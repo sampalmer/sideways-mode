@@ -17,7 +17,7 @@ public class RotationService extends Service {
 	
 	private boolean paused;
 	private SensorManager sensors;
-	private OrientationCalculator orientationCalculator;
+	private RelativeOrientationCalculator orientationCalculator;
 	private OrientationChanger orientationChanger;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;

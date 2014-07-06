@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 
-public class RelativeOrientationCalculator implements OrientationCalculator {
+public class RelativeOrientationCalculator {
 	
 	private Clock clock;
 	
@@ -15,7 +15,6 @@ public class RelativeOrientationCalculator implements OrientationCalculator {
 		this.screenOrientation = Orientation.fromAndroid(screenOrientation);
 	}
 	
-	@Override
 	public void registerNewDeviceOrientation(int deviceOrientation) {
 		Orientation newDeviceOrientation = Orientation.fromAndroid(deviceOrientation);
 
@@ -54,7 +53,6 @@ public class RelativeOrientationCalculator implements OrientationCalculator {
 		}
 	}
 
-	@Override
 	public void registerNewCoveredState(boolean covered) {
 		boolean covering = !this.covered && covered;
 		
@@ -67,7 +65,6 @@ public class RelativeOrientationCalculator implements OrientationCalculator {
 		this.covered = covered;
 	}
 
-	@Override
 	public int getScreenOrientation() {
 		return screenOrientation.getAndroidOrientation();
 	}

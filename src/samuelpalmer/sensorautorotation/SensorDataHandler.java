@@ -7,11 +7,11 @@ import android.hardware.SensorEventListener;
 
 public class SensorDataHandler implements SensorEventListener {
 	
-	private final OrientationCalculator orientationCalculator;
+	private final RelativeOrientationCalculator orientationCalculator;
 	private final OrientationChanger orientationChanger;
 	private final LowPassFilter gravity;
 
-	public SensorDataHandler(OrientationCalculator orientationCalculator, OrientationChanger orientationChanger, Clock clock) {
+	public SensorDataHandler(RelativeOrientationCalculator orientationCalculator, OrientationChanger orientationChanger, Clock clock) {
 		this.orientationCalculator = orientationCalculator;
 		this.orientationChanger = orientationChanger;
 		this.gravity = new LowPassFilter(clock);
