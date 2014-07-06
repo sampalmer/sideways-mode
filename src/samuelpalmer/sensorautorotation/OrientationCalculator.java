@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 
-public class RelativeOrientationCalculator {
+public class OrientationCalculator {
 	
 	private Clock clock;
 	
@@ -10,7 +10,7 @@ public class RelativeOrientationCalculator {
 	private Rotation potentialRotationToLandscape;
 	private boolean covered;
 	
-	public RelativeOrientationCalculator(Clock clock, int screenOrientation) {
+	public OrientationCalculator(Clock clock, int screenOrientation) {
 		this.clock = clock;
 		this.screenOrientation = Orientation.fromAndroid(screenOrientation);
 	}

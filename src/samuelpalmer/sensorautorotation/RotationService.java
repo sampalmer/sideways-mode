@@ -17,7 +17,7 @@ public class RotationService extends Service {
 	
 	private boolean paused;
 	private SensorManager sensors;
-	private RelativeOrientationCalculator orientationCalculator;
+	private OrientationCalculator orientationCalculator;
 	private OrientationChanger orientationChanger;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
@@ -50,7 +50,7 @@ public class RotationService extends Service {
 	
 	private void resume() throws EnvironmentException {
 		SystemClock clock = new SystemClock();
-		orientationCalculator = new RelativeOrientationCalculator(clock, defaultOrientation);
+		orientationCalculator = new OrientationCalculator(clock, defaultOrientation);
 		tracker = new PhysicalOrientationTracker(sensors, new SensorDataHandler(orientationCalculator, orientationChanger, clock));
 		
 		paused = false;
