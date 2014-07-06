@@ -1,15 +1,14 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.pm.ActivityInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-public class Orientation implements Parcelable {
+public class Orientation {
 	
 	private final int clockwiseRotationsFromUpright;
 
 	public static Orientation fromAndroid(int androidOrientation) {
-		return new Orientation(findOffset(androidOrientation));
+		int offset = findOffset(androidOrientation);
+		return new Orientation(offset);
 	}
 	
 	private Orientation(int unwrappedOffset) {
@@ -17,7 +16,9 @@ public class Orientation implements Parcelable {
 	}
 
 	private int wrap(int unwrappedOffset) {
-		return ((unwrappedOffset % offsetToAndroidOrientation.length) + offsetToAndroidOrientation.length) % offsetToAndroidOrientation.length;
+		int positiveWrapped = unwrappedOffset % offsetToAndroidOrientation.length;
+		int nonNegative = positiveWrapped + offsetToAndroidOrientation.length;
+		return nonNegative % offsetToAndroidOrientation.length;
 	}
 	
 	public Orientation(Orientation original) {
@@ -45,28 +46,6 @@ public class Orientation implements Parcelable {
 		ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE,
 		ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
 		ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
-	};
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(clockwiseRotationsFromUpright);
-	}
-	
-	public static final Parcelable.Creator<Orientation> CREATOR = new Parcelable.Creator<Orientation>() {
-		@Override
-		public Orientation createFromParcel(Parcel in) {
-			return new Orientation(in.readInt());
-		}
-
-		@Override
-		public Orientation[] newArray(int size) {
-			return new Orientation[size];
-		}
 	};
 
 	public int clockwiseRotationsFrom(Orientation lastDeviceOrientation) {
