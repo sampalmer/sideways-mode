@@ -3,15 +3,11 @@ package samuelpalmer.sensorautorotation;
 
 public class OrientationCalculator {
 	
-	private Clock clock;
-	
 	private Orientation lastDeviceOrientation;
 	private Orientation screenOrientation;
-	private Rotation potentialRotationToLandscape;
 	private boolean covered;
 	
-	public OrientationCalculator(Clock clock, int screenOrientation) {
-		this.clock = clock;
+	public OrientationCalculator(int screenOrientation) {
 		this.screenOrientation = Orientation.fromAndroid(screenOrientation);
 	}
 	
@@ -34,17 +30,10 @@ public class OrientationCalculator {
 	}
 
 	private void handleNinetyDegreeRotation(int clockwiseRotations) {
-		potentialRotationToLandscape = null;
-		
 		if (screenOrientation.isPortrait()) {
 			if (covered) {
 				screenOrientation = screenOrientation.rotatedClockwise(clockwiseRotations);
 			}
-//			else {
-//				potentialRotationToLandscape = new Rotation();
-//				potentialRotationToLandscape.clockwiseCount = clockwiseRotations;
-//				potentialRotationToLandscape.when = clock.read();
-//			}
 		}
 		else {
 			if (!covered) {
@@ -54,14 +43,6 @@ public class OrientationCalculator {
 	}
 
 	public void registerNewCoveredState(boolean covered) {
-		boolean covering = !this.covered && covered;
-		
-		boolean justWentSideways = potentialRotationToLandscape != null && clock.read().getTime() - potentialRotationToLandscape.when.getTime() < 500;
-		if (covering && justWentSideways) {
-			screenOrientation = screenOrientation.rotatedClockwise(potentialRotationToLandscape.clockwiseCount);
-			potentialRotationToLandscape = null;
-		}
-		
 		this.covered = covered;
 	}
 
