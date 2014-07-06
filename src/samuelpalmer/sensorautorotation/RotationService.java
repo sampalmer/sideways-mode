@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -16,14 +15,10 @@ import android.widget.Toast;
 public class RotationService extends Service {
 	
 	private boolean paused;
-	private SensorManager sensors;
-	private OrientationCalculator orientationCalculator;
 	private OrientationChanger orientationChanger;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
 	
-	private static final int defaultOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT; //TODO: Use USER_ROTATION instead
-
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -35,9 +30,6 @@ public class RotationService extends Service {
 		super.onCreate();
 		
 		try {
-			sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
-			orientationChanger = new PassiveOrientationChanger(this.getContentResolver()/*, defaultOrientation*/);
-			
 			resume();
 	        supportScreenStateChanges();
 			promoteToForeground();
@@ -49,20 +41,27 @@ public class RotationService extends Service {
     }
 	
 	private void resume() throws EnvironmentException {
+		orientationChanger = new PassiveOrientationChanger(this.getContentResolver());
+		OrientationCalculator orientationCalculator = new OrientationCalculator(this.orientationChanger.get());
+		
 		SystemClock clock = new SystemClock();
-		orientationCalculator = new OrientationCalculator(defaultOrientation);
-		tracker = new PhysicalOrientationTracker(sensors, new SensorDataHandler(orientationCalculator, orientationChanger, clock));
+		SensorManager sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
+		SensorDataHandler dataHandler = new SensorDataHandler(orientationCalculator, orientationChanger, clock);
+		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
 		
 		paused = false;
 	}
 
+	/**
+	 * Reduces chance of being killed
+	 */
 	private void promoteToForeground() {
 		Notification notification = new NotificationCompat.Builder(this)
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
 			.setContentTitle(getString(R.string.app_name))
 			.build();
-		startForeground(1, notification); //Reduces chance of being killed
+		startForeground(1, notification);
 	}
 
 	private void supportScreenStateChanges() {
@@ -107,13 +106,11 @@ public class RotationService extends Service {
 		
 		if (!paused)
 			pause();
-		
-		orientationChanger.close();
 	}
 
 	private void pause() {
 		tracker.close();
-		orientationChanger.set(defaultOrientation);
+		orientationChanger.close();
 		
 		paused = true;
 	}

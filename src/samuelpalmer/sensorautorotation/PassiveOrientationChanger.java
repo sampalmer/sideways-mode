@@ -1,10 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.ContentResolver;
-import android.content.pm.ActivityInfo;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.view.Surface;
 
 public class PassiveOrientationChanger implements OrientationChanger {
 
@@ -23,25 +21,7 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	
 	@Override
 	public void set(int orientation) {
-		int surfaceRotation;
-		
-		switch (orientation)
-		{
-			case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
-				surfaceRotation = Surface.ROTATION_0;
-				break;
-			case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
-				surfaceRotation = Surface.ROTATION_90;
-				break;
-			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
-				surfaceRotation = Surface.ROTATION_180;
-				break;
-			case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
-				surfaceRotation = Surface.ROTATION_270;
-				break;
-			default:
-				throw new RuntimeException("Unknown screen rotation: " + orientation);
-		}
+		int surfaceRotation = RotationOrientationMapper.fromAndroidOrientation(orientation).getAndroidRotation();
 		
 		setRotation(surfaceRotation);
 	}
@@ -55,5 +35,10 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	@Override
 	public void close() {
 		this.setRotation(this.originalRotation);
+	}
+
+	@Override
+	public int get() {
+		return RotationOrientationMapper.fromAndroidRotation(this.originalRotation).getAndroidOrientation();
 	}
 }
