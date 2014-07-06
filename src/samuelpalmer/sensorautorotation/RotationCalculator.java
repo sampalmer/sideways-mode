@@ -1,13 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
 
-public class OrientationCalculator {
+public class RotationCalculator {
 	
 	private Orientation lastDeviceOrientation;
 	private Orientation screenOrientation;
 	private boolean covered;
 	
-	public OrientationCalculator(int screenOrientation) {
+	public RotationCalculator(int screenOrientation) {
 		this.screenOrientation = Orientation.fromAndroid(screenOrientation);
 	}
 	
