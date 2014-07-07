@@ -1,13 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
 
-public class RotationCalculator {
+public class OrientationCalculator {
 	
 	private Orientation lastDevice;
 	private Orientation screen;
 	private boolean covered;
 	
-	public RotationCalculator(Orientation screen) {
+	public OrientationCalculator(Orientation screen) {
 		this.screen = screen;
 	}
 	
@@ -28,16 +28,8 @@ public class RotationCalculator {
 	}
 
 	private void handleNinetyDegreeRotation(Rotation change) {
-		if (screen.isPortrait()) {
-			if (covered) {
-				screen = screen.plus(change);
-			}
-		}
-		else {
-			if (!covered) {
-				screen = screen.plus(change);
-			}
-		}
+		if (screen.isPortrait() == covered)
+			screen = screen.plus(change);
 	}
 
 	public void registerNewCoveredState(boolean covered) {
