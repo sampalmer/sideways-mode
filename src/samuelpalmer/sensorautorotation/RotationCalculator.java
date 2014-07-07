@@ -3,41 +3,39 @@ package samuelpalmer.sensorautorotation;
 
 public class RotationCalculator {
 	
-	private Orientation lastDeviceOrientation;
-	private Orientation screenOrientation;
+	private Orientation lastDevice;
+	private Orientation screen;
 	private boolean covered;
 	
-	public RotationCalculator(int screenOrientation) {
-		this.screenOrientation = Orientation.fromAndroid(screenOrientation);
+	public RotationCalculator(Orientation screen) {
+		this.screen = screen;
 	}
 	
-	public void registerNewDeviceOrientation(int deviceOrientation) {
-		Orientation newDeviceOrientation = Orientation.fromAndroid(deviceOrientation);
+	public void registerNewDeviceOrientation(Orientation newDevice) {
 
-		if (lastDeviceOrientation == null)
-			lastDeviceOrientation = newDeviceOrientation;
+		if (lastDevice == null)
+			lastDevice = newDevice;
 		
-		boolean changed = lastDeviceOrientation != newDeviceOrientation;
+		boolean changed = lastDevice != newDevice;
 		if (changed) {
-			int clockwiseRotations = newDeviceOrientation.clockwiseRotationsFrom(lastDeviceOrientation);
+			Rotation change = newDevice.minus(lastDevice);
 		
-			boolean isNinetyDegree = clockwiseRotations % 2 != 0;
-			if (isNinetyDegree)
-				handleNinetyDegreeRotation(clockwiseRotations);
+			if (change.isNinetyDegree())
+				handleNinetyDegreeRotation(change);
 		}
 		
-		lastDeviceOrientation = newDeviceOrientation;
+		lastDevice = newDevice;
 	}
 
-	private void handleNinetyDegreeRotation(int clockwiseRotations) {
-		if (screenOrientation.isPortrait()) {
+	private void handleNinetyDegreeRotation(Rotation change) {
+		if (screen.isPortrait()) {
 			if (covered) {
-				screenOrientation = screenOrientation.rotatedClockwise(clockwiseRotations);
+				screen = screen.plus(change);
 			}
 		}
 		else {
 			if (!covered) {
-				screenOrientation = screenOrientation.rotatedClockwise(clockwiseRotations);
+				screen = screen.plus(change);
 			}
 		}
 	}
@@ -46,8 +44,8 @@ public class RotationCalculator {
 		this.covered = covered;
 	}
 
-	public int getScreenOrientation() {
-		return screenOrientation.getAndroidOrientation();
+	public Orientation screenOrientation() {
+		return screen;
 	}
 	
 }

@@ -34,7 +34,7 @@ public class SensorDataHandler implements SensorEventListener {
 				throw new RuntimeException("Unexpected sensor: " + event.sensor.getName());
 		}
 		
-		int screenOrientation = orientationCalculator.getScreenOrientation();
+		Orientation screenOrientation = orientationCalculator.screenOrientation();
 		orientationChanger.set(screenOrientation);
 	}
 	
@@ -72,7 +72,7 @@ public class SensorDataHandler implements SensorEventListener {
 			else
 				return;
 			
-			orientationCalculator.registerNewDeviceOrientation(deviceOrientation);
+			orientationCalculator.registerNewDeviceOrientation(new Orientation(deviceOrientation));
 		}
 	}
 }

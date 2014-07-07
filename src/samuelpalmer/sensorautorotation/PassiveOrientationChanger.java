@@ -20,8 +20,8 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	}
 	
 	@Override
-	public void set(int orientation) {
-		int surfaceRotation = RotationOrientationMapper.fromAndroidOrientation(orientation).getAndroidRotation();
+	public void set(Orientation value) {
+		int surfaceRotation = RotationOrientationMapper.fromAndroidOrientation(value.android()).getAndroidRotation();
 		
 		setRotation(surfaceRotation);
 	}
