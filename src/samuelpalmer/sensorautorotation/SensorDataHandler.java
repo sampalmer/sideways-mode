@@ -26,8 +26,9 @@ public class SensorDataHandler implements SensorEventListener {
 				updateOrientation(event);
 				break;
 			case Sensor.TYPE_PROXIMITY:
-				float distance = event.values[0];
-				boolean covered = distance < event.sensor.getMaximumRange();
+				float distanceInCentimetres = event.values[0];
+				float coveredThreshold = Math.min(3, event.sensor.getMaximumRange());
+				boolean covered = distanceInCentimetres <= coveredThreshold;
 				orientationCalculator.registerNewCoveredState(covered);
 				break;
 			default:
