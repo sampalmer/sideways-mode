@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.ContentResolver;
 import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
+import android.view.Surface;
 
 public class PassiveOrientationChanger implements OrientationChanger {
 
@@ -12,11 +12,7 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	public PassiveOrientationChanger(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 		
-		try {
-			this.originalUserRotation = Settings.System.getInt(this.contentResolver, Settings.System.USER_ROTATION);
-		} catch (SettingNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		this.originalUserRotation = Settings.System.getInt(this.contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
 	}
 	
 	@Override
