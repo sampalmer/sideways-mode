@@ -1,55 +1,48 @@
 package samuelpalmer.sensorautorotation;
 
-import java.util.Arrays;
-import java.util.List;
-import android.content.pm.ActivityInfo;
+import android.view.Surface;
+
 
 public class Orientation {
 	
-	private final int androidScreenOrientation;
+	private static final int numberOfPossibleRotations = 4;
+	private final int clockwiseRotationsFromNaturalOrientation;
 
-	public Orientation(int androidDeviceOrientation) {
-		this.androidScreenOrientation = androidDeviceOrientation;
-		if (clockwiseIndex() == -1)
-			throw new RuntimeException("Unknown orientation: " + androidDeviceOrientation);
+	public Orientation(int clockwiseRotationsFromNaturalOrientation) {
+		if (clockwiseRotationsFromNaturalOrientation < 0 || clockwiseRotationsFromNaturalOrientation >= numberOfPossibleRotations)
+			throw new RuntimeException("Unknown orientation: " + clockwiseRotationsFromNaturalOrientation);
+		
+		this.clockwiseRotationsFromNaturalOrientation = clockwiseRotationsFromNaturalOrientation;
 	}
 
 	public boolean isPortrait() {
-		return this.androidScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-				|| this.androidScreenOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-	}
-	
-	public int android() {
-		return this.androidScreenOrientation;
+		return this.clockwiseRotationsFromNaturalOrientation % 2 == 0;
 	}
 	
 	public Rotation minus(Orientation other) {
-		return new Rotation(clockwiseIndex() - other.clockwiseIndex());
+		return new Rotation(clockwiseRotationsFromNaturalOrientation - other.clockwiseRotationsFromNaturalOrientation);
 	}
 
 	public Orientation plus(Rotation change) {
-		int unwrappedResultingClockwiseIndex = clockwiseIndex() + change.clockwiseCount();
-		int wrappedResultingClockwiseIndex = IntegerUtilities.wrap(unwrappedResultingClockwiseIndex, offsetToAndroidOrientation.size());
-		int androidDeviceOrientation = offsetToAndroidOrientation.get(wrappedResultingClockwiseIndex);
+		int unwrappedResultingClockwiseIndex = clockwiseRotationsFromNaturalOrientation + change.clockwiseCount();
+		int wrappedResultingClockwiseIndex = IntegerUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
 		
-		return new Orientation(androidDeviceOrientation);
+		return new Orientation(wrappedResultingClockwiseIndex);
 	}
 
-	private int clockwiseIndex() {
-		return offsetToAndroidOrientation.indexOf(this.androidScreenOrientation);
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		return o != null
 				&& this.getClass() == o.getClass()
-				&& this.androidScreenOrientation == ((Orientation)o).androidScreenOrientation;
+				&& this.clockwiseRotationsFromNaturalOrientation == ((Orientation)o).clockwiseRotationsFromNaturalOrientation;
+	}
+	
+	public int androidSurfaceRotation() {
+		return Surface.ROTATION_0 + clockwiseRotationsFromNaturalOrientation;
 	}
 
-	private static final List<Integer> offsetToAndroidOrientation = Arrays.asList(
-		ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
-		ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE,
-		ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
-		ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-	);
+	public static Orientation fromAndroidSurfaceRotation(int androidSurfaceRotation) {
+		return new Orientation(androidSurfaceRotation - Surface.ROTATION_0);
+	}
+	
 }

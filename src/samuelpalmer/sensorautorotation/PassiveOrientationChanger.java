@@ -7,13 +7,13 @@ import android.provider.Settings.SettingNotFoundException;
 public class PassiveOrientationChanger implements OrientationChanger {
 
 	private final ContentResolver contentResolver;
-	private final int originalRotation;
+	private final int originalUserRotation;
 	
 	public PassiveOrientationChanger(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 		
 		try {
-			this.originalRotation = Settings.System.getInt(this.contentResolver, Settings.System.USER_ROTATION);
+			this.originalUserRotation = Settings.System.getInt(this.contentResolver, Settings.System.USER_ROTATION);
 		} catch (SettingNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -21,12 +21,7 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	
 	@Override
 	public void set(Orientation value) {
-		int surfaceRotation = RotationOrientationMapper.fromAndroidOrientation(value.android()).getAndroidRotation();
-		
-		setRotation(surfaceRotation);
-	}
-
-	private void setRotation(int surfaceRotation) {
+		int surfaceRotation = value.androidSurfaceRotation();
 		boolean result = Settings.System.putInt(this.contentResolver, Settings.System.USER_ROTATION, surfaceRotation);
 		if (!result)
 			throw new RuntimeException("Couldn't change orientation");
@@ -34,11 +29,13 @@ public class PassiveOrientationChanger implements OrientationChanger {
 
 	@Override
 	public void close() {
-		this.setRotation(this.originalRotation);
+		boolean result = Settings.System.putInt(this.contentResolver, Settings.System.USER_ROTATION, this.originalUserRotation);
+		if (!result)
+			throw new RuntimeException("Couldn't change orientation");
 	}
 
 	@Override
-	public int get() {
-		return RotationOrientationMapper.fromAndroidRotation(this.originalRotation).getAndroidOrientation();
+	public Orientation getOriginal() {
+		return Orientation.fromAndroidSurfaceRotation(this.originalUserRotation);
 	}
 }

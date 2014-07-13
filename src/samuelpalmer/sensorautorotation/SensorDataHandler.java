@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -58,22 +57,23 @@ public class SensorDataHandler implements SensorEventListener {
 		if (differenceInMagnitudes > threshold) {
 			boolean isMoreVertical = yMagnitude > xMagnitude;
 			
-			int deviceOrientation;
+			int clockwiseRotationsFromNaturalOrientation;
 			
 			if (isMoreVertical && yMagnitude > threshold)
 				if (y > 0)
-					deviceOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+					clockwiseRotationsFromNaturalOrientation = 0;
 				else
-					deviceOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+					clockwiseRotationsFromNaturalOrientation = 2;
 			else if (xMagnitude > threshold)
 				if (x > 0)
-					deviceOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+					clockwiseRotationsFromNaturalOrientation = 1;
 				else
-					deviceOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+					clockwiseRotationsFromNaturalOrientation = 3;
 			else
 				return;
 			
-			orientationCalculator.registerNewDeviceOrientation(new Orientation(deviceOrientation));
+			Orientation orientation = new Orientation(clockwiseRotationsFromNaturalOrientation);
+			orientationCalculator.registerNewDeviceOrientation(orientation);
 		}
 	}
 }
