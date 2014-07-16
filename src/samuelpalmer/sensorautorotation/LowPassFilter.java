@@ -1,39 +1,33 @@
 package samuelpalmer.sensorautorotation;
 
-import java.util.Date;
+import android.hardware.SensorEvent;
 
 public class LowPassFilter {
-	private static final float TIME_CONSTANT = 200f;
+	private static final float SMOOTHING_TIME_MILLISECONDS = 200f;
 
-	private final Clock clock;
-	
 	private float[] lastData;
-	private Date lastDataRead;
+	private long lastDataReadTimeNanoseconds;
 	
-	public LowPassFilter(Clock clock) {
-		this.clock = clock;
-	}
-	
-	public float[] process(float[] data) {
-		Date time = clock.read();
+	public float[] process(SensorEvent data) {
+		long nowNanoseconds = data.timestamp;
 		
         if (lastData == null) {
-        	lastData = new float[data.length];
-        	lastDataRead = time;
+        	lastData = new float[data.values.length];
+        	lastDataReadTimeNanoseconds = data.timestamp;
         }
         
-    	if (data.length != lastData.length)
-    		throw new RuntimeException("Expected " + lastData.length + " components but instead found " + data.length);
+    	if (data.values.length != lastData.length)
+    		throw new RuntimeException("Expected " + lastData.length + " components but instead found " + data.values.length);
     	
 		// alpha is calculated as t / (t + dT)
         // with t, the low-pass filter's time-constant
         // and dT, the event delivery rate
-    	float dt = (time.getTime() - lastDataRead.getTime());
-        final float alpha = TIME_CONSTANT / (TIME_CONSTANT + dt);
+    	float timeElapsedNanoseconds = nowNanoseconds - lastDataReadTimeNanoseconds;
+        final float alpha = SMOOTHING_TIME_MILLISECONDS / (SMOOTHING_TIME_MILLISECONDS + timeElapsedNanoseconds);
     	
-    	for (int i = 0; i < data.length; ++i)
-    		lastData[i] = alpha * lastData[i] + (1 - alpha) * data[i];
-        lastDataRead = time;
+    	for (int i = 0; i < data.values.length; ++i)
+    		lastData[i] = alpha * lastData[i] + (1 - alpha) * data.values[i];
+    	lastDataReadTimeNanoseconds = nowNanoseconds;
     	
     	return lastData.clone();
 	}

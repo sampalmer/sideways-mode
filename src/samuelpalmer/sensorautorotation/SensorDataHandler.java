@@ -10,10 +10,10 @@ public class SensorDataHandler implements SensorEventListener {
 	private final OrientationChanger orientationChanger;
 	private final LowPassFilter gravity;
 
-	public SensorDataHandler(OrientationCalculator orientationCalculator, OrientationChanger orientationChanger, Clock clock) {
+	public SensorDataHandler(OrientationCalculator orientationCalculator, OrientationChanger orientationChanger) {
 		this.orientationCalculator = orientationCalculator;
 		this.orientationChanger = orientationChanger;
-		this.gravity = new LowPassFilter(clock);
+		this.gravity = new LowPassFilter();
 	}
 	
 	@Override
@@ -46,7 +46,7 @@ public class SensorDataHandler implements SensorEventListener {
 	private void updateOrientation(SensorEvent event) {
 		final int threshold = 1;
 		
-		float[] components = gravity.process(event.values);
+		float[] components = gravity.process(event);
 		float x = components[0];
 		float y = components[1];
 		

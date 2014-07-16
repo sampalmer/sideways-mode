@@ -44,9 +44,8 @@ public class RotationService extends Service {
 		orientationChanger = new PassiveOrientationChanger(this.getContentResolver());
 		OrientationCalculator orientationCalculator = new OrientationCalculator(this.orientationChanger.getOriginal());
 		
-		SystemClock clock = new SystemClock();
 		SensorManager sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
-		SensorDataHandler dataHandler = new SensorDataHandler(orientationCalculator, orientationChanger, clock);
+		SensorDataHandler dataHandler = new SensorDataHandler(orientationCalculator, orientationChanger);
 		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
 		
 		paused = false;

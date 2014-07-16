@@ -7,6 +7,10 @@ public class Orientation {
 	
 	private static final int numberOfPossibleRotations = 4;
 	private final int clockwiseRotationsFromNaturalOrientation;
+	public static final Orientation REVERSE_PORTRAIT = new Orientation(2);
+	public static final Orientation REVERSE_LANDSCAPE = new Orientation(1);
+	public static final Orientation PORTRAIT = new Orientation(0);
+	public static final Orientation LANDSCAPE = new Orientation(3);
 
 	public Orientation(int clockwiseRotationsFromNaturalOrientation) {
 		if (clockwiseRotationsFromNaturalOrientation < 0 || clockwiseRotationsFromNaturalOrientation >= numberOfPossibleRotations)
