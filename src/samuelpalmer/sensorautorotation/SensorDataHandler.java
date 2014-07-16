@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
+//TODO: Split this into 2 classes
+
 public class SensorDataHandler implements SensorEventListener {
 	
 	private final OrientationCalculator orientationCalculator;
@@ -46,6 +48,7 @@ public class SensorDataHandler implements SensorEventListener {
 	private void updateOrientation(SensorEvent event) {
 		final int threshold = 1;
 		
+		//TODO: Organise and test all this code
 		float[] components = gravity.process(event);
 		float x = components[0];
 		float y = components[1];
