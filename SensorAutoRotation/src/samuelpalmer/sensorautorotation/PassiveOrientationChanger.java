@@ -13,10 +13,10 @@ public class PassiveOrientationChanger implements OrientationChanger {
 	public PassiveOrientationChanger(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 		
-		this.originalAccelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0);
+		originalAccelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0);
 		set(Settings.System.ACCELEROMETER_ROTATION, 0, "Failed to disable system auto-rotation"); //TODO: Make this a warning for the user
 		
-		this.originalUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
+		originalUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
 	}
 	
 	@Override

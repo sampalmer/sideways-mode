@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation;
 
 public class OrientationCalculator {
 	
-	private Orientation lastDevice;
+	private Orientation device;
 	private Orientation screen;
 	private boolean covered;
 	
@@ -12,19 +12,18 @@ public class OrientationCalculator {
 	}
 	
 	public void registerNewDeviceOrientation(Orientation newDevice) {
-
-		if (lastDevice == null)
-			lastDevice = newDevice;
+		if (device == null)
+			device = newDevice;
 		
-		boolean changed = lastDevice != newDevice;
+		boolean changed = device != newDevice;
 		if (changed) {
-			Rotation change = newDevice.minus(lastDevice);
+			Rotation change = newDevice.minus(device);
 		
 			if (change.isNinetyDegree())
 				handleNinetyDegreeRotation(change);
 		}
 		
-		lastDevice = newDevice;
+		device = newDevice;
 	}
 
 	private void handleNinetyDegreeRotation(Rotation change) {
