@@ -8,13 +8,11 @@ import android.hardware.SensorEventListener;
 
 public class SensorDataHandler implements SensorEventListener {
 	
-	private final OrientationCalculator orientationCalculator;
-	private final OrientationChanger orientationChanger;
 	private final LowPassFilter gravity;
+	private X x;
 
-	public SensorDataHandler(OrientationCalculator orientationCalculator, OrientationChanger orientationChanger) {
-		this.orientationCalculator = orientationCalculator;
-		this.orientationChanger = orientationChanger;
+	public SensorDataHandler(X x) {
+		this.x = x;
 		this.gravity = new LowPassFilter();
 	}
 	
@@ -27,23 +25,22 @@ public class SensorDataHandler implements SensorEventListener {
 				updateOrientation(event);
 				break;
 			case Sensor.TYPE_PROXIMITY:
-				float distanceInCentimetres = event.values[0];
-				float coveredThreshold = Math.min(3, event.sensor.getMaximumRange());
-				boolean covered = distanceInCentimetres <= coveredThreshold;
-				orientationCalculator.registerNewCoveredState(covered);
+				updateProximity(event);
 				break;
 			default:
 				throw new RuntimeException("Unexpected sensor: " + event.sensor.getName());
 		}
-		
-		Orientation screenOrientation = orientationCalculator.screenOrientation();
-		orientationChanger.set(screenOrientation);
+	}
+
+	private void updateProximity(SensorEvent event) {
+		float distanceInCentimetres = event.values[0];
+		float coveredThreshold = Math.min(3, event.sensor.getMaximumRange());
+		boolean covered = distanceInCentimetres <= coveredThreshold;
+		x.setProximitySensorCovered(covered);
 	}
 	
 	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-	}
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 	
 	private void updateOrientation(SensorEvent event) {
 		final int threshold = 1;
@@ -76,7 +73,7 @@ public class SensorDataHandler implements SensorEventListener {
 				return;
 			
 			Orientation orientation = new Orientation(clockwiseRotationsFromNaturalOrientation);
-			orientationCalculator.registerNewDeviceOrientation(orientation);
+			this.x.setDeviceOrientation(orientation);
 		}
 	}
 }

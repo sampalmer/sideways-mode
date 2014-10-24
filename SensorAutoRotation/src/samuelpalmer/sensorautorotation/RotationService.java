@@ -42,10 +42,9 @@ public class RotationService extends Service {
 	
 	private void resume() throws EnvironmentException {
 		orientationChanger = new PassiveOrientationChanger(this.getContentResolver());
-		OrientationCalculator orientationCalculator = new OrientationCalculator(this.orientationChanger.getOriginal());
 		
 		SensorManager sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
-		SensorDataHandler dataHandler = new SensorDataHandler(orientationCalculator, orientationChanger);
+		SensorDataHandler dataHandler = new SensorDataHandler(new X(orientationChanger));
 		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
 		
 		paused = false;

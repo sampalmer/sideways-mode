@@ -7,14 +7,13 @@ public class OrientationCalculator {
 	private Orientation screen;
 	private boolean covered;
 	
-	public OrientationCalculator(Orientation screen) {
+	public OrientationCalculator(Orientation screen, Orientation device, boolean covered) {
 		this.screen = screen;
+		this.device = device;
+		this.covered = covered;
 	}
 	
 	public void registerNewDeviceOrientation(Orientation newDevice) {
-		if (device == null)
-			device = newDevice;
-		
 		boolean changed = device != newDevice;
 		if (changed) {
 			Rotation change = newDevice.minus(device);

@@ -75,6 +75,6 @@ public class OrientationCoordinatorTests {
 
 	@Before
 	public void createSut() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT);
+		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
 	}
 }
