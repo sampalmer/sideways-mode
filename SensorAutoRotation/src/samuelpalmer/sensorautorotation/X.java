@@ -46,7 +46,7 @@ public class X {
 	}
 
 	private Orientation initialScreenOrientation() {
-		return orientationChanger.getOriginal();
+		return orientationChanger.originalUserOrientation();
 	}
 	
 	private boolean canMakeCalculator() {

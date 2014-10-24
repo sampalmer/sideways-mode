@@ -35,7 +35,11 @@ public class Screen {
 			throw new RuntimeException(failureMessage);
 	}
 
-	public Orientation getOriginal() {
+	public Orientation originalUserOrientation() {
 		return Orientation.fromAndroidSurfaceRotation(originalUserRotation);
+	}
+	
+	public boolean originalAutoRotation() {
+		return originalAccelerometerRotation == 1;
 	}
 }
