@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class RotationService extends Service {
 	
 	private boolean paused;
-	private PassiveOrientationChanger orientationChanger;
+	private Screen orientationChanger;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
 	
@@ -41,7 +41,7 @@ public class RotationService extends Service {
     }
 	
 	private void resume() throws EnvironmentException {
-		orientationChanger = new PassiveOrientationChanger(this.getContentResolver());
+		orientationChanger = new Screen(this.getContentResolver());
 		
 		SensorManager sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
 		SensorDataHandler dataHandler = new SensorDataHandler(new X(orientationChanger));

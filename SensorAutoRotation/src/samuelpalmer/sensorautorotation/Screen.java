@@ -4,13 +4,13 @@ import android.content.ContentResolver;
 import android.provider.Settings;
 import android.view.Surface;
 
-public class PassiveOrientationChanger {
+public class Screen {
 
 	private final ContentResolver contentResolver;
 	private final int originalUserRotation;
 	private final int originalAccelerometerRotation;
 	
-	public PassiveOrientationChanger(ContentResolver contentResolver) {
+	public Screen(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 		
 		originalAccelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0);
