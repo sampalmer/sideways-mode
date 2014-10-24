@@ -8,30 +8,37 @@ public class PassiveOrientationChanger implements OrientationChanger {
 
 	private final ContentResolver contentResolver;
 	private final int originalUserRotation;
+	private final int originalAccelerometerRotation;
 	
 	public PassiveOrientationChanger(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 		
-		this.originalUserRotation = Settings.System.getInt(this.contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
+		this.originalAccelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0);
+		set(Settings.System.ACCELEROMETER_ROTATION, 0, "Failed to disable system auto-rotation"); //TODO: Make this a warning for the user
+		
+		this.originalUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
 	}
 	
 	@Override
 	public void set(Orientation value) {
 		int surfaceRotation = value.androidSurfaceRotation();
-		boolean result = Settings.System.putInt(this.contentResolver, Settings.System.USER_ROTATION, surfaceRotation);
-		if (!result)
-			throw new RuntimeException("Couldn't change orientation");
+		set(Settings.System.USER_ROTATION, surfaceRotation, "Couldn't change orientation");
 	}
 
 	@Override
 	public void close() {
-		boolean result = Settings.System.putInt(this.contentResolver, Settings.System.USER_ROTATION, this.originalUserRotation);
-		if (!result)
-			throw new RuntimeException("Couldn't change orientation");
+		set(Settings.System.USER_ROTATION, originalUserRotation, "Couldn't restore original orientation");
+		set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, "Couldn't restore original auto-rotation value");
+	}
+
+	private void set(String setting, int value, String failureMessage) {
+		boolean successful = Settings.System.putInt(contentResolver, setting, value);
+		if (!successful)
+			throw new RuntimeException(failureMessage);
 	}
 
 	@Override
 	public Orientation getOriginal() {
-		return Orientation.fromAndroidSurfaceRotation(this.originalUserRotation);
+		return Orientation.fromAndroidSurfaceRotation(originalUserRotation);
 	}
 }
