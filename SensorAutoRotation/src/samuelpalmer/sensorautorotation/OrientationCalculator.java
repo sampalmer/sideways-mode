@@ -14,13 +14,10 @@ public class OrientationCalculator {
 	}
 	
 	public void registerNewDeviceOrientation(Orientation newDevice) {
-		boolean changed = device != newDevice;
-		if (changed) {
-			Rotation change = newDevice.minus(device);
-		
-			if (change.isNinetyDegree())
-				handleNinetyDegreeRotation(change);
-		}
+		Rotation change = newDevice.minus(device);
+	
+		if (change.isNinetyDegree())
+			handleNinetyDegreeRotation(change);
 		
 		device = newDevice;
 	}
