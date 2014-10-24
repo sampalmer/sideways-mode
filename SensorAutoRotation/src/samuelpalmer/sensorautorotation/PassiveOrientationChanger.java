@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.provider.Settings;
 import android.view.Surface;
 
-public class PassiveOrientationChanger implements OrientationChanger {
+public class PassiveOrientationChanger {
 
 	private final ContentResolver contentResolver;
 	private final int originalUserRotation;
@@ -19,13 +19,11 @@ public class PassiveOrientationChanger implements OrientationChanger {
 		originalUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
 	}
 	
-	@Override
 	public void set(Orientation value) {
 		int surfaceRotation = value.androidSurfaceRotation();
 		set(Settings.System.USER_ROTATION, surfaceRotation, "Couldn't change orientation");
 	}
 
-	@Override
 	public void close() {
 		set(Settings.System.USER_ROTATION, originalUserRotation, "Couldn't restore original orientation");
 		set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, "Couldn't restore original auto-rotation value");
@@ -37,7 +35,6 @@ public class PassiveOrientationChanger implements OrientationChanger {
 			throw new RuntimeException(failureMessage);
 	}
 
-	@Override
 	public Orientation getOriginal() {
 		return Orientation.fromAndroidSurfaceRotation(originalUserRotation);
 	}

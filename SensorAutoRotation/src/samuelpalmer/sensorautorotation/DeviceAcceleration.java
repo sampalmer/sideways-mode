@@ -5,10 +5,12 @@ package samuelpalmer.sensorautorotation;
  */
 public class DeviceAcceleration {
 	
+	private static final int threshold = 1;
+	
 	private Orientation orientation;
 
 	public DeviceAcceleration(float x, float y) {
-		final int threshold = 1;
+		
 		
 		float xMagnitude = Math.abs(x);
 		float yMagnitude = Math.abs(y);

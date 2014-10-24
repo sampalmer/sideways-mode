@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class RotationService extends Service {
 	
 	private boolean paused;
-	private OrientationChanger orientationChanger;
+	private PassiveOrientationChanger orientationChanger;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
 	

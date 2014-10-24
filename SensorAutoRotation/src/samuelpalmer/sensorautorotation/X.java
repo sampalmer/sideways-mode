@@ -2,14 +2,14 @@ package samuelpalmer.sensorautorotation;
 
 public class X {
 	
-	private final OrientationChanger orientationChanger;
+	private final PassiveOrientationChanger orientationChanger;
 	private OrientationCalculator orientationCalculator;
 	
 	private Orientation initialDeviceOrientation;
 	private boolean hasInitialCoveredState;
 	private boolean initialCoveredState;
 	
-	public X(OrientationChanger orientationChanger) {
+	public X(PassiveOrientationChanger orientationChanger) {
 		this.orientationChanger = orientationChanger;
 	}
 	
