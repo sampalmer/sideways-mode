@@ -13,39 +13,50 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 public class RotationService extends Service {
-	
+
 	private boolean paused;
 	private Screen screen;
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-	
+
 	@Override
-	public void onCreate()
-    {
+	public void onCreate() {
 		super.onCreate();
-		
+
 		try {
 			screen = new Screen(this.getContentResolver());
+			final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+			Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+					screen.close();
+					if (oldHandler != null)
+						oldHandler.uncaughtException(paramThread, paramThrowable);
+					else
+						System.exit(2);
+				}
+			});
+
 			resume();
-	        supportScreenStateChanges();
+			supportScreenStateChanges();
 			promoteToForeground();
 		} catch (EnvironmentException e) {
 			exitError(e.getMessage());
 			return;
 		}
-		
-    }
-	
+
+	}
+
 	private void resume() throws EnvironmentException {
-		SensorManager sensors = (SensorManager)getSystemService(SENSOR_SERVICE);
+		SensorManager sensors = (SensorManager) getSystemService(SENSOR_SERVICE);
 		SensorDataHandler dataHandler = new SensorDataHandler(new X(screen));
 		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
-		
+
 		paused = false;
 	}
 
@@ -54,10 +65,11 @@ public class RotationService extends Service {
 	 */
 	private void promoteToForeground() {
 		Notification notification = new NotificationCompat.Builder(this)
-			.setSmallIcon(R.drawable.ic_launcher)
-			.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
-			.setContentTitle(getString(R.string.app_name))
-			.build();
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentIntent(
+						PendingIntent.getActivity(this, 0, new Intent(this,
+								MainActivity.class), 0))
+				.setContentTitle(getString(R.string.app_name)).build();
 		startForeground(1, notification);
 	}
 
@@ -65,58 +77,57 @@ public class RotationService extends Service {
 		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		screenStateChangeReceiver = new BroadcastReceiver() {
-		    @Override
-		    public void onReceive(Context context, Intent intent) {
-		        String action = intent.getAction();
-		        
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
+
 				if (action.equals(Intent.ACTION_SCREEN_OFF))
-		        	pause();
-		        else if (action.equals(Intent.ACTION_SCREEN_ON)) {
-		        	try {
+					pause();
+				else if (action.equals(Intent.ACTION_SCREEN_ON)) {
+					try {
 						resume();
 					} catch (EnvironmentException e) {
 						exitError(e.getMessage());
 					}
-		        }
-		    }
+				}
+			}
 		};
-		
+
 		registerReceiver(screenStateChangeReceiver, intentFilter);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
+
 		destroy();
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		
+
 		destroy();
 	}
-	
+
 	private void destroy() {
 		unregisterReceiver(screenStateChangeReceiver);
-		
+
 		if (!paused)
 			pause();
-		
+
 		screen.close();
 	}
 
 	private void pause() {
 		tracker.close();
-		
+
 		paused = true;
 	}
-	
+
 	private void exitError(String message) {
 		String fullMessage = getString(R.string.app_name) + ": " + message;
-		Toast.makeText(this, fullMessage, Toast.LENGTH_LONG)
-			.show();
+		Toast.makeText(this, fullMessage, Toast.LENGTH_LONG).show();
 		stopSelf();
 	}
 }
