@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -29,9 +28,9 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				stopService(new Intent(MainActivity.this, RotationService.class));
+				new ServiceController(MainActivity.this).stop();
 			}
-        	
+
         });
     }
 }

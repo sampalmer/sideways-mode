@@ -71,6 +71,7 @@ public class RotationService extends Service {
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Running")
 				.setPriority(NotificationCompat.PRIORITY_MIN)
+				.addAction(0, "Stop", PendingIntent.getActivity(this, 0, new Intent(this, StopServiceActivity.class), 0))
 				.build();
 		startForeground(1, notification);
 	}

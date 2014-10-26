@@ -1,9 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 
 public class StartServiceTask extends AsyncTask<Void, Void, Void> {
@@ -26,9 +24,7 @@ public class StartServiceTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected Void doInBackground(Void... params) {
-		ComponentName service = context.startService(new Intent(context, RotationService.class));
-        if (service == null)
-        	throw new RuntimeException("Service doesn't exist");
+		new ServiceController(context).start();
         
 		return null;
 	}
