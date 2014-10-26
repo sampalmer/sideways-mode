@@ -4,14 +4,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-//TODO: Split this into 2 classes
-
-public class SensorDataHandler implements SensorEventListener {
+public class RotatorProximitySensorDataHandler implements SensorEventListener {
 	
-	private X x;
+	private AutoRotator rotator;
 
-	public SensorDataHandler(X x) {
-		this.x = x;
+	public RotatorProximitySensorDataHandler(AutoRotator x) {
+		this.rotator = x;
 	}
 	
 	@Override
@@ -28,7 +26,7 @@ public class SensorDataHandler implements SensorEventListener {
 		float distanceInCentimetres = event.values[0];
 		float coveredThreshold = Math.min(3, event.sensor.getMaximumRange());
 		boolean covered = distanceInCentimetres <= coveredThreshold;
-		x.setProximitySensorCovered(covered);
+		rotator.setProximitySensorCovered(covered);
 	}
 	
 	@Override

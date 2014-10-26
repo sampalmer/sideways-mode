@@ -1,16 +1,16 @@
 package samuelpalmer.sensorautorotation;
 
-public class X {
+public class AutoRotator {
 	
-	private final Screen orientationChanger;
+	private final Screen screen;
 	private OrientationCalculator orientationCalculator;
 	
 	private Orientation initialDeviceOrientation;
 	private boolean hasInitialCoveredState;
 	private boolean initialCoveredState;
 	
-	public X(Screen orientationChanger) {
-		this.orientationChanger = orientationChanger;
+	public AutoRotator(Screen screen) {
+		this.screen = screen;
 	}
 	
 	public void setDeviceOrientation(Orientation value) {
@@ -41,12 +41,12 @@ public class X {
 		
 		if (orientationCalculator != null) {
 			Orientation screenOrientation = orientationCalculator.screenOrientation();
-			orientationChanger.set(screenOrientation);
+			screen.set(screenOrientation);
 		}
 	}
 
 	private Orientation initialScreenOrientation() {
-		return orientationChanger.originalUserOrientation();
+		return screen.originalUserOrientation();
 	}
 	
 	private boolean canMakeCalculator() {

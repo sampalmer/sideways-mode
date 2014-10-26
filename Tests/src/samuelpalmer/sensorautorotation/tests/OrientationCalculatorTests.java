@@ -7,7 +7,7 @@ import org.junit.Test;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 
-public class OrientationCoordinatorTests {
+public class OrientationCalculatorTests {
 	private OrientationCalculator sut;
 	
 	@Test
