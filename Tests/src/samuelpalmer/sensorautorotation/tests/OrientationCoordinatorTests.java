@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import samuelpalmer.sensorautorotation.Orientation;
@@ -13,18 +12,17 @@ public class OrientationCoordinatorTests {
 	
 	@Test
 	public void rotatingIntoLandscapeWithSensorCoveredShouldCauseScreenRotation() {
-		holdProximitySensor();
+		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, true);
+		
 		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
 		
 		screenShouldBe(Orientation.LANDSCAPE);
 	}
 
-	private void holdProximitySensor() {
-		sut.registerNewCoveredState(true);
-	}
-	
 	@Test
     public void rotatingWithoutSensorCoveredShouldntCauseScreenRotation() {
+		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
+		
 		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
 		
 		screenShouldBe(Orientation.PORTRAIT); 
@@ -32,17 +30,17 @@ public class OrientationCoordinatorTests {
 	
 	@Test
 	public void rotatingWhileSidewaysShouldWork() {
-		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
+		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.LANDSCAPE, true);
 		
-		holdProximitySensor();
-		sut.registerNewDeviceOrientation(new Orientation(2));
+		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
 		
 		screenShouldBe(Orientation.LANDSCAPE); 
 	}
 	
 	@Test
     public void supportsUserReturningFromSide() {
-		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
+		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.LANDSCAPE, false);
+		
 		sut.registerNewDeviceOrientation(Orientation.PORTRAIT);
 		
 		screenShouldBe(Orientation.PORTRAIT); 
@@ -50,31 +48,23 @@ public class OrientationCoordinatorTests {
 	
 	@Test
 	public void supportsUserGoingOnSideWhileInLandscape() {
-		holdProximitySensor();
-		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
+		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, true);
 		
-		sut.registerNewDeviceOrientation(new Orientation(2));
+		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
 		
 		screenShouldBe(Orientation.LANDSCAPE);
 	}
 	
 	@Test
 	public void supportsUserReturningFromSideWhileInLandscape() {
-		holdProximitySensor();
-		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
-		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
+		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.REVERSE_PORTRAIT, true);
 		
 		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
 		
 		screenShouldBe(Orientation.LANDSCAPE);
 	}
-	
+
 	private void screenShouldBe(Orientation orientation) {
 		assertEquals(orientation, sut.screenOrientation());
-	}
-
-	@Before
-	public void createSut() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
 	}
 }
