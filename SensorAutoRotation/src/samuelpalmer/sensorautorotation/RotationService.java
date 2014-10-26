@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ public class RotationService extends Service {
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
 	private RotatorOrientationEventListener orientationListener;
-	private AutoRotator rotator;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -43,7 +41,8 @@ public class RotationService extends Service {
 						System.exit(2);
 				}
 			});
-			rotator = new AutoRotator(screen);
+			AutoRotator rotator = new AutoRotator(screen);
+			tracker = new PhysicalOrientationTracker(this, rotator);
 			orientationListener = new RotatorOrientationEventListener(this, rotator);
 			
 			resume();
@@ -55,16 +54,21 @@ public class RotationService extends Service {
 		}
 
 	}
-
+	
 	private void resume() throws EnvironmentException {
-		SensorManager sensors = (SensorManager) getSystemService(SENSOR_SERVICE);
-		RotatorProximitySensorDataHandler dataHandler = new RotatorProximitySensorDataHandler(rotator);
-		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
+		tracker.enable();
 		orientationListener.enable();
 		
 		paused = false;
 	}
-
+	
+	private void pause() {
+		tracker.disable();
+		orientationListener.disable();
+		
+		paused = true;
+	}
+	
 	/**
 	 * Reduces chance of being killed
 	 */
@@ -125,13 +129,6 @@ public class RotationService extends Service {
 			pause();
 
 		screen.close();
-	}
-
-	private void pause() {
-		tracker.close();
-		orientationListener.disable();
-		
-		paused = true;
 	}
 
 	private void exitError(String message) {

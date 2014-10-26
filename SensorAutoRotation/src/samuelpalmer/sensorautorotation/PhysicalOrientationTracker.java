@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -7,38 +8,35 @@ import android.hardware.SensorManager;
 public class PhysicalOrientationTracker {
 	final SensorManager sensorManager;
 	final SensorEventListener listener;
-	final Sensor[] sensors;
+	final Sensor proximitySensor;
 	
-	public PhysicalOrientationTracker(SensorManager sensorManager, SensorEventListener listener) throws EnvironmentException {
-		this.sensorManager = sensorManager;
-		this.listener = listener;
-		this.sensors = new Sensor[] {
-			getSensor(Sensor.TYPE_PROXIMITY, "proximity")
-		};
-		
-		registerSensors();
+	boolean enabled;
+	
+	public PhysicalOrientationTracker(Context context, AutoRotator rotator) throws EnvironmentException {
+		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+		listener = new RotatorProximitySensorDataHandler(rotator);
+		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+		if (proximitySensor == null)
+			throw new EnvironmentException("No proximity sensor");
 	}
 
-	private Sensor getSensor(int type, String description) throws EnvironmentException {
-		Sensor result = sensorManager.getDefaultSensor(type);
-		if (result == null)
-			throw new EnvironmentException("No " + description + " sensor");
+	public void enable() throws EnvironmentException {
+		if (enabled)
+			throw new RuntimeException("Already enabled");
 		
-		return result;
-	}
-	
-	private void registerSensors() throws EnvironmentException {
-		for (Sensor sensor : sensors)
-			registerSensor(sensor);
-	}
-	
-	private void registerSensor(Sensor sensor) throws EnvironmentException {
-		boolean registered = sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+		boolean registered = sensorManager.registerListener(listener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
 		if (!registered)
-			throw new EnvironmentException("Couldn't use sensor " + sensor);
+			throw new EnvironmentException("Couldn't use sensor " + proximitySensor);
+		
+		enabled = true;
 	}
 	
-	public void close() {
+	public void disable() {
+		if (!enabled)
+			throw new RuntimeException("Not enabled");
+		
 		sensorManager.unregisterListener(listener);
+		
+		enabled = false;
 	}
 }
