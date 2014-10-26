@@ -3,4 +3,4 @@ syntax: glob
 out
 */bin
 Thumbs.db
-/gen/
+gen
