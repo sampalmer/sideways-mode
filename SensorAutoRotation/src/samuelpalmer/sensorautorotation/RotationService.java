@@ -67,9 +67,10 @@ public class RotationService extends Service {
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(
-						PendingIntent.getActivity(this, 0, new Intent(this,
-								MainActivity.class), 0))
-				.setContentTitle(getString(R.string.app_name)).build();
+						PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
+				.setContentTitle(getString(R.string.app_name))
+				.setContentText("Running")
+				.build();
 		startForeground(1, notification);
 	}
 
