@@ -63,7 +63,37 @@ public class OrientationCoordinatorTests {
 		
 		screenShouldBe(Orientation.LANDSCAPE);
 	}
-
+	
+	@Test
+	public void doesntSupportReversePortrait() {
+		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		
+		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
+		
+		screenShouldBe(Orientation.LANDSCAPE);
+	}
+	
+	@Test
+	public void preservesOrientationWhenUserRecoversFromReversePortraitAttempt() {
+		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		
+		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
+		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
+		
+		screenShouldBe(Orientation.LANDSCAPE);
+	}
+	
+	@Test
+	public void supportsOrientationChangesAfterRecoveryFromReversePortraitAttempt() {
+		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		sut.registerNewDeviceOrientation(Orientation.REVERSE_PORTRAIT);
+		sut.registerNewDeviceOrientation(Orientation.LANDSCAPE);
+		
+		sut.registerNewDeviceOrientation(Orientation.PORTRAIT);
+		
+		screenShouldBe(Orientation.PORTRAIT);
+	}
+	
 	private void screenShouldBe(Orientation orientation) {
 		assertEquals(orientation, sut.screenOrientation());
 	}
