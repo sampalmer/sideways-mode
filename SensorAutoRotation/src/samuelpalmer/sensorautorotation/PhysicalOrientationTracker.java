@@ -13,7 +13,6 @@ public class PhysicalOrientationTracker {
 		this.sensorManager = sensorManager;
 		this.listener = listener;
 		this.sensors = new Sensor[] {
-			getSensor(Sensor.TYPE_ACCELEROMETER, "accelerometer"),
 			getSensor(Sensor.TYPE_PROXIMITY, "proximity")
 		};
 		
