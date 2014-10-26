@@ -16,8 +16,8 @@ public class RotationService extends Service {
 	private boolean paused;
 	private Screen screen;
 	private PhysicalOrientationTracker tracker;
-	private BroadcastReceiver screenStateChangeReceiver;
 	private RotatorOrientationEventListener orientationListener;
+	private BroadcastReceiver screenStateChangeReceiver;
 
 	@Override
 	public IBinder onBind(Intent intent) {
