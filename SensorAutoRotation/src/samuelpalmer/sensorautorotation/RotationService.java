@@ -19,7 +19,7 @@ public class RotationService extends Service {
 	private PhysicalOrientationTracker tracker;
 	private BroadcastReceiver screenStateChangeReceiver;
 	private RotatorOrientationEventListener orientationListener;
-	private AutoRotator x;
+	private AutoRotator rotator;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -43,8 +43,8 @@ public class RotationService extends Service {
 						System.exit(2);
 				}
 			});
-			x = new AutoRotator(screen);
-			orientationListener = new RotatorOrientationEventListener(this, x);
+			rotator = new AutoRotator(screen);
+			orientationListener = new RotatorOrientationEventListener(this, rotator);
 			
 			resume();
 			supportScreenStateChanges();
@@ -58,7 +58,7 @@ public class RotationService extends Service {
 
 	private void resume() throws EnvironmentException {
 		SensorManager sensors = (SensorManager) getSystemService(SENSOR_SERVICE);
-		RotatorProximitySensorDataHandler dataHandler = new RotatorProximitySensorDataHandler(x);
+		RotatorProximitySensorDataHandler dataHandler = new RotatorProximitySensorDataHandler(rotator);
 		tracker = new PhysicalOrientationTracker(sensors, dataHandler);
 		orientationListener.enable();
 		
