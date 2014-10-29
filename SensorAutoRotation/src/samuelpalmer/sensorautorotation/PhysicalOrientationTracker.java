@@ -12,7 +12,7 @@ public class PhysicalOrientationTracker {
 	
 	boolean enabled;
 	
-	public PhysicalOrientationTracker(Context context, AutoRotator rotator) throws EnvironmentException {
+	public PhysicalOrientationTracker(Context context, AutoRotator rotator) {
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		listener = new RotatorProximitySensorDataHandler(rotator);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -20,7 +20,7 @@ public class PhysicalOrientationTracker {
 			throw new EnvironmentException("No proximity sensor");
 	}
 
-	public void enable() throws EnvironmentException {
+	public void enable() {
 		if (enabled)
 			throw new RuntimeException("Already enabled");
 		

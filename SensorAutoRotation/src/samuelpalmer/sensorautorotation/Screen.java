@@ -12,7 +12,7 @@ public class Screen {
 	private final Boolean originalAccelerometerRotation;
 	private SystemConfig config;
 	
-	public Screen(SystemConfig config) throws EnvironmentException {
+	public Screen(SystemConfig config) {
 		this.config = config;
 		
 		originalAccelerometerRotation = config.getOrNull(Settings.System.ACCELEROMETER_ROTATION, TypeConverters.bool);
@@ -25,7 +25,7 @@ public class Screen {
 		originalUserRotation = config.getOrNull(Settings.System.USER_ROTATION, TypeConverters.integer);
 	}
 	
-	public void set(Orientation value) throws EnvironmentException {
+	public void set(Orientation value) {
 		int surfaceRotation = value.androidSurfaceRotation();
 		
 		try {
@@ -35,7 +35,7 @@ public class Screen {
 		}
 	}
 
-	public void close() throws EnvironmentException {
+	public void close() {
 		try {
 			config.set(Settings.System.USER_ROTATION, originalUserRotation, TypeConverters.integer);
 			config.set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, TypeConverters.bool);

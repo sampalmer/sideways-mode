@@ -29,39 +29,47 @@ public class RotationService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		registerErrorHandler();
+		
+		screen = new Screen(new SystemConfig(new AndroidUntypedSystemConfig(this.getContentResolver())));
+		AutoRotator rotator = new AutoRotator(screen);
+		tracker = new PhysicalOrientationTracker(this, rotator);
+		orientationListener = new RotatorOrientationEventListener(this, rotator);
+		
+		resume();
+		supportScreenStateChanges();
+		promoteToForeground();
+	}
 
-		try {
-			screen = new Screen(new SystemConfig(new AndroidUntypedSystemConfig(this.getContentResolver())));
-			final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
-			Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-				@Override
-				public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-					try {
-						screen.close();
-					} catch (EnvironmentException e) {
-					}
-					
+	private void registerErrorHandler() {
+		final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+				if (screen != null)
+				try {
+					screen.close();
+				} catch (Exception e) {
+				}
+				
+				if (EnvironmentException.class.isInstance(paramThrowable))
+					exitError(paramThrowable.getMessage());
+				else
 					if (oldHandler != null)
 						oldHandler.uncaughtException(paramThread, paramThrowable);
 					else
 						System.exit(2);
-				}
-			});
-			AutoRotator rotator = new AutoRotator(screen);
-			tracker = new PhysicalOrientationTracker(this, rotator);
-			orientationListener = new RotatorOrientationEventListener(this, rotator);
+			}
 			
-			resume();
-			supportScreenStateChanges();
-			promoteToForeground();
-		} catch (EnvironmentException e) {
-			exitError(e.getMessage());
-			return;
-		}
-
+			private void exitError(String message) {
+				String fullMessage = getString(R.string.app_name) + ": " + message;
+				Toast.makeText(getApplicationContext(), fullMessage, Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 	
-	private void resume() throws EnvironmentException {
+	private void resume() {
 		tracker.enable();
 		orientationListener.enable();
 		
@@ -101,13 +109,8 @@ public class RotationService extends Service {
 
 				if (action.equals(Intent.ACTION_SCREEN_OFF))
 					pause();
-				else if (action.equals(Intent.ACTION_SCREEN_ON)) {
-					try {
-						resume();
-					} catch (EnvironmentException e) {
-						exitError(e.getMessage());
-					}
-				}
+				else if (action.equals(Intent.ACTION_SCREEN_ON))
+					resume();
 			}
 		};
 
@@ -134,16 +137,6 @@ public class RotationService extends Service {
 		if (!paused)
 			pause();
 
-		try {
-			screen.close();
-		} catch (EnvironmentException e) {
-			exitError(e.getMessage());
-		}
-	}
-
-	private void exitError(String message) {
-		String fullMessage = getString(R.string.app_name) + ": " + message;
-		Toast.makeText(this, fullMessage, Toast.LENGTH_LONG).show();
-		stopSelf();
+		screen.close();
 	}
 }
