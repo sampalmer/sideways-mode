@@ -6,7 +6,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import samuelpalmer.sensorautorotation.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 
 public class SettingWriteFailedExceptionTests {
 

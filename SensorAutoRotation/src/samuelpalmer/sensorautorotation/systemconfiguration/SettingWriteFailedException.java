@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.systemconfiguration;
 
 public class SettingWriteFailedException extends Exception {
 

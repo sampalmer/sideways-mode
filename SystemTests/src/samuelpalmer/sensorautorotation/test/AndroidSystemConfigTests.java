@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.test;
 
-import samuelpalmer.sensorautorotation.AndroidSystemConfig;
-import samuelpalmer.sensorautorotation.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidUntypedSystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import android.content.ContentResolver;
 import android.provider.Settings;
 import android.test.AndroidTestCase;
@@ -30,7 +30,7 @@ public class AndroidSystemConfigTests extends AndroidTestCase {
 		String key = Settings.System.TIME_12_24;
 		String originalValue = Settings.System.getString(contentResolver, key);
 		
-		AndroidSystemConfig sut = new AndroidSystemConfig(contentResolver);
+		AndroidUntypedSystemConfig sut = new AndroidUntypedSystemConfig(contentResolver);
 		int value = 0;
 		
 		try {
