@@ -14,7 +14,7 @@ public class AndroidSystemConfig implements SystemConfig {
 	
 	@Override
 	public Integer getOrNull(String key) {
-		String textValue = getString(contentResolver, ACCELEROMETER_ROTATION);
+		String textValue = getString(contentResolver, key);
 		
 		try {
             Integer value = textValue != null ? Integer.parseInt(textValue) : null;
