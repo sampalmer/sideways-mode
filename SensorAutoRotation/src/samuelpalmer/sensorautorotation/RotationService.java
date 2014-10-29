@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidUntypedSystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemConfig;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -29,12 +31,16 @@ public class RotationService extends Service {
 		super.onCreate();
 
 		try {
-			screen = new Screen(this.getContentResolver());
+			screen = new Screen(new SystemConfig(new AndroidUntypedSystemConfig(this.getContentResolver())));
 			final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
 			Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 				@Override
 				public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-					screen.close();
+					try {
+						screen.close();
+					} catch (EnvironmentException e) {
+					}
+					
 					if (oldHandler != null)
 						oldHandler.uncaughtException(paramThread, paramThrowable);
 					else
@@ -128,7 +134,11 @@ public class RotationService extends Service {
 		if (!paused)
 			pause();
 
-		screen.close();
+		try {
+			screen.close();
+		} catch (EnvironmentException e) {
+			exitError(e.getMessage());
+		}
 	}
 
 	private void exitError(String message) {

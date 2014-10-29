@@ -41,7 +41,10 @@ public class AutoRotator {
 		
 		if (orientationCalculator != null) {
 			Orientation screenOrientation = orientationCalculator.screenOrientation();
-			screen.set(screenOrientation);
+			try {
+				screen.set(screenOrientation);
+			} catch (EnvironmentException e) {
+			}
 		}
 	}
 

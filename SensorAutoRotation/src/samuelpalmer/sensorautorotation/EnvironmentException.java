@@ -7,4 +7,8 @@ public class EnvironmentException extends Exception {
 	public EnvironmentException(String message) {
 		super(message);
 	}
+
+	public EnvironmentException(Exception cause) {
+		super(cause.getMessage(), cause);
+	}
 }

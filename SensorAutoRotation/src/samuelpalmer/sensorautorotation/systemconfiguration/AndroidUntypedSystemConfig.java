@@ -4,7 +4,7 @@ import static android.provider.Settings.System.*;
 
 import android.content.ContentResolver;
 
-public class AndroidUntypedSystemConfig implements TypedSystemConfig<String> {
+public class AndroidUntypedSystemConfig implements UntypedSystemConfig {
 	
 	private ContentResolver contentResolver;
 

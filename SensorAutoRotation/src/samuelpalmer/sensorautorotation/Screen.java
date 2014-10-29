@@ -1,45 +1,54 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.ContentResolver;
+import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.TypeConverters;
 import android.provider.Settings;
 import android.view.Surface;
 
 public class Screen {
 
-	private final ContentResolver contentResolver;
-	private final int originalUserRotation;
-	private final int originalAccelerometerRotation;
+	private final Integer originalUserRotation;
+	private final Boolean originalAccelerometerRotation;
+	private SystemConfig config;
 	
-	public Screen(ContentResolver contentResolver) {
-		this.contentResolver = contentResolver;
+	public Screen(SystemConfig config) throws EnvironmentException {
+		this.config = config;
 		
-		originalAccelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0);
-		set(Settings.System.ACCELEROMETER_ROTATION, 0, "Failed to disable system auto-rotation"); //TODO: Make this a warning for the user
+		originalAccelerometerRotation = config.getOrNull(Settings.System.ACCELEROMETER_ROTATION, TypeConverters.bool);
+		try {
+			config.set(Settings.System.ACCELEROMETER_ROTATION, false, TypeConverters.bool);
+		} catch (SettingWriteFailedException e) {
+			throw new EnvironmentException(e);
+		}
 		
-		originalUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
+		originalUserRotation = config.getOrNull(Settings.System.USER_ROTATION, TypeConverters.integer);
 	}
 	
-	public void set(Orientation value) {
+	public void set(Orientation value) throws EnvironmentException {
 		int surfaceRotation = value.androidSurfaceRotation();
-		set(Settings.System.USER_ROTATION, surfaceRotation, "Couldn't change orientation");
+		
+		try {
+			config.set(Settings.System.USER_ROTATION, surfaceRotation, TypeConverters.integer);
+		} catch (SettingWriteFailedException e) {
+			throw new EnvironmentException(e);
+		}
 	}
 
-	public void close() {
-		set(Settings.System.USER_ROTATION, originalUserRotation, "Couldn't restore original orientation");
-		set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, "Couldn't restore original auto-rotation value");
-	}
-
-	private void set(String setting, int value, String failureMessage) {
-		boolean successful = Settings.System.putInt(contentResolver, setting, value);
-		if (!successful)
-			throw new RuntimeException(failureMessage);
+	public void close() throws EnvironmentException {
+		try {
+			config.set(Settings.System.USER_ROTATION, originalUserRotation, TypeConverters.integer);
+			config.set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, TypeConverters.bool);
+		} catch (SettingWriteFailedException e) {
+			throw new EnvironmentException(e);
+		}
 	}
 
 	public Orientation originalUserOrientation() {
-		return Orientation.fromAndroidSurfaceRotation(originalUserRotation);
+		return Orientation.fromAndroidSurfaceRotation(originalUserRotation == null ? Surface.ROTATION_0 : originalUserRotation);
 	}
 	
 	public boolean originalAutoRotation() {
-		return originalAccelerometerRotation == 1;
+		return originalAccelerometerRotation == null ? true : originalAccelerometerRotation;
 	}
 }
