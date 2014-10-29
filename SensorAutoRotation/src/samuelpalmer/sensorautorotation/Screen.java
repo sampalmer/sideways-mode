@@ -47,8 +47,4 @@ public class Screen {
 	public Orientation originalUserOrientation() {
 		return Orientation.fromAndroidSurfaceRotation(originalUserRotation == null ? Surface.ROTATION_0 : originalUserRotation);
 	}
-	
-	public boolean originalAutoRotation() {
-		return originalAccelerometerRotation == null ? true : originalAccelerometerRotation;
-	}
 }
