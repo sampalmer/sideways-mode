@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidUntypedSystemConfig;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemConfig;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -32,7 +31,7 @@ public class RotationService extends Service {
 		
 		registerErrorHandler();
 		
-		screen = new Screen(new SystemConfig(new AndroidUntypedSystemConfig(this.getContentResolver())));
+		screen = new Screen(new AndroidSystemConfig(this.getContentResolver()));
 		AutoRotator rotator = new AutoRotator(screen);
 		tracker = new PhysicalOrientationTracker(this, rotator);
 		orientationListener = new RotatorOrientationEventListener(this, rotator);

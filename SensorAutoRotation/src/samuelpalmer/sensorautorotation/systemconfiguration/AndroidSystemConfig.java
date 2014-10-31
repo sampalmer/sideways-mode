@@ -4,11 +4,11 @@ import static android.provider.Settings.System.*;
 
 import android.content.ContentResolver;
 
-public class AndroidUntypedSystemConfig implements UntypedSystemConfig {
+public class AndroidSystemConfig implements SystemConfig {
 	
 	private ContentResolver contentResolver;
 
-	public AndroidUntypedSystemConfig(ContentResolver contentResolver) {
+	public AndroidSystemConfig(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 	}
 	

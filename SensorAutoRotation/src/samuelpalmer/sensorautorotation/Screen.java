@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemConfig;
 import samuelpalmer.sensorautorotation.systemconfiguration.TypeConverters;
@@ -7,29 +8,32 @@ import android.provider.Settings;
 import android.view.Surface;
 
 public class Screen {
-
+	
+	private final Setting<Boolean> accelerometerRotation;
+	private final Setting<Integer> userRotation;
+	
 	private final Integer originalUserRotation;
 	private final Boolean originalAccelerometerRotation;
-	private SystemConfig config;
 	
 	public Screen(SystemConfig config) {
-		this.config = config;
+		accelerometerRotation = new Setting<Boolean>(config, Settings.System.ACCELEROMETER_ROTATION, TypeConverters.bool);
+		userRotation = new Setting<Integer>(config, Settings.System.USER_ROTATION, TypeConverters.integer);
 		
-		originalAccelerometerRotation = config.getOrNull(Settings.System.ACCELEROMETER_ROTATION, TypeConverters.bool);
+		originalAccelerometerRotation = accelerometerRotation.getOrNull();
 		try {
-			config.set(Settings.System.ACCELEROMETER_ROTATION, false, TypeConverters.bool);
+			accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
 		
-		originalUserRotation = config.getOrNull(Settings.System.USER_ROTATION, TypeConverters.integer);
+		originalUserRotation = userRotation.getOrNull();
 	}
 	
 	public void set(Orientation value) {
 		int surfaceRotation = value.androidSurfaceRotation();
 		
 		try {
-			config.set(Settings.System.USER_ROTATION, surfaceRotation, TypeConverters.integer);
+			userRotation.set(surfaceRotation);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
@@ -37,8 +41,8 @@ public class Screen {
 
 	public void close() {
 		try {
-			config.set(Settings.System.USER_ROTATION, originalUserRotation, TypeConverters.integer);
-			config.set(Settings.System.ACCELEROMETER_ROTATION, originalAccelerometerRotation, TypeConverters.bool);
+			userRotation.set(originalUserRotation);
+			accelerometerRotation.set(originalAccelerometerRotation);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
