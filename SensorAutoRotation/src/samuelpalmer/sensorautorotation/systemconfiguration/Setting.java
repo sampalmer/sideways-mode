@@ -19,7 +19,7 @@ public class Setting<T> {
 		if (value == null)
 			return null;
 		
-		return converter.parse(value);
+		return converter.tryParse(value);
 	}
 
 	public void set(T value) throws SettingWriteFailedException {

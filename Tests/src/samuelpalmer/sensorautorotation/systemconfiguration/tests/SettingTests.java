@@ -23,7 +23,7 @@ public class SettingTests {
 	
 	class VerifyingStringTypeConverter implements TypeConverter<String> {
 
-		public String parse(String nonNullTextValue) {
+		public String tryParse(String nonNullTextValue) {
 			verify(nonNullTextValue);
 			return nonNullTextValue;
 		}

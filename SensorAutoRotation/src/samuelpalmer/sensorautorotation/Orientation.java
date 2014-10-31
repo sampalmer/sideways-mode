@@ -13,9 +13,9 @@ public class Orientation {
 	
 	private final int clockwiseRotationsFromNaturalOrientation;
 
-	public Orientation(int clockwiseRotationsFromNaturalOrientation) {
+	public Orientation(int clockwiseRotationsFromNaturalOrientation) throws IllegalArgumentException {
 		if (clockwiseRotationsFromNaturalOrientation < 0 || clockwiseRotationsFromNaturalOrientation >= numberOfPossibleRotations)
-			throw new RuntimeException("Unknown orientation: " + clockwiseRotationsFromNaturalOrientation);
+			throw new IllegalArgumentException("Unknown orientation: " + clockwiseRotationsFromNaturalOrientation);
 		
 		this.clockwiseRotationsFromNaturalOrientation = clockwiseRotationsFromNaturalOrientation;
 	}
@@ -63,7 +63,7 @@ public class Orientation {
 		return Surface.ROTATION_0 + clockwiseRotationsFromNaturalOrientation;
 	}
 
-	public static Orientation fromAndroidSurfaceRotation(int androidSurfaceRotation) {
+	public static Orientation fromAndroidSurfaceRotation(int androidSurfaceRotation) throws IllegalArgumentException {
 		return new Orientation(androidSurfaceRotation - Surface.ROTATION_0);
 	}
 

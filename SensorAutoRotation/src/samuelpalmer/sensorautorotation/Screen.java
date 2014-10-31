@@ -2,12 +2,11 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
-import android.view.Surface;
 
 public class Screen {
 	
 	private SystemSettings settings;
-	private final Integer originalUserRotation;
+	private final Orientation originalUserRotation;
 	private final Boolean originalAccelerometerRotation;
 	
 	public Screen(SystemSettings systemSettings) {
@@ -24,10 +23,11 @@ public class Screen {
 	}
 	
 	public void set(Orientation value) {
-		int surfaceRotation = value.androidSurfaceRotation();
+		if (value == null)
+			throw new IllegalArgumentException();
 		
 		try {
-			settings.userRotation.set(surfaceRotation);
+			settings.userRotation.set(value);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
@@ -43,8 +43,8 @@ public class Screen {
 	}
 
 	public Orientation get() {
-		Integer androidSurfaceRotation = settings.userRotation.getOrNull();
-		return Orientation.fromAndroidSurfaceRotation(androidSurfaceRotation == null ? Surface.ROTATION_0 : androidSurfaceRotation);
+		Orientation result = settings.userRotation.getOrNull();
+		return result == null ? Orientation.NATURAL : result;
 	}
 	
 	@Override

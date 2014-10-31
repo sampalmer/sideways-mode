@@ -13,8 +13,8 @@ public class BooleanTypeConverter implements
 	}
 	
 	@Override
-	public Boolean parse(String nonNullTextValue) {
-		Integer integerValue = integerConverter.parse(nonNullTextValue);
+	public Boolean tryParse(String nonNullTextValue) {
+		Integer integerValue = integerConverter.tryParse(nonNullTextValue);
 		if (integerValue == null)
 			return null;
 		
