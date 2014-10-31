@@ -23,10 +23,10 @@ public class OrientationCalculator {
 				if (change.isNinetyDegree()) {
 					Orientation screenOrientation = screen.get();
 					
-					if (screenOrientation.isPortrait() == covered) {
+					if (screenOrientation.sideways() != covered) {
 						Orientation proposedScreen = screenOrientation.plus(change);
 						
-						if (!proposedScreen.equals(Orientation.REVERSE_PORTRAIT))
+						if (!proposedScreen.equals(Orientation.UPSIDE_DOWN))
 							screen.set(proposedScreen);
 						else
 							deviceLock = device;

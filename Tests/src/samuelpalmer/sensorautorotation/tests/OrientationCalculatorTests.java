@@ -16,86 +16,86 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void rotatingIntoLandscapeWithSensorCoveredShouldCauseScreenRotation() {
-		setState(Orientation.PORTRAIT, Orientation.PORTRAIT, true);
+		setState(Orientation.NATURAL, Orientation.NATURAL, true);
 		
-		sut.setDevice(Orientation.LANDSCAPE);
+		sut.setDevice(Orientation.LEFT_SIDE);
 		
-		screenShouldBe(Orientation.LANDSCAPE);
+		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 
 	@Test
     public void rotatingWithoutSensorCoveredShouldntCauseScreenRotation() {
-		setState(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
+		setState(Orientation.NATURAL, Orientation.NATURAL, false);
 		
-		sut.setDevice(Orientation.LANDSCAPE);
+		sut.setDevice(Orientation.LEFT_SIDE);
 		
-		screenShouldBe(Orientation.PORTRAIT); 
+		screenShouldBe(Orientation.NATURAL); 
     }
 	
 	@Test
 	public void rotatingWhileSidewaysShouldWork() {
-		setState(Orientation.PORTRAIT, Orientation.LANDSCAPE, true);
+		setState(Orientation.NATURAL, Orientation.LEFT_SIDE, true);
 		
-		sut.setDevice(Orientation.REVERSE_PORTRAIT);
+		sut.setDevice(Orientation.UPSIDE_DOWN);
 		
-		screenShouldBe(Orientation.LANDSCAPE); 
+		screenShouldBe(Orientation.LEFT_SIDE); 
 	}
 	
 	@Test
     public void supportsUserReturningFromSide() {
-		setState(Orientation.PORTRAIT, Orientation.LANDSCAPE, false);
+		setState(Orientation.NATURAL, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.PORTRAIT);
+		sut.setDevice(Orientation.NATURAL);
 		
-		screenShouldBe(Orientation.PORTRAIT); 
+		screenShouldBe(Orientation.NATURAL); 
     }
 	
 	@Test
 	public void supportsUserGoingOnSideWhileInLandscape() {
-		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, true);
+		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, true);
 		
-		sut.setDevice(Orientation.REVERSE_PORTRAIT);
+		sut.setDevice(Orientation.UPSIDE_DOWN);
 		
-		screenShouldBe(Orientation.LANDSCAPE);
+		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 	
 	@Test
 	public void supportsUserReturningFromSideWhileInLandscape() {
-		setState(Orientation.LANDSCAPE, Orientation.REVERSE_PORTRAIT, true);
+		setState(Orientation.LEFT_SIDE, Orientation.UPSIDE_DOWN, true);
 		
-		sut.setDevice(Orientation.LANDSCAPE);
+		sut.setDevice(Orientation.LEFT_SIDE);
 		
-		screenShouldBe(Orientation.LANDSCAPE);
+		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 	
 	@Test
 	public void doesntSupportReversePortrait() {
-		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.REVERSE_PORTRAIT);
+		sut.setDevice(Orientation.UPSIDE_DOWN);
 		
-		screenShouldBe(Orientation.LANDSCAPE);
+		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 	
 	@Test
 	public void preservesOrientationWhenUserRecoversFromReversePortraitAttempt() {
-		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.REVERSE_PORTRAIT);
-		sut.setDevice(Orientation.LANDSCAPE);
+		sut.setDevice(Orientation.UPSIDE_DOWN);
+		sut.setDevice(Orientation.LEFT_SIDE);
 		
-		screenShouldBe(Orientation.LANDSCAPE);
+		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 	
 	@Test
 	public void supportsOrientationChangesAfterRecoveryFromReversePortraitAttempt() {
-		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
-		sut.setDevice(Orientation.REVERSE_PORTRAIT);
-		sut.setDevice(Orientation.LANDSCAPE);
+		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
+		sut.setDevice(Orientation.UPSIDE_DOWN);
+		sut.setDevice(Orientation.LEFT_SIDE);
 		
-		sut.setDevice(Orientation.PORTRAIT);
+		sut.setDevice(Orientation.NATURAL);
 		
-		screenShouldBe(Orientation.PORTRAIT);
+		screenShouldBe(Orientation.NATURAL);
 	}
 	
 	private void setState(Orientation screen, Orientation device, boolean covered) {

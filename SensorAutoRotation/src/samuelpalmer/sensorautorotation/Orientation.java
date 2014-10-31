@@ -6,11 +6,12 @@ import android.view.Surface;
 public class Orientation {
 	
 	private static final int numberOfPossibleRotations = 4;
+	public static final Orientation NATURAL = new Orientation(0);
+	public static final Orientation RIGHT_SIDE = new Orientation(1);
+	public static final Orientation UPSIDE_DOWN = new Orientation(2);
+	public static final Orientation LEFT_SIDE = new Orientation(3);
+	
 	private final int clockwiseRotationsFromNaturalOrientation;
-	public static final Orientation REVERSE_PORTRAIT = new Orientation(2);
-	public static final Orientation REVERSE_LANDSCAPE = new Orientation(1);
-	public static final Orientation PORTRAIT = new Orientation(0);
-	public static final Orientation LANDSCAPE = new Orientation(3);
 
 	public Orientation(int clockwiseRotationsFromNaturalOrientation) {
 		if (clockwiseRotationsFromNaturalOrientation < 0 || clockwiseRotationsFromNaturalOrientation >= numberOfPossibleRotations)
@@ -19,8 +20,8 @@ public class Orientation {
 		this.clockwiseRotationsFromNaturalOrientation = clockwiseRotationsFromNaturalOrientation;
 	}
 
-	public boolean isPortrait() {
-		return this.clockwiseRotationsFromNaturalOrientation % 2 == 0;
+	public boolean sideways() {
+		return this.clockwiseRotationsFromNaturalOrientation % 2 != 0;
 	}
 	
 	public Rotation minus(Orientation other) {
@@ -46,13 +47,13 @@ public class Orientation {
 		switch (this.clockwiseRotationsFromNaturalOrientation)
 		{
 		case 0:
-			return "Portrait";
+			return "Natural";
 		case 1:
-			return "Reverse Landscape";
+			return "Right Side";
 		case 2:
-			return "Reverse Portrait";
+			return "Upside-Down";
 		case 3:
-			return "Landscape";
+			return "Left Side";
 		default:
 			throw new RuntimeException("Unknown number of rotations: " + this.clockwiseRotationsFromNaturalOrientation);
 		}
@@ -65,5 +66,5 @@ public class Orientation {
 	public static Orientation fromAndroidSurfaceRotation(int androidSurfaceRotation) {
 		return new Orientation(androidSurfaceRotation - Surface.ROTATION_0);
 	}
-	
+
 }
