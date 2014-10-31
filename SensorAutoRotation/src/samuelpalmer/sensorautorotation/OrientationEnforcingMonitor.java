@@ -6,6 +6,9 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Handler;
 
 //TODO: Pause this on screen off
@@ -16,13 +19,18 @@ public class OrientationEnforcingMonitor extends Thread {
 	private final ActivityManager activityManager;
 	private final Context context;
 	private final Handler uiThread;
+	private final String currentHomePackage;
 	private ScreenOrientationEnforcer enforcer; //Must be accessed by UI thread.
-
 
     public OrientationEnforcingMonitor(Context context){
 		this.context = context;
         activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		uiThread = new Handler(context.getMainLooper());
+		
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		currentHomePackage = resolveInfo.activityInfo.packageName;
 		
 		start();
     }
@@ -41,7 +49,7 @@ public class OrientationEnforcingMonitor extends Thread {
 
 	private boolean shouldEnforce() {
 		final String packageName = getCurrentActivityPackageName();
-		return packageName.equals("com.sonyericsson.home");
+		return packageName.equals(currentHomePackage);
 	}
 
 	private final Runnable enforce = new Runnable() {
