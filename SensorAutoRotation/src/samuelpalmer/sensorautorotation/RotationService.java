@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+
 import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
@@ -36,7 +37,8 @@ public class RotationService extends Service {
 		OrientationCalculator calculator = new OrientationCalculator(screen);
 		tracker = new ProximitySensor(this, calculator);
 		orientationListener = new OrientationSensorHandler(this, calculator);
-		
+		new OrientationEnforcingMonitor(this);
+			
 		resume();
 		supportScreenStateChanges();
 		promoteToForeground();
@@ -76,13 +78,15 @@ public class RotationService extends Service {
 	private void resume() {
 		tracker.enable();
 		orientationListener.enable();
-		
+		//TODO: Update this to support resuming the thread
+
 		paused = false;
 	}
 	
 	private void pause() {
-		tracker.disable();
+		//TODO: Pause the background thread
 		orientationListener.disable();
+		tracker.disable();
 		
 		paused = true;
 	}
