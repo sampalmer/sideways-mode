@@ -14,21 +14,25 @@ public class OrientationCalculator {
 	
 	public void setDevice(Orientation newDevice) {
 		
-		Orientation screenOrientation = screen.get();
-		
 		if (device != null && covered != null) {
-			Rotation change = newDevice.minus(device);
-			Orientation proposedScreen = screenOrientation.plus(change);
-			
 			if (deviceLock != null && newDevice.equals(deviceLock))
 				deviceLock = null;
-			else
-				if (change.isNinetyDegree())
-					if (screenOrientation.isPortrait() == covered)
+			else {
+				Rotation change = newDevice.minus(device);
+				
+				if (change.isNinetyDegree()) {
+					Orientation screenOrientation = screen.get();
+					
+					if (screenOrientation.isPortrait() == covered) {
+						Orientation proposedScreen = screenOrientation.plus(change);
+						
 						if (!proposedScreen.equals(Orientation.REVERSE_PORTRAIT))
 							screen.set(proposedScreen);
 						else
 							deviceLock = device;
+					}
+				}
+			}
 		}
 		
 		device = newDevice;
