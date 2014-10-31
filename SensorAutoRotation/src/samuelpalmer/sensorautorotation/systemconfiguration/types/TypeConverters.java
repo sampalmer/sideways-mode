@@ -7,7 +7,7 @@ public class TypeConverters {
 	
 	static {
 		integer = new IntegerSystemConfigTypeConverter();
-		bool = new BooleanSystemConfigTypeConverter(integer);
+		bool = new BooleanSystemConfigTypeConverter();
 	}
 
 }

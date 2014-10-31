@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.systemconfiguration.types;
 public class IntegerSystemConfigTypeConverter implements SystemConfigTypeConverter<Integer> {
 
 	@Override
-	public Integer convertOrNull(String textValue) {
+	public Integer parse(String textValue) {
 		try {
 			return Integer.parseInt(textValue);
         } catch (NumberFormatException e) {
@@ -12,7 +12,7 @@ public class IntegerSystemConfigTypeConverter implements SystemConfigTypeConvert
 	}
 
 	@Override
-	public String convert(Integer value) {
+	public String format(Integer value) {
 		return Integer.toString(value);
 	}
 

@@ -19,11 +19,11 @@ public class Setting<T> {
 		if (value == null)
 			return null;
 		
-		return converter.convertOrNull(value);
+		return converter.parse(value);
 	}
 
 	public void set(T value) throws SettingWriteFailedException {
-		String textValue = converter.convert(value);
+		String textValue = converter.format(value);
 		config.set(key, textValue);
 	}
 	

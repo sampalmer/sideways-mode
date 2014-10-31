@@ -6,15 +6,15 @@ public class BooleanSystemConfigTypeConverter implements
 	private static final int FALSE = 0;
 	private static final int TRUE = 1;
 	
-	private SystemConfigTypeConverter<Integer> integerConverter;
+	private final SystemConfigTypeConverter<Integer> integerConverter;
 
-	public BooleanSystemConfigTypeConverter(SystemConfigTypeConverter<Integer> integerConverter) {
-		this.integerConverter = integerConverter;
+	public BooleanSystemConfigTypeConverter() {
+		this.integerConverter = new IntegerSystemConfigTypeConverter();
 	}
 	
 	@Override
-	public Boolean convertOrNull(String nonNullTextValue) {
-		Integer integerValue = integerConverter.convertOrNull(nonNullTextValue);
+	public Boolean parse(String nonNullTextValue) {
+		Integer integerValue = integerConverter.parse(nonNullTextValue);
 		if (integerValue == null)
 			return null;
 		
@@ -29,9 +29,9 @@ public class BooleanSystemConfigTypeConverter implements
 	}
 
 	@Override
-	public String convert(Boolean nonNullvalue) {
+	public String format(Boolean nonNullvalue) {
 		Integer integerValue = nonNullvalue ? TRUE : FALSE;
-		return integerConverter.convert(integerValue);
+		return integerConverter.format(integerValue);
 	}
 
 }

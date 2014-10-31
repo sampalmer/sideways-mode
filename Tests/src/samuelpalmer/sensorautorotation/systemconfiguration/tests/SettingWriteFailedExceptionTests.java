@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.tests;
+package samuelpalmer.sensorautorotation.systemconfiguration.tests;
 
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.*;
