@@ -6,13 +6,17 @@ import org.junit.Test;
 
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.Screen;
+import samuelpalmer.sensorautorotation.SystemSettings;
+import samuelpalmer.sensorautorotation.systemconfiguration.tests.InMemorySystemConfig;
 
 public class OrientationCalculatorTests {
 	private OrientationCalculator sut;
+	private Screen screen;
 	
 	@Test
 	public void rotatingIntoLandscapeWithSensorCoveredShouldCauseScreenRotation() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, true);
+		setState(Orientation.PORTRAIT, Orientation.PORTRAIT, true);
 		
 		sut.setDevice(Orientation.LANDSCAPE);
 		
@@ -21,7 +25,7 @@ public class OrientationCalculatorTests {
 
 	@Test
     public void rotatingWithoutSensorCoveredShouldntCauseScreenRotation() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
+		setState(Orientation.PORTRAIT, Orientation.PORTRAIT, false);
 		
 		sut.setDevice(Orientation.LANDSCAPE);
 		
@@ -30,7 +34,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void rotatingWhileSidewaysShouldWork() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.LANDSCAPE, true);
+		setState(Orientation.PORTRAIT, Orientation.LANDSCAPE, true);
 		
 		sut.setDevice(Orientation.REVERSE_PORTRAIT);
 		
@@ -39,7 +43,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
     public void supportsUserReturningFromSide() {
-		sut = new OrientationCalculator(Orientation.PORTRAIT, Orientation.LANDSCAPE, false);
+		setState(Orientation.PORTRAIT, Orientation.LANDSCAPE, false);
 		
 		sut.setDevice(Orientation.PORTRAIT);
 		
@@ -48,7 +52,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void supportsUserGoingOnSideWhileInLandscape() {
-		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, true);
+		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, true);
 		
 		sut.setDevice(Orientation.REVERSE_PORTRAIT);
 		
@@ -57,7 +61,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void supportsUserReturningFromSideWhileInLandscape() {
-		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.REVERSE_PORTRAIT, true);
+		setState(Orientation.LANDSCAPE, Orientation.REVERSE_PORTRAIT, true);
 		
 		sut.setDevice(Orientation.LANDSCAPE);
 		
@@ -66,7 +70,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void doesntSupportReversePortrait() {
-		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
 		
 		sut.setDevice(Orientation.REVERSE_PORTRAIT);
 		
@@ -75,7 +79,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void preservesOrientationWhenUserRecoversFromReversePortraitAttempt() {
-		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
 		
 		sut.setDevice(Orientation.REVERSE_PORTRAIT);
 		sut.setDevice(Orientation.LANDSCAPE);
@@ -85,7 +89,7 @@ public class OrientationCalculatorTests {
 	
 	@Test
 	public void supportsOrientationChangesAfterRecoveryFromReversePortraitAttempt() {
-		sut = new OrientationCalculator(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
+		setState(Orientation.LANDSCAPE, Orientation.LANDSCAPE, false);
 		sut.setDevice(Orientation.REVERSE_PORTRAIT);
 		sut.setDevice(Orientation.LANDSCAPE);
 		
@@ -94,7 +98,16 @@ public class OrientationCalculatorTests {
 		screenShouldBe(Orientation.PORTRAIT);
 	}
 	
+	private void setState(Orientation screen, Orientation device, boolean covered) {
+		this.screen = new Screen(new SystemSettings(new InMemorySystemConfig()));
+		this.screen.set(screen);
+		
+		sut = new OrientationCalculator(this.screen);
+		sut.setDevice(device);
+		sut.setCovered(covered);
+	}
+	
 	private void screenShouldBe(Orientation orientation) {
-		assertEquals(orientation, sut.screenOrientation());
+		assertEquals(orientation, screen.get());
 	}
 }

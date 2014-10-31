@@ -12,9 +12,9 @@ public class PhysicalOrientationTracker {
 	
 	boolean enabled;
 	
-	public PhysicalOrientationTracker(Context context, AutoRotator rotator) {
+	public PhysicalOrientationTracker(Context context, OrientationCalculator calculator) {
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-		listener = new RotatorProximitySensorDataHandler(rotator);
+		listener = new RotatorProximitySensorDataHandler(calculator);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		if (proximitySensor == null)
 			throw new EnvironmentException("No proximity sensor");

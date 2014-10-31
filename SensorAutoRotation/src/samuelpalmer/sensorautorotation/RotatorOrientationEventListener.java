@@ -5,17 +5,17 @@ import com.android.internal.policy.impl.WindowOrientationListener;
 
 public class RotatorOrientationEventListener extends WindowOrientationListener {
 
-	private final AutoRotator rotator;
+	private OrientationCalculator calculator;
 
-	public RotatorOrientationEventListener(Context context, AutoRotator rotator) {
+	public RotatorOrientationEventListener(Context context, OrientationCalculator calculator) {
 		super(context, null);
-		this.rotator = rotator;
+		this.calculator = calculator;
 	}
 
 	@Override
 	public void onProposedRotationChanged(int rotation) {
 		Orientation orientation = Orientation.fromAndroidSurfaceRotation(rotation);
-		rotator.setDeviceOrientation(orientation);
+		calculator.setDevice(orientation);
 	}
 	
 }

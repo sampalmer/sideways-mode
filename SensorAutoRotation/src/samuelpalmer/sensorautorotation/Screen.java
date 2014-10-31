@@ -12,14 +12,14 @@ public class Screen {
 	public Screen(SystemSettings systemSettings) {
 		settings = systemSettings;
 		
+		originalUserRotation = settings.userRotation.getOrNull();
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+		
 		try {
 			settings.accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
-		
-		originalUserRotation = settings.userRotation.getOrNull();
 	}
 	
 	public void set(Orientation value) {
@@ -41,7 +41,13 @@ public class Screen {
 		}
 	}
 
-	public Orientation originalUserOrientation() {
-		return Orientation.fromAndroidSurfaceRotation(originalUserRotation == null ? Surface.ROTATION_0 : originalUserRotation);
+	public Orientation get() {
+		Integer androidSurfaceRotation = settings.userRotation.getOrNull();
+		return Orientation.fromAndroidSurfaceRotation(androidSurfaceRotation == null ? Surface.ROTATION_0 : androidSurfaceRotation);
+	}
+	
+	@Override
+	public String toString() {
+		return get().toString();
 	}
 }
