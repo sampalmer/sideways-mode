@@ -6,8 +6,7 @@ public class AutoRotator {
 	private OrientationCalculator orientationCalculator;
 	
 	private Orientation initialDeviceOrientation;
-	private boolean hasInitialCoveredState;
-	private boolean initialCoveredState;
+	private Boolean initialCoveredState;
 	
 	public AutoRotator(Screen screen) {
 		this.screen = screen;
@@ -24,10 +23,8 @@ public class AutoRotator {
 	}
 	
 	public void setProximitySensorCovered(boolean value) {
-		if (!hasInitialCoveredState) {
+		if (initialCoveredState = null)
 			initialCoveredState = value;
-			hasInitialCoveredState = true;
-		}
 		
 		if (orientationCalculator != null)
 			orientationCalculator.registerNewCoveredState(value);
@@ -50,6 +47,6 @@ public class AutoRotator {
 	}
 	
 	private boolean canMakeCalculator() {
-		return initialDeviceOrientation != null && hasInitialCoveredState;
+		return initialDeviceOrientation != null && initialCoveredState != null;
 	}
 }
