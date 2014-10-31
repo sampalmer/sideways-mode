@@ -14,7 +14,7 @@ public class OrientationCalculator {
 		this.covered = covered;
 	}
 	
-	public void registerNewDeviceOrientation(Orientation newDevice) {
+	public void setDevice(Orientation newDevice) {
 		Rotation change = newDevice.minus(device);
 		Orientation proposedScreen = screen.plus(change);
 		
@@ -31,7 +31,7 @@ public class OrientationCalculator {
 		device = newDevice;
 	}
 
-	public void registerNewCoveredState(boolean covered) {
+	public void setCovered(boolean covered) {
 		this.covered = covered;
 	}
 

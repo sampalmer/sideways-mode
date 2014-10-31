@@ -17,7 +17,7 @@ public class AutoRotator {
 			initialDeviceOrientation = value;
 		
 		if (orientationCalculator != null)
-			orientationCalculator.registerNewDeviceOrientation(value);
+			orientationCalculator.setDevice(value);
 		
 		update();
 	}
@@ -27,7 +27,7 @@ public class AutoRotator {
 			initialCoveredState = value;
 		
 		if (orientationCalculator != null)
-			orientationCalculator.registerNewCoveredState(value);
+			orientationCalculator.setCovered(value);
 		
 		update();
 	}
