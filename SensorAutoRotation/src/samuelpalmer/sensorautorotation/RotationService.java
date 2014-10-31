@@ -47,22 +47,26 @@ public class RotationService extends Service {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+				//TODO: Get this working. The screen close logic and toast logic don't throw exceptions, but they also don't seem to have any effect.
+				
 				if (screen != null)
-				try {
-					screen.close();
-				} catch (Exception e) {
-				}
+					try {
+						screen.close();
+					} catch (Exception e) {
+					}
 				
 				if (EnvironmentException.class.isInstance(paramThrowable))
-					exitError(paramThrowable.getMessage());
+					show(paramThrowable.getMessage());
 				else
-					if (oldHandler != null)
+					if (oldHandler != null) {
 						oldHandler.uncaughtException(paramThread, paramThrowable);
-					else
-						System.exit(2);
+						return;
+					}
+				
+				System.exit(2);
 			}
 			
-			private void exitError(String message) {
+			private void show(String message) {
 				String fullMessage = getString(R.string.app_name) + ": " + message;
 				Toast.makeText(getApplicationContext(), fullMessage, Toast.LENGTH_LONG).show();
 			}
