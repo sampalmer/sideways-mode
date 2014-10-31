@@ -6,13 +6,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
-import samuelpalmer.sensorautorotation.systemconfiguration.types.SystemConfigTypeConverter;
+import samuelpalmer.sensorautorotation.systemconfiguration.types.TypeConverter;
 
 public class SettingTests {
 
 	@Test
 	public void returnsNullForNonExistant() {
-		InMemorySystemConfig config = new InMemorySystemConfig();
+		InMemorySystemSettingSource config = new InMemorySystemSettingSource();
 		String key = "123";
 		Setting<String> sut = new Setting<String>(config, key, new VerifyingStringTypeConverter());
 		
@@ -21,7 +21,7 @@ public class SettingTests {
 		assertNull(result);
 	}
 	
-	class VerifyingStringTypeConverter implements SystemConfigTypeConverter<String> {
+	class VerifyingStringTypeConverter implements TypeConverter<String> {
 
 		public String parse(String nonNullTextValue) {
 			verify(nonNullTextValue);

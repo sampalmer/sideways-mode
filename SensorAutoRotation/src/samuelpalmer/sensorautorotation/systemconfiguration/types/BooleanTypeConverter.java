@@ -1,15 +1,15 @@
 package samuelpalmer.sensorautorotation.systemconfiguration.types;
 
-public class BooleanSystemConfigTypeConverter implements
-		SystemConfigTypeConverter<Boolean> {
+public class BooleanTypeConverter implements
+		TypeConverter<Boolean> {
 	
 	private static final int FALSE = 0;
 	private static final int TRUE = 1;
 	
-	private final SystemConfigTypeConverter<Integer> integerConverter;
+	private final TypeConverter<Integer> integerConverter;
 
-	public BooleanSystemConfigTypeConverter() {
-		this.integerConverter = new IntegerSystemConfigTypeConverter();
+	public BooleanTypeConverter() {
+		this.integerConverter = new IntegerTypeConverter();
 	}
 	
 	@Override

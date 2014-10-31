@@ -5,16 +5,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class PhysicalOrientationTracker {
+public class ProximitySensor {
 	final SensorManager sensorManager;
 	final SensorEventListener listener;
 	final Sensor proximitySensor;
 	
 	boolean enabled;
 	
-	public PhysicalOrientationTracker(Context context, OrientationCalculator calculator) {
+	public ProximitySensor(Context context, OrientationCalculator calculator) {
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-		listener = new RotatorProximitySensorDataHandler(calculator);
+		listener = new ProximitySensorDataHandler(calculator);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		if (proximitySensor == null)
 			throw new EnvironmentException("No proximity sensor");

@@ -4,11 +4,11 @@ import static android.provider.Settings.System.*;
 
 import android.content.ContentResolver;
 
-public class AndroidSystemConfig implements SystemConfig {
+public class AndroidSystemSettingSource implements SystemSettingSource {
 	
 	private ContentResolver contentResolver;
 
-	public AndroidSystemConfig(ContentResolver contentResolver) {
+	public AndroidSystemSettingSource(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 	}
 	

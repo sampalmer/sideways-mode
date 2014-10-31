@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.view.Surface;
 
 public class Screen {

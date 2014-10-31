@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.systemconfiguration.types;
 
-public class IntegerSystemConfigTypeConverter implements SystemConfigTypeConverter<Integer> {
+public class IntegerTypeConverter implements TypeConverter<Integer> {
 
 	@Override
 	public Integer parse(String textValue) {

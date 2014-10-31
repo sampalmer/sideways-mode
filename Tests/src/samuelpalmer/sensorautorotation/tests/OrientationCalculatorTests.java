@@ -7,8 +7,8 @@ import org.junit.Test;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.Screen;
-import samuelpalmer.sensorautorotation.SystemSettings;
-import samuelpalmer.sensorautorotation.systemconfiguration.tests.InMemorySystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import samuelpalmer.sensorautorotation.systemconfiguration.tests.InMemorySystemSettingSource;
 
 public class OrientationCalculatorTests {
 	private OrientationCalculator sut;
@@ -99,7 +99,7 @@ public class OrientationCalculatorTests {
 	}
 	
 	private void setState(Orientation screen, Orientation device, boolean covered) {
-		this.screen = new Screen(new SystemSettings(new InMemorySystemConfig()));
+		this.screen = new Screen(new SystemSettings(new InMemorySystemSettingSource()));
 		this.screen.set(screen);
 		
 		sut = new OrientationCalculator(this.screen);

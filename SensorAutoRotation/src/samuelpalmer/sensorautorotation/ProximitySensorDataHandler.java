@@ -4,12 +4,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-public class RotatorProximitySensorDataHandler implements SensorEventListener {
+public class ProximitySensorDataHandler implements SensorEventListener {
 	
 	private static final int THRESHOLD_IN_CENTIMETRES = 3;
 	private OrientationCalculator calculator;
 
-	public RotatorProximitySensorDataHandler(OrientationCalculator calculator) {
+	public ProximitySensorDataHandler(OrientationCalculator calculator) {
 		this.calculator = calculator;
 	}
 	

@@ -1,14 +1,14 @@
 package samuelpalmer.sensorautorotation.systemconfiguration;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.types.SystemConfigTypeConverter;
+import samuelpalmer.sensorautorotation.systemconfiguration.types.TypeConverter;
 
 public class Setting<T> {
 	
-	private SystemConfig config;
+	private SystemSettingSource config;
 	private String key;
-	private SystemConfigTypeConverter<T> converter;
+	private TypeConverter<T> converter;
 
-	public Setting(SystemConfig config, String key, SystemConfigTypeConverter<T> converter) {
+	public Setting(SystemSettingSource config, String key, TypeConverter<T> converter) {
 		this.config = config;
 		this.key = key;
 		this.converter = converter;

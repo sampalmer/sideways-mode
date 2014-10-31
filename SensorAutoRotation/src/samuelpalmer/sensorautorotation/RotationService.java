@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemConfig;
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -16,8 +17,8 @@ public class RotationService extends Service {
 
 	private boolean paused;
 	private Screen screen;
-	private PhysicalOrientationTracker tracker;
-	private RotatorOrientationEventListener orientationListener;
+	private ProximitySensor tracker;
+	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
 
 	@Override
@@ -31,10 +32,10 @@ public class RotationService extends Service {
 		
 		registerErrorHandler();
 		
-		screen = new Screen(new SystemSettings(new AndroidSystemConfig(this.getContentResolver())));
+		screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
 		OrientationCalculator calculator = new OrientationCalculator(screen);
-		tracker = new PhysicalOrientationTracker(this, calculator);
-		orientationListener = new RotatorOrientationEventListener(this, calculator);
+		tracker = new ProximitySensor(this, calculator);
+		orientationListener = new OrientationSensorHandler(this, calculator);
 		
 		resume();
 		supportScreenStateChanges();

@@ -3,11 +3,11 @@ package samuelpalmer.sensorautorotation;
 import android.content.Context;
 import com.android.internal.policy.impl.WindowOrientationListener;
 
-public class RotatorOrientationEventListener extends WindowOrientationListener {
+public class OrientationSensorHandler extends WindowOrientationListener {
 
 	private OrientationCalculator calculator;
 
-	public RotatorOrientationEventListener(Context context, OrientationCalculator calculator) {
+	public OrientationSensorHandler(Context context, OrientationCalculator calculator) {
 		super(context, null);
 		this.calculator = calculator;
 	}

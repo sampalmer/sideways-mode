@@ -2,12 +2,12 @@ package samuelpalmer.sensorautorotation.systemconfiguration.types;
 
 public class TypeConverters {
 	
-	public static final SystemConfigTypeConverter<Boolean> bool;
-	public static final SystemConfigTypeConverter<Integer> integer;
+	public static final TypeConverter<Boolean> bool;
+	public static final TypeConverter<Integer> integer;
 	
 	static {
-		integer = new IntegerSystemConfigTypeConverter();
-		bool = new BooleanSystemConfigTypeConverter();
+		integer = new IntegerTypeConverter();
+		bool = new BooleanTypeConverter();
 	}
 
 }
