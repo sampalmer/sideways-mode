@@ -31,7 +31,7 @@ public class RotationService extends Service {
 		
 		registerErrorHandler();
 		
-		screen = new Screen(new AndroidSystemConfig(this.getContentResolver()));
+		screen = new Screen(new SystemSettings(new AndroidSystemConfig(this.getContentResolver())));
 		AutoRotator rotator = new AutoRotator(screen);
 		tracker = new PhysicalOrientationTracker(this, rotator);
 		orientationListener = new RotatorOrientationEventListener(this, rotator);
