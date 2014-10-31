@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.systemconfiguration;
 
+import samuelpalmer.sensorautorotation.systemconfiguration.types.SystemConfigTypeConverter;
+
 public class Setting<T> {
 	
 	private SystemConfig config;

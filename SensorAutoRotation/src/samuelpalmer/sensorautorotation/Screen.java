@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemConfig;
-import samuelpalmer.sensorautorotation.systemconfiguration.TypeConverters;
+import samuelpalmer.sensorautorotation.systemconfiguration.types.TypeConverters;
 import android.provider.Settings;
 import android.view.Surface;
 

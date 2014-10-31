@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.systemconfiguration;
+package samuelpalmer.sensorautorotation.systemconfiguration.types;
 
 public class BooleanSystemConfigTypeConverter implements
 		SystemConfigTypeConverter<Boolean> {
