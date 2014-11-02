@@ -12,13 +12,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
+        final ServiceController service = new ServiceController(this);
+        
         Button start = (Button)findViewById(R.id.start_service);
         start.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				new StartServiceTask(MainActivity.this).execute();
+				service.start();
 			}
         	
         });
@@ -28,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				new ServiceController(MainActivity.this).stop();
+				service.stop();
 			}
 
         });
