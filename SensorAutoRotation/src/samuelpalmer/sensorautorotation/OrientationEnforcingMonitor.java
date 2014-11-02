@@ -20,6 +20,8 @@ public class OrientationEnforcingMonitor {
 
     public OrientationEnforcingMonitor(Context context){
 		this.context = context;
+		
+		//Alternatively, use a Timer to run in a different thread.
 		recurringRunner = new RecurringRunner(updateEnforcement, 333);
     }
     
