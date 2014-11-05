@@ -45,7 +45,13 @@
             android:label="test"
             android:theme="@android:style/Theme.NoDisplay" >
         </activity>
-
+		
+        <activity
+            android:name="samuelpalmer.sensorautorotation.ErrorDialogActivity"
+            android:label="Error"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+           
         <service
             android:name="samuelpalmer.sensorautorotation.RotationService"
             android:enabled="true"

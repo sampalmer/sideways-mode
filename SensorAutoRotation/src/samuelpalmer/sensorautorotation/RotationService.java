@@ -4,6 +4,7 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -12,7 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 public class RotationService extends Service {
 
@@ -50,7 +50,7 @@ public class RotationService extends Service {
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-				//TODO: Get this working. The screen close logic and toast logic don't throw exceptions, but they also don't seem to have any effect.
+				//TODO: Get this working. The app still goes unstable after this stuff.
 				
 				if (screen != null)
 					try {
@@ -58,20 +58,30 @@ public class RotationService extends Service {
 					} catch (Exception e) {
 					}
 				
-				if (EnvironmentException.class.isInstance(paramThrowable))
-					show(paramThrowable.getMessage());
+				Throwable cause = paramThrowable.getCause();
+				if (EnvironmentException.class.isInstance(cause))
+					show(cause.getMessage());
 				else
 					if (oldHandler != null) {
 						oldHandler.uncaughtException(paramThread, paramThrowable);
 						return;
 					}
 				
-				System.exit(2);
+				System.exit(0);
 			}
 			
 			private void show(String message) {
-				String fullMessage = getString(R.string.app_name) + ": " + message;
-				Toast.makeText(getApplicationContext(), fullMessage, Toast.LENGTH_LONG).show();
+				Notification notification = new NotificationCompat.Builder(RotationService.this)
+					.setSmallIcon(R.drawable.ic_launcher)
+					.setContentIntent(makePending(makeIntent(ErrorDialogActivity.class).putExtra(ErrorDialogActivity.MESSAGE_INTENT_EXTRA_NAME, message)))
+					.setContentTitle(getString(R.string.app_name))
+					.setContentText(message)
+					.setAutoCancel(true)
+					.build();
+				
+				NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
+		        notificationManager.notify(0, notification);
 			}
 		});
 	}
@@ -98,14 +108,26 @@ public class RotationService extends Service {
 	private void promoteToForeground() {
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(
-						PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
+				.setContentIntent(makePending(MainActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Running")
 				.setPriority(NotificationCompat.PRIORITY_MIN)
-				.addAction(0, "Stop", PendingIntent.getActivity(this, 0, new Intent(this, StopServiceActivity.class), 0))
+				.addAction(0, "Stop", makePending(StopServiceActivity.class))
 				.build();
 		startForeground(1, notification);
+	}
+
+	private PendingIntent makePending(Class<?> clazz) {
+		Intent intent = makeIntent(clazz);
+		return makePending(intent);
+	}
+
+	private PendingIntent makePending(Intent intent) {
+		return PendingIntent.getActivity(this, 0, intent, 0);
+	}
+
+	private Intent makeIntent(Class<?> clazz) {
+		return new Intent(this, clazz);
 	}
 
 	private void supportScreenStateChanges() {
