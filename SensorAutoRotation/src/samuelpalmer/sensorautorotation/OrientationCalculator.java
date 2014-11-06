@@ -12,7 +12,7 @@ public class OrientationCalculator {
 		this.screen = screen;
 	}
 	
-	public void setDevice(Orientation newDevice) {
+	public void setDevice(Orientation newDevice) throws EnvironmentException {
 		
 		if (device != null && covered != null) {
 			if (deviceLock != null && newDevice.equals(deviceLock))

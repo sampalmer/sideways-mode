@@ -12,7 +12,7 @@ public class ProximitySensor {
 	
 	boolean enabled;
 	
-	public ProximitySensor(Context context, OrientationCalculator calculator) {
+	public ProximitySensor(Context context, OrientationCalculator calculator) throws EnvironmentException {
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		listener = new ProximitySensorDataHandler(calculator);
 		proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -20,7 +20,7 @@ public class ProximitySensor {
 			throw new EnvironmentException("No proximity sensor");
 	}
 
-	public void enable() {
+	public void enable() throws EnvironmentException {
 		if (enabled)
 			throw new RuntimeException("Already enabled");
 		

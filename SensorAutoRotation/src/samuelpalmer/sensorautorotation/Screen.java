@@ -9,7 +9,7 @@ public class Screen {
 	private final Orientation originalUserRotation;
 	private final Boolean originalAccelerometerRotation;
 	
-	public Screen(SystemSettings systemSettings) {
+	public Screen(SystemSettings systemSettings) throws EnvironmentException {
 		settings = systemSettings;
 		
 		originalUserRotation = settings.userRotation.getOrNull();
@@ -22,7 +22,7 @@ public class Screen {
 		}
 	}
 	
-	public void set(Orientation value) {
+	public void set(Orientation value) throws EnvironmentException {
 		if (value == null)
 			throw new IllegalArgumentException();
 		
@@ -33,7 +33,7 @@ public class Screen {
 		}
 	}
 
-	public void close() {
+	public void close() throws EnvironmentException {
 		try {
 			settings.userRotation.set(originalUserRotation);
 			settings.accelerometerRotation.set(originalAccelerometerRotation);

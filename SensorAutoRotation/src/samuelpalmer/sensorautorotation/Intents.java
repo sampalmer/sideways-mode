@@ -1,0 +1,28 @@
+package samuelpalmer.sensorautorotation;
+
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+
+public class Intents {
+	
+	private Context context;
+
+	public Intents(Context context) {
+		this.context = context;
+	}
+	
+	public PendingIntent makePending(Class<?> clazz) {
+		Intent intent = makeIntent(clazz);
+		return makePending(intent);
+	}
+
+	public PendingIntent makePending(Intent intent) {
+		return PendingIntent.getActivity(context, 0, intent, 0);
+	}
+
+	public Intent makeIntent(Class<?> clazz) {
+		return new Intent(context, clazz);
+	}
+
+}

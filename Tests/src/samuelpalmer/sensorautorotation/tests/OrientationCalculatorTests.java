@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.Screen;
@@ -18,16 +19,24 @@ public class OrientationCalculatorTests {
 	public void rotatingIntoLandscapeWithSensorCoveredShouldCauseScreenRotation() {
 		setState(Orientation.NATURAL, Orientation.NATURAL, true);
 		
-		sut.setDevice(Orientation.LEFT_SIDE);
+		set(Orientation.LEFT_SIDE);
 		
 		screenShouldBe(Orientation.LEFT_SIDE);
+	}
+
+	private void set(Orientation orientation) {
+		try {
+			sut.setDevice(orientation);
+		} catch (EnvironmentException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Test
     public void rotatingWithoutSensorCoveredShouldntCauseScreenRotation() {
 		setState(Orientation.NATURAL, Orientation.NATURAL, false);
 		
-		sut.setDevice(Orientation.LEFT_SIDE);
+		set(Orientation.LEFT_SIDE);
 		
 		screenShouldBe(Orientation.NATURAL); 
     }
@@ -36,7 +45,7 @@ public class OrientationCalculatorTests {
 	public void rotatingWhileSidewaysShouldWork() {
 		setState(Orientation.NATURAL, Orientation.LEFT_SIDE, true);
 		
-		sut.setDevice(Orientation.UPSIDE_DOWN);
+		set(Orientation.UPSIDE_DOWN);
 		
 		screenShouldBe(Orientation.LEFT_SIDE); 
 	}
@@ -45,7 +54,7 @@ public class OrientationCalculatorTests {
     public void supportsUserReturningFromSide() {
 		setState(Orientation.NATURAL, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.NATURAL);
+		set(Orientation.NATURAL);
 		
 		screenShouldBe(Orientation.NATURAL); 
     }
@@ -54,7 +63,7 @@ public class OrientationCalculatorTests {
 	public void supportsUserGoingOnSideWhileInLandscape() {
 		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, true);
 		
-		sut.setDevice(Orientation.UPSIDE_DOWN);
+		set(Orientation.UPSIDE_DOWN);
 		
 		screenShouldBe(Orientation.LEFT_SIDE);
 	}
@@ -63,7 +72,7 @@ public class OrientationCalculatorTests {
 	public void supportsUserReturningFromSideWhileInLandscape() {
 		setState(Orientation.LEFT_SIDE, Orientation.UPSIDE_DOWN, true);
 		
-		sut.setDevice(Orientation.LEFT_SIDE);
+		set(Orientation.LEFT_SIDE);
 		
 		screenShouldBe(Orientation.LEFT_SIDE);
 	}
@@ -72,7 +81,7 @@ public class OrientationCalculatorTests {
 	public void doesntSupportReversePortrait() {
 		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.UPSIDE_DOWN);
+		set(Orientation.UPSIDE_DOWN);
 		
 		screenShouldBe(Orientation.LEFT_SIDE);
 	}
@@ -81,8 +90,8 @@ public class OrientationCalculatorTests {
 	public void preservesOrientationWhenUserRecoversFromReversePortraitAttempt() {
 		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
 		
-		sut.setDevice(Orientation.UPSIDE_DOWN);
-		sut.setDevice(Orientation.LEFT_SIDE);
+		set(Orientation.UPSIDE_DOWN);
+		set(Orientation.LEFT_SIDE);
 		
 		screenShouldBe(Orientation.LEFT_SIDE);
 	}
@@ -90,20 +99,24 @@ public class OrientationCalculatorTests {
 	@Test
 	public void supportsOrientationChangesAfterRecoveryFromReversePortraitAttempt() {
 		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
-		sut.setDevice(Orientation.UPSIDE_DOWN);
-		sut.setDevice(Orientation.LEFT_SIDE);
+		set(Orientation.UPSIDE_DOWN);
+		set(Orientation.LEFT_SIDE);
 		
-		sut.setDevice(Orientation.NATURAL);
+		set(Orientation.NATURAL);
 		
 		screenShouldBe(Orientation.NATURAL);
 	}
 	
 	private void setState(Orientation screen, Orientation device, boolean covered) {
+		try {
 		this.screen = new Screen(new SystemSettings(new InMemorySystemSettingSource()));
 		this.screen.set(screen);
+		} catch (EnvironmentException e) {
+			throw new RuntimeException(e);
+		}
 		
 		sut = new OrientationCalculator(this.screen);
-		sut.setDevice(device);
+		set(device);
 		sut.setCovered(covered);
 	}
 	

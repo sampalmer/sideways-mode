@@ -1,11 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
 
@@ -21,6 +19,9 @@ public class RotationService extends Service {
 	private ProximitySensor proximityListener;
 	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
+	private Intents intents;
+	private UserErrorHandler errorHandler;
+	private boolean destroyed;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -31,16 +32,24 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
+		intents = new Intents(this);
+		errorHandler = new UserErrorHandler(this);
+		
 		registerErrorHandler();
 		
-		screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
-		OrientationCalculator calculator = new OrientationCalculator(screen);
-		proximityListener = new ProximitySensor(this, calculator);
-		orientationListener = new OrientationSensorHandler(this, calculator);
-			
-		resume();
-		supportScreenStateChanges();
-		promoteToForeground();
+		try {
+			screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
+			OrientationCalculator calculator = new OrientationCalculator(screen);
+			proximityListener = new ProximitySensor(this, calculator);
+			orientationListener = new OrientationSensorHandler(this, calculator);
+				
+			resume();
+			supportScreenStateChanges();
+			promoteToForeground();
+		}
+		catch (EnvironmentException e) {
+			errorHandler.handle(e);
+		}
 	}
 
 	private void registerErrorHandler() {
@@ -56,44 +65,33 @@ public class RotationService extends Service {
 					} catch (Exception e) {
 					}
 				
-				Throwable cause = paramThrowable.getCause();
-				if (EnvironmentException.class.isInstance(cause))
-					show(cause.getMessage());
-				else
-					if (oldHandler != null) {
-						oldHandler.uncaughtException(paramThread, paramThrowable);
-						return;
-					}
-				
-				System.exit(0);
-			}
+				if (oldHandler != null) {
+					oldHandler.uncaughtException(paramThread, paramThrowable);
+					return;
+				}
 			
-			private void show(String message) {
-				Notification notification = new NotificationCompat.Builder(RotationService.this)
-					.setSmallIcon(R.drawable.ic_launcher)
-					.setContentIntent(makePending(makeIntent(ErrorDialogActivity.class).putExtra(ErrorDialogActivity.MESSAGE_INTENT_EXTRA_NAME, message)))
-					.setContentTitle(getString(R.string.app_name))
-					.setContentText(message)
-					.setAutoCancel(true)
-					.build();
-				
-				NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
-		        notificationManager.notify(0, notification);
+				System.exit(0);
 			}
 		});
 	}
 	
 	private void resume() {
-		proximityListener.enable();
+		try {
+			proximityListener.enable();
+		} catch (EnvironmentException e) {
+			errorHandler.handle(e);
+		}
+		
 		orientationListener.enable();
 
 		paused = false;
 	}
 	
 	private void pause() {
-		orientationListener.disable();
-		proximityListener.disable();
+		if (orientationListener != null)
+			orientationListener.disable();
+		if (proximityListener != null)
+			proximityListener.disable();
 		
 		paused = true;
 	}
@@ -104,26 +102,13 @@ public class RotationService extends Service {
 	private void promoteToForeground() {
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(makePending(MainActivity.class))
+				.setContentIntent(intents.makePending(MainActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Running")
 				.setPriority(NotificationCompat.PRIORITY_MIN)
-				.addAction(0, "Stop", makePending(StopServiceActivity.class))
+				.addAction(0, "Stop", intents.makePending(StopServiceActivity.class))
 				.build();
 		startForeground(1, notification);
-	}
-
-	private PendingIntent makePending(Class<?> clazz) {
-		Intent intent = makeIntent(clazz);
-		return makePending(intent);
-	}
-
-	private PendingIntent makePending(Intent intent) {
-		return PendingIntent.getActivity(this, 0, intent, 0);
-	}
-
-	private Intent makeIntent(Class<?> clazz) {
-		return new Intent(this, clazz);
 	}
 
 	private void supportScreenStateChanges() {
@@ -159,11 +144,21 @@ public class RotationService extends Service {
 	}
 
 	private void destroy() {
-		unregisterReceiver(screenStateChangeReceiver);
-
-		if (!paused)
-			pause();
-
-		screen.close();
+		if (!destroyed) {
+			if (screenStateChangeReceiver != null)
+				unregisterReceiver(screenStateChangeReceiver);
+			
+			if (!paused)
+				pause();
+			
+			if (screen != null)
+				try {
+					screen.close();
+				} catch (EnvironmentException e) {
+					errorHandler.handle(e);
+				}
+			
+			destroyed = true;
+		}
 	}
 }
