@@ -21,7 +21,6 @@ public class RotationService extends Service {
 	private ProximitySensor tracker;
 	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
-	private OrientationEnforcingMonitor monitor;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -38,7 +37,6 @@ public class RotationService extends Service {
 		OrientationCalculator calculator = new OrientationCalculator(screen);
 		tracker = new ProximitySensor(this, calculator);
 		orientationListener = new OrientationSensorHandler(this, calculator);
-		monitor = new OrientationEnforcingMonitor(this);
 			
 		resume();
 		supportScreenStateChanges();
@@ -89,13 +87,11 @@ public class RotationService extends Service {
 	private void resume() {
 		tracker.enable();
 		orientationListener.enable();
-		monitor.start();
 
 		paused = false;
 	}
 	
 	private void pause() {
-		monitor.stop();
 		orientationListener.disable();
 		tracker.disable();
 		
