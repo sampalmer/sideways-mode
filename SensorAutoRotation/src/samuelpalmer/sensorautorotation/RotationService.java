@@ -18,7 +18,7 @@ public class RotationService extends Service {
 
 	private boolean paused;
 	private Screen screen;
-	private ProximitySensor tracker;
+	private ProximitySensor proximityListener;
 	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
 
@@ -35,7 +35,7 @@ public class RotationService extends Service {
 		
 		screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
 		OrientationCalculator calculator = new OrientationCalculator(screen);
-		tracker = new ProximitySensor(this, calculator);
+		proximityListener = new ProximitySensor(this, calculator);
 		orientationListener = new OrientationSensorHandler(this, calculator);
 			
 		resume();
@@ -85,7 +85,7 @@ public class RotationService extends Service {
 	}
 	
 	private void resume() {
-		tracker.enable();
+		proximityListener.enable();
 		orientationListener.enable();
 
 		paused = false;
@@ -93,7 +93,7 @@ public class RotationService extends Service {
 	
 	private void pause() {
 		orientationListener.disable();
-		tracker.disable();
+		proximityListener.disable();
 		
 		paused = true;
 	}
