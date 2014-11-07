@@ -6,13 +6,11 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 public class Screen {
 	
 	private SystemSettings settings;
-	private final Orientation originalUserRotation;
 	private final Boolean originalAccelerometerRotation;
 	
 	public Screen(SystemSettings systemSettings) throws EnvironmentException {
 		settings = systemSettings;
 		
-		originalUserRotation = settings.userRotation.getOrNull();
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
 		try {
@@ -35,7 +33,7 @@ public class Screen {
 
 	public void close() throws EnvironmentException {
 		try {
-			settings.userRotation.set(originalUserRotation);
+			settings.userRotation.set(Orientation.NATURAL);
 			settings.accelerometerRotation.set(originalAccelerometerRotation);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
