@@ -33,9 +33,6 @@ public class RotationService extends Service {
 		super.onCreate();
 		
 		intents = new Intents(this);
-		errorHandler = new UserErrorHandler(this);
-		
-		registerErrorHandler();
 		
 		try {
 			screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
@@ -52,29 +49,6 @@ public class RotationService extends Service {
 		}
 	}
 
-	private void registerErrorHandler() {
-		final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-				//TODO: Get this working. The app still goes unstable after this stuff.
-				
-				if (screen != null)
-					try {
-						screen.close();
-					} catch (Exception e) {
-					}
-				
-				if (oldHandler != null) {
-					oldHandler.uncaughtException(paramThread, paramThrowable);
-					return;
-				}
-			
-				System.exit(0);
-			}
-		});
-	}
-	
 	private void resume() {
 		try {
 			proximityListener.enable();
