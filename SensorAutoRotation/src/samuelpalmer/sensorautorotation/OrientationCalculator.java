@@ -5,7 +5,6 @@ public class OrientationCalculator {
 	
 	private Orientation device;
 	private Boolean covered;
-	private Orientation deviceLock;
 	private Screen screen;
 	
 	public OrientationCalculator(Screen screen) {
@@ -15,22 +14,14 @@ public class OrientationCalculator {
 	public void setDevice(Orientation newDevice) throws EnvironmentException {
 		
 		if (device != null && covered != null) {
-			if (deviceLock != null && newDevice.equals(deviceLock))
-				deviceLock = null;
-			else {
-				Rotation change = newDevice.minus(device);
+			Rotation change = newDevice.minus(device);
+			
+			if (change.isNinetyDegree()) {
+				Orientation screenOrientation = screen.get();
 				
-				if (change.isNinetyDegree()) {
-					Orientation screenOrientation = screen.get();
-					
-					if (screenOrientation.sideways() != covered) {
-						Orientation proposedScreen = screenOrientation.plus(change);
-						
-						if (!proposedScreen.equals(Orientation.UPSIDE_DOWN))
-							screen.set(proposedScreen);
-						else
-							deviceLock = device;
-					}
+				if (screenOrientation.sideways() != covered) {
+					Orientation proposedScreen = screenOrientation.plus(change);
+					screen.set(proposedScreen);
 				}
 			}
 		}

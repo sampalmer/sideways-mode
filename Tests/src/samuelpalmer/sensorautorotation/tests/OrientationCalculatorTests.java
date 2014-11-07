@@ -77,36 +77,6 @@ public class OrientationCalculatorTests {
 		screenShouldBe(Orientation.LEFT_SIDE);
 	}
 	
-	@Test
-	public void doesntSupportReversePortrait() {
-		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
-		
-		set(Orientation.UPSIDE_DOWN);
-		
-		screenShouldBe(Orientation.LEFT_SIDE);
-	}
-	
-	@Test
-	public void preservesOrientationWhenUserRecoversFromReversePortraitAttempt() {
-		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
-		
-		set(Orientation.UPSIDE_DOWN);
-		set(Orientation.LEFT_SIDE);
-		
-		screenShouldBe(Orientation.LEFT_SIDE);
-	}
-	
-	@Test
-	public void supportsOrientationChangesAfterRecoveryFromReversePortraitAttempt() {
-		setState(Orientation.LEFT_SIDE, Orientation.LEFT_SIDE, false);
-		set(Orientation.UPSIDE_DOWN);
-		set(Orientation.LEFT_SIDE);
-		
-		set(Orientation.NATURAL);
-		
-		screenShouldBe(Orientation.NATURAL);
-	}
-	
 	private void setState(Orientation screen, Orientation device, boolean covered) {
 		try {
 		this.screen = new Screen(new SystemSettings(new InMemorySystemSettingSource()));
