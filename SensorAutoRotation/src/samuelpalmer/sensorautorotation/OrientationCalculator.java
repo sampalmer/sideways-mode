@@ -1,36 +1,74 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.landscapetriggering.Listener;
+import samuelpalmer.sensorautorotation.landscapetriggering.Monitor;
+import samuelpalmer.sensorautorotation.landscapetriggering.MonitorFactory;
+
 
 public class OrientationCalculator {
 	
 	private Orientation device;
-	private Boolean covered;
+	
+	private MonitorFactory monitorFactory;
 	private Screen screen;
 	
-	public OrientationCalculator(Screen screen) {
+	public OrientationCalculator(MonitorFactory monitorFactory, Screen screen) {
+		this.monitorFactory = monitorFactory;
 		this.screen = screen;
 	}
 	
 	public void setDevice(Orientation newDevice) throws EnvironmentException {
 		
-		if (device != null && covered != null) {
-			Rotation change = newDevice.minus(device);
+		if (device != null) {
+			Rotation deviceChange = newDevice.minus(device);
+			final Orientation currentScreenOrientation = screen.get();
+			final Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
 			
-			if (change.isNinetyDegree()) {
-				Orientation screenOrientation = screen.get();
-				
-				if (screenOrientation.sideways() != covered) {
-					Orientation proposedScreen = screenOrientation.plus(change);
-					screen.set(proposedScreen);
+			if (deviceChange.isNinetyDegree()) {
+				if (proposedScreenOrientation.sideways()) {
+					propose(proposedScreenOrientation);
+				}
+				else {
+					screen.set(proposedScreenOrientation);
+					propose(currentScreenOrientation);
 				}
 			}
+			else
+				screen.set(proposedScreenOrientation);
 		}
 		
 		device = newDevice;
 	}
 
-	public void setCovered(boolean covered) {
-		this.covered = covered;
+	private Monitor monitor;
+	
+	private void propose(final Orientation proposedScreenOrientation) throws EnvironmentException {
+		ensureNotMonitoring();
+		
+		monitor = monitorFactory.create(new Listener() {
+			
+			@Override
+			public void trigger() throws EnvironmentException {
+				screen.set(proposedScreenOrientation);
+			}
+
+			@Override
+			public void stop() {
+				monitor = null;
+			}
+			
+		});
 	}
+	
+	public void pause() {
+		ensureNotMonitoring();
+	}
+	
+	private void ensureNotMonitoring() {
+		if (monitor != null)
+			monitor.stop();
+	}
+	
+	public void resume() {}
 	
 }

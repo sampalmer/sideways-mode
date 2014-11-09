@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.landscapetriggering;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,8 +15,8 @@ public class ProximitySensorMonitor extends Monitor {
 	private SensorManager sensorManager;
 	private SensorEventListener listener;
 
-	public ProximitySensorMonitor(Context context, Listener listener) throws EnvironmentException {
-		super(listener);
+	public ProximitySensorMonitor(final Context context, Listener listener, int timeoutMilliseconds) throws EnvironmentException {
+		super(listener, timeoutMilliseconds);
 		
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		this.listener = new SensorEventListener() {
@@ -31,7 +32,11 @@ public class ProximitySensorMonitor extends Monitor {
 				float coveredThreshold = Math.min(THRESHOLD_IN_CENTIMETRES, event.sensor.getMaximumRange());
 				boolean covered = distanceInCentimetres <= coveredThreshold;
 				if (covered)
-					trigger();
+					try {
+						trigger();
+					} catch (EnvironmentException e) {
+						new UserErrorHandler(context).handle(e);
+					}
 			}
 			
 			@Override

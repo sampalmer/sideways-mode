@@ -1,6 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
 
+import samuelpalmer.sensorautorotation.landscapetriggering.ProximitySensorMonitorFactory;
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,19 +12,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
 
 	private boolean paused;
 	private Screen screen;
-	private ProximitySensor proximityListener;
 	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
 	private Intents intents;
 	private UserErrorHandler errorHandler;
 	private boolean destroyed;
+	private OrientationCalculator calculator;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -36,8 +37,7 @@ public class RotationService extends Service {
 		
 		try {
 			screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
-			OrientationCalculator calculator = new OrientationCalculator(screen);
-			proximityListener = new ProximitySensor(this, calculator);
+			calculator = new OrientationCalculator(new ProximitySensorMonitorFactory(this), screen);
 			orientationListener = new OrientationSensorHandler(this, calculator);
 				
 			resume();
@@ -50,12 +50,7 @@ public class RotationService extends Service {
 	}
 
 	private void resume() {
-		try {
-			proximityListener.enable();
-		} catch (EnvironmentException e) {
-			errorHandler.handle(e);
-		}
-		
+		calculator.resume();
 		orientationListener.enable();
 
 		paused = false;
@@ -64,8 +59,8 @@ public class RotationService extends Service {
 	private void pause() {
 		if (orientationListener != null)
 			orientationListener.disable();
-		if (proximityListener != null)
-			proximityListener.disable();
+		if (calculator != null)
+			calculator.pause();
 		
 		paused = true;
 	}
