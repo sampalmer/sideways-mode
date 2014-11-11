@@ -13,7 +13,7 @@ public class ProximitySensorMonitorFactory implements MonitorFactory {
 	
 	@Override
 	public Monitor create(Listener listener) throws EnvironmentException {
-		return new ProximitySensorMonitor(context, listener, 1500);
+		return new ProximitySensorMonitor(context, listener, 1250);
 	}
 
 }
