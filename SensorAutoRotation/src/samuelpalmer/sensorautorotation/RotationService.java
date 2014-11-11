@@ -1,9 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
 
-import samuelpalmer.sensorautorotation.landscapetriggering.ProximitySensorMonitorFactory;
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -11,19 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 public class RotationService extends Service {
 
-	private boolean paused;
-	private Screen screen;
-	private OrientationSensorHandler orientationListener;
 	private BroadcastReceiver screenStateChangeReceiver;
-	private Intents intents;
-	private UserErrorHandler errorHandler;
-	private boolean destroyed;
-	private OrientationCalculator calculator;
-
+	private App app;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -33,42 +25,21 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		intents = new Intents(this);
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		boolean isScreenOn = pm.isScreenOn();
+		if (isScreenOn)
+			app = new App(this);
 		
-		try {
-			screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(this.getContentResolver())));
-			calculator = new OrientationCalculator(new ProximitySensorMonitorFactory(this), screen);
-			orientationListener = new OrientationSensorHandler(this, calculator);
-				
-			resume();
-			supportScreenStateChanges();
-			promoteToForeground();
-		}
-		catch (EnvironmentException e) {
-			errorHandler.handle(e);
-		}
+		supportScreenStateChanges();
+		promoteToForeground();
 	}
 
-	private void resume() {
-		calculator.resume();
-		orientationListener.enable();
-
-		paused = false;
-	}
-	
-	private void pause() {
-		if (orientationListener != null)
-			orientationListener.disable();
-		if (calculator != null)
-			calculator.pause();
-		
-		paused = true;
-	}
-	
 	/**
 	 * Reduces chance of being killed
 	 */
 	private void promoteToForeground() {
+		Intents intents = new Intents(this);
+		
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(intents.makePending(MainActivity.class))
@@ -77,6 +48,7 @@ public class RotationService extends Service {
 				.setPriority(NotificationCompat.PRIORITY_MIN)
 				.addAction(0, "Stop", intents.makePending(StopServiceActivity.class))
 				.build();
+		
 		startForeground(1, notification);
 	}
 
@@ -89,9 +61,9 @@ public class RotationService extends Service {
 				String action = intent.getAction();
 
 				if (action.equals(Intent.ACTION_SCREEN_OFF))
-					pause();
+					destroy();
 				else if (action.equals(Intent.ACTION_SCREEN_ON))
-					resume();
+					app = new App(RotationService.this);
 			}
 		};
 
@@ -101,7 +73,10 @@ public class RotationService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
+		
+		if (screenStateChangeReceiver != null)
+			unregisterReceiver(screenStateChangeReceiver);
+		
 		destroy();
 	}
 
@@ -113,21 +88,10 @@ public class RotationService extends Service {
 	}
 
 	private void destroy() {
-		if (!destroyed) {
-			if (screenStateChangeReceiver != null)
-				unregisterReceiver(screenStateChangeReceiver);
-			
-			if (!paused)
-				pause();
-			
-			if (screen != null)
-				try {
-					screen.close();
-				} catch (EnvironmentException e) {
-					errorHandler.handle(e);
-				}
-			
-			destroyed = true;
+		if (app != null) {
+			app.destroy();
+			app = null;
 		}
 	}
+	
 }
