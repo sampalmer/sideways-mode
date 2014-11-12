@@ -33,11 +33,7 @@ public class App {
 				orientationListener.disable();
 			
 			if (calculator != null)
-				try {
-					calculator.pause();
-				} catch (EnvironmentException e1) {
-					errorHandler.handle(e1);
-				}
+				calculator.pause();
 			
 			if (screen != null)
 				try {
