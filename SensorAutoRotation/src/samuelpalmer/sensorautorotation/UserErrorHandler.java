@@ -17,7 +17,7 @@ public class UserErrorHandler {
 	}
 	
 	public void handle(EnvironmentException error) {
-		show(error.getMessage());
+		show(error.getMessage() + " " + getAppName() + " will be disabled.");
 		new ServiceController(context).stop();
 	}
 	
@@ -25,7 +25,7 @@ public class UserErrorHandler {
 		Notification notification = new NotificationCompat.Builder(context)
 			.setSmallIcon(R.drawable.ic_launcher)
 			.setContentIntent(makeShowMessage(message))
-			.setContentTitle(context.getString(R.string.app_name))
+			.setContentTitle(getAppName())
 			.setContentText(message)
 			.setAutoCancel(true)
 			.setTicker(message)
@@ -35,6 +35,10 @@ public class UserErrorHandler {
 		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notification);
+	}
+
+	private String getAppName() {
+		return context.getString(R.string.app_name);
 	}
 
 	private PendingIntent makeShowMessage(String message) {
