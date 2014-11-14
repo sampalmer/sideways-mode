@@ -10,7 +10,6 @@ public class App {
 	private UserErrorHandler errorHandler;
 	private boolean destroyed;
 	private OrientationCalculator calculator;
-	
 	public App(Context context) {
 		errorHandler = new UserErrorHandler(context);
 		
@@ -48,7 +47,7 @@ public class App {
 
 	public void rotationMightHaveChanged() {
 		try {
-			screen.matchCurrentScreenRotation();
+			screen.systemConfigChanged();
 		} catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}

@@ -9,7 +9,7 @@ import android.view.WindowManager;
 public class Screen {
 	
 	private SystemSettings settings;
-	private final Boolean originalAccelerometerRotation;
+	private Boolean originalAccelerometerRotation;
 	private Context context;
 	
 	public Screen(Context context) throws EnvironmentException {
@@ -55,6 +55,16 @@ public class Screen {
 		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windows.getDefaultDisplay().getRotation();
 		return Orientation.fromAndroidSurfaceRotation(rotation);
+	}
+	
+	public void systemConfigChanged() throws EnvironmentException {
+		matchCurrentScreenRotation();
+		
+		Boolean currentAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+		if (currentAccelerometerRotation == true) {
+			originalAccelerometerRotation = currentAccelerometerRotation;
+			throw new EnvironmentException("System screen auto-rotation was enabled.");
+		}
 	}
 	
 	@Override
