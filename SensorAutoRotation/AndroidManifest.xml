@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme" >
         
         <activity
-            android:name="samuelpalmer.sensorautorotation.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,19 +41,19 @@
         </activity>
         
         <activity
-            android:name="samuelpalmer.sensorautorotation.StopServiceActivity"
+            android:name=".StopServiceActivity"
             android:label="test"
             android:theme="@android:style/Theme.NoDisplay" >
         </activity>
 		
         <activity
-            android:name="samuelpalmer.sensorautorotation.ErrorDialogActivity"
+            android:name=".ErrorDialogActivity"
             android:label="Error"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
            
         <service
-            android:name="samuelpalmer.sensorautorotation.RotationService"
+            android:name=".RotationService"
             android:enabled="true"
             android:exported="false" />
     </application>
