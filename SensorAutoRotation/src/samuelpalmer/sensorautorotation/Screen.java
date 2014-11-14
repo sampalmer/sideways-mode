@@ -18,6 +18,8 @@ public class Screen {
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
+		set(get());
+		
 		try {
 			settings.accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
@@ -38,8 +40,8 @@ public class Screen {
 
 	public void close() throws EnvironmentException {
 		try {
-			settings.userRotation.set(Orientation.NATURAL);
 			settings.accelerometerRotation.set(originalAccelerometerRotation);
+			settings.userRotation.set(Orientation.NATURAL);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
