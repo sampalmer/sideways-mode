@@ -23,14 +23,14 @@ public class OrientationCalculator {
 			Rotation deviceChange = newDevice.minus(device);
 			
 			if (deviceChange.isNinetyDegree()) {
-				final Orientation currentScreenOrientation = screen.get();
+				final Orientation currentScreenOrientation = screen.orientation();
 				final Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
 				
 				if (proposedScreenOrientation.sideways()) {
 					propose(proposedScreenOrientation);
 				}
 				else {
-					screen.set(proposedScreenOrientation);
+					screen.propose(proposedScreenOrientation);
 					propose(currentScreenOrientation);
 				}
 			}
@@ -48,7 +48,7 @@ public class OrientationCalculator {
 			
 			@Override
 			public void trigger() throws EnvironmentException {
-				screen.set(proposedScreenOrientation);
+				screen.propose(proposedScreenOrientation);
 			}
 
 			@Override

@@ -18,7 +18,7 @@ public class Screen {
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
-		set(get());
+		matchCurrentScreenRotation();
 		
 		try {
 			settings.accelerometerRotation.set(false);
@@ -26,8 +26,12 @@ public class Screen {
 			throw new EnvironmentException(e);
 		}
 	}
+
+	public void matchCurrentScreenRotation() throws EnvironmentException {
+		propose(orientation());
+	}
 	
-	public void set(Orientation value) throws EnvironmentException {
+	public void propose(Orientation value) throws EnvironmentException {
 		if (value == null)
 			throw new IllegalArgumentException();
 		
@@ -47,7 +51,7 @@ public class Screen {
 		}
 	}
 
-	public Orientation get() {
+	public Orientation orientation() {
 		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windows.getDefaultDisplay().getRotation();
 		return Orientation.fromAndroidSurfaceRotation(rotation);
@@ -55,6 +59,6 @@ public class Screen {
 	
 	@Override
 	public String toString() {
-		return get().toString();
+		return orientation().toString();
 	}
 }

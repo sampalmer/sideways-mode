@@ -48,7 +48,7 @@ public class App {
 
 	public void rotationMightHaveChanged() {
 		try {
-			screen.set(screen.get());
+			screen.matchCurrentScreenRotation();
 		} catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}
