@@ -28,6 +28,8 @@ public class UserErrorHandler {
 			.setContentTitle(context.getString(R.string.app_name))
 			.setContentText(message)
 			.setAutoCancel(true)
+			.setTicker(message)
+			.setPriority(NotificationCompat.PRIORITY_HIGH)
 			.build();
 		
 		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Activity.NOTIFICATION_SERVICE);
