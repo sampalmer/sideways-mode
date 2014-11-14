@@ -3,7 +3,10 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.WindowManager;
 
 public class Screen {
@@ -12,11 +15,22 @@ public class Screen {
 	private Boolean originalAccelerometerRotation;
 	private Context context;
 	
+	private final BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			systemConfigChanged();
+		}
+		
+	};
+	
 	public Screen(Context context) throws EnvironmentException {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+		
+		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 		
 		matchCurrentScreenRotation();
 		
@@ -44,6 +58,7 @@ public class Screen {
 
 	public void close() throws EnvironmentException {
 		try {
+			context.unregisterReceiver(receiver);
 			settings.accelerometerRotation.set(originalAccelerometerRotation);
 			settings.userRotation.set(Orientation.NATURAL);
 		} catch (SettingWriteFailedException e) {
@@ -57,13 +72,17 @@ public class Screen {
 		return Orientation.fromAndroidSurfaceRotation(rotation);
 	}
 	
-	public void systemConfigChanged() throws EnvironmentException {
-		matchCurrentScreenRotation();
-		
-		Boolean currentAccelerometerRotation = settings.accelerometerRotation.getOrNull();
-		if (currentAccelerometerRotation == true) {
-			originalAccelerometerRotation = currentAccelerometerRotation;
-			throw new EnvironmentException("System screen auto-rotation was enabled.");
+	public void systemConfigChanged() {
+		try {
+			matchCurrentScreenRotation();
+			
+			Boolean currentAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+			if (currentAccelerometerRotation == true) {
+				originalAccelerometerRotation = currentAccelerometerRotation;
+				throw new EnvironmentException("System screen auto-rotation was enabled.");
+			}
+		} catch (EnvironmentException e) {
+			new UserErrorHandler(context).handle(e);
 		}
 	}
 	
