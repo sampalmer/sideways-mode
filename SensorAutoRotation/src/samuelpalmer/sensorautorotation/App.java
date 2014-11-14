@@ -1,9 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.landscapetriggering.ProximitySensorMonitorFactory;
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.content.Context;
+import android.view.WindowManager;
 
 public class App {
 	
@@ -12,10 +11,12 @@ public class App {
 	private UserErrorHandler errorHandler;
 	private boolean destroyed;
 	private OrientationCalculator calculator;
+	private Context context;
 	
 	public App(Context context) {
+		this.context = context;
 		try {
-			screen = new Screen(new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver())));
+			screen = new Screen(context);
 			calculator = new OrientationCalculator(new ProximitySensorMonitorFactory(context), screen);
 			orientationListener = new OrientationSensorHandler(context, calculator);
 				
@@ -43,6 +44,17 @@ public class App {
 				}
 			
 			destroyed = true;
+		}
+	}
+
+	public void rotationMightHaveChanged() {
+		WindowManager x = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int rotation = x.getDefaultDisplay().getRotation();
+		Orientation real = Orientation.fromAndroidSurfaceRotation(rotation);
+		try {
+			screen.set(real);
+		} catch (EnvironmentException e) {
+			errorHandler.handle(e);
 		}
 	}
 	

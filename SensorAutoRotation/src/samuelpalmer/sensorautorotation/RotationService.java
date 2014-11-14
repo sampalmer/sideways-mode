@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -28,12 +29,24 @@ public class RotationService extends Service {
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		boolean isScreenOn = pm.isScreenOn();
 		if (isScreenOn)
-			app = new App(this);
+			create();
 		
 		supportScreenStateChanges();
 		promoteToForeground();
 	}
 
+	private void create() {
+		app = new App(this);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		
+		if (app != null)
+			app.rotationMightHaveChanged();
+	}
+	
 	/**
 	 * Reduces chance of being killed
 	 */
@@ -63,7 +76,7 @@ public class RotationService extends Service {
 				if (action.equals(Intent.ACTION_SCREEN_OFF))
 					destroy();
 				else if (action.equals(Intent.ACTION_SCREEN_ON))
-					app = new App(RotationService.this);
+					create();
 			}
 		};
 

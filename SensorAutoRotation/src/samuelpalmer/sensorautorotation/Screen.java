@@ -1,15 +1,20 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import android.content.Context;
+import android.view.WindowManager;
 
 public class Screen {
 	
 	private SystemSettings settings;
 	private final Boolean originalAccelerometerRotation;
+	private Context context;
 	
-	public Screen(SystemSettings systemSettings) throws EnvironmentException {
-		settings = systemSettings;
+	public Screen(Context context) throws EnvironmentException {
+		this.context = context;
+		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
@@ -41,8 +46,9 @@ public class Screen {
 	}
 
 	public Orientation get() {
-		Orientation result = settings.userRotation.getOrNull();
-		return result == null ? Orientation.NATURAL : result;
+		WindowManager x = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int rotation = x.getDefaultDisplay().getRotation();
+		return Orientation.fromAndroidSurfaceRotation(rotation);
 	}
 	
 	@Override
