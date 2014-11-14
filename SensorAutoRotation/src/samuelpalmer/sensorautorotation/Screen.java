@@ -48,8 +48,8 @@ public class Screen {
 	}
 
 	public Orientation get() {
-		WindowManager x = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		int rotation = x.getDefaultDisplay().getRotation();
+		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int rotation = windows.getDefaultDisplay().getRotation();
 		return Orientation.fromAndroidSurfaceRotation(rotation);
 	}
 	
