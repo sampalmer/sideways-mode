@@ -12,6 +12,8 @@ public class App {
 	private OrientationCalculator calculator;
 	
 	public App(Context context) {
+		errorHandler = new UserErrorHandler(context);
+		
 		try {
 			screen = new Screen(context);
 			calculator = new OrientationCalculator(new ProximitySensorMonitorFactory(context), screen);
