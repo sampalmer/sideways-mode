@@ -1,73 +1,68 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.landscapetriggering.Listener;
-import samuelpalmer.sensorautorotation.landscapetriggering.Monitor;
-import samuelpalmer.sensorautorotation.landscapetriggering.MonitorFactory;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 
 public class OrientationCalculator {
 	
+	private static final int THRESHOLD_IN_CENTIMETRES = 3;
+	
 	private Orientation device;
-	
-	private MonitorFactory monitorFactory;
 	private Screen screen;
+	private SensorManager sensorManager;
+	private boolean covered;
+	private SensorEventListener listener;
 	
-	public OrientationCalculator(MonitorFactory monitorFactory, Screen screen) {
-		this.monitorFactory = monitorFactory;
+	public OrientationCalculator(Context context, Screen screen) throws EnvironmentException {
 		this.screen = screen;
+		
+		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+		listener = new SensorEventListener() {
+			
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				int sensorType = event.sensor.getType();
+				
+				if (sensorType != Sensor.TYPE_PROXIMITY)
+					throw new RuntimeException("Unexpected sensor: " + event.sensor.getName());
+				
+				float distanceInCentimetres = event.values[0];
+				float coveredThreshold = Math.min(THRESHOLD_IN_CENTIMETRES, event.sensor.getMaximumRange());
+				covered = distanceInCentimetres <= coveredThreshold;
+			}
+			
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+		};
+		
+		Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+		if (proximitySensor == null)
+			throw new EnvironmentException("No proximity sensor");
+		
+		boolean registered = sensorManager.registerListener(this.listener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+		if (!registered)
+			throw new EnvironmentException("Couldn't use sensor " + proximitySensor);
 	}
 	
 	public void setDevice(Orientation newDevice) throws EnvironmentException {
 		
 		if (device != null) {
 			Rotation deviceChange = newDevice.minus(device);
-			
-			if (deviceChange.isNinetyDegree()) {
-				final Orientation currentScreenOrientation = screen.orientation();
-				final Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
-				
-				if (proposedScreenOrientation.sideways()) {
-					propose(proposedScreenOrientation);
-				}
-				else {
-					screen.propose(proposedScreenOrientation);
-					propose(currentScreenOrientation);
-				}
-			}
+			Orientation currentScreenOrientation = screen.orientation();
+			Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
+			if (!covered)
+				screen.propose(proposedScreenOrientation);
 		}
 		
 		device = newDevice;
 	}
 
-	private Monitor monitor;
-	
-	private void propose(final Orientation proposedScreenOrientation) throws EnvironmentException {
-		ensureNotMonitoring();
-		
-		monitor = monitorFactory.create(new Listener() {
-			
-			@Override
-			public void trigger() throws EnvironmentException {
-				screen.propose(proposedScreenOrientation);
-			}
-
-			@Override
-			public void stop() {
-				monitor = null;
-			}
-			
-		});
+	public void stop() {
+		sensorManager.unregisterListener(listener);
 	}
-	
-	public void pause() {
-		ensureNotMonitoring();
-	}
-	
-	private void ensureNotMonitoring() {
-		if (monitor != null)
-			monitor.stop();
-	}
-	
-	public void resume() {}
 	
 }

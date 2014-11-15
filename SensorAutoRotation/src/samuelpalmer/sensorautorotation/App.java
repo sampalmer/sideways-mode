@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.landscapetriggering.ProximitySensorMonitorFactory;
 import android.content.Context;
 
 public class App {
@@ -16,10 +15,9 @@ public class App {
 		
 		try {
 			screen = new Screen(context);
-			calculator = new OrientationCalculator(new ProximitySensorMonitorFactory(context), screen);
+			calculator = new OrientationCalculator(context, screen);
 			orientationListener = new OrientationSensorHandler(context, calculator);
 				
-			calculator.resume();
 			orientationListener.enable();
 		}
 		catch (EnvironmentException e) {
@@ -33,7 +31,7 @@ public class App {
 				orientationListener.disable();
 			
 			if (calculator != null)
-				calculator.pause();
+				calculator.stop();
 			
 			if (screen != null)
 				try {
