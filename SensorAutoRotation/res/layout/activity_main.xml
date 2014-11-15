@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -7,16 +7,11 @@
     tools:ignore="MergeRootFrame"
     android:orientation="vertical" >
 
-	<Button
-	    android:id="@+id/start_service"
+	<ToggleButton
+	    android:id="@+id/onOffButton"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="Start" />
-	
-	<Button
-	    android:id="@+id/stop_service"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Stop" />
+	    android:layout_centerInParent="true"
+	    android:layout_gravity="center" />
 
-</LinearLayout>
+</RelativeLayout>

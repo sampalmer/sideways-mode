@@ -1,38 +1,57 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.Settings.Listener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ToggleButton;
 
 public class MainActivity extends ActionBarActivity {
 	
-    @Override
+    private Settings settings;
+	private ToggleButton button;
+
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        final ServiceController service = new ServiceController(this);
+        settings = new Settings(this);
+        button = (ToggleButton)findViewById(R.id.onOffButton);
         
-        Button start = (Button)findViewById(R.id.start_service);
-        start.setOnClickListener(new OnClickListener() {
-
+        button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
 			@Override
-			public void onClick(View v) {
-				service.start();
-			}
-        	
-        });
-        
-        Button stop = (Button)findViewById(R.id.stop_service);
-        stop.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				service.stop();
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				settings.setEnabled(isChecked);
+				updateServiceState(isChecked);
 			}
 
-        });
+		});
+        
+        settings.listen(new Listener() {
+			@Override
+			public void tell() {
+				updateFromSettings();
+			}
+		});
+        
+        updateFromSettings();
     }
+
+	private void updateFromSettings() {
+		boolean enabled = settings.enabled();
+		button.setChecked(enabled);
+		updateServiceState(enabled);
+	}
+
+	private void updateServiceState(boolean enabled) {
+		final ServiceController service = new ServiceController(this);
+        if (enabled)
+        	service.start();
+        else
+        	service.stop();
+	}
+    
 }
