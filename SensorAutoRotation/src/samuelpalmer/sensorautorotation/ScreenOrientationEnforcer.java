@@ -23,7 +23,7 @@ public class ScreenOrientationEnforcer {
 	}
 	
 	private LayoutParams generateLayout() {
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.RGBA_8888);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.TRANSPARENT);
         layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 		return layoutParams;
 	}
