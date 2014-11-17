@@ -17,9 +17,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        settings = new Settings(this);
         button = (ToggleButton)findViewById(R.id.onOffButton);
-        
         button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -30,6 +28,7 @@ public class MainActivity extends ActionBarActivity {
 
 		});
         
+        settings = new Settings(this);
         settings.listen(new Listener() {
 			@Override
 			public void tell() {
@@ -39,7 +38,13 @@ public class MainActivity extends ActionBarActivity {
         
         updateFromSettings();
     }
-
+	
+	@Override
+	protected void onDestroy() {
+		settings.stopListening();
+		super.onDestroy();
+	}
+	
 	private void updateFromSettings() {
 		boolean enabled = settings.enabled();
 		button.setChecked(enabled);

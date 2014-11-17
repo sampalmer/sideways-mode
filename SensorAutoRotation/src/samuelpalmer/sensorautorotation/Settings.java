@@ -8,9 +8,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 public class Settings {
 
 	private static final String FILE_NAME = "samuelpalmer.sensorautorotation.prefs";
-	private SharedPreferences prefs;
-    private static final String ENABLED_PREF_NAME = "enabled";
-	private OnSharedPreferenceChangeListener listener;
+	private static final String ENABLED_PREF_NAME = "enabled";
+	private final SharedPreferences prefs;
+    private OnSharedPreferenceChangeListener listener;
     
     public Settings(Context context) {
         prefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
@@ -23,7 +23,8 @@ public class Settings {
 	public void setEnabled(boolean isChecked) {
 		Editor editor = prefs.edit();
 		editor.putBoolean(ENABLED_PREF_NAME, isChecked);
-		editor.commit();
+		if (!editor.commit())
+			throw new RuntimeException("Failed to write settings");
 	}
 	
 	public void listen(final Listener listener) {
