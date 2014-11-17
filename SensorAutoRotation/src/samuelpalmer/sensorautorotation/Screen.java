@@ -29,13 +29,13 @@ public class Screen {
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
-		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
-		
 		try {
 			settings.accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
+		
+		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	public void propose(Orientation value) throws EnvironmentException {
@@ -69,11 +69,9 @@ public class Screen {
 	
 	private void systemConfigChanged() {
 		try {
-			Boolean currentAccelerometerRotation = settings.accelerometerRotation.getOrNull();
-			if (currentAccelerometerRotation == true) {
-				originalAccelerometerRotation = currentAccelerometerRotation;
+			Boolean originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+			if (originalAccelerometerRotation == true)
 				throw new EnvironmentException("System screen auto-rotation was enabled.");
-			}
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(context).handle(e);
 		}
