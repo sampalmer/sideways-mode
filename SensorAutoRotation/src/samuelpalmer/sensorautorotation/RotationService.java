@@ -15,6 +15,13 @@ public class RotationService extends Service {
 
 	private BroadcastReceiver screenStateChangeReceiver;
 	private App app;
+	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			stopSelf();
+		}
+	};
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -32,6 +39,8 @@ public class RotationService extends Service {
 		
 		supportScreenStateChanges();
 		promoteToForeground();
+		
+		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 	}
 
 	private void create() {
@@ -76,6 +85,8 @@ public class RotationService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
+		unregisterReceiver(shutdownReceiver);
 		
 		if (screenStateChangeReceiver != null)
 			unregisterReceiver(screenStateChangeReceiver);
