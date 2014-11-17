@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.view.WindowManager;
 
 public class Screen {
 	
@@ -32,8 +31,6 @@ public class Screen {
 		
 		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 		
-		matchCurrentScreenRotation();
-		
 		try {
 			settings.accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
@@ -41,10 +38,6 @@ public class Screen {
 		}
 	}
 
-	public void matchCurrentScreenRotation() throws EnvironmentException {
-		propose(orientation());
-	}
-	
 	public void propose(Orientation value) throws EnvironmentException {
 		if (value == null)
 			throw new IllegalArgumentException();
@@ -67,15 +60,15 @@ public class Screen {
 	}
 
 	public Orientation orientation() {
-		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		int rotation = windows.getDefaultDisplay().getRotation();
-		return Orientation.fromAndroidSurfaceRotation(rotation);
+		Orientation result = settings.userRotation.getOrNull();
+		if (result == null)
+			result = Orientation.NATURAL;
+		
+		return result;
 	}
 	
-	public void systemConfigChanged() {
+	private void systemConfigChanged() {
 		try {
-			matchCurrentScreenRotation();
-			
 			Boolean currentAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 			if (currentAccelerometerRotation == true) {
 				originalAccelerometerRotation = currentAccelerometerRotation;
