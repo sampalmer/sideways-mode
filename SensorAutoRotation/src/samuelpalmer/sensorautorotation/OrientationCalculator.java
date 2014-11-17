@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -24,8 +25,10 @@ public class OrientationCalculator {
 	private SensorEventListener listener;
 	private WindowManager windowManager;
 	private View overlay;
+	private Context context;
 	
 	public OrientationCalculator(final Context context, Screen screen) throws EnvironmentException {
+		this.context = context;
 		this.screen = screen;
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		overlay = new LinearLayout(context);
@@ -78,7 +81,11 @@ public class OrientationCalculator {
 			Rotation deviceChange = newDevice.minus(device);
 			Orientation currentScreenOrientation = screen.orientation();
 			Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
-			if (!covered)
+			if (covered) {
+				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+			    vibrator.vibrate(75);    
+			}
+			else
 				screen.propose(proposedScreenOrientation);
 		}
 		
