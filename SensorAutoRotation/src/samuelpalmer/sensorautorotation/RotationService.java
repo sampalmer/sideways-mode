@@ -13,13 +13,28 @@ import android.support.v4.app.NotificationCompat;
 
 public class RotationService extends Service {
 
-	private BroadcastReceiver screenStateChangeReceiver;
+	private boolean destroyed;
 	private App app;
+	
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			stopSelf();
+		}
+	};
+	
+	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			startProcessing();
+		}
+	};
+	
+	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			stopProcessing();
 		}
 	};
 	
@@ -32,19 +47,31 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		boolean isScreenOn = pm.isScreenOn();
-		if (isScreenOn)
-			create();
+		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		
-		supportScreenStateChanges();
 		promoteToForeground();
 		
-		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		if (screenOn())
+			startProcessing();
 	}
 
-	private void create() {
-		app = new App(this);
+	private boolean screenOn() {
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		return pm.isScreenOn();
+	}
+
+	private void startProcessing() {
+		if (app == null)
+			app = new App(this);
+	}
+	
+	private void stopProcessing() {
+		if (app != null) {
+			app.destroy();
+			app = null;
+		}
 	}
 	
 	/**
@@ -64,32 +91,9 @@ public class RotationService extends Service {
 		startForeground(1, notification);
 	}
 
-	private void supportScreenStateChanges() {
-		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-		screenStateChangeReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-
-				if (action.equals(Intent.ACTION_SCREEN_OFF))
-					destroy();
-				else if (action.equals(Intent.ACTION_SCREEN_ON))
-					create();
-			}
-		};
-
-		registerReceiver(screenStateChangeReceiver, intentFilter);
-	}
-
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
-		unregisterReceiver(shutdownReceiver);
-		
-		if (screenStateChangeReceiver != null)
-			unregisterReceiver(screenStateChangeReceiver);
 		
 		destroy();
 	}
@@ -102,9 +106,14 @@ public class RotationService extends Service {
 	}
 
 	private void destroy() {
-		if (app != null) {
-			app.destroy();
-			app = null;
+		if (!destroyed) {
+			stopProcessing();
+			
+			unregisterReceiver(shutdownReceiver);
+			unregisterReceiver(screenOffReceiver);
+			unregisterReceiver(screenOnReceiver);
+			
+			destroyed = true;
 		}
 	}
 	
