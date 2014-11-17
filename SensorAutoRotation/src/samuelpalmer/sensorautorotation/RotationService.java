@@ -16,6 +16,44 @@ public class RotationService extends Service {
 	private boolean destroyed;
 	private App app;
 	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		
+		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		
+		promoteToForeground();
+		
+		if (screenOn())
+			startProcessing();
+	}
+
+	private void destroy() {
+		if (!destroyed) {
+			stopProcessing();
+			
+			unregisterReceiver(shutdownReceiver);
+			unregisterReceiver(screenOffReceiver);
+			unregisterReceiver(screenOnReceiver);
+			
+			destroyed = true;
+		}
+	}
+	
+	private void startProcessing() {
+		if (app == null)
+			app = new App(this);
+	}
+	
+	private void stopProcessing() {
+		if (app != null) {
+			app.destroy();
+			app = null;
+		}
+	}
+	
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 		
 		@Override
@@ -43,35 +81,9 @@ public class RotationService extends Service {
 		return null;
 	}
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		
-		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
-		
-		promoteToForeground();
-		
-		if (screenOn())
-			startProcessing();
-	}
-
 	private boolean screenOn() {
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		return pm.isScreenOn();
-	}
-
-	private void startProcessing() {
-		if (app == null)
-			app = new App(this);
-	}
-	
-	private void stopProcessing() {
-		if (app != null) {
-			app.destroy();
-			app = null;
-		}
 	}
 	
 	/**
@@ -103,18 +115,6 @@ public class RotationService extends Service {
 		super.finalize();
 
 		destroy();
-	}
-
-	private void destroy() {
-		if (!destroyed) {
-			stopProcessing();
-			
-			unregisterReceiver(shutdownReceiver);
-			unregisterReceiver(screenOffReceiver);
-			unregisterReceiver(screenOnReceiver);
-			
-			destroyed = true;
-		}
 	}
 	
 }
