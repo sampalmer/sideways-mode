@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.view.WindowManager;
 
 public class Screen {
 	
@@ -27,6 +28,8 @@ public class Screen {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
 		
+		Orientation realOrientation = realOrientation();
+		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		
 		try {
@@ -34,6 +37,8 @@ public class Screen {
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
+		
+		propose(realOrientation);
 		
 		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
@@ -59,7 +64,13 @@ public class Screen {
 		}
 	}
 
-	public Orientation orientation() {
+	private Orientation realOrientation() {
+		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int rotation = windows.getDefaultDisplay().getRotation();
+		return Orientation.fromAndroidSurfaceRotation(rotation);
+	}
+	
+	private Orientation proposedOrientation() {
 		Orientation result = settings.userRotation.getOrNull();
 		if (result == null)
 			result = Orientation.NATURAL;
@@ -79,6 +90,6 @@ public class Screen {
 	
 	@Override
 	public String toString() {
-		return orientation().toString();
+		return proposedOrientation().toString();
 	}
 }

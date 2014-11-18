@@ -15,6 +15,7 @@ public class RotationService extends Service {
 
 	private boolean destroyed;
 	private App app;
+	private Screen screen;
 	
 	@Override
 	public void onCreate() {
@@ -23,6 +24,11 @@ public class RotationService extends Service {
 		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 		registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		try {
+			screen = new Screen(this);
+		} catch (EnvironmentException e) {
+			new UserErrorHandler(this).handle(e);
+		}
 		
 		promoteToForeground();
 		
@@ -34,6 +40,11 @@ public class RotationService extends Service {
 		if (!destroyed) {
 			stopProcessing();
 			
+			try {
+				screen.close();
+			} catch (EnvironmentException e) {
+				new UserErrorHandler(this).handle(e);
+			}
 			unregisterReceiver(shutdownReceiver);
 			unregisterReceiver(screenOffReceiver);
 			unregisterReceiver(screenOnReceiver);
@@ -44,7 +55,7 @@ public class RotationService extends Service {
 	
 	private void startProcessing() {
 		if (app == null)
-			app = new App(this);
+			app = new App(this, screen);
 	}
 	
 	private void stopProcessing() {

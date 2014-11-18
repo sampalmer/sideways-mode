@@ -19,6 +19,8 @@ public class OrientationCalculator {
 	private static final int THRESHOLD_IN_CENTIMETRES = 3;
 	
 	private Orientation device;
+	private Orientation user = Orientation.NATURAL;
+	
 	private Screen screen;
 	private SensorManager sensorManager;
 	private boolean covered;
@@ -79,14 +81,16 @@ public class OrientationCalculator {
 		
 		if (device != null) {
 			Rotation deviceChange = newDevice.minus(device);
-			Orientation currentScreenOrientation = screen.orientation();
-			Orientation proposedScreenOrientation = currentScreenOrientation.plus(deviceChange);
+			
 			if (covered) {
 				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-			    vibrator.vibrate(75);    
+			    vibrator.vibrate(75);
+			    user = user.plus(deviceChange);
 			}
-			else
+			else {
+				Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
 				screen.propose(proposedScreenOrientation);
+			}
 		}
 		
 		device = newDevice;
