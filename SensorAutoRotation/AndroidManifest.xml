@@ -32,12 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name=".StopServiceActivity"
-            android:label="Stop"
-            android:theme="@android:style/Theme.NoDisplay" >
-        </activity>
 		
         <activity
             android:name="samuelpalmer.sensorautorotation.components.ErrorDialogActivity"
