@@ -8,7 +8,7 @@ import android.hardware.SensorManager;
 
 public class ProximitySensorHandler {
 
-	private static final int THRESHOLD_IN_CENTIMETRES = 3;
+	private static final float THRESHOLD_IN_CENTIMETRES = .3f;
 	
 	private final SensorManager sensorManager;
 	private final Listener[] listeners;
