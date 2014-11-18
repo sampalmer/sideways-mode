@@ -31,7 +31,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 	
 	@Override
-	public void stateChanged(boolean covered) {
+	public void update(boolean covered) {
 		if (covered)
 			overlay.setVisibility(View.VISIBLE);
 		else

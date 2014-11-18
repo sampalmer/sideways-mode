@@ -12,7 +12,6 @@ public class ProximitySensorHandler {
 	
 	private final SensorManager sensorManager;
 	private final Listener[] listeners;
-	private Boolean covered;
 
 	public ProximitySensorHandler(Context context, Listener[] listeners) throws EnvironmentException {
 		this.listeners = listeners;
@@ -42,12 +41,9 @@ public class ProximitySensorHandler {
 			
 			float distanceInCentimetres = event.values[0];
 			float coveredThreshold = Math.min(THRESHOLD_IN_CENTIMETRES, event.sensor.getMaximumRange());
-			boolean newCovered = distanceInCentimetres <= coveredThreshold;
-			if (covered == null || newCovered != covered) {
-				covered = newCovered;
-				for (int i = 0; i < listeners.length; ++i)
-					listeners[i].stateChanged(newCovered);
-			}
+			boolean covered = distanceInCentimetres <= coveredThreshold;
+			for (int i = 0; i < listeners.length; ++i)
+				listeners[i].update(covered);
 		}
 		
 		@Override
@@ -55,7 +51,7 @@ public class ProximitySensorHandler {
 	};
 	
 	public interface Listener {
-		public void stateChanged(boolean covered);
+		public void update(boolean covered);
 	}
 	
 }

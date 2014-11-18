@@ -6,8 +6,10 @@ import android.os.Vibrator;
 
 public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	
+	private static final Orientation DEFAULT_USER = Orientation.NATURAL; 
+	
 	private Orientation device;
-	private Orientation user = Orientation.NATURAL;
+	private Orientation user = DEFAULT_USER;
 	
 	private Screen screen;
 	private boolean covered;
@@ -18,7 +20,7 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 		this.screen = screen;
 	}
 	
-	public void setDevice(Orientation newDevice) throws EnvironmentException {
+	public void setDevice(Orientation newDevice) {
 		
 		if (covered) {
 			if (device != null) {
@@ -30,16 +32,28 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 				}
 			}
 		}
-		else {
-			Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
-			screen.propose(proposedScreenOrientation);
-		}
 			
 		device = newDevice;
+		
+		updateScreen();
 	}
 
+	private void updateScreen() {
+		Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(user));
+		try {
+			screen.propose(proposedScreenOrientation);
+		} catch (EnvironmentException e) {
+			new UserErrorHandler(context).handle(e);
+		}
+	}
+	
+	public void resetUser() {
+		user = DEFAULT_USER;
+		updateScreen();
+	}
+	
 	@Override
-	public void stateChanged(boolean proximitySensorCovered) {
+	public void update(boolean proximitySensorCovered) {
 		covered = proximitySensorCovered;
 	}
 	

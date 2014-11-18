@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- To show screen overlays and enforce orientation -->
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- For recalibrate feedback -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- To prevent user orientation changes during calls -->
 	<!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
 
     <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="18" tools:ignore="OldTargetApi"/>
