@@ -79,20 +79,21 @@ public class OrientationCalculator {
 	
 	public void setDevice(Orientation newDevice) throws EnvironmentException {
 		
-		if (device != null) {
-			Rotation deviceChange = newDevice.minus(device);
-			if (deviceChange.clockwiseCount() != 0)
-				if (covered) {
+		if (covered) {
+			if (device != null) {
+				Rotation deviceChange = newDevice.minus(device);
+				if (deviceChange.clockwiseCount() != 0) {
 					Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 				    vibrator.vibrate(75);
 				    user = user.plus(deviceChange);
 				}
-				else {
-					Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
-					screen.propose(proposedScreenOrientation);
-				}
+			}
 		}
-		
+		else {
+			Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
+			screen.propose(proposedScreenOrientation);
+		}
+			
 		device = newDevice;
 	}
 
