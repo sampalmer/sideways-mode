@@ -1,6 +1,12 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.unused;
 
 import java.io.IOException;
+
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.IntegerUtilities;
+import samuelpalmer.sensorautorotation.Orientation;
+import samuelpalmer.sensorautorotation.Screen;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
 
 import android.annotation.TargetApi;
 import android.content.Context;

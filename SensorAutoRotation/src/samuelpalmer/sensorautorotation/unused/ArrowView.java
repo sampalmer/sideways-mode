@@ -1,5 +1,8 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.unused;
 
+import samuelpalmer.sensorautorotation.IntegerUtilities;
+import samuelpalmer.sensorautorotation.Orientation;
+import samuelpalmer.sensorautorotation.Rotation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;

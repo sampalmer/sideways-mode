@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.unused;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
