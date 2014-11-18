@@ -6,6 +6,8 @@ import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.Screen;
+import samuelpalmer.sensorautorotation.ScreenOnMonitor;
+import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.app.Notification;
 import android.app.Service;
@@ -14,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 public class RotationService extends Service {
@@ -22,13 +23,24 @@ public class RotationService extends Service {
 	private boolean destroyed;
 	private App app;
 	private Screen screen;
+	private ScreenOnMonitor screenOnMonitor;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
-		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		screenOnMonitor = new ScreenOnMonitor(this, new StateMonitor.Listener<Boolean>() {
+			@Override
+			public void stateChanged(Boolean on) {
+				if (on)
+					startProcessing();
+				else
+					stopProcessing();
+			}
+		});
+		
+		screenOnMonitor.start();
+		
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		try {
 			screen = new Screen(this);
@@ -37,9 +49,6 @@ public class RotationService extends Service {
 		}
 		
 		promoteToForeground();
-		
-		if (screenOn())
-			startProcessing();
 	}
 
 	private void destroy() {
@@ -52,8 +61,7 @@ public class RotationService extends Service {
 				new UserErrorHandler(this).handle(e);
 			}
 			unregisterReceiver(shutdownReceiver);
-			unregisterReceiver(screenOffReceiver);
-			unregisterReceiver(screenOnReceiver);
+			screenOnMonitor.stop();
 			
 			destroyed = true;
 		}
@@ -79,28 +87,9 @@ public class RotationService extends Service {
 		}
 	};
 	
-	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			startProcessing();
-		}
-	};
-	
-	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			stopProcessing();
-		}
-	};
-	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
-	}
-
-	private boolean screenOn() {
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		return pm.isScreenOn();
 	}
 	
 	/**
