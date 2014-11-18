@@ -81,16 +81,16 @@ public class OrientationCalculator {
 		
 		if (device != null) {
 			Rotation deviceChange = newDevice.minus(device);
-			
-			if (covered) {
-				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-			    vibrator.vibrate(75);
-			    user = user.plus(deviceChange);
-			}
-			else {
-				Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
-				screen.propose(proposedScreenOrientation);
-			}
+			if (deviceChange.clockwiseCount() != 0)
+				if (covered) {
+					Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+				    vibrator.vibrate(75);
+				    user = user.plus(deviceChange);
+				}
+				else {
+					Orientation proposedScreenOrientation = newDevice.plus(Orientation.NATURAL.minus(user));
+					screen.propose(proposedScreenOrientation);
+				}
 		}
 		
 		device = newDevice;
