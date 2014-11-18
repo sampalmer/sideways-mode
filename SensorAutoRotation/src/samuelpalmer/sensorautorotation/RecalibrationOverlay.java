@@ -12,30 +12,45 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
 	private LinearLayout overlay;
+	private Context context;
 
 	public RecalibrationOverlay(Context context) {
+		this.context = context;
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		overlay = new LinearLayout(context);
-		overlay.setBackgroundColor(Color.BLACK);
-		windowManager.addView(overlay, generateLayout());
 	}
 
 	public void stop() {
-		windowManager.removeView(overlay);
+		ensureNotPresent();
+	}
+	
+	@Override
+	public void update(boolean covered) {
+		if (covered)
+			ensurePresent();
+		else
+			ensureNotPresent();
+	}
+
+	private void ensurePresent() {
+		if (overlay == null) {
+			overlay = new LinearLayout(context);
+			overlay.setBackgroundColor(Color.BLACK);
+			overlay.setVisibility(View.VISIBLE);
+			windowManager.addView(overlay, generateLayout());
+		}
+	}
+
+	private void ensureNotPresent() {
+		if (overlay != null) {
+			windowManager.removeView(overlay);
+			overlay = null;
+		}
 	}
 	
 	private LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.TRANSLUCENT);
 		layoutParams.alpha = 0.3f;
 		return layoutParams;
-	}
-	
-	@Override
-	public void update(boolean covered) {
-		if (covered)
-			overlay.setVisibility(View.VISIBLE);
-		else
-			overlay.setVisibility(View.GONE);
 	}
 
 }
