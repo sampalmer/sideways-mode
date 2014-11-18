@@ -34,7 +34,7 @@ public class Settings {
 		this.listener = new OnSharedPreferenceChangeListener() {
 			@Override
 			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-				if (key == ENABLED_PREF_NAME)
+				if (key.equals(ENABLED_PREF_NAME))
 					listener.tell();
 			}
 		};
