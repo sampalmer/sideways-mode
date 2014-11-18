@@ -1,5 +1,6 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.components;
 
+import samuelpalmer.sensorautorotation.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;

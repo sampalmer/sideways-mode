@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.components.RotationService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;

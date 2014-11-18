@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;

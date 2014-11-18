@@ -1,6 +1,12 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.components;
 
 
+import samuelpalmer.sensorautorotation.App;
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.Screen;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;

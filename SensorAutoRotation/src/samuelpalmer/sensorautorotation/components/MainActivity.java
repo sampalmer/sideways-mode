@@ -1,5 +1,8 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.components;
 
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.Settings.Listener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
