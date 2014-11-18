@@ -8,28 +8,35 @@ public class App {
 	private UserErrorHandler errorHandler;
 	private boolean destroyed;
 	private OrientationCalculator calculator;
+	private ProximitySensorHandler proximityHandler;
+	private RecalibrationOverlay overlay;
 	
 	public App(Context context, Screen screen) {
 		errorHandler = new UserErrorHandler(context);
+		calculator = new OrientationCalculator(context, screen);
+		overlay = new RecalibrationOverlay(context);
 		
 		try {
-			calculator = new OrientationCalculator(context, screen);
 			orientationListener = new OrientationSensorHandler(context, calculator);
-				
-			orientationListener.enable();
+			proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
 		}
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
+			return;
 		}
+		
+		orientationListener.enable();
 	}
 	
 	public void destroy() {
 		if (!destroyed) {
+			if (proximityHandler != null)
+				proximityHandler.stop();
+			
 			if (orientationListener != null)
 				orientationListener.disable();
 			
-			if (calculator != null)
-				calculator.stop();
+			overlay.stop();
 			
 			destroyed = true;
 		}
