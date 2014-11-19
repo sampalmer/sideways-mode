@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-jar-with-dependencies.jar" sourcepath="/SensorAutoRotation/libs/test/robolectric-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sam/Desktop/Utilities/adt-bundle-windows-x86_64-20140702/sdk/platforms/android-18/android.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Sam/Desktop/Utilities/adt-bundle-windows-x86_64-20140702/sdk/platforms/android-18/android.jar" sourcepath="C:/Users/Sam/Desktop/Utilities/adt-bundle-windows-x86_64-20140702/sdk/sources/android-18"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
