@@ -23,7 +23,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void shouldHaveHappySmiles() throws Exception 
+    public void shouldHaveHappySmiles() 
     {
         String hello = this.activity.getString(R.string.app_name);
         assertThat(hello, equalTo("Screen Rotate"));
