@@ -38,10 +38,6 @@ public class MainActivityTest {
     	Intent startIntent = shadowActivity.getNextStartedService();
     	isForService(startIntent);
     }
-
-	private void isForService(Intent intent) {
-		assertThat(intent.getComponent().getClassName(), equalTo(RotationService.class.getCanonicalName()));
-	}
     
     @Test
     public void pressingButtonShouldStopService() {
@@ -50,4 +46,8 @@ public class MainActivityTest {
     	Intent stopIntent = shadowActivity.getNextStoppedService();
     	isForService(stopIntent);
     }
+
+	private void isForService(Intent intent) {
+		assertThat(intent.getComponent().getClassName(), equalTo(RotationService.class.getCanonicalName()));
+	}
 }
