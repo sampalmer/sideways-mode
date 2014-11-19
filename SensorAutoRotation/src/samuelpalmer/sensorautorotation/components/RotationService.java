@@ -39,8 +39,6 @@ public class RotationService extends Service {
 			}
 		});
 		
-		screenOnMonitor.start();
-		
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		try {
 			screen = new Screen(this);
@@ -49,6 +47,8 @@ public class RotationService extends Service {
 		}
 		
 		promoteToForeground();
+		
+		screenOnMonitor.start();
 	}
 
 	private void destroy() {
