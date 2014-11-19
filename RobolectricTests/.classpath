@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SensorAutoRotation"/>
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/hamcrest-all-1.3.jar"/>
-	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-jar-with-dependencies.jar" sourcepath="/SensorAutoRotation/libs/test/robolectric-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="/SensorAutoRotation/libs/test/robolectric-2.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Sam/Desktop/Utilities/adt-bundle-windows-x86_64-20140702/sdk/platforms/android-18/android.jar"/>
