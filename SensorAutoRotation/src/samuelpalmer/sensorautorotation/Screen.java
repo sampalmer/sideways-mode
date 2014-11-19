@@ -80,7 +80,7 @@ public class Screen {
 	
 	private void systemConfigChanged() {
 		try {
-			Boolean originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
+			originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 			if (originalAccelerometerRotation == true)
 				throw new EnvironmentException("System screen auto-rotation was enabled.");
 		} catch (EnvironmentException e) {
