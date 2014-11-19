@@ -1,15 +1,13 @@
 package samuelpalmer.sensorautorotation.components;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowPreferenceManager;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.Settings;
@@ -22,12 +20,6 @@ public class MainActivityTest {
     MainActivity activity;
 	private ShadowActivity shadowActivity;
 	private ToggleButton button;
-	private Settings settings;
-	
-	@Before
-	public void setup() {
-		settings = new Settings(Robolectric.application);
-	}
 	
     @Test
     public void buttonShouldBeOn() {
@@ -46,6 +38,7 @@ public class MainActivityTest {
     
     @Test
     public void shouldNotStartServiceWhenDisabled() {
+    	Settings settings = new Settings(Robolectric.application);
     	settings.setEnabled(false);
     	
     	startActivity();
