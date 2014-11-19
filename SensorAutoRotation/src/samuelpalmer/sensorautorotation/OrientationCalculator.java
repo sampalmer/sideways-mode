@@ -40,11 +40,12 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 
 	private void updateScreen() {
 		Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(user));
-		try {
-			screen.propose(proposedScreenOrientation);
-		} catch (EnvironmentException e) {
-			new UserErrorHandler(context).handle(e);
-		}
+		if (!proposedScreenOrientation.equals(Orientation.UPSIDE_DOWN))
+			try {
+				screen.propose(proposedScreenOrientation);
+			} catch (EnvironmentException e) {
+				new UserErrorHandler(context).handle(e);
+			}
 	}
 	
 	public void resetUser() {
