@@ -8,12 +8,24 @@
     android:visibility="visible"
     android:background="#000000" >
     
-     <com.caverock.androidsvg.SVGImageView
-        android:id="@+id/overlay_portrait_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        svgimageview:svg="portrait.svg"
-        app:layout_angle="0"
-        android:background="#000000" />
+    <RelativeLayout
+        android:id="@+id/overlay_subcontainer"
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent">
+        <!-- <com.caverock.androidsvg.SVGImageView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	    	android:layout_gravity=""
+	        android:scaleType="fitStart"
+	     	svgimageview:svg="portrait.svg" /> -->
+	    <ImageView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	    	android:layout_gravity="bottom|center_horizontal"
+	    	android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+	        android:scaleType="fitStart"
+	     	android:src="@drawable/abc_ic_search" />
+    </RelativeLayout>
     
 </com.github.rongi.rotate_layout.layout.RotateLayout>

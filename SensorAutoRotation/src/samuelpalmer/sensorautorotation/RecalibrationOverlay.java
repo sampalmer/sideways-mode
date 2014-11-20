@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.ImageView.ScaleType;
 
 import com.caverock.androidsvg.SVGImageView;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
@@ -50,8 +51,8 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 			RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			subcontainerParams.angle = 90 * actual.minus(proposed).clockwiseCount();
 			
-			View image = layout.findViewById(R.id.overlay_portrait_image);
-	        image.setLayoutParams(subcontainerParams);
+			View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
+	        subcontainer.setLayoutParams(subcontainerParams);
 			
 			windowManager.addView(layout, generateLayout());
 		}
