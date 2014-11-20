@@ -15,9 +15,11 @@ public class App {
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationOverlay overlay;
 	private Context context;
+	private Screen screen;
 	
 	public App(Context context, Screen screen) {
 		this.context = context;
+		this.screen = screen;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
 		overlay = new RecalibrationOverlay(screen, context);
@@ -46,6 +48,12 @@ public class App {
 			
 			context.unregisterReceiver(callStateReceiver);
 			overlay.stop();
+			
+			try {
+				screen.propose(Orientation.NATURAL);
+			} catch (EnvironmentException e) {
+				errorHandler.handle(e);
+			}
 			
 			destroyed = true;
 		}
