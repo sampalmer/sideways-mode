@@ -4,6 +4,7 @@ import samuelpalmer.sensorautorotation.Screen.RealOrientationListener;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -14,16 +15,16 @@ import com.github.rongi.rotate_layout.layout.RotateLayout;
 public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
-	private RotateLayout layout;
-	private Context context;
+	private View layout;
 	private Screen screen;
-	private SVGImageView image;
+	private LayoutInflater layoutInflater;
 	
 	public RecalibrationOverlay(Screen screen, Context context) {
 		this.screen = screen;
-		this.context = context;
 		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 		screen.listen(listener);
 	}
 
@@ -42,28 +43,18 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 
 	private void ensurePresent() {
 		if (layout == null) {
-			layout = new RotateLayout(context);
+	        layout = layoutInflater.inflate(R.layout.user_orientation, null);
+	        
+	        Orientation proposed = screen.proposedOrientation();
+			Orientation actual = screen.realOrientation();
+			RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			subcontainerParams.angle = 90 * actual.minus(proposed).clockwiseCount();
 			
-			makeImageView();
+			View image = layout.findViewById(R.id.overlay_portrait_image);
+	        image.setLayoutParams(subcontainerParams);
 			
-			layout.addView(image);
-			
-			layout.setBackgroundColor(Color.BLACK);
-			layout.setVisibility(View.VISIBLE);
 			windowManager.addView(layout, generateLayout());
 		}
-	}
-
-	private void makeImageView() {
-		image = new SVGImageView(context);
-		image.setImageAsset("portrait.svg");
-		
-		Orientation proposed = screen.proposedOrientation();
-		Orientation actual = screen.realOrientation();
-		
-		RotateLayout.LayoutParams params = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		params.angle = 90 * actual.minus(proposed).clockwiseCount();
-		image.setLayoutParams(params);
 	}
 
 	private void ensureNotPresent() {
