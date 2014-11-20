@@ -44,9 +44,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		if (layout == null) {
 			layout = new RotateLayout(context);
 			
-			image = new SVGImageView(context);
-			image.setImageAsset("portrait.svg");
-			adjustRotation();
+			makeImageView();
 			
 			layout.addView(image);
 			
@@ -54,6 +52,18 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 			layout.setVisibility(View.VISIBLE);
 			windowManager.addView(layout, generateLayout());
 		}
+	}
+
+	private void makeImageView() {
+		image = new SVGImageView(context);
+		image.setImageAsset("portrait.svg");
+		
+		Orientation proposed = screen.proposedOrientation();
+		Orientation actual = screen.realOrientation();
+		
+		RotateLayout.LayoutParams params = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		params.angle = 90 * actual.minus(proposed).clockwiseCount();
+		image.setLayoutParams(params);
 	}
 
 	private void ensureNotPresent() {
@@ -69,20 +79,13 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		return layoutParams;
 	}
 
-	private void adjustRotation() {
-		Orientation proposed = screen.proposedOrientation();
-		Orientation actual = screen.realOrientation();
-		
-		RotateLayout.LayoutParams params = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		params.angle = 90 * actual.minus(proposed).clockwiseCount();
-		image.setLayoutParams(params);
-	}
-	
 	private final RealOrientationListener listener = new RealOrientationListener() {
 		@Override
 		public void possiblyChanged() {
-			if (layout != null)
-				adjustRotation();
+			if (layout != null) {
+				ensureNotPresent();
+				ensurePresent();
+			}
 		}
 	};
 }
