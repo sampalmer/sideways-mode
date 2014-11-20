@@ -44,21 +44,23 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-		Orientation device = calculator.getDevice();
-		
-		if (layout == null && device != null) {
+		if (layout == null && calculator.getDevice() != null) {
 	        layout = layoutInflater.inflate(R.layout.user_orientation, null);
 	        
-	        Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(calculator.getUser()));
-			Orientation actual = screen.realOrientation();
-			RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			subcontainerParams.angle = 90 * actual.minus(proposedScreenOrientation).clockwiseCount();
-			
-			View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
-	        subcontainer.setLayoutParams(subcontainerParams);
+	        update();
 			
 			windowManager.addView(layout, generateLayout());
 		}
+	}
+
+	private void update() {
+		Orientation proposedScreenOrientation = calculator.getDevice().plus(Orientation.NATURAL.minus(calculator.getUser()));
+		Orientation actual = screen.realOrientation();
+		RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		subcontainerParams.angle = 90 * actual.minus(proposedScreenOrientation).clockwiseCount();
+		
+		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
+		subcontainer.setLayoutParams(subcontainerParams);
 	}
 
 	private void ensureNotPresent() {
@@ -90,10 +92,8 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	};
 	
 	private void updateOverlay() {
-		if (layout != null) {
-			ensureNotPresent();
-			ensurePresent();
-		}
+		if (layout != null)
+			update();
 	}
 	
 }
