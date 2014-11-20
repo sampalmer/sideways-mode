@@ -64,13 +64,13 @@ public class Screen {
 		}
 	}
 
-	private Orientation realOrientation() {
+	public Orientation realOrientation() {
 		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windows.getDefaultDisplay().getRotation();
 		return Orientation.fromAndroidSurfaceRotation(rotation);
 	}
 	
-	private Orientation proposedOrientation() {
+	public Orientation proposedOrientation() {
 		Orientation result = settings.userRotation.getOrNull();
 		if (result == null)
 			result = Orientation.NATURAL;
@@ -86,10 +86,33 @@ public class Screen {
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(context).handle(e);
 		}
+		
+		if (listener != null)
+			listener.possiblyChanged();
 	}
 	
 	@Override
 	public String toString() {
 		return proposedOrientation().toString();
+	}
+	
+	private RealOrientationListener listener; 
+	
+	public void listen(RealOrientationListener listener) {
+		if (this.listener != null)
+			throw new RuntimeException("Already listening");
+		
+		this.listener = listener;
+	}
+	
+	public void stopListening() {
+		if (listener == null)
+			throw new RuntimeException("Not listening");
+		
+		listener = null;
+	}
+	
+	public interface RealOrientationListener {
+		void possiblyChanged();
 	}
 }

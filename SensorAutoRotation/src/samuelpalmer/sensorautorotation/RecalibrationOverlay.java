@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.Screen.RealOrientationListener;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -8,19 +9,26 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.caverock.androidsvg.SVGImageView;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 
 public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
-	private SVGImageView overlay;
+	private RotateLayout layout;
 	private Context context;
-
-	public RecalibrationOverlay(Context context) {
+	private Screen screen;
+	private SVGImageView image;
+	
+	public RecalibrationOverlay(Screen screen, Context context) {
+		this.screen = screen;
 		this.context = context;
+		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		screen.listen(listener);
 	}
 
 	public void stop() {
+		screen.stopListening();
 		ensureNotPresent();
 	}
 	
@@ -33,19 +41,25 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-		if (overlay == null) {
-			overlay = new SVGImageView(context);
-			overlay.setImageAsset("portrait.svg");
-			overlay.setBackgroundColor(Color.BLACK);
-			overlay.setVisibility(View.VISIBLE);
-			windowManager.addView(overlay, generateLayout());
+		if (layout == null) {
+			layout = new RotateLayout(context);
+			
+			image = new SVGImageView(context);
+			image.setImageAsset("portrait.svg");
+			adjustRotation();
+			
+			layout.addView(image);
+			
+			layout.setBackgroundColor(Color.BLACK);
+			layout.setVisibility(View.VISIBLE);
+			windowManager.addView(layout, generateLayout());
 		}
 	}
 
 	private void ensureNotPresent() {
-		if (overlay != null) {
-			windowManager.removeView(overlay);
-			overlay = null;
+		if (layout != null) {
+			windowManager.removeView(layout);
+			layout = null;
 		}
 	}
 	
@@ -55,4 +69,20 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		return layoutParams;
 	}
 
+	private void adjustRotation() {
+		Orientation proposed = screen.proposedOrientation();
+		Orientation actual = screen.realOrientation();
+		
+		RotateLayout.LayoutParams params = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		params.angle = 90 * actual.minus(proposed).clockwiseCount();
+		image.setLayoutParams(params);
+	}
+	
+	private final RealOrientationListener listener = new RealOrientationListener() {
+		@Override
+		public void possiblyChanged() {
+			if (layout != null)
+				adjustRotation();
+		}
+	};
 }

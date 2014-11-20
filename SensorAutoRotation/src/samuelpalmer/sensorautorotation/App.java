@@ -20,7 +20,7 @@ public class App {
 		this.context = context;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
-		overlay = new RecalibrationOverlay(context);
+		overlay = new RecalibrationOverlay(screen, context);
 		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 		
 		try {
