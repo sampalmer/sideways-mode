@@ -6,12 +6,13 @@ import android.graphics.PixelFormat;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.LinearLayout;
+
+import com.caverock.androidsvg.SVGImageView;
 
 public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
-	private LinearLayout overlay;
+	private SVGImageView overlay;
 	private Context context;
 
 	public RecalibrationOverlay(Context context) {
@@ -33,7 +34,8 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 
 	private void ensurePresent() {
 		if (overlay == null) {
-			overlay = new LinearLayout(context);
+			overlay = new SVGImageView(context);
+			overlay.setImageAsset("portrait.svg");
 			overlay.setBackgroundColor(Color.BLACK);
 			overlay.setVisibility(View.VISIBLE);
 			windowManager.addView(overlay, generateLayout());
