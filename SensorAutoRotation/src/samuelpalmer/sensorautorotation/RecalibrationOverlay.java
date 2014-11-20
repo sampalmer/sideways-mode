@@ -1,16 +1,14 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.OrientationCalculator.UserListener;
 import samuelpalmer.sensorautorotation.Screen.RealOrientationListener;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ImageView.ScaleType;
 
-import com.caverock.androidsvg.SVGImageView;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 
 public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
@@ -19,14 +17,17 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	private View layout;
 	private Screen screen;
 	private LayoutInflater layoutInflater;
+	private OrientationCalculator calculator;
 	
-	public RecalibrationOverlay(Screen screen, Context context) {
+	public RecalibrationOverlay(Screen screen, Context context, OrientationCalculator calculator) {
 		this.screen = screen;
+		this.calculator = calculator;
 		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		screen.listen(listener);
+		screen.listen(screenListener);
+		calculator.listen(userListener);
 	}
 
 	public void stop() {
@@ -43,13 +44,15 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-		if (layout == null) {
+		Orientation device = calculator.getDevice();
+		
+		if (layout == null && device != null) {
 	        layout = layoutInflater.inflate(R.layout.user_orientation, null);
 	        
-	        Orientation proposed = screen.proposedOrientation();
+	        Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(calculator.getUser()));
 			Orientation actual = screen.realOrientation();
 			RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			subcontainerParams.angle = 90 * actual.minus(proposed).clockwiseCount();
+			subcontainerParams.angle = 90 * actual.minus(proposedScreenOrientation).clockwiseCount();
 			
 			View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
 	        subcontainer.setLayoutParams(subcontainerParams);
@@ -71,13 +74,26 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		return layoutParams;
 	}
 
-	private final RealOrientationListener listener = new RealOrientationListener() {
+	private final RealOrientationListener screenListener = new RealOrientationListener() {
 		@Override
 		public void possiblyChanged() {
-			if (layout != null) {
-				ensureNotPresent();
-				ensurePresent();
-			}
+			updateOverlay();
 		}
 	};
+	
+	private UserListener userListener = new UserListener() {
+		
+		@Override
+		public void update() {
+			updateOverlay();
+		}
+	};
+	
+	private void updateOverlay() {
+		if (layout != null) {
+			ensureNotPresent();
+			ensurePresent();
+		}
+	}
+	
 }

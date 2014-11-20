@@ -14,6 +14,8 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	private Screen screen;
 	private boolean covered;
 	private Context context;
+
+	private UserListener listener;
 	
 	public OrientationCalculator(final Context context, Screen screen) {
 		this.context = context;
@@ -37,7 +39,11 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 		
 		updateScreen();
 	}
-
+	
+	public Orientation getDevice() {
+		return device;
+	}
+	
 	private void updateScreen() {
 		Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(user));
 		if (!proposedScreenOrientation.equals(Orientation.UPSIDE_DOWN))
@@ -46,11 +52,40 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(context).handle(e);
 			}
+		
+		updateListener();
 	}
 	
 	public void resetUser() {
 		user = DEFAULT_USER;
 		updateScreen();
+	}
+
+	private void updateListener() {
+		if (listener != null)
+			listener.update();
+	}
+	
+	public Orientation getUser() {
+		return user;
+	}
+	
+	public void listen(UserListener listener) {
+		if (this.listener != null)
+			throw new RuntimeException("Already listening");
+		
+		this.listener = listener; 
+	}
+	
+	public void stopListening() {
+		if (listener == null)
+			throw new RuntimeException("Not listening");
+		
+		listener = null;
+	}
+	
+	public interface UserListener {
+		void update();
 	}
 	
 	@Override
