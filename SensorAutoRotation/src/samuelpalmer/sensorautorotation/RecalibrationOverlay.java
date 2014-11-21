@@ -25,6 +25,9 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		layout = layoutInflater.inflate(R.layout.user_orientation, null);
+		ensureNotPresent();
+		windowManager.addView(layout, generateLayout());
 		
 		screen.listen(screenListener);
 		calculator.listen(userListener);
@@ -32,7 +35,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 
 	public void stop() {
 		screen.stopListening();
-		ensureNotPresent();
+		windowManager.removeView(layout);
 	}
 	
 	@Override
@@ -44,13 +47,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-		if (layout == null) {
-	        layout = layoutInflater.inflate(R.layout.user_orientation, null);
-	        
-	        update();
-			
-			windowManager.addView(layout, generateLayout());
-		}
+        layout.setVisibility(View.VISIBLE);
 	}
 
 	private void update() {
@@ -64,10 +61,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensureNotPresent() {
-		if (layout != null) {
-			windowManager.removeView(layout);
-			layout = null;
-		}
+        layout.setVisibility(View.GONE);
 	}
 	
 	private LayoutParams generateLayout() {
@@ -92,8 +86,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	};
 	
 	private void updateOverlay() {
-		if (layout != null)
-			update();
+		update();
 	}
 	
 }
