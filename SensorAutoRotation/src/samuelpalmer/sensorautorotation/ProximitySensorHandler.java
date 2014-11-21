@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 
 public class ProximitySensorHandler {
 
@@ -12,6 +13,7 @@ public class ProximitySensorHandler {
 	
 	private final SensorManager sensorManager;
 	private final Listener[] listeners;
+	private boolean stopped;
 
 	public ProximitySensorHandler(Context context, Listener[] listeners) throws EnvironmentException {
 		this.listeners = listeners;
@@ -27,6 +29,7 @@ public class ProximitySensorHandler {
 	}
 	
 	public void stop() {
+		stopped = true;
 		sensorManager.unregisterListener(listener);
 	}
 	
@@ -41,7 +44,25 @@ public class ProximitySensorHandler {
 			
 			float distanceInCentimetres = event.values[0];
 			float coveredThreshold = Math.min(THRESHOLD_IN_CENTIMETRES, event.sensor.getMaximumRange());
-			boolean covered = distanceInCentimetres <= coveredThreshold;
+			boolean newCovered = distanceInCentimetres <= coveredThreshold;
+			
+			if (newCovered != covered) {
+				covered = newCovered;
+				if (covered)
+					new Handler().postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							if (!stopped)
+								updateListeners();
+						}
+					}, 400);
+				else
+					updateListeners();
+			}
+		}
+
+		private void updateListeners() {
 			for (int i = 0; i < listeners.length; ++i)
 				listeners[i].update(covered);
 		}
@@ -49,6 +70,8 @@ public class ProximitySensorHandler {
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 	};
+	
+	private boolean covered;
 	
 	public interface Listener {
 		public void update(boolean covered);
