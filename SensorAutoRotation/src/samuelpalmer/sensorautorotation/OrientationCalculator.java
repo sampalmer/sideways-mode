@@ -27,8 +27,7 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 		if (covered) {
 			Rotation deviceChange = newDevice.minus(device);
 			if (deviceChange.clockwiseCount() != 0) {
-				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-			    vibrator.vibrate(85);
+				vibrate(85);
 			    user = user.plus(deviceChange);
 			}
 		}
@@ -36,6 +35,11 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 		device = newDevice;
 		
 		updateScreen();
+	}
+
+	private void vibrate(int durationMilliseconds) {
+		Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+		vibrator.vibrate(durationMilliseconds);
 	}
 	
 	public Orientation getDevice() {
@@ -88,6 +92,9 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	
 	@Override
 	public void update(boolean proximitySensorCovered) {
+		if (proximitySensorCovered && !covered)
+			vibrate(40);
+		
 		covered = proximitySensorCovered;
 	}
 	
