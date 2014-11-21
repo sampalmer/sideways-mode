@@ -44,7 +44,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-		if (layout == null && calculator.getDevice() != null) {
+		if (layout == null) {
 	        layout = layoutInflater.inflate(R.layout.user_orientation, null);
 	        
 	        update();
