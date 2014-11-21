@@ -8,7 +8,7 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	
 	private static final Orientation DEFAULT_USER = Orientation.NATURAL; 
 	
-	private Orientation device;
+	private Orientation device = DEFAULT_USER;
 	private Orientation user = DEFAULT_USER;
 	
 	private Screen screen;
@@ -25,13 +25,11 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	public void setDevice(Orientation newDevice) {
 		
 		if (covered) {
-			if (device != null) {
-				Rotation deviceChange = newDevice.minus(device);
-				if (deviceChange.clockwiseCount() != 0) {
-					Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-				    vibrator.vibrate(75);
-				    user = user.plus(deviceChange);
-				}
+			Rotation deviceChange = newDevice.minus(device);
+			if (deviceChange.clockwiseCount() != 0) {
+				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+			    vibrator.vibrate(75);
+			    user = user.plus(deviceChange);
 			}
 		}
 			
