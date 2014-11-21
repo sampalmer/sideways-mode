@@ -28,7 +28,7 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 			Rotation deviceChange = newDevice.minus(device);
 			if (deviceChange.clockwiseCount() != 0) {
 				Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-			    vibrator.vibrate(90);
+			    vibrator.vibrate(85);
 			    user = user.plus(deviceChange);
 			}
 		}
