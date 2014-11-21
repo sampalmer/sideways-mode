@@ -25,9 +25,6 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		layout = layoutInflater.inflate(R.layout.user_orientation, null);
-		ensureNotPresent();
-		windowManager.addView(layout, generateLayout());
 		
 		screen.listen(screenListener);
 		calculator.listen(userListener);
@@ -35,7 +32,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 
 	public void stop() {
 		screen.stopListening();
-		windowManager.removeView(layout);
+		ensureNotPresent();
 	}
 	
 	@Override
@@ -47,9 +44,20 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	}
 
 	private void ensurePresent() {
-        layout.setVisibility(View.VISIBLE);
+		if (layout == null) {
+			layout = layoutInflater.inflate(R.layout.user_orientation, null);
+			update();
+			windowManager.addView(layout, generateLayoutParams());
+		}
 	}
 
+	private void ensureNotPresent() {
+		if (layout != null) {
+			windowManager.removeView(layout);
+			layout = null;
+		}
+	}
+	
 	private void update() {
 		Orientation proposedScreenOrientation = calculator.getDevice().plus(Orientation.NATURAL.minus(calculator.getUser()));
 		Orientation actual = screen.realOrientation();
@@ -59,12 +67,8 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
 		subcontainer.setLayoutParams(subcontainerParams);
 	}
-
-	private void ensureNotPresent() {
-        layout.setVisibility(View.GONE);
-	}
 	
-	private LayoutParams generateLayout() {
+	private LayoutParams generateLayoutParams() {
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.TRANSLUCENT);
 		layoutParams.alpha = 0.4f;
 		return layoutParams;
@@ -86,7 +90,8 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	};
 	
 	private void updateOverlay() {
-		update();
+		if (layout != null)
+			update();
 	}
 	
 }
