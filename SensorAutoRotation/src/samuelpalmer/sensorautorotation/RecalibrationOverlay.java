@@ -72,7 +72,7 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 	
 	private LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.TRANSLUCENT);
-		layoutParams.alpha = 0.3f;
+		layoutParams.alpha = 0.4f;
 		return layoutParams;
 	}
 
