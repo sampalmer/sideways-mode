@@ -12,13 +12,13 @@ public class ServiceController {
 		this.context = context;
 	}
 	
-	public void start() {
+	public void ensureStarted() {
 		ComponentName service = context.startService(intent());
         if (service == null)
         	throw new RuntimeException("Service doesn't exist");
 	}
 
-	public void stop() {
+	public void ensureStopped() {
 		context.stopService(intent());
 	}
 

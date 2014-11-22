@@ -54,9 +54,9 @@ public class MainActivity extends ActionBarActivity {
 	private void updateServiceState(boolean enabled) {
 		final ServiceController service = new ServiceController(this);
         if (enabled)
-        	service.start();
+        	service.ensureStarted();
         else
-        	service.stop();
+        	service.ensureStopped();
 	}
     
 }
