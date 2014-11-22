@@ -1,32 +1,23 @@
 package samuelpalmer.sensorautorotation;
 
-import android.util.Log;
 
 public abstract class ExternalResource {
-	private boolean stopped;
+	private boolean started;
 	
-	public void ensureStarted() {
-		if (stopped) {
+	public void ensureStarted() throws EnvironmentException {
+		if (!started) {
 			start();
-			stopped = false;
-		} else
-			log("Already started");
+			started = true;
+		}
 	}
 	
 	public void ensureStopped() {
-		if (!stopped) {
+		if (started) {
 			stop();
-			stopped = true;
+			started = false;
 		}
-		else
-			log("Already stopped");
 	}
-
 	
-	protected abstract void start();
+	protected abstract void start() throws EnvironmentException;
 	protected abstract void stop();
-	
-	private void log(String message) {
-		Log.w(getClass().getName(), new Throwable(message));
-	}
 }
