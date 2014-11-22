@@ -40,8 +40,9 @@ public class RotationService extends Service {
 		});
 		
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		screen = new Screen(this);
 		try {
-			screen = new Screen(this);
+			screen.ensureStarted();
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(this).handle(e);
 		}
@@ -56,7 +57,7 @@ public class RotationService extends Service {
 			stopProcessing();
 			
 			try {
-				screen.close();
+				screen.ensureStopped();
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(this).handle(e);
 			}

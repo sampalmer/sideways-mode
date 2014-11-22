@@ -43,15 +43,15 @@ public class App {
 	
 	public void destroy() {
 		if (!destroyed) {
-			proximityHandler.ensureStopped();
-			
-			if (orientationListener != null)
-				orientationListener.ensureStopped();
-			
-			context.unregisterReceiver(callStateReceiver);
-			overlay.ensureStopped();
-			
 			try {
+				proximityHandler.ensureStopped();
+				
+				if (orientationListener != null)
+					orientationListener.ensureStopped();
+				
+				context.unregisterReceiver(callStateReceiver);
+				overlay.ensureStopped();
+			
 				screen.propose(Orientation.NATURAL);
 			} catch (EnvironmentException e) {
 				errorHandler.handle(e);
@@ -66,15 +66,15 @@ public class App {
 		public void onReceive(Context context, Intent intent) {
 			String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 			boolean notOnCall = state.equals(TelephonyManager.EXTRA_STATE_IDLE);
-			if (notOnCall)
-				try {
+			try {
+				if (notOnCall)
 					proximityHandler.ensureStarted();
-				} catch (EnvironmentException e) {
-					errorHandler.handle(e);
+				else {
+					proximityHandler.ensureStopped();
+					calculator.resetUser();
 				}
-			else {
-				proximityHandler.ensureStopped();
-				calculator.resetUser();
+			} catch (EnvironmentException e) {
+				errorHandler.handle(e);
 			}
 		}
 	}; 

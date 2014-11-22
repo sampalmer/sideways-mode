@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
 
-public class Screen {
+public class Screen extends ExternalResource {
 	
 	private SystemSettings settings;
 	private Boolean originalAccelerometerRotation;
@@ -24,10 +24,13 @@ public class Screen {
 		
 	};
 	
-	public Screen(Context context) throws EnvironmentException {
+	public Screen(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
-		
+	}
+	
+	@Override
+	protected void start() throws EnvironmentException {
 		Orientation realOrientation = realOrientation();
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
@@ -43,6 +46,18 @@ public class Screen {
 		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
+	@Override
+	protected void stop() throws EnvironmentException {
+		context.unregisterReceiver(receiver);
+		
+		try {
+			settings.accelerometerRotation.set(originalAccelerometerRotation);
+			settings.userRotation.set(Orientation.NATURAL);
+		} catch (SettingWriteFailedException e) {
+			throw new EnvironmentException(e);
+		}
+	}
+	
 	public void propose(Orientation value) throws EnvironmentException {
 		if (value == null)
 			throw new IllegalArgumentException();
@@ -53,17 +68,7 @@ public class Screen {
 			throw new EnvironmentException(e);
 		}
 	}
-
-	public void close() throws EnvironmentException {
-		try {
-			context.unregisterReceiver(receiver);
-			settings.accelerometerRotation.set(originalAccelerometerRotation);
-			settings.userRotation.set(Orientation.NATURAL);
-		} catch (SettingWriteFailedException e) {
-			throw new EnvironmentException(e);
-		}
-	}
-
+	
 	public Orientation realOrientation() {
 		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		int rotation = windows.getDefaultDisplay().getRotation();
@@ -115,4 +120,5 @@ public class Screen {
 	public interface RealOrientationListener {
 		void possiblyChanged();
 	}
+
 }

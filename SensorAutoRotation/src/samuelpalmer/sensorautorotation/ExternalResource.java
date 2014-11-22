@@ -11,7 +11,7 @@ public abstract class ExternalResource {
 		}
 	}
 	
-	public void ensureStopped() {
+	public void ensureStopped() throws EnvironmentException {
 		if (started) {
 			stop();
 			started = false;
@@ -19,5 +19,5 @@ public abstract class ExternalResource {
 	}
 	
 	protected abstract void start() throws EnvironmentException;
-	protected abstract void stop();
+	protected abstract void stop() throws EnvironmentException;
 }

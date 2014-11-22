@@ -16,7 +16,7 @@ public class CompositeExternalResource extends ExternalResource {
 	}
 
 	@Override
-	protected void stop() {
+	protected void stop() throws EnvironmentException {
 		for (int i = resources.length - 1; i >= 0; --i)
 			resources[i].stop();
 	}
