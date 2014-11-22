@@ -31,7 +31,8 @@ public class Screen extends ExternalResource {
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		propose(realOrientation());
+		Orientation realOrientation = realOrientation();
+		propose(realOrientation);
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
 		try {
@@ -39,6 +40,8 @@ public class Screen extends ExternalResource {
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
+		
+		propose(realOrientation); //Just in case disabling system rotation reset this.
 		
 		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
