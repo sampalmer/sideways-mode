@@ -29,18 +29,23 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
+		screen = new Screen(this);
+		app = new App(this, screen);
 		screenOnMonitor = new ScreenOnMonitor(this, new StateMonitor.Listener<Boolean>() {
 			@Override
 			public void stateChanged(Boolean on) {
-				if (on)
-					startProcessing();
-				else
-					stopProcessing();
+				try {
+					if (on)
+						app.ensureStarted();
+					else
+						app.ensureStopped();
+				} catch (EnvironmentException e) {
+					new UserErrorHandler(RotationService.this).handle(e);
+				}
 			}
 		});
 		
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
-		screen = new Screen(this);
 		try {
 			screen.ensureStarted();
 		
@@ -54,9 +59,8 @@ public class RotationService extends Service {
 
 	private void destroy() {
 		if (!destroyed) {
-			stopProcessing();
-			
 			try {
+				app.ensureStopped();
 				screen.ensureStopped();
 				unregisterReceiver(shutdownReceiver);
 				screenOnMonitor.ensureStopped();
@@ -65,18 +69,6 @@ public class RotationService extends Service {
 			}
 			
 			destroyed = true;
-		}
-	}
-	
-	private void startProcessing() {
-		if (app == null)
-			app = new App(this, screen);
-	}
-	
-	private void stopProcessing() {
-		if (app != null) {
-			app.destroy();
-			app = null;
 		}
 	}
 	

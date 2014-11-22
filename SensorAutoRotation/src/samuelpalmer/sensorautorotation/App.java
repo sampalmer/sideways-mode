@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.TelephonyManager;
 
-public class App {
+public class App extends ExternalResource {
 	
 	private OrientationSensorHandler orientationListener;
 	private UserErrorHandler errorHandler;
-	private boolean destroyed;
 	private OrientationCalculator calculator;
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationOverlay overlay;
@@ -25,41 +24,38 @@ public class App {
 		overlay = new RecalibrationOverlay(screen, context, calculator);
 		
 		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
-		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 		
 		try {
 			orientationListener = new OrientationSensorHandler(context, calculator);
-			TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-			if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
-				proximityHandler.ensureStarted();
-			orientationListener.ensureStarted();
-			overlay.ensureStarted();
 		}
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
-			return;
 		}
 	}
 	
-	public void destroy() {
-		if (!destroyed) {
-			try {
-				proximityHandler.ensureStopped();
-				
-				if (orientationListener != null)
-					orientationListener.ensureStopped();
-				
-				context.unregisterReceiver(callStateReceiver);
-				overlay.ensureStopped();
-			
-				screen.propose(Orientation.NATURAL);
-			} catch (EnvironmentException e) {
-				errorHandler.handle(e);
-			}
-			
-			destroyed = true;
-		}
+	@Override
+	protected void start() throws EnvironmentException {
+		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+		TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+		if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
+			proximityHandler.ensureStarted();
+		
+		orientationListener.ensureStarted();
+		overlay.ensureStarted();
 	}
+
+	@Override
+	protected void stop() throws EnvironmentException {
+		proximityHandler.ensureStopped();
+		
+		if (orientationListener != null)
+			orientationListener.ensureStopped();
+		
+		context.unregisterReceiver(callStateReceiver);
+		overlay.ensureStopped();
+	
+		screen.propose(Orientation.NATURAL);
+	} 
 	
 	private final BroadcastReceiver callStateReceiver = new BroadcastReceiver() {
 		@Override
@@ -77,5 +73,5 @@ public class App {
 				errorHandler.handle(e);
 			}
 		}
-	}; 
+	};
 }
