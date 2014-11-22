@@ -36,7 +36,7 @@ public class App {
 			return;
 		}
 		
-		orientationListener.enable();
+		orientationListener.start();
 	}
 	
 	public void destroy() {
@@ -44,7 +44,7 @@ public class App {
 			stopProximityMonitoring();
 			
 			if (orientationListener != null)
-				orientationListener.disable();
+				orientationListener.stop();
 			
 			context.unregisterReceiver(callStateReceiver);
 			overlay.stop();

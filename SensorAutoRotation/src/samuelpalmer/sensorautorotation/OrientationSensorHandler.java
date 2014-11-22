@@ -4,22 +4,31 @@ import android.content.Context;
 
 import com.android.internal.policy.impl.WindowOrientationListener;
 
-public class OrientationSensorHandler extends WindowOrientationListener {
+public class OrientationSensorHandler extends ExternalResource {
 
-	private OrientationCalculator calculator;
+	private WindowOrientationListener listener;
 
-	public OrientationSensorHandler(Context context, OrientationCalculator calculator) throws EnvironmentException {
-		super(context, null);
-		if (!canDetectOrientation())
-			throw new EnvironmentException("Couldn't find an accelerometer");
+	public OrientationSensorHandler(Context context, final OrientationCalculator calculator) throws EnvironmentException {
+		listener = new WindowOrientationListener(context, null) {
+			@Override
+			public void onProposedRotationChanged(int rotation) {
+				Orientation orientation = Orientation.fromAndroidSurfaceRotation(rotation);
+				calculator.setDevice(orientation);
+			}
+		};
 		
-		this.calculator = calculator;
+		if (!listener.canDetectOrientation())
+			throw new EnvironmentException("Couldn't find an accelerometer");
 	}
 
 	@Override
-	public void onProposedRotationChanged(int rotation) {
-		Orientation orientation = Orientation.fromAndroidSurfaceRotation(rotation);
-		calculator.setDevice(orientation);
+	protected void start() {
+		listener.enable();
+	}
+
+	@Override
+	protected void stop() {
+		listener.disable();
 	}
 	
 }
