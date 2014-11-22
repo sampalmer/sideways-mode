@@ -31,17 +31,14 @@ public class Screen extends ExternalResource {
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		Orientation realOrientation = realOrientation();
+		propose(realOrientation());
 		
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
-		
 		try {
 			settings.accelerometerRotation.set(false);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
-		
-		propose(realOrientation);
 		
 		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
