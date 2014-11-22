@@ -7,34 +7,44 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 
-public class ProximitySensorHandler {
+public class ProximitySensorHandler extends ExternalResource {
 
 	private static final float THRESHOLD_IN_CENTIMETRES = .3f;
 	
 	private final SensorManager sensorManager;
 	private final Listener[] listeners;
-	private boolean stopped;
+	private final Handler handler;
+	private final Runnable r = new Runnable() {
+		@Override
+		public void run() {
+			updateListeners();
+		}
+	};
 
-	public ProximitySensorHandler(Context context, Listener[] listeners) throws EnvironmentException {
+	public ProximitySensorHandler(Context context, Listener[] listeners) {
 		this.listeners = listeners;
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		
+		handler = new Handler();
+	}
+	
+	protected void start() throws EnvironmentException {
 		Sensor proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		if (proximitySensor == null)
 			throw new EnvironmentException("No proximity sensor");
 		
-		boolean registered = sensorManager.registerListener(this.listener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+		boolean registered = sensorManager.registerListener(listener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
 		if (!registered)
 			throw new EnvironmentException("Couldn't use sensor " + proximitySensor);
 	}
 	
-	public void stop() {
-		stopped = true;
+	protected void stop() {
+		dequeueUpdates();
 		sensorManager.unregisterListener(listener);
 	}
 	
 	private final SensorEventListener listener = new SensorEventListener() {
-		
+
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			int sensorType = event.sensor.getType();
@@ -49,27 +59,26 @@ public class ProximitySensorHandler {
 			if (newCovered != covered) {
 				covered = newCovered;
 				if (covered)
-					new Handler().postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							if (!stopped)
-								updateListeners();
-						}
-					}, 400);
-				else
+					handler.postDelayed(r, 400);
+				else {
+					dequeueUpdates();
 					updateListeners();
+				}
 			}
-		}
-
-		private void updateListeners() {
-			for (int i = 0; i < listeners.length; ++i)
-				listeners[i].update(covered);
 		}
 		
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 	};
+	
+	private void dequeueUpdates() {
+		handler.removeCallbacks(r);
+	}
+	
+	private void updateListeners() {
+		for (int i = 0; i < listeners.length; ++i)
+			listeners[i].update(covered);
+	}
 	
 	private boolean covered;
 	

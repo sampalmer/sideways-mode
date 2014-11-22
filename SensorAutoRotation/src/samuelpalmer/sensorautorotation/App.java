@@ -23,28 +23,28 @@ public class App {
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
 		overlay = new RecalibrationOverlay(screen, context, calculator);
+		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
 		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 		
 		try {
 			orientationListener = new OrientationSensorHandler(context, calculator);
 			TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 			if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
-				startProximityMonitoring();
+				proximityHandler.ensureStarted();
+			orientationListener.ensureStarted();
 		}
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
 			return;
 		}
-		
-		orientationListener.start();
 	}
 	
 	public void destroy() {
 		if (!destroyed) {
-			stopProximityMonitoring();
+			proximityHandler.ensureStopped();
 			
 			if (orientationListener != null)
-				orientationListener.stop();
+				orientationListener.ensureStopped();
 			
 			context.unregisterReceiver(callStateReceiver);
 			overlay.stop();
@@ -63,28 +63,17 @@ public class App {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-			if (state.equals(TelephonyManager.EXTRA_STATE_IDLE))
+			boolean notOnCall = state.equals(TelephonyManager.EXTRA_STATE_IDLE);
+			if (notOnCall)
 				try {
-					startProximityMonitoring();
+					proximityHandler.ensureStarted();
 				} catch (EnvironmentException e) {
 					errorHandler.handle(e);
 				}
 			else {
-				stopProximityMonitoring();
+				proximityHandler.ensureStopped();
 				calculator.resetUser();
 			}
 		}
 	}; 
-	
-	private void startProximityMonitoring() throws EnvironmentException {
-		if (proximityHandler == null)
-			proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
-	}
-	
-	private void stopProximityMonitoring() {
-		if (proximityHandler != null) {
-			proximityHandler.stop();
-			proximityHandler = null;
-		}
-	}
 }

@@ -10,7 +10,7 @@ public class CompositeExternalResource extends ExternalResource {
 	}
 	
 	@Override
-	protected void start() {
+	protected void start() throws EnvironmentException {
 		for (ExternalResource resource : resources)
 			resource.start();
 	}
