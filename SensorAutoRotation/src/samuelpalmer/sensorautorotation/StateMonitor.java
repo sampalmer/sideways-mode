@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-public abstract class StateMonitor<T> {
+public abstract class StateMonitor<T> extends ExternalResource {
 	
 	private final Listener<T> listener;
 
@@ -8,14 +8,13 @@ public abstract class StateMonitor<T> {
 		this.listener = listener;
 	}
 	
-	public void start() {
+	@Override
+	protected void start() {
 		startInternal();
 		reportChange(get());
 	}
 	
 	protected abstract void startInternal();
-	
-	public abstract void stop();
 	
 	protected abstract T get();
 	

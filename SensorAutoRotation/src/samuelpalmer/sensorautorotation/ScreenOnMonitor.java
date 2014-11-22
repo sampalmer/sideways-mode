@@ -22,7 +22,7 @@ public class ScreenOnMonitor extends StateMonitor<Boolean> {
 	}
 	
 	@Override
-	public void stop() {
+	protected void stop() {
 		context.unregisterReceiver(screenOffReceiver);
 		context.unregisterReceiver(screenOnReceiver);
 	}

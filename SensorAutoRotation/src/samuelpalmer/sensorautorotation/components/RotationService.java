@@ -43,13 +43,13 @@ public class RotationService extends Service {
 		screen = new Screen(this);
 		try {
 			screen.ensureStarted();
+		
+			promoteToForeground();
+			
+			screenOnMonitor.ensureStarted();
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(this).handle(e);
 		}
-		
-		promoteToForeground();
-		
-		screenOnMonitor.start();
 	}
 
 	private void destroy() {
@@ -58,11 +58,11 @@ public class RotationService extends Service {
 			
 			try {
 				screen.ensureStopped();
+				unregisterReceiver(shutdownReceiver);
+				screenOnMonitor.ensureStopped();
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(this).handle(e);
 			}
-			unregisterReceiver(shutdownReceiver);
-			screenOnMonitor.stop();
 			
 			destroyed = true;
 		}
