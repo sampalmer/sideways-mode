@@ -51,8 +51,8 @@ public class Screen extends ExternalResource {
 		context.unregisterReceiver(receiver);
 		
 		try {
-			settings.accelerometerRotation.set(originalAccelerometerRotation);
 			settings.userRotation.set(Orientation.NATURAL);
+			settings.accelerometerRotation.set(originalAccelerometerRotation);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
@@ -85,9 +85,11 @@ public class Screen extends ExternalResource {
 	
 	private void systemConfigChanged() {
 		try {
-			originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
-			if (originalAccelerometerRotation == true)
+			Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
+			if (accelerometerRotation != null && accelerometerRotation == true) {
+				originalAccelerometerRotation = accelerometerRotation;
 				throw new EnvironmentException("System screen auto-rotation was enabled.");
+			}
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(context).handle(e);
 		}
