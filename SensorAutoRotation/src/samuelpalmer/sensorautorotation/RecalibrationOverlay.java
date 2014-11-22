@@ -11,7 +11,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 
-public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
+public class RecalibrationOverlay extends ExternalResource implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
 	private View layout;
@@ -25,12 +25,17 @@ public class RecalibrationOverlay implements ProximitySensorHandler.Listener {
 		
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+	}
+	
+	@Override
+	protected void start() {
 		screen.listen(screenListener);
 		calculator.listen(userListener);
 	}
-
-	public void stop() {
+	
+	@Override
+	protected void stop() {
+		calculator.stopListening();
 		screen.stopListening();
 		ensureNotPresent();
 	}

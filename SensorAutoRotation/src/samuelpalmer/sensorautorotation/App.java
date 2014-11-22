@@ -23,6 +23,7 @@ public class App {
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
 		overlay = new RecalibrationOverlay(screen, context, calculator);
+		
 		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
 		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 		
@@ -32,6 +33,7 @@ public class App {
 			if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
 				proximityHandler.ensureStarted();
 			orientationListener.ensureStarted();
+			overlay.ensureStarted();
 		}
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
@@ -47,7 +49,7 @@ public class App {
 				orientationListener.ensureStopped();
 			
 			context.unregisterReceiver(callStateReceiver);
-			overlay.stop();
+			overlay.ensureStopped();
 			
 			try {
 				screen.propose(Orientation.NATURAL);
