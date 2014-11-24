@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.systemconfiguration;
 
-import static android.provider.Settings.System.*;
-
+import static android.provider.Settings.System.getString;
+import static android.provider.Settings.System.putString;
 import android.content.ContentResolver;
 
 public class AndroidSystemSettingSource implements SystemSettingSource {

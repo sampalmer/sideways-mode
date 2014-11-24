@@ -8,7 +8,7 @@ public class OrientationSensorHandler extends ExternalResource {
 
 	private WindowOrientationListener listener;
 
-	public OrientationSensorHandler(Context context, final OrientationCalculator calculator) throws EnvironmentException {
+	public OrientationSensorHandler(final Context context, final OrientationCalculator calculator) throws EnvironmentException {
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
