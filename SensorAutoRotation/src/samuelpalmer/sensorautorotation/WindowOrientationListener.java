@@ -18,11 +18,12 @@
  * Copied from commit 33253a4 (https://github.com/android/platform_frameworks_base/blob/0c1faf43aecadc37b78c4ad6cb669eb351d21385/policy/src/com/android/internal/policy/impl/WindowOrientationListener.java)
  * 
  * Minor modifications made for this project:
+ * -Package changed
  * -Logging removed to fix errors due to inaccessible code
  * -Unused variables and methods removed to remove warnings
  */
 
-package com.android.internal.policy.impl;
+package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -43,8 +44,6 @@ import android.util.Log;
  *
  * You can also visualize the behavior of the WindowOrientationListener.
  * Refer to frameworks/base/tools/orientationplot/README.txt for details.
- *
- * @hide
  */
 public abstract class WindowOrientationListener {
     private static final String TAG = "WindowOrientationListener";

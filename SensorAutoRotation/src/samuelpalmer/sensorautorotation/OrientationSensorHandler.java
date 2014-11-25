@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 
-import com.android.internal.policy.impl.WindowOrientationListener;
 
 public class OrientationSensorHandler extends ExternalResource {
 
