@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Vibrator;
 
 
-public class OrientationCalculator implements ProximitySensorHandler.Listener {
+public class OrientationCalculator
+	extends ExternalResource
+	implements ProximitySensorHandler.Listener {
 	
 	private static final Orientation DEFAULT_USER = Orientation.NATURAL; 
 	
@@ -20,6 +22,17 @@ public class OrientationCalculator implements ProximitySensorHandler.Listener {
 	public OrientationCalculator(final Context context, Screen screen) {
 		this.context = context;
 		this.screen = screen;
+	}
+	
+	@Override
+	protected void start() throws EnvironmentException {
+		device = DEFAULT_USER;
+		user = DEFAULT_USER;
+	}
+	
+	@Override
+	protected void stop() throws EnvironmentException {
+		screen.propose(Orientation.NATURAL);
 	}
 	
 	public void setDevice(Orientation newDevice) {

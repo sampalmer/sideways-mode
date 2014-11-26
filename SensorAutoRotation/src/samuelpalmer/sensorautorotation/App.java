@@ -14,11 +14,9 @@ public class App extends ExternalResource {
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationOverlay overlay;
 	private Context context;
-	private Screen screen;
 	
 	public App(Context context, Screen screen) {
 		this.context = context;
-		this.screen = screen;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
 		overlay = new RecalibrationOverlay(screen, context, calculator);
@@ -35,6 +33,8 @@ public class App extends ExternalResource {
 	
 	@Override
 	protected void start() throws EnvironmentException {
+		calculator.ensureStarted();
+		
 		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
 		TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
@@ -53,8 +53,7 @@ public class App extends ExternalResource {
 		
 		context.unregisterReceiver(callStateReceiver);
 		overlay.ensureStopped();
-	
-		screen.propose(Orientation.NATURAL);
+		calculator.ensureStopped();
 	} 
 	
 	private final BroadcastReceiver callStateReceiver = new BroadcastReceiver() {
