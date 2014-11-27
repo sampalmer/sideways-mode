@@ -60,15 +60,18 @@ public class OrientationCalculator
 	}
 	
 	private void updateScreen() {
-		Orientation proposedScreenOrientation = device.plus(offset());
-		if (!proposedScreenOrientation.equals(Orientation.UPSIDE_DOWN))
+		if (!proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN))
 			try {
-				screen.propose(proposedScreenOrientation);
+				screen.propose(proposedScreenOrientation());
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(context).handle(e);
 			}
 		
 		updateListener();
+	}
+
+	private Orientation proposedScreenOrientation() {
+		return device.plus(offset());
 	}
 
 	private Rotation offset() {
