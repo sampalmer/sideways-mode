@@ -21,7 +21,10 @@ public class ProximitySensorHandler extends ExternalResource {
 		}
 	};
 
+	private Context context;
+
 	public ProximitySensorHandler(Context context, Listener[] listeners) {
+		this.context = context;
 		this.listeners = listeners;
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		
@@ -77,13 +80,17 @@ public class ProximitySensorHandler extends ExternalResource {
 	
 	private void updateListeners() {
 		for (int i = 0; i < listeners.length; ++i)
-			listeners[i].update(covered);
+			try {
+				listeners[i].update(covered);
+			} catch (EnvironmentException e) {
+				new UserErrorHandler(context).handle(e);
+			}
 	}
 	
 	private boolean covered;
 	
 	public interface Listener {
-		public void update(boolean covered);
+		public void update(boolean covered) throws EnvironmentException;
 	}
 	
 }
