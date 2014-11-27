@@ -12,16 +12,16 @@ public class App extends ExternalResource {
 	private UserErrorHandler errorHandler;
 	private OrientationCalculator calculator;
 	private ProximitySensorHandler proximityHandler;
-	private RecalibrationOverlayController overlay;
+	private RecalibrationController recalibrator;
 	private Context context;
 	
 	public App(Context context, Screen screen) {
 		this.context = context;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
-		overlay = new RecalibrationOverlayController(new RecalibrationOverlay(context, screen, calculator));
+		recalibrator = new RecalibrationController(new RecalibrationOverlay(context, screen, calculator));
 		
-		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
+		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, recalibrator });
 		
 		try {
 			orientationListener = new OrientationSensorHandler(context, calculator);
@@ -41,7 +41,7 @@ public class App extends ExternalResource {
 			proximityHandler.ensureStarted();
 		
 		orientationListener.ensureStarted();
-		overlay.ensureStarted();
+		recalibrator.ensureStarted();
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class App extends ExternalResource {
 			orientationListener.ensureStopped();
 		
 		context.unregisterReceiver(callStateReceiver);
-		overlay.ensureStopped();
+		recalibrator.ensureStopped();
 		calculator.ensureStopped();
 	} 
 	

@@ -1,13 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
 
-public class RecalibrationOverlayController
+public class RecalibrationController
 	extends ExternalResource
 	implements ProximitySensorHandler.Listener {
 	
 	private RecalibrationOverlay overlay;
 	
-	public RecalibrationOverlayController(RecalibrationOverlay overlay) {
+	public RecalibrationController(RecalibrationOverlay overlay) {
 		this.overlay = overlay;
 	}
 	
