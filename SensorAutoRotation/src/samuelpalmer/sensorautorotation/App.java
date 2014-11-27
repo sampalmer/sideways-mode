@@ -19,7 +19,7 @@ public class App extends ExternalResource {
 		this.context = context;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screen);
-		overlay = new RecalibrationOverlayController(screen, context, calculator);
+		overlay = new RecalibrationOverlayController(new RecalibrationOverlay(context, screen, calculator));
 		
 		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, overlay });
 		

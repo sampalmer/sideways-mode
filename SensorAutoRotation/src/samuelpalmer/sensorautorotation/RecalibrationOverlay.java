@@ -72,7 +72,7 @@ public class RecalibrationOverlay extends ExternalResource {
 		
 		@Override
 		public void update() {
-			update();
+			RecalibrationOverlay.this.update();
 		}
 	};
 	
