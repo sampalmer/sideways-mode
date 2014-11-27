@@ -8,10 +8,10 @@ public class OrientationCalculator
 	extends ExternalResource
 	implements ProximitySensorHandler.Listener {
 	
-	private static final Orientation DEFAULT_USER = Orientation.NATURAL; 
+	private static final Orientation DEFAULT = Orientation.NATURAL; 
 	
-	private Orientation device = DEFAULT_USER;
-	private Orientation user = DEFAULT_USER;
+	private Orientation device = DEFAULT;
+	private Orientation user = DEFAULT;
 	
 	private Screen screen;
 	private boolean covered;
@@ -26,13 +26,13 @@ public class OrientationCalculator
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		device = DEFAULT_USER;
-		user = DEFAULT_USER;
 	}
 	
 	@Override
 	protected void stop() throws EnvironmentException {
-		screen.propose(Orientation.NATURAL);
+		device = DEFAULT;
+		user = DEFAULT;
+		screen.propose(proposedScreenOrientation());
 	}
 	
 	public void setDevice(Orientation newDevice) {
@@ -47,7 +47,7 @@ public class OrientationCalculator
 			
 		device = newDevice;
 		
-		updateScreen();
+		reportUpdate();
 	}
 
 	private void vibrate(int durationMilliseconds) {
@@ -59,7 +59,7 @@ public class OrientationCalculator
 		return device;
 	}
 	
-	private void updateScreen() {
+	private void reportUpdate() {
 		if (!proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN))
 			try {
 				screen.propose(proposedScreenOrientation());
@@ -67,7 +67,8 @@ public class OrientationCalculator
 				new UserErrorHandler(context).handle(e);
 			}
 		
-		updateListener();
+		if (listener != null)
+			listener.update();
 	}
 
 	private Orientation proposedScreenOrientation() {
@@ -79,15 +80,10 @@ public class OrientationCalculator
 	}
 	
 	public void resetUser() {
-		user = DEFAULT_USER;
-		updateScreen();
+		user = DEFAULT;
+		reportUpdate();
 	}
 
-	private void updateListener() {
-		if (listener != null)
-			listener.update();
-	}
-	
 	public Orientation getUser() {
 		return user;
 	}

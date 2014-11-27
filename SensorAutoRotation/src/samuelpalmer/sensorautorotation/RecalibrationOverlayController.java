@@ -11,7 +11,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 
-public class RecalibrationOverlay extends ExternalResource implements ProximitySensorHandler.Listener {
+public class RecalibrationOverlayController extends ExternalResource implements ProximitySensorHandler.Listener {
 	
 	private WindowManager windowManager;
 	private View layout;
@@ -19,7 +19,7 @@ public class RecalibrationOverlay extends ExternalResource implements ProximityS
 	private LayoutInflater layoutInflater;
 	private OrientationCalculator calculator;
 	
-	public RecalibrationOverlay(Screen screen, Context context, OrientationCalculator calculator) {
+	public RecalibrationOverlayController(Screen screen, Context context, OrientationCalculator calculator) {
 		this.screen = screen;
 		this.calculator = calculator;
 		
