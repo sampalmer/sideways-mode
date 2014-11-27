@@ -60,7 +60,7 @@ public class OrientationCalculator
 	}
 	
 	private void updateScreen() {
-		Orientation proposedScreenOrientation = device.plus(Orientation.NATURAL.minus(user));
+		Orientation proposedScreenOrientation = device.plus(offset());
 		if (!proposedScreenOrientation.equals(Orientation.UPSIDE_DOWN))
 			try {
 				screen.propose(proposedScreenOrientation);
@@ -69,6 +69,10 @@ public class OrientationCalculator
 			}
 		
 		updateListener();
+	}
+
+	private Rotation offset() {
+		return Orientation.NATURAL.minus(user);
 	}
 	
 	public void resetUser() {
