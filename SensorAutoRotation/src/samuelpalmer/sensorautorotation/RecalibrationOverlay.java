@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.OrientationCalculator.UserListener;
+import samuelpalmer.sensorautorotation.OrientationCalculator.Listener;
 import samuelpalmer.sensorautorotation.Screen.RealOrientationListener;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -30,7 +30,7 @@ public class RecalibrationOverlay extends ExternalResource implements ProximityS
 	@Override
 	protected void start() {
 		screen.listen(screenListener);
-		calculator.listen(userListener);
+		calculator.listen(listener);
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class RecalibrationOverlay extends ExternalResource implements ProximityS
 		}
 	};
 	
-	private UserListener userListener = new UserListener() {
+	private Listener listener = new Listener() {
 		
 		@Override
 		public void update() {

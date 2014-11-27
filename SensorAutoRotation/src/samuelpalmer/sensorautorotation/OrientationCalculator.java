@@ -17,7 +17,7 @@ public class OrientationCalculator
 	private boolean covered;
 	private Context context;
 
-	private UserListener listener;
+	private Listener listener;
 	
 	public OrientationCalculator(final Context context, Screen screen) {
 		this.context = context;
@@ -85,7 +85,7 @@ public class OrientationCalculator
 		return user;
 	}
 	
-	public void listen(UserListener listener) {
+	public void listen(Listener listener) {
 		if (this.listener != null)
 			throw new RuntimeException("Already listening");
 		
@@ -99,7 +99,7 @@ public class OrientationCalculator
 		listener = null;
 	}
 	
-	public interface UserListener {
+	public interface Listener {
 		void update();
 	}
 	
