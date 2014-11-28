@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.content.BroadcastReceiver;

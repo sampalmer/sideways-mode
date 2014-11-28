@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
