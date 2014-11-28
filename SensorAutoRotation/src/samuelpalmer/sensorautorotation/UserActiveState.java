@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
-import android.telephony.TelephonyManager;
 
 public class UserActiveState extends ExternalResource {
 	
@@ -58,12 +57,11 @@ public class UserActiveState extends ExternalResource {
 		calculator.ensureStopped();
 	} 
 	
-	private final Listener<Integer> callStateReceiver = new Listener<Integer>() {
+	private final Listener<CallState> callStateReceiver = new Listener<CallState>() {
 		@Override
-		public void stateChanged(Integer state) {
-			boolean notOnCall = state == TelephonyManager.CALL_STATE_IDLE;
+		public void stateChanged(CallState state) {
 			try {
-				if (notOnCall)
+				if (!state.possiblyOnCall())
 					proximityHandler.ensureStarted();
 				else {
 					proximityHandler.ensureStopped();

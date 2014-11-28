@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
-public class CallStateMonitor extends StateMonitor<Integer> {
+public class CallStateMonitor extends StateMonitor<CallState> {
 
 	private Context context;
 	private BroadcastReceiver callStateReceiver = new BroadcastReceiver() {
@@ -15,24 +14,11 @@ public class CallStateMonitor extends StateMonitor<Integer> {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-			int result;
-			
-			if (state.equals(TelephonyManager.EXTRA_STATE_IDLE))
-				result = TelephonyManager.CALL_STATE_IDLE;
-			else if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))
-				result = TelephonyManager.CALL_STATE_OFFHOOK;
-			else if (state.equals(TelephonyManager.EXTRA_STATE_RINGING))
-				result = TelephonyManager.CALL_STATE_RINGING;
-			else {
-				Log.w(CallStateMonitor.class.getName(), "Unrecognised extra call state: " + state);
-				return;
-			}
-			
-			CallStateMonitor.this.reportChange(result);
+			CallStateMonitor.this.reportChange(new CallState(state));
 		}
 	};
 
-	public CallStateMonitor(Context context, Listener<Integer> listener) {
+	public CallStateMonitor(Context context, Listener<CallState> listener) {
 		super(listener);
 		this.context = context;
 	}
@@ -43,9 +29,9 @@ public class CallStateMonitor extends StateMonitor<Integer> {
 	}
 
 	@Override
-	protected Integer get() {
+	protected CallState get() {
 		TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-		return telephony.getCallState();
+		return new CallState(telephony.getCallState());
 	}
 
 	@Override
