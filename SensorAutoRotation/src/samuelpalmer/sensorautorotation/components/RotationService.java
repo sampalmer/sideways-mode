@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.components;
 
 
-import samuelpalmer.sensorautorotation.App;
+import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
@@ -21,7 +21,7 @@ import android.support.v4.app.NotificationCompat;
 public class RotationService extends Service {
 
 	private boolean destroyed;
-	private App app;
+	private UserActiveState userActiveState;
 	private ScreenOrientationController screenOrientationController;
 	private ScreenOnMonitor screenOnMonitor;
 	
@@ -30,15 +30,15 @@ public class RotationService extends Service {
 		super.onCreate();
 		
 		screenOrientationController = new ScreenOrientationController(this);
-		app = new App(this, screenOrientationController);
+		userActiveState = new UserActiveState(this, screenOrientationController);
 		screenOnMonitor = new ScreenOnMonitor(this, new StateMonitor.Listener<Boolean>() {
 			@Override
 			public void stateChanged(Boolean on) {
 				try {
 					if (on)
-						app.ensureStarted();
+						userActiveState.ensureStarted();
 					else
-						app.ensureStopped();
+						userActiveState.ensureStopped();
 				} catch (EnvironmentException e) {
 					new UserErrorHandler(RotationService.this).handle(e);
 				}
@@ -60,7 +60,7 @@ public class RotationService extends Service {
 	private void destroy() {
 		if (!destroyed) {
 			try {
-				app.ensureStopped();
+				userActiveState.ensureStopped();
 				screenOrientationController.ensureStopped();
 				unregisterReceiver(shutdownReceiver);
 				screenOnMonitor.ensureStopped();

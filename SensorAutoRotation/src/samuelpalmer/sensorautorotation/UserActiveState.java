@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.TelephonyManager;
 
-public class App extends ExternalResource {
+public class UserActiveState extends ExternalResource {
 	
 	private OrientationSensorHandler orientationListener;
 	private UserErrorHandler errorHandler;
@@ -15,7 +15,7 @@ public class App extends ExternalResource {
 	private RecalibrationController recalibrator;
 	private Context context;
 	
-	public App(Context context, ScreenOrientationController screenOrientationController) {
+	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
 		this.context = context;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screenOrientationController);
