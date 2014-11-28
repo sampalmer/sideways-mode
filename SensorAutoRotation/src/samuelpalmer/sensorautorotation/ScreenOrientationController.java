@@ -71,8 +71,8 @@ public class ScreenOrientationController extends ExternalResource {
 	
 	public Orientation realOrientation() {
 		WindowManager windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		int rotation = windows.getDefaultDisplay().getRotation();
-		return Orientation.fromAndroidSurfaceRotation(rotation);
+		AndroidSurfaceRotation rotation = new AndroidSurfaceRotation(windows.getDefaultDisplay().getRotation());
+		return rotation.orientation();
 	}
 	
 	public Orientation proposedOrientation() {

@@ -12,7 +12,7 @@ public class OrientationSensorHandler extends ExternalResource {
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
-				Orientation orientation = Orientation.fromAndroidSurfaceRotation(rotation);
+				Orientation orientation = new AndroidSurfaceRotation(rotation).orientation();
 				calculator.setDevice(orientation);
 			}
 		};

@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.view.Surface;
 
 
 public class Orientation {
@@ -21,15 +20,15 @@ public class Orientation {
 	}
 
 	public boolean sideways() {
-		return this.clockwiseRotationsFromNaturalOrientation % 2 != 0;
+		return this.getClockwiseRotationsFromNaturalOrientation() % 2 != 0;
 	}
 	
 	public Rotation minus(Orientation other) {
-		return new Rotation(clockwiseRotationsFromNaturalOrientation - other.clockwiseRotationsFromNaturalOrientation);
+		return new Rotation(getClockwiseRotationsFromNaturalOrientation() - other.getClockwiseRotationsFromNaturalOrientation());
 	}
 
 	public Orientation plus(Rotation change) {
-		int unwrappedResultingClockwiseIndex = clockwiseRotationsFromNaturalOrientation + change.clockwiseCount();
+		int unwrappedResultingClockwiseIndex = getClockwiseRotationsFromNaturalOrientation() + change.clockwiseCount();
 		int wrappedResultingClockwiseIndex = IntegerUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
 		
 		return new Orientation(wrappedResultingClockwiseIndex);
@@ -39,12 +38,12 @@ public class Orientation {
 	public boolean equals(Object o) {
 		return o != null
 				&& this.getClass() == o.getClass()
-				&& this.clockwiseRotationsFromNaturalOrientation == ((Orientation)o).clockwiseRotationsFromNaturalOrientation;
+				&& this.getClockwiseRotationsFromNaturalOrientation() == ((Orientation)o).getClockwiseRotationsFromNaturalOrientation();
 	}
 	
 	@Override
 	public String toString() {
-		switch (this.clockwiseRotationsFromNaturalOrientation)
+		switch (this.getClockwiseRotationsFromNaturalOrientation())
 		{
 		case 0:
 			return "Natural";
@@ -55,16 +54,12 @@ public class Orientation {
 		case 3:
 			return "Left Side";
 		default:
-			throw new RuntimeException("Unknown number of rotations: " + this.clockwiseRotationsFromNaturalOrientation);
+			throw new RuntimeException("Unknown number of rotations: " + this.getClockwiseRotationsFromNaturalOrientation());
 		}
 	}
+
+	public int getClockwiseRotationsFromNaturalOrientation() {
+		return clockwiseRotationsFromNaturalOrientation;
+	}
 	
-	public int androidSurfaceRotation() {
-		return Surface.ROTATION_0 + clockwiseRotationsFromNaturalOrientation;
-	}
-
-	public static Orientation fromAndroidSurfaceRotation(int androidSurfaceRotation) throws IllegalArgumentException {
-		return new Orientation(androidSurfaceRotation - Surface.ROTATION_0);
-	}
-
 }

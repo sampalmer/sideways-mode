@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.systemconfiguration.types;
 
+import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.Orientation;
 
 public class OrientationTypeConverter implements TypeConverter<Orientation> {
@@ -17,7 +18,7 @@ public class OrientationTypeConverter implements TypeConverter<Orientation> {
 			return null;
 		
 		try {
-			return Orientation.fromAndroidSurfaceRotation(androidSurfaceRotation);
+			return new AndroidSurfaceRotation(androidSurfaceRotation).orientation();
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
@@ -25,7 +26,7 @@ public class OrientationTypeConverter implements TypeConverter<Orientation> {
 
 	@Override
 	public String format(Orientation nonNullvalue) {
-		int androidSurfaceRotation = nonNullvalue.androidSurfaceRotation();
+		int androidSurfaceRotation = new AndroidSurfaceRotation(nonNullvalue).getValue();
 		return integer.format(androidSurfaceRotation);
 	}
 
