@@ -15,7 +15,7 @@ public class ScreenOrientationController extends ExternalResource {
 	private Boolean originalAccelerometerRotation;
 	private Context context;
 	
-	private final BroadcastReceiver receiver = new BroadcastReceiver() {
+	private final BroadcastReceiver configChangedReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -43,12 +43,12 @@ public class ScreenOrientationController extends ExternalResource {
 		
 		propose(realOrientation); //Just in case disabling system rotation reset this.
 		
-		context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
+		context.registerReceiver(configChangedReceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
-		context.unregisterReceiver(receiver);
+		context.unregisterReceiver(configChangedReceiver);
 		
 		try {
 			settings.userRotation.set(Orientation.NATURAL);
