@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.OrientationCalculator.Listener;
 import samuelpalmer.sensorautorotation.ScreenOrientationController.RealOrientationListener;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
@@ -33,12 +33,12 @@ public class RecalibrationOverlay extends ExternalResource {
 		windowManager.addView(layout, generateLayoutParams());
 		
 		screenOrientationController.listen(screenListener);
-		calculator.listen(listener);
+		calculator.onChange().subscribe(listener);
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
-		calculator.stopListening();
+		calculator.onChange().unsubscribe(listener);
 		screenOrientationController.stopListening();
 		
 		windowManager.removeView(layout);
@@ -68,12 +68,10 @@ public class RecalibrationOverlay extends ExternalResource {
 		}
 	};
 	
-	private final Listener listener = new Listener() {
-		
+	private final EventHandler<Void> listener = new EventHandler<Void>() {
 		@Override
-		public void update() {
+		public void update(Void event) {
 			RecalibrationOverlay.this.update();
 		}
 	};
-	
 }

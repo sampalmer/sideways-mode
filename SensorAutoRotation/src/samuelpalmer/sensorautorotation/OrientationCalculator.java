@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 import android.os.Vibrator;
 
@@ -17,7 +19,7 @@ public class OrientationCalculator
 	private boolean covered;
 	private Context context;
 
-	private Listener listener;
+	private UpdatingEventRegistrar<Void> listener = new UpdatingEventRegistrar<Void>();
 	
 	public OrientationCalculator(final Context context, ScreenOrientationController screenOrientationController) {
 		this.context = context;
@@ -32,7 +34,7 @@ public class OrientationCalculator
 	protected void stop() throws EnvironmentException {
 		device = DEFAULT;
 		user = DEFAULT;
-		screenOrientationController.propose(proposedScreenOrientation());
+		reportUpdate();
 	}
 	
 	public void setDevice(Orientation newDevice) {
@@ -67,10 +69,13 @@ public class OrientationCalculator
 				new UserErrorHandler(context).handle(e);
 			}
 		
-		if (listener != null)
-			listener.update();
+		listener.report(null);
 	}
-
+	
+	public EventRegistrar<Void> onChange() {
+		return listener;
+	}
+	
 	private Orientation proposedScreenOrientation() {
 		return device.plus(offset());
 	}
@@ -88,23 +93,6 @@ public class OrientationCalculator
 		return user;
 	}
 	
-	public void listen(Listener listener) {
-		if (this.listener != null)
-			throw new RuntimeException("Already listening");
-		
-		this.listener = listener; 
-	}
-	
-	public void stopListening() {
-		if (listener == null)
-			throw new RuntimeException("Not listening");
-		
-		listener = null;
-	}
-	
-	public interface Listener {
-		void update();
-	}
 	
 	@Override
 	public void update(boolean proximitySensorCovered) {
