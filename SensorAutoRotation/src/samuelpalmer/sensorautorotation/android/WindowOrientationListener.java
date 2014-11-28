@@ -23,7 +23,7 @@
  * -Unused variables and methods removed to remove warnings
  */
 
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.android;
 
 import android.content.Context;
 import android.hardware.Sensor;

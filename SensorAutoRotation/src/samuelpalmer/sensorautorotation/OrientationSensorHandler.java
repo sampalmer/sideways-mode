@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.android.WindowOrientationListener;
 import android.content.Context;
 
 
