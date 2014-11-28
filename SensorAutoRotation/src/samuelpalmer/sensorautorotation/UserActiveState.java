@@ -1,9 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.BroadcastReceiver;
+import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.telephony.TelephonyManager;
 
 public class UserActiveState extends ExternalResource {
@@ -13,15 +11,16 @@ public class UserActiveState extends ExternalResource {
 	private OrientationCalculator calculator;
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationController recalibrator;
-	private Context context;
+	private CallStateMonitor callStateMonitor;
 	
 	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
-		this.context = context;
 		errorHandler = new UserErrorHandler(context);
 		calculator = new OrientationCalculator(context, screenOrientationController);
 		recalibrator = new RecalibrationController(new RecalibrationOverlay(context, screenOrientationController, calculator));
 		
 		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, recalibrator });
+		
+		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
 		
 		try {
 			orientationListener = new OrientationSensorHandler(context, calculator);
@@ -34,12 +33,7 @@ public class UserActiveState extends ExternalResource {
 	@Override
 	protected void start() throws EnvironmentException {
 		calculator.ensureStarted();
-		
-		context.registerReceiver(callStateReceiver, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
-		TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-		if (telephony.getCallState() == TelephonyManager.CALL_STATE_IDLE)
-			proximityHandler.ensureStarted();
-		
+		callStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
 	}
@@ -51,16 +45,15 @@ public class UserActiveState extends ExternalResource {
 		if (orientationListener != null)
 			orientationListener.ensureStopped();
 		
-		context.unregisterReceiver(callStateReceiver);
+		callStateMonitor.ensureStopped();
 		recalibrator.ensureStopped();
 		calculator.ensureStopped();
 	} 
 	
-	private final BroadcastReceiver callStateReceiver = new BroadcastReceiver() {
+	private final Listener<Integer> callStateReceiver = new Listener<Integer>() {
 		@Override
-		public void onReceive(Context context, Intent intent) {
-			String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-			boolean notOnCall = state.equals(TelephonyManager.EXTRA_STATE_IDLE);
+		public void stateChanged(Integer state) {
+			boolean notOnCall = state == TelephonyManager.CALL_STATE_IDLE;
 			try {
 				if (notOnCall)
 					proximityHandler.ensureStarted();
