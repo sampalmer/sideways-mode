@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
@@ -23,11 +24,18 @@ public class UserActiveState extends ExternalResource {
 		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
 		
 		try {
-			orientationListener = new OrientationSensorHandler(context, calculator);
+			orientationListener = new OrientationSensorHandler(context);
 		}
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}
+		
+		orientationListener.onRotationChanged().ensureSubscribed(new EventHandler<AndroidSurfaceRotation>() {
+			@Override
+			public void update(AndroidSurfaceRotation event) {
+				calculator.setDevice(event.orientation());
+			}
+		});
 	}
 	
 	@Override

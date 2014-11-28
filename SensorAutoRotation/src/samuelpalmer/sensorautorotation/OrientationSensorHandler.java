@@ -1,19 +1,21 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.android.WindowOrientationListener;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 
 
 public class OrientationSensorHandler extends ExternalResource {
 
 	private WindowOrientationListener listener;
-
-	public OrientationSensorHandler(final Context context, final OrientationCalculator calculator) throws EnvironmentException {
+	private final UpdatingEventRegistrar<AndroidSurfaceRotation> subscriptions = new UpdatingEventRegistrar<AndroidSurfaceRotation>();
+	
+	public OrientationSensorHandler(final Context context) throws EnvironmentException {
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
-				Orientation orientation = new AndroidSurfaceRotation(rotation).orientation();
-				calculator.setDevice(orientation);
+				subscriptions.report(new AndroidSurfaceRotation(rotation));
 			}
 		};
 		
@@ -29,6 +31,10 @@ public class OrientationSensorHandler extends ExternalResource {
 	@Override
 	protected void stop() {
 		listener.disable();
+	}
+	
+	public EventRegistrar<AndroidSurfaceRotation> onRotationChanged() {
+		return subscriptions;
 	}
 	
 }
