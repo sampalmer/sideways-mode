@@ -6,7 +6,8 @@ import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.ScreenOnMonitor;
+import samuelpalmer.sensorautorotation.UserInteractivity;
+import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.app.Notification;
@@ -23,7 +24,7 @@ public class RotationService extends Service {
 	private boolean destroyed;
 	private UserActiveState userActiveState;
 	private ScreenOrientationController screenOrientationController;
-	private ScreenOnMonitor screenOnMonitor;
+	private UserInteractivityMonitor userInteractivityMonitor;
 	
 	@Override
 	public void onCreate() {
@@ -31,11 +32,11 @@ public class RotationService extends Service {
 		
 		screenOrientationController = new ScreenOrientationController(this);
 		userActiveState = new UserActiveState(this, screenOrientationController);
-		screenOnMonitor = new ScreenOnMonitor(this, new StateMonitor.Listener<Boolean>() {
+		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
-			public void stateChanged(Boolean on) {
+			public void stateChanged(UserInteractivity user) {
 				try {
-					if (on)
+					if (user.active())
 						userActiveState.ensureStarted();
 					else
 						userActiveState.ensureStopped();
@@ -51,7 +52,7 @@ public class RotationService extends Service {
 		
 			promoteToForeground();
 			
-			screenOnMonitor.ensureStarted();
+			userInteractivityMonitor.ensureStarted();
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(this).handle(e);
 		}
@@ -63,7 +64,7 @@ public class RotationService extends Service {
 				userActiveState.ensureStopped();
 				screenOrientationController.ensureStopped();
 				unregisterReceiver(shutdownReceiver);
-				screenOnMonitor.ensureStopped();
+				userInteractivityMonitor.ensureStopped();
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(this).handle(e);
 			}

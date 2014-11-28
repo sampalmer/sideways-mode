@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.PowerManager;
 
-public class ScreenOnMonitor extends StateMonitor<Boolean> {
+public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 
 	private final Context context;
 
-	public ScreenOnMonitor(Context context, Listener<Boolean> listener) {
+	public UserInteractivityMonitor(Context context, Listener<UserInteractivity> listener) {
 		super(listener);
 		this.context = context;
 	}
@@ -28,22 +28,22 @@ public class ScreenOnMonitor extends StateMonitor<Boolean> {
 	}
 	
 	@Override
-	protected Boolean get() {
+	protected UserInteractivity get() {
 		PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-		return pm.isScreenOn();
+		return new UserInteractivity(pm.isScreenOn());
 	}
 	
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			reportChange(true);
+			reportChange(new UserInteractivity(true));
 		}
 	};
 	
 	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			reportChange(false);
+			reportChange(new UserInteractivity(false));
 		}
 	};
 	
