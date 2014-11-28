@@ -29,7 +29,7 @@ public class UserActiveState extends ExternalResource {
 			errorHandler.handle(e);
 		}
 		
-		orientationListener.onRotationChanged().ensureSubscribed(new EventHandler<AndroidSurfaceRotation>() {
+		orientationListener.onRotationChanged().subscribe(new EventHandler<AndroidSurfaceRotation>() {
 			@Override
 			public void update(AndroidSurfaceRotation event) {
 				calculator.setDevice(event.orientation());

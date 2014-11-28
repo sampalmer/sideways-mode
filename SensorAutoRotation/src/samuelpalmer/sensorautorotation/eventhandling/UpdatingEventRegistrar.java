@@ -8,16 +8,23 @@ public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 	private final Set<EventHandler<T>> subscriptions = new HashSet<EventHandler<T>>();
 	
 	@Override
-	public void ensureSubscribed(EventHandler<T> subscriber) {
+	public void subscribe(EventHandler<T> subscriber) {
+		if (subscribed(subscriber))
+			throw new RuntimeException("Already subscribed: " + subscriber);
+		
 		subscriptions.add(subscriber);
 	}
 	
 	@Override
 	public void unsubscribe(EventHandler<T> subscriber) {
-		if (!subscriptions.contains(subscriber))
+		if (!subscribed(subscriber))
 			throw new RuntimeException("Unknown subscriber: " + subscriber);
 		
 		subscriptions.remove(subscriber);
+	}
+
+	private boolean subscribed(EventHandler<T> subscriber) {
+		return subscriptions.contains(subscriber);
 	}
 	
 	public void report(T event) {

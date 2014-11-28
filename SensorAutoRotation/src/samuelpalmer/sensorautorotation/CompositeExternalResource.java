@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 
+
 public class CompositeExternalResource extends ExternalResource {
 	
 	private final ExternalResource[] resources;
