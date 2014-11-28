@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.OrientationCalculator.Listener;
-import samuelpalmer.sensorautorotation.Screen.RealOrientationListener;
+import samuelpalmer.sensorautorotation.ScreenOrientationController.RealOrientationListener;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
@@ -16,11 +16,11 @@ public class RecalibrationOverlay extends ExternalResource {
 	private WindowManager windowManager;
 	private LayoutInflater layoutInflater;
 	private View layout;
-	private Screen screen;
+	private ScreenOrientationController screenOrientationController;
 	private OrientationCalculator calculator;
 
-	public RecalibrationOverlay(Context context, Screen screen, OrientationCalculator calculator) {
-		this.screen = screen;
+	public RecalibrationOverlay(Context context, ScreenOrientationController screenOrientationController, OrientationCalculator calculator) {
+		this.screenOrientationController = screenOrientationController;
 		this.calculator = calculator;
 		windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -32,21 +32,21 @@ public class RecalibrationOverlay extends ExternalResource {
 		update();
 		windowManager.addView(layout, generateLayoutParams());
 		
-		screen.listen(screenListener);
+		screenOrientationController.listen(screenListener);
 		calculator.listen(listener);
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
 		calculator.stopListening();
-		screen.stopListening();
+		screenOrientationController.stopListening();
 		
 		windowManager.removeView(layout);
 	}
 
 	private void update() {
 		Orientation proposedScreenOrientation = calculator.getDevice().plus(Orientation.NATURAL.minus(calculator.getUser()));
-		Orientation actual = screen.realOrientation();
+		Orientation actual = screenOrientationController.realOrientation();
 		RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		subcontainerParams.angle = 90 * actual.minus(proposedScreenOrientation).clockwiseCount();
 		

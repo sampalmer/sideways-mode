@@ -5,7 +5,7 @@ import samuelpalmer.sensorautorotation.App;
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.Screen;
+import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOnMonitor;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
@@ -22,15 +22,15 @@ public class RotationService extends Service {
 
 	private boolean destroyed;
 	private App app;
-	private Screen screen;
+	private ScreenOrientationController screenOrientationController;
 	private ScreenOnMonitor screenOnMonitor;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		
-		screen = new Screen(this);
-		app = new App(this, screen);
+		screenOrientationController = new ScreenOrientationController(this);
+		app = new App(this, screenOrientationController);
 		screenOnMonitor = new ScreenOnMonitor(this, new StateMonitor.Listener<Boolean>() {
 			@Override
 			public void stateChanged(Boolean on) {
@@ -47,7 +47,7 @@ public class RotationService extends Service {
 		
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		try {
-			screen.ensureStarted();
+			screenOrientationController.ensureStarted();
 		
 			promoteToForeground();
 			
@@ -61,7 +61,7 @@ public class RotationService extends Service {
 		if (!destroyed) {
 			try {
 				app.ensureStopped();
-				screen.ensureStopped();
+				screenOrientationController.ensureStopped();
 				unregisterReceiver(shutdownReceiver);
 				screenOnMonitor.ensureStopped();
 			} catch (EnvironmentException e) {

@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
 
-public class Screen extends ExternalResource {
+public class ScreenOrientationController extends ExternalResource {
 	
 	private SystemSettings settings;
 	private Boolean originalAccelerometerRotation;
@@ -24,7 +24,7 @@ public class Screen extends ExternalResource {
 		
 	};
 	
-	public Screen(Context context) {
+	public ScreenOrientationController(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
 	}

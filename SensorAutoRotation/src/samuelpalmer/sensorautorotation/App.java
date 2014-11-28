@@ -15,11 +15,11 @@ public class App extends ExternalResource {
 	private RecalibrationController recalibrator;
 	private Context context;
 	
-	public App(Context context, Screen screen) {
+	public App(Context context, ScreenOrientationController screenOrientationController) {
 		this.context = context;
 		errorHandler = new UserErrorHandler(context);
-		calculator = new OrientationCalculator(context, screen);
-		recalibrator = new RecalibrationController(new RecalibrationOverlay(context, screen, calculator));
+		calculator = new OrientationCalculator(context, screenOrientationController);
+		recalibrator = new RecalibrationController(new RecalibrationOverlay(context, screenOrientationController, calculator));
 		
 		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, recalibrator });
 		

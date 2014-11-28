@@ -13,15 +13,15 @@ public class OrientationCalculator
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 	
-	private Screen screen;
+	private ScreenOrientationController screenOrientationController;
 	private boolean covered;
 	private Context context;
 
 	private Listener listener;
 	
-	public OrientationCalculator(final Context context, Screen screen) {
+	public OrientationCalculator(final Context context, ScreenOrientationController screenOrientationController) {
 		this.context = context;
-		this.screen = screen;
+		this.screenOrientationController = screenOrientationController;
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class OrientationCalculator
 	protected void stop() throws EnvironmentException {
 		device = DEFAULT;
 		user = DEFAULT;
-		screen.propose(proposedScreenOrientation());
+		screenOrientationController.propose(proposedScreenOrientation());
 	}
 	
 	public void setDevice(Orientation newDevice) {
@@ -62,7 +62,7 @@ public class OrientationCalculator
 	private void reportUpdate() {
 		if (!proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN))
 			try {
-				screen.propose(proposedScreenOrientation());
+				screenOrientationController.propose(proposedScreenOrientation());
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(context).handle(e);
 			}
