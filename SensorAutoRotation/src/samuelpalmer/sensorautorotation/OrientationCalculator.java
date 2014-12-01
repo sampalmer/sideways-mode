@@ -64,10 +64,6 @@ public class OrientationCalculator extends ExternalResource {
 		vibrator.vibrate(durationMilliseconds);
 	}
 	
-	public Orientation getDevice() {
-		return device;
-	}
-	
 	private void reportUpdate() {
 		if (!proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN))
 			try {
@@ -83,7 +79,7 @@ public class OrientationCalculator extends ExternalResource {
 		return listener;
 	}
 	
-	private Orientation proposedScreenOrientation() {
+	public Orientation proposedScreenOrientation() {
 		return device.plus(offset());
 	}
 
@@ -94,10 +90,6 @@ public class OrientationCalculator extends ExternalResource {
 	public void resetUser() {
 		user = DEFAULT;
 		reportUpdate();
-	}
-
-	public Orientation getUser() {
-		return user;
 	}
 	
 }

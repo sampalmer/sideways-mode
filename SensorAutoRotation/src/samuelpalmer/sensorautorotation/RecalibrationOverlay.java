@@ -45,10 +45,9 @@ public class RecalibrationOverlay extends ExternalResource {
 	}
 
 	private void update() {
-		Orientation proposedScreenOrientation = calculator.getDevice().plus(Orientation.NATURAL.minus(calculator.getUser()));
 		Orientation actual = screenOrientationController.realOrientation();
 		RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		subcontainerParams.angle = 90 * actual.minus(proposedScreenOrientation).clockwiseCount();
+		subcontainerParams.angle = 90 * actual.minus(calculator.proposedScreenOrientation()).clockwiseCount();
 		
 		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
 		subcontainer.setLayoutParams(subcontainerParams);
