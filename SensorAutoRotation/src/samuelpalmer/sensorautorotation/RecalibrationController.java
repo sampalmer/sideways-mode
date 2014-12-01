@@ -5,12 +5,12 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class RecalibrationController extends ExternalResource {
 	
-	private RecalibrationOverlay overlay;
 	private ProximitySensorHandler proximitySensor;
+	private Recalibration recalibration;
 	
-	public RecalibrationController(ProximitySensorHandler proximitySensor, RecalibrationOverlay overlay) {
+	public RecalibrationController(ProximitySensorHandler proximitySensor, Recalibration recalibration) {
 		this.proximitySensor = proximitySensor;
-		this.overlay = overlay;
+		this.recalibration = recalibration;
 	}
 	
 	@Override
@@ -22,16 +22,16 @@ public class RecalibrationController extends ExternalResource {
 	protected void stop() throws EnvironmentException {
 		proximitySensor.onChange().unsubscribe(subscriber);
 		
-		overlay.ensureStopped();
+		recalibration.ensureStopped();
 	}
 	
 	private final EventHandler<ProximitySensorCoveredState> subscriber = new EventHandler<ProximitySensorCoveredState>() {
 		@Override
 		public void update(ProximitySensorCoveredState event) throws EnvironmentException {
 			if (event.isCovered())
-				overlay.ensureStarted();
+				recalibration.ensureStarted();
 			else
-				overlay.ensureStopped();
+				recalibration.ensureStopped();
 		}
 	};
 	

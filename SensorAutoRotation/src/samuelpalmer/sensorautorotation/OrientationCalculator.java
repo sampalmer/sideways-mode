@@ -15,7 +15,6 @@ public class OrientationCalculator extends ExternalResource {
 	private Orientation user = DEFAULT;
 	
 	private ScreenOrientationController screenOrientationController;
-	private boolean covered;
 	private Context context;
 
 	private final UpdatingEventRegistrar<Void> listener;
@@ -53,6 +52,8 @@ public class OrientationCalculator extends ExternalResource {
 			covered = event.isCovered();
 		}
 	};
+	
+	private boolean covered;
 	
 	public void setDevice(Orientation newDevice) {
 		
