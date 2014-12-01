@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
@@ -19,45 +18,35 @@ public class OrientationCalculator extends ExternalResource {
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	private ProximitySensorHandler proximitySensor;
-	
-	public OrientationCalculator(final Context context, ProximitySensorHandler proximitySensor, ScreenOrientationController screenOrientationController) {
+	public OrientationCalculator(final Context context, ScreenOrientationController screenOrientationController) {
 		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 		this.context = context;
-		this.proximitySensor = proximitySensor;
 		this.screenOrientationController = screenOrientationController;
 	}
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		proximitySensor.onChange().subscribe(subscriber);
 	}
 	
 	@Override
 	protected void stop() throws EnvironmentException {
-		proximitySensor.onChange().unsubscribe(subscriber);
-		
 		device = DEFAULT;
 		user = DEFAULT;
 		reportUpdate();
 	}
 	
-	private final EventHandler<ProximitySensorCoveredState> subscriber = new EventHandler<ProximitySensorCoveredState>() {
+	public void setRecalibrating(boolean recalibrating) {
+		if (recalibrating && !this.recalibrating)
+			vibrate(40);
 		
-		@Override
-		public void update(ProximitySensorCoveredState event) throws EnvironmentException {
-			if (event.isCovered() && !covered)
-				vibrate(40);
-			
-			covered = event.isCovered();
-		}
-	};
+		this.recalibrating = recalibrating;		
+	}
 	
-	private boolean covered;
+	private boolean recalibrating;
 	
 	public void setDevice(Orientation newDevice) {
 		
-		if (covered) {
+		if (recalibrating) {
 			Rotation deviceChange = newDevice.minus(device);
 			if (deviceChange.clockwiseCount() != 0) {
 				vibrate(85);
