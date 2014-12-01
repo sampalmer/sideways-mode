@@ -12,13 +12,14 @@ public class UserActiveState extends ExternalResource {
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationController recalibrator;
 	private CallStateMonitor callStateMonitor;
+	private ScreenOrientationUpdater screenUpdater;
 	
 	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
 		errorHandler = new UserErrorHandler(context);
 		proximityHandler = new ProximitySensorHandler(context);
-		calculator = new OrientationCalculator(context, screenOrientationController);
+		calculator = new OrientationCalculator(context);
+		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		recalibrator = new RecalibrationController(proximityHandler, new Recalibration(new RecalibrationOverlay(context, screenOrientationController, calculator), calculator));
-		
 		
 		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
 		
@@ -43,10 +44,12 @@ public class UserActiveState extends ExternalResource {
 		callStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
+		screenUpdater.ensureStarted();
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
+		screenUpdater.ensureStopped();		
 		proximityHandler.ensureStopped();
 		
 		if (orientationListener != null)

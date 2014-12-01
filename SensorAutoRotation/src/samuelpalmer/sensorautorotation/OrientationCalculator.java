@@ -13,15 +13,13 @@ public class OrientationCalculator extends ExternalResource {
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 	
-	private ScreenOrientationController screenOrientationController;
 	private Context context;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(final Context context, ScreenOrientationController screenOrientationController) {
+	public OrientationCalculator(final Context context) {
 		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 		this.context = context;
-		this.screenOrientationController = screenOrientationController;
 	}
 	
 	@Override
@@ -65,13 +63,6 @@ public class OrientationCalculator extends ExternalResource {
 	}
 	
 	private void reportUpdate() {
-		if (!proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN))
-			try {
-				screenOrientationController.propose(proposedScreenOrientation());
-			} catch (EnvironmentException e) {
-				new UserErrorHandler(context).handle(e);
-			}
-		
 		listener.report(null);
 	}
 	
