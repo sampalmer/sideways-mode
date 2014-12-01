@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,22 +14,22 @@ public class ProximitySensorHandler extends ExternalResource {
 	private static final float THRESHOLD_IN_CENTIMETRES = .3f;
 	
 	private final SensorManager sensorManager;
-	private final Listener[] listeners;
 	private final Handler handler;
 	private final Runnable r = new Runnable() {
 		@Override
 		public void run() {
-			updateListeners();
+			onChange.report(new ProximitySensorCoveredState(covered));
 		}
 	};
-
-	private Context context;
-
-	public ProximitySensorHandler(Context context, Listener[] listeners) {
-		this.context = context;
-		this.listeners = listeners;
+	
+	private final UpdatingEventRegistrar<ProximitySensorCoveredState> onChange;
+	public EventRegistrar<ProximitySensorCoveredState> onChange() {
+		return onChange;
+	}
+	
+	public ProximitySensorHandler(Context context) {
+		onChange = new UpdatingEventRegistrar<ProximitySensorCoveredState>(new UserErrorHandler(context));
 		sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-		
 		handler = new Handler();
 	}
 	
@@ -65,7 +67,7 @@ public class ProximitySensorHandler extends ExternalResource {
 					handler.postDelayed(r, 400);
 				else {
 					dequeueUpdates();
-					updateListeners();
+					r.run();
 				}
 			}
 		}
@@ -78,19 +80,6 @@ public class ProximitySensorHandler extends ExternalResource {
 		handler.removeCallbacks(r);
 	}
 	
-	private void updateListeners() {
-		for (int i = 0; i < listeners.length; ++i)
-			try {
-				listeners[i].update(covered);
-			} catch (EnvironmentException e) {
-				new UserErrorHandler(context).handle(e);
-			}
-	}
-	
 	private boolean covered;
-	
-	public interface Listener {
-		public void update(boolean covered) throws EnvironmentException;
-	}
 	
 }

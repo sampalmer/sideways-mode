@@ -15,10 +15,10 @@ public class UserActiveState extends ExternalResource {
 	
 	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
 		errorHandler = new UserErrorHandler(context);
-		calculator = new OrientationCalculator(context, screenOrientationController);
-		recalibrator = new RecalibrationController(new RecalibrationOverlay(context, screenOrientationController, calculator));
+		proximityHandler = new ProximitySensorHandler(context);
+		calculator = new OrientationCalculator(context, proximityHandler, screenOrientationController);
+		recalibrator = new RecalibrationController(proximityHandler, new RecalibrationOverlay(context, screenOrientationController, calculator));
 		
-		proximityHandler = new ProximitySensorHandler(context, new ProximitySensorHandler.Listener[] { calculator, recalibrator });
 		
 		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
 		

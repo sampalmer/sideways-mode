@@ -3,9 +3,17 @@ package samuelpalmer.sensorautorotation.eventhandling;
 import java.util.HashSet;
 import java.util.Set;
 
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
+
 public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 	
 	private final Set<EventHandler<T>> subscriptions = new HashSet<EventHandler<T>>();
+	private final UserErrorHandler errorHandler;
+	
+	public UpdatingEventRegistrar(UserErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+	}
 	
 	@Override
 	public void subscribe(EventHandler<T> subscriber) {
@@ -28,8 +36,13 @@ public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 	}
 	
 	public void report(T event) {
-		for (EventHandler<T> subscriber : subscriptions)
-			subscriber.update(event);
+		try
+		{
+			for (EventHandler<T> subscriber : subscriptions)
+				subscriber.update(event);
+		} catch (EnvironmentException e) {
+			errorHandler.handle(e);
+		}
 	}
 	
 }

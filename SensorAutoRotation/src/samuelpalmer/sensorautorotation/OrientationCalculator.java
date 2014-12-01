@@ -1,14 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 import android.os.Vibrator;
 
 
-public class OrientationCalculator
-	extends ExternalResource
-	implements ProximitySensorHandler.Listener {
+public class OrientationCalculator extends ExternalResource {
 	
 	private static final Orientation DEFAULT = Orientation.NATURAL; 
 	
@@ -19,23 +18,41 @@ public class OrientationCalculator
 	private boolean covered;
 	private Context context;
 
-	private UpdatingEventRegistrar<Void> listener = new UpdatingEventRegistrar<Void>();
+	private final UpdatingEventRegistrar<Void> listener;
+
+	private ProximitySensorHandler proximitySensor;
 	
-	public OrientationCalculator(final Context context, ScreenOrientationController screenOrientationController) {
+	public OrientationCalculator(final Context context, ProximitySensorHandler proximitySensor, ScreenOrientationController screenOrientationController) {
+		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 		this.context = context;
+		this.proximitySensor = proximitySensor;
 		this.screenOrientationController = screenOrientationController;
 	}
 	
 	@Override
 	protected void start() throws EnvironmentException {
+		proximitySensor.onChange().subscribe(subscriber);
 	}
 	
 	@Override
 	protected void stop() throws EnvironmentException {
+		proximitySensor.onChange().unsubscribe(subscriber);
+		
 		device = DEFAULT;
 		user = DEFAULT;
 		reportUpdate();
 	}
+	
+	private final EventHandler<ProximitySensorCoveredState> subscriber = new EventHandler<ProximitySensorCoveredState>() {
+		
+		@Override
+		public void update(ProximitySensorCoveredState event) throws EnvironmentException {
+			if (event.isCovered() && !covered)
+				vibrate(40);
+			
+			covered = event.isCovered();
+		}
+	};
 	
 	public void setDevice(Orientation newDevice) {
 		
@@ -91,15 +108,6 @@ public class OrientationCalculator
 
 	public Orientation getUser() {
 		return user;
-	}
-	
-	
-	@Override
-	public void update(boolean proximitySensorCovered) {
-		if (proximitySensorCovered && !covered)
-			vibrate(40);
-		
-		covered = proximitySensorCovered;
 	}
 	
 }

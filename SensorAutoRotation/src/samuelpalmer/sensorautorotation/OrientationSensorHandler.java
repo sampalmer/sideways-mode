@@ -9,9 +9,11 @@ import android.content.Context;
 public class OrientationSensorHandler extends ExternalResource {
 
 	private WindowOrientationListener listener;
-	private final UpdatingEventRegistrar<AndroidSurfaceRotation> subscriptions = new UpdatingEventRegistrar<AndroidSurfaceRotation>();
+	private final UpdatingEventRegistrar<AndroidSurfaceRotation> subscriptions;
 	
 	public OrientationSensorHandler(final Context context) throws EnvironmentException {
+		subscriptions = new UpdatingEventRegistrar<AndroidSurfaceRotation>(new UserErrorHandler(context));
+		
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
