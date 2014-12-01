@@ -45,12 +45,16 @@ public class RecalibrationOverlay extends ExternalResource {
 	}
 
 	private void update() {
+		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
+		subcontainer.setLayoutParams(calculateRotation());
+	}
+
+	private RotateLayout.LayoutParams calculateRotation() {
 		Orientation actual = screenOrientationController.realOrientation();
 		RotateLayout.LayoutParams subcontainerParams = new RotateLayout.LayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		subcontainerParams.angle = 90 * actual.minus(calculator.proposedScreenOrientation()).clockwiseCount();
 		
-		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
-		subcontainer.setLayoutParams(subcontainerParams);
+		return subcontainerParams;
 	}
 	
 	private LayoutParams generateLayoutParams() {
@@ -58,7 +62,6 @@ public class RecalibrationOverlay extends ExternalResource {
 		layoutParams.alpha = 0.4f;
 		return layoutParams;
 	}
-	
 	
 	private final RealOrientationListener screenListener = new RealOrientationListener() {
 		@Override
