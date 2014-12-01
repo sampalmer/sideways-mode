@@ -32,14 +32,14 @@ public class RecalibrationOverlay extends ExternalResource {
 		update();
 		windowManager.addView(layout, generateLayoutParams());
 		
-		screenOrientationController.onOrientationChanged().subscribe(screenOrientationListener);
-		calculator.onChange().subscribe(proposedOrientationListener);
+		screenOrientationController.onOrientationChanged().subscribe(listener);
+		calculator.onChange().subscribe(listener);
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
-		calculator.onChange().unsubscribe(proposedOrientationListener);
-		screenOrientationController.onOrientationChanged().unsubscribe(screenOrientationListener);
+		calculator.onChange().unsubscribe(listener);
+		screenOrientationController.onOrientationChanged().unsubscribe(listener);
 		
 		windowManager.removeView(layout);
 	}
@@ -63,14 +63,7 @@ public class RecalibrationOverlay extends ExternalResource {
 		return layoutParams;
 	}
 	
-	private final EventHandler<Void> screenOrientationListener = new EventHandler<Void>() {
-		@Override
-		public void update(Void event) {
-			RecalibrationOverlay.this.update();
-		}
-	};
-	
-	private final EventHandler<Void> proposedOrientationListener = new EventHandler<Void>() {
+	private final EventHandler<Void> listener = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
 			RecalibrationOverlay.this.update();
