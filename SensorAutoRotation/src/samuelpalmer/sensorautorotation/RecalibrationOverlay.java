@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ public class RecalibrationOverlay extends ExternalResource {
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	@Override
+	@SuppressLint("InflateParams") @Override
 	protected void start() throws EnvironmentException {
 		layout = layoutInflater.inflate(R.layout.user_orientation, null);
 		update();
