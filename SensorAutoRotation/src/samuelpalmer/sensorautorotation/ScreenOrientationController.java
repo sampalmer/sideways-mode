@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 import android.content.BroadcastReceiver;
@@ -27,6 +29,7 @@ public class ScreenOrientationController extends ExternalResource {
 	public ScreenOrientationController(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
+		onOrientationChanged = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 	}
 	
 	@Override
@@ -94,33 +97,18 @@ public class ScreenOrientationController extends ExternalResource {
 			new UserErrorHandler(context).handle(e);
 		}
 		
-		if (listener != null)
-			listener.possiblyChanged();
+		onOrientationChanged.report(null);
 	}
+	
+	public EventRegistrar<Void> onOrientationChanged() {
+		return onOrientationChanged;
+	}
+	
+	private final UpdatingEventRegistrar<Void> onOrientationChanged;
 	
 	@Override
 	public String toString() {
 		return proposedOrientation().toString();
-	}
-	
-	private RealOrientationListener listener; 
-	
-	public void listen(RealOrientationListener listener) {
-		if (this.listener != null)
-			throw new RuntimeException("Already listening");
-		
-		this.listener = listener;
-	}
-	
-	public void stopListening() {
-		if (listener == null)
-			throw new RuntimeException("Not listening");
-		
-		listener = null;
-	}
-	
-	public interface RealOrientationListener {
-		void possiblyChanged();
 	}
 
 }
