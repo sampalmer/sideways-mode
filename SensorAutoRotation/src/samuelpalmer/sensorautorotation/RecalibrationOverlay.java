@@ -29,7 +29,7 @@ public class RecalibrationOverlay extends ExternalResource {
 	@SuppressLint("InflateParams") @Override
 	protected void start() throws EnvironmentException {
 		layout = layoutInflater.inflate(R.layout.user_orientation, null);
-		update();
+		setRotation();
 		windowManager.addView(layout, generateLayoutParams());
 		
 		screenOrientationController.onOrientationChanged().subscribe(listener);
@@ -44,7 +44,7 @@ public class RecalibrationOverlay extends ExternalResource {
 		windowManager.removeView(layout);
 	}
 
-	private void update() {
+	private void setRotation() {
 		View subcontainer = layout.findViewById(R.id.overlay_subcontainer);
 		subcontainer.setLayoutParams(calculateRotation());
 	}
@@ -66,7 +66,7 @@ public class RecalibrationOverlay extends ExternalResource {
 	private final EventHandler<Void> listener = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			RecalibrationOverlay.this.update();
+			RecalibrationOverlay.this.setRotation();
 		}
 	};
 }
