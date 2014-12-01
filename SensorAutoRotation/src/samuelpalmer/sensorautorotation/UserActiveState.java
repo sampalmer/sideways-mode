@@ -42,16 +42,15 @@ public class UserActiveState extends ExternalResource {
 	
 	@Override
 	protected void start() throws EnvironmentException {
+		screenUpdater.ensureStarted();
 		calculator.ensureStarted();
 		callStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
-		screenUpdater.ensureStarted();
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
-		screenUpdater.ensureStopped();		
 		proximityHandler.ensureStopped();
 		
 		if (orientationListener != null)
@@ -60,6 +59,7 @@ public class UserActiveState extends ExternalResource {
 		callStateMonitor.ensureStopped();
 		recalibrator.ensureStopped();
 		calculator.ensureStopped();
+		screenUpdater.ensureStopped();		
 	} 
 	
 	private final Listener<CallState> callStateReceiver = new Listener<CallState>() {
