@@ -78,7 +78,7 @@ public class ScreenOrientationController extends ExternalResource {
 		return rotation.orientation();
 	}
 	
-	public Orientation proposedOrientation() {
+	private Orientation proposedOrientation() {
 		Orientation result = settings.userRotation.getOrNull();
 		if (result == null)
 			result = Orientation.NATURAL;
