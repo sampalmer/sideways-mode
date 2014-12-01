@@ -87,6 +87,11 @@ public class ScreenOrientationController extends ExternalResource {
 	}
 	
 	private void systemConfigChanged() {
+		checkIfSystemAutoRotationWasEnabled();
+		onOrientationChanged.report(null);
+	}
+
+	private void checkIfSystemAutoRotationWasEnabled() {
 		try {
 			Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
 			if (accelerometerRotation != null && accelerometerRotation == true) {
@@ -96,8 +101,6 @@ public class ScreenOrientationController extends ExternalResource {
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(context).handle(e);
 		}
-		
-		onOrientationChanged.report(null);
 	}
 	
 	public EventRegistrar<Void> onOrientationChanged() {
