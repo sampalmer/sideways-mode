@@ -31,13 +31,6 @@ public class UserActiveState extends ExternalResource {
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}
-		
-		orientationListener.onRotationChanged().subscribe(new EventHandler<AndroidSurfaceRotation>() {
-			@Override
-			public void update(AndroidSurfaceRotation event) {
-				calculator.setDevice(event.orientation());
-			}
-		});
 	}
 	
 	@Override
@@ -47,10 +40,14 @@ public class UserActiveState extends ExternalResource {
 		callStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
+		
+		orientationListener.onRotationChanged().subscribe(deviceOrientationSubscriber);
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
+		orientationListener.onRotationChanged().unsubscribe(deviceOrientationSubscriber);
+		
 		proximityHandler.ensureStopped();
 		
 		if (orientationListener != null)
@@ -61,6 +58,15 @@ public class UserActiveState extends ExternalResource {
 		calculator.ensureStopped();
 		screenUpdater.ensureStopped();		
 	} 
+	
+	EventHandler<AndroidSurfaceRotation> deviceOrientationSubscriber = new EventHandler<AndroidSurfaceRotation>() {
+		
+		@Override
+		public void update(AndroidSurfaceRotation event)
+				throws EnvironmentException {
+			calculator.setDevice(event.orientation());
+		}
+	};
 	
 	private final Listener<CallState> callStateReceiver = new Listener<CallState>() {
 		@Override
