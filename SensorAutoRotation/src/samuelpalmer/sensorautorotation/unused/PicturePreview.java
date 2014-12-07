@@ -1,16 +1,16 @@
 package samuelpalmer.sensorautorotation.unused;
 
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.ExternalResource;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
-import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.ExternalResource;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import android.widget.ImageView.ScaleType;
 
 public class PicturePreview extends ExternalResource {
 	
@@ -24,8 +24,7 @@ public class PicturePreview extends ExternalResource {
 		
 		view = new ImageView(context);
 		view.setImageBitmap(image);
-		view.setAlpha(0.7f);
-		view.setVisibility(View.VISIBLE);
+		view.setScaleType(ScaleType.CENTER);
 	}
 	
 	@Override
@@ -34,6 +33,7 @@ public class PicturePreview extends ExternalResource {
 				LayoutParams.TYPE_SYSTEM_OVERLAY,
 	            0,
 	            PixelFormat.TRANSLUCENT);
+//		params.alpha = 0.85f;
 		
 		wm.addView(view, params);
 		
@@ -47,7 +47,7 @@ public class PicturePreview extends ExternalResource {
 					new UserErrorHandler(context).handle(e);
 				}
 			}
-		}, 5000);
+		}, 2500);
 	}
 
 	@Override
