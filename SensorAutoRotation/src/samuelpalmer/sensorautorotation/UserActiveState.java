@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.facedetection.CameraOrientationCalculator;
+import samuelpalmer.sensorautorotation.facedetection.TimingLogger;
 import android.content.Context;
 
 public class UserActiveState extends ExternalResource {

@@ -5,7 +5,6 @@ import java.io.IOException;
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.ExternalResource;
 import samuelpalmer.sensorautorotation.Orientation;
-import samuelpalmer.sensorautorotation.TimingLogger;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -15,7 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Handler;
 import android.view.SurfaceHolder;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 public class CameraOrientationCalculator extends ExternalResource {
 
+	private static final int OPTIMAL_WIDTH = 160;
 	private boolean surfaceAvailable;
 	
 	private final class CallbackImplementation implements Callback {
@@ -170,15 +172,15 @@ public class CameraOrientationCalculator extends ExternalResource {
 			
 			logger.showMessage("Decoded picture");
 
-			int targetWidth = 160;
-			double scaleMultiplier = (double) targetWidth / image.getWidth();
-			image = Bitmap.createScaledBitmap(image, targetWidth, (int) (image.getHeight() * scaleMultiplier), false);
+			image = BitmapExtensions.scaleToWidth(image, OPTIMAL_WIDTH);
 			
 			CameraInfo info = new CameraInfo();
 			Camera.getCameraInfo(cameraIndex, info);
 			int cameraOrientationDegrees = info.orientation;
 			image = BitmapExtensions.rotatedClockwise(image, cameraOrientationDegrees / 90);
-
+			
+			logger.showMessage("Processed picture");
+			
 			try {
 				new PicturePreview(context, image).ensureStarted();
 			} catch (EnvironmentException e) {
@@ -200,6 +202,11 @@ public class CameraOrientationCalculator extends ExternalResource {
 	
 	private void configureCamera() {
 		mute();
+		
+		Parameters parameters = camera.getParameters();
+		Size optimalSize = new OptimalSizeChooser(parameters.getSupportedPreviewSizes(), OPTIMAL_WIDTH).choose();
+		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
+		camera.setParameters(parameters);
 		
 		try {
 			camera.setPreviewDisplay(preview.getHolder());
