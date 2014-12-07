@@ -29,24 +29,25 @@ import android.widget.Toast;
 public class CameraOrientationCalculator extends ExternalResource {
 
 	private static final int OPTIMAL_WIDTH = 160;
-	private boolean surfaceAvailable;
+	
+	private boolean surfaceCreated;
 	
 	private final class CallbackImplementation implements Callback {
-		
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			surfaceAvailable = false;
+			surfaceCreated = false;
+			
+			logger.showMessage("Surface destroyed");
 		}
 
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
+			surfaceCreated = true;
+			
 			logger.showMessage("Surface created");
 			
-			surfaceAvailable = true;
-			
-			if (detecting)
-				takePicture();
+			startPreview();
 		}
 
 		@Override
@@ -69,27 +70,46 @@ public class CameraOrientationCalculator extends ExternalResource {
 	
 	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<Orientation>(new UserErrorHandler(context));
 	private boolean detecting;
+
+	private boolean exposureSet;
 	public EventRegistrar<Orientation> onDetected() {
 		return onDetected;
 	}
 	
 	@Override
 	protected void start() throws EnvironmentException {
-	}
-
-	@Override
-	protected void stop() throws EnvironmentException {
-	}
-	
-	public void detect() {
-		logger.showMessage("Started");
+		logger.showMessage("Start called");
 		
 		cameraIndex = tryFindFrontCameraIndex();
 		camera = null;
 		
-		startOverlay();
+		setCamera();
 		
-		if (!detecting && surfaceAvailable)
+		if (camera != null) {
+			startOverlay();
+			configureCamera();
+		}
+	}
+
+	@Override
+	protected void stop() throws EnvironmentException {
+		if (camera != null) {
+			camera.release();
+			camera = null;
+		}
+		
+		stopOverlay();
+	}
+	
+	public void detect() {
+		if (camera == null) {
+			detected(null);
+			return;
+		}
+		
+		logger.showMessage("Detect called");
+		
+		if (!detecting && surfaceCreated && exposureSet)
 			takePicture();
 		
 		detecting = true;
@@ -98,24 +118,18 @@ public class CameraOrientationCalculator extends ExternalResource {
 	private void detected(Orientation result) {
 		onDetected.report(result);
 		detecting = false;
-		
-		stopOverlay();
-		
-		if (camera != null) {
-			camera.release();
-			camera = null;
-		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	private void startOverlay() {
 		preview = new SurfaceView(context);
+		
 		SurfaceHolder holder = preview.getHolder();
 		// deprecated setting, but required on Android versions prior to 3.0
 		holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		holder.addCallback(new CallbackImplementation());
-
-		LayoutParams params = new LayoutParams(1, 1, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
+		
+		LayoutParams params = new LayoutParams(1, 1, Integer.MIN_VALUE, Integer.MIN_VALUE, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
 		wm.addView(preview, params);
 
 		logger.showMessage("Added overlay");
@@ -141,14 +155,15 @@ public class CameraOrientationCalculator extends ExternalResource {
 		logger.showMessage("Opened camera");
 	}
 
-	private void takePicture() {
-		setCamera();
-		if (camera == null) {
-			detected(null);
-			return;
+	private void startPreview() {
+		try {
+			camera.setPreviewDisplay(preview.getHolder());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-
-		configureCamera();
+		
+		camera.startPreview();
+		logger.showMessage("Started preview");
 		
 		new Handler().postDelayed(exposureCallback, 1000);
 	}
@@ -158,10 +173,16 @@ public class CameraOrientationCalculator extends ExternalResource {
 		public void run() {
 			logger.showMessage("Set exposure");
 			
-			if (camera != null)
-				camera.setOneShotPreviewCallback(pictureTaken);
+			exposureSet = true;
+			if (detecting)
+				takePicture();
 		}
 	};
+	
+	private void takePicture() {
+		if (camera != null)
+			camera.setOneShotPreviewCallback(pictureTaken);
+	}
 	
 	private final PreviewCallback pictureTaken = new PreviewCallback() {
 		
@@ -170,9 +191,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 			logger.showMessage("Took picture");
 
 			Bitmap image = new Nv21Decoder(nv21, camera).decode();
-			
 			logger.showMessage("Decoded picture");
-
+			
 			image = BitmapExtensions.scaleToWidth(image, OPTIMAL_WIDTH);
 			
 			CameraInfo info = new CameraInfo();
@@ -208,15 +228,6 @@ public class CameraOrientationCalculator extends ExternalResource {
 		Size optimalSize = new OptimalSizeChooser(parameters.getSupportedPreviewSizes(), OPTIMAL_WIDTH).choose();
 		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
 		camera.setParameters(parameters);
-		
-		try {
-			camera.setPreviewDisplay(preview.getHolder());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		camera.startPreview();
-		logger.showMessage("Started preview");
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
