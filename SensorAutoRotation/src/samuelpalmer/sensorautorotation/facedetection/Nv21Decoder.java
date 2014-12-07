@@ -34,7 +34,7 @@ public class Nv21Decoder {
 	
 	private byte[] transcodeJpeg(YuvImage yuv) {
 		ByteArrayOutputStream compressionOutput = new ByteArrayOutputStream();
-		boolean success = yuv.compressToJpeg(new Rect(0, 0, yuv.getWidth(), yuv.getHeight()), 10, compressionOutput);
+		boolean success = yuv.compressToJpeg(new Rect(0, 0, yuv.getWidth(), yuv.getHeight()), 70, compressionOutput);
 		if (!success)
 			throw new RuntimeException("Couldn't compress YUV image to JPEG");
 		
