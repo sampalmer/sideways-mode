@@ -72,7 +72,8 @@ public class OrientationCalculator extends ExternalResource {
 			
 		device = newDevice;
 		
-		camera.detect();
+		if (!recalibrating)
+			camera.detect();
 	}
 	
 	private void vibrate(int durationMilliseconds) {
