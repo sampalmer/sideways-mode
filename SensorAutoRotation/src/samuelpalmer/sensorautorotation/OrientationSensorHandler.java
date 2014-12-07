@@ -31,6 +31,7 @@ public class OrientationSensorHandler extends ExternalResource {
 
 	@Override
 	protected void start() {
+		lastRotation = null;
 		listener.enable();
 	}
 
