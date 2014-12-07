@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import samuelpalmer.sensorautorotation.unused.PicturePreview;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,9 +11,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera.PreviewCallback;
+import android.hardware.Camera.Size;
 import android.media.FaceDetector;
 import android.media.FaceDetector.Face;
 import android.os.Build;
@@ -22,6 +28,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Toast;
 
 public class CameraOrientationCalculator extends ExternalResource {
 
@@ -59,6 +66,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void start() throws EnvironmentException {
+		showMessage("Started");
+
 		camera = null;
 		preview = new SurfaceView(context);
 		cameraIndex = tryFindFrontCameraIndex();
@@ -72,6 +81,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 		LayoutParams params = new LayoutParams(1, 1, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
 
 		wm.addView(preview, params);
+
+		showMessage("Added overlay");
 	}
 
 	@Override
@@ -107,69 +118,86 @@ public class CameraOrientationCalculator extends ExternalResource {
 		}
 
 		configureCamera();
-
+		
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				showMessage("Set exposure");
 
-				if (isStarted()) {
+				camera.setOneShotPreviewCallback(new PreviewCallback() {
+					
+					@Override
+					public void onPreviewFrame(byte[] nv21, Camera camera) {
+						showMessage("Took picture");
 
-					camera.takePicture(null, null, new PictureCallback() {
+						if (isStarted()) {
+							Parameters parameters = camera.getParameters();
+							Size size = parameters.getPreviewSize();
+							YuvImage yuv = new YuvImage(nv21, parameters.getPreviewFormat(), size.width, size.height, null);
+							
+							ByteArrayOutputStream compressionOutput = new ByteArrayOutputStream();
+							yuv.compressToJpeg(new Rect(0, 0, size.width, size.height), 10, compressionOutput);
+							byte[] jpeg = compressionOutput.toByteArray();
+							
+							Options opts = new Options();
+							opts.inPreferredConfig = Bitmap.Config.RGB_565;
+							Bitmap image = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length, opts);
+							if (image == null)
+								throw new RuntimeException("Couldn't decode image");
+							
+							showMessage("Decoded picture");
 
-						@Override
-						public void onPictureTaken(byte[] data, Camera camera) {
-							showMessage("Took picture");
+							int targetWidth = 160;
+							double scaleMultiplier = (double) targetWidth / image.getWidth();
+							image = Bitmap.createScaledBitmap(image, targetWidth, (int) (image.getHeight() * scaleMultiplier), false);
 
-							if (isStarted()) {
-								Options opts = new Options();
-								opts.inPreferredConfig = Bitmap.Config.RGB_565;
-								Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-								
-								int targetWidth = 160;
-								double scaleMultiplier = (double)targetWidth / image.getWidth();
-								image = Bitmap.createScaledBitmap(image, targetWidth, (int)(image.getHeight() * scaleMultiplier), false);
-								
-								CameraInfo info = new CameraInfo();
-								Camera.getCameraInfo(cameraIndex, info);
-								int cameraOrientationDegrees = info.orientation;
-								image = rotateClockwise(image, cameraOrientationDegrees / 90);
+							CameraInfo info = new CameraInfo();
+							Camera.getCameraInfo(cameraIndex, info);
+							int cameraOrientationDegrees = info.orientation;
+							image = rotateClockwise(image, cameraOrientationDegrees / 90);
 
-								for (int i = 0; i < 4; ++i) {
-									Bitmap rotatedImage = rotateClockwise(image, i);
-
-									// Only works if face is upright :( Maybe
-									// keep rotating image to find the
-									// orientation.
-									int MAX_FACES = 1;
-									Face[] faces = new Face[MAX_FACES];
-
-									FaceDetector detector = new FaceDetector(rotatedImage.getWidth(), rotatedImage.getHeight(), MAX_FACES);
-									detector.findFaces(rotatedImage, faces);
-
-									if (faces[0] != null) {
-										Orientation orientation = new Orientation(i);
-										showMessage("Found face in " + orientation);
-										listener.detected(orientation);
-										return;
-									}
-								}
-
-								listener.didntDetect();
+							try {
+								new PicturePreview(context, image).ensureStarted();
+							} catch (EnvironmentException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-						}
+							showMessage("Showed preview");
 
-						private Bitmap rotateClockwise(Bitmap image, int i) {
-							Matrix matrix = new Matrix();
-							matrix.postRotate(i * 90);
+							for (int i = 0; i < 4; ++i) {
+								Bitmap rotatedImage = rotateClockwise(image, i);
 
-							return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
+								Face[] faces = new Face[1];
+
+								FaceDetector detector = new FaceDetector(rotatedImage.getWidth(), rotatedImage.getHeight(), faces.length);
+								detector.findFaces(rotatedImage, faces);
+
+								if (faces[0] != null) {
+									Orientation orientation = new Orientation(i);
+//									Toast.makeText(context, "Found face", Toast.LENGTH_SHORT).show();
+									showMessage("Found face in " + orientation);
+									listener.detected(orientation);
+									return;
+								}
+							}
+
+							showMessage("Did face detection");
+
+							listener.didntDetect();
 						}
-					});
-				}
+					}
+				});
 			}
-		}, 100);
+		}, 500);
 	}
+	
+	private Bitmap rotateClockwise(Bitmap image, int ninetyDegreeRotations) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(ninetyDegreeRotations * 90);
 
+		return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
+	}
+	
 	private void configureCamera() {
 		mute();
 		
@@ -190,8 +218,19 @@ public class CameraOrientationCalculator extends ExternalResource {
 	}
 
 	private void showMessage(String message) {
+		long now = System.nanoTime();
+
+		if (lastMessage != null) {
+			double durationMs = (now - lastMessage) / 1000000.0;
+			message += " (" + Math.round(durationMs) + "ms)";
+		}
+
+		lastMessage = now;
+
 		Log.i("Camera", message);
 	}
+
+	Long lastMessage;
 
 	private Integer tryFindFrontCameraIndex() {
 		Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
