@@ -75,7 +75,6 @@ public class CameraOrientationCalculator extends ExternalResource {
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		logger.showMessage("Started");
 	}
 
 	@Override
@@ -83,10 +82,12 @@ public class CameraOrientationCalculator extends ExternalResource {
 	}
 	
 	public void detect() {
+		logger.showMessage("Started");
+		
 		cameraIndex = tryFindFrontCameraIndex();
 		camera = null;
 		
-		startPreview();
+		startOverlay();
 		
 		if (!detecting && surfaceAvailable)
 			takePicture();
@@ -98,7 +99,7 @@ public class CameraOrientationCalculator extends ExternalResource {
 		onDetected.report(result);
 		detecting = false;
 		
-		stopPreview();
+		stopOverlay();
 		
 		if (camera != null) {
 			camera.release();
@@ -107,7 +108,7 @@ public class CameraOrientationCalculator extends ExternalResource {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void startPreview() {
+	private void startOverlay() {
 		preview = new SurfaceView(context);
 		SurfaceHolder holder = preview.getHolder();
 		// deprecated setting, but required on Android versions prior to 3.0
@@ -120,7 +121,7 @@ public class CameraOrientationCalculator extends ExternalResource {
 		logger.showMessage("Added overlay");
 	}
 	
-	private void stopPreview() {
+	private void stopOverlay() {
 		wm.removeView(preview);
 	}
 	
