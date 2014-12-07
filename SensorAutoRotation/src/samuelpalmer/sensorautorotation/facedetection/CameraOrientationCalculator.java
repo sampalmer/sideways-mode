@@ -129,7 +129,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 		holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		holder.addCallback(new CallbackImplementation());
 		
-		LayoutParams params = new LayoutParams(1, 1, Integer.MIN_VALUE, Integer.MIN_VALUE, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
+		//TODO: Change preview dimensions to match those from the camera
+		LayoutParams params = new LayoutParams(8, 16, Integer.MIN_VALUE, Integer.MIN_VALUE, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
 		wm.addView(preview, params);
 
 		logger.showMessage("Added overlay");
