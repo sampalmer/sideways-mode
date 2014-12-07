@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.facedetection.CameraOrientationCalculator;
 import android.content.Context;
 
 public class UserActiveState extends ExternalResource {
@@ -13,11 +14,13 @@ public class UserActiveState extends ExternalResource {
 	private RecalibrationController recalibrator;
 	private CallStateMonitor callStateMonitor;
 	private ScreenOrientationUpdater screenUpdater;
+	private CameraOrientationCalculator cameraOrientationCalculator;
 	
 	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
 		errorHandler = new UserErrorHandler(context);
 		proximityHandler = new ProximitySensorHandler(context);
-		calculator = new OrientationCalculator(context);
+		cameraOrientationCalculator = new CameraOrientationCalculator(context, new TimingLogger());
+		calculator = new OrientationCalculator(context, cameraOrientationCalculator);
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		
 		Recalibration recalibration = new Recalibration(new RecalibrationOverlay(context, screenOrientationController, calculator), calculator);
@@ -40,6 +43,7 @@ public class UserActiveState extends ExternalResource {
 		callStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
+		cameraOrientationCalculator.ensureStarted();
 		
 		orientationListener.onRotationChanged().subscribe(deviceOrientationSubscriber);
 	}
@@ -54,6 +58,7 @@ public class UserActiveState extends ExternalResource {
 			orientationListener.ensureStopped();
 		
 		callStateMonitor.ensureStopped();
+		cameraOrientationCalculator.ensureStopped();
 		recalibrator.ensureStopped();
 		calculator.ensureStopped();
 		screenUpdater.ensureStopped();		

@@ -1,8 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.CameraOrientationCalculator.Listener;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.facedetection.CameraOrientationCalculator;
 import android.content.Context;
 import android.os.Vibrator;
 
@@ -16,42 +17,30 @@ public class OrientationCalculator extends ExternalResource {
 	
 	private Context context;
 
-	final CameraOrientationCalculator cameraOrientationCalculator;
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(final Context context) {
+	private CameraOrientationCalculator camera;
+
+	public OrientationCalculator(final Context context, CameraOrientationCalculator camera) {
+		this.camera = camera;
 		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 		this.context = context;
-		
-		cameraOrientationCalculator = new CameraOrientationCalculator(context, new Listener() {
-			
-			@Override
-			public void didntDetect() {
-				try {
-					cameraOrientationCalculator.ensureStopped();
-				} catch (EnvironmentException e) {
-					new UserErrorHandler(context).handle(e);
-				}
-				
-				reportUpdate();
-			}
-			
-			@Override
-			public void detected(Orientation user) {
-				try {
-					cameraOrientationCalculator.ensureStopped();
-				} catch (EnvironmentException e) {
-					new UserErrorHandler(context).handle(e);
-				}
-				
-				OrientationCalculator.this.user = Orientation.NATURAL.plus(device.minus(user));
-				reportUpdate();
-			}
-		});
 	}
+	
+	private final EventHandler<Orientation> cameraSubscriber = new EventHandler<Orientation>() {
+		
+		@Override
+		public void update(Orientation cameraUser) throws EnvironmentException {
+			if (cameraUser != null)
+				user = Orientation.NATURAL.plus(device.minus(cameraUser));
+			
+			reportUpdate();
+		}
+	};
 	
 	@Override
 	protected void start() throws EnvironmentException {
+		camera.onDetected().subscribe(cameraSubscriber);
 	}
 	
 	@Override
@@ -59,7 +48,7 @@ public class OrientationCalculator extends ExternalResource {
 		device = DEFAULT;
 		user = DEFAULT;
 		reportUpdate();
-		cameraOrientationCalculator.ensureStopped();
+		camera.onDetected().unsubscribe(cameraSubscriber);
 	}
 	
 	public void setRecalibrating(boolean recalibrating) {
@@ -83,11 +72,7 @@ public class OrientationCalculator extends ExternalResource {
 			
 		device = newDevice;
 		
-		try {
-			cameraOrientationCalculator.ensureStarted();
-		} catch (EnvironmentException e) {
-			new UserErrorHandler(context).handle(e);
-		}
+		camera.detect();
 	}
 	
 	private void vibrate(int durationMilliseconds) {

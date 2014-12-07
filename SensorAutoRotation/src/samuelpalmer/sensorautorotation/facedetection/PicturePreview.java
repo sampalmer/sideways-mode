@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.unused;
+package samuelpalmer.sensorautorotation.facedetection;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.ExternalResource;

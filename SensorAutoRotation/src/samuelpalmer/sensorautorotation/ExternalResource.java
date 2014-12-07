@@ -20,8 +20,4 @@ public abstract class ExternalResource {
 	
 	protected abstract void start() throws EnvironmentException;
 	protected abstract void stop() throws EnvironmentException;
-	
-	public boolean isStarted() {
-		return started;
-	}
 }
