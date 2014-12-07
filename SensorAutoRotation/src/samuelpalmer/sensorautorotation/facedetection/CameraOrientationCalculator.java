@@ -81,6 +81,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 		logger.showMessage("Start called");
 		
 		cameraIndex = tryFindFrontCameraIndex();
+		surfaceCreated = false;
+		exposureSet = false;
 		camera = null;
 		
 		setCamera();
