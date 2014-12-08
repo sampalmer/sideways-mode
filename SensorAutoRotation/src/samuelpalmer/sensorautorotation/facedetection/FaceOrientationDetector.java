@@ -22,7 +22,7 @@ public class FaceOrientationDetector {
 	}
 	
 	private boolean hasFace(int clockwiseRotations) {
-		Bitmap rotatedImage = BitmapExtensions.rotatedClockwise(image, clockwiseRotations);
+		Bitmap rotatedImage = BitmapExtensions.rotatedCounterclockwise(image, clockwiseRotations);
 
 		final int MAX_FACES = 1;
 		Face[] faces = new Face[MAX_FACES];
@@ -33,7 +33,7 @@ public class FaceOrientationDetector {
 			return false;
 		
 		Face face = faces[0];
-		Log.i("FaceORientation", "Detected face: " + face.confidence() * 100.0 + "% confident. x: " + face.pose(Face.EULER_X) + "y: " + face.pose(Face.EULER_Y) + "z: " + face.pose(Face.EULER_Z));
+		Log.i("FaceORientation", "Detected face: " + face.confidence() * 100.0 + "% confident");
 		return true;
 	}
 }
