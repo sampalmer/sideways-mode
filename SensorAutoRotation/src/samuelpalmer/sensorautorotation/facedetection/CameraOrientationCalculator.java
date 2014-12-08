@@ -192,14 +192,13 @@ public class CameraOrientationCalculator extends ExternalResource {
 		preview.getBitmap(image);
 		
 		logger.showMessage("Took picture");
-		logger.showMessage("Decoded picture");
 		
 		CameraInfo info = new CameraInfo();
 		Camera.getCameraInfo(cameraIndex, info);
 		int cameraOrientationDegrees = info.orientation;
 		image = BitmapExtensions.rotatedClockwise(image, cameraOrientationDegrees / 90);
 		
-		logger.showMessage("Processed picture");
+		logger.showMessage("Rotated picture");
 		
 		try {
 			new PicturePreview(context, image).ensureStarted();
