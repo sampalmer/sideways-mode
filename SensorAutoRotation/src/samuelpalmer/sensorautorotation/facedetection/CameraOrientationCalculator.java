@@ -12,6 +12,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
@@ -19,9 +20,8 @@ import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Handler;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
+import android.view.TextureView;
+import android.view.TextureView.SurfaceTextureListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
@@ -32,30 +32,35 @@ public class CameraOrientationCalculator extends ExternalResource {
 	
 	private boolean surfaceCreated;
 	
-	private final class CallbackImplementation implements Callback {
+	private final class CallbackImplementation implements SurfaceTextureListener {
 
 		@Override
-		public void surfaceDestroyed(SurfaceHolder holder) {
-			surfaceCreated = false;
-			
-			logger.showMessage("Surface destroyed");
-		}
-
-		@Override
-		public void surfaceCreated(SurfaceHolder holder) {
+		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 			surfaceCreated = true;
-			
 			logger.showMessage("Surface created");
-			
 			startPreview();
 		}
 
 		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+		}
+
+		@Override
+		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+			surfaceCreated = false;
+			logger.showMessage("Surface destroyed");
+			
+			return true;
+		}
+
+		@Override
+		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
-	private SurfaceView preview;
+	private TextureView preview;
 	private Context context;
 	private WindowManager wm;
 	private Camera camera;
@@ -122,17 +127,13 @@ public class CameraOrientationCalculator extends ExternalResource {
 		detecting = false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void startOverlay() {
-		preview = new SurfaceView(context);
-		
-		SurfaceHolder holder = preview.getHolder();
-		// deprecated setting, but required on Android versions prior to 3.0
-		holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		holder.addCallback(new CallbackImplementation());
+		preview = new TextureView(context);
+		preview.setSurfaceTextureListener(new CallbackImplementation());
 		
 		//TODO: Change preview dimensions to match those from the camera
-		LayoutParams params = new LayoutParams(8, 16, Integer.MIN_VALUE, Integer.MIN_VALUE, LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.UNKNOWN);
+		LayoutParams params = new LayoutParams(8, 16, Integer.MIN_VALUE, Integer.MIN_VALUE, LayoutParams.TYPE_SYSTEM_OVERLAY, LayoutParams.FLAG_HARDWARE_ACCELERATED, PixelFormat.TRANSPARENT);
+		params.alpha = 0;
 		wm.addView(preview, params);
 
 		logger.showMessage("Added overlay");
@@ -160,7 +161,7 @@ public class CameraOrientationCalculator extends ExternalResource {
 
 	private void startPreview() {
 		try {
-			camera.setPreviewDisplay(preview.getHolder());
+			camera.setPreviewTexture(preview.getSurfaceTexture());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
