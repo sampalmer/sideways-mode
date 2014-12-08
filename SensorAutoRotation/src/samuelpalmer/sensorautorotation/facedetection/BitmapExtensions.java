@@ -12,11 +12,4 @@ public class BitmapExtensions {
 		return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
 	}
 
-	public static Bitmap scaleToWidth(Bitmap image, int targetWidth) {
-		double scaleMultiplier = (double)targetWidth / image.getWidth();
-		int height = (int) (image.getHeight() * scaleMultiplier);
-		image = Bitmap.createScaledBitmap(image, targetWidth, height, false);
-		return image;
-	}
-
 }

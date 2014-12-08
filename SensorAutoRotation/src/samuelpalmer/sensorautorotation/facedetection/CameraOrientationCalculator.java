@@ -11,12 +11,12 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
-import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Handler;
@@ -184,53 +184,48 @@ public class CameraOrientationCalculator extends ExternalResource {
 	};
 	
 	private void takePicture() {
-		if (camera != null)
-			camera.setOneShotPreviewCallback(pictureTaken);
-	}
-	
-	private final PreviewCallback pictureTaken = new PreviewCallback() {
+		Size previewSize = camera.getParameters().getPreviewSize();
+		double scaleMultiplier = (double)OPTIMAL_WIDTH / previewSize.width;
+		int height = (int) (previewSize.height * scaleMultiplier);
 		
-		@Override
-		public void onPreviewFrame(byte[] nv21, Camera camera) {
-			logger.showMessage("Took picture");
-
-			Bitmap image = new Nv21Decoder(nv21, camera).decode();
-			logger.showMessage("Decoded picture");
-			
-			image = BitmapExtensions.scaleToWidth(image, OPTIMAL_WIDTH);
-			
-			CameraInfo info = new CameraInfo();
-			Camera.getCameraInfo(cameraIndex, info);
-			int cameraOrientationDegrees = info.orientation;
-			image = BitmapExtensions.rotatedClockwise(image, cameraOrientationDegrees / 90);
-			
-			logger.showMessage("Processed picture");
-			
-			try {
-				new PicturePreview(context, image).ensureStarted();
-			} catch (EnvironmentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			logger.showMessage("Showed preview");
-			
-			Orientation result = new FaceOrientationDetector(image).detect();
-
-			logger.showMessage("Did face detection: " + result);
-			if (result != null)
-				Toast.makeText(context, "Found face", Toast.LENGTH_SHORT).show();
-			
-			detected(result);
+		Bitmap image = Bitmap.createBitmap(height, OPTIMAL_WIDTH, Config.RGB_565);
+		preview.getBitmap(image);
+		
+		logger.showMessage("Took picture");
+		logger.showMessage("Decoded picture");
+		logger.showMessage("Processed picture");
+		
+		try {
+			new PicturePreview(context, image).ensureStarted();
+		} catch (EnvironmentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	};
+		
+		logger.showMessage("Showed preview");
+		
+		Orientation result = new FaceOrientationDetector(image).detect();
+
+		logger.showMessage("Did face detection: " + result);
+		if (result != null)
+			Toast.makeText(context, "Found face", Toast.LENGTH_SHORT).show();
+		
+		detected(result);
+	}
 	
 	private void configureCamera() {
 		mute();
 		
+		CameraInfo info = new CameraInfo();
+		Camera.getCameraInfo(cameraIndex, info);
+		int cameraOrientationDegrees = info.orientation;
+		camera.setDisplayOrientation((360 - cameraOrientationDegrees) % 360);
+		
 		Parameters parameters = camera.getParameters();
+		
 		Size optimalSize = new OptimalSizeChooser(parameters.getSupportedPreviewSizes(), OPTIMAL_WIDTH).choose();
 		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
+		
 		camera.setParameters(parameters);
 	}
 
