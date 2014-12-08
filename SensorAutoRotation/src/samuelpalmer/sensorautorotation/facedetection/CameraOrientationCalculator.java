@@ -188,11 +188,17 @@ public class CameraOrientationCalculator extends ExternalResource {
 		double scaleMultiplier = (double)OPTIMAL_WIDTH / previewSize.width;
 		int height = (int) (previewSize.height * scaleMultiplier);
 		
-		Bitmap image = Bitmap.createBitmap(height, OPTIMAL_WIDTH, Config.RGB_565);
+		Bitmap image = Bitmap.createBitmap(OPTIMAL_WIDTH, height, Config.RGB_565);
 		preview.getBitmap(image);
 		
 		logger.showMessage("Took picture");
 		logger.showMessage("Decoded picture");
+		
+		CameraInfo info = new CameraInfo();
+		Camera.getCameraInfo(cameraIndex, info);
+		int cameraOrientationDegrees = info.orientation;
+		image = BitmapExtensions.rotatedClockwise(image, cameraOrientationDegrees / 90);
+		
 		logger.showMessage("Processed picture");
 		
 		try {
@@ -216,16 +222,9 @@ public class CameraOrientationCalculator extends ExternalResource {
 	private void configureCamera() {
 		mute();
 		
-		CameraInfo info = new CameraInfo();
-		Camera.getCameraInfo(cameraIndex, info);
-		int cameraOrientationDegrees = info.orientation;
-		camera.setDisplayOrientation((360 - cameraOrientationDegrees) % 360);
-		
 		Parameters parameters = camera.getParameters();
-		
 		Size optimalSize = new OptimalSizeChooser(parameters.getSupportedPreviewSizes(), OPTIMAL_WIDTH).choose();
 		parameters.setPreviewSize(optimalSize.width, optimalSize.height);
-		
 		camera.setParameters(parameters);
 	}
 
