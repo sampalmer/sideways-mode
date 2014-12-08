@@ -27,7 +27,7 @@ public class Nv21Decoder {
 		int pixelCount = size().width * size().height;
 		int[] out = new int[pixelCount];
 		for (int i = 0; i < pixelCount; ++i) {
-			int luminance = nv21[i];
+			int luminance = nv21[i] & 0xFF;
 			out[i] = Color.argb(0xFF, luminance, luminance, luminance);
 		}
 		return out;
