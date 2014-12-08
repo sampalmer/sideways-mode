@@ -118,8 +118,8 @@ public class CameraOrientationCalculator extends ExternalResource {
 		
 		if (!detecting && surfaceCreated && exposureSet)
 			takePicture();
-		
-		detecting = true;
+		else
+			detecting = true;
 	}
 	
 	private void detected(Orientation result) {
