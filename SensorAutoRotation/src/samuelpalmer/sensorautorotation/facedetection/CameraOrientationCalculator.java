@@ -24,7 +24,6 @@ import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.Toast;
 
 public class CameraOrientationCalculator extends ExternalResource {
 
@@ -209,11 +208,9 @@ public class CameraOrientationCalculator extends ExternalResource {
 		
 		logger.showMessage("Showed preview");
 		
-		Orientation result = new FaceOrientationDetector(image).detect();
+		Orientation result = new FaceOrientationDetector(context, image).detect();
 
 		logger.showMessage("Did face detection: " + result);
-		if (result != null)
-			Toast.makeText(context, "Found face", Toast.LENGTH_SHORT).show();
 		
 		detected(result);
 	}
