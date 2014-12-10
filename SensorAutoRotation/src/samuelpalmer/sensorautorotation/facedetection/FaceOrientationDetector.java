@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.FaceDetector;
 import android.media.FaceDetector.Face;
+import android.util.Log;
 import android.widget.Toast;
 
 public class FaceOrientationDetector {
@@ -22,8 +23,11 @@ public class FaceOrientationDetector {
 			
 			if (face != null) {
 				Orientation orientation = new Orientation(clockwiseRotations);
-				Toast.makeText(context, "Found " + orientation + " face (" + Math.round(face.confidence() * 10000.0) / 100.0 + "% confident)", Toast.LENGTH_LONG).show();
-
+				
+				String message = "Found " + orientation + " face (" + Math.round(face.confidence() * 10000.0) / 100.0 + "% confident)";
+				Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+				Log.i("FaceOrientationDetector", message);
+				
 				return orientation;
 			}
 		}
