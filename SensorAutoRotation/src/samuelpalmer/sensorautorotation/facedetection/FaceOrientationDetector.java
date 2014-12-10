@@ -18,21 +18,25 @@ public class FaceOrientationDetector {
 	}
 	
 	public Orientation detect() {
+		DetectedFace result = new DetectedFace();
+		result.confidence = Float.MIN_VALUE;
+		
 		for (int clockwiseRotations = 0; clockwiseRotations < 4; ++clockwiseRotations) {
 			Face face = hasFace(clockwiseRotations);
 			
-			if (face != null) {
-				Orientation orientation = new Orientation(clockwiseRotations);
-				
-				String message = "Found " + orientation + " face (" + Math.round(face.confidence() * 10000.0) / 100.0 + "% confident)";
-				Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-				Log.i("FaceOrientationDetector", message);
-				
-				return orientation;
+			if (face != null && face.confidence() > result.confidence) {
+				result.orientation = new Orientation(clockwiseRotations);
+				result.confidence = face.confidence();
 			}
 		}
 		
-		return null;
+		if (result.orientation != null) {
+			String message = "Found " + result.orientation + " face (" + Math.round(result.confidence * 10000.0) / 100.0 + "% confident)";
+			Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+			Log.i("FaceOrientationDetector", message);
+		}
+		
+		return result.orientation;
 	}
 	
 	private Face hasFace(int clockwiseRotations) {
@@ -49,5 +53,10 @@ public class FaceOrientationDetector {
 		Face face = faces[0];
 		
 		return face;
+	}
+	
+	class DetectedFace {
+		public Orientation orientation;
+		public float confidence;
 	}
 }
