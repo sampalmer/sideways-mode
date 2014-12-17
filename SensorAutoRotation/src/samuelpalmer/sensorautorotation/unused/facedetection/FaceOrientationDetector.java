@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.facedetection;
+package samuelpalmer.sensorautorotation.unused.facedetection;
 
 import samuelpalmer.sensorautorotation.Orientation;
 import android.content.Context;

@@ -1,9 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.facedetection.CameraOrientationCalculator;
 import android.content.Context;
 import android.os.Vibrator;
 
@@ -19,28 +17,13 @@ public class OrientationCalculator extends ExternalResource {
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	private CameraOrientationCalculator camera;
-
-	public OrientationCalculator(final Context context, CameraOrientationCalculator camera) {
-		this.camera = camera;
+	public OrientationCalculator(final Context context) {
 		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
 		this.context = context;
 	}
 	
-	private final EventHandler<Orientation> cameraSubscriber = new EventHandler<Orientation>() {
-		
-		@Override
-		public void update(Orientation cameraUser) throws EnvironmentException {
-			if (cameraUser != null)
-				user = Orientation.NATURAL.plus(device.minus(cameraUser));
-			
-			reportUpdate();
-		}
-	};
-	
 	@Override
 	protected void start() throws EnvironmentException {
-		camera.onDetected().subscribe(cameraSubscriber);
 	}
 	
 	@Override
@@ -48,7 +31,6 @@ public class OrientationCalculator extends ExternalResource {
 		device = DEFAULT;
 		user = DEFAULT;
 		reportUpdate();
-		camera.onDetected().unsubscribe(cameraSubscriber);
 	}
 	
 	public void setRecalibrating(boolean recalibrating) {
@@ -71,9 +53,8 @@ public class OrientationCalculator extends ExternalResource {
 		}
 			
 		device = newDevice;
+		reportUpdate();
 		
-		if (!recalibrating)
-			camera.detect();
 	}
 	
 	private void vibrate(int durationMilliseconds) {

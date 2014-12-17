@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.facedetection;
+package samuelpalmer.sensorautorotation.unused.facedetection;
 
 import android.util.Log;
 
