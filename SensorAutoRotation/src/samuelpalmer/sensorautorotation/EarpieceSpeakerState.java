@@ -11,11 +11,11 @@ public class EarpieceSpeakerState {
 	}
 	
 	public boolean usingEarpieceSpeaker() {
-		return usingTelephony()
+		return playingSound()
 			&& routingToEarpiece();
 	}
 
-	private boolean usingTelephony() {
+	private boolean playingSound() {
 		return audioManager.getMode() != AudioManager.MODE_NORMAL;
 	}
 	
