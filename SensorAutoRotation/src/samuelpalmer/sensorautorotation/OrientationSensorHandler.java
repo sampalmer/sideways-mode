@@ -6,7 +6,7 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 
 
-public class OrientationSensorHandler extends ExternalResource {
+public class OrientationSensorHandler extends State {
 
 	private WindowOrientationListener listener;
 	private final UpdatingEventRegistrar<Orientation> subscriptions;

@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
-public class ScreenOrientationUpdater extends ExternalResource {
+public class ScreenOrientationUpdater extends State {
 
 	private final OrientationCalculator calculator;
 	private ScreenOrientationController screen;

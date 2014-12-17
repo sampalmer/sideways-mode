@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.os.Vibrator;
 
-public class Recalibration extends ExternalResource {
+public class Recalibration extends State {
 
 	private RecalibrationOverlay overlay;
 	private OrientationCalculator calculator;

@@ -5,7 +5,7 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 
 
-public class OrientationCalculator extends ExternalResource {
+public class OrientationCalculator extends State {
 	
 	private static final Orientation DEFAULT = Orientation.NATURAL; 
 	

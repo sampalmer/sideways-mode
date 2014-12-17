@@ -11,7 +11,7 @@ import android.view.WindowManager.LayoutParams;
 
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 
-public class RecalibrationOverlay extends ExternalResource {
+public class RecalibrationOverlay extends State {
 	
 	private WindowManager windowManager;
 	private LayoutInflater layoutInflater;

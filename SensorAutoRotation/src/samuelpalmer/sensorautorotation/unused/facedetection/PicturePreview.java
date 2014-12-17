@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.unused.facedetection;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.ExternalResource;
+import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +12,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-public class PicturePreview extends ExternalResource {
+public class PicturePreview extends State {
 	
 	private ImageView view;
 	private WindowManager wm;

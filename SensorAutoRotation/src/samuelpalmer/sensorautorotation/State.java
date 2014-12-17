@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 
-public abstract class ExternalResource {
+public abstract class State {
 	private boolean started;
 	
 	public void ensureStarted() throws EnvironmentException {

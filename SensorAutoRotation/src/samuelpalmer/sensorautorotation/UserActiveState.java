@@ -5,7 +5,7 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
 import android.os.Vibrator;
 
-public class UserActiveState extends ExternalResource {
+public class UserActiveState extends State {
 	
 	private OrientationSensorHandler orientationListener;
 	private UserErrorHandler errorHandler;

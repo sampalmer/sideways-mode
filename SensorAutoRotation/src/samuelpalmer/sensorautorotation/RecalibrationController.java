@@ -4,7 +4,7 @@ import android.os.Handler;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 
-public class RecalibrationController extends ExternalResource {
+public class RecalibrationController extends State {
 	
 	private ProximitySensorHandler proximitySensor;
 	private Recalibration recalibration;

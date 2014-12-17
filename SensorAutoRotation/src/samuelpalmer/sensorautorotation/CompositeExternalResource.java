@@ -2,17 +2,17 @@ package samuelpalmer.sensorautorotation;
 
 
 
-public class CompositeExternalResource extends ExternalResource {
+public class CompositeExternalResource extends State {
 	
-	private final ExternalResource[] resources;
+	private final State[] resources;
 
-	public CompositeExternalResource(ExternalResource[] resources) {
+	public CompositeExternalResource(State[] resources) {
 		this.resources = resources.clone();
 	}
 	
 	@Override
 	protected void start() throws EnvironmentException {
-		for (ExternalResource resource : resources)
+		for (State resource : resources)
 			resource.start();
 	}
 

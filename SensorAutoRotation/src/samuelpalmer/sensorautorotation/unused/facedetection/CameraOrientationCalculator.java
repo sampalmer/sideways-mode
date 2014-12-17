@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.unused.facedetection;
 import java.io.IOException;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.ExternalResource;
+import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -25,7 +25,7 @@ import android.view.TextureView.SurfaceTextureListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-public class CameraOrientationCalculator extends ExternalResource {
+public class CameraOrientationCalculator extends State {
 
 	private static final int OPTIMAL_WIDTH = 160;
 	

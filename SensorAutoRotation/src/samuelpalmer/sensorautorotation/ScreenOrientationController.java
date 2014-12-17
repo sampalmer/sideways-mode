@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
 
-public class ScreenOrientationController extends ExternalResource {
+public class ScreenOrientationController extends State {
 	
 	private SystemSettings settings;
 	private Boolean originalAccelerometerRotation;

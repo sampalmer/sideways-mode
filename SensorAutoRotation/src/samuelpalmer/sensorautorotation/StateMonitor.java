@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-public abstract class StateMonitor<T> extends ExternalResource {
+public abstract class StateMonitor<T> extends State {
 	
 	private final Listener<T> listener;
 
