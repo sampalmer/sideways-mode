@@ -21,6 +21,7 @@ public class RotationServiceTest {
 		settings.accelerometerRotation.set(true);
 		
 		Robolectric.buildService(RotationService.class)
+			.attach()
 			.create()
 			.destroy();
 		
