@@ -1,8 +1,8 @@
-package samuelpalmer.sensorautorotation.unused;
+package samuelpalmer.sensorautorotation;
 
 import android.os.Handler;
 
-public class RecurringRunner {
+public class RecurringRunner extends State {
 	
 	private Handler handler;
 	private Runnable runnable;

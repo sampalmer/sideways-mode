@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.unused;
 
 import java.util.List;
 
+import samuelpalmer.sensorautorotation.RecurringRunner;
+
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;

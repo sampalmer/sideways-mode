@@ -12,7 +12,7 @@ public class UserActiveState extends State {
 	private OrientationCalculator calculator;
 	private ProximitySensorHandler proximityHandler;
 	private RecalibrationController recalibrator;
-	private CallStateMonitor callStateMonitor;
+	private EarpieceStateMonitor earpieceStateMonitor;
 	private ScreenOrientationUpdater screenUpdater;
 	
 	public UserActiveState(Context context, ScreenOrientationController screenOrientationController) {
@@ -21,7 +21,7 @@ public class UserActiveState extends State {
 		calculator = new OrientationCalculator(context);
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		
-		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
+		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 		
 		try {
 			orientationListener = new OrientationSensorHandler(context);
@@ -40,7 +40,7 @@ public class UserActiveState extends State {
 	protected void start() throws EnvironmentException {
 		screenUpdater.ensureStarted();
 		calculator.ensureStarted();
-		callStateMonitor.ensureStarted();
+		earpieceStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
 		
@@ -56,7 +56,7 @@ public class UserActiveState extends State {
 		if (orientationListener != null)
 			orientationListener.ensureStopped();
 		
-		callStateMonitor.ensureStopped();
+		earpieceStateMonitor.ensureStopped();
 		recalibrator.ensureStopped();
 		calculator.ensureStopped();
 		screenUpdater.ensureStopped();		
@@ -71,11 +71,11 @@ public class UserActiveState extends State {
 		}
 	};
 	
-	private final Listener<CallState> callStateReceiver = new Listener<CallState>() {
+	private final Listener<EarpieceSpeakerState> callStateReceiver = new Listener<EarpieceSpeakerState>() {
 		@Override
-		public void stateChanged(CallState state) {
+		public void stateChanged(EarpieceSpeakerState state) {
 			try {
-				if (!state.possiblyOnCall())
+				if (!state.usingEarpieceSpeaker())
 					proximityHandler.ensureStarted();
 				else {
 					proximityHandler.ensureStopped();
