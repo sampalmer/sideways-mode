@@ -9,12 +9,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class FaceOrientationDetector {
+	final int MAX_FACES = 1;
+
 	private Bitmap image;
 	private Context context;
+	
+	private FaceDetector[] detectors;
 
 	public FaceOrientationDetector(Context context, Bitmap image) {
 		this.context = context;
 		this.image = image;
+		
+		detectors = new FaceDetector[]
+		{
+			new FaceDetector(image.getWidth(), image.getHeight(), MAX_FACES),
+			new FaceDetector(image.getHeight(), image.getWidth(), MAX_FACES)
+		};
 	}
 	
 	public Orientation detect() {
@@ -42,17 +52,14 @@ public class FaceOrientationDetector {
 	private Face hasFace(int clockwiseRotations) {
 		Bitmap rotatedImage = BitmapExtensions.rotatedCounterclockwise(image, clockwiseRotations);
 
-		final int MAX_FACES = 1;
 		Face[] faces = new Face[MAX_FACES];
-		FaceDetector detector = new FaceDetector(rotatedImage.getWidth(), rotatedImage.getHeight(), faces.length);
-		int detectedFaces = detector.findFaces(rotatedImage, faces);
+		
+		int detectedFaces = detectors[clockwiseRotations % 2].findFaces(rotatedImage, faces);
 		boolean found = detectedFaces > 0;
 		if (!found)
 			return null;
 		
-		Face face = faces[0];
-		
-		return face;
+		return faces[0];
 	}
 	
 	class DetectedFace {
