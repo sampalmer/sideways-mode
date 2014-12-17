@@ -70,6 +70,10 @@ public class OrientationEnforcingMonitor {
 		}
 	};
 	
+	/**
+	 * Only works before Android 5
+	 * @return
+	 */
 	private String getCurrentActivityPackageName() {
 		ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
