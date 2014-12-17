@@ -9,17 +9,17 @@ import android.content.Context;
 public class OrientationSensorHandler extends ExternalResource {
 
 	private WindowOrientationListener listener;
-	private final UpdatingEventRegistrar<AndroidSurfaceRotation> subscriptions;
+	private final UpdatingEventRegistrar<Orientation> subscriptions;
 	private Integer lastRotation;
 	
 	public OrientationSensorHandler(final Context context) throws EnvironmentException {
-		subscriptions = new UpdatingEventRegistrar<AndroidSurfaceRotation>(new UserErrorHandler(context));
+		subscriptions = new UpdatingEventRegistrar<Orientation>(new UserErrorHandler(context));
 		
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
 				if (lastRotation == null || lastRotation != rotation) {
-					subscriptions.report(new AndroidSurfaceRotation(rotation));
+					subscriptions.report(new AndroidSurfaceRotation(rotation).orientation());
 					lastRotation = rotation;
 				}
 			}
@@ -40,7 +40,7 @@ public class OrientationSensorHandler extends ExternalResource {
 		listener.disable();
 	}
 	
-	public EventRegistrar<AndroidSurfaceRotation> onRotationChanged() {
+	public EventRegistrar<Orientation> onRotationChanged() {
 		return subscriptions;
 	}
 	

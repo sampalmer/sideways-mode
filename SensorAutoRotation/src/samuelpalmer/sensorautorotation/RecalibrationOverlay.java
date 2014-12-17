@@ -26,7 +26,8 @@ public class RecalibrationOverlay extends ExternalResource {
 		layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	@SuppressLint("InflateParams") @Override
+	@SuppressLint("InflateParams")
+	@Override
 	protected void start() throws EnvironmentException {
 		layout = layoutInflater.inflate(R.layout.user_orientation, null);
 		setRotation();

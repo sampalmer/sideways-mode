@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
+import android.os.Vibrator;
 
 public class UserActiveState extends ExternalResource {
 	
@@ -20,9 +21,6 @@ public class UserActiveState extends ExternalResource {
 		calculator = new OrientationCalculator(context);
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		
-		Recalibration recalibration = new Recalibration(new RecalibrationOverlay(context, screenOrientationController, calculator), calculator);
-		recalibrator = new RecalibrationController(proximityHandler, recalibration, errorHandler);
-		
 		callStateMonitor = new CallStateMonitor(context, callStateReceiver);
 		
 		try {
@@ -31,6 +29,11 @@ public class UserActiveState extends ExternalResource {
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}
+		
+		RecalibrationOverlay overlay = new RecalibrationOverlay(context, screenOrientationController, calculator);
+		Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+		Recalibration recalibration = new Recalibration(overlay, calculator, orientationListener, vibrator);
+		recalibrator = new RecalibrationController(proximityHandler, recalibration, errorHandler);
 	}
 	
 	@Override
@@ -59,12 +62,12 @@ public class UserActiveState extends ExternalResource {
 		screenUpdater.ensureStopped();		
 	} 
 	
-	EventHandler<AndroidSurfaceRotation> deviceOrientationSubscriber = new EventHandler<AndroidSurfaceRotation>() {
+	EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
 		
 		@Override
-		public void update(AndroidSurfaceRotation event)
+		public void update(Orientation event)
 				throws EnvironmentException {
-			calculator.setDevice(event.orientation());
+			calculator.setDevice(event);
 		}
 	};
 	
