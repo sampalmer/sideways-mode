@@ -1,7 +1,5 @@
-package samuelpalmer.sensorautorotation.unused;
+package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.State;
 
 
 
