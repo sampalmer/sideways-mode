@@ -39,16 +39,16 @@ public class RecalibrationController extends State {
 			if (event.isCovered() != covered) {
 				covered = event.isCovered();
 				if (covered)
-					handler.postDelayed(r, 400);
+					handler.postDelayed(updateRecalibration, 400);
 				else {
 					dequeueUpdates();
-					r.run();
+					updateRecalibration.run();
 				}
 			}
 		}
 	};
 	
-	private final Runnable r = new Runnable() {
+	private final Runnable updateRecalibration = new Runnable() {
 		@Override
 		public void run() {
 			try {
@@ -63,7 +63,7 @@ public class RecalibrationController extends State {
 	};
 	
 	private void dequeueUpdates() {
-		handler.removeCallbacks(r);
+		handler.removeCallbacks(updateRecalibration);
 	}
 
 	private boolean covered;
