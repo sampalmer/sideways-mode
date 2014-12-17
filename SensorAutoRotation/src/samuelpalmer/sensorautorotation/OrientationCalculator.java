@@ -71,10 +71,10 @@ public class OrientationCalculator extends ExternalResource {
 	}
 	
 	public Orientation proposedScreenOrientation() {
-		return device.plus(offset());
+		return device.plus(userOffset());
 	}
 
-	private Rotation offset() {
+	private Rotation userOffset() {
 		return Orientation.NATURAL.minus(user);
 	}
 	
