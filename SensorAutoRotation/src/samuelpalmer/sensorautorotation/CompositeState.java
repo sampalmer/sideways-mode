@@ -3,11 +3,11 @@ package samuelpalmer.sensorautorotation;
 
 
 
-public class CompositeExternalResource extends State {
+public class CompositeState extends State {
 	
 	private final State[] resources;
 
-	public CompositeExternalResource(State[] resources) {
+	public CompositeState(State[] resources) {
 		this.resources = resources.clone();
 	}
 	
