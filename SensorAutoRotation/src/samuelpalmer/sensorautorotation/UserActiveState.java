@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation;
 import samuelpalmer.sensorautorotation.StateMonitor.Listener;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import android.content.Context;
-import android.os.Vibrator;
 
 public class UserActiveState extends State {
 	
@@ -21,6 +20,10 @@ public class UserActiveState extends State {
 		calculator = new OrientationCalculator(context);
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		
+		RecalibrationOverlay overlay = new RecalibrationOverlay(context, screenOrientationController, calculator);
+		Recalibration recalibration = new Recalibration(overlay, calculator);
+		recalibrator = new RecalibrationController(proximityHandler, recalibration, errorHandler);
+		
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 		
 		try {
@@ -29,11 +32,6 @@ public class UserActiveState extends State {
 		catch (EnvironmentException e) {
 			errorHandler.handle(e);
 		}
-		
-		RecalibrationOverlay overlay = new RecalibrationOverlay(context, screenOrientationController, calculator);
-		Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-		Recalibration recalibration = new Recalibration(overlay, calculator, orientationListener, vibrator);
-		recalibrator = new RecalibrationController(proximityHandler, recalibration, errorHandler);
 	}
 	
 	@Override
