@@ -1,15 +1,6 @@
 package samuelpalmer.sensorautorotation.components;
 
 
-import samuelpalmer.sensorautorotation.UserActiveState;
-import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.Intents;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.UserInteractivity;
-import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.StateMonitor;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -19,19 +10,36 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ScreenOrientationController;
+import samuelpalmer.sensorautorotation.StateMonitor;
+import samuelpalmer.sensorautorotation.UserActiveState;
+import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.UserInteractivity;
+import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
+
 public class RotationService extends Service {
 
 	private boolean destroyed;
 	private UserActiveState userActiveState;
-	private ScreenOrientationController screenOrientationController;
-	private UserInteractivityMonitor userInteractivityMonitor;
-	
-	@Override
+
+    public static ScreenOrientationController screenOrientationController;
+    public static OrientationCalculator calculator;
+
+    private UserInteractivityMonitor userInteractivityMonitor;
+
+    @Override
 	public void onCreate() {
 		super.onCreate();
 		
 		screenOrientationController = new ScreenOrientationController(this);
-		userActiveState = new UserActiveState(this, screenOrientationController);
+        calculator = new OrientationCalculator(this);
+
+        userActiveState = new UserActiveState(this);
+
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
 			public void stateChanged(UserInteractivity user) {
@@ -94,9 +102,9 @@ public class RotationService extends Service {
 		
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(intents.makePending(MainActivity.class))
+				.setContentIntent(intents.makePending(RecalibrationActivity.class))
 				.setContentTitle(getString(R.string.app_name))
-				.setContentText("Running")
+				.setContentText("Touch to change user orientation")
 				.setPriority(NotificationCompat.PRIORITY_MIN)
 				.build();
 		

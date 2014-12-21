@@ -10,7 +10,6 @@
     <!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
-    <uses-feature android:name="android.hardware.sensor.proximity" android:required="true" />
     <uses-feature android:name="android.hardware.screen.landscape" android:required="true" />
     <uses-feature android:name="android.hardware.screen.portrait" android:required="true" />
     <!-- <uses-feature android:name="android.hardware.camera.front" android:required="false" /> -->
@@ -22,7 +21,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name="samuelpalmer.sensorautorotation.components.MainActivity"
+            android:name=".components.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,17 +30,25 @@
         </activity>
 
         <activity
-            android:name="samuelpalmer.sensorautorotation.components.ErrorDialogActivity"
+            android:name=".components.ErrorDialogActivity"
             android:label="Error"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
 
+        <activity
+            android:name=".components.RecalibrationActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            />
+
         <service
-            android:name="samuelpalmer.sensorautorotation.components.RotationService"
+            android:name=".components.RotationService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name="samuelpalmer.sensorautorotation.components.ServiceStartingReceiver">
+        <receiver android:name=".components.ServiceStartingReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <data android:scheme="package" android:path="samuelpalmer.sensorautorotation" />

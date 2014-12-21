@@ -1,9 +1,10 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import android.content.Context;
 import android.os.Vibrator;
+
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 
 public class OrientationCalculator extends State {
@@ -18,7 +19,7 @@ public class OrientationCalculator extends State {
 	private final UpdatingEventRegistrar<Void> listener;
 
 	public OrientationCalculator(final Context context) {
-		listener = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
+		listener = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
 		this.context = context;
 	}
 	
@@ -34,10 +35,7 @@ public class OrientationCalculator extends State {
 	}
 	
 	public void setRecalibrating(boolean recalibrating) {
-		if (recalibrating && !this.recalibrating)
-			vibrate(40);
-		
-		this.recalibrating = recalibrating;		
+		this.recalibrating = recalibrating;
 	}
 	
 	private boolean recalibrating;
@@ -77,10 +75,5 @@ public class OrientationCalculator extends State {
 	private Rotation userOffset() {
 		return Orientation.NATURAL.minus(user);
 	}
-	
-	public void resetUser() {
-		user = DEFAULT;
-		reportUpdate();
-	}
-	
+
 }
