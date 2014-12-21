@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="samuelpalmer.sensorautorotation"
-    android:versionCode="13"
-    android:versionName="0.4.3" xmlns:tools="http://schemas.android.com/tools">
+    package="samuelpalmer.sensorautorotation">
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- To disable system rotation, set user rotation -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -10,8 +8,6 @@
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- For recalibrate feedback -->
     <!-- <uses-permission android:name="android.permission.CAMERA" /> --> <!-- For face detection -->
     <!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
-
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="18" tools:ignore="OldTargetApi"/>
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
     <uses-feature android:name="android.hardware.sensor.proximity" android:required="true" />

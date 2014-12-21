@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
         minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 18
+        versionCode 13
+        versionName "0.4.3"
     }
     buildTypes {
         release {
