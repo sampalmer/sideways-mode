@@ -1,6 +1,8 @@
 syntax: glob
-.metadata
-out
-*/bin
 Thumbs.db
-gen
+build
+local.properties
+.gradle
+.idea/workspace.xml
+.idea/libraries
+.DS_Store
