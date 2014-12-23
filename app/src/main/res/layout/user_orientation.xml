@@ -18,8 +18,17 @@
             android:layout_alignParentBottom="true"
 	        android:scaleType="fitCenter"
 	     	svgimageview:svg="portrait.svg"
-	     	android:adjustViewBounds="true" />
-	    
+	     	android:adjustViewBounds="true"
+            android:id="@+id/view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Touch to finish"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
     
 </com.github.rongi.rotate_layout.layout.RotateLayout>

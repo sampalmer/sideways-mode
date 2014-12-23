@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.components;
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 
@@ -30,6 +31,12 @@ public class RecalibrationActivity extends Activity {
 
         RotationService.calculator.setRecalibrating(true);
 	}
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        finish();
+        return true;
+    }
 
     @Override
     protected void onPause() {
