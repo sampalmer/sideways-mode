@@ -1,9 +1,10 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.Context;
+
 import samuelpalmer.sensorautorotation.android.WindowOrientationListener;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import android.content.Context;
 
 
 public class OrientationSensorHandler extends State {
@@ -11,10 +12,10 @@ public class OrientationSensorHandler extends State {
 	private WindowOrientationListener listener;
 	private final UpdatingEventRegistrar<Orientation> subscriptions;
 	private Integer lastRotation;
-	
+
 	public OrientationSensorHandler(final Context context) throws EnvironmentException {
 		subscriptions = new UpdatingEventRegistrar<Orientation>(new UserErrorHandler(context));
-		
+
 		listener = new WindowOrientationListener(context, null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
@@ -24,7 +25,7 @@ public class OrientationSensorHandler extends State {
 				}
 			}
 		};
-		
+
 		if (!listener.canDetectOrientation())
 			throw new EnvironmentException("Couldn't find an accelerometer");
 	}
@@ -39,9 +40,9 @@ public class OrientationSensorHandler extends State {
 	protected void stop() {
 		listener.disable();
 	}
-	
+
 	public EventRegistrar<Orientation> onRotationChanged() {
 		return subscriptions;
 	}
-	
+
 }

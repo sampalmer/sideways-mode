@@ -14,17 +14,17 @@ public class ScreenOrientationEnforcer {
 	final WindowManager windows;
 
 	public ScreenOrientationEnforcer(Context owner) {
-		windows = (WindowManager)owner.getSystemService(Context.WINDOW_SERVICE);
+		windows = (WindowManager) owner.getSystemService(Context.WINDOW_SERVICE);
 		view = new LinearLayout(owner);
-		
+
 		LayoutParams layout = generateLayout();
 		windows.addView(view, layout);
 		view.setVisibility(View.VISIBLE);
 	}
-	
+
 	private LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.TRANSPARENT);
-        layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+		layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 		return layoutParams;
 	}
 

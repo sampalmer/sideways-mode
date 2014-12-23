@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 public class Intents {
-	
+
 	private Context context;
 
 	public Intents(Context context) {
 		this.context = context;
 	}
-	
+
 	public PendingIntent makePending(Class<?> clazz) {
 		Intent intent = makeIntent(clazz);
 		return makePending(intent);

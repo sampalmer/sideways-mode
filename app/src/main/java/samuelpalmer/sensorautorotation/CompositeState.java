@@ -1,16 +1,14 @@
 package samuelpalmer.sensorautorotation;
 
 
-
-
 public class CompositeState extends State {
-	
+
 	private final State[] resources;
 
 	public CompositeState(State[] resources) {
 		this.resources = resources.clone();
 	}
-	
+
 	@Override
 	protected void start() throws EnvironmentException {
 		for (State resource : resources)

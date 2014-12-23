@@ -11,7 +11,7 @@ public class ScreenOrientationUpdater extends State {
 		this.calculator = calculator;
 		this.screen = screen;
 	}
-	
+
 	@Override
 	protected void start() throws EnvironmentException {
 		calculator.onChange().subscribe(subscriber);
@@ -29,7 +29,7 @@ public class ScreenOrientationUpdater extends State {
 				screen.propose(calculator.proposedScreenOrientation());
 		}
 	};
-	
+
 	private boolean upsideDown() {
 		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);
 	}

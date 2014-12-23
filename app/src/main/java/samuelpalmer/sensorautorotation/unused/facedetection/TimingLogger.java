@@ -3,9 +3,9 @@ package samuelpalmer.sensorautorotation.unused.facedetection;
 import android.util.Log;
 
 public class TimingLogger {
-	
+
 	private Long lastMessage;
-	
+
 	public void showMessage(String message) {
 		long now = System.nanoTime();
 

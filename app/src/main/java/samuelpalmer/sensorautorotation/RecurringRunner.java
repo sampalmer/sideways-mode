@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation;
 import android.os.Handler;
 
 public class RecurringRunner extends State {
-	
+
 	private Handler handler;
 	private Runnable runnable;
 	private int periodInMilliseconds;
@@ -13,7 +13,7 @@ public class RecurringRunner extends State {
 		this.runnable = runnable;
 		this.periodInMilliseconds = periodInMilliseconds;
 	}
-	
+
 	private Runnable runAndEnqueue = new Runnable() {
 		@Override
 		public void run() {
@@ -21,11 +21,11 @@ public class RecurringRunner extends State {
 			handler.postDelayed(runAndEnqueue, periodInMilliseconds);
 		}
 	};
-	
+
 	public void start() {
 		runAndEnqueue.run();
 	}
-	
+
 	public void stop() {
 		handler.removeCallbacks(runAndEnqueue);
 	}

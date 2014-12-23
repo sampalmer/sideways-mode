@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.systemconfiguration;
 import samuelpalmer.sensorautorotation.systemconfiguration.types.TypeConverter;
 
 public class Setting<T> {
-	
+
 	private SystemSettingSource config;
 	private String key;
 	private TypeConverter<T> converter;
@@ -13,12 +13,12 @@ public class Setting<T> {
 		this.key = key;
 		this.converter = converter;
 	}
-	
+
 	public T getOrNull() {
 		String value = config.getOrNull(key);
 		if (value == null)
 			return null;
-		
+
 		return converter.tryParse(value);
 	}
 
@@ -26,5 +26,5 @@ public class Setting<T> {
 		String textValue = converter.format(value);
 		config.set(key, textValue);
 	}
-	
+
 }
