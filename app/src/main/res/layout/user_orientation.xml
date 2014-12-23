@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="#63000000"
     tools:context="samuelpalmer.sensorautorotation.components.RecalibrationActivity">
     
     <RelativeLayout
@@ -27,7 +27,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Touch to finish"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/black" />
 
     </RelativeLayout>
     
