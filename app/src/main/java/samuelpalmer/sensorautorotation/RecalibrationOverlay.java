@@ -87,7 +87,10 @@ public class RecalibrationOverlay extends State {
 	}
 
 	private LayoutParams generateLayoutParams() {
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.TRANSLUCENT);
+		LayoutParams layoutParams = new LayoutParams(
+				LayoutParams.TYPE_SYSTEM_ERROR,
+				LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+				PixelFormat.TRANSLUCENT);
 		layoutParams.alpha = 0.4f;
 		return layoutParams;
 	}
