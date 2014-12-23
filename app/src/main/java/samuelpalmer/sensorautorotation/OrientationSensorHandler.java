@@ -14,7 +14,7 @@ public class OrientationSensorHandler extends State {
 	private Integer lastRotation;
 
 	public OrientationSensorHandler(final Context context) throws EnvironmentException {
-		subscriptions = new UpdatingEventRegistrar<Orientation>(new UserErrorHandler(context));
+		subscriptions = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
 
 		listener = new WindowOrientationListener(context, null) {
 			@Override

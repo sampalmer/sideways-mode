@@ -73,7 +73,7 @@ public class CameraOrientationCalculator extends State {
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<Orientation>(new UserErrorHandler(context));
+	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
 	private boolean detecting;
 
 	private boolean exposureSet;

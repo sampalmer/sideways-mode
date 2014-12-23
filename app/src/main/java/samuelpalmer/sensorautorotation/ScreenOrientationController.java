@@ -30,7 +30,7 @@ public class ScreenOrientationController extends State {
 	public ScreenOrientationController(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
-		onOrientationChanged = new UpdatingEventRegistrar<Void>(new UserErrorHandler(context));
+		onOrientationChanged = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
 	}
 
 	@Override

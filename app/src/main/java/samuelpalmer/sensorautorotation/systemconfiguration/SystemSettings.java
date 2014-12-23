@@ -20,7 +20,7 @@ public class SystemSettings {
 	}
 
 	private <T> Setting<T> makeSetting(String key, TypeConverter<T> type) {
-		return new Setting<T>(config, key, type);
+		return new Setting<>(config, key, type);
 	}
 
 	public final Setting<Boolean> accelerometerRotation;

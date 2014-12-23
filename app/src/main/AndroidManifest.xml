@@ -41,7 +41,7 @@
 		<activity
 			android:name=".components.ErrorDialogActivity"
 			android:label="Error"
-			android:theme="@android:style/Theme.Dialog"></activity>
+			android:theme="@android:style/Theme.Dialog" />
 
 		<activity
 			android:name=".components.RecalibrationActivity"

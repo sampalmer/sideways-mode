@@ -18,10 +18,6 @@ public class Orientation {
 		this.clockwiseRotationsFromNaturalOrientation = clockwiseRotationsFromNaturalOrientation;
 	}
 
-	public boolean sideways() {
-		return this.getClockwiseRotationsFromNaturalOrientation() % 2 != 0;
-	}
-
 	public Rotation minus(Orientation other) {
 		return new Rotation(getClockwiseRotationsFromNaturalOrientation() - other.getClockwiseRotationsFromNaturalOrientation());
 	}

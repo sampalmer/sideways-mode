@@ -8,7 +8,7 @@ import samuelpalmer.sensorautorotation.UserErrorHandler;
 
 public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 
-	private final Set<EventHandler<T>> subscriptions = new HashSet<EventHandler<T>>();
+	private final Set<EventHandler<T>> subscriptions = new HashSet<>();
 	private final UserErrorHandler errorHandler;
 
 	public UpdatingEventRegistrar(UserErrorHandler errorHandler) {

@@ -64,8 +64,6 @@ public class OrientationEnforcingMonitor {
 			enforcer = new ScreenOrientationEnforcer(context);
 	}
 
-	;
-
 	private void dontEnforce() {
 		if (enforcer != null) {
 			enforcer.close();
@@ -73,12 +71,8 @@ public class OrientationEnforcingMonitor {
 		}
 	}
 
-	;
-
 	/**
 	 * Only works before Android 5
-	 *
-	 * @return
 	 */
 	private String getCurrentActivityPackageName() {
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
