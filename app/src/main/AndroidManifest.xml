@@ -7,8 +7,8 @@
 
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-	<!-- To enforce orientation -->
-	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+	<!-- To show overlay & enforce orientation -->
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 	<!-- For recalibrate feedback -->
 	<uses-permission android:name="android.permission.VIBRATE" />
@@ -48,9 +48,8 @@
 			android:theme="@android:style/Theme.Dialog" />
 
 		<activity
-			android:name=".components.RecalibrationActivity"
-			android:label="User Orientation"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:name=".components.NotificationPressedActivity"
+			android:theme="@android:style/Theme.NoDisplay"
 			android:launchMode="singleTask"
 			android:taskAffinity=""
 			android:excludeFromRecents="true" />
