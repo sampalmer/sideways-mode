@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="samuelpalmer.sensorautorotation">
 
-	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
 	<!-- To disable system rotation, set user rotation -->
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+
 	<!-- To enforce orientation -->
-	<uses-permission android:name="android.permission.VIBRATE" />
+	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+
 	<!-- For recalibrate feedback -->
+	<uses-permission android:name="android.permission.VIBRATE" />
+
 	<!-- <uses-permission android:name="android.permission.CAMERA" /> --> <!-- For face detection -->
 	<!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
 
