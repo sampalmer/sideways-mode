@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +20,11 @@ public class RecalibrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.user_orientation);
+
+		LayoutParams params = getWindow().getAttributes();
+		params.format = PixelFormat.TRANSLUCENT;
+		params.alpha = 0.4f;
+		getWindow().setAttributes(params);
 
 		setRotation();
 
