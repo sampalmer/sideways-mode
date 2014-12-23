@@ -19,13 +19,13 @@ public class RecalibrationActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.user_orientation);
-
 		LayoutParams params = getWindow().getAttributes();
 		params.format = PixelFormat.TRANSLUCENT;
 		params.alpha = 0.4f;
+		params.flags |= LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 		getWindow().setAttributes(params);
 
+		setContentView(R.layout.user_orientation);
 		setRotation();
 
 		RotationService.screenOrientationController.onOrientationChanged().subscribe(listener);
