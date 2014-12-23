@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class UserActiveState extends State {
@@ -10,15 +9,19 @@ public class UserActiveState extends State {
 	private final ProximitySensorHandler proximityHandler;
 	private final RecalibrationController recalibrator;
 	private final EarpieceStateMonitor earpieceStateMonitor;
+	private final OrientationCalculator calculator;
+	private final ScreenOrientationController screenOrientationController;
 	private OrientationSensorHandler orientationListener;
 	private UserErrorHandler errorHandler;
 	private ScreenOrientationUpdater screenUpdater;
 
-	public UserActiveState(Context context) {
+	public UserActiveState(Context context, OrientationCalculator calculator, ScreenOrientationController screenOrientationController) {
+		this.calculator = calculator;
+		this.screenOrientationController = screenOrientationController;
 		errorHandler = new UserErrorHandler(context);
 		proximityHandler = new ProximitySensorHandler(context);
-		screenUpdater = new ScreenOrientationUpdater(RotationService.calculator, RotationService.screenOrientationController);
-		recalibrator = new RecalibrationController(context, proximityHandler);
+		screenUpdater = new ScreenOrientationUpdater(this.calculator, this.screenOrientationController);
+		recalibrator = new RecalibrationController(proximityHandler);
 
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 
@@ -32,7 +35,7 @@ public class UserActiveState extends State {
 	@Override
 	protected void start() throws EnvironmentException {
 		screenUpdater.ensureStarted();
-		RotationService.calculator.ensureStarted();
+		calculator.ensureStarted();
 		earpieceStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 		recalibrator.ensureStarted();
@@ -49,7 +52,7 @@ public class UserActiveState extends State {
 		if (orientationListener != null)
 			orientationListener.ensureStopped();
 
-		RotationService.calculator.ensureStopped();
+		calculator.ensureStopped();
 		earpieceStateMonitor.ensureStopped();
 		recalibrator.ensureStopped();
 		screenUpdater.ensureStopped();
@@ -60,7 +63,7 @@ public class UserActiveState extends State {
 		@Override
 		public void update(Orientation event)
 				throws EnvironmentException {
-			RotationService.calculator.setDevice(event);
+			calculator.setDevice(event);
 		}
 	};
 
@@ -72,7 +75,7 @@ public class UserActiveState extends State {
 					proximityHandler.ensureStarted();
 				else {
 					proximityHandler.ensureStopped();
-					RotationService.calculator.resetUser();
+					calculator.resetUser();
 				}
 			} catch (EnvironmentException e) {
 				errorHandler.handle(e);
