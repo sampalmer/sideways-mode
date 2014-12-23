@@ -76,4 +76,9 @@ public class OrientationCalculator extends State {
 		return Orientation.NATURAL.minus(user);
 	}
 
+    public void resetUser() {
+        user = DEFAULT;
+        reportUpdate();
+    }
+
 }
