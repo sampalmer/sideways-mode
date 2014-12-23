@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.app.Activity;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,10 +18,7 @@ public class RecalibrationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View layout = getLayoutInflater().inflate(R.layout.user_orientation, null);
-        LayoutParams params = new LayoutParams(LayoutParams.TYPE_SYSTEM_ALERT, LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.TRANSLUCENT);
-        params.alpha = 0.4f;
-        setContentView(layout, params);
+        setContentView(R.layout.user_orientation);
 
 		setRotation();
 
