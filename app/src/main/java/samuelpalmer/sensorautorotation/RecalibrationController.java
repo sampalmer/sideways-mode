@@ -1,17 +1,21 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
+import samuelpalmer.sensorautorotation.components.RecalibrationActivity;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 
 public class RecalibrationController extends State {
 
+	private Context context;
 	private ProximitySensorHandler proximitySensor;
 	private final Handler handler;
 
-	public RecalibrationController(ProximitySensorHandler proximitySensor) {
+	public RecalibrationController(Context context, ProximitySensorHandler proximitySensor) {
+		this.context = context;
 		this.proximitySensor = proximitySensor;
 		handler = new Handler();
 	}
@@ -45,11 +49,9 @@ public class RecalibrationController extends State {
 	private final Runnable startRecalibration = new Runnable() {
 		@Override
 		public void run() {
-			try {
-				RotationService.overlay.ensureStarted();
-			} catch (EnvironmentException e) {
-				RotationService.errorHandler.handle(e);
-			}
+			Intent intent = new Intent(context, RecalibrationActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(intent);
 		}
 	};
 

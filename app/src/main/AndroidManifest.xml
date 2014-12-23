@@ -44,8 +44,8 @@
 			android:theme="@android:style/Theme.Dialog" />
 
 		<activity
-			android:name=".components.NotificationPressedActivity"
-			android:theme="@android:style/Theme.NoDisplay"
+			android:name=".components.RecalibrationActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
 			android:launchMode="singleTask"
 			android:taskAffinity=""
 			android:excludeFromRecents="true" />
