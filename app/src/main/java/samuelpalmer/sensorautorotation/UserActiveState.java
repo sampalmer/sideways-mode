@@ -7,8 +7,6 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class UserActiveState extends State {
 
-	private final ProximitySensorHandler proximityHandler;
-	private final RecalibrationController recalibrator;
 	private final EarpieceStateMonitor earpieceStateMonitor;
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screenOrientationController;
@@ -20,9 +18,7 @@ public class UserActiveState extends State {
 		this.calculator = calculator;
 		this.screenOrientationController = screenOrientationController;
 		errorHandler = new UserErrorHandler(context);
-		proximityHandler = new ProximitySensorHandler(context);
 		screenUpdater = new ScreenOrientationUpdater(this.calculator, this.screenOrientationController);
-		recalibrator = new RecalibrationController(proximityHandler);
 
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 
@@ -39,7 +35,6 @@ public class UserActiveState extends State {
 		calculator.ensureStarted();
 		earpieceStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
-		recalibrator.ensureStarted();
 
 		orientationListener.onRotationChanged().subscribe(deviceOrientationSubscriber);
 	}
@@ -48,14 +43,11 @@ public class UserActiveState extends State {
 	protected void stop() throws EnvironmentException {
 		orientationListener.onRotationChanged().unsubscribe(deviceOrientationSubscriber);
 
-		proximityHandler.ensureStopped();
-
 		if (orientationListener != null)
 			orientationListener.ensureStopped();
 
 		calculator.ensureStopped();
 		earpieceStateMonitor.ensureStopped();
-		recalibrator.ensureStopped();
 		screenUpdater.ensureStopped();
 
 		RotationService.overlay.ensureStopped();
@@ -73,16 +65,8 @@ public class UserActiveState extends State {
 	private final StateMonitor.Listener<EarpieceSpeakerState> callStateReceiver = new StateMonitor.Listener<EarpieceSpeakerState>() {
 		@Override
 		public void stateChanged(EarpieceSpeakerState state) {
-			try {
-				if (!state.usingEarpieceSpeaker())
-					proximityHandler.ensureStarted();
-				else {
-					proximityHandler.ensureStopped();
-					calculator.resetUser();
-				}
-			} catch (EnvironmentException e) {
-				errorHandler.handle(e);
-			}
+			if (state.usingEarpieceSpeaker())
+				calculator.resetUser();
 		}
 	};
 }
