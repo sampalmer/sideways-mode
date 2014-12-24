@@ -110,7 +110,6 @@ public class RotationService extends Service {
 				.setContentIntent(intents.makePending(NotificationPressedActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Touch to change user orientation")
-				.setPriority(NotificationCompat.PRIORITY_MIN)
 				.build();
 
 		startForeground(1, notification);
