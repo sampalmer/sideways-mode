@@ -14,7 +14,6 @@ import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.RecalibrationOverlay;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserActiveState;
@@ -27,23 +26,19 @@ public class RotationService extends Service {
 	private boolean destroyed;
 	private UserActiveState userActiveState;
 
-	public ScreenOrientationController screenOrientationController;
-	public OrientationCalculator calculator;
+	public static ScreenOrientationController screenOrientationController;
+	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
-	public static RecalibrationOverlay overlay;
-	public static UserErrorHandler errorHandler;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		errorHandler = new UserErrorHandler(this);
 		screenOrientationController = new ScreenOrientationController(this);
 		calculator = new OrientationCalculator(this);
-		overlay = new RecalibrationOverlay(this, screenOrientationController, calculator);
 
-		userActiveState = new UserActiveState(this, calculator, screenOrientationController);
+		userActiveState = new UserActiveState(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
@@ -54,7 +49,7 @@ public class RotationService extends Service {
 					else
 						userActiveState.ensureStopped();
 				} catch (EnvironmentException e) {
-					errorHandler.handle(e);
+					new UserErrorHandler(RotationService.this).handle(e);
 				}
 			}
 		});
@@ -107,7 +102,7 @@ public class RotationService extends Service {
 
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(intents.makePending(NotificationPressedActivity.class))
+				.setContentIntent(intents.makePending(RecalibrationActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Touch to change user orientation")
 				.build();

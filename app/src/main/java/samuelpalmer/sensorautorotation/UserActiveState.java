@@ -8,17 +8,13 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 public class UserActiveState extends State {
 
 	private final EarpieceStateMonitor earpieceStateMonitor;
-	private final OrientationCalculator calculator;
-	private final ScreenOrientationController screenOrientationController;
 	private OrientationSensorHandler orientationListener;
 	private UserErrorHandler errorHandler;
 	private ScreenOrientationUpdater screenUpdater;
 
-	public UserActiveState(Context context, OrientationCalculator calculator, ScreenOrientationController screenOrientationController) {
-		this.calculator = calculator;
-		this.screenOrientationController = screenOrientationController;
+	public UserActiveState(Context context) {
 		errorHandler = new UserErrorHandler(context);
-		screenUpdater = new ScreenOrientationUpdater(this.calculator, this.screenOrientationController);
+		screenUpdater = new ScreenOrientationUpdater(RotationService.calculator, RotationService.screenOrientationController);
 
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 
@@ -32,7 +28,7 @@ public class UserActiveState extends State {
 	@Override
 	protected void start() throws EnvironmentException {
 		screenUpdater.ensureStarted();
-		calculator.ensureStarted();
+		RotationService.calculator.ensureStarted();
 		earpieceStateMonitor.ensureStarted();
 		orientationListener.ensureStarted();
 
@@ -46,11 +42,9 @@ public class UserActiveState extends State {
 		if (orientationListener != null)
 			orientationListener.ensureStopped();
 
-		calculator.ensureStopped();
+		RotationService.calculator.ensureStopped();
 		earpieceStateMonitor.ensureStopped();
 		screenUpdater.ensureStopped();
-
-		RotationService.overlay.ensureStopped();
 	}
 
 	EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
@@ -58,7 +52,7 @@ public class UserActiveState extends State {
 		@Override
 		public void update(Orientation event)
 				throws EnvironmentException {
-			calculator.setDevice(event);
+			RotationService.calculator.setDevice(event);
 		}
 	};
 
@@ -66,7 +60,7 @@ public class UserActiveState extends State {
 		@Override
 		public void stateChanged(EarpieceSpeakerState state) {
 			if (state.usingEarpieceSpeaker())
-				calculator.resetUser();
+				RotationService.calculator.resetUser();
 		}
 	};
 }
