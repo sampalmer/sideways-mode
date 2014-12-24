@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 
+import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class UserActiveState extends State {
@@ -56,6 +57,8 @@ public class UserActiveState extends State {
 		earpieceStateMonitor.ensureStopped();
 		recalibrator.ensureStopped();
 		screenUpdater.ensureStopped();
+
+		RotationService.overlay.ensureStopped();
 	}
 
 	EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
