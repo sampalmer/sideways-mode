@@ -13,7 +13,7 @@ public class OrientationCalculator extends State {
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
-	private boolean firstSensorOrientation;
+
 	private Context context;
 
 	private final UpdatingEventRegistrar<Void> listener;
@@ -25,7 +25,6 @@ public class OrientationCalculator extends State {
 
 	@Override
 	protected void start() throws EnvironmentException {
-		firstSensorOrientation = true;
 	}
 
 	@Override
@@ -50,13 +49,10 @@ public class OrientationCalculator extends State {
 				user = user.plus(deviceChange);
 			}
 		}
-		else if (firstSensorOrientation) {
-			user = newDevice;
-			firstSensorOrientation = false;
-		}
 
 		device = newDevice;
 		reportUpdate();
+
 	}
 
 	private void vibrate(int durationMilliseconds) {
