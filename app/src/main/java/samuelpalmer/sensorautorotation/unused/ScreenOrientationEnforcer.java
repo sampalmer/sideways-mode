@@ -8,7 +8,10 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.LinearLayout;
 
-public class ScreenOrientationEnforcer {
+import samuelpalmer.sensorautorotation.EnvironmentException;
+import samuelpalmer.sensorautorotation.State;
+
+public class ScreenOrientationEnforcer extends State {
 
 	final View view;
 	final WindowManager windows;
@@ -16,10 +19,6 @@ public class ScreenOrientationEnforcer {
 	public ScreenOrientationEnforcer(Context owner) {
 		windows = (WindowManager) owner.getSystemService(Context.WINDOW_SERVICE);
 		view = new LinearLayout(owner);
-
-		LayoutParams layout = generateLayout();
-		windows.addView(view, layout);
-		view.setVisibility(View.VISIBLE);
 	}
 
 	private LayoutParams generateLayout() {
@@ -28,8 +27,15 @@ public class ScreenOrientationEnforcer {
 		return layoutParams;
 	}
 
-	public void close() {
-		windows.removeView(view);
+	@Override
+	protected void start() throws EnvironmentException {
+		LayoutParams layout = generateLayout();
+		windows.addView(view, layout);
+		view.setVisibility(View.VISIBLE);
 	}
 
+	@Override
+	protected void stop() throws EnvironmentException {
+		windows.removeView(view);
+	}
 }
