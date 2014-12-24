@@ -1,14 +1,15 @@
 package samuelpalmer.sensorautorotation.components;
 
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.accessibility.AccessibilityEvent;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
@@ -20,8 +21,9 @@ import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
+import samuelpalmer.sensorautorotation.unused.ScreenOrientationEnforcer;
 
-public class RotationService extends Service {
+public class RotationService extends AccessibilityService {
 
 	private boolean destroyed;
 	private UserActiveState userActiveState;
@@ -30,6 +32,7 @@ public class RotationService extends Service {
 	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
+	private ScreenOrientationEnforcer orientationEnforcer;
 
 	@Override
 	public void onCreate() {
@@ -64,6 +67,8 @@ public class RotationService extends Service {
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(this).handle(e);
 		}
+
+		orientationEnforcer = new ScreenOrientationEnforcer(this);
 	}
 
 	private void destroy() {
@@ -88,11 +93,6 @@ public class RotationService extends Service {
 			stopSelf();
 		}
 	};
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
 
 	/**
 	 * Reduces chance of being killed
@@ -124,4 +124,26 @@ public class RotationService extends Service {
 		destroy();
 	}
 
+	@Override
+	public void onAccessibilityEvent(AccessibilityEvent event) {
+		CharSequence packageName = event.getPackageName();
+		int eventType = event.getEventType();
+
+		Log.i("AccessibilityEvent", "Package: " + packageName + " Type: " + eventType);
+
+		if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+			try {
+				if (packageName.equals("com.sonyericsson.home"))
+					orientationEnforcer.ensureStarted();
+				else
+					orientationEnforcer.ensureStopped();
+			}
+			catch (EnvironmentException e) {
+				new UserErrorHandler(this).handle(e);
+			}
+		}
+	}
+
+	@Override
+	public void onInterrupt() {}
 }
