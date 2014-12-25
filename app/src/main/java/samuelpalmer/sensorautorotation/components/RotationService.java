@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -152,7 +153,9 @@ public class RotationService extends AccessibilityService {
 		AccessibilityServiceInfo accessibilityServiceInfo = new AccessibilityServiceInfo();
 		accessibilityServiceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 		accessibilityServiceInfo.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
-		accessibilityServiceInfo.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
+
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+			accessibilityServiceInfo.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
 
 		setServiceInfo(accessibilityServiceInfo);
 	}
