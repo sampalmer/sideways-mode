@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.components;
 
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -142,6 +143,18 @@ public class RotationService extends AccessibilityService {
 				new UserErrorHandler(this).handle(e);
 			}
 		}
+	}
+
+	@Override
+	protected void onServiceConnected() {
+		super.onServiceConnected();
+
+		AccessibilityServiceInfo accessibilityServiceInfo = new AccessibilityServiceInfo();
+		accessibilityServiceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+		accessibilityServiceInfo.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
+		accessibilityServiceInfo.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
+
+		setServiceInfo(accessibilityServiceInfo);
 	}
 
 	@Override
