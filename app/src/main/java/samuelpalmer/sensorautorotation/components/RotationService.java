@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.StateMonitor;
@@ -21,7 +21,6 @@ import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.unused.ScreenOrientationEnforcer;
 
 public class RotationService extends AccessibilityService {
 
@@ -32,7 +31,7 @@ public class RotationService extends AccessibilityService {
 	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
-	private ScreenOrientationEnforcer orientationEnforcer;
+	private OrientationEnforcementMonitor orientationEnforcementMonitor;
 
 	@Override
 	public void onCreate() {
@@ -68,7 +67,7 @@ public class RotationService extends AccessibilityService {
 			new UserErrorHandler(this).handle(e);
 		}
 
-		orientationEnforcer = new ScreenOrientationEnforcer(this);
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this);
 	}
 
 	private void destroy() {
@@ -126,22 +125,10 @@ public class RotationService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		CharSequence packageName = event.getPackageName();
-		int eventType = event.getEventType();
 
-		Log.i("AccessibilityEvent", "Package: " + packageName + " Type: " + eventType);
+		if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+			orientationEnforcementMonitor.reportWindowChange(event.getPackageName());
 
-		if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-			try {
-				if (packageName.equals("com.sonyericsson.home"))
-					orientationEnforcer.ensureStarted();
-				else
-					orientationEnforcer.ensureStopped();
-			}
-			catch (EnvironmentException e) {
-				new UserErrorHandler(this).handle(e);
-			}
-		}
 	}
 
 	@Override
