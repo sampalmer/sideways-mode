@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
 
+import samuelpalmer.sensorautorotation.AppPackage;
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
@@ -21,6 +22,7 @@ import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
+import samuelpalmer.sensorautorotation.WindowMonitor;
 
 public class RotationService extends AccessibilityService {
 
@@ -32,6 +34,7 @@ public class RotationService extends AccessibilityService {
 
 	private UserInteractivityMonitor userInteractivityMonitor;
 	private OrientationEnforcementMonitor orientationEnforcementMonitor;
+	private WindowMonitor windowMonitor;
 
 	@Override
 	public void onCreate() {
@@ -67,7 +70,8 @@ public class RotationService extends AccessibilityService {
 			new UserErrorHandler(this).handle(e);
 		}
 
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this);
+		windowMonitor = new WindowMonitor(this);
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, windowMonitor);
 	}
 
 	private void destroy() {
@@ -77,6 +81,7 @@ public class RotationService extends AccessibilityService {
 				screenOrientationController.ensureStopped();
 				unregisterReceiver(shutdownReceiver);
 				userInteractivityMonitor.ensureStopped();
+				orientationEnforcementMonitor.ensureStopped();
 			} catch (EnvironmentException e) {
 				new UserErrorHandler(this).handle(e);
 			}
@@ -127,7 +132,7 @@ public class RotationService extends AccessibilityService {
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 
 		if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
-			orientationEnforcementMonitor.reportWindowChange(event.getPackageName());
+			windowMonitor.reportWindowChange(new AppPackage(event.getPackageName()));
 
 	}
 
