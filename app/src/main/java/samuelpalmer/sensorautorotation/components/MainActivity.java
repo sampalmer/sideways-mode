@@ -29,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
 		serviceEnabledButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				updateEnabledButtonState(); //Prevents button from toggling its own state.
 				showAccessibilitySettings();
 			}
 		});
