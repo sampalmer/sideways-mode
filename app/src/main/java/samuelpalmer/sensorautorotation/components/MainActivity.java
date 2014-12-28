@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -27,16 +29,56 @@ public class MainActivity extends ActionBarActivity {
 		serviceEnabledButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-				startActivity(intent);
+				showAccessibilitySettings();
 			}
 		});
+
+		updateEnabledButtonState();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ensureUserInstructed();
+	}
+
+	private void ensureUserInstructed() {
+		samuelpalmer.sensorautorotation.Settings.Setting<Boolean> userInstructed = new samuelpalmer.sensorautorotation.Settings(this).userInstructed();
+		if (!userInstructed.getOr(false)) {
+			new AlertDialog.Builder(this)
+					.setCancelable(true)
+					.setMessage("This app runs as an accessibility service. To use it, you must enable it in the accessibility settings. Do you want to do this now?")
+					.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							showAccessibilitySettings();
+						}
+					})
+					.setNegativeButton("No", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+						}
+					})
+					.create()
+					.show();
+			userInstructed.set(true);
+		}
+	}
+
+	private void showAccessibilitySettings() {
+		Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+		startActivity(intent);
 	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 
+		updateEnabledButtonState();
+	}
+
+	private void updateEnabledButtonState() {
 		serviceEnabledButton.setChecked(serviceEnabled());
 	}
 
