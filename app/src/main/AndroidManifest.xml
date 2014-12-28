@@ -53,6 +53,9 @@
 			android:taskAffinity=""
 			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
+        <activity
+            android:name=".components.SettingsActivity"/>
+
 		<service
 			android:name=".components.RotationService"
 			android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
