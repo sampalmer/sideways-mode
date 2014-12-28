@@ -15,7 +15,7 @@ public class Settings {
 		prefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
 	}
 
-	public Setting<Boolean> userInstructed() { return new BooleanSetting("userInstructed"); }
+	public Setting<Boolean> userInstructedAboutAccessibilityService() { return new BooleanSetting("userInstructedAboutAccessibilityService"); }
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Set<String>> orientationEnforcedAppPackages() { return new StringSetSetting("orientationEnforcedAppPackages"); }
 

@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void ensureUserInstructed() {
-		samuelpalmer.sensorautorotation.Settings.Setting<Boolean> userInstructed = new samuelpalmer.sensorautorotation.Settings(this).userInstructed();
+		samuelpalmer.sensorautorotation.Settings.Setting<Boolean> userInstructed = new samuelpalmer.sensorautorotation.Settings(this).userInstructedAboutAccessibilityService();
 		if (!userInstructed.getOr(false)) {
 			new AlertDialog.Builder(this)
 					.setCancelable(true)
