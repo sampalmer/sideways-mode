@@ -4,8 +4,7 @@
 	<string name="app_name">Screen Rotate</string>
 	<string name="accessibility_service_description">Provides screen auto-rotation with support for the user lying down</string>
 	<string name="home_instructions">
-		Rotate the phone to change screen orientation.
-		This works the same way as it normally does.
+		Rotate your device to change the screen orientation.
 		If you want to change your own orientation (eg. lie on your side),
 		open the notification for this app to adjust the screen orientation
 		accordingly.
