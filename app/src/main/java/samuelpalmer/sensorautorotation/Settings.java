@@ -3,16 +3,16 @@ package samuelpalmer.sensorautorotation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import java.util.Set;
 
 public class Settings {
 
-	private static final String FILE_NAME = "samuelpalmer.sensorautorotation.prefs";
 	private final SharedPreferences prefs;
 
 	public Settings(Context context) {
-		prefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	public Setting<Boolean> userInstructedAboutAccessibilityService() { return new BooleanSetting("userInstructedAboutAccessibilityService"); }
