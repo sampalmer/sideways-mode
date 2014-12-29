@@ -18,6 +18,7 @@ public class Settings {
 	public Setting<Boolean> userInstructedAboutAccessibilityService() { return new BooleanSetting("userInstructedAboutAccessibilityService"); }
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Set<String>> appPackagesNotSupportingForcedOrientation() { return new StringSetSetting("appPackagesNotSupportingForcedOrientation"); }
+	public Setting<Boolean> enforceOrientation() { return new BooleanSetting("enforce_orientation"); }
 
 	public abstract class Setting<T> {
 

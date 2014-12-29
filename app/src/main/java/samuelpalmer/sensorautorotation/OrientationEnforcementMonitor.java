@@ -33,16 +33,22 @@ public class OrientationEnforcementMonitor extends State {
 
 	private final EventHandler<AppPackage> subscriber = new EventHandler<AppPackage>() {
 		@Override
-		public void update(AppPackage event) throws EnvironmentException {
+		public void update(AppPackage activeApp) throws EnvironmentException {
 
-			Set<String> enforcedAppPackageNames = new Settings(context).appPackagesNotSupportingForcedOrientation().getOr(new HashSet<String>(0));
-			for (String name : enforcedAppPackageNames)
-				if (new AppPackage(name).equals(event)) {
-					orientationEnforcer.ensureStarted();
-					return;
+			if (new Settings(context).enforceOrientation().getOr(false)) {
+				Set<String> unsupportedApps = new Settings(context).appPackagesNotSupportingForcedOrientation().getOr(new HashSet<String>(0));
+				for (String unsupportedAppName : unsupportedApps) {
+					AppPackage unsupportedApp = new AppPackage(unsupportedAppName);
+					if (unsupportedApp.equals(activeApp)) {
+						orientationEnforcer.ensureStopped();
+						return;
+					}
 				}
 
-			orientationEnforcer.ensureStopped();
+				orientationEnforcer.ensureStarted();
+			}
+			else
+				orientationEnforcer.ensureStopped();
 
 		}
 	};
