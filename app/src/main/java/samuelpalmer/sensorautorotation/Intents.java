@@ -18,7 +18,7 @@ public class Intents {
 	}
 
 	public PendingIntent makePending(Intent intent) {
-		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	public Intent makeIntent(Class<?> clazz) {
