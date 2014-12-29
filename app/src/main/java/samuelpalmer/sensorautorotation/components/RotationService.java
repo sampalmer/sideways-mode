@@ -60,18 +60,20 @@ public class RotationService extends AccessibilityService {
 		});
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+
+		windowMonitor = new WindowMonitor(this);
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, windowMonitor);
+
 		try {
 			screenOrientationController.ensureStarted();
 
 			promoteToForeground();
 
 			userInteractivityMonitor.ensureStarted();
+			orientationEnforcementMonitor.ensureStarted();
 		} catch (EnvironmentException e) {
 			new UserErrorHandler(this).handle(e);
 		}
-
-		windowMonitor = new WindowMonitor(this);
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, windowMonitor);
 	}
 
 	private void destroy() {
