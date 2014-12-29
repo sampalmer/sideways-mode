@@ -35,7 +35,7 @@ public class OrientationEnforcementMonitor extends State {
 		@Override
 		public void update(AppPackage event) throws EnvironmentException {
 
-			Set<String> enforcedAppPackageNames = new Settings(context).orientationEnforcedAppPackages().getOr(new HashSet<String>(0));
+			Set<String> enforcedAppPackageNames = new Settings(context).appPackagesNotSupportingForcedOrientation().getOr(new HashSet<String>(0));
 			for (String name : enforcedAppPackageNames)
 				if (new AppPackage(name).equals(event)) {
 					orientationEnforcer.ensureStarted();
