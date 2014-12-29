@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private void ensureUserInstructed() {
 		samuelpalmer.sensorautorotation.Settings.Setting<Boolean> userInstructed = new samuelpalmer.sensorautorotation.Settings(this).userInstructedAboutAccessibilityService();
-		if (!userInstructed.getOr(false)) {
+		if (!(userInstructed.getOr(false) || serviceEnabled())) {
 			new AlertDialog.Builder(this)
 					.setCancelable(true)
 					.setMessage("This app runs as an accessibility service. To use it, you must enable it in the accessibility settings. Do you want to do this now?")
