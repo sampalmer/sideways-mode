@@ -49,13 +49,13 @@ public class MainActivity extends ActionBarActivity {
 			new AlertDialog.Builder(this)
 					.setCancelable(true)
 					.setMessage("This app runs as an accessibility service. To use it, you must enable it in the accessibility settings. Do you want to do this now?")
-					.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							showAccessibilitySettings();
 						}
 					})
-					.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 
