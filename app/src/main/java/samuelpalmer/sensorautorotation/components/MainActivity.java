@@ -63,8 +63,9 @@ public class MainActivity extends ActionBarActivity {
 					})
 					.create()
 					.show();
-			userInstructed.set(true);
 		}
+
+		userInstructed.set(true);
 	}
 
 	private void showAccessibilitySettings() {
