@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.ToggleButton;
@@ -35,6 +37,25 @@ public class MainActivity extends ActionBarActivity {
 		});
 
 		updateEnabledButtonState();
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		if (id == R.id.action_settings) {
+			startActivity(new Intent(this, SettingsActivity.class));
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

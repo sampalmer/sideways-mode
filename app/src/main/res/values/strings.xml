@@ -9,5 +9,6 @@
 		open the notification for this app to adjust the screen orientation
 		accordingly.
 	</string>
+	<string name="action_settings">Settings</string>
 
 </resources>
