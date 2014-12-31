@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -10,8 +8,8 @@ public class ActivityMonitor {
 	private RecentWindows mostRecentWindows = new RecentWindows();
 	private final UpdatingEventRegistrar<AppPackage> onWindowChange;
 
-	public ActivityMonitor(Context context) {
-		onWindowChange = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+	public ActivityMonitor() {
+		onWindowChange = new UpdatingEventRegistrar<>();
 	}
 
 	public EventRegistrar<AppPackage> onChange() { return onWindowChange; }

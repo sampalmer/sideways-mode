@@ -19,10 +19,8 @@ import android.view.WindowManager.LayoutParams;
 
 import java.io.IOException;
 
-import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -73,7 +71,7 @@ public class CameraOrientationCalculator extends State {
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<>();
 	private boolean detecting;
 
 	private boolean exposureSet;
@@ -83,7 +81,7 @@ public class CameraOrientationCalculator extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		logger.showMessage("Start called");
 
 		cameraIndex = tryFindFrontCameraIndex();
@@ -100,7 +98,7 @@ public class CameraOrientationCalculator extends State {
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		if (camera != null) {
 			camera.release();
 			camera = null;
@@ -201,12 +199,7 @@ public class CameraOrientationCalculator extends State {
 
 		logger.showMessage("Rotated picture");
 
-		try {
-			new PicturePreview(context, image).ensureStarted();
-		} catch (EnvironmentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new PicturePreview(context, image).ensureStarted();
 
 		logger.showMessage("Showed preview");
 

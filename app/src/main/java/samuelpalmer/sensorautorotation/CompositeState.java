@@ -10,13 +10,13 @@ public class CompositeState extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		for (State resource : resources)
 			resource.start();
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		for (int i = resources.length - 1; i >= 0; --i)
 			resources[i].stop();
 	}

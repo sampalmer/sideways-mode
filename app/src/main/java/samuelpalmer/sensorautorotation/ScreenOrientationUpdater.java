@@ -17,18 +17,18 @@ public class ScreenOrientationUpdater extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		calculator.onChange().subscribe(subscriber);
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		calculator.onChange().unsubscribe(subscriber);
 	}
 
 	private final EventHandler<Void> subscriber = new EventHandler<Void>() {
 		@Override
-		public void update(Void event) throws EnvironmentException {
+		public void update(Void event) {
 			if (!upsideDown() || new Settings(context).allowUpsideDownScreen().getOr(false))
 				screen.propose(calculator.proposedScreenOrientation());
 		}

@@ -31,11 +31,11 @@ public class ScreenOrientationController extends State {
 	public ScreenOrientationController(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
-		onOrientationChanged = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+		onOrientationChanged = new UpdatingEventRegistrar<>();
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		Orientation realOrientation = realOrientation();
 		propose(realOrientation);
 
@@ -48,25 +48,25 @@ public class ScreenOrientationController extends State {
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		context.unregisterReceiver(configChangedReceiver);
 
 		set(settings.userRotation, Orientation.NATURAL);
 		set(settings.accelerometerRotation, originalAccelerometerRotation);
 	}
 
-	public void propose(Orientation value) throws EnvironmentException {
+	public void propose(Orientation value) {
 		if (value == null)
 			throw new IllegalArgumentException();
 
 		set(settings.userRotation, value);
 	}
 
-	private <T> void set(Setting<T> setting, T value) throws EnvironmentException {
+	private <T> void set(Setting<T> setting, T value) {
 		try {
 			setting.set(value);
 		} catch (SettingWriteFailedException e) {
-			throw new EnvironmentException(e);
+			new EnvironmentErrorNotifier(context).handle(e.getMessage());
 		}
 	}
 
@@ -90,14 +90,10 @@ public class ScreenOrientationController extends State {
 	}
 
 	private void checkIfSystemAutoRotationWasEnabled() {
-		try {
-			Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
-			if (accelerometerRotation != null && accelerometerRotation) {
-				originalAccelerometerRotation = accelerometerRotation;
-				throw new EnvironmentException("System screen auto-rotation was enabled. Screen orientation probably won't work correctly.");
-			}
-		} catch (EnvironmentException e) {
-			new EnvironmentErrorNotifier(context).handle(e);
+		Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
+		if (accelerometerRotation != null && accelerometerRotation) {
+			originalAccelerometerRotation = accelerometerRotation;
+			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled. Screen orientation probably won't work correctly.");
 		}
 	}
 

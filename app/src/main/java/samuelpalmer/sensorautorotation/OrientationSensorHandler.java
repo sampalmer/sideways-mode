@@ -13,8 +13,8 @@ public class OrientationSensorHandler extends State {
 	private final UpdatingEventRegistrar<Orientation> subscriptions;
 	private Integer lastRotation;
 
-	public OrientationSensorHandler(final Context context) throws EnvironmentException {
-		subscriptions = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+	public OrientationSensorHandler(final Context context) {
+		subscriptions = new UpdatingEventRegistrar<>();
 
 		listener = new WindowOrientationListener(context, null) {
 			@Override
@@ -27,7 +27,7 @@ public class OrientationSensorHandler extends State {
 		};
 
 		if (!listener.canDetectOrientation())
-			throw new EnvironmentException("Couldn't find an accelerometer");
+			new EnvironmentErrorNotifier(context).handle("Couldn't find an accelerometer");
 	}
 
 	@Override

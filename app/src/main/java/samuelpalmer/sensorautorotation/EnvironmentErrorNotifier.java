@@ -18,11 +18,7 @@ public class EnvironmentErrorNotifier {
 		this.context = context;
 	}
 
-	public void handle(EnvironmentException error) {
-		show(error.getMessage());
-	}
-
-	private void show(String message) {
+	public void handle(String message) {
 		Notification notification = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(makeShowMessage(message))

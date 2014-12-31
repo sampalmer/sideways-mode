@@ -19,16 +19,16 @@ public class OrientationCalculator extends State {
 	private final UpdatingEventRegistrar<Void> listener;
 
 	public OrientationCalculator(final Context context) {
-		listener = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+		listener = new UpdatingEventRegistrar<>();
 		this.context = context;
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		device = DEFAULT;
 		user = DEFAULT;
 		reportUpdate();

@@ -9,18 +9,14 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 
 public class PicturePreview extends State {
 
 	private ImageView view;
 	private WindowManager wm;
-	private Context context;
 
 	public PicturePreview(Context context, Bitmap image) {
-		this.context = context;
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
 		view = new ImageView(context);
@@ -29,7 +25,7 @@ public class PicturePreview extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		LayoutParams params = new LayoutParams(
 				LayoutParams.TYPE_SYSTEM_OVERLAY,
 				0,
@@ -42,17 +38,13 @@ public class PicturePreview extends State {
 
 			@Override
 			public void run() {
-				try {
-					ensureStopped();
-				} catch (EnvironmentException e) {
-					new EnvironmentErrorNotifier(context).handle(e);
-				}
+				ensureStopped();
 			}
 		}, 2500);
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		wm.removeView(view);
 	}
 

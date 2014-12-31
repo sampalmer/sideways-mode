@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
-import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -24,7 +22,7 @@ public class ScreenTouchMonitor extends State {
 		view = new View(context);
 		view.setAlpha(0);
 
-		onTouch = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
+		onTouch = new UpdatingEventRegistrar<>();
 
 		view.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -38,7 +36,7 @@ public class ScreenTouchMonitor extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 				0, 0, 0, 0,
 				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
@@ -48,7 +46,7 @@ public class ScreenTouchMonitor extends State {
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		wm.removeView(view);
 	}
 

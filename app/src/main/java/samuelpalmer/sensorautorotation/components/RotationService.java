@@ -12,8 +12,8 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
 
+import samuelpalmer.sensorautorotation.ActivityMonitor;
 import samuelpalmer.sensorautorotation.AppPackage;
-import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationEnforcementMonitor;
@@ -21,10 +21,8 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserActiveState;
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.ActivityMonitor;
 
 public class RotationService extends AccessibilityService {
 
@@ -50,45 +48,33 @@ public class RotationService extends AccessibilityService {
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
 			public void stateChanged(UserInteractivity user) {
-				try {
-					if (user.active())
-						userActiveState.ensureStarted();
-					else
-						userActiveState.ensureStopped();
-				} catch (EnvironmentException e) {
-					new EnvironmentErrorNotifier(RotationService.this).handle(e);
-				}
+				if (user.active())
+					userActiveState.ensureStarted();
+				else
+					userActiveState.ensureStopped();
 			}
 		});
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		activityMonitor = new ActivityMonitor(this);
+		activityMonitor = new ActivityMonitor();
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor);
 
-		try {
-			screenOrientationController.ensureStarted();
+		screenOrientationController.ensureStarted();
 
-			promoteToForeground();
+		promoteToForeground();
 
-			userInteractivityMonitor.ensureStarted();
-			orientationEnforcementMonitor.ensureStarted();
-		} catch (EnvironmentException e) {
-			new EnvironmentErrorNotifier(this).handle(e);
-		}
+		userInteractivityMonitor.ensureStarted();
+		orientationEnforcementMonitor.ensureStarted();
 	}
 
 	private void destroy() {
 		if (!destroyed) {
-			try {
-				userActiveState.ensureStopped();
-				screenOrientationController.ensureStopped();
-				unregisterReceiver(shutdownReceiver);
-				userInteractivityMonitor.ensureStopped();
-				orientationEnforcementMonitor.ensureStopped();
-			} catch (EnvironmentException e) {
-				new EnvironmentErrorNotifier(this).handle(e);
-			}
+			userActiveState.ensureStopped();
+			screenOrientationController.ensureStopped();
+			unregisterReceiver(shutdownReceiver);
+			userInteractivityMonitor.ensureStopped();
+			orientationEnforcementMonitor.ensureStopped();
 
 			destroyed = true;
 		}

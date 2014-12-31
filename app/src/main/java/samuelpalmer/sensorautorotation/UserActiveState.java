@@ -9,24 +9,16 @@ public class UserActiveState extends State {
 
 	private final EarpieceStateMonitor earpieceStateMonitor;
 	private OrientationSensorHandler orientationListener;
-	private EnvironmentErrorNotifier errorHandler;
 	private ScreenOrientationUpdater screenUpdater;
 
 	public UserActiveState(Context context) {
-		errorHandler = new EnvironmentErrorNotifier(context);
 		screenUpdater = new ScreenOrientationUpdater(context, RotationService.calculator, RotationService.screenOrientationController);
-
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
-
-		try {
-			orientationListener = new OrientationSensorHandler(context);
-		} catch (EnvironmentException e) {
-			errorHandler.handle(e);
-		}
+		orientationListener = new OrientationSensorHandler(context);
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		screenUpdater.ensureStarted();
 		RotationService.calculator.ensureStarted();
 		earpieceStateMonitor.ensureStarted();
@@ -36,7 +28,7 @@ public class UserActiveState extends State {
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		orientationListener.onRotationChanged().unsubscribe(deviceOrientationSubscriber);
 
 		if (orientationListener != null)
@@ -50,8 +42,7 @@ public class UserActiveState extends State {
 	EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
 
 		@Override
-		public void update(Orientation event)
-				throws EnvironmentException {
+		public void update(Orientation event) {
 			RotationService.calculator.setDevice(event);
 		}
 	};

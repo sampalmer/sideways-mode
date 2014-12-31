@@ -21,19 +21,19 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	@Override
-	protected void start() throws EnvironmentException {
+	protected void start() {
 		monitor.onChange().subscribe(subscriber);
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		monitor.onChange().unsubscribe(subscriber);
 		orientationEnforcer.ensureStopped();
 	}
 
 	private final EventHandler<AppPackage> subscriber = new EventHandler<AppPackage>() {
 		@Override
-		public void update(AppPackage activeApp) throws EnvironmentException {
+		public void update(AppPackage activeApp) {
 
 			Set<String> orientationEnforcedAppsPackages = new Settings(context).forcedOrientationAppPackages().getOr(new HashSet<String>(0));
 			for (String orientationEnforcedAppPackage : orientationEnforcedAppsPackages) {

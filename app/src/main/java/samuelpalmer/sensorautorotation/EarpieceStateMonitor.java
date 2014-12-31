@@ -5,12 +5,10 @@ import android.media.AudioManager;
 
 public class EarpieceStateMonitor extends StateMonitor<EarpieceSpeakerState> {
 
-	private Context context;
 	private EarpieceSpeakerState state;
 
 	public EarpieceStateMonitor(Context context, Listener<EarpieceSpeakerState> listener) {
 		super(listener);
-		this.context = context;
 
 		AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		state = new EarpieceSpeakerState(audioManager);
@@ -18,15 +16,11 @@ public class EarpieceStateMonitor extends StateMonitor<EarpieceSpeakerState> {
 
 	@Override
 	protected void startInternal() {
-		try {
-			repeater.ensureStarted();
-		} catch (EnvironmentException e) {
-			new EnvironmentErrorNotifier(context).handle(e);
-		}
+		repeater.ensureStarted();
 	}
 
 	@Override
-	protected void stop() throws EnvironmentException {
+	protected void stop() {
 		repeater.ensureStopped();
 	}
 
