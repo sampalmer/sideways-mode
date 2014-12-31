@@ -14,7 +14,7 @@ public class UserActiveState extends State {
 
 	public UserActiveState(Context context) {
 		errorHandler = new UserErrorHandler(context);
-		screenUpdater = new ScreenOrientationUpdater(RotationService.calculator, RotationService.screenOrientationController);
+		screenUpdater = new ScreenOrientationUpdater(context, RotationService.calculator, RotationService.screenOrientationController);
 
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);
 

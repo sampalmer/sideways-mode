@@ -1,13 +1,17 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.Context;
+
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class ScreenOrientationUpdater extends State {
 
+	private final Context context;
 	private final OrientationCalculator calculator;
 	private ScreenOrientationController screen;
 
-	public ScreenOrientationUpdater(OrientationCalculator calculator, ScreenOrientationController screen) {
+	public ScreenOrientationUpdater(Context context, OrientationCalculator calculator, ScreenOrientationController screen) {
+		this.context = context;
 		this.calculator = calculator;
 		this.screen = screen;
 	}
@@ -25,7 +29,7 @@ public class ScreenOrientationUpdater extends State {
 	private final EventHandler<Void> subscriber = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) throws EnvironmentException {
-			if (!upsideDown())
+			if (!upsideDown() || new Settings(context).allowUpsideDownScreen().getOr(false))
 				screen.propose(calculator.proposedScreenOrientation());
 		}
 	};
