@@ -19,8 +19,7 @@ public class UserErrorHandler {
 	}
 
 	public void handle(EnvironmentException error) {
-		show(error.getMessage() + " " + getAppName() + " will be disabled.");
-		new ServiceController(context).ensureStopped();
+		show(error.getMessage());
 	}
 
 	private void show(String message) {
