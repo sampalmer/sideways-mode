@@ -11,10 +11,10 @@ import samuelpalmer.sensorautorotation.unused.ScreenOrientationEnforcer;
 public class OrientationEnforcementMonitor extends State {
 
 	private final Context context;
-	private final WindowMonitor monitor;
+	private final ActivityMonitor monitor;
 	private final ScreenOrientationEnforcer orientationEnforcer;
 
-	public OrientationEnforcementMonitor(Context context, WindowMonitor monitor) {
+	public OrientationEnforcementMonitor(Context context, ActivityMonitor monitor) {
 		this.context = context;
 		this.monitor = monitor;
 		orientationEnforcer = new ScreenOrientationEnforcer(context);
@@ -22,12 +22,12 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void start() throws EnvironmentException {
-		monitor.onWindowChange().subscribe(subscriber);
+		monitor.onChange().subscribe(subscriber);
 	}
 
 	@Override
 	protected void stop() throws EnvironmentException {
-		monitor.onWindowChange().unsubscribe(subscriber);
+		monitor.onChange().unsubscribe(subscriber);
 		orientationEnforcer.ensureStopped();
 	}
 
@@ -35,21 +35,16 @@ public class OrientationEnforcementMonitor extends State {
 		@Override
 		public void update(AppPackage activeApp) throws EnvironmentException {
 
-			if (new Settings(context).enforceOrientation().getOr(false)) {
-				Set<String> unsupportedApps = new Settings(context).appPackagesNotSupportingForcedOrientation().getOr(new HashSet<String>(0));
-				for (String unsupportedAppName : unsupportedApps) {
-					AppPackage unsupportedApp = new AppPackage(unsupportedAppName);
-					if (unsupportedApp.equals(activeApp)) {
-						orientationEnforcer.ensureStopped();
-						return;
-					}
+			Set<String> orientationEnforcedAppsPackages = new Settings(context).forcedOrientationAppPackages().getOr(new HashSet<String>(0));
+			for (String orientationEnforcedAppPackage : orientationEnforcedAppsPackages) {
+				AppPackage orientationEnforcedApp = new AppPackage(orientationEnforcedAppPackage);
+				if (orientationEnforcedApp.equals(activeApp)) {
+					orientationEnforcer.ensureStarted();
+					return;
 				}
-
-				orientationEnforcer.ensureStarted();
 			}
-			else
-				orientationEnforcer.ensureStopped();
 
+			orientationEnforcer.ensureStopped();
 		}
 	};
 }

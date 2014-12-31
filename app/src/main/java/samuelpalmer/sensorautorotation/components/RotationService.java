@@ -4,9 +4,11 @@ package samuelpalmer.sensorautorotation.components;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -22,7 +24,7 @@ import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserErrorHandler;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.WindowMonitor;
+import samuelpalmer.sensorautorotation.ActivityMonitor;
 
 public class RotationService extends AccessibilityService {
 
@@ -34,7 +36,7 @@ public class RotationService extends AccessibilityService {
 
 	private UserInteractivityMonitor userInteractivityMonitor;
 	private OrientationEnforcementMonitor orientationEnforcementMonitor;
-	private WindowMonitor windowMonitor;
+	private ActivityMonitor activityMonitor;
 
 	@Override
 	public void onCreate() {
@@ -61,8 +63,8 @@ public class RotationService extends AccessibilityService {
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		windowMonitor = new WindowMonitor(this);
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, windowMonitor);
+		activityMonitor = new ActivityMonitor(this);
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor);
 
 		try {
 			screenOrientationController.ensureStarted();
@@ -133,9 +135,24 @@ public class RotationService extends AccessibilityService {
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 
-		if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
-			windowMonitor.reportWindowChange(new AppPackage(event.getPackageName()));
+		boolean windowChanged = event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+		if (windowChanged && isForActivity(event))
+			activityMonitor.reportChange(new AppPackage(event.getPackageName()));
 
+	}
+
+	private boolean isForActivity(AccessibilityEvent event) {
+		ComponentName activityComponentName = new ComponentName(
+				event.getPackageName().toString(),
+				event.getClassName().toString());
+
+		try {
+			getPackageManager().getActivityInfo(activityComponentName, 0);
+		} catch (PackageManager.NameNotFoundException e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
