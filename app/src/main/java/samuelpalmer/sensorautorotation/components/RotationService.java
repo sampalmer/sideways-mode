@@ -21,7 +21,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserActiveState;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.ActivityMonitor;
@@ -56,7 +56,7 @@ public class RotationService extends AccessibilityService {
 					else
 						userActiveState.ensureStopped();
 				} catch (EnvironmentException e) {
-					new UserErrorHandler(RotationService.this).handle(e);
+					new EnvironmentErrorNotifier(RotationService.this).handle(e);
 				}
 			}
 		});
@@ -74,7 +74,7 @@ public class RotationService extends AccessibilityService {
 			userInteractivityMonitor.ensureStarted();
 			orientationEnforcementMonitor.ensureStarted();
 		} catch (EnvironmentException e) {
-			new UserErrorHandler(this).handle(e);
+			new EnvironmentErrorNotifier(this).handle(e);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class RotationService extends AccessibilityService {
 				userInteractivityMonitor.ensureStopped();
 				orientationEnforcementMonitor.ensureStopped();
 			} catch (EnvironmentException e) {
-				new UserErrorHandler(this).handle(e);
+				new EnvironmentErrorNotifier(this).handle(e);
 			}
 
 			destroyed = true;

@@ -22,7 +22,7 @@ import java.io.IOException;
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -73,7 +73,7 @@ public class CameraOrientationCalculator extends State {
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
+	private UpdatingEventRegistrar<Orientation> onDetected = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
 	private boolean detecting;
 
 	private boolean exposureSet;

@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 
 public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 
 	private final Set<EventHandler<T>> subscriptions = new HashSet<>();
-	private final UserErrorHandler errorHandler;
+	private final EnvironmentErrorNotifier errorHandler;
 
-	public UpdatingEventRegistrar(UserErrorHandler errorHandler) {
+	public UpdatingEventRegistrar(EnvironmentErrorNotifier errorHandler) {
 		this.errorHandler = errorHandler;
 	}
 

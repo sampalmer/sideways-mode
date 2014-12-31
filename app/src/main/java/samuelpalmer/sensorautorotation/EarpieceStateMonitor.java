@@ -21,7 +21,7 @@ public class EarpieceStateMonitor extends StateMonitor<EarpieceSpeakerState> {
 		try {
 			repeater.ensureStarted();
 		} catch (EnvironmentException e) {
-			new UserErrorHandler(context).handle(e);
+			new EnvironmentErrorNotifier(context).handle(e);
 		}
 	}
 

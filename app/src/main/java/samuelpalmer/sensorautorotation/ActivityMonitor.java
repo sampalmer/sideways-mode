@@ -11,7 +11,7 @@ public class ActivityMonitor {
 	private final UpdatingEventRegistrar<AppPackage> onWindowChange;
 
 	public ActivityMonitor(Context context) {
-		onWindowChange = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
+		onWindowChange = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
 	}
 
 	public EventRegistrar<AppPackage> onChange() { return onWindowChange; }

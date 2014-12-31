@@ -11,7 +11,7 @@ import android.widget.ImageView.ScaleType;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 
 public class PicturePreview extends State {
 
@@ -45,7 +45,7 @@ public class PicturePreview extends State {
 				try {
 					ensureStopped();
 				} catch (EnvironmentException e) {
-					new UserErrorHandler(context).handle(e);
+					new EnvironmentErrorNotifier(context).handle(e);
 				}
 			}
 		}, 2500);

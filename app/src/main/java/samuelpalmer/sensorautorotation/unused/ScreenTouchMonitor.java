@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.EnvironmentException;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.UserErrorHandler;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -24,7 +24,7 @@ public class ScreenTouchMonitor extends State {
 		view = new View(context);
 		view.setAlpha(0);
 
-		onTouch = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
+		onTouch = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
 
 		view.setOnTouchListener(new OnTouchListener() {
 			@Override

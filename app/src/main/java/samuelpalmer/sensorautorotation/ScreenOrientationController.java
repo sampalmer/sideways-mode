@@ -31,7 +31,7 @@ public class ScreenOrientationController extends State {
 	public ScreenOrientationController(Context context) {
 		this.context = context;
 		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
-		onOrientationChanged = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
+		onOrientationChanged = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class ScreenOrientationController extends State {
 				throw new EnvironmentException("System screen auto-rotation was enabled. Screen orientation probably won't work correctly.");
 			}
 		} catch (EnvironmentException e) {
-			new UserErrorHandler(context).handle(e);
+			new EnvironmentErrorNotifier(context).handle(e);
 		}
 	}
 

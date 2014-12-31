@@ -9,11 +9,11 @@ public class UserActiveState extends State {
 
 	private final EarpieceStateMonitor earpieceStateMonitor;
 	private OrientationSensorHandler orientationListener;
-	private UserErrorHandler errorHandler;
+	private EnvironmentErrorNotifier errorHandler;
 	private ScreenOrientationUpdater screenUpdater;
 
 	public UserActiveState(Context context) {
-		errorHandler = new UserErrorHandler(context);
+		errorHandler = new EnvironmentErrorNotifier(context);
 		screenUpdater = new ScreenOrientationUpdater(context, RotationService.calculator, RotationService.screenOrientationController);
 
 		earpieceStateMonitor = new EarpieceStateMonitor(context, callStateReceiver);

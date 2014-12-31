@@ -10,11 +10,11 @@ import android.support.v4.app.NotificationCompat;
 
 import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 
-public class UserErrorHandler {
+public class EnvironmentErrorNotifier {
 
 	private Context context;
 
-	public UserErrorHandler(Context context) {
+	public EnvironmentErrorNotifier(Context context) {
 		this.context = context;
 	}
 

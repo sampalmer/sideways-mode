@@ -19,7 +19,7 @@ public class OrientationCalculator extends State {
 	private final UpdatingEventRegistrar<Void> listener;
 
 	public OrientationCalculator(final Context context) {
-		listener = new UpdatingEventRegistrar<>(new UserErrorHandler(context));
+		listener = new UpdatingEventRegistrar<>(new EnvironmentErrorNotifier(context));
 		this.context = context;
 	}
 
