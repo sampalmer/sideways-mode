@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
@@ -39,11 +40,7 @@ public class ScreenOrientationController extends State {
 		propose(realOrientation);
 
 		originalAccelerometerRotation = settings.accelerometerRotation.getOrNull();
-		try {
-			settings.accelerometerRotation.set(false);
-		} catch (SettingWriteFailedException e) {
-			throw new EnvironmentException(e);
-		}
+		set(settings.accelerometerRotation, false);
 
 		propose(realOrientation); //Just in case disabling system rotation reset this.
 
@@ -54,20 +51,20 @@ public class ScreenOrientationController extends State {
 	protected void stop() throws EnvironmentException {
 		context.unregisterReceiver(configChangedReceiver);
 
-		try {
-			settings.userRotation.set(Orientation.NATURAL);
-			settings.accelerometerRotation.set(originalAccelerometerRotation);
-		} catch (SettingWriteFailedException e) {
-			throw new EnvironmentException(e);
-		}
+		set(settings.userRotation, Orientation.NATURAL);
+		set(settings.accelerometerRotation, originalAccelerometerRotation);
 	}
 
 	public void propose(Orientation value) throws EnvironmentException {
 		if (value == null)
 			throw new IllegalArgumentException();
 
+		set(settings.userRotation, value);
+	}
+
+	private <T> void set(Setting<T> setting, T value) throws EnvironmentException {
 		try {
-			settings.userRotation.set(value);
+			setting.set(value);
 		} catch (SettingWriteFailedException e) {
 			throw new EnvironmentException(e);
 		}
@@ -95,7 +92,7 @@ public class ScreenOrientationController extends State {
 	private void checkIfSystemAutoRotationWasEnabled() {
 		try {
 			Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
-			if (accelerometerRotation != null && accelerometerRotation == true) {
+			if (accelerometerRotation != null && accelerometerRotation) {
 				originalAccelerometerRotation = accelerometerRotation;
 				throw new EnvironmentException("System screen auto-rotation was enabled.");
 			}
