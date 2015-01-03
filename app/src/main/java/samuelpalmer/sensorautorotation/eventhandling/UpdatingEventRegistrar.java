@@ -32,4 +32,8 @@ public class UpdatingEventRegistrar<T> implements EventRegistrar<T> {
 			subscriber.update(event);
 	}
 
+	protected boolean noSubscriptions() {
+		return subscriptions.isEmpty();
+	}
+
 }

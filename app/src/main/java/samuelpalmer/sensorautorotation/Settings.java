@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+
 public class Settings {
 
 	private final SharedPreferences prefs;
-	private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
 	public Settings(Context context) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -17,29 +20,33 @@ public class Settings {
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
 
-	public void listen(final Listener listener) {
-		if (this.listener != null)
-			throw new RuntimeException("Already listening");
-
-		this.listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-				listener.tell();
-			}
-		};
-
-		prefs.registerOnSharedPreferenceChangeListener(this.listener);
-	}
-
-	public void stopListening() {
-		prefs.unregisterOnSharedPreferenceChangeListener(listener);
-	}
-
-	public interface Listener {
-		void tell();
-	}
-
 	public abstract class Setting<T> {
+
+		private final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
+
+			private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+				@Override
+				public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+					if (key.equals(Setting.this.key))
+						report(null);
+				}
+			};
+
+			@Override
+			public void subscribe(EventHandler<Void> subscriber) {
+				if (noSubscriptions())
+					prefs.registerOnSharedPreferenceChangeListener(listener);
+				super.subscribe(subscriber);
+			}
+
+			@Override
+			public void unsubscribe(EventHandler<Void> subscriber) {
+				super.unsubscribe(subscriber);
+				if (noSubscriptions())
+					prefs.unregisterOnSharedPreferenceChangeListener(listener);
+			}
+
+		};
 
 		protected final String key;
 
@@ -54,6 +61,10 @@ public class Settings {
 			put(editor, value);
 			if (!editor.commit())
 				throw new RuntimeException("Failed to write settings");
+		}
+
+		public EventRegistrar<Void> onChange() {
+			return onChange;
 		}
 
 		protected abstract void put(Editor editor, T value);
