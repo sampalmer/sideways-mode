@@ -15,7 +15,7 @@
 		<ToggleButton
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/serviceEnabledButton"
+			android:id="@+id/onOffButton"
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true" />
@@ -27,8 +27,8 @@
 			android:text="Status:"
 			android:id="@+id/textView"
 			android:layout_centerVertical="true"
-			android:layout_toLeftOf="@+id/serviceEnabledButton"
-			android:layout_toStartOf="@+id/serviceEnabledButton" />
+			android:layout_toLeftOf="@+id/onOffButton"
+			android:layout_toStartOf="@+id/onOffButton" />
 
 	</RelativeLayout>
 

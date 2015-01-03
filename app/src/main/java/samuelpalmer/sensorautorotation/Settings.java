@@ -5,20 +5,39 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import java.util.Set;
-
 public class Settings {
 
 	private final SharedPreferences prefs;
+	private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
 	public Settings(Context context) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public Setting<Boolean> userInstructedAboutAccessibilityService() { return new BooleanSetting("userInstructedAboutAccessibilityService"); }
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
-	public Setting<Set<String>> forcedOrientationAppPackages() { return new StringSetSetting("forcedOrientationAppPackages"); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
+
+	public void listen(final Listener listener) {
+		if (this.listener != null)
+			throw new RuntimeException("Already listening");
+
+		this.listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+				listener.tell();
+			}
+		};
+
+		prefs.registerOnSharedPreferenceChangeListener(this.listener);
+	}
+
+	public void stopListening() {
+		prefs.unregisterOnSharedPreferenceChangeListener(listener);
+	}
+
+	public interface Listener {
+		void tell();
+	}
 
 	public abstract class Setting<T> {
 
@@ -57,20 +76,4 @@ public class Settings {
 		}
 	}
 
-	private class StringSetSetting extends Setting<Set<String>> {
-		public StringSetSetting(String key) {
-			super(key);
-		}
-
-		@Override
-		public Set<String> getOr(Set<String> defaultValue) {
-			return prefs.getStringSet(key, defaultValue);
-		}
-
-		@Override
-		protected void put(Editor editor, Set<String> value) {
-			editor.putStringSet(key, value);
-		}
-
-	}
 }

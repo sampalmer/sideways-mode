@@ -10,7 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 
-public class EnvironmentErrorNotifier {
+public class EnvironmentErrorNotifier{
 
 	private Context context;
 
@@ -19,6 +19,12 @@ public class EnvironmentErrorNotifier {
 	}
 
 	public void handle(String message) {
+		show(message + " " + getAppName() + " will be disabled.");
+		new ServiceController(context).ensureStopped();
+		new Settings(context).enabled().set(false);
+	}
+
+	private void show(String message) {
 		Notification notification = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentIntent(makeShowMessage(message))

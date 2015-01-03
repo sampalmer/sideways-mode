@@ -1,22 +1,17 @@
 package samuelpalmer.sensorautorotation.components;
 
 
-import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
+import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.view.accessibility.AccessibilityEvent;
 
-import samuelpalmer.sensorautorotation.ActivityMonitor;
-import samuelpalmer.sensorautorotation.AppPackage;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.StateMonitor;
@@ -24,7 +19,7 @@ import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 
-public class RotationService extends AccessibilityService {
+public class RotationService extends Service {
 
 	private boolean destroyed;
 	private UserActiveState userActiveState;
@@ -33,8 +28,6 @@ public class RotationService extends AccessibilityService {
 	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
-	private OrientationEnforcementMonitor orientationEnforcementMonitor;
-	private ActivityMonitor activityMonitor;
 
 	@Override
 	public void onCreate() {
@@ -57,15 +50,11 @@ public class RotationService extends AccessibilityService {
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		activityMonitor = new ActivityMonitor();
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor);
-
 		screenOrientationController.ensureStarted();
 
 		promoteToForeground();
 
 		userInteractivityMonitor.ensureStarted();
-		orientationEnforcementMonitor.ensureStarted();
 	}
 
 	private void destroy() {
@@ -74,7 +63,6 @@ public class RotationService extends AccessibilityService {
 			screenOrientationController.ensureStopped();
 			unregisterReceiver(shutdownReceiver);
 			userInteractivityMonitor.ensureStopped();
-			orientationEnforcementMonitor.ensureStopped();
 
 			destroyed = true;
 		}
@@ -87,6 +75,11 @@ public class RotationService extends AccessibilityService {
 			stopSelf();
 		}
 	};
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 
 	/**
 	 * Reduces chance of being killed
@@ -118,29 +111,4 @@ public class RotationService extends AccessibilityService {
 		destroy();
 	}
 
-	@Override
-	public void onAccessibilityEvent(AccessibilityEvent event) {
-
-		boolean windowChanged = event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-		if (windowChanged && isForActivity(event))
-			activityMonitor.reportChange(new AppPackage(event.getPackageName()));
-
-	}
-
-	private boolean isForActivity(AccessibilityEvent event) {
-		ComponentName activityComponentName = new ComponentName(
-				event.getPackageName().toString(),
-				event.getClassName().toString());
-
-		try {
-			getPackageManager().getActivityInfo(activityComponentName, 0);
-		} catch (PackageManager.NameNotFoundException e) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
-	public void onInterrupt() {}
 }

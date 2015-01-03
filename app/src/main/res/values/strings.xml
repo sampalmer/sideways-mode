@@ -2,7 +2,6 @@
 <resources>
 
 	<string name="app_name">Screen Rotate</string>
-	<string name="accessibility_service_description">Provides screen auto-rotation with support for the user lying down</string>
 	<string name="home_instructions">
 		Rotate your device to change the screen orientation.
 		If you want to change your own orientation (eg. lie on your side),
