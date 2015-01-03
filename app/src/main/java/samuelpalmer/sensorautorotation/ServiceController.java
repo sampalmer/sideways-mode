@@ -26,7 +26,7 @@ public class ServiceController {
 	}
 
 	public void updateFromSettings() {
-		boolean enabled = settings.enabled().getOr(true);
+		boolean enabled = settings.enabled().get();
 		updateServiceState(enabled);
 	}
 

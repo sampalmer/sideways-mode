@@ -4,10 +4,12 @@
 	<CheckBoxPreference
 		android:key="enabled"
 	    android:title="Enabled"
+	    android:defaultValue="true"
 	/>
 	<CheckBoxPreference
 		android:key="allowUpsideDownScreen"
 	    android:title="Allow upside-down screen"
 	    android:summary="Support use of the phone while the phone is upside-down"
+	    android:defaultValue="false"
 	/>
 </PreferenceScreen>

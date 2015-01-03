@@ -12,7 +12,7 @@ public class ServiceStartingReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		final ServiceController service = new ServiceController(context);
-		if (new Settings(context).enabled().getOr(true))
+		if (new Settings(context).enabled().get())
 			service.ensureStarted();
 	}
 

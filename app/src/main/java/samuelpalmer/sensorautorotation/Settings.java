@@ -54,7 +54,7 @@ public class Settings {
 			this.key = key;
 		}
 
-		public abstract T getOr(T defaultValue);
+		public abstract T get();
 
 		public void set(T value) {
 			Editor editor = prefs.edit();
@@ -77,8 +77,13 @@ public class Settings {
 		}
 
 		@Override
-		public Boolean getOr(Boolean defaultValue) {
-			return prefs.getBoolean(key, defaultValue);
+		public Boolean get() {
+			//Intentionally throws when value not present or wrong type
+			Boolean value = (Boolean) prefs.getAll().get(key);
+			if (value == null)
+				throw new RuntimeException("No preference value found for key " + key);
+
+			return value;
 		}
 
 		@Override
