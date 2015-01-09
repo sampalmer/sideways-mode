@@ -13,5 +13,6 @@
 	<string name="uninstallation_heading">Uninstallation</string>
 	<string name="uninstallation_instructions">If you want to uninstall this app, please first disable its "Enabled" setting to ensure the screen doesn\'t get stuck in the wrong orientation. This is necessary because of an Android limitation.</string>
 	<string name="recalibration_activity_instruction_summary">Touch screen to finish</string>
+	<string name="recalibration_instructions">Rotate the device until the image is aligned with your head. Then wait for a vibration.</string>
 
 </resources>
