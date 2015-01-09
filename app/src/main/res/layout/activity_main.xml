@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/container"
 	android:layout_width="match_parent"
@@ -10,8 +11,39 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text="@string/instructions_heading"
+	    android:layout_gravity="center"
+	/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:text="@string/home_instructions"
-		android:layout_gravity="center_horizontal" />
+	/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text=""
+		android:layout_gravity="center"
+		/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:text="@string/uninstallation_heading"
+		android:layout_gravity="center"
+	/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:text="@string/uninstallation_instructions"
+	/>
 
 </LinearLayout>
