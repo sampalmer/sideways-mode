@@ -9,6 +9,8 @@ import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.Settings;
+import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -18,6 +20,9 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		Settings.Setting<Integer> instructedVersion = new Settings(this).lastVersionUserInstructedAbout();
+		if (!instructedVersion.hasValue())
+			instructedVersion.set(new VersionInfo(this).installedVersionCode());
 
 		new ServiceController(this).updateFromSettings();
 	}

@@ -7,8 +7,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.HashMap;
@@ -18,16 +16,15 @@ import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.Settings;
+import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class UpgradeReceiver extends BroadcastReceiver {
 
-	public static final int VERSION_BEFORE_UPGRADE_MESSAGES = 13;
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		int newAppVersion = currentVersionCode(context);
+		int newAppVersion = new VersionInfo(context).installedVersionCode();
 		Settings.Setting<Integer> lastVersionUserInstructedAbout = new Settings(context).lastVersionUserInstructedAbout();
-		int lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(VERSION_BEFORE_UPGRADE_MESSAGES);
+		int lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(newAppVersion);
 
 		StringBuilder upgradeMessage = new StringBuilder();
 		for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
@@ -66,15 +63,6 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Intent intent = intents.makeIntent(UpgradeActivity.class)
 				.putExtra(DialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
 		return intents.makePending(intent);
-	}
-
-	private int currentVersionCode(Context context) {
-		try {
-			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-			return packageInfo.versionCode;
-		} catch (PackageManager.NameNotFoundException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private static final Map<Integer, String> upgradeMessages;

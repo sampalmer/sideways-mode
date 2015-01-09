@@ -75,6 +75,10 @@ public class Settings {
 			return value;
 		}
 
+		public boolean hasValue() {
+			return tryGet() != null;
+		}
+
 		public void set(T value) {
 			Editor editor = prefs.edit();
 			put(editor, value);
