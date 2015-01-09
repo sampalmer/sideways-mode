@@ -17,6 +17,7 @@ public class Settings {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
+	public Setting<Integer> lastVersionUserInstructedAbout() { return new IntegerSetting("lastVersionUserInstructedAbout"); }
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
 
@@ -54,7 +55,25 @@ public class Settings {
 			this.key = key;
 		}
 
-		public abstract T get();
+		private T tryGet() {
+			return (T)prefs.getAll().get(key);
+		}
+
+		public T get() {
+			T value = tryGet();
+			if (value == null)
+				throw new RuntimeException("No preference value found for key " + key);
+
+			return value;
+		}
+
+		public T getOr(T defaultValue) {
+			T value = tryGet();
+			if (value == null)
+				value = defaultValue;
+
+			return value;
+		}
 
 		public void set(T value) {
 			Editor editor = prefs.edit();
@@ -77,19 +96,22 @@ public class Settings {
 		}
 
 		@Override
-		public Boolean get() {
-			//Intentionally throws when value not present or wrong type
-			Boolean value = (Boolean) prefs.getAll().get(key);
-			if (value == null)
-				throw new RuntimeException("No preference value found for key " + key);
-
-			return value;
-		}
-
-		@Override
 		protected void put(Editor editor, Boolean value) {
 			editor.putBoolean(key, value);
 		}
+	}
+
+	private class IntegerSetting extends Setting<Integer> {
+
+		public IntegerSetting(String key) {
+			super(key);
+		}
+
+		@Override
+		protected void put(Editor editor, Integer value) {
+			editor.putInt(key, value);
+		}
+
 	}
 
 }

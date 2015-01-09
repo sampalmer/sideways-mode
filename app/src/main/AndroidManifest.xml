@@ -44,8 +44,10 @@
 
 		<activity
 			android:name=".components.ErrorDialogActivity"
-			android:label="Error"
-			android:theme="@android:style/Theme.Dialog" />
+			android:label="Error" />
+
+		<activity android:name=".components.UpgradeActivity" />
+
 
 		<activity
 			android:name=".components.RecalibrationActivity"
@@ -63,15 +65,18 @@
 			android:enabled="true"
 			android:exported="false" />
 
-		<receiver android:name=".components.ServiceStartingReceiver">
+		<receiver android:name=".components.StartupReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".components.UpgradeReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.PACKAGE_REPLACED" />
 				<data
 					android:scheme="package"
 					android:path="samuelpalmer.sensorautorotation" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
 	</application>
