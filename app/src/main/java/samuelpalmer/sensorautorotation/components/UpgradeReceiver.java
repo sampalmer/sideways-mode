@@ -22,25 +22,29 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		upgradeUser(context);
+		new ServiceController(context).updateFromSettings();
+	}
+
+	private void upgradeUser(Context context) {
 		int newAppVersion = new VersionInfo(context).installedVersionCode();
 		Settings.Setting<Integer> lastVersionUserInstructedAbout = new Settings(context).lastVersionUserInstructedAbout();
-		int lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(newAppVersion);
-
-		StringBuilder upgradeMessage = new StringBuilder();
-		for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
-			String currentMessage = upgradeMessages.get(version);
-			if (currentMessage != null) {
-				upgradeMessage.append(currentMessage);
-				upgradeMessage.append('\n');
+		Integer lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(null);
+		if (lastVersionUserInstructedAboutValue != null) {
+			StringBuilder upgradeMessage = new StringBuilder();
+			for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
+				String currentMessage = upgradeMessages.get(version);
+				if (currentMessage != null) {
+					upgradeMessage.append(currentMessage);
+					upgradeMessage.append('\n');
+				}
 			}
+
+			if (upgradeMessage.length() != 0)
+				show(upgradeMessage.toString(), context);
+
+			lastVersionUserInstructedAbout.set(newAppVersion);
 		}
-
-		if (upgradeMessage.length() != 0)
-			show(upgradeMessage.toString(), context);
-
-		lastVersionUserInstructedAbout.set(newAppVersion);
-
-		new ServiceController(context).updateFromSettings();
 	}
 
 	private void show(String upgradeMessage, Context context) {
