@@ -6,6 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion 8
+        //noinspection OldTargetApi
         targetSdkVersion 16
         versionCode 1
         versionName "1.0"

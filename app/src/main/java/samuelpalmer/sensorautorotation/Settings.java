@@ -56,6 +56,7 @@ public class Settings {
 			this.key = key;
 		}
 
+		@SuppressWarnings("unchecked")
 		private T tryGet() {
 			return (T)prefs.getAll().get(key);
 		}

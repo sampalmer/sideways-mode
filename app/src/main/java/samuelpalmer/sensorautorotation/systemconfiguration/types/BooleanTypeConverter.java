@@ -29,8 +29,8 @@ public class BooleanTypeConverter implements
 	}
 
 	@Override
-	public String format(Boolean nonNullvalue) {
-		Integer integerValue = nonNullvalue ? TRUE : FALSE;
+	public String format(Boolean nonNullValue) {
+		Integer integerValue = nonNullValue ? TRUE : FALSE;
 		return integerConverter.format(integerValue);
 	}
 

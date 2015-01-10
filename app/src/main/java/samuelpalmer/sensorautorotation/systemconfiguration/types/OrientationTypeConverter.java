@@ -25,8 +25,8 @@ public class OrientationTypeConverter implements TypeConverter<Orientation> {
 	}
 
 	@Override
-	public String format(Orientation nonNullvalue) {
-		int androidSurfaceRotation = new AndroidSurfaceRotation(nonNullvalue).getValue();
+	public String format(Orientation nonNullValue) {
+		int androidSurfaceRotation = new AndroidSurfaceRotation(nonNullValue).getValue();
 		return integer.format(androidSurfaceRotation);
 	}
 

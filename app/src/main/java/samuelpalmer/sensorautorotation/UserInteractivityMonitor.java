@@ -30,6 +30,7 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 	@Override
 	protected UserInteractivity get() {
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		//noinspection deprecation
 		return new UserInteractivity(pm.isScreenOn());
 	}
 

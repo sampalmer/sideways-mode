@@ -92,7 +92,7 @@ public class ScreenOrientationController extends State {
 	private void checkIfSystemAutoRotationWasEnabled() {
 		Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
 		if (accelerometerRotation != null && accelerometerRotation) {
-			originalAccelerometerRotation = accelerometerRotation;
+			originalAccelerometerRotation = true;
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
 	}

@@ -12,7 +12,4 @@ public class Rotation {
 		return this.clockwiseRotations;
 	}
 
-	public boolean isNinetyDegree() {
-		return this.clockwiseRotations % 2 != 0;
-	}
 }
