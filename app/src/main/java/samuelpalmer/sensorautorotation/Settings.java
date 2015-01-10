@@ -14,6 +14,7 @@ public class Settings {
 	private final SharedPreferences prefs;
 
 	public Settings(Context context) {
+		PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
