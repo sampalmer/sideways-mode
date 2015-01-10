@@ -8,8 +8,8 @@ android {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
 		targetSdkVersion 18
-		versionCode 13
-		versionName "0.4.3"
+		versionCode 14
+		versionName "0.5.0"
 	}
 	buildTypes {
 		release {
