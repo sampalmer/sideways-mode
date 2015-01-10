@@ -25,7 +25,7 @@ public class RecalibrationActivity extends Activity {
 
 		LayoutParams params = getWindow().getAttributes();
 		params.format = PixelFormat.TRANSLUCENT;
-		params.alpha = 0.7f;
+		params.alpha = 0.75f;
 		params.flags |= LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 		getWindow().setAttributes(params);
 

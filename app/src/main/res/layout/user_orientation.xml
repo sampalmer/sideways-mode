@@ -7,38 +7,44 @@
 	android:background="#000000"
 	tools:context="samuelpalmer.sensorautorotation.components.RecalibrationActivity">
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/overlay_subcontainer"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+	>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:text="@string/recalibration_instructions"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
 			android:textColor="@android:color/white" />
 
-		<com.caverock.androidsvg.SVGImageView
+		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:scaleType="fitCenter"
-			svgimageview:svg="portrait.svg"
-			android:adjustViewBounds="true"
-			android:id="@+id/view" />
+			android:layout_height="match_parent">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="@string/recalibration_activity_instruction_summary"
-			android:layout_alignParentBottom="true"
-			android:layout_centerHorizontal="true"
-			android:textColor="@android:color/black" />
+			<com.caverock.androidsvg.SVGImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:scaleType="fitCenter"
+				svgimageview:svg="portrait.svg"
+				android:adjustViewBounds="true"
+				android:id="@+id/view" />
 
-	</RelativeLayout>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="@string/recalibration_activity_instruction_summary"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:textColor="@android:color/black" />
+
+		</RelativeLayout>
+
+	</LinearLayout>
 
 </com.github.rongi.rotate_layout.layout.RotateLayout>
