@@ -88,7 +88,7 @@ public class RotationService extends Service {
 		Intents intents = new Intents(this);
 
 		Notification notification = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.ic_notification)
 				.setContentIntent(intents.makePending(RecalibrationActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Touch to change user orientation")
