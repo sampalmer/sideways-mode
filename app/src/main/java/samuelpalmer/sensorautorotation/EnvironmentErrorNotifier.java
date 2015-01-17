@@ -33,6 +33,7 @@ public class EnvironmentErrorNotifier{
 				.setAutoCancel(true)
 				.setTicker(message)
 				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setCategory(NotificationCompat.CATEGORY_ERROR)
 				.build();
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);

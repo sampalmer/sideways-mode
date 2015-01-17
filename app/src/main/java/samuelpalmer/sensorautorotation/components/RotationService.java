@@ -92,6 +92,7 @@ public class RotationService extends Service {
 				.setContentIntent(intents.makePending(RecalibrationActivity.class))
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Touch to change user orientation")
+				.setCategory(NotificationCompat.CATEGORY_SERVICE)
 				.build();
 
 		startForeground(1, notification);
