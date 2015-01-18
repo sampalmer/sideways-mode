@@ -88,7 +88,7 @@ public class RotationService extends Service {
 		Intents intents = new Intents(this);
 
 		Notification notification = new NotificationCompat.Builder(this)
-				.setSmallIcon(calculator.isRecalibrating() ? R.drawable.ic_screen_rotation_disabled : R.drawable.ic_screen_rotation_enabled)
+				.setSmallIcon(calculator.isRecalibrating() ? (calculator.proposedScreenOrientation().isPortrait(this) ? R.drawable.ic_screen_rotation_locked_portrait : R.drawable.ic_screen_rotation_locked_landscape) : R.drawable.ic_screen_rotation_enabled)
 				.setContentIntent(intents.makePending(RecalibrationActivity.class))
 				.setContentTitle(calculator.isRecalibrating() ? "Screen Rotation Locked" : "Screen Rotation Enabled")
 				.setContentText("Touch for " + (calculator.isRecalibrating() ? "auto" : "locked") + " screen rotation")

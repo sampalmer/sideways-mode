@@ -1,6 +1,10 @@
 package samuelpalmer.sensorautorotation;
 
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.view.WindowManager;
+
 public class Orientation {
 
 	private static final int numberOfPossibleRotations = 4;
@@ -54,6 +58,19 @@ public class Orientation {
 
 	public int getClockwiseRotationsFromNaturalOrientation() {
 		return clockwiseRotationsFromNaturalOrientation;
+	}
+
+	public boolean isPortrait(Context context) {
+		int currentScreenOrientation = context.getResources().getConfiguration().orientation;
+		boolean screenIsPortrait = currentScreenOrientation == Configuration.ORIENTATION_PORTRAIT;
+
+		WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		boolean screenIsNaturalOrientation = new AndroidSurfaceRotation(windowManager.getDefaultDisplay().getRotation()).orientation().clockwiseRotationsFromNaturalOrientation % 2 == 0;
+
+		boolean deviceIsNaturallyPortrait = screenIsPortrait == screenIsNaturalOrientation;
+
+		boolean inNaturalOrientation = clockwiseRotationsFromNaturalOrientation % 2 == 0;
+		return inNaturalOrientation == deviceIsNaturallyPortrait;
 	}
 
 }
