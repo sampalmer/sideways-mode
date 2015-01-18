@@ -84,14 +84,14 @@ public class RotationService extends Service {
 	/**
 	 * Reduces chance of being killed
 	 */
-	private void promoteToForeground() {
+	public void promoteToForeground() {
 		Intents intents = new Intents(this);
 
 		Notification notification = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_notification)
+				.setSmallIcon(calculator.isRecalibrating() ? R.drawable.ic_screen_rotation_disabled : R.drawable.ic_screen_rotation_enabled)
 				.setContentIntent(intents.makePending(RecalibrationActivity.class))
-				.setContentTitle(getString(R.string.app_name))
-				.setContentText("Touch to change user orientation")
+				.setContentTitle(calculator.isRecalibrating() ? "Screen Rotation Locked" : "Screen Rotation Enabled")
+				.setContentText("Touch for " + (calculator.isRecalibrating() ? "auto" : "locked") + " screen rotation")
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
 				.setShowWhen(false)
 				.setWhen(0)

@@ -9,7 +9,8 @@ public class RecalibrationActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		RotationService.calculator.setRecalibrating(true);
+		RotationService.calculator.toggleRecalibration();
+		finish();
 	}
 
 }
