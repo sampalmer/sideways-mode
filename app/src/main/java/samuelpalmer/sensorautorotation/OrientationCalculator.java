@@ -24,14 +24,14 @@ public class OrientationCalculator extends State {
 
 	@Override
 	protected void start() {
-		recalibrating = true;
-		applyRecalibration();
 	}
 
 	@Override
 	protected void stop() {
 		device = DEFAULT;
 		user = DEFAULT;
+		recalibrating = true;
+		applyRecalibration();
 		reportUpdate();
 	}
 
