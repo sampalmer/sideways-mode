@@ -24,6 +24,8 @@ public class OrientationCalculator extends State {
 
 	@Override
 	protected void start() {
+		recalibrating = true;
+		applyRecalibration();
 	}
 
 	@Override
@@ -39,11 +41,15 @@ public class OrientationCalculator extends State {
 
 	public void toggleRecalibration() {
 		recalibrating = !recalibrating;
-		r.promoteToForeground();
+		applyRecalibration();
 
 		Toast
 			.makeText(r, recalibrating ? "Screen rotation locked" : "Screen rotation enabled", Toast.LENGTH_SHORT)
 			.show();
+	}
+
+	private void applyRecalibration() {
+		r.promoteToForeground();
 	}
 
 	private boolean recalibrating;
