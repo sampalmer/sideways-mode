@@ -93,6 +93,8 @@ public class RotationService extends Service {
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Touch to change user orientation")
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
+				.setShowWhen(false)
+				.setWhen(0)
 				.build();
 
 		startForeground(1, notification);
