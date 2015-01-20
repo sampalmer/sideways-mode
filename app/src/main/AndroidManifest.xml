@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="samuelpalmer.sensorautorotation">
+
+	<!-- To disable system rotation, set user rotation -->
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+	<!-- To enforce orientation -->
+	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+
+	<!-- For recalibrate feedback -->
+	<uses-permission android:name="android.permission.VIBRATE" />
+
+	<!-- <uses-permission android:name="android.permission.CAMERA" /> --> <!-- For face detection -->
+	<!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
+
+	<uses-feature
+		android:name="android.hardware.sensor.accelerometer"
+		android:required="true" />
+	<uses-feature
+		android:name="android.hardware.screen.landscape"
+		android:required="true" />
+	<uses-feature
+		android:name="android.hardware.screen.portrait"
+		android:required="true" />
+	<!-- <uses-feature android:name="android.hardware.camera.front" android:required="false" /> -->
+
+	<application
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:theme="@style/AppTheme">
+
+		<activity
+			android:name=".components.MainActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".components.ErrorDialogActivity"
+			android:label="Error" />
+
+		<activity android:name=".components.UpgradeActivity" />
+
+
+		<activity
+			android:name=".components.RecalibrationActivity"
+			android:label="User Orientation"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:launchMode="singleTask"
+			android:taskAffinity=""
+			android:excludeFromRecents="true" />
+
+        <activity
+            android:name=".components.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+	        />
+
+		<service
+			android:name=".components.RotationService"
+			android:enabled="true"
+			android:exported="false" />
+
+		<receiver android:name=".components.StartupReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".components.UpgradeReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.PACKAGE_REPLACED" />
+				<data
+					android:scheme="package"
+					android:path="samuelpalmer.sensorautorotation" />
+			</intent-filter>
+		</receiver>
+	</application>
+
+</manifest>
