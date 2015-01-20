@@ -10,9 +10,6 @@
 	<!-- To enforce orientation -->
 	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
 
-	<!-- For recalibrate feedback -->
-	<uses-permission android:name="android.permission.VIBRATE" />
-
 	<!-- <uses-permission android:name="android.permission.CAMERA" /> --> <!-- For face detection -->
 	<!-- <uses-permission android:name="android.permission.GET_TASKS" /> --> <!-- To detect current "activity" -->
 

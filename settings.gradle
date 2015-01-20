@@ -1,1 +1,1 @@
-include ':app', ':rotate_layout', ':androidsvg'
+include ':app', ':rotate_layout'

@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
-import android.os.Vibrator;
+import android.widget.Toast;
 
+import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -10,17 +10,16 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class OrientationCalculator extends State {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
+	private final RotationService r;
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 
-	private Context context;
-
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(final Context context) {
+	public OrientationCalculator(RotationService r) {
+		this.r = r;
 		listener = new UpdatingEventRegistrar<>();
-		this.context = context;
 	}
 
 	@Override
@@ -31,11 +30,26 @@ public class OrientationCalculator extends State {
 	protected void stop() {
 		device = DEFAULT;
 		user = DEFAULT;
+		recalibrating = true;
+		applyRecalibration();
 		reportUpdate();
 	}
 
-	public void setRecalibrating(boolean recalibrating) {
-		this.recalibrating = recalibrating;
+	public boolean isRecalibrating() {
+		return recalibrating;
+	}
+
+	public void toggleRecalibration() {
+		recalibrating = !recalibrating;
+		applyRecalibration();
+
+		Toast
+			.makeText(r, recalibrating ? "Screen rotation locked" : "Screen rotation enabled", Toast.LENGTH_SHORT)
+			.show();
+	}
+
+	private void applyRecalibration() {
+		r.promoteToForeground();
 	}
 
 	private boolean recalibrating;
@@ -44,20 +58,13 @@ public class OrientationCalculator extends State {
 
 		if (recalibrating) {
 			Rotation deviceChange = newDevice.minus(device);
-			if (deviceChange.clockwiseCount() != 0) {
-				vibrate(85);
+			if (deviceChange.clockwiseCount() != 0)
 				user = user.plus(deviceChange);
-			}
 		}
 
 		device = newDevice;
 		reportUpdate();
 
-	}
-
-	private void vibrate(int durationMilliseconds) {
-		Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-		vibrator.vibrate(durationMilliseconds);
 	}
 
 	private void reportUpdate() {
