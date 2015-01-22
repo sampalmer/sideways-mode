@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
@@ -78,7 +79,23 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return new LocalBinder();
+	}
+
+	/**
+	 * Must be called from process main thread
+	 */
+	public class LocalBinder extends Binder {
+
+		public void toggleRotation() {
+			setRecalibrating(!calculator.isRecalibrating());
+		}
+
+	}
+
+	public void setRecalibrating(boolean newValue) {
+		calculator.setRecalibrating(newValue);
+		promoteToForeground();
 	}
 
 	/**
@@ -88,16 +105,65 @@ public class RotationService extends Service {
 		Intents intents = new Intents(this);
 
 		Notification notification = new NotificationCompat.Builder(this)
-				.setSmallIcon(calculator.isRecalibrating() ? (calculator.proposedScreenOrientation().isPortrait(this) ? R.drawable.ic_screen_rotation_locked_portrait : R.drawable.ic_screen_rotation_locked_landscape) : R.drawable.ic_screen_rotation_enabled)
+				.setSmallIcon(mode().iconResourceId())
 				.setContentIntent(intents.makePending(RecalibrationActivity.class))
-				.setContentTitle(calculator.isRecalibrating() ? "Screen Rotation Locked" : "Screen Rotation Enabled")
-				.setContentText("Touch for " + (calculator.isRecalibrating() ? "auto" : "locked") + " screen rotation")
+				.setContentTitle(getText(mode().summaryResourceId()))
+				.setContentText(getText(mode().actionDescriptionResourceId()))
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
 				.setShowWhen(false)
 				.setWhen(0)
 				.build();
 
 		startForeground(1, notification);
+	}
+
+	private Mode mode() {
+		if (calculator.isRecalibrating())
+			return new LockedMode();
+		else
+			return new AutoRotationMode();
+	}
+
+	private interface Mode {
+		public int iconResourceId();
+		public int summaryResourceId();
+		public int actionDescriptionResourceId();
+	}
+
+	private class LockedMode implements Mode {
+
+		@Override
+		public int iconResourceId() {
+			return calculator.proposedScreenOrientation().isPortrait(RotationService.this) ? R.drawable.ic_screen_rotation_locked_portrait : R.drawable.ic_screen_rotation_locked_landscape;
+		}
+
+		@Override
+		public int summaryResourceId() {
+			return R.string.screen_rotation_disabled;
+		}
+
+		@Override
+		public int actionDescriptionResourceId() {
+			return R.string.enable_screen_rotation;
+		}
+	}
+
+	private class AutoRotationMode implements Mode {
+
+		@Override
+		public int iconResourceId() {
+			return R.drawable.ic_screen_rotation_enabled;
+		}
+
+		@Override
+		public int summaryResourceId() {
+			return R.string.screen_rotation_enabled;
+		}
+
+		@Override
+		public int actionDescriptionResourceId() {
+			return R.string.disable_screen_rotation;
+		}
 	}
 
 	@Override

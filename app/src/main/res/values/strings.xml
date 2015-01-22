@@ -14,5 +14,8 @@
 		If you want to uninstall this app, please first disable its "Enabled" setting to ensure the screen doesn\'t get stuck in the wrong orientation.
 		This is necessary because of an Android limitation.
 	</string>
-
+	<string name="screen_rotation_enabled">Auto-Rotating Screen</string>
+	<string name="screen_rotation_disabled">Screen Rotation Locked</string>
+	<string name="enable_screen_rotation">Touch to enable auto screen rotation</string>
+	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 </resources>

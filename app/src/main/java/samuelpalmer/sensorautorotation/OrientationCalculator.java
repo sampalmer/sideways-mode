@@ -28,8 +28,7 @@ public class OrientationCalculator extends State {
 	protected void stop() {
 		device = DEFAULT;
 		user = DEFAULT;
-		recalibrating = true;
-		applyRecalibration();
+		r.setRecalibrating(true);
 		reportUpdate();
 	}
 
@@ -37,13 +36,8 @@ public class OrientationCalculator extends State {
 		return recalibrating;
 	}
 
-	public void toggleRecalibration() {
-		recalibrating = !recalibrating;
-		applyRecalibration();
-	}
-
-	private void applyRecalibration() {
-		r.promoteToForeground();
+	public void setRecalibrating(boolean newValue) {
+		recalibrating = newValue;
 	}
 
 	private boolean recalibrating;
