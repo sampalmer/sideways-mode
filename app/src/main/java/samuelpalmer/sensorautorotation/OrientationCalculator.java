@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.widget.Toast;
-
 import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -42,10 +40,6 @@ public class OrientationCalculator extends State {
 	public void toggleRecalibration() {
 		recalibrating = !recalibrating;
 		applyRecalibration();
-
-		Toast
-			.makeText(r, recalibrating ? "Screen rotation locked" : "Screen rotation enabled", Toast.LENGTH_SHORT)
-			.show();
 	}
 
 	private void applyRecalibration() {
