@@ -28,8 +28,7 @@ public class UserActiveState extends State {
 	protected void stop() {
 		orientationListener.onRotationChanged().unsubscribe(deviceOrientationSubscriber);
 
-		if (orientationListener != null)
-			orientationListener.ensureStopped();
+		orientationListener.ensureStopped();
 
 		RotationService.calculator.ensureStopped();
 		screenUpdater.ensureStopped();
