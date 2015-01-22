@@ -35,7 +35,7 @@ public class RotationService extends Service {
 		super.onCreate();
 
 		screenOrientationController = new ScreenOrientationController(this);
-		calculator = new OrientationCalculator(this);
+		calculator = new OrientationCalculator();
 
 		userActiveState = new UserActiveState(this);
 

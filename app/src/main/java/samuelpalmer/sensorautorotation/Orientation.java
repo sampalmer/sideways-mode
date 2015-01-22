@@ -65,7 +65,8 @@ public class Orientation {
 		boolean screenIsPortrait = currentScreenOrientation == Configuration.ORIENTATION_PORTRAIT;
 
 		WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		boolean screenIsNaturalOrientation = new AndroidSurfaceRotation(windowManager.getDefaultDisplay().getRotation()).orientation().clockwiseRotationsFromNaturalOrientation % 2 == 0;
+		Orientation currentScreenRotation = new AndroidSurfaceRotation(windowManager.getDefaultDisplay().getRotation()).orientation();
+		boolean screenIsNaturalOrientation = currentScreenRotation.clockwiseRotationsFromNaturalOrientation % 2 == 0;
 
 		boolean deviceIsNaturallyPortrait = screenIsPortrait == screenIsNaturalOrientation;
 

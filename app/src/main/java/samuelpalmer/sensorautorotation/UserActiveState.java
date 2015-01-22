@@ -1,15 +1,15 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.components.RotationService;
 
 public class UserActiveState extends State {
 
+	private final RotationService service;
 	private OrientationMessenger orientationMessenger;
 	private ScreenOrientationUpdater screenUpdater;
 
-	public UserActiveState(Context context) {
+	public UserActiveState(RotationService context) {
+		service = context;
 		screenUpdater = new ScreenOrientationUpdater(context, RotationService.calculator, RotationService.screenOrientationController);
 		orientationMessenger = new OrientationMessenger(context);
 	}
@@ -17,7 +17,6 @@ public class UserActiveState extends State {
 	@Override
 	protected void start() {
 		screenUpdater.ensureStarted();
-		RotationService.calculator.ensureStarted();
 		orientationMessenger.ensureStarted();
 	}
 
@@ -26,8 +25,8 @@ public class UserActiveState extends State {
 		orientationMessenger.ensureStopped();
 
 		RotationService.calculator.reset();
+		service.setRecalibrating(true);
 
-		RotationService.calculator.ensureStopped();
 		screenUpdater.ensureStopped();
 	}
 

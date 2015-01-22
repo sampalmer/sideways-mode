@@ -1,32 +1,20 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 
-public class OrientationCalculator extends State {
+public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
-	private final RotationService r;
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(RotationService r) {
-		this.r = r;
+	public OrientationCalculator() {
 		listener = new UpdatingEventRegistrar<>();
-	}
-
-	@Override
-	protected void start() {
-	}
-
-	@Override
-	protected void stop() {
-		r.setRecalibrating(true);
 	}
 
 	public void reset() {
