@@ -49,7 +49,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	private void show(String upgradeMessage, Context context) {
 		Notification notification = new NotificationCompat.Builder(context)
-				.setSmallIcon(R.drawable.ic_info)
+				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
 				.setContentTitle(context.getString(R.string.app_name) + " Upgraded")
 				.setContentText("Touch for details")
