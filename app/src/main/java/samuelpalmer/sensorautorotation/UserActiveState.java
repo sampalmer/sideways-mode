@@ -24,6 +24,9 @@ public class UserActiveState extends State {
 	@Override
 	protected void stop() {
 		orientationMessenger.ensureStopped();
+
+		RotationService.calculator.reset();
+
 		RotationService.calculator.ensureStopped();
 		screenUpdater.ensureStopped();
 	}

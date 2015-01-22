@@ -26,9 +26,12 @@ public class OrientationCalculator extends State {
 
 	@Override
 	protected void stop() {
+		r.setRecalibrating(true);
+	}
+
+	public void reset() {
 		device = DEFAULT;
 		user = DEFAULT;
-		r.setRecalibrating(true);
 		reportUpdate();
 	}
 
