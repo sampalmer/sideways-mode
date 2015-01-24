@@ -112,6 +112,7 @@ public class RotationService extends Service {
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
 				.setShowWhen(false)
 				.setWhen(0)
+				.setPriority(NotificationCompat.PRIORITY_MAX)
 				.build();
 
 		startForeground(1, notification);
