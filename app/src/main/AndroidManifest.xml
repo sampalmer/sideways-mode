@@ -48,7 +48,8 @@
 
 
 		<activity
-			android:name=".components.RecalibrationActivity"
+			android:name=".components.ToggleRotationLockActivity"
+			android:exported="true"
 			android:label="User Orientation"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar"
 			android:launchMode="singleTask"
@@ -59,6 +60,16 @@
             android:name=".components.SettingsActivity"
             android:configChanges="orientation|screenSize"
 	        />
+
+		<activity
+			android:name=".components.ShortcutActivity"
+		    android:label="@string/toggle_rotation_lock"
+		>
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 
 		<service
 			android:name=".components.RotationService"

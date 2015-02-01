@@ -106,7 +106,7 @@ public class RotationService extends Service {
 
 		Notification notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(RecalibrationActivity.class))
+				.setContentIntent(intents.makePending(ToggleRotationLockActivity.class))
 				.setContentTitle(getText(mode().summaryResourceId()))
 				.setContentText(getText(mode().actionDescriptionResourceId()))
 				.setCategory(NotificationCompat.CATEGORY_SERVICE)
