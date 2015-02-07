@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+import android.os.Build;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,14 +48,18 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	}
 
 	private void show(String upgradeMessage, Context context) {
-		Notification notification = new NotificationCompat.Builder(context)
+		Notification.Builder builder = new Notification.Builder(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
 				.setContentTitle(context.getString(R.string.app_name) + " Upgraded")
 				.setContentText("Touch for details")
-				.setAutoCancel(true)
-				.setPriority(NotificationCompat.PRIORITY_HIGH)
-				.build();
+				.setAutoCancel(true);
+
+		if (Build.VERSION.SDK_INT >= 16)
+			builder.setPriority(Notification.PRIORITY_HIGH);
+
+		@SuppressWarnings("deprecation")
+		Notification notification = builder.getNotification();
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 

@@ -6,7 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+import android.os.Build;
 
 import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 
@@ -25,16 +25,22 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private void show(String message) {
-		Notification notification = new NotificationCompat.Builder(context)
+		Notification.Builder builder = new Notification.Builder(context)
 				.setSmallIcon(R.drawable.ic_error)
 				.setContentIntent(makeShowMessage(message))
 				.setContentTitle(getAppName())
 				.setContentText(message)
 				.setAutoCancel(true)
-				.setTicker(message)
-				.setPriority(NotificationCompat.PRIORITY_HIGH)
-				.setCategory(NotificationCompat.CATEGORY_ERROR)
-				.build();
+				.setTicker(message);
+
+		if (Build.VERSION.SDK_INT >= 16)
+			builder.setPriority(Notification.PRIORITY_HIGH);
+
+		if (Build.VERSION.SDK_INT >= 21)
+			builder.setCategory(Notification.CATEGORY_ERROR);
+
+		@SuppressWarnings("deprecation")
+		Notification notification = builder.getNotification();
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 

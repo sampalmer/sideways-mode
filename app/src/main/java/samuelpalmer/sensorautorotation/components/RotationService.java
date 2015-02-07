@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
@@ -130,7 +129,7 @@ public class RotationService extends Service {
 				.setContentText(getText(mode().actionDescriptionResourceId()));
 
 		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(NotificationCompat.PRIORITY_MAX);
+			builder.setPriority(Notification.PRIORITY_MAX);
 
 		if (Build.VERSION.SDK_INT >= 17) {
 			builder
@@ -142,7 +141,7 @@ public class RotationService extends Service {
 		}
 
 		if (Build.VERSION.SDK_INT >= 21)
-			builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
+			builder.setCategory(Notification.CATEGORY_SERVICE);
 
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();
