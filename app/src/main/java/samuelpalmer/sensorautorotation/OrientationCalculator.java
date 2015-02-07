@@ -11,6 +11,7 @@ public class OrientationCalculator {
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
+	private boolean deviceSpecified;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
@@ -30,15 +31,16 @@ public class OrientationCalculator {
 	}
 
 	public void setRecalibrating(boolean newValue) {
-		if (newValue)
-			setScreen(screen.realOrientation());
+		if (newValue) {
+			inferUserFromScreen();
+			reportUpdate();
+		}
 
 		recalibrating = newValue;
 	}
 
-	private void setScreen(Orientation orientation) {
-		user = Orientation.NATURAL.plus(device.minus(orientation));
-		reportUpdate();
+	private void inferUserFromScreen() {
+		user = Orientation.NATURAL.plus(device.minus(screen.realOrientation()));
 	}
 
 	private boolean recalibrating;
@@ -52,6 +54,12 @@ public class OrientationCalculator {
 		}
 
 		device = newDevice;
+
+		if (!deviceSpecified) {
+			inferUserFromScreen();
+			deviceSpecified = true;
+		}
+
 		reportUpdate();
 
 	}
