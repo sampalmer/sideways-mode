@@ -7,13 +7,15 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
+	private final ScreenOrientationController screen;
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator() {
+	public OrientationCalculator(ScreenOrientationController screen) {
+		this.screen = screen;
 		listener = new UpdatingEventRegistrar<>();
 	}
 
@@ -28,7 +30,15 @@ public class OrientationCalculator {
 	}
 
 	public void setRecalibrating(boolean newValue) {
+		if (newValue)
+			setScreen(screen.realOrientation());
+
 		recalibrating = newValue;
+	}
+
+	private void setScreen(Orientation orientation) {
+		user = Orientation.NATURAL.plus(device.minus(orientation));
+		reportUpdate();
 	}
 
 	private boolean recalibrating;
