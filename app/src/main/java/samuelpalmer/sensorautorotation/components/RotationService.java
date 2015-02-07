@@ -20,6 +20,8 @@ import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
+import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
 
@@ -35,8 +37,10 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
-		screenOrientationController = new ScreenOrientationController(this);
-		calculator = new OrientationCalculator(screenOrientationController);
+		SystemSettings settings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
+
+		screenOrientationController = new ScreenOrientationController(this, settings);
+		calculator = new OrientationCalculator(screenOrientationController, settings);
 
 		userActiveState = new UserActiveState(this);
 

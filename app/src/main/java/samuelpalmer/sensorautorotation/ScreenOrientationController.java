@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
 
-import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
@@ -28,9 +27,9 @@ public class ScreenOrientationController extends State {
 
 	};
 
-	public ScreenOrientationController(Context context) {
+	public ScreenOrientationController(Context context, SystemSettings settings) {
 		this.context = context;
-		settings = new SystemSettings(new AndroidSystemSettingSource(context.getContentResolver()));
+		this.settings = settings;
 		onOrientationChanged = new UpdatingEventRegistrar<>();
 	}
 

@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 
 public class OrientationCalculator {
@@ -12,12 +13,16 @@ public class OrientationCalculator {
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
 	private boolean deviceSpecified;
+	private boolean recalibrating;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(ScreenOrientationController screen) {
+	public OrientationCalculator(ScreenOrientationController screen, SystemSettings settings) {
 		this.screen = screen;
 		listener = new UpdatingEventRegistrar<>();
+
+		Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
+		recalibrating = accelerometerRotation == null || !accelerometerRotation;
 	}
 
 	public void reset() {
@@ -42,8 +47,6 @@ public class OrientationCalculator {
 	private void inferUserFromScreen() {
 		user = Orientation.NATURAL.plus(device.minus(screen.realOrientation()));
 	}
-
-	private boolean recalibrating;
 
 	public void setDevice(Orientation newDevice) {
 
