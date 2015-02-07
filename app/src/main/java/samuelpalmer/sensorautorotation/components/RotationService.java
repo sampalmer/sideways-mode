@@ -14,10 +14,12 @@ import android.support.v4.app.NotificationCompat;
 
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
+import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.StateMonitor;
-import samuelpalmer.sensorautorotation.UserActiveState;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
@@ -26,31 +28,42 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 public class RotationService extends Service {
 
 	private boolean destroyed;
-	private UserActiveState userActiveState;
 
 	public static ScreenOrientationController screenOrientationController;
 	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
+	private ScreenOrientationUpdater screenUpdater;
+	private OrientationMessenger orientationMessenger;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		SystemSettings settings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
+		Screen screen = new Screen(this);
 
-		screenOrientationController = new ScreenOrientationController(this, settings);
-		calculator = new OrientationCalculator(screenOrientationController, settings);
+		calculator = new OrientationCalculator(screen, settings);
+		screenOrientationController = new ScreenOrientationController(this, settings, screen, calculator);
 
-		userActiveState = new UserActiveState(this);
+		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, RotationService.screenOrientationController);
+		orientationMessenger = new OrientationMessenger(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
 			public void stateChanged(UserInteractivity user) {
-				if (user.active())
-					userActiveState.ensureStarted();
-				else
-					userActiveState.ensureStopped();
+				if (user.active()) {
+					screenUpdater.ensureStarted();
+					orientationMessenger.ensureStarted();
+				}
+				else {
+					orientationMessenger.ensureStopped();
+
+					calculator.reset();
+					promoteToForeground();
+
+					screenUpdater.ensureStopped();
+				}
 			}
 		});
 
@@ -65,7 +78,8 @@ public class RotationService extends Service {
 
 	private void destroy() {
 		if (!destroyed) {
-			userActiveState.ensureStopped();
+			orientationMessenger.ensureStopped();
+			screenUpdater.ensureStopped();
 			screenOrientationController.ensureStopped();
 			unregisterReceiver(shutdownReceiver);
 			userInteractivityMonitor.ensureStopped();

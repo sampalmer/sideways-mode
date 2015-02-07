@@ -8,7 +8,7 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
-	private final ScreenOrientationController screen;
+	private final Screen screen;
 
 	private Orientation device = DEFAULT;
 	private Orientation user = DEFAULT;
@@ -17,7 +17,7 @@ public class OrientationCalculator {
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(ScreenOrientationController screen, SystemSettings settings) {
+	public OrientationCalculator(Screen screen, SystemSettings settings) {
 		this.screen = screen;
 		listener = new UpdatingEventRegistrar<>();
 
@@ -28,6 +28,7 @@ public class OrientationCalculator {
 	public void reset() {
 		device = DEFAULT;
 		user = DEFAULT;
+		recalibrating = true;
 		reportUpdate();
 	}
 
