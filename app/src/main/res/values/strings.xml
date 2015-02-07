@@ -7,12 +7,15 @@
 		\n\n
 		If you want to change your own orientation (eg. lie on your side), ensure auto screen rotation is disabled via the notification.
 	</string>
+
 	<string name="action_settings">Settings</string>
+	<string name="action_uninstall">Uninstall</string>
+
 	<string name="instructions_heading">Instructions</string>
 	<string name="uninstallation_heading">Uninstallation</string>
 	<string name="uninstallation_instructions">
-		If you want to uninstall this app, please first disable its "Enabled" setting to ensure the screen doesn\'t get stuck in the wrong orientation.
-		This is necessary because of an Android limitation.
+		If you want to uninstall this app, please use the corresponding menu item in this screen
+		to ensure the default screen rotation is not left in the current state.
 	</string>
 	<string name="screen_rotation_enabled">Auto-Rotating Screen</string>
 	<string name="screen_rotation_disabled">Screen Rotation Locked</string>

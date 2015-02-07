@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -37,6 +38,13 @@ public class MainActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 			case R.id.action_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
+				break;
+			case R.id.action_uninstall:
+				Uri packageUri = Uri.parse("package:" + getPackageName());
+				Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+				new Settings(this).enabled().set(false);
+				new ServiceController(this).ensureStopped();
+				startActivity(uninstallIntent);
 				break;
 			default:
 				return super.onOptionsItemSelected(item);
