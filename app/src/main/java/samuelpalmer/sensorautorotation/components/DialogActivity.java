@@ -7,8 +7,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.R;
-
 public abstract class DialogActivity extends Activity {
 	public static final String MESSAGE_INTENT_EXTRA_NAME = "message";
 
@@ -38,7 +36,6 @@ public abstract class DialogActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return new AlertDialog.Builder(getActivity())
-					.setIcon(R.id.icon)
 					.setMessage(getArguments().getString("message"))
 					.create();
 		}
