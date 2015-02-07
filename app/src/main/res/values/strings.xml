@@ -2,25 +2,33 @@
 <resources>
 
 	<string name="app_name">Screen Rotate</string>
-	<string name="home_instructions">
-		Changing the screen orientation is the same as normal; ensure auto screen rotation is enabled via the notification, and just rotate the device.
-		\n\n
-		If you want to change your own orientation (eg. lie on your side), ensure auto screen rotation is disabled via the notification.
-	</string>
 
 	<string name="action_settings">Settings</string>
 	<string name="action_uninstall">Uninstall</string>
 
 	<string name="instructions_heading">Instructions</string>
+	<string name="home_instructions">To toggle auto rotation, use the notification rather than the system auto rotation setting.
+
+		\n\nEach time you enable auto rotation, the direction the screen was facing will be treated as the direction
+		<i>you</i> are facing, so rotating the device will cause the screen to face <i>that</i> direction.
+
+		\n\nTo change your own orientation (eg. lie down):
+		\n1. Disable auto rotation
+		\n2. Rotate the device until the screen faces the direction you want
+		\n3. Re-enable auto rotation
+	</string>
+
 	<string name="uninstallation_heading">Uninstallation</string>
 	<string name="uninstallation_instructions">
 		If you want to uninstall this app, please use the corresponding menu item in this screen
-		to ensure the default screen rotation is not left in the current state.
+		to ensure the default screen rotation is not left in the wrong state.
 	</string>
+
 	<string name="screen_rotation_enabled">Auto-Rotating Screen</string>
 	<string name="screen_rotation_disabled">Screen Rotation Locked</string>
 	<string name="enable_screen_rotation">Touch to enable auto screen rotation</string>
 	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 
 	<string name="toggle_rotation_lock">Toggle Rotation Lock</string>
+
 </resources>
