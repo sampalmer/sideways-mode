@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
 import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
@@ -32,8 +30,6 @@ public class ScreenOrientationController extends State {
 		this.settings = settings;
 		this.screen = screen;
 		this.calculator = calculator;
-
-		onOrientationChanged = new UpdatingEventRegistrar<>();
 	}
 
 	@Override
@@ -81,7 +77,6 @@ public class ScreenOrientationController extends State {
 
 	private void systemConfigChanged() {
 		checkIfSystemAutoRotationWasEnabled();
-		onOrientationChanged.report(null);
 	}
 
 	private void checkIfSystemAutoRotationWasEnabled() {
@@ -91,12 +86,6 @@ public class ScreenOrientationController extends State {
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
 	}
-
-	public EventRegistrar<Void> onOrientationChanged() {
-		return onOrientationChanged;
-	}
-
-	private final UpdatingEventRegistrar<Void> onOrientationChanged;
 
 	@Override
 	public String toString() {
