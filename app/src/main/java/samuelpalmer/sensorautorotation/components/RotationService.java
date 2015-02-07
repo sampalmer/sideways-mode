@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
@@ -104,16 +105,29 @@ public class RotationService extends Service {
 	public void promoteToForeground() {
 		Intents intents = new Intents(this);
 
-		Notification notification = new NotificationCompat.Builder(this)
+		Notification.Builder builder = new Notification.Builder(this)
 				.setSmallIcon(mode().iconResourceId())
 				.setContentIntent(intents.makePending(ToggleRotationLockActivity.class))
 				.setContentTitle(getText(mode().summaryResourceId()))
-				.setContentText(getText(mode().actionDescriptionResourceId()))
-				.setCategory(NotificationCompat.CATEGORY_SERVICE)
-				.setShowWhen(false)
-				.setWhen(0)
-				.setPriority(NotificationCompat.PRIORITY_MAX)
-				.build();
+				.setContentText(getText(mode().actionDescriptionResourceId()));
+
+		if (Build.VERSION.SDK_INT >= 16)
+			builder.setPriority(NotificationCompat.PRIORITY_MAX);
+
+		if (Build.VERSION.SDK_INT >= 17) {
+			builder
+					.setShowWhen(false)
+					.setWhen(Integer.MAX_VALUE);
+		}
+		else {
+			builder.setWhen(0);
+		}
+
+		if (Build.VERSION.SDK_INT >= 21)
+			builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
+
+		@SuppressWarnings("deprecation")
+		Notification notification = builder.getNotification();
 
 		startForeground(1, notification);
 	}
