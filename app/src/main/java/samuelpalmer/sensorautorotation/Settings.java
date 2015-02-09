@@ -21,6 +21,7 @@ public class Settings {
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new IntegerSetting("lastVersionUserInstructedAbout"); }
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
+	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new EnumSetting<>("screenOnBehaviour", ScreenOnBehaviour.class); }
 
 	public abstract class Setting<T> {
 
@@ -57,8 +58,13 @@ public class Settings {
 		}
 
 		@SuppressWarnings("unchecked")
+		protected T convertFromRaw(Object raw) {
+			return (T)raw;
+		}
+
 		private T tryGet() {
-			return (T)prefs.getAll().get(key);
+			Object raw = prefs.getAll().get(key);
+			return convertFromRaw(raw);
 		}
 
 		public T get() {
@@ -119,5 +125,34 @@ public class Settings {
 		}
 
 	}
+
+	private class EnumSetting<T extends Enum<T>> extends Setting<T> {
+
+		private final Class<T> clazz;
+
+		public EnumSetting(String key, Class<T> clazz) {
+			super(key);
+			this.clazz = clazz;
+		}
+
+		@Override
+		protected void put(Editor editor, T value) {
+			editor.putString(key, value.name());
+		}
+
+		@Override
+		protected T convertFromRaw(Object raw) {
+			if (raw == null)
+				return null;
+
+			return Enum.valueOf(clazz, (String)raw);
+		}
+	}
+
+	public enum ScreenOnBehaviour {
+		DO_NOTHING,
+		LOCK_SCREEN_ROTATION
+	}
+
 
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="screen_on_behaviours">
+		<item>Do nothing</item>
+		<item>Lock screen rotation</item>
+	</string-array>
+
+	<string-array name="screen_on_behaviour_values">
+		<item>DO_NOTHING</item>
+		<item>LOCK_SCREEN_ROTATION</item>
+	</string-array>
+</resources>

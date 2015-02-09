@@ -42,7 +42,7 @@ public class RotationService extends Service {
 		SystemSettings settings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
 		Screen screen = new Screen(this);
 
-		calculator = new OrientationCalculator(screen, settings);
+		calculator = new OrientationCalculator(this, screen, settings);
 		screenOrientationController = new ScreenOrientationController(this, settings, screen, calculator);
 
 		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, RotationService.screenOrientationController);
