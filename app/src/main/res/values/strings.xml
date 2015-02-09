@@ -19,8 +19,7 @@
 	</string>
 
 	<string name="uninstallating">Uninstalling</string>
-	<string name="uninstallating_instructions">
-		If you want to uninstall this, please use the menu item on this screen
+	<string name="uninstallating_instructions">If you want to uninstall this, please use the menu item on this screen
 		to ensure the default screen rotation is not left in the wrong state.
 	</string>
 
@@ -33,6 +32,7 @@
 	<string name="not_enabled_message">Screen Rotate is not enabled</string>
 	<string name="upgraded_title">Screen Rotate Upgraded</string>
 	<string name="touch_for_details">Touch for details</string>
-	<string name="v18_upgrade">Disabling auto rotation is now supported. The user orientation screen has been removed since disabling auto rotation lets you do the same thing. See the instructions in the main screen for details.</string>
+
+	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation lets you do the same thing. See the instructions in the main screen for details.</string>
 
 </resources>
