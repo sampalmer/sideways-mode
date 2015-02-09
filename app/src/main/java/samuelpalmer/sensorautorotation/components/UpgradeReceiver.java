@@ -78,7 +78,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	static {
 		upgradeMessages = new HashMap<>();
 		upgradeMessages.put(14, "Use of the proximity sensor has been removed since it is difficult to use and sometimes triggers unintentionally. Please use the notification in the notification drawer instead.");
-		upgradeMessages.put(18, "Disabling auto rotation is now supported. The recalibration screen has been removed since disabling auto rotation doubles as recalibration. See the instructions in the main screen for details.");
+		upgradeMessages.put(18, "Disabling auto rotation is now supported. The user orientation screen has been removed since disabling auto rotation lets you do the same thing. See the instructions in the main screen for details.");
 	}
 
 }
