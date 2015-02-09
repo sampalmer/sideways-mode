@@ -33,7 +33,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		if (lastVersionUserInstructedAboutValue != null) {
 			StringBuilder upgradeMessage = new StringBuilder();
 			for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
-				String currentMessage = upgradeMessages.get(version);
+				String currentMessage = context.getString(upgradeMessages.get(version));
 				if (currentMessage != null) {
 					upgradeMessage.append(currentMessage);
 					upgradeMessage.append('\n');
@@ -51,8 +51,8 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Notification.Builder builder = new Notification.Builder(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
-				.setContentTitle(context.getString(R.string.app_name) + " Upgraded")
-				.setContentText("Touch for details")
+				.setContentTitle(context.getString(R.string.upgraded_title))
+				.setContentText(context.getString(R.string.touch_for_details))
 				.setAutoCancel(true);
 
 		if (Build.VERSION.SDK_INT >= 16)
@@ -73,12 +73,11 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		return intents.makePending(intent);
 	}
 
-	private static final Map<Integer, String> upgradeMessages;
+	private static final Map<Integer, Integer> upgradeMessages;
 
 	static {
 		upgradeMessages = new HashMap<>();
-		upgradeMessages.put(14, "Use of the proximity sensor has been removed since it is difficult to use and sometimes triggers unintentionally. Please use the notification in the notification drawer instead.");
-		upgradeMessages.put(18, "Disabling auto rotation is now supported. The user orientation screen has been removed since disabling auto rotation lets you do the same thing. See the instructions in the main screen for details.");
+		upgradeMessages.put(18, R.string.v18_upgrade);
 	}
 
 }

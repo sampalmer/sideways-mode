@@ -30,5 +30,9 @@
 	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 
 	<string name="toggle_rotation_lock">Toggle Rotation Lock</string>
+	<string name="not_enabled_message">Screen Rotate is not enabled</string>
+	<string name="upgraded_title">Screen Rotate Upgraded</string>
+	<string name="touch_for_details">Touch for details</string>
+	<string name="v18_upgrade">Disabling auto rotation is now supported. The user orientation screen has been removed since disabling auto rotation lets you do the same thing. See the instructions in the main screen for details.</string>
 
 </resources>

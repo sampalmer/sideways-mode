@@ -20,7 +20,7 @@ public class ToggleRotationLockActivity extends Activity {
 
 		if (!new Settings(this).enabled().getOr(false)) {
 			Toast
-				.makeText(this, getString(R.string.app_name) + " is not enabled", Toast.LENGTH_SHORT)
+				.makeText(this, R.string.not_enabled_message, Toast.LENGTH_SHORT)
 				.show();
 
 			finish();
