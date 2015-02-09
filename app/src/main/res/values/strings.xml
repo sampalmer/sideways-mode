@@ -7,20 +7,20 @@
 	<string name="action_uninstall">Uninstall</string>
 
 	<string name="instructions_heading">Instructions</string>
-	<string name="home_instructions">To toggle auto rotation, use the notification rather than the system auto rotation setting.
+	<string name="home_instructions">To turn auto rotation on or off, use the notification instead of the system auto rotation setting.
 
-		\n\nEach time you enable auto rotation, the direction the screen was facing will be treated as the direction
-		<i>you</i> are facing, so rotating the device will cause the screen to face <i>that</i> direction.
+		\n\nEach time you turn auto rotation on, the direction of the screen will be considered <i>your</i> direction,
+		so when you rotate the device, the screen will rotate to face <i>your</i> direction.
 
-		\n\nTo change your own orientation (eg. lie down):
-		\n1. Disable auto rotation
-		\n2. Rotate the device until the screen faces the direction you want
-		\n3. Re-enable auto rotation
+		\n\nTo use auto rotation while lying down:
+		\n1. Ensure auto rotation is <b>off</b>.
+		\n2. Rotate the device until the screen faces the direction you want.
+		\n3. Turn auto rotation back <b>on</b>.
 	</string>
 
 	<string name="uninstallation_heading">Uninstallation</string>
 	<string name="uninstallation_instructions">
-		If you want to uninstall this app, please use the corresponding menu item in this screen
+		If you want to uninstall this, please use the menu item on this screen
 		to ensure the default screen rotation is not left in the wrong state.
 	</string>
 
