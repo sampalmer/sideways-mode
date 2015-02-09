@@ -18,8 +18,8 @@
 		\n3. Turn auto rotation back <b>on</b>.
 	</string>
 
-	<string name="uninstallation_heading">Uninstallation</string>
-	<string name="uninstallation_instructions">
+	<string name="uninstallating">Uninstalling</string>
+	<string name="uninstallating_instructions">
 		If you want to uninstall this, please use the menu item on this screen
 		to ensure the default screen rotation is not left in the wrong state.
 	</string>
@@ -29,7 +29,7 @@
 	<string name="enable_screen_rotation">Touch to enable auto screen rotation</string>
 	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 
-	<string name="toggle_rotation_lock">Toggle Rotation Lock</string>
+	<string name="toggle_rotation_lock">Toggle Auto Rotation</string>
 	<string name="not_enabled_message">Screen Rotate is not enabled</string>
 	<string name="upgraded_title">Screen Rotate Upgraded</string>
 	<string name="touch_for_details">Touch for details</string>
