@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -23,10 +24,11 @@ public class SettingsActivity extends PreferenceActivity {
 
 	public static class SettingsFragment extends PreferenceFragment {
 
-		private final EventHandler<Void> serviceUpdater = new EventHandler<Void>() {
+		private final EventHandler<Void> enabledUpdater = new EventHandler<Void>() {
 			@Override
 			public void update(Void event) {
 				new ServiceController(getActivity()).updateFromSettings();
+				refresh();
 			}
 		};
 
@@ -61,15 +63,22 @@ public class SettingsActivity extends PreferenceActivity {
 		@Override
 		public void onResume() {
 			super.onResume();
-			enabledChanged.subscribe(serviceUpdater);
+			enabledChanged.subscribe(enabledUpdater);
 			onScreenOnChanged.subscribe(onScreenOnSummaryUpdater);
+
+			refresh();
+		}
+
+		private void refresh() {
+			CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
+			preference.setChecked(settings.enabled().get());
 		}
 
 		@Override
 		public void onPause() {
 			super.onPause();
 			onScreenOnChanged.unsubscribe(onScreenOnSummaryUpdater);
-			enabledChanged.unsubscribe(serviceUpdater);
+			enabledChanged.unsubscribe(enabledUpdater);
 		}
 
 	}
