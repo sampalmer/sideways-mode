@@ -3,18 +3,17 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<CheckBoxPreference
 		android:key="enabled"
-	    android:title="Enabled"
+	    android:title="@string/app_enabled"
 	    android:defaultValue="true"
 	/>
 	<CheckBoxPreference
 		android:key="allowUpsideDownScreen"
-	    android:title="Allow upside-down screen"
-	    android:summary="Support use of the device while it is upside-down"
+	    android:title="@string/allow_upside_down_screen"
 	    android:defaultValue="false"
 	/>
 	<ListPreference
 		android:key="screenOnBehaviour"
-	    android:title="On screen on"
+	    android:title="@string/on_screen_on"
 	    android:entries="@array/screen_on_behaviours"
 	    android:entryValues="@array/screen_on_behaviour_values"
 	    android:defaultValue="DO_NOTHING"
