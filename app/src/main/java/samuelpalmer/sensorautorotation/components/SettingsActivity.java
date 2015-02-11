@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
@@ -29,25 +30,45 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		};
 
+		private final EventHandler<Void> onScreenOnSummaryUpdater = new EventHandler<Void>() {
+			@Override
+			public void update(Void event) {
+				updateOnScreenOnSummary();
+			}
+		};
+
+		private void updateOnScreenOnSummary() {
+			ListPreference preference = (ListPreference)findPreference(settings.screenOnBehaviour().getKey());
+			preference.setSummary(preference.getEntry());
+		}
+
+		private Settings settings;
 		private EventRegistrar<Void> enabledChanged;
+		private EventRegistrar<Void> onScreenOnChanged;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences);
 
-			enabledChanged = new Settings(getActivity()).enabled().onChange();
+			settings = new Settings(getActivity());
+			updateOnScreenOnSummary();
+
+			enabledChanged = settings.enabled().onChange();
+			onScreenOnChanged = settings.screenOnBehaviour().onChange();
 		}
 
 		@Override
 		public void onResume() {
 			super.onResume();
 			enabledChanged.subscribe(serviceUpdater);
+			onScreenOnChanged.subscribe(onScreenOnSummaryUpdater);
 		}
 
 		@Override
 		public void onPause() {
 			super.onPause();
+			onScreenOnChanged.unsubscribe(onScreenOnSummaryUpdater);
 			enabledChanged.unsubscribe(serviceUpdater);
 		}
 

@@ -94,6 +94,10 @@ public class Settings {
 				throw new RuntimeException("Failed to write settings");
 		}
 
+		public String getKey() {
+			return key;
+		}
+
 		public EventRegistrar<Void> onChange() {
 			return onChange;
 		}
