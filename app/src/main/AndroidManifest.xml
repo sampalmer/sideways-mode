@@ -49,7 +49,7 @@
 		<activity
 			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
-			android:label="User Orientation"
+			android:label="Toggle Rotation Lock"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar"
 			android:launchMode="singleTask"
 			android:taskAffinity=""
