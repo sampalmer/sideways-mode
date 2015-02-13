@@ -55,7 +55,7 @@ public class EnvironmentErrorNotifier{
 		Intents intents = new Intents(context);
 		Intent intent = intents.makeIntent(ErrorDialogActivity.class)
 				.putExtra(ErrorDialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
-		return intents.makePending(intent);
+		return intents.makePending(intent, Intents.ComponentType.ACTIVITY);
 	}
 
 }

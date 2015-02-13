@@ -45,12 +45,14 @@
 
 		<activity android:name=".components.UpgradeActivity" />
 
+		<receiver
+			android:name=".components.ToggleRotationLockReceiver"/>
 
 		<activity
 			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
 			android:label="Toggle Rotation Lock"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:theme="@android:style/Theme.NoDisplay"
 			android:launchMode="singleTask"
 			android:taskAffinity=""
 			android:excludeFromRecents="true" />

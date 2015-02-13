@@ -121,7 +121,7 @@ public class RotationService extends Service {
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(ToggleRotationLockActivity.class))
+				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockReceiver.class), Intents.ComponentType.BROADCAST_RECEIVER))
 				.setContentTitle(getText(mode().summaryResourceId()))
 				.setContentText(getText(mode().actionDescriptionResourceId()));
 

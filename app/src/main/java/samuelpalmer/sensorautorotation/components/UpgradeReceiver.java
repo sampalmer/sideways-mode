@@ -70,7 +70,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Intents intents = new Intents(context);
 		Intent intent = intents.makeIntent(UpgradeActivity.class)
 				.putExtra(DialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
-		return intents.makePending(intent);
+		return intents.makePending(intent, Intents.ComponentType.ACTIVITY);
 	}
 
 	private static final Map<Integer, Integer> upgradeMessages;
