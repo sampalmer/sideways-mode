@@ -216,11 +216,4 @@ public class RotationService extends Service {
 		destroy();
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-
-		destroy();
-	}
-
 }
