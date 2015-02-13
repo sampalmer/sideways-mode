@@ -15,8 +15,11 @@ public class ServiceController {
 		settings = new Settings(context);
 	}
 
-	public void ensureStarted() {
-		ComponentName service = context.startService(intent());
+	public void ensureStarted(String action) {
+		Intent intent = intent();
+		intent.setAction(action);
+
+		ComponentName service = context.startService(intent);
 		if (service == null)
 			throw new RuntimeException("Service doesn't exist");
 	}
@@ -32,7 +35,7 @@ public class ServiceController {
 
 	private void updateServiceState(boolean enabled) {
 		if (enabled)
-			ensureStarted();
+			ensureStarted(null);
 		else
 			ensureStopped();
 	}

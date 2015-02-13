@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 
@@ -75,6 +74,25 @@ public class RotationService extends Service {
 		userInteractivityMonitor.ensureStarted();
 	}
 
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent == null) {
+			//Service was restarted after being killed
+		}
+		else {
+			String action = intent.getAction();
+
+			if (action != null && action.equals(getToggleAction(this)))
+				toggleRotation();
+		}
+
+		return Service.START_STICKY;
+	}
+
+	public static String getToggleAction(Context service) {
+		return service.getPackageName() + ".TOGGLE_ROTATION";
+	}
+
 	private void destroy() {
 		if (!destroyed) {
 			orientationMessenger.ensureStopped();
@@ -97,18 +115,11 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new LocalBinder();
+		return null;
 	}
 
-	/**
-	 * Must be called from process main thread
-	 */
-	public class LocalBinder extends Binder {
-
-		public void toggleRotation() {
-			setRecalibrating(!calculator.isRecalibrating());
-		}
-
+	public void toggleRotation() {
+		setRecalibrating(!calculator.isRecalibrating());
 	}
 
 	public void setRecalibrating(boolean newValue) {
