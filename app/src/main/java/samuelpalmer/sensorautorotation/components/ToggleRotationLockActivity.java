@@ -14,16 +14,13 @@ public class ToggleRotationLockActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (!new Settings(this).enabled().getOr(false)) {
+		if (!new Settings(this).enabled().getOr(false))
 			Toast
 				.makeText(this, R.string.not_enabled_message, Toast.LENGTH_SHORT)
 				.show();
+		else
+			new ServiceController(this).ensureStarted(RotationService.getToggleAction(this));
 
-			finish();
-			return;
-		}
-
-		new ServiceController(this).ensureStarted(RotationService.getToggleAction(this));
 		finish();
 	}
 
