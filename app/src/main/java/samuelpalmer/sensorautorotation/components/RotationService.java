@@ -25,8 +25,6 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
 
-	private boolean destroyed;
-
 	public static ScreenOrientationController screenOrientationController;
 	public static OrientationCalculator calculator;
 
@@ -91,18 +89,6 @@ public class RotationService extends Service {
 
 	public static String getToggleAction(Context service) {
 		return service.getPackageName() + ".TOGGLE_ROTATION";
-	}
-
-	private void destroy() {
-		if (!destroyed) {
-			orientationMessenger.ensureStopped();
-			screenUpdater.ensureStopped();
-			screenOrientationController.ensureStopped();
-			unregisterReceiver(shutdownReceiver);
-			userInteractivityMonitor.ensureStopped();
-
-			destroyed = true;
-		}
 	}
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
@@ -213,7 +199,11 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		destroy();
+		orientationMessenger.ensureStopped();
+		screenUpdater.ensureStopped();
+		screenOrientationController.ensureStopped();
+		unregisterReceiver(shutdownReceiver);
+		userInteractivityMonitor.ensureStopped();
 	}
 
 }
