@@ -25,10 +25,10 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
 
-	public static ScreenOrientationController screenOrientationController;
 	public static OrientationCalculator calculator;
 
 	private UserInteractivityMonitor userInteractivityMonitor;
+	private ScreenOrientationController screenOrientationController;
 	private ScreenOrientationUpdater screenUpdater;
 	private OrientationMessenger orientationMessenger;
 
@@ -42,7 +42,7 @@ public class RotationService extends Service {
 		calculator = new OrientationCalculator(this, screen, settings);
 		screenOrientationController = new ScreenOrientationController(this, settings, screen, calculator);
 
-		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, RotationService.screenOrientationController);
+		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, screenOrientationController);
 		orientationMessenger = new OrientationMessenger(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
