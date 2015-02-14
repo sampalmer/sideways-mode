@@ -31,17 +31,8 @@ public class ServiceNotification {
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
-		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(Notification.PRIORITY_MAX);
-
-		if (Build.VERSION.SDK_INT >= 17) {
-			builder
-					.setShowWhen(false)
-					.setWhen(Integer.MAX_VALUE);
-		}
-		else {
-			builder.setWhen(0);
-		}
+		moveToTop(builder);
+		hideTimestamp(builder);
 
 		if (Build.VERSION.SDK_INT >= 21)
 			builder.setCategory(Notification.CATEGORY_SERVICE);
@@ -50,6 +41,20 @@ public class ServiceNotification {
 		Notification notification = builder.getNotification();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	private void moveToTop(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 16)
+			builder.setPriority(Notification.PRIORITY_MAX);
+
+		builder.setWhen(Integer.MAX_VALUE);
+	}
+
+	private void hideTimestamp(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 17)
+			builder.setShowWhen(false);
+		else
+			builder.setWhen(0);
 	}
 
 	private Mode mode() {
