@@ -61,8 +61,7 @@ public class OrientationCalculator {
 
 		if (recalibrating) {
 			Rotation deviceChange = newDevice.minus(device);
-			if (deviceChange.clockwiseCount() != 0)
-				user = user.plus(deviceChange);
+			user = user.plus(deviceChange);
 		}
 
 		device = newDevice;
