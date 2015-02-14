@@ -80,14 +80,21 @@ public class RotationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (isToggleAction(intent))
+			toggleRotation();
+
+		return Service.START_STICKY;
+	}
+
+	private boolean isToggleAction(Intent intent) {
 		if (intent != null) {
 			String action = intent.getAction();
 
 			if (action != null && action.equals(getToggleAction(this)))
-				toggleRotation();
+				return true;
 		}
 
-		return Service.START_STICKY;
+		return false;
 	}
 
 	public static String getToggleAction(Context service) {
