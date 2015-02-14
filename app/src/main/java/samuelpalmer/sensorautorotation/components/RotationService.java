@@ -12,6 +12,7 @@ import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.R;
@@ -145,7 +146,7 @@ public class RotationService extends Service {
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();
 
-		startForeground(1, notification);
+		startForeground(NotificationIds.SERVICE, notification);
 	}
 
 	private Mode mode() {

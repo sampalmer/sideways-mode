@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.Settings;
@@ -63,7 +64,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
-		notificationManager.notify(0, notification);
+		notificationManager.notify(NotificationIds.UPGRADE, notification);
 	}
 
 	private PendingIntent makeShowMessage(String message, Context context) {

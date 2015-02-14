@@ -44,7 +44,7 @@ public class EnvironmentErrorNotifier{
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
-		notificationManager.notify(0, notification);
+		notificationManager.notify(NotificationIds.ERROR, notification);
 	}
 
 	private String getAppName() {
