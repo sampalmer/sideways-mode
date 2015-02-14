@@ -56,4 +56,8 @@ public class Orientation {
 		return clockwiseRotationsFromNaturalOrientation;
 	}
 
+	public boolean isNaturalOrUpsideDown() {
+		return clockwiseRotationsFromNaturalOrientation % 2 == 0;
+	}
+
 }

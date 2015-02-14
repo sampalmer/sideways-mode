@@ -78,11 +78,11 @@ public class ServiceNotification {
 
 			WindowManager windowManager = (WindowManager)service.getSystemService(Context.WINDOW_SERVICE);
 			Orientation currentScreenRotation = new AndroidSurfaceRotation(windowManager.getDefaultDisplay().getRotation()).orientation();
-			boolean screenIsNaturalOrientation = currentScreenRotation.getClockwiseRotationsFromNaturalOrientation() % 2 == 0;
+			boolean screenIsNaturalOrientation = currentScreenRotation.isNaturalOrUpsideDown();
 
 			boolean deviceIsNaturallyPortrait = screenIsPortrait == screenIsNaturalOrientation;
 
-			boolean inNaturalOrientation = calculator.proposedScreenOrientation().getClockwiseRotationsFromNaturalOrientation() % 2 == 0;
+			boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
 			return inNaturalOrientation == deviceIsNaturallyPortrait;
 		}
 
