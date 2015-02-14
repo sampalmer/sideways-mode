@@ -4,9 +4,9 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class ApplicationState {
 
-	private final Settings settings;
+	private final ApplicationSettings settings;
 
-	public ApplicationState(Settings settings, SystemSettings systemSettings) {
+	public ApplicationState(ApplicationSettings settings, SystemSettings systemSettings) {
 		this.settings = settings;
 
 		if (!settings.autoRotate().hasValue()) {
@@ -27,7 +27,7 @@ public class ApplicationState {
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
-		Settings.Transaction transaction = settings.new Transaction();
+		ApplicationSettings.Transaction transaction = settings.new Transaction();
 		settings.autoRotate().set(autoRotate, transaction);
 		settings.userOrientation().set(serialise(user), transaction);
 		transaction.commit();
@@ -42,7 +42,7 @@ public class ApplicationState {
 	}
 
 	public void clear() {
-		Settings.Transaction transaction = settings.new Transaction();
+		ApplicationSettings.Transaction transaction = settings.new Transaction();
 		settings.autoRotate().remove(transaction);
 		settings.userOrientation().remove(transaction);
 		transaction.commit();

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
@@ -15,7 +16,6 @@ import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.ServiceNotification;
-import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
@@ -40,7 +40,7 @@ public class RotationService extends Service {
 		SystemSettings systemSettings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
 		Screen screen = new Screen(this);
 
-		Settings appSettings = new Settings(this);
+		ApplicationSettings appSettings = new ApplicationSettings(this);
 		applicationState = new ApplicationState(appSettings, systemSettings);
 
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);

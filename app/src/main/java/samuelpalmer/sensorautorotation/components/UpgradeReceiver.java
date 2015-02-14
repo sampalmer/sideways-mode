@@ -12,11 +12,11 @@ import android.os.Build;
 import java.util.HashMap;
 import java.util.Map;
 
+import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
-import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class UpgradeReceiver extends BroadcastReceiver {
@@ -29,7 +29,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	private void upgradeUser(Context context) {
 		int newAppVersion = new VersionInfo(context).installedVersionCode();
-		Settings.Setting<Integer> lastVersionUserInstructedAbout = new Settings(context).lastVersionUserInstructedAbout();
+		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
 		Integer lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(null);
 		if (lastVersionUserInstructedAboutValue != null) {
 			StringBuilder upgradeMessage = new StringBuilder();

@@ -8,11 +8,11 @@ import samuelpalmer.sensorautorotation.components.RotationService;
 
 public class ServiceController {
 	private final Context context;
-	private final Settings settings;
+	private final ApplicationSettings settings;
 
 	public ServiceController(Context context) {
 		this.context = context;
-		settings = new Settings(context);
+		settings = new ApplicationSettings(context);
 	}
 
 	public void ensureStarted(String action) {

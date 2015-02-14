@@ -4,11 +4,11 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class ScreenOrientationUpdater extends State {
 
-	private final Settings settings;
+	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screen;
 
-	public ScreenOrientationUpdater(Settings settings, OrientationCalculator calculator, ScreenOrientationController screen) {
+	public ScreenOrientationUpdater(ApplicationSettings settings, OrientationCalculator calculator, ScreenOrientationController screen) {
 		this.settings = settings;
 		this.calculator = calculator;
 		this.screen = screen;

@@ -6,9 +6,9 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
+import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
-import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 
@@ -44,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity {
 			preference.setSummary(preference.getEntry());
 		}
 
-		private Settings settings;
+		private ApplicationSettings settings;
 		private EventRegistrar<Void> enabledChanged;
 		private EventRegistrar<Void> onScreenOnChanged;
 
@@ -53,7 +53,7 @@ public class SettingsActivity extends PreferenceActivity {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences);
 
-			settings = new Settings(getActivity());
+			settings = new ApplicationSettings(getActivity());
 			updateOnScreenOnSummary();
 
 			enabledChanged = settings.enabled().onChange();

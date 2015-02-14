@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
-import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class MainActivity extends Activity {
@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Settings.Setting<Integer> instructedVersion = new Settings(this).lastVersionUserInstructedAbout();
+		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings(this).lastVersionUserInstructedAbout();
 		if (!instructedVersion.hasValue())
 			instructedVersion.setAndCommit(new VersionInfo(this).installedVersionCode());
 
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 			case R.id.action_uninstall:
 				Uri packageUri = Uri.parse("package:" + getPackageName());
 				Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-				new Settings(this).enabled().setAndCommit(false);
+				new ApplicationSettings(this).enabled().setAndCommit(false);
 				new ServiceController(this).ensureStopped();
 				startActivity(uninstallIntent);
 				break;
