@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 
+import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
@@ -17,6 +18,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
@@ -31,6 +33,7 @@ public class RotationService extends Service {
 	private ScreenOrientationController screenOrientationController;
 	private ScreenOrientationUpdater screenUpdater;
 	private OrientationMessenger orientationMessenger;
+	private ApplicationState applicationState;
 
 	@Override
 	public void onCreate() {
@@ -39,7 +42,9 @@ public class RotationService extends Service {
 		SystemSettings settings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
 		Screen screen = new Screen(this);
 
-		calculator = new OrientationCalculator(this, screen, settings);
+		applicationState = new ApplicationState(new Settings(this), settings);
+
+		calculator = new OrientationCalculator(this, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(this, settings, screen, calculator);
 
 		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, screenOrientationController);
@@ -74,10 +79,7 @@ public class RotationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) {
-			//Service was restarted after being killed
-		}
-		else {
+		if (intent != null) {
 			String action = intent.getAction();
 
 			if (action != null && action.equals(getToggleAction(this)))
@@ -204,6 +206,8 @@ public class RotationService extends Service {
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityMonitor.ensureStopped();
+
+		applicationState.clear();
 	}
 
 }

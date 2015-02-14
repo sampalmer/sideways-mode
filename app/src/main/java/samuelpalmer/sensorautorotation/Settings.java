@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +20,9 @@ public class Settings {
 	}
 
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new IntegerSetting("lastVersionUserInstructedAbout"); }
+	public Setting<Boolean> autoRotate() { return new BooleanSetting("autoRotate"); }
+	public Setting<Integer> userOrientation() { return new IntegerSetting("userOrientation"); }
+
 	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
 	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new EnumSetting<>("screenOnBehaviour", ScreenOnBehaviour.class); }
@@ -87,11 +91,18 @@ public class Settings {
 			return tryGet() != null;
 		}
 
-		public void set(T value) {
-			Editor editor = prefs.edit();
-			put(editor, value);
-			if (!editor.commit())
-				throw new RuntimeException("Failed to write settings");
+		public void setAndCommit(T value) {
+			Transaction transaction = new Transaction();
+			set(value, transaction);
+			transaction.commit();
+		}
+
+		public void set(T value, Transaction transaction) {
+			put(transaction.editor, value);
+		}
+
+		public void remove(Transaction transaction) {
+			transaction.editor.remove(key);
 		}
 
 		public String getKey() {
@@ -158,5 +169,18 @@ public class Settings {
 		LOCK_SCREEN_ROTATION
 	}
 
+	public class Transaction {
+		private final Editor editor;
+
+		@SuppressLint("CommitPrefEdits")
+		public Transaction() {
+			editor = prefs.edit();
+		}
+
+		public void commit() {
+			if (!editor.commit())
+				throw new RuntimeException("Failed to write settings");
+		}
+	}
 
 }

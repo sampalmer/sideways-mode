@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
 
 		Settings.Setting<Integer> instructedVersion = new Settings(this).lastVersionUserInstructedAbout();
 		if (!instructedVersion.hasValue())
-			instructedVersion.set(new VersionInfo(this).installedVersionCode());
+			instructedVersion.setAndCommit(new VersionInfo(this).installedVersionCode());
 
 		new ServiceController(this).updateFromSettings();
 	}
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 			case R.id.action_uninstall:
 				Uri packageUri = Uri.parse("package:" + getPackageName());
 				Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-				new Settings(this).enabled().set(false);
+				new Settings(this).enabled().setAndCommit(false);
 				new ServiceController(this).ensureStopped();
 				startActivity(uninstallIntent);
 				break;

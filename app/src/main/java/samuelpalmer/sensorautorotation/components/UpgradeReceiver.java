@@ -43,7 +43,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 			if (upgradeMessage.length() != 0)
 				show(upgradeMessage.toString(), context);
 
-			lastVersionUserInstructedAbout.set(newAppVersion);
+			lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
 		}
 	}
 

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 
 public class OrientationCalculator {
@@ -12,36 +11,35 @@ public class OrientationCalculator {
 	private static final Orientation DEFAULT = Orientation.NATURAL;
 	private final Context context;
 	private final Screen screen;
+	private final ApplicationState state;
 
 	private Orientation device = DEFAULT;
-	private Orientation user = DEFAULT;
 	private boolean deviceSpecified;
-	private boolean recalibrating;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(Context context, Screen screen, SystemSettings settings) {
+	public OrientationCalculator(Context context, Screen screen, ApplicationState state) {
 		this.context = context;
 		this.screen = screen;
+		this.state = state;
 		listener = new UpdatingEventRegistrar<>();
-
-		Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
-		recalibrating = accelerometerRotation == null || !accelerometerRotation;
 	}
 
 	public void reset() {
 		device = DEFAULT;
-		user = DEFAULT;
+		Orientation newUser = DEFAULT;
 
 		Settings.ScreenOnBehaviour screenOnBehaviour = new Settings(context).screenOnBehaviour().get();
 		if (screenOnBehaviour == Settings.ScreenOnBehaviour.LOCK_SCREEN_ROTATION)
-			recalibrating = true;
+			state.set(false, newUser);
+		else
+			state.user(newUser);
 
 		reportUpdate();
 	}
 
 	public boolean isRecalibrating() {
-		return recalibrating;
+		return !state.autoRotate();
 	}
 
 	public void setRecalibrating(boolean newValue) {
@@ -50,18 +48,22 @@ public class OrientationCalculator {
 			reportUpdate();
 		}
 
-		recalibrating = newValue;
+		state.autoRotate(!newValue);
 	}
 
 	private void inferUserFromScreen() {
-		user = Orientation.NATURAL.plus(device.minus(screen.realOrientation()));
+		state.user(inferredUser());
+	}
+
+	private Orientation inferredUser() {
+		return Orientation.NATURAL.plus(device.minus(screen.realOrientation()));
 	}
 
 	public void setDevice(Orientation newDevice) {
 
-		if (recalibrating) {
+		if (isRecalibrating()) {
 			Rotation deviceChange = newDevice.minus(device);
-			user = user.plus(deviceChange);
+			state.user(state.user().plus(deviceChange));
 		}
 
 		device = newDevice;
@@ -88,7 +90,7 @@ public class OrientationCalculator {
 	}
 
 	private Rotation userOffset() {
-		return Orientation.NATURAL.minus(user);
+		return Orientation.NATURAL.minus(state.user());
 	}
 
 }

@@ -21,7 +21,7 @@ public class EnvironmentErrorNotifier{
 	public void handle(String message) {
 		show(message + " " + getAppName() + " will be disabled.");
 		new ServiceController(context).ensureStopped();
-		new Settings(context).enabled().set(false);
+		new Settings(context).enabled().setAndCommit(false);
 	}
 
 	private void show(String message) {
