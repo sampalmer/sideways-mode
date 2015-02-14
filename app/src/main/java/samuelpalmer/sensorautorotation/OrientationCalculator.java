@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -9,7 +7,7 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
-	private final Context context;
+	private final Settings settings;
 	private final Screen screen;
 	private final ApplicationState state;
 
@@ -18,8 +16,8 @@ public class OrientationCalculator {
 
 	private final UpdatingEventRegistrar<Void> listener;
 
-	public OrientationCalculator(Context context, Screen screen, ApplicationState state) {
-		this.context = context;
+	public OrientationCalculator(Settings settings, Screen screen, ApplicationState state) {
+		this.settings = settings;
 		this.screen = screen;
 		this.state = state;
 		listener = new UpdatingEventRegistrar<>();
@@ -29,7 +27,7 @@ public class OrientationCalculator {
 		device = DEFAULT;
 		Orientation newUser = DEFAULT;
 
-		Settings.ScreenOnBehaviour screenOnBehaviour = new Settings(context).screenOnBehaviour().get();
+		Settings.ScreenOnBehaviour screenOnBehaviour = settings.screenOnBehaviour().get();
 		if (screenOnBehaviour == Settings.ScreenOnBehaviour.LOCK_SCREEN_ROTATION)
 			state.set(false, newUser);
 		else

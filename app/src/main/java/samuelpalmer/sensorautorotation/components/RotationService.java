@@ -40,15 +40,16 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
-		SystemSettings settings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
+		SystemSettings systemSettings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
 		Screen screen = new Screen(this);
 
-		applicationState = new ApplicationState(new Settings(this), settings);
+		Settings appSettings = new Settings(this);
+		applicationState = new ApplicationState(appSettings, systemSettings);
 
-		calculator = new OrientationCalculator(this, screen, applicationState);
-		screenOrientationController = new ScreenOrientationController(this, settings, screen, calculator);
+		calculator = new OrientationCalculator(appSettings, screen, applicationState);
+		screenOrientationController = new ScreenOrientationController(this, systemSettings, screen, calculator);
 
-		screenUpdater = new ScreenOrientationUpdater(this, RotationService.calculator, screenOrientationController);
+		screenUpdater = new ScreenOrientationUpdater(appSettings, RotationService.calculator, screenOrientationController);
 		orientationMessenger = new OrientationMessenger(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
