@@ -1,24 +1,20 @@
 package samuelpalmer.sensorautorotation.components;
 
 
-import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
-import samuelpalmer.sensorautorotation.Intents;
-import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.ServiceNotification;
 import samuelpalmer.sensorautorotation.Settings;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
@@ -35,6 +31,7 @@ public class RotationService extends Service {
 	private ScreenOrientationUpdater screenUpdater;
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
+	private ServiceNotification serviceNotification;
 
 	@Override
 	public void onCreate() {
@@ -52,6 +49,8 @@ public class RotationService extends Service {
 		screenUpdater = new ScreenOrientationUpdater(appSettings, RotationService.calculator, screenOrientationController);
 		orientationMessenger = new OrientationMessenger(this);
 
+		serviceNotification = new ServiceNotification(this, calculator);
+
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
 			public void stateChanged(UserInteractivity user) {
@@ -63,7 +62,7 @@ public class RotationService extends Service {
 					orientationMessenger.ensureStopped();
 
 					calculator.reset();
-					promoteToForeground();
+					serviceNotification.set();
 
 					screenUpdater.ensureStopped();
 				}
@@ -74,7 +73,7 @@ public class RotationService extends Service {
 
 		screenOrientationController.ensureStarted();
 
-		promoteToForeground();
+		serviceNotification.set();
 
 		userInteractivityMonitor.ensureStarted();
 	}
@@ -121,89 +120,7 @@ public class RotationService extends Service {
 
 	public void setRecalibrating(boolean newValue) {
 		calculator.setRecalibrating(newValue);
-		promoteToForeground();
-	}
-
-	/**
-	 * Reduces chance of being killed
-	 */
-	public void promoteToForeground() {
-		Intents intents = new Intents(this);
-
-		Notification.Builder builder = new Notification.Builder(this)
-				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockReceiver.class), Intents.ComponentType.BROADCAST_RECEIVER))
-				.setContentTitle(getText(mode().summaryResourceId()))
-				.setContentText(getText(mode().actionDescriptionResourceId()));
-
-		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(Notification.PRIORITY_MAX);
-
-		if (Build.VERSION.SDK_INT >= 17) {
-			builder
-					.setShowWhen(false)
-					.setWhen(Integer.MAX_VALUE);
-		}
-		else {
-			builder.setWhen(0);
-		}
-
-		if (Build.VERSION.SDK_INT >= 21)
-			builder.setCategory(Notification.CATEGORY_SERVICE);
-
-		@SuppressWarnings("deprecation")
-		Notification notification = builder.getNotification();
-
-		startForeground(NotificationIds.SERVICE, notification);
-	}
-
-	private Mode mode() {
-		if (calculator.isRecalibrating())
-			return new LockedMode();
-		else
-			return new AutoRotationMode();
-	}
-
-	private interface Mode {
-		public int iconResourceId();
-		public int summaryResourceId();
-		public int actionDescriptionResourceId();
-	}
-
-	private class LockedMode implements Mode {
-
-		@Override
-		public int iconResourceId() {
-			return calculator.proposedScreenOrientation().isPortrait(RotationService.this) ? R.drawable.ic_screen_rotation_locked_portrait : R.drawable.ic_screen_rotation_locked_landscape;
-		}
-
-		@Override
-		public int summaryResourceId() {
-			return R.string.screen_rotation_disabled;
-		}
-
-		@Override
-		public int actionDescriptionResourceId() {
-			return R.string.enable_screen_rotation;
-		}
-	}
-
-	private class AutoRotationMode implements Mode {
-
-		@Override
-		public int iconResourceId() {
-			return R.drawable.ic_screen_rotation_enabled;
-		}
-
-		@Override
-		public int summaryResourceId() {
-			return R.string.screen_rotation_enabled;
-		}
-
-		@Override
-		public int actionDescriptionResourceId() {
-			return R.string.disable_screen_rotation;
-		}
+		serviceNotification.set();
 	}
 
 	@Override
