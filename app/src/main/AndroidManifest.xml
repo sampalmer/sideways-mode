@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="samuelpalmer.sensorautorotation">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="samuelpalmer.sensorautorotation">
 
 	<!-- To disable system rotation, set user rotation -->
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
 	<!-- To enforce orientation -->
 	<!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
@@ -91,6 +92,19 @@
 					android:path="samuelpalmer.sensorautorotation" />
 			</intent-filter>
 		</receiver>
+
+		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
+
+		<!--suppress AndroidDomInspection -->
+		<service
+			android:name=".components.ToggleRotationLockSmallApp"
+			android:exported="true"
+			tools:ignore="ExportedService">
+			<intent-filter>
+				<action android:name="com.sony.smallapp.intent.action.MAIN" />
+				<category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
+			</intent-filter>
+		</service>
 	</application>
 
 </manifest>
