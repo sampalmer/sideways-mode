@@ -10,7 +10,7 @@ public class ToggleRotationLockReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new RotationLockToggler(context).go();
+		new RotationLockToggler(context).go(false);
 	}
 
 }

@@ -15,9 +15,10 @@ public class ServiceController {
 		settings = new ApplicationSettings(context);
 	}
 
-	public void ensureStarted(String action) {
+	public void ensureStarted(String action, boolean showStatusToast) {
 		Intent intent = intent();
 		intent.setAction(action);
+		intent.putExtra(RotationService.EXTRA_SHOW_STATUS_TOAST, showStatusToast);
 
 		ComponentName service = context.startService(intent);
 		if (service == null)
@@ -35,7 +36,7 @@ public class ServiceController {
 
 	private void updateServiceState(boolean enabled) {
 		if (enabled)
-			ensureStarted(null);
+			ensureStarted(null, false);
 		else
 			ensureStopped();
 	}

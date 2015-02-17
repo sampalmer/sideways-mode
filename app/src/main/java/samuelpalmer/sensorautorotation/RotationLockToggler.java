@@ -12,9 +12,9 @@ public class RotationLockToggler {
 		this.context = context;
 	}
 
-	public void go() {
+	public void go(boolean showStatusToast) {
 		if (enabled())
-			toggle();
+			toggle(showStatusToast);
 		else
 			showNotEnabledMessage();
 	}
@@ -23,8 +23,8 @@ public class RotationLockToggler {
 		return new ApplicationSettings(context).enabled().getOr(false);
 	}
 
-	private void toggle() {
-		new ServiceController(context).ensureStarted(RotationService.getToggleAction(context));
+	private void toggle(boolean showStatusToast) {
+		new ServiceController(context).ensureStarted(RotationService.getToggleAction(context), showStatusToast);
 	}
 
 	private void showNotEnabledMessage() {

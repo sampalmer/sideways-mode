@@ -57,14 +57,14 @@ public class ServiceNotification {
 			builder.setWhen(0);
 	}
 
-	private Mode mode() {
+	public Mode mode() {
 		if (calculator.isRecalibrating())
 			return new LockedMode();
 		else
 			return new AutoRotationMode();
 	}
 
-	private interface Mode {
+	public interface Mode {
 		public int iconResourceId();
 		public int summaryResourceId();
 		public int actionDescriptionResourceId();

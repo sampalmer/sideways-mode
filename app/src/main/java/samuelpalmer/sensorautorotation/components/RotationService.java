@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.ApplicationState;
@@ -80,8 +81,13 @@ public class RotationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (isToggleAction(intent))
+		if (isToggleAction(intent)) {
 			toggleRotation();
+			if (intent.getBooleanExtra(EXTRA_SHOW_STATUS_TOAST, false))
+				Toast
+						.makeText(this, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
+						.show();
+		}
 
 		return Service.START_STICKY;
 	}
@@ -100,6 +106,8 @@ public class RotationService extends Service {
 	public static String getToggleAction(Context service) {
 		return service.getPackageName() + ".TOGGLE_ROTATION";
 	}
+
+	public static final String EXTRA_SHOW_STATUS_TOAST = "show_status_toast";
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 
