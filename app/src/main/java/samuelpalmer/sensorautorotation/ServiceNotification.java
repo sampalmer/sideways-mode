@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
@@ -31,6 +32,7 @@ public class ServiceNotification {
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
+		hideFromLockScreen(builder);
 		moveToTop(builder);
 		hideTimestamp(builder);
 
@@ -41,6 +43,13 @@ public class ServiceNotification {
 		Notification notification = builder.getNotification();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	@SuppressLint("NewApi")
+	private void hideFromLockScreen(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 21)
+			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
+			builder.setVisibility(Notification.VISIBILITY_SECRET);
 	}
 
 	private void moveToTop(Notification.Builder builder) {
