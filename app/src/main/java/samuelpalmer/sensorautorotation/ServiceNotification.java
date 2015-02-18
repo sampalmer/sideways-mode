@@ -28,7 +28,7 @@ public class ServiceNotification {
 
 		Notification.Builder builder = new Notification.Builder(service)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockActivity.class)))
+				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockActivity.class), Intents.ComponentType.ACTIVITY))
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
