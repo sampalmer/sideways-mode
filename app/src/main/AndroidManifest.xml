@@ -49,6 +49,9 @@
 		<receiver
 			android:name=".components.ToggleRotationLockReceiver"/>
 
+		<receiver
+			android:name=".components.StartServiceReceiver" />
+
 		<activity
 			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
