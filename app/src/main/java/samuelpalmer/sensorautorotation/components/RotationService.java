@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.ServiceNotification;
+import samuelpalmer.sensorautorotation.ServiceNotificationLockScreenHider;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
@@ -33,6 +34,7 @@ public class RotationService extends Service {
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
 	private ServiceNotification serviceNotification;
+	private ServiceNotificationLockScreenHider notificationHider;
 
 	@Override
 	public void onCreate() {
@@ -51,6 +53,7 @@ public class RotationService extends Service {
 		orientationMessenger = new OrientationMessenger(this);
 
 		serviceNotification = new ServiceNotification(this, calculator);
+		notificationHider = new ServiceNotificationLockScreenHider(this, serviceNotification);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
@@ -77,6 +80,7 @@ public class RotationService extends Service {
 		serviceNotification.set();
 
 		userInteractivityMonitor.ensureStarted();
+		notificationHider.ensureStarted();
 	}
 
 	@Override
@@ -135,6 +139,7 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
+		notificationHider.ensureStopped();
 		orientationMessenger.ensureStopped();
 		screenUpdater.ensureStopped();
 		screenOrientationController.ensureStopped();
