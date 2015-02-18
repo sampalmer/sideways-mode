@@ -47,9 +47,6 @@
 		<activity android:name=".components.UpgradeActivity" />
 
 		<receiver
-			android:name=".components.ToggleRotationLockReceiver"/>
-
-		<receiver
 			android:name=".components.StartServiceReceiver" />
 
 		<activity

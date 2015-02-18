@@ -8,7 +8,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.view.WindowManager;
 
-import samuelpalmer.sensorautorotation.components.ToggleRotationLockReceiver;
+import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 
 public class ServiceNotification {
 
@@ -28,7 +28,7 @@ public class ServiceNotification {
 
 		Notification.Builder builder = new Notification.Builder(service)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockReceiver.class), Intents.ComponentType.BROADCAST_RECEIVER))
+				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockActivity.class)))
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 

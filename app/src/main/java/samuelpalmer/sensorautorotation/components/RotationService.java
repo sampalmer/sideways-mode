@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -90,33 +91,8 @@ public class RotationService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (isToggleAction(intent)) {
-			toggleRotation();
-			if (intent.getBooleanExtra(EXTRA_SHOW_STATUS_TOAST, false))
-				Toast
-						.makeText(this, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
-						.show();
-		}
-
 		return Service.START_STICKY;
 	}
-
-	private boolean isToggleAction(Intent intent) {
-		if (intent != null) {
-			String action = intent.getAction();
-
-			if (action != null && action.equals(getToggleAction(this)))
-				return true;
-		}
-
-		return false;
-	}
-
-	public static String getToggleAction(Context service) {
-		return service.getPackageName() + ".TOGGLE_ROTATION";
-	}
-
-	public static final String EXTRA_SHOW_STATUS_TOAST = "show_status_toast";
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 
@@ -128,11 +104,24 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return new LocalBinder();
 	}
 
-	public void toggleRotation() {
-		setRecalibrating(!calculator.isRecalibrating());
+	/**
+	 * Must be called from process main thread
+	 */
+	public class LocalBinder extends Binder {
+
+		public void toggleRotation() {
+			setRecalibrating(!calculator.isRecalibrating());
+		}
+
+		public void showStatusToast() {
+			Toast
+				.makeText(RotationService.this, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
+				.show();
+		}
+
 	}
 
 	public void setRecalibrating(boolean newValue) {

@@ -15,12 +15,8 @@ public class ServiceController {
 		settings = new ApplicationSettings(context);
 	}
 
-	public void ensureStarted(String action, boolean showStatusToast) {
-		Intent intent = intent();
-		intent.setAction(action);
-		intent.putExtra(RotationService.EXTRA_SHOW_STATUS_TOAST, showStatusToast);
-
-		ComponentName service = context.startService(intent);
+	public void ensureStarted() {
+		ComponentName service = context.startService(intent());
 		if (service == null)
 			throw new RuntimeException("Service doesn't exist");
 	}
@@ -36,7 +32,7 @@ public class ServiceController {
 
 	private void updateServiceState(boolean enabled) {
 		if (enabled)
-			ensureStarted(null, false);
+			ensureStarted();
 		else
 			ensureStopped();
 	}
