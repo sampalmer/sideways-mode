@@ -10,7 +10,7 @@ public class StartServiceReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new ServiceController(context).ensureStarted(null, false);
+		new ServiceController(context).updateFromSettings();
 	}
 
 }
