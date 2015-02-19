@@ -34,8 +34,9 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		if (lastVersionUserInstructedAboutValue != null) {
 			StringBuilder upgradeMessage = new StringBuilder();
 			for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
-				String currentMessage = context.getString(upgradeMessages.get(version));
-				if (currentMessage != null) {
+				Integer messageId = upgradeMessages.get(version);
+				if (messageId != null) {
+					String currentMessage = context.getString(messageId);
 					upgradeMessage.append(currentMessage);
 					upgradeMessage.append('\n');
 				}
