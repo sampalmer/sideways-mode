@@ -52,10 +52,10 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private PendingIntent makeShowMessage(String message) {
-		Intents intents = new Intents(context);
-		Intent intent = intents.makeIntent(ErrorDialogActivity.class)
+		Intents intents = new Intents(context, ErrorDialogActivity.class);
+		Intent intent = intents.makeIntent()
 				.putExtra(ErrorDialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
-		return intents.makePending(intent, Intents.ComponentType.ACTIVITY);
+		return intents.makePending(intent);
 	}
 
 }

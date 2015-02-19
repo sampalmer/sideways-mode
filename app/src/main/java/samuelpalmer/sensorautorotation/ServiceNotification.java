@@ -24,11 +24,11 @@ public class ServiceNotification {
 	 * Reduces chance of being killed
 	 */
 	public void set() {
-		Intents intents = new Intents(service);
+		Intents intents = new Intents(service, ToggleRotationLockActivity.class);
 
 		Notification.Builder builder = new Notification.Builder(service)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(intents.makeIntent(ToggleRotationLockActivity.class), Intents.ComponentType.ACTIVITY))
+				.setContentIntent(intents.makePending(intents.makeIntent()))
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 

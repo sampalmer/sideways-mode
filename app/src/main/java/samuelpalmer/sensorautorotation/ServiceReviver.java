@@ -36,10 +36,9 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		Intents intents = new Intents(context);
+		Intents intents = new Intents(context, StartServiceReceiver.class);
 		return intents.makePending(
-				intents.makeIntent(StartServiceReceiver.class),
-				Intents.ComponentType.BROADCAST_RECEIVER
+				intents.makeIntent()
 		);
 	}
 
