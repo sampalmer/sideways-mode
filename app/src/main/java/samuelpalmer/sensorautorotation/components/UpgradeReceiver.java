@@ -30,7 +30,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	private void upgradeUser(Context context) {
 		int newAppVersion = new VersionInfo(context).installedVersionCode();
 		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
-		Integer lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.getOr(null);
+		Integer lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.tryGet();
 		if (lastVersionUserInstructedAboutValue != null) {
 			StringBuilder upgradeMessage = new StringBuilder();
 			for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {

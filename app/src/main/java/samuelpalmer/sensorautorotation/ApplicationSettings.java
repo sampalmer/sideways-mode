@@ -15,19 +15,29 @@ public class ApplicationSettings {
 	private final SharedPreferences prefs;
 
 	public ApplicationSettings(Context context) {
-		PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public Setting<Integer> lastVersionUserInstructedAbout() { return new IntegerSetting("lastVersionUserInstructedAbout"); }
-	public Setting<Boolean> autoRotate() { return new BooleanSetting("autoRotate"); }
-	public Setting<Integer> userOrientation() { return new IntegerSetting("userOrientation"); }
+	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
+	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
+	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
 
-	public Setting<Boolean> enabled() { return new BooleanSetting("enabled"); }
-	public Setting<Boolean> allowUpsideDownScreen() { return new BooleanSetting("allowUpsideDownScreen"); }
-	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new EnumSetting<>("screenOnBehaviour", ScreenOnBehaviour.class); }
+	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
+	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
+	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOnBehaviour.class), "screenOnBehaviour", ScreenOnBehaviour.DO_NOTHING); }
 
-	public abstract class Setting<T> {
+	public void ensureInitialised() {
+		Setting<?>[] settingsWithDefaults = new Setting<?>[] {
+			enabled(),
+			allowUpsideDownScreen(),
+			screenOnBehaviour()
+		};
+
+		for (Setting<?> setting : settingsWithDefaults)
+			setting.ensureInitialised();
+	}
+
+	public class Setting<T> {
 
 		private final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
 
@@ -55,20 +65,27 @@ public class ApplicationSettings {
 
 		};
 
-		protected final String key;
+		private final SettingType<T> type;
+		private final String key;
+		private final T defaultValue;
 
-		public Setting(String key) {
+		public Setting(SettingType<T> type, String key, T defaultValue) {
+			this.type = type;
 			this.key = key;
+			this.defaultValue = defaultValue;
 		}
 
-		@SuppressWarnings("unchecked")
-		protected T convertFromRaw(Object raw) {
-			return (T)raw;
+		private void ensureInitialised() {
+			if (!hasValue() && defaultValue != null)
+				setAndCommit(defaultValue);
 		}
 
-		private T tryGet() {
-			Object raw = prefs.getAll().get(key);
-			return convertFromRaw(raw);
+		public T tryGet() {
+			Object raw = getRaw();
+			if (raw == null)
+				return defaultValue;
+
+			return type.convertFromRaw(raw);
 		}
 
 		public T get() {
@@ -79,16 +96,12 @@ public class ApplicationSettings {
 			return value;
 		}
 
-		public T getOr(T defaultValue) {
-			T value = tryGet();
-			if (value == null)
-				value = defaultValue;
-
-			return value;
+		public boolean hasValue() {
+			return getRaw() != null;
 		}
 
-		public boolean hasValue() {
-			return tryGet() != null;
+		private Object getRaw() {
+			return prefs.getAll().get(key);
 		}
 
 		public void setAndCommit(T value) {
@@ -98,7 +111,7 @@ public class ApplicationSettings {
 		}
 
 		public void set(T value, Transaction transaction) {
-			put(transaction.editor, value);
+			type.put(transaction.editor, key, value);
 		}
 
 		public void remove(Transaction transaction) {
@@ -113,53 +126,42 @@ public class ApplicationSettings {
 			return onChange;
 		}
 
-		protected abstract void put(Editor editor, T value);
-
 	}
 
-	private class BooleanSetting extends Setting<Boolean> {
-		public BooleanSetting(String key) {
-			super(key);
+	private abstract class SettingType<T> {
+		@SuppressWarnings("unchecked")
+		public T convertFromRaw(Object raw) {
+			return (T)raw;
 		}
 
-		@Override
-		protected void put(Editor editor, Boolean value) {
+		public abstract void put(Editor editor, String key, T value);
+	}
+
+	private class BooleanSetting extends SettingType<Boolean> {
+		public void put(Editor editor, String key, Boolean value) {
 			editor.putBoolean(key, value);
 		}
 	}
 
-	private class IntegerSetting extends Setting<Integer> {
-
-		public IntegerSetting(String key) {
-			super(key);
-		}
-
-		@Override
-		protected void put(Editor editor, Integer value) {
+	private class IntegerSetting extends SettingType<Integer> {
+		public void put(Editor editor, String key, Integer value) {
 			editor.putInt(key, value);
 		}
-
 	}
 
-	private class EnumSetting<T extends Enum<T>> extends Setting<T> {
-
+	private class EnumSetting<T extends Enum<T>> extends SettingType<T> {
 		private final Class<T> clazz;
 
-		public EnumSetting(String key, Class<T> clazz) {
-			super(key);
+		public EnumSetting(Class<T> clazz) {
 			this.clazz = clazz;
 		}
 
-		@Override
-		protected void put(Editor editor, T value) {
+		public void put(Editor editor, String key, T value) {
 			editor.putString(key, value.name());
 		}
 
 		@Override
-		protected T convertFromRaw(Object raw) {
-			if (raw == null)
-				return null;
-
+		public T convertFromRaw(Object raw) {
 			return Enum.valueOf(clazz, (String)raw);
 		}
 	}

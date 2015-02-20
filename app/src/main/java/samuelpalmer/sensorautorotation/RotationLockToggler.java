@@ -31,7 +31,7 @@ public class RotationLockToggler {
 	}
 
 	private Boolean enabled() {
-		return new ApplicationSettings(context).enabled().getOr(false);
+		return new ApplicationSettings(context).enabled().get();
 	}
 
 	private void toggle() {
