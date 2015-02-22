@@ -61,7 +61,11 @@ public class ServiceNotification {
 		if (Build.VERSION.SDK_INT >= 16)
 			builder.setPriority(Notification.PRIORITY_MAX);
 
-		builder.setWhen(Integer.MAX_VALUE);
+		builder.setWhen(System.currentTimeMillis() + millisecondsFromYears(10L));
+	}
+
+	private long millisecondsFromYears(long years) {
+		return years * 365L * 24L * 60L * 60L * 1000L;
 	}
 
 	private void hideTimestamp(Notification.Builder builder) {
