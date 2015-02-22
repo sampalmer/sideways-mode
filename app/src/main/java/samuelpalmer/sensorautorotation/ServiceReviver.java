@@ -23,6 +23,8 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void start() {
+		ensureNoAlarm(); //Just in case the "set" methods don't update the existing alarm
+
 		alarmManager().setInexactRepeating(
 				AlarmManager.ELAPSED_REALTIME,
 				firstTriggerTimeInMilliseconds(),
@@ -44,6 +46,10 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void stop() {
+		ensureNoAlarm();
+	}
+
+	private void ensureNoAlarm() {
 		alarmManager().cancel(intent());
 	}
 
