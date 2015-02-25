@@ -77,8 +77,6 @@ public class RotationService extends Service {
 			}
 		});
 
-		reviver.ensureStarted();
-
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
 		screenOrientationController.ensureStarted();
@@ -92,6 +90,12 @@ public class RotationService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return Service.START_STICKY;
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		reviver.ensureStarted();
 	}
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
