@@ -2,12 +2,16 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.KeyguardManager;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.view.WindowManager;
 
+import samuelpalmer.sensorautorotation.components.MainActivity;
+import samuelpalmer.sensorautorotation.components.SettingsActivity;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 
 public class ServiceNotification {
@@ -33,6 +37,7 @@ public class ServiceNotification {
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
+//		addActions(builder);
 		moveToTop(builder);
 		hideTimestamp(builder);
 		hideFromLockScreen(builder);
@@ -44,6 +49,19 @@ public class ServiceNotification {
 		Notification notification = builder.getNotification();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	private void addActions(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 16) {
+			builder.addAction(
+					R.drawable.ic_settings,
+					service.getString(R.string.action_settings),
+					PendingIntent.getActivities(service, 0, new Intent[] {
+							new Intent(service, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK),
+							new Intent(service, SettingsActivity.class)
+					}, Intents.FLAGS)
+			);
+		}
 	}
 
 	private void hideFromLockScreen(Notification.Builder builder) {
