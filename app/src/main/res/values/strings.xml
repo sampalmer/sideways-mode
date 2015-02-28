@@ -41,6 +41,6 @@
 	<string name="allow_upside_down_screen">Allow upside-down screen</string>
 	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
 
-	<string name="on_screen_on">On screen on</string>
+	<string name="on_screen_on">When screen turned on</string>
 
 </resources>
