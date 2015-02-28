@@ -40,7 +40,7 @@ public class ServiceNotification {
 		hideFromLockScreen(builder);
 
 		if (Build.VERSION.SDK_INT >= 21)
-			builder.setCategory(Notification.CATEGORY_SERVICE);
+			builder.setCategory(Notification.CATEGORY_STATUS);
 
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();

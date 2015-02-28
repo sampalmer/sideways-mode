@@ -60,6 +60,9 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		if (Build.VERSION.SDK_INT >= 16)
 			builder.setPriority(Notification.PRIORITY_HIGH);
 
+		if (Build.VERSION.SDK_INT >= 21)
+			builder.setCategory(Notification.CATEGORY_STATUS);
+
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();
 
