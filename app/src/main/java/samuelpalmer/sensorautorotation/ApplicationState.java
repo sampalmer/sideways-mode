@@ -6,15 +6,15 @@ public class ApplicationState {
 
 	private final ApplicationSettings settings;
 
-	public ApplicationState(ApplicationSettings settings, SystemSettings systemSettings) {
-		this.settings = settings;
+	public ApplicationState(ApplicationSettings applicationSettings, SystemSettings systemSettings) {
+		this.settings = applicationSettings;
 
-		if (!settings.autoRotate().hasValue()) {
-			Boolean accelerometerRotation = systemSettings.accelerometerRotation.getOrNull();
-			autoRotate(accelerometerRotation != null && accelerometerRotation);
+		if (!applicationSettings.autoRotate().hasValue()) {
+			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
+			autoRotate(accelerometerRotation);
 		}
 
-		if (!settings.userOrientation().hasValue())
+		if (!applicationSettings.userOrientation().hasValue())
 			user(Orientation.NATURAL);
 	}
 

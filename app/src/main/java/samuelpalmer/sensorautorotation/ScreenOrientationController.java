@@ -68,11 +68,7 @@ public class ScreenOrientationController extends State {
 	}
 
 	private Orientation proposedOrientation() {
-		Orientation result = settings.userRotation.getOrNull();
-		if (result == null)
-			result = Orientation.NATURAL;
-
-		return result;
+		return settings.userRotation.get();
 	}
 
 	private void systemConfigChanged() {
@@ -80,8 +76,8 @@ public class ScreenOrientationController extends State {
 	}
 
 	private void checkIfSystemAutoRotationWasEnabled() {
-		Boolean accelerometerRotation = settings.accelerometerRotation.getOrNull();
-		if (accelerometerRotation != null && accelerometerRotation) {
+		boolean accelerometerRotation = settings.accelerometerRotation.get();
+		if (accelerometerRotation) {
 			calculator.setRecalibrating(false);
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}

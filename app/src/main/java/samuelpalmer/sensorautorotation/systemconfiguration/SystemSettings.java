@@ -15,12 +15,12 @@ public class SystemSettings {
 	public SystemSettings(SystemSettingSource config) {
 		this.config = config;
 
-		accelerometerRotation = makeSetting(ACCELEROMETER_ROTATION, new BooleanTypeConverter());
-		userRotation = makeSetting(USER_ROTATION, new OrientationTypeConverter());
+		accelerometerRotation = makeSetting(ACCELEROMETER_ROTATION, new BooleanTypeConverter(), true);
+		userRotation = makeSetting(USER_ROTATION, new OrientationTypeConverter(), Orientation.NATURAL);
 	}
 
-	private <T> Setting<T> makeSetting(String key, TypeConverter<T> type) {
-		return new Setting<>(config, key, type);
+	private <T> Setting<T> makeSetting(String key, TypeConverter<T> type, T defaultValue) {
+		return new Setting<>(config, key, type, defaultValue);
 	}
 
 	public final Setting<Boolean> accelerometerRotation;
