@@ -1,11 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Build;
+import android.view.Display;
 import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
@@ -97,17 +99,28 @@ public class ServiceNotification {
 		}
 
 		public boolean isPortrait() {
-			int currentScreenOrientation = service.getResources().getConfiguration().orientation;
-			boolean screenIsPortrait = currentScreenOrientation == Configuration.ORIENTATION_PORTRAIT;
-
-			WindowManager windowManager = (WindowManager)service.getSystemService(Context.WINDOW_SERVICE);
-			Orientation currentScreenRotation = new AndroidSurfaceRotation(windowManager.getDefaultDisplay().getRotation()).orientation();
-			boolean screenIsNaturalOrientation = currentScreenRotation.isNaturalOrUpsideDown();
-
-			boolean deviceIsNaturallyPortrait = screenIsPortrait == screenIsNaturalOrientation;
-
 			boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
-			return inNaturalOrientation == deviceIsNaturallyPortrait;
+			return inNaturalOrientation == deviceIsNaturallyPortrait();
+		}
+
+		@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+		private boolean deviceIsNaturallyPortrait() {
+			WindowManager windowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);
+			Display display = windowManager.getDefaultDisplay();
+			Point screenResolution = new Point();
+
+			//Getting the screen dimensions and rotation should be as close together as possible
+			//since it's possible for them to be retrieved out of sync
+			if (Build.VERSION.SDK_INT >= 14)
+				display.getRealSize(screenResolution);
+			else
+				display.getSize(screenResolution);
+			int rotation = display.getRotation();
+
+			Orientation orientation = new AndroidSurfaceRotation(rotation).orientation();
+
+			boolean portrait = screenResolution.x < screenResolution.y;
+			return portrait == orientation.isNaturalOrUpsideDown();
 		}
 
 		@Override
