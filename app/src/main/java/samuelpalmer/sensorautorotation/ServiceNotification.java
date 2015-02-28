@@ -31,7 +31,7 @@ public class ServiceNotification {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		Notification.Builder builder = new Notification.Builder(service)
 				.setSmallIcon(mode().iconResourceId())
-				.setContentIntent(intents.makePending(intents.makeIntent()))
+				.setContentIntent(intents.makePending())
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 

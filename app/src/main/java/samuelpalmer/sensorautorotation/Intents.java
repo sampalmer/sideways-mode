@@ -36,6 +36,10 @@ public class Intents {
 		throw new RuntimeException(clazz + " doesn't appear to be a component");
 	}
 
+	public PendingIntent makePending() {
+		return makePending(makeIntent());
+	}
+
 	public Intent makeIntent() {
 		return new Intent(context, clazz);
 	}
