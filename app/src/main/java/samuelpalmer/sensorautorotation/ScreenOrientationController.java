@@ -67,10 +67,6 @@ public class ScreenOrientationController extends State {
 		}
 	}
 
-	private Orientation proposedOrientation() {
-		return settings.userRotation.get();
-	}
-
 	private void systemConfigChanged() {
 		checkIfSystemAutoRotationWasEnabled();
 	}
@@ -81,11 +77,6 @@ public class ScreenOrientationController extends State {
 			calculator.setRecalibrating(false);
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
-	}
-
-	@Override
-	public String toString() {
-		return proposedOrientation().toString();
 	}
 
 }
