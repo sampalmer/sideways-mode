@@ -39,8 +39,10 @@ public class ServiceNotification {
 		hideTimestamp(builder);
 		hideFromLockScreen(builder);
 
-		if (Build.VERSION.SDK_INT >= 21)
+		if (Build.VERSION.SDK_INT >= 21) {
 			builder.setCategory(Notification.CATEGORY_STATUS);
+			builder.setColor(0xff536dfe);
+		}
 
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();
