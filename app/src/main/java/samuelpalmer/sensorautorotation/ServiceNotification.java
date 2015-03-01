@@ -64,7 +64,16 @@ public class ServiceNotification {
 		if (Build.VERSION.SDK_INT >= 16)
 			builder.setPriority(Notification.PRIORITY_MAX);
 
-		builder.setWhen(System.currentTimeMillis() + millisecondsFromYears(10L));
+		builder.setWhen(bestWhen());
+	}
+
+	private long bestWhen() {
+		long result = System.currentTimeMillis();
+
+		if (Build.VERSION.SDK_INT < 21) //Because Android 5 ignores future 'when' values in ordering
+			result += millisecondsFromYears(10L);
+
+		return result;
 	}
 
 	private long millisecondsFromYears(long years) {
