@@ -13,9 +13,9 @@
 		so when you rotate the device, the screen will rotate to face <i>your</i> direction.
 
 		\n\nTo use auto rotation while lying down:
-		\n1. Ensure auto rotation is <b>off</b>.
+		\n1. Ensure screen rotation is <b>locked</b>.
 		\n2. Rotate the device until the screen faces the direction you want.
-		\n3. Turn auto rotation back <b>on</b>.
+		\n3. Turn auto rotation <b>on</b>.
 	</string>
 
 	<string name="uninstallating">Uninstalling</string>
@@ -25,7 +25,7 @@
 
 	<string name="screen_rotation_enabled">Auto-Rotating Screen</string>
 	<string name="screen_rotation_disabled">Screen Rotation Locked</string>
-	<string name="enable_screen_rotation">Touch to enable auto screen rotation</string>
+	<string name="enable_screen_rotation">Touch for auto screen rotation</string>
 	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 
 	<string name="toggle_rotation_lock">Toggle Auto Rotation</string>
