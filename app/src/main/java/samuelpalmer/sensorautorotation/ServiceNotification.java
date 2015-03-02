@@ -44,10 +44,17 @@ public class ServiceNotification {
 			builder.setColor(0xff536dfe);
 		}
 
-		@SuppressWarnings("deprecation")
-		Notification notification = builder.getNotification();
+		Notification notification = build(builder);
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	private Notification build(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 16)
+			return builder.build();
+		else
+			//noinspection deprecation
+			return builder.getNotification();
 	}
 
 	private void hideFromLockScreen(Notification.Builder builder) {

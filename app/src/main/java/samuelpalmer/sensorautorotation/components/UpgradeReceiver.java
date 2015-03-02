@@ -63,12 +63,19 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		if (Build.VERSION.SDK_INT >= 21)
 			builder.setCategory(Notification.CATEGORY_STATUS);
 
-		@SuppressWarnings("deprecation")
-		Notification notification = builder.getNotification();
+		Notification notification = build(builder);
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
 		notificationManager.notify(NotificationIds.UPGRADE, notification);
+	}
+
+	private Notification build(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 16)
+			return builder.build();
+		else
+			//noinspection deprecation
+			return builder.getNotification();
 	}
 
 	private PendingIntent makeShowMessage(String message, Context context) {

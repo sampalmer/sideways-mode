@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 
 public class EnvironmentErrorNotifier{
 
-	private Context context;
+	private final Context context;
 
 	public EnvironmentErrorNotifier(Context context) {
 		this.context = context;
@@ -39,12 +39,19 @@ public class EnvironmentErrorNotifier{
 		if (Build.VERSION.SDK_INT >= 21)
 			builder.setCategory(Notification.CATEGORY_ERROR);
 
-		@SuppressWarnings("deprecation")
-		Notification notification = builder.getNotification();
+		Notification notification = build(builder);
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
 		notificationManager.notify(NotificationIds.ERROR, notification);
+	}
+
+	private Notification build(Notification.Builder builder) {
+		if (Build.VERSION.SDK_INT >= 16)
+			return builder.build();
+		else
+			//noinspection deprecation
+			return builder.getNotification();
 	}
 
 	private String getAppName() {

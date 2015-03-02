@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.PowerManager;
 
 public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
@@ -29,9 +30,17 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 
 	@Override
 	protected UserInteractivity get() {
+		return new UserInteractivity(isInteractive());
+	}
+
+	private boolean isInteractive() {
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		//noinspection deprecation
-		return new UserInteractivity(pm.isScreenOn());
+
+		if (Build.VERSION.SDK_INT >= 20)
+			return pm.isInteractive();
+		else
+			//noinspection deprecation
+			return pm.isScreenOn();
 	}
 
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
