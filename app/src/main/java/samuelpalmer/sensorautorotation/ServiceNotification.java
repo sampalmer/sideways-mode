@@ -11,15 +11,21 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 
-public class ServiceNotification {
+public class ServiceNotification extends State {
 
 	private final Service service;
 	private final OrientationCalculator calculator;
+	private final ApplicationSettings settings;
+	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 
-	public ServiceNotification(Service service, OrientationCalculator calculator) {
+	public ServiceNotification(Service service, OrientationCalculator calculator, ApplicationSettings settings) {
 		this.service = service;
 		this.calculator = calculator;
+		this.settings = settings;
+		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
 	}
 
 	/**
@@ -35,7 +41,9 @@ public class ServiceNotification {
 				.setContentTitle(service.getText(mode().summaryResourceId()))
 				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
-		moveToTop(builder);
+		if (settings.showNotificationAtTop().get())
+			moveToTop(builder);
+
 		hideTimestamp(builder);
 		hideFromLockScreen(builder);
 
@@ -102,6 +110,24 @@ public class ServiceNotification {
 		else
 			return new AutoRotationMode();
 	}
+
+	@Override
+	protected void start() {
+		set();
+		onShowNotificationAtTopChanged.subscribe(updateNotification);
+	}
+
+	@Override
+	protected void stop() {
+		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
+	}
+
+	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {
+		@Override
+		public void update(Void event) {
+			set();
+		}
+	};
 
 	public interface Mode {
 		public int iconResourceId();

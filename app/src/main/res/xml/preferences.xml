@@ -17,4 +17,9 @@
 	    android:entries="@array/screen_on_behaviours"
 	    android:entryValues="@array/screen_on_behaviour_values"
 	/>
+	<CheckBoxPreference
+		android:key="showNotificationAtTop"
+	    android:title="@string/show_notification_at_top"
+	    android:summary="@string/show_notification_at_top_description"
+	/>
 </PreferenceScreen>
