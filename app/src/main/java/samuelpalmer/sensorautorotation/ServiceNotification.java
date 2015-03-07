@@ -49,7 +49,7 @@ public class ServiceNotification extends State {
 
 		if (Build.VERSION.SDK_INT >= 21) {
 			builder.setCategory(Notification.CATEGORY_STATUS);
-			builder.setColor(0xff536dfe);
+			builder.setColor(0xFF795548);
 		}
 
 		Notification notification = build(builder);
