@@ -7,13 +7,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
@@ -50,32 +50,19 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	}
 
 	private void show(String upgradeMessage, Context context) {
-		Notification.Builder builder = new Notification.Builder(context)
+		Notification notification = new NotificationBuilderCompat(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
 				.setContentTitle(context.getString(R.string.upgraded_title))
 				.setContentText(context.getString(R.string.touch_for_details))
-				.setAutoCancel(true);
-
-		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(Notification.PRIORITY_HIGH);
-
-		if (Build.VERSION.SDK_INT >= 21)
-			builder.setCategory(Notification.CATEGORY_STATUS);
-
-		Notification notification = build(builder);
+				.setAutoCancel(true)
+				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+				.build();
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
 		notificationManager.notify(NotificationIds.UPGRADE, notification);
-	}
-
-	private Notification build(Notification.Builder builder) {
-		if (Build.VERSION.SDK_INT >= 16)
-			return builder.build();
-		else
-			//noinspection deprecation
-			return builder.getNotification();
 	}
 
 	private PendingIntent makeShowMessage(String message, Context context) {

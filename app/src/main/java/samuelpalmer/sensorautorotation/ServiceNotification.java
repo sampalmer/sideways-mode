@@ -35,7 +35,7 @@ public class ServiceNotification extends State {
 		Intents intents = new Intents(service, ToggleRotationLockActivity.class);
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
-		Notification.Builder builder = new Notification.Builder(service)
+		NotificationBuilderCompat builder = new NotificationBuilderCompat(service)
 				.setSmallIcon(mode().iconResourceId())
 				.setContentIntent(intents.makePending())
 				.setContentTitle(service.getText(mode().summaryResourceId()))
@@ -47,40 +47,28 @@ public class ServiceNotification extends State {
 		hideTimestamp(builder);
 		hideFromLockScreen(builder);
 
-		if (Build.VERSION.SDK_INT >= 21) {
-			builder.setCategory(Notification.CATEGORY_STATUS);
-			builder.setColor(0xFF795548);
-		}
+		builder.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
+		builder.setColor(0xFF795548);
 
-		Notification notification = build(builder);
+		Notification notification = builder.build();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
 	}
 
-	private Notification build(Notification.Builder builder) {
-		if (Build.VERSION.SDK_INT >= 16)
-			return builder.build();
-		else
-			//noinspection deprecation
-			return builder.getNotification();
-	}
-
-	private void hideFromLockScreen(Notification.Builder builder) {
+	private void hideFromLockScreen(NotificationBuilderCompat builder) {
 		if (Build.VERSION.SDK_INT >= 21) {
 			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
-			builder.setVisibility(Notification.VISIBILITY_SECRET);
+			builder.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET);
 
 			KeyguardManager keyguardManager = (KeyguardManager) service.getSystemService(Context.KEYGUARD_SERVICE);
 
 			if (keyguardManager.isKeyguardLocked())
-				builder.setPriority(Notification.PRIORITY_MIN);
+				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
 		}
 	}
 
-	private void moveToTop(Notification.Builder builder) {
-		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(Notification.PRIORITY_MAX);
-
+	private void moveToTop(NotificationBuilderCompat builder) {
+		builder.setPriority(NotificationBuilderCompat.PRIORITY_MAX);
 		builder.setWhen(bestWhen());
 	}
 
@@ -97,7 +85,7 @@ public class ServiceNotification extends State {
 		return years * 365L * 24L * 60L * 60L * 1000L;
 	}
 
-	private void hideTimestamp(Notification.Builder builder) {
+	private void hideTimestamp(NotificationBuilderCompat builder) {
 		if (Build.VERSION.SDK_INT >= 17)
 			builder.setShowWhen(false);
 		else
