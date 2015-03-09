@@ -18,8 +18,8 @@
 		\n3. Turn auto rotation <b>on</b>.
 	</string>
 
-	<string name="uninstallating">Uninstalling</string>
-	<string name="uninstallating_instructions">If you want to uninstall this, please use the menu item on this screen
+	<string name="uninstalling">Uninstalling</string>
+	<string name="uninstalling_instructions">If you want to uninstall this, please use the menu item on this screen
 		to ensure the default screen rotation is not left in the wrong state.
 	</string>
 

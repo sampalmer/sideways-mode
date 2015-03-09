@@ -39,7 +39,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="@string/uninstallating"
+			android:text="@string/uninstalling"
 			android:layout_gravity="center"
 		/>
 
@@ -47,7 +47,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text="@string/uninstallating_instructions"
+			android:text="@string/uninstalling_instructions"
 		/>
 
 	</LinearLayout>
