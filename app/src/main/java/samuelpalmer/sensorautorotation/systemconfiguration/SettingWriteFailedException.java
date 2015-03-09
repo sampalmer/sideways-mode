@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.systemconfiguration;
 public class SettingWriteFailedException extends Exception {
 
 	private static final long serialVersionUID = 2703215740394090412L;
-	private String key;
-	private Object value;
+	private final String key;
+	private final Object value;
 
 	public SettingWriteFailedException(String key, Object value) {
 		super(String.format("Failed to write the value '%s' for setting '%s'", value, key));

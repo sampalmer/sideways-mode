@@ -11,10 +11,10 @@ import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class ScreenOrientationController extends State {
 
-	private SystemSettings settings;
+	private final SystemSettings settings;
 	private final Screen screen;
 	private final OrientationCalculator calculator;
-	private Context context;
+	private final Context context;
 
 	private final BroadcastReceiver configChangedReceiver = new BroadcastReceiver() {
 

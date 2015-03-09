@@ -5,7 +5,7 @@ import samuelpalmer.sensorautorotation.Orientation;
 
 public class OrientationTypeConverter implements TypeConverter<Orientation> {
 
-	private IntegerTypeConverter integer;
+	private final IntegerTypeConverter integer;
 
 	public OrientationTypeConverter() {
 		integer = new IntegerTypeConverter();

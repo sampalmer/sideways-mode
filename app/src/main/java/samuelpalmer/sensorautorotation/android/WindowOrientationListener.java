@@ -21,10 +21,12 @@
  * -Package changed
  * -Logging removed to fix errors due to inaccessible code
  * -Unused variables and methods removed to remove warnings
+ * -Suppression of lint checks and warnings
  */
 
 package samuelpalmer.sensorautorotation.android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -45,6 +47,8 @@ import android.util.Log;
  * You can also visualize the behavior of the WindowOrientationListener.
  * Refer to frameworks/base/tools/orientationplot/README.txt for details.
  */
+@SuppressWarnings("ALL")
+@SuppressLint("all")
 public abstract class WindowOrientationListener {
 	private static final String TAG = "WindowOrientationListener";
 

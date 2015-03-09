@@ -25,7 +25,7 @@ public class OrientationMessenger extends State {
 		orientationListener.ensureStopped();
 	}
 
-	EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
+	final EventHandler<Orientation> deviceOrientationSubscriber = new EventHandler<Orientation>() {
 
 		@Override
 		public void update(Orientation event) {

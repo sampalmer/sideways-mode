@@ -10,7 +10,7 @@ import static android.provider.Settings.System.USER_ROTATION;
 
 public class SystemSettings {
 
-	private SystemSettingSource config;
+	private final SystemSettingSource config;
 
 	public SystemSettings(SystemSettingSource config) {
 		this.config = config;

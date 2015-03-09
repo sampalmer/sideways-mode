@@ -10,7 +10,7 @@ import static android.provider.Settings.System.putString;
 
 public class AndroidSystemSettingSource implements SystemSettingSource {
 
-	private ContentResolver contentResolver;
+	private final ContentResolver contentResolver;
 
 	public AndroidSystemSettingSource(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;

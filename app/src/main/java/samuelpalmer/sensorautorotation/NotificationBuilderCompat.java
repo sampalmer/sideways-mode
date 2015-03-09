@@ -10,7 +10,7 @@ import android.os.Build;
  * Basically a reinvented clone of NotificationCompat.Builder, except with a working setShowWhen
  * implementation. Avoiding use of the compat library reduces installation size and RAM use.
  */
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings({"UnusedDeclaration", "UnusedReturnValue"})
 public class NotificationBuilderCompat {
 	protected final Notification.Builder builder;
 

@@ -9,7 +9,7 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class OrientationSensorHandler extends State {
 
-	private WindowOrientationListener listener;
+	private final WindowOrientationListener listener;
 	private final UpdatingEventRegistrar<Orientation> subscriptions;
 	private Integer lastRotation;
 
