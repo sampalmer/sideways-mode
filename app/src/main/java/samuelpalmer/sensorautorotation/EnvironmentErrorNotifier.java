@@ -24,7 +24,7 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private void show(String message) {
-		Notification notification = new NotificationBuilderCompat(context)
+		Notification notification = NotificationBuilderCompat.create(context)
 				.setSmallIcon(R.drawable.ic_error)
 				.setContentIntent(makeShowMessage(message))
 				.setContentTitle(getAppName())

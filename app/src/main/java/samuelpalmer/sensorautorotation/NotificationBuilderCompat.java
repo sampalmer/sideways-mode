@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,7 +12,7 @@ import android.os.Build;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class NotificationBuilderCompat {
-	private final Notification.Builder builder;
+	protected final Notification.Builder builder;
 
 	public static final int PRIORITY_DEFAULT = 0;
 	public static final int PRIORITY_LOW = -1;
@@ -38,7 +39,18 @@ public class NotificationBuilderCompat {
 	public static final String CATEGORY_RECOMMENDATION = "recommendation";
 	public static final String CATEGORY_STATUS = "status";
 
-	public NotificationBuilderCompat(Context context) {
+	public static NotificationBuilderCompat create(Context context) {
+		if (Build.VERSION.SDK_INT >= 21)
+			return new V21(context);
+		else if (Build.VERSION.SDK_INT >= 17)
+			return new V17(context);
+		else if (Build.VERSION.SDK_INT >= 16)
+			return new V16(context);
+		else
+			return new NotificationBuilderCompat(context);
+	}
+
+	private NotificationBuilderCompat(Context context) {
 		builder = new Notification.Builder(context);
 	}
 
@@ -63,20 +75,14 @@ public class NotificationBuilderCompat {
 	}
 
 	public NotificationBuilderCompat setCategory(String category) {
-		if (Build.VERSION.SDK_INT >= 21)
-			builder.setCategory(category);
 		return this;
 	}
 
 	public NotificationBuilderCompat setColor(int argb) {
-		if (Build.VERSION.SDK_INT >= 21)
-			builder.setColor(argb);
 		return this;
 	}
 
 	public NotificationBuilderCompat setVisibility(int visibility) {
-		if (Build.VERSION.SDK_INT >= 21)
-			builder.setVisibility(visibility);
 		return this;
 	}
 
@@ -86,22 +92,15 @@ public class NotificationBuilderCompat {
 	}
 
 	public Notification build() {
-		if (Build.VERSION.SDK_INT >= 16)
-			return builder.build();
-		else
-			//noinspection deprecation
-			return builder.getNotification();
+		//noinspection deprecation
+		return builder.getNotification();
 	}
 
 	public NotificationBuilderCompat setPriority(int pri) {
-		if (Build.VERSION.SDK_INT >= 16)
-			builder.setPriority(pri);
 		return this;
 	}
 
 	public NotificationBuilderCompat setShowWhen(boolean show) {
-		if (Build.VERSION.SDK_INT >= 17)
-			builder.setShowWhen(show);
 		return this;
 	}
 
@@ -113,5 +112,64 @@ public class NotificationBuilderCompat {
 	public NotificationBuilderCompat setTicker(CharSequence tickerText) {
 		builder.setTicker(tickerText);
 		return this;
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private static class V16 extends NotificationBuilderCompat
+	{
+		public V16(Context context) {
+			super(context);
+		}
+
+		@Override
+		public Notification build() {
+			return builder.build();
+		}
+
+		@Override
+		public NotificationBuilderCompat setPriority(int pri) {
+			builder.setPriority(pri);
+			return this;
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private static class V17 extends V16
+	{
+		public V17(Context context) {
+			super(context);
+		}
+
+		@Override
+		public NotificationBuilderCompat setShowWhen(boolean show) {
+			builder.setShowWhen(show);
+			return this;
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	private static class V21 extends V17
+	{
+		public V21(Context context) {
+			super(context);
+		}
+
+		@Override
+		public NotificationBuilderCompat setCategory(String category) {
+			builder.setCategory(category);
+			return this;
+		}
+
+		@Override
+		public NotificationBuilderCompat setColor(int argb) {
+			builder.setColor(argb);
+			return this;
+		}
+
+		@Override
+		public NotificationBuilderCompat setVisibility(int visibility) {
+			builder.setVisibility(visibility);
+			return this;
+		}
 	}
 }

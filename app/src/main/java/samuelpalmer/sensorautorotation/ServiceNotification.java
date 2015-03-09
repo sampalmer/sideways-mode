@@ -35,7 +35,7 @@ public class ServiceNotification extends State {
 		Intents intents = new Intents(service, ToggleRotationLockActivity.class);
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
-		NotificationBuilderCompat builder = new NotificationBuilderCompat(service)
+		NotificationBuilderCompat builder = NotificationBuilderCompat.create(service)
 				.setSmallIcon(mode().iconResourceId())
 				.setContentIntent(intents.makePending())
 				.setContentTitle(service.getText(mode().summaryResourceId()))

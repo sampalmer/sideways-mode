@@ -50,7 +50,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	}
 
 	private void show(String upgradeMessage, Context context) {
-		Notification notification = new NotificationBuilderCompat(context)
+		Notification notification = NotificationBuilderCompat.create(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
 				.setContentTitle(context.getString(R.string.upgraded_title))
