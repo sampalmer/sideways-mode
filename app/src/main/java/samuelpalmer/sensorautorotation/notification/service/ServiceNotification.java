@@ -53,7 +53,7 @@ public class ServiceNotification {
 	}
 
 	public Mode mode() {
-		if (calculator.isRecalibrating())
+		if (calculator.isOrientationLocked())
 			return new LockedMode(service, calculator);
 		else
 			return new AutoRotationMode();
