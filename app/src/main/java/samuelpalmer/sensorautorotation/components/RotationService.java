@@ -24,6 +24,7 @@ import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
+import samuelpalmer.sensorautorotation.notification.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
@@ -35,9 +36,10 @@ public class RotationService extends Service {
 	private ScreenOrientationUpdater screenUpdater;
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
-	private ServiceNotification serviceNotification;
+	private ServiceNotificationManager serviceNotificationManager;
 	private LockScreenHider notificationHider;
 	private ServiceReviver reviver;
+	private ServiceNotification serviceNotification;
 
 	@Override
 	public void onCreate() {
@@ -55,7 +57,8 @@ public class RotationService extends Service {
 		screenUpdater = new ScreenOrientationUpdater(appSettings, RotationService.calculator, screenOrientationController);
 		orientationMessenger = new OrientationMessenger(this);
 
-		serviceNotification = new ServiceNotification(this, calculator, appSettings);
+		serviceNotification = new ServiceNotification(this, appSettings, calculator);
+		serviceNotificationManager = new ServiceNotificationManager(serviceNotification, appSettings);
 		notificationHider = new LockScreenHider(this, serviceNotification);
 		reviver = new ServiceReviver(this);
 
@@ -80,7 +83,7 @@ public class RotationService extends Service {
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
 		screenOrientationController.ensureStarted();
-		serviceNotification.ensureStarted();
+		serviceNotificationManager.ensureStarted();
 		userInteractivityMonitor.ensureStarted();
 		notificationHider.ensureStarted();
 	}
@@ -141,7 +144,7 @@ public class RotationService extends Service {
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityMonitor.ensureStopped();
-		serviceNotification.ensureStopped();
+		serviceNotificationManager.ensureStopped();
 		reviver.ensureStopped();
 
 		applicationState.clear();

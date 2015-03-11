@@ -15,11 +15,11 @@ import samuelpalmer.sensorautorotation.State;
 public class LockScreenHider extends State {
 
 	private final Context context;
-	private final ServiceNotification notification;
+	private final ServiceNotification serviceNotification;
 
-	public LockScreenHider(Context context, ServiceNotification notification) {
+	public LockScreenHider(Context context, ServiceNotification serviceNotification) {
 		this.context = context;
-		this.notification = notification;
+		this.serviceNotification = serviceNotification;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class LockScreenHider extends State {
 	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			notification.set();
+			serviceNotification.set();
 		}
 	};
 

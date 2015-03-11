@@ -9,25 +9,20 @@ import android.os.Build;
 import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notification.NotificationIds;
 
-public class ServiceNotification extends State {
+public class ServiceNotification {
 
 	private final Service service;
-	private final OrientationCalculator calculator;
 	private final ApplicationSettings settings;
-	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
+	private final OrientationCalculator calculator;
 
-	public ServiceNotification(Service service, OrientationCalculator calculator, ApplicationSettings settings) {
+	public ServiceNotification(Service service, ApplicationSettings settings, OrientationCalculator calculator) {
 		this.service = service;
-		this.calculator = calculator;
 		this.settings = settings;
-		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
+		this.calculator = calculator;
 	}
 
 	/**
@@ -55,6 +50,13 @@ public class ServiceNotification extends State {
 		Notification notification = builder.build();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	public Mode mode() {
+		if (calculator.isRecalibrating())
+			return new LockedMode(service, calculator);
+		else
+			return new AutoRotationMode();
 	}
 
 	private void hideFromLockScreen(NotificationBuilderCompat builder) {
@@ -93,30 +95,4 @@ public class ServiceNotification extends State {
 		else
 			builder.setWhen(0);
 	}
-
-	public Mode mode() {
-		if (calculator.isRecalibrating())
-			return new LockedMode(service, calculator);
-		else
-			return new AutoRotationMode();
-	}
-
-	@Override
-	protected void start() {
-		set();
-		onShowNotificationAtTopChanged.subscribe(updateNotification);
-	}
-
-	@Override
-	protected void stop() {
-		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
-	}
-
-	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {
-		@Override
-		public void update(Void event) {
-			set();
-		}
-	};
-
 }
