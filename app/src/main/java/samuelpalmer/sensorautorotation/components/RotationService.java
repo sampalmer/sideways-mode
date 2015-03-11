@@ -70,12 +70,11 @@ public class RotationService extends Service {
 					orientationMessenger.ensureStarted();
 				}
 				else {
+					screenUpdater.ensureStopped();
 					orientationMessenger.ensureStopped();
 
 					calculator.reset();
 					serviceNotification.set();
-
-					screenUpdater.ensureStopped();
 				}
 			}
 		});
