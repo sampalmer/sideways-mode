@@ -13,11 +13,11 @@ import java.util.Map;
 
 import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.Intents;
-import samuelpalmer.sensorautorotation.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.NotificationIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notification.NotificationIds;
 
 public class UpgradeReceiver extends BroadcastReceiver {
 

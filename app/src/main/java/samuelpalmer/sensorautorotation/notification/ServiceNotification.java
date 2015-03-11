@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.notification;
 
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
@@ -10,6 +10,13 @@ import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
 
+import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.ApplicationSettings;
+import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.Orientation;
+import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;

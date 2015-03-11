@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.notification;
 
 public class NotificationIds {
 	public static final int SERVICE = 1;

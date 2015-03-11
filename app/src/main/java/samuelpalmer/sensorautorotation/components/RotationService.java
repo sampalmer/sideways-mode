@@ -17,13 +17,13 @@ import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
-import samuelpalmer.sensorautorotation.ServiceNotification;
-import samuelpalmer.sensorautorotation.ServiceNotificationLockScreenHider;
 import samuelpalmer.sensorautorotation.ServiceReviver;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.notification.ServiceNotification;
+import samuelpalmer.sensorautorotation.notification.ServiceNotificationLockScreenHider;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {

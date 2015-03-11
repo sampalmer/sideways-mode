@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.notification;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+
+import samuelpalmer.sensorautorotation.State;
 
 /**
  * Updates the service notification to try to prevent it from showing on the lock screen on Android 5
