@@ -49,7 +49,7 @@ public class ScreenOrientationController extends State {
 		context.unregisterReceiver(configChangedReceiver);
 
 		set(settings.userRotation, Orientation.NATURAL);
-		set(settings.accelerometerRotation, !calculator.isOrientationLocked());
+		set(settings.accelerometerRotation, calculator.autoRotate());
 	}
 
 	public void propose(Orientation value) {
@@ -74,7 +74,7 @@ public class ScreenOrientationController extends State {
 	private void checkIfSystemAutoRotationWasEnabled() {
 		boolean accelerometerRotation = settings.accelerometerRotation.get();
 		if (accelerometerRotation) {
-			calculator.setOrientationLocked(false);
+			calculator.setAutoRotate(true);
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
 	}

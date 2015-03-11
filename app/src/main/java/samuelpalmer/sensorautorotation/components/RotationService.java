@@ -117,7 +117,7 @@ public class RotationService extends Service {
 	public class LocalBinder extends Binder {
 
 		public void toggleRotation() {
-			setOrientationLocked(!calculator.isOrientationLocked());
+			setAutoRotate(!calculator.autoRotate());
 		}
 
 		public void showStatusToast() {
@@ -128,8 +128,8 @@ public class RotationService extends Service {
 
 	}
 
-	public void setOrientationLocked(boolean newValue) {
-		calculator.setOrientationLocked(newValue);
+	public void setAutoRotate(boolean newValue) {
+		calculator.setAutoRotate(newValue);
 		serviceNotification.set();
 	}
 

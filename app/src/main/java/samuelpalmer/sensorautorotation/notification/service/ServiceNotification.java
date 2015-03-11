@@ -53,10 +53,10 @@ public class ServiceNotification {
 	}
 
 	public Mode mode() {
-		if (calculator.isOrientationLocked())
-			return new LockedMode(service, calculator);
-		else
+		if (calculator.autoRotate())
 			return new AutoRotationMode();
+		else
+			return new LockedMode(service, calculator);
 	}
 
 	private void hideFromLockScreen(NotificationBuilderCompat builder) {

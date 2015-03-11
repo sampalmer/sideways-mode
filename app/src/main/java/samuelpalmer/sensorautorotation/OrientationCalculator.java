@@ -36,18 +36,18 @@ public class OrientationCalculator {
 		reportUpdate();
 	}
 
-	public boolean isOrientationLocked() {
-		return !state.autoRotate();
+	public boolean autoRotate() {
+		return state.autoRotate();
 	}
 
-	public void setOrientationLocked(boolean newValue) {
+	public void setAutoRotate(boolean newValue) {
 		/* Since the current app/window might be overriding the current proposed orientation.
 		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience;
 		 locking screen orientation locks the actual orientation rather than the proposed one. */
-		if (newValue)
+		if (!newValue)
 			inferUserFromScreen();
 
-		state.autoRotate(!newValue);
+		state.autoRotate(newValue);
 		reportUpdate();
 	}
 
@@ -61,7 +61,7 @@ public class OrientationCalculator {
 
 	public void setDevice(Orientation newDevice) {
 
-		if (isOrientationLocked()) {
+		if (!autoRotate()) {
 			Rotation deviceChange = newDevice.minus(device);
 			state.user(state.user().plus(deviceChange));
 		}
