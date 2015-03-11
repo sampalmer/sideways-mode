@@ -22,8 +22,8 @@ import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
-import samuelpalmer.sensorautorotation.notification.ServiceNotification;
-import samuelpalmer.sensorautorotation.notification.ServiceNotificationLockScreenHider;
+import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
+import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {
@@ -36,7 +36,7 @@ public class RotationService extends Service {
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
 	private ServiceNotification serviceNotification;
-	private ServiceNotificationLockScreenHider notificationHider;
+	private LockScreenHider notificationHider;
 	private ServiceReviver reviver;
 
 	@Override
@@ -56,7 +56,7 @@ public class RotationService extends Service {
 		orientationMessenger = new OrientationMessenger(this);
 
 		serviceNotification = new ServiceNotification(this, calculator, appSettings);
-		notificationHider = new ServiceNotificationLockScreenHider(this, serviceNotification);
+		notificationHider = new LockScreenHider(this, serviceNotification);
 		reviver = new ServiceReviver(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification;
+package samuelpalmer.sensorautorotation.notification.service;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -12,12 +12,12 @@ import samuelpalmer.sensorautorotation.State;
 /**
  * Updates the service notification to try to prevent it from showing on the lock screen on Android 5
  */
-public class ServiceNotificationLockScreenHider extends State {
+public class LockScreenHider extends State {
 
 	private final Context context;
 	private final ServiceNotification notification;
 
-	public ServiceNotificationLockScreenHider(Context context, ServiceNotification notification) {
+	public LockScreenHider(Context context, ServiceNotification notification) {
 		this.context = context;
 		this.notification = notification;
 	}

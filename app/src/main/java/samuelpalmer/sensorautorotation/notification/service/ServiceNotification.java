@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification;
+package samuelpalmer.sensorautorotation.notification.service;
 
 import android.app.KeyguardManager;
 import android.app.Notification;
@@ -13,6 +13,8 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notification.NotificationIds;
 
 public class ServiceNotification extends State {
 

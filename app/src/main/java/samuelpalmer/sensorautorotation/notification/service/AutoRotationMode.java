@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification;
+package samuelpalmer.sensorautorotation.notification.service;
 
 import samuelpalmer.sensorautorotation.R;
 
