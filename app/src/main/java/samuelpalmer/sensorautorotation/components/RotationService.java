@@ -6,9 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
@@ -107,29 +105,7 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new LocalBinder();
-	}
-
-	/**
-	 * Must be called from process main thread
-	 */
-	public class LocalBinder extends Binder {
-
-		public void toggleRotation() {
-			setAutoRotate(!calculator.autoRotate());
-		}
-
-		public void showStatusToast() {
-			Toast
-				.makeText(RotationService.this, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
-				.show();
-		}
-
-	}
-
-	public void setAutoRotate(boolean newValue) {
-		calculator.setAutoRotate(newValue);
-		serviceNotification.set();
+		return new LocalBinder(this, serviceNotification);
 	}
 
 	@Override

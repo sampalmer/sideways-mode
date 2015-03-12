@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import samuelpalmer.sensorautorotation.components.LocalBinder;
 import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -55,7 +56,7 @@ public class RotationLockToggler {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			context.unbindService(this);
 
-			RotationService.LocalBinder localBinder = (RotationService.LocalBinder)service;
+			LocalBinder localBinder = (LocalBinder)service;
 			localBinder.toggleRotation();
 			if (showStatusToast)
 				localBinder.showStatusToast();
