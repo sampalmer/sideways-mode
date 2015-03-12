@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation;
 import android.content.Context;
 
 import samuelpalmer.sensorautorotation.components.RotationService;
+import samuelpalmer.sensorautorotation.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class OrientationMessenger extends State {

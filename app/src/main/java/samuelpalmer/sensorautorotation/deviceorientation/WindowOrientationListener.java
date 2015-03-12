@@ -24,7 +24,7 @@
  * -Suppression of lint checks and warnings
  */
 
-package samuelpalmer.sensorautorotation.android;
+package samuelpalmer.sensorautorotation.deviceorientation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
