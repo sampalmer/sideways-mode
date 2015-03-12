@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification.service;
+package samuelpalmer.sensorautorotation.notifications.service;
 
 public interface Mode {
 	public int iconResourceId();

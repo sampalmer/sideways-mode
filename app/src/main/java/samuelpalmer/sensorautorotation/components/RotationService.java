@@ -19,9 +19,9 @@ import samuelpalmer.sensorautorotation.ServiceReviver;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
-import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
-import samuelpalmer.sensorautorotation.notification.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.notifications.service.LockScreenHider;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 

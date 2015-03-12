@@ -5,7 +5,7 @@ import android.os.Binder;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.components.RotationService;
-import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 
 /**
  * Must be called from process main thread

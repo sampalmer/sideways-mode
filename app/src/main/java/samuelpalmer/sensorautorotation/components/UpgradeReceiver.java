@@ -15,8 +15,8 @@ import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.VersionInfo;
-import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notification.NotificationIds;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class UpgradeReceiver extends BroadcastReceiver {

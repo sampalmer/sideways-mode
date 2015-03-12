@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification;
+package samuelpalmer.sensorautorotation.notifications;
 
 import android.annotation.TargetApi;
 import android.app.Notification;

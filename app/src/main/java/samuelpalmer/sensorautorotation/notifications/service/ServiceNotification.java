@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notification.service;
+package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.KeyguardManager;
 import android.app.Notification;
@@ -9,8 +9,8 @@ import android.os.Build;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
-import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notification.NotificationIds;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotification {
