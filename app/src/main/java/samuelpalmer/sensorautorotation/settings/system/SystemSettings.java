@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.settings.system;
 
+import android.content.ContentResolver;
+
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.settings.system.types.BooleanTypeConverter;
 import samuelpalmer.sensorautorotation.settings.system.types.OrientationTypeConverter;
@@ -12,8 +14,8 @@ public class SystemSettings {
 
 	private final SystemSettingSource config;
 
-	public SystemSettings(SystemSettingSource config) {
-		this.config = config;
+	public SystemSettings(ContentResolver config) {
+		this.config = new SystemSettingSource(config);
 
 		accelerometerRotation = makeSetting(ACCELEROMETER_ROTATION, new BooleanTypeConverter(), true);
 		userRotation = makeSetting(USER_ROTATION, new OrientationTypeConverter(), Orientation.NATURAL);
