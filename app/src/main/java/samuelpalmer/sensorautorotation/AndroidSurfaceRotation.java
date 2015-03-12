@@ -6,7 +6,10 @@ public class AndroidSurfaceRotation {
 
 	private final int value;
 
-	public AndroidSurfaceRotation(int value) {
+	public AndroidSurfaceRotation(int value) throws IllegalArgumentException {
+		if (value < Surface.ROTATION_0 || value > Surface.ROTATION_270)
+			throw new IllegalArgumentException("Value " + value + " is not a valid surface rotation");
+
 		this.value = value;
 	}
 
