@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -13,8 +14,10 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class ApplicationSettings {
 
 	private final SharedPreferences prefs;
+	private final Context context;
 
 	public ApplicationSettings(Context context) {
+		this.context = context;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
@@ -139,7 +142,8 @@ public class ApplicationSettings {
 
 		public void commit() {
 			if (!editor.commit())
-				throw new RuntimeException("Failed to write settings");
+				// Since a look over the implementation of Editor.commit() indicates this represents a file system or other IO error.
+				new EnvironmentErrorNotifier(context).handle("Couldn't write application settings.");
 		}
 	}
 
