@@ -74,6 +74,7 @@ public class ScreenOrientationController extends State {
 	private void checkIfSystemAutoRotationWasEnabled() {
 		boolean accelerometerRotation = settings.accelerometerRotation.get();
 		if (accelerometerRotation) {
+			//So when the service is stopped, the new auto rotation setting will be reapplied to the system. (Otherwise the user's change to system auto rotation could be reverted.)
 			calculator.setAutoRotate(true);
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
