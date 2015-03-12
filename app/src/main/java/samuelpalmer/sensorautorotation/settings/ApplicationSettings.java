@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -127,49 +127,6 @@ public class ApplicationSettings {
 			return onChange;
 		}
 
-	}
-
-	private abstract class SettingType<T> {
-		@SuppressWarnings("unchecked")
-		public T convertFromRaw(Object raw) {
-			return (T)raw;
-		}
-
-		public abstract void put(Editor editor, String key, T value);
-	}
-
-	private class BooleanSetting extends SettingType<Boolean> {
-		public void put(Editor editor, String key, Boolean value) {
-			editor.putBoolean(key, value);
-		}
-	}
-
-	private class IntegerSetting extends SettingType<Integer> {
-		public void put(Editor editor, String key, Integer value) {
-			editor.putInt(key, value);
-		}
-	}
-
-	private class EnumSetting<T extends Enum<T>> extends SettingType<T> {
-		private final Class<T> clazz;
-
-		public EnumSetting(Class<T> clazz) {
-			this.clazz = clazz;
-		}
-
-		public void put(Editor editor, String key, T value) {
-			editor.putString(key, value.name());
-		}
-
-		@Override
-		public T convertFromRaw(Object raw) {
-			return Enum.valueOf(clazz, (String)raw);
-		}
-	}
-
-	public enum ScreenOnBehaviour {
-		DO_NOTHING,
-		LOCK_SCREEN_ROTATION
 	}
 
 	public class Transaction {

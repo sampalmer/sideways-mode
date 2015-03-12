@@ -10,7 +10,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
@@ -25,6 +24,7 @@ import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
 
 public class RotationService extends Service {

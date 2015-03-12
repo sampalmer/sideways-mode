@@ -6,12 +6,12 @@ import android.app.Service;
 import android.content.Context;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notification.NotificationIds;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public class ServiceNotification {
 

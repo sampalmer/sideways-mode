@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import samuelpalmer.sensorautorotation.ApplicationSettings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public class MainActivity extends Activity {
 

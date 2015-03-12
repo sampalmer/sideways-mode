@@ -10,6 +10,7 @@ import android.content.Intent;
 import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
 import samuelpalmer.sensorautorotation.notification.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notification.NotificationIds;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public class EnvironmentErrorNotifier{
 
