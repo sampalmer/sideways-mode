@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import android.content.Context;
+
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -7,23 +9,27 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {
 
-	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 	private final ServiceNotification serviceNotification;
+	private final LockScreenHider notificationHider;
+	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 
-	public ServiceNotificationManager(ServiceNotification serviceNotification, ApplicationSettings settings) {
+	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings) {
 		this.serviceNotification = serviceNotification;
+		notificationHider = new LockScreenHider(context, serviceNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
 	}
 
 	@Override
 	protected void start() {
 		serviceNotification.set();
+		notificationHider.ensureStarted();
 		onShowNotificationAtTopChanged.subscribe(updateNotification);
 	}
 
 	@Override
 	protected void stop() {
 		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
+		notificationHider.ensureStopped();
 	}
 
 	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {

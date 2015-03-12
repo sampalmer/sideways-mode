@@ -19,7 +19,6 @@ import samuelpalmer.sensorautorotation.ServiceReviver;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.notifications.service.LockScreenHider;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -35,7 +34,6 @@ public class RotationService extends Service {
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
 	private ServiceNotificationManager serviceNotificationManager;
-	private LockScreenHider notificationHider;
 	private ServiceReviver reviver;
 	private ServiceNotification serviceNotification;
 
@@ -56,8 +54,7 @@ public class RotationService extends Service {
 		orientationMessenger = new OrientationMessenger(this);
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator);
-		serviceNotificationManager = new ServiceNotificationManager(serviceNotification, appSettings);
-		notificationHider = new LockScreenHider(this, serviceNotification);
+		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings);
 		reviver = new ServiceReviver(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
@@ -82,7 +79,6 @@ public class RotationService extends Service {
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
 		userInteractivityMonitor.ensureStarted();
-		notificationHider.ensureStarted();
 	}
 
 	@Override
@@ -113,7 +109,6 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		notificationHider.ensureStopped();
 		orientationMessenger.ensureStopped();
 		screenUpdater.ensureStopped();
 		screenOrientationController.ensureStopped();
