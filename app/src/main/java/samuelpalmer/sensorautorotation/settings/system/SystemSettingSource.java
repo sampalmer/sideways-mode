@@ -5,11 +5,11 @@ import android.content.ContentResolver;
 import static android.provider.Settings.System.getString;
 import static android.provider.Settings.System.putString;
 
-public class AndroidSystemSettingSource {
+public class SystemSettingSource {
 
 	private final ContentResolver contentResolver;
 
-	public AndroidSystemSettingSource(ContentResolver contentResolver) {
+	public SystemSettingSource(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
 	}
 

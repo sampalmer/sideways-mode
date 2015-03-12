@@ -24,7 +24,7 @@ import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.system.AndroidSystemSettingSource;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingSource;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class RotationService extends Service {
@@ -45,7 +45,7 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
-		SystemSettings systemSettings = new SystemSettings(new AndroidSystemSettingSource(getContentResolver()));
+		SystemSettings systemSettings = new SystemSettings(new SystemSettingSource(getContentResolver()));
 		Screen screen = new Screen(this);
 
 		ApplicationSettings appSettings = new ApplicationSettings(this);

@@ -10,9 +10,9 @@ import static android.provider.Settings.System.USER_ROTATION;
 
 public class SystemSettings {
 
-	private final AndroidSystemSettingSource config;
+	private final SystemSettingSource config;
 
-	public SystemSettings(AndroidSystemSettingSource config) {
+	public SystemSettings(SystemSettingSource config) {
 		this.config = config;
 
 		accelerometerRotation = makeSetting(ACCELEROMETER_ROTATION, new BooleanTypeConverter(), true);

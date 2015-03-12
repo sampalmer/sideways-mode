@@ -4,12 +4,12 @@ import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
 public class Setting<T> {
 
-	private final AndroidSystemSettingSource config;
+	private final SystemSettingSource config;
 	private final String key;
 	private final TypeConverter<T> converter;
 	private final T defaultValue;
 
-	public Setting(AndroidSystemSettingSource config, String key, TypeConverter<T> converter, T defaultValue) {
+	public Setting(SystemSettingSource config, String key, TypeConverter<T> converter, T defaultValue) {
 		this.config = config;
 		this.key = key;
 		this.converter = converter;
