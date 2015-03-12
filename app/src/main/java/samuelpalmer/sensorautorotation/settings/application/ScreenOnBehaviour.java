@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.settings;
+package samuelpalmer.sensorautorotation.settings.application;
 
 public enum ScreenOnBehaviour {
 	DO_NOTHING,

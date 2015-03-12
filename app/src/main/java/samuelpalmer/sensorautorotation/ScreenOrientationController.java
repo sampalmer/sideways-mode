@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.Setting;
-import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import samuelpalmer.sensorautorotation.settings.system.Setting;
+import samuelpalmer.sensorautorotation.settings.system.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
 

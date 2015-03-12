@@ -2,8 +2,8 @@ package samuelpalmer.sensorautorotation.android;
 
 import android.content.ContentResolver;
 
-import samuelpalmer.sensorautorotation.systemconfiguration.SettingWriteFailedException;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettingSource;
+import samuelpalmer.sensorautorotation.settings.system.SettingWriteFailedException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingSource;
 
 import static android.provider.Settings.System.getString;
 import static android.provider.Settings.System.putString;

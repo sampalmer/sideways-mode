@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.components.RotationService;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceController {
 	private final Context context;

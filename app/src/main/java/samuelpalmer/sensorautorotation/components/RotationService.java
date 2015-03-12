@@ -24,8 +24,8 @@ import samuelpalmer.sensorautorotation.android.AndroidSystemSettingSource;
 import samuelpalmer.sensorautorotation.notification.service.LockScreenHider;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class RotationService extends Service {
 

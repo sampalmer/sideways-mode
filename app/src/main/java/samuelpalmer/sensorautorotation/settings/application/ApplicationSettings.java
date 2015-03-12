@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.settings;
+package samuelpalmer.sensorautorotation.settings.application;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

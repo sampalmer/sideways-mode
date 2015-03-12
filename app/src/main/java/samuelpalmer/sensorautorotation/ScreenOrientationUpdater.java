@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ScreenOrientationUpdater extends State {
 

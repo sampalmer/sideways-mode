@@ -2,8 +2,8 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.ScreenOnBehaviour;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ScreenOnBehaviour;
 
 
 public class OrientationCalculator {

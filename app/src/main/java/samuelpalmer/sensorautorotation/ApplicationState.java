@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
-import samuelpalmer.sensorautorotation.systemconfiguration.SystemSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ApplicationState {
 

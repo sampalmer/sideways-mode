@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.components.RotationService;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class RotationLockToggler {
 
