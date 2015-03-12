@@ -20,8 +20,8 @@ public class EnvironmentErrorNotifier{
 		this.context = context;
 	}
 
-	public void handle(String message) {
-		show(message + " " + getAppName() + " will be disabled.");
+	public void handle(String messageEndingWithFullStop) {
+		show(messageEndingWithFullStop + " " + getAppName() + " will be disabled.");
 		new ServiceController(context).ensureStopped();
 		new ApplicationSettings(context).enabled().setAndCommit(false);
 	}
