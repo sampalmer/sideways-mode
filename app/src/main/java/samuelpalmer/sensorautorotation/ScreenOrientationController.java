@@ -63,6 +63,7 @@ public class ScreenOrientationController extends State {
 		try {
 			setting.set(value);
 		} catch (SettingWriteFailedException e) {
+			//Because the developer can't do anything about this; it seems to be a problem on the device.
 			new EnvironmentErrorNotifier(context).handle(e.getMessage());
 		}
 	}
