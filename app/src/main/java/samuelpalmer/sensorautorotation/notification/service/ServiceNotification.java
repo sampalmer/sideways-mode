@@ -60,6 +60,7 @@ public class ServiceNotification {
 	}
 
 	private void hideFromLockScreen(NotificationBuilderCompat builder) {
+		//Notifications only show on lock screen as of Android 5
 		if (Build.VERSION.SDK_INT >= 21) {
 			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
 			builder.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET);
