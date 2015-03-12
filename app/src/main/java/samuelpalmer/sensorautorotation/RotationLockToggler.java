@@ -52,13 +52,13 @@ public class RotationLockToggler {
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
+		public void onServiceConnected(ComponentName name, IBinder untypedBinder) {
 			context.unbindService(this);
 
-			LocalBinder localBinder = (LocalBinder)service;
-			localBinder.toggleRotation();
+			ServiceApiBinder service = (ServiceApiBinder)untypedBinder;
+			service.toggleRotation();
 			if (showStatusToast)
-				localBinder.showStatusToast();
+				service.showStatusToast();
 
 			callback.completed();
 		}

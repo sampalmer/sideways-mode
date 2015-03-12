@@ -9,12 +9,12 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
-import samuelpalmer.sensorautorotation.LocalBinder;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceReviver;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
@@ -106,7 +106,7 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new LocalBinder(this, serviceNotification);
+		return new ServiceApiBinder(this, serviceNotification);
 	}
 
 	@Override

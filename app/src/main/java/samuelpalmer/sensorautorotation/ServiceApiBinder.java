@@ -10,12 +10,12 @@ import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 /**
  * Must be called from process main thread
  */
-public class LocalBinder extends Binder {
+public class ServiceApiBinder extends Binder {
 
 	private final Context context;
 	private final ServiceNotification serviceNotification;
 
-	public LocalBinder(Context context, ServiceNotification serviceNotification) {
+	public ServiceApiBinder(Context context, ServiceNotification serviceNotification) {
 		this.context = context;
 		this.serviceNotification = serviceNotification;
 	}
