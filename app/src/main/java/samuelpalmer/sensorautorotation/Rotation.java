@@ -1,5 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
+/**
+ * Represents the difference between two orientations; change in orientation
+ */
 public class Rotation {
 
 	private final int clockwiseRotations;
