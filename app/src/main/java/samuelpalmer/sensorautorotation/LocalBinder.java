@@ -1,9 +1,10 @@
-package samuelpalmer.sensorautorotation.components;
+package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 import android.os.Binder;
 import android.widget.Toast;
 
+import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.notification.service.ServiceNotification;
 
 /**

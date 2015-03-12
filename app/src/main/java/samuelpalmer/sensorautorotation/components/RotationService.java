@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
+import samuelpalmer.sensorautorotation.LocalBinder;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.Screen;

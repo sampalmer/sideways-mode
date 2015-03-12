@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.components.LocalBinder;
 import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
