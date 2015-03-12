@@ -27,7 +27,7 @@ public class OrientationSensorHandler extends State {
 		};
 
 		if (!listener.canDetectOrientation())
-			new EnvironmentErrorNotifier(context).handle("Couldn't find an accelerometer");
+			new EnvironmentErrorNotifier(context).handle("Couldn't find an accelerometer.");
 	}
 
 	@Override
