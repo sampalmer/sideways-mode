@@ -30,17 +30,6 @@ public class ApplicationSettings {
 	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOnBehaviour.class), "screenOnBehaviour", ScreenOnBehaviour.DO_NOTHING); }
 	public Setting<Boolean> showNotificationAtTop() { return new Setting<>(new BooleanSetting(), "showNotificationAtTop", false); }
 
-	public void ensureInitialised() {
-		Setting<?>[] settingsWithDefaults = new Setting<?>[] {
-			enabled(),
-			allowUpsideDownScreen(),
-			screenOnBehaviour()
-		};
-
-		for (Setting<?> setting : settingsWithDefaults)
-			setting.ensureInitialised();
-	}
-
 	public class Setting<T> {
 
 		private final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
@@ -79,7 +68,10 @@ public class ApplicationSettings {
 			this.defaultValue = defaultValue;
 		}
 
-		private void ensureInitialised() {
+		/**
+		 * Sets this to its default value if it hasn't been set before.
+		 */
+		public void ensureInitialised() {
 			if (!hasValue() && defaultValue != null)
 				setAndCommit(defaultValue);
 		}
