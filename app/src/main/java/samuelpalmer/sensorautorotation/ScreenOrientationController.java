@@ -38,7 +38,6 @@ public class ScreenOrientationController extends State {
 		propose(realOrientation);
 
 		set(settings.accelerometerRotation, false);
-
 		propose(realOrientation); //Just in case disabling system rotation reset this.
 
 		context.registerReceiver(configChangedReceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
@@ -48,8 +47,8 @@ public class ScreenOrientationController extends State {
 	protected void stop() {
 		context.unregisterReceiver(configChangedReceiver);
 
-		set(settings.userRotation, Orientation.NATURAL);
 		set(settings.accelerometerRotation, calculator.autoRotate());
+		set(settings.userRotation, Orientation.NATURAL);
 	}
 
 	public void propose(Orientation value) {
