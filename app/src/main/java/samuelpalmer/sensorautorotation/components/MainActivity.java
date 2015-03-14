@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends Activity {
@@ -18,10 +17,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings(this).lastVersionUserInstructedAbout();
-		if (!instructedVersion.hasValue())
-			instructedVersion.setAndCommit(new VersionInfo(this).installedVersionCode());
 
 		new ServiceController(this).updateFromSettings();
 	}
