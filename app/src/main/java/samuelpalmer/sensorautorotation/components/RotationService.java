@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
-import samuelpalmer.sensorautorotation.ServiceReviver;
+import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.UserInteractivity;
 import samuelpalmer.sensorautorotation.UserInteractivityMonitor;
@@ -34,7 +34,7 @@ public class RotationService extends Service {
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
 	private ServiceNotificationManager serviceNotificationManager;
-	private ServiceReviver reviver;
+	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotification serviceNotification;
 
 	@Override
@@ -55,7 +55,7 @@ public class RotationService extends Service {
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator);
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings);
-		reviver = new ServiceReviver(this);
+		serviceRevivalManager = new ServiceRevivalManager(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
 			@Override
@@ -86,12 +86,6 @@ public class RotationService extends Service {
 		return Service.START_STICKY;
 	}
 
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		reviver.ensureStarted();
-	}
-
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -115,7 +109,7 @@ public class RotationService extends Service {
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityMonitor.ensureStopped();
 		serviceNotificationManager.ensureStopped();
-		reviver.ensureStopped();
+		serviceRevivalManager.ensureStopped();
 
 		applicationState.clear();
 	}
