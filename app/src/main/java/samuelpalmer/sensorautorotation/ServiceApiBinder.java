@@ -32,7 +32,6 @@ public class ServiceApiBinder extends Binder {
 
 	private void setAutoRotate(boolean newValue) {
 		RotationService.calculator.setAutoRotate(newValue);
-		serviceNotification.set();
 	}
 
 }

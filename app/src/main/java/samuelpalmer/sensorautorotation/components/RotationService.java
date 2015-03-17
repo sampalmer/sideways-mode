@@ -54,7 +54,7 @@ public class RotationService extends Service {
 		orientationMessenger = new OrientationMessenger(this);
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator);
-		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings);
+		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, calculator);
 		serviceRevivalManager = new ServiceRevivalManager(this);
 
 		userInteractivityMonitor = new UserInteractivityMonitor(this, new StateMonitor.Listener<UserInteractivity>() {
@@ -69,7 +69,6 @@ public class RotationService extends Service {
 					orientationMessenger.ensureStopped();
 
 					calculator.reset();
-					serviceNotification.set();
 				}
 			}
 		});

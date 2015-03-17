@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.content.Context;
 
+import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -10,11 +11,13 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class ServiceNotificationManager extends State {
 
 	private final ServiceNotification serviceNotification;
+	private final OrientationCalculator calculator;
 	private final LockScreenHider notificationHider;
 	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 
-	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings) {
+	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings, OrientationCalculator calculator) {
 		this.serviceNotification = serviceNotification;
+		this.calculator = calculator;
 		notificationHider = new LockScreenHider(context, serviceNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
 	}
@@ -24,10 +27,12 @@ public class ServiceNotificationManager extends State {
 		serviceNotification.set();
 		notificationHider.ensureStarted();
 		onShowNotificationAtTopChanged.subscribe(updateNotification);
+		calculator.onChange().subscribe(updateNotification);
 	}
 
 	@Override
 	protected void stop() {
+		calculator.onChange().unsubscribe(updateNotification);
 		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
 	}
