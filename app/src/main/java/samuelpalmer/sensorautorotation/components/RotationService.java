@@ -53,6 +53,7 @@ public class RotationService extends Service {
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
+		serviceRevivalManager.ensureStarted();
 	}
 
 	@Override
