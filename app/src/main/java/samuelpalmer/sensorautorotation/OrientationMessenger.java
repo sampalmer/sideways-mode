@@ -2,15 +2,16 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class OrientationMessenger extends State {
 
 	private final OrientationSensorHandler orientationListener;
+	private final OrientationCalculator calculator;
 
-	public OrientationMessenger(Context context) {
+	public OrientationMessenger(Context context, OrientationCalculator calculator) {
+		this.calculator = calculator;
 		orientationListener = new OrientationSensorHandler(context);
 	}
 
@@ -30,7 +31,7 @@ public class OrientationMessenger extends State {
 
 		@Override
 		public void update(Orientation event) {
-			RotationService.calculator.setDevice(event);
+			calculator.setDevice(event);
 		}
 
 	};

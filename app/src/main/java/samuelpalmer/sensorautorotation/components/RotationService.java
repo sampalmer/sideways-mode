@@ -26,13 +26,12 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class RotationService extends Service {
 
-	public static OrientationCalculator calculator;
-
 	private UserInteractivityMonitor userInteractivityMonitor;
 	private ScreenOrientationController screenOrientationController;
 	private ScreenOrientationUpdater screenUpdater;
 	private OrientationMessenger orientationMessenger;
 	private ApplicationState applicationState;
+	private OrientationCalculator calculator;
 	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotification serviceNotification;
@@ -50,8 +49,8 @@ public class RotationService extends Service {
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(this, systemSettings, screen, calculator);
 
-		screenUpdater = new ScreenOrientationUpdater(appSettings, RotationService.calculator, screenOrientationController);
-		orientationMessenger = new OrientationMessenger(this);
+		screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
+		orientationMessenger = new OrientationMessenger(this, calculator);
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator);
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, calculator);
@@ -95,7 +94,7 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new ServiceApiBinder(this, serviceNotification);
+		return new ServiceApiBinder(this, serviceNotification, calculator);
 	}
 
 	@Override

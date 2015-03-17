@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Binder;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 
 /**
@@ -14,14 +13,16 @@ public class ServiceApiBinder extends Binder {
 
 	private final Context context;
 	private final ServiceNotification serviceNotification;
+	private final OrientationCalculator calculator;
 
-	public ServiceApiBinder(Context context, ServiceNotification serviceNotification) {
+	public ServiceApiBinder(Context context, ServiceNotification serviceNotification, OrientationCalculator calculator) {
 		this.context = context;
 		this.serviceNotification = serviceNotification;
+		this.calculator = calculator;
 	}
 
 	public void toggleRotation() {
-		setAutoRotate(!RotationService.calculator.autoRotate());
+		setAutoRotate(!calculator.autoRotate());
 	}
 
 	public void showStatusToast() {
@@ -31,7 +32,7 @@ public class ServiceApiBinder extends Binder {
 	}
 
 	private void setAutoRotate(boolean newValue) {
-		RotationService.calculator.setAutoRotate(newValue);
+		calculator.setAutoRotate(newValue);
 	}
 
 }
