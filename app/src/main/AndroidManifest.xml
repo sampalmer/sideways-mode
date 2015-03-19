@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="samuelpalmer.sensorautorotation"
-          android:installLocation="auto"
-	>
+          package="samuelpalmer.sensorautorotation">
 
 	<!-- To disable system rotation, set user rotation -->
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
