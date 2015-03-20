@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.components;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,17 +37,38 @@ public class MainActivity extends Activity {
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
 			case R.id.action_uninstall:
-				Uri packageUri = Uri.parse("package:" + getPackageName());
-				Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-				new ApplicationSettings(this).enabled().setAndCommit(false);
-				new ServiceController(this).ensureStopped();
-				startActivity(uninstallIntent);
+				confirmUninstall();
 				break;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 
 		return true;
+	}
+
+	private void confirmUninstall() {
+		new AlertDialog.Builder(this)
+				.setTitle("Uninstall?")
+				.setIcon(android.R.drawable.ic_menu_delete)
+				.setMessage("Rotation control by this app will be disabled. (You can re-enable it in this app's settings screen.) Disable and uninstall this app?")
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						uninstall();
+					}
+				})
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {}
+				})
+				.create()
+				.show();
+	}
+
+	private void uninstall() {
+		Uri packageUri = Uri.parse("package:" + getPackageName());
+		Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+		new ApplicationSettings(this).enabled().setAndCommit(false);
+		new ServiceController(this).ensureStopped();
+		startActivity(uninstallIntent);
 	}
 
 }
