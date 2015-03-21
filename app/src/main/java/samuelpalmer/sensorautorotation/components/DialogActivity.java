@@ -18,17 +18,13 @@ public class DialogActivity extends Activity {
 		if (extras == null)
 			throw new RuntimeException("No extras specified");
 
-		String message = extras.getString(MESSAGE_INTENT_EXTRA_NAME);
-
-		MyDialogFragment.newInstance(message).show(getFragmentManager(), null);
+		MyDialogFragment.newInstance(extras).show(getFragmentManager(), null);
 	}
 
 	public static class MyDialogFragment extends DialogFragment {
 
-		public static MyDialogFragment newInstance(String message) {
+		public static MyDialogFragment newInstance(Bundle args) {
 			MyDialogFragment frag = new MyDialogFragment();
-			Bundle args = new Bundle();
-			args.putString("message", message);
 			frag.setArguments(args);
 			return frag;
 		}
@@ -36,7 +32,7 @@ public class DialogActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return new AlertDialog.Builder(getActivity())
-					.setMessage(getArguments().getString("message"))
+					.setMessage(getArguments().getString(MESSAGE_INTENT_EXTRA_NAME))
 					.create();
 		}
 
