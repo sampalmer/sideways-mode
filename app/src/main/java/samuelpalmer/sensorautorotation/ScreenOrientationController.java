@@ -1,10 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.system.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
@@ -16,13 +14,11 @@ public class ScreenOrientationController extends State {
 	private final OrientationCalculator calculator;
 	private final Context context;
 
-	private final BroadcastReceiver configChangedReceiver = new BroadcastReceiver() {
-
+	private final EventHandler<Void> configChangedReceiver = new EventHandler<Void>() {
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void update(Void event) {
 			systemConfigChanged();
 		}
-
 	};
 
 	public ScreenOrientationController(Context context, SystemSettings settings, Screen screen, OrientationCalculator calculator) {
@@ -34,21 +30,21 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void start() {
+		settings.accelerometerRotation.onExternalChange.subscribe(configChangedReceiver);
+
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
 
 		set(settings.accelerometerRotation, false);
 		propose(realOrientation); //Just in case disabling system rotation reset this.
-
-		context.registerReceiver(configChangedReceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	@Override
 	protected void stop() {
-		context.unregisterReceiver(configChangedReceiver);
-
 		set(settings.accelerometerRotation, calculator.autoRotate());
 		set(settings.userRotation, Orientation.NATURAL);
+
+		settings.accelerometerRotation.onExternalChange.unsubscribe(configChangedReceiver);
 	}
 
 	public void propose(Orientation value) {
