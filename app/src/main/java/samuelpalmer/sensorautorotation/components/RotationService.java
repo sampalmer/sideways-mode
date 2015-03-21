@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
+import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
@@ -47,6 +48,8 @@ public class RotationService extends Service {
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, calculator);
 		serviceRevivalManager = new ServiceRevivalManager(this);
 		userInteractivityThing = new UserInteractivityThing(this, appSettings, calculator, screenOrientationController);
+
+		new EnvironmentErrorNotifier(this).clear();
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 

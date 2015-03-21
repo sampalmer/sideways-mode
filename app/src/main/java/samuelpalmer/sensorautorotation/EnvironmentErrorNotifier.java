@@ -38,9 +38,7 @@ public class EnvironmentErrorNotifier{
 				.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 				.build();
 
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
-
-		notificationManager.notify(NotificationIds.ERROR, notification);
+		notificationManager().notify(NotificationIds.ERROR, notification);
 	}
 
 	private String getAppName() {
@@ -55,4 +53,11 @@ public class EnvironmentErrorNotifier{
 		return intents.makePending(intent);
 	}
 
+	public void clear() {
+		notificationManager().cancel(NotificationIds.ERROR);
+	}
+
+	private NotificationManager notificationManager() {
+		return (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
+	}
 }
