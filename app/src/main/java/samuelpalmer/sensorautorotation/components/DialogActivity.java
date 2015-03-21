@@ -8,7 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class DialogActivity extends Activity {
-	public static final String MESSAGE_INTENT_EXTRA_NAME = "message";
+	public static final String INTENT_EXTRA_TITLE = "title";
+	public static final String INTENT_EXTRA_MESSAGE = "message";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,8 @@ public class DialogActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return new AlertDialog.Builder(getActivity())
-					.setMessage(getArguments().getString(MESSAGE_INTENT_EXTRA_NAME))
+					.setMessage(getArguments().getString(INTENT_EXTRA_MESSAGE))
+					.setTitle(getArguments().getInt(INTENT_EXTRA_TITLE))
 					.create();
 		}
 
