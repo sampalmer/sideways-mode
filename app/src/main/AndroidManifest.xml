@@ -44,11 +44,7 @@
 			tools:ignore="UnusedAttribute">
 		</activity>
 
-		<activity
-			android:name=".components.ErrorDialogActivity"
-			android:label="Error" />
-
-		<activity android:name=".components.UpgradeActivity" />
+		<activity android:name=".components.DialogActivity" />
 
 		<receiver
 			android:name=".components.StartServiceReceiver" />

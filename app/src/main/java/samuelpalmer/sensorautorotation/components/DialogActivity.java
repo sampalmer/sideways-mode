@@ -7,7 +7,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-public abstract class DialogActivity extends Activity {
+public class DialogActivity extends Activity {
 	public static final String MESSAGE_INTENT_EXTRA_NAME = "message";
 
 	@Override

@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.components.ErrorDialogActivity;
+import samuelpalmer.sensorautorotation.components.DialogActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -48,9 +48,9 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private PendingIntent makeShowMessage(String message) {
-		Intents intents = new Intents(context, ErrorDialogActivity.class);
+		Intents intents = new Intents(context, DialogActivity.class);
 		Intent intent = intents.makeIntent()
-				.putExtra(ErrorDialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
+				.putExtra(DialogActivity.MESSAGE_INTENT_EXTRA_NAME, message);
 		return intents.makePending(intent);
 	}
 
