@@ -44,7 +44,8 @@
 			tools:ignore="UnusedAttribute">
 		</activity>
 
-		<activity android:name=".components.DialogActivity" />
+		<activity android:name=".components.DialogActivity"
+			android:theme="@style/Theme.NoDisplay"/>
 
 		<receiver
 			android:name=".components.StartServiceReceiver" />
