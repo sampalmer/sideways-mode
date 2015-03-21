@@ -12,10 +12,10 @@ import static android.provider.Settings.System.USER_ROTATION;
 
 public class SystemSettings {
 
-	private final SystemSettingSource config;
+	private final ContentResolver config;
 
 	public SystemSettings(ContentResolver config) {
-		this.config = new SystemSettingSource(config);
+		this.config = config;
 
 		accelerometerRotation = makeSetting(ACCELEROMETER_ROTATION, new BooleanTypeConverter(), true);
 		userRotation = makeSetting(USER_ROTATION, new OrientationTypeConverter(), Orientation.NATURAL);
