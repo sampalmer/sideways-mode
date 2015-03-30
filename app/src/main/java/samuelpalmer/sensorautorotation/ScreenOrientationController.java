@@ -14,10 +14,10 @@ public class ScreenOrientationController extends State {
 	private final OrientationCalculator calculator;
 	private final Context context;
 
-	private final EventHandler<Void> configChangedReceiver = new EventHandler<Void>() {
+	private final EventHandler<Void> systemAutoRotationChanged = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			systemConfigChanged();
+			checkIfSystemAutoRotationWasEnabled();
 		}
 	};
 
@@ -30,7 +30,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void start() {
-		settings.accelerometerRotation.onExternalChange.subscribe(configChangedReceiver);
+		settings.accelerometerRotation.onExternalChange.subscribe(systemAutoRotationChanged);
 
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
@@ -44,7 +44,7 @@ public class ScreenOrientationController extends State {
 		set(settings.accelerometerRotation, calculator.autoRotate());
 		set(settings.userRotation, Orientation.NATURAL);
 
-		settings.accelerometerRotation.onExternalChange.unsubscribe(configChangedReceiver);
+		settings.accelerometerRotation.onExternalChange.unsubscribe(systemAutoRotationChanged);
 	}
 
 	public void propose(Orientation value) {
@@ -61,10 +61,6 @@ public class ScreenOrientationController extends State {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
 			new EnvironmentErrorNotifier(context).handle(e.getMessage());
 		}
-	}
-
-	private void systemConfigChanged() {
-		checkIfSystemAutoRotationWasEnabled();
 	}
 
 	private void checkIfSystemAutoRotationWasEnabled() {
