@@ -5,13 +5,18 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.os.Build;
+import android.view.Display;
+import android.view.WindowManager;
 
+import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ServiceNotification {
 
@@ -50,6 +55,15 @@ public class ServiceNotification {
 		Notification notification = builder.build();
 
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	private boolean overridden() {
+		Display display = ((WindowManager)service.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+		Orientation requested = new SystemSettings(service.getContentResolver()).userRotation.get();
+		Orientation actual = new AndroidSurfaceRotation(display.getRotation()).orientation();
+
+		return !requested.equals(actual);
 	}
 
 	public Mode mode() {
