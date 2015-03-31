@@ -44,11 +44,10 @@ public class OrientationCalculator {
 
 	public void setAutoRotate(boolean newValue) {
 		/* Since the current app/window might be overriding the current proposed orientation.
-		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience;
-		 locking screen orientation locks the actual orientation rather than the proposed one. */
-		if (!newValue)
-			inferUserFromScreen();
-
+		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
+		 Locking the screen orientation locks the actual orientation rather than the proposed one.
+		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
+		inferUserFromScreen();
 		state.autoRotate(newValue);
 		reportUpdate();
 	}
