@@ -19,7 +19,7 @@ public class ShortcutActivity extends Activity {
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.toggle_rotation_lock));
 		shortcut.putExtra(
 				Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-				Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_screen_rotation_enabled));
+				Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_screen_rotation_enabled_normal));
 
 		setResult(RESULT_OK, shortcut);
 		finish();

@@ -5,8 +5,8 @@ import samuelpalmer.sensorautorotation.R;
 class AutoRotationMode implements Mode {
 
 	@Override
-	public int iconResourceId() {
-		return R.drawable.ic_screen_rotation_enabled;
+	public int iconResourceId(boolean overridden) {
+		return overridden ? R.drawable.ic_screen_rotation_enabled_overridden : R.drawable.ic_screen_rotation_enabled_normal;
 	}
 
 	@Override

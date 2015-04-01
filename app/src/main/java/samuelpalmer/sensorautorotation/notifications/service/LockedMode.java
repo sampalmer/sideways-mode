@@ -23,8 +23,13 @@ class LockedMode implements Mode {
 	}
 
 	@Override
-	public int iconResourceId() {
-		return isPortrait() ? R.drawable.ic_screen_rotation_locked_portrait : R.drawable.ic_screen_rotation_locked_landscape;
+	public int iconResourceId(boolean overridden) {
+		return
+				isPortrait()
+						?
+						(overridden ? R.drawable.ic_screen_rotation_locked_portrait_overridden : R.drawable.ic_screen_rotation_locked_portrait_normal)
+						:
+						(overridden ? R.drawable.ic_screen_rotation_locked_landscape_overridden : R.drawable.ic_screen_rotation_locked_landscape_normal);
 	}
 
 	public boolean isPortrait() {

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   x="0px"
+   y="0px"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   enable-background="new 0 0 96 96"
+   xml:space="preserve"
+   id="svg2"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="device_access_screen_locked_to_portrait.svg"
+   inkscape:export-filename="C:\Users\Sam\Desktop\New folder\device_access_screen_locked_to_portrait.png"
+   inkscape:export-xdpi="162.73"
+   inkscape:export-ydpi="162.73"><metadata
+   id="metadata15"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+   id="defs13" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1920"
+   inkscape:window-height="1137"
+   id="namedview11"
+   showgrid="false"
+   fit-margin-top="0"
+   fit-margin-left="0"
+   fit-margin-right="0"
+   fit-margin-bottom="0"
+   inkscape:zoom="19.666667"
+   inkscape:cx="6.0994859"
+   inkscape:cy="18.514003"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg2" />
+<g
+   id="_x31_0_device_access_screen_locked_to_portrait"
+   transform="matrix(0.38636144,0,0,0.38636144,-8.2889984,-6.5453492)"
+   style="fill:#000000;fill-opacity:1;stroke:none">
+	<g
+   display="inline"
+   id="g5"
+   style="fill:#000000;fill-opacity:1;stroke:none;display:inline">
+		<path
+   clip-rule="evenodd"
+   d="m 31.226,43.098 c 0,-3.941 3.211,-7.151 7.151,-7.151 3.952,0 7.162,3.21 7.162,7.151 v 5.151 H 31.226 v -5.151 z m 18.805,5.151 v -5.151 c 0,-6.422 -5.232,-11.643 -11.654,-11.643 -6.422,0 -11.652,5.221 -11.652,11.643 v 5.151 H 21.454 V 65.885 H 55.313 V 48.249 h -5.282 z"
+   id="path7"
+   inkscape:connector-curvature="0"
+   style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+		<polygon
+   points="36.736,27.124 36.736,16.941 74.547,16.941 74.547,79.059 36.736,79.059 36.736,70.446 40.519,70.446 40.519,75.207 70.768,75.207 70.768,20.792 40.519,20.792 40.519,27.124 "
+   id="polygon9"
+   style="fill:#000000;fill-opacity:1;stroke:none" />
+	</g>
+</g>
+</svg>
