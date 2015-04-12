@@ -13,6 +13,7 @@ import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.Screen;
 import samuelpalmer.sensorautorotation.ScreenOrientationController;
+import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.UserInteractivityThing;
@@ -45,9 +46,10 @@ public class RotationService extends Service {
 		screenOrientationController = new ScreenOrientationController(this, systemSettings, screen, calculator);
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator);
-		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, calculator);
+		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
+		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager(this);
-		userInteractivityThing = new UserInteractivityThing(this, appSettings, calculator, screenOrientationController);
+		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
 
 		new EnvironmentErrorNotifier(this).clear();
 

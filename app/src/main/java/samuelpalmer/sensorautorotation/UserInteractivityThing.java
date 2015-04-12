@@ -2,17 +2,15 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
 
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-
 public class UserInteractivityThing extends State {
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final OrientationMessenger orientationMessenger;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
-	public UserInteractivityThing(Context context, ApplicationSettings appSettings, OrientationCalculator calculator, ScreenOrientationController screenOrientationController) {
+	public UserInteractivityThing(Context context, OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
 		this.calculator = calculator;
-		screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
+		this.screenUpdater = screenUpdater;
 		orientationMessenger = new OrientationMessenger(context, calculator);
 		userInteractivityMonitor = new UserInteractivityMonitor(context, listener);
 	}

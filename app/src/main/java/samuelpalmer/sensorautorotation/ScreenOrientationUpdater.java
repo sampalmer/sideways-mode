@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ScreenOrientationUpdater extends State {
@@ -17,24 +19,34 @@ public class ScreenOrientationUpdater extends State {
 
 	@Override
 	protected void start() {
-		calculator.onChange().subscribe(subscriber);
+		calculator.onChange().subscribe(applyChange);
 	}
 
 	@Override
 	protected void stop() {
-		calculator.onChange().unsubscribe(subscriber);
+		calculator.onChange().unsubscribe(applyChange);
 	}
 
-	private final EventHandler<Void> subscriber = new EventHandler<Void>() {
+	private final EventHandler<Void> applyChange = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
 			if (!upsideDown() || settings.allowUpsideDownScreen().get())
-				screen.propose(calculator.proposedScreenOrientation());
+				propose();
 		}
 	};
+
+	private void propose() {
+		screen.propose(calculator.proposedScreenOrientation());
+		onProposedOrientationChanged.report(null);
+	}
 
 	private boolean upsideDown() {
 		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);
 	}
 
+	private UpdatingEventRegistrar<Void> onProposedOrientationChanged = new UpdatingEventRegistrar<>();
+
+	public EventRegistrar<Void> onChange() {
+		return onProposedOrientationChanged;
+	}
 }

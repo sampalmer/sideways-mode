@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -15,13 +15,14 @@ public class ServiceNotificationManager extends State {
 
 	private final Context context;
 	private final ServiceNotification serviceNotification;
-	private final OrientationCalculator calculator;
+	private final ScreenOrientationUpdater screen;
 	private final LockScreenHider notificationHider;
 	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
-	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings, OrientationCalculator calculator) {
+
+	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings, ScreenOrientationUpdater screen) {
 		this.context = context;
 		this.serviceNotification = serviceNotification;
-		this.calculator = calculator;
+		this.screen = screen;
 		notificationHider = new LockScreenHider(context, serviceNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
 	}
@@ -31,14 +32,14 @@ public class ServiceNotificationManager extends State {
 		serviceNotification.set();
 		notificationHider.ensureStarted();
 		onShowNotificationAtTopChanged.subscribe(updateNotification);
-		calculator.onChange().subscribe(updateNotification);
+		screen.onChange().subscribe(updateNotification);
 		context.registerReceiver(screenRotationMightHaveChanged, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	@Override
 	protected void stop() {
 		context.unregisterReceiver(screenRotationMightHaveChanged);
-		calculator.onChange().unsubscribe(updateNotification);
+		screen.onChange().unsubscribe(updateNotification);
 		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
 	}
