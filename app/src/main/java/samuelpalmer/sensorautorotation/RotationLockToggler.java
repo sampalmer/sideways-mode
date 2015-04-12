@@ -1,13 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class RotationLockToggler {
@@ -38,35 +33,24 @@ public class RotationLockToggler {
 	private void toggle() {
 		//Otherwise if the service wasn't running, it will be stopped on unbind.
 		new ServiceController(context).ensureStarted();
-
-		Intent intent = new Intent(context, RotationService.class);
-		boolean bound = context.bindService(intent, connection, Context.BIND_ABOVE_CLIENT);
-		if (!bound)
-			throw new RuntimeException("Couldn't bind to service");
+		new ServiceCommandRunner(context, command).run();
 	}
 
-	private void showNotEnabledMessage() {
-		Toast
-				.makeText(context, R.string.not_enabled_message, Toast.LENGTH_SHORT)
-				.show();
-	}
-
-	private final ServiceConnection connection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder untypedBinder) {
-			context.unbindService(this);
-
-			ServiceApiBinder service = (ServiceApiBinder)untypedBinder;
+	private final ServiceCommandRunner.Command command = new ServiceCommandRunner.Command() {
+		public void run(ServiceApiBinder service) {
 			service.toggleRotation();
 			if (showStatusToast)
 				service.showStatusToast();
 
 			callback.completed();
 		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {}
 	};
+
+	private void showNotEnabledMessage() {
+		Toast
+				.makeText(context, R.string.not_enabled_message, Toast.LENGTH_SHORT)
+				.show();
+	}
 
 	public interface CompletionCallback {
 		void completed();
