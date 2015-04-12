@@ -30,6 +30,10 @@ public class Setting<T> {
 				report(null);
 			}
 
+			@Override
+			public boolean deliverSelfNotifications() {
+				return false;
+			}
 		};
 
 		@Override
