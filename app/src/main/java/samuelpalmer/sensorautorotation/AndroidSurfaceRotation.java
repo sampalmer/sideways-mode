@@ -18,11 +18,19 @@ public class AndroidSurfaceRotation {
 	}
 
 	public Orientation orientation() throws IllegalArgumentException {
-		return new Orientation(getValue() - Surface.ROTATION_0);
+		return new Orientation(offset());
+	}
+
+	private int offset() {
+		return getValue() - Surface.ROTATION_0;
 	}
 
 	public int getValue() {
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		return "ROTATION_" + offset() * 90;
+	}
 }

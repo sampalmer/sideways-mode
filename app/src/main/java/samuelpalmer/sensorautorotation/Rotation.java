@@ -15,4 +15,9 @@ public class Rotation {
 		return this.clockwiseRotations;
 	}
 
+	@Override
+	public String toString() {
+		return clockwiseRotations + " clockwise turn" + (clockwiseRotations == 1 ? "" : "s");
+	}
+
 }
