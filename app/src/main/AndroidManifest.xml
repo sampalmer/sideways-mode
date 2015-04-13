@@ -5,6 +5,14 @@
 
 	<!-- To disable system rotation, set user rotation -->
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+	<!-- To enforce orientation -->
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+	<!-- To detect current "activity" -->
+	<!--suppress DeprecatedClassUsageInspection -->
+	<uses-permission android:name="android.permission.GET_TASKS" />
+
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 

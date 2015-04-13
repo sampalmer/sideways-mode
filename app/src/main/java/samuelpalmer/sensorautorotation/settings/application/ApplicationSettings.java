@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -29,6 +32,7 @@ public class ApplicationSettings {
 	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
 	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOnBehaviour.class), "screenOnBehaviour", ScreenOnBehaviour.DO_NOTHING); }
 	public Setting<Boolean> showNotificationAtTop() { return new Setting<>(new BooleanSetting(), "showNotificationAtTop", false); }
+	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
 
 	public class Setting<T> {
 

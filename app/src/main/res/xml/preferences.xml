@@ -22,4 +22,9 @@
 	    android:title="@string/show_notification_at_top"
 	    android:summary="@string/show_notification_at_top_description"
 	/>
+	<samuelpalmer.sensorautorotation.orientationenforcement.AppPackagesPreference
+		android:key="forcedOrientationAppPackages"
+		android:title="Forced apps"
+		android:summary="Apps for which orientation should be enforced"
+		/>
 </PreferenceScreen>

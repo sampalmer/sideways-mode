@@ -49,7 +49,7 @@ public class RotationService extends Service {
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager(this);
-		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
+		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater, appSettings);
 
 		new EnvironmentErrorNotifier(this).clear();
 
