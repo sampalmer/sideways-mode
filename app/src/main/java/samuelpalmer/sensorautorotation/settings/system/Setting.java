@@ -20,19 +20,13 @@ public class Setting<T> {
 	private final T defaultValue;
 
 	//Mostly copied from ApplicationSettings.Setting
-	public final EventRegistrar<Void> onExternalChange = new UpdatingEventRegistrar<Void>() {
+	public final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
 
 		private final ContentObserver listener = new ContentObserver(null) {
-
 			@Override
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);
 				report(null);
-			}
-
-			@Override
-			public boolean deliverSelfNotifications() {
-				return false;
 			}
 		};
 

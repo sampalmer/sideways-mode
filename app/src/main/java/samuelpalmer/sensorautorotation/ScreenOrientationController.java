@@ -14,13 +14,6 @@ public class ScreenOrientationController extends State {
 	private final OrientationCalculator calculator;
 	private final Context context;
 
-	private final EventHandler<Void> systemAutoRotationChanged = new EventHandler<Void>() {
-		@Override
-		public void update(Void event) {
-			checkIfSystemAutoRotationWasEnabled();
-		}
-	};
-
 	public ScreenOrientationController(Context context, SystemSettings settings, Screen screen, OrientationCalculator calculator) {
 		this.context = context;
 		this.settings = settings;
@@ -30,7 +23,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void start() {
-		settings.accelerometerRotation.onExternalChange.subscribe(systemAutoRotationChanged);
+		settings.accelerometerRotation.onChange.subscribe(systemAutoRotationChanged);
 
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
@@ -41,10 +34,10 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void stop() {
+		settings.accelerometerRotation.onChange.unsubscribe(systemAutoRotationChanged);
+
 		set(settings.accelerometerRotation, calculator.autoRotate());
 		set(settings.userRotation, Orientation.NATURAL);
-
-		settings.accelerometerRotation.onExternalChange.unsubscribe(systemAutoRotationChanged);
 	}
 
 	public void propose(Orientation value) {
@@ -62,6 +55,13 @@ public class ScreenOrientationController extends State {
 			new EnvironmentErrorNotifier(context).handle(e.getMessage());
 		}
 	}
+
+	private final EventHandler<Void> systemAutoRotationChanged = new EventHandler<Void>() {
+		@Override
+		public void update(Void event) {
+			checkIfSystemAutoRotationWasEnabled();
+		}
+	};
 
 	private void checkIfSystemAutoRotationWasEnabled() {
 		boolean accelerometerRotation = settings.accelerometerRotation.get();
