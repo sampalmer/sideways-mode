@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.orientationenforcement;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import java.lang.reflect.Field;
@@ -79,9 +81,16 @@ public class ActivityMonitor extends State {
 					int state = processStateField.getInt(process);
 
 					if (state == PROCESS_STATE_TOP) {
-						for (String processPackage : process.pkgList)
-							result.add(new AppPackage(processPackage));
-						return; //If multiple candidates are found, it's most likely that apps are being switched. The first one provided by the OS seems to be the one being switched to.
+						for (String processPackage : process.pkgList) {
+							try {
+								PackageInfo packageInfo = context.getPackageManager().getPackageInfo(processPackage, PackageManager.GET_ACTIVITIES);
+								if (packageInfo.activities.length > 0) //Don't worry about apps that don't have activities
+									result.add(new AppPackage(processPackage));
+							} catch (PackageManager.NameNotFoundException e) { //Don't care about non-existent packages
+							}
+						}
+
+						return; //If multiple candidate processes are found, it's most likely that apps are being switched. The first one provided by the OS seems to be the one being switched to.
 					}
 				}
 			}
