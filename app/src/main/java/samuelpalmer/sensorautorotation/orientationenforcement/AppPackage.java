@@ -16,12 +16,12 @@ public class AppPackage {
 	public boolean equals(Object o) {
 		return o != null
 				&& o.getClass() == getClass()
-				&& ((AppPackage)o).qualifiedName.equals(qualifiedName);
+				&& ((AppPackage)o).toString().equals(toString());
 	}
 
 	@Override
 	public int hashCode() {
-		return qualifiedName.hashCode();
+		return toString().hashCode();
 	}
 
 	@Override
