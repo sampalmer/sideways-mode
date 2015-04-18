@@ -17,8 +17,9 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class ActivityMonitor extends State {
 
 	private final Context context;
-	private RecurringRunner recurringRunner;
+	private final RecurringRunner recurringRunner;
 	private final UpdatingEventRegistrar<Set<AppPackage>> onChange = new UpdatingEventRegistrar<>();
+	private Set<AppPackage> lastPackages = new HashSet<>(0);
 
 	public ActivityMonitor(Context context) {
 		this.context = context;
@@ -39,7 +40,11 @@ public class ActivityMonitor extends State {
 
 		@Override
 		public void run() {
-			onChange.report(getCurrentPackages());
+			Set<AppPackage> currentPackages = getCurrentPackages();
+			if (!currentPackages.equals(lastPackages)) {
+				lastPackages = currentPackages;
+				onChange.report(currentPackages);
+			}
 		}
 
 	};
@@ -93,7 +98,6 @@ public class ActivityMonitor extends State {
 	private ActivityManager activityManager() {
 		return (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 	}
-
 
 	public EventRegistrar<Set<AppPackage>> onChange() {
 		return onChange;
