@@ -12,6 +12,7 @@ public class ServiceCommandRunner {
 
 	private final Context context;
 	private final Command command;
+
 	public ServiceCommandRunner(Context context, Command command) {
 		this.context = context;
 		this.command = command;
