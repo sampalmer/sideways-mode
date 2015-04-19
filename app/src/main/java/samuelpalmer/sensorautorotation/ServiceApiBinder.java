@@ -36,7 +36,7 @@ public class ServiceApiBinder extends Binder {
 	}
 
 	public void reportAppChange(AppPackage current) {
-		monitor.updateEnforcement(current);
+		monitor.reportApp(current);
 	}
 
 	private void setAutoRotate(boolean newValue) {
