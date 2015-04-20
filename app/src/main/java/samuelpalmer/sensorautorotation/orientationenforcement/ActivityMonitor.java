@@ -63,9 +63,9 @@ public class ActivityMonitor extends State {
 	private void getCurrentPackagesPreLollipop(HashSet<AppPackage> result) {
 		@SuppressWarnings("deprecation")
 		List<ActivityManager.RunningTaskInfo> tasks = activityManager().getRunningTasks(1);
-		ActivityManager.RunningTaskInfo task = tasks.get(0);
-		ComponentName mainActivity = task.baseActivity;
-		result.add(new AppPackage(mainActivity.getPackageName()));
+		ActivityManager.RunningTaskInfo currentTask = tasks.get(0);
+		ComponentName currentActivity = currentTask.topActivity;
+		result.add(new AppPackage(currentActivity.getPackageName()));
 	}
 
 	private void getCurrentPackagesLollipop(HashSet<AppPackage> result) {
@@ -77,16 +77,25 @@ public class ActivityMonitor extends State {
 			List<ActivityManager.RunningAppProcessInfo> processes = activityManager().getRunningAppProcesses();
 			for (ActivityManager.RunningAppProcessInfo process : processes) {
 				if (
-					process.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND //Filters out most non-activity processes
+					// Filters out most non-activity processes
+					process.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 					&&
-					process.importanceReasonCode == 0 //Filters out processes that are _used_ by the process with the activity
+					// Filters out processes that are just being
+					// _used_ by the process with the activity
+					process.importanceReasonCode == 0
 				) {
 					int state = processStateField.getInt(process);
 
 					if (state == PROCESS_STATE_TOP) {
 						for (String processPackage : process.pkgList)
 							result.add(new AppPackage(processPackage));
-						return; //If multiple candidates are found, it's most likely that apps are being switched. The first one provided by the OS seems to be the one being switched to.
+						/*
+						 If multiple candidate processes can get here,
+						 it's most likely that apps are being switched.
+						 The first one provided by the OS seems to be
+						 the one being switched to, so we stop here.
+						 */
+						return;
 					}
 				}
 			}
