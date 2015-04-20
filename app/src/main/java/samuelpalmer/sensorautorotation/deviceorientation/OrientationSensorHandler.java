@@ -30,6 +30,7 @@ public class OrientationSensorHandler extends State {
 		};
 
 		if (!listener.canDetectOrientation())
+			//A user of an HTC One X reported that he/she got this error. Apparently system auto rotation also wasn't working, so it was probably a problem with the phone.
 			new EnvironmentErrorNotifier(context).handle("This application needs an accelerometer to run, but it didn't find one in this device. If the device does have one, try using the device's \"Auto-rotate screen\" option. If that doesn't work, the accelerometer might be broken.");
 	}
 
