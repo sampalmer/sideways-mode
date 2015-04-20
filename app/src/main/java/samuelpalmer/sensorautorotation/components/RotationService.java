@@ -38,6 +38,9 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
+		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
+		new EnvironmentErrorNotifier(this).clear();
+
 		SystemSettings systemSettings = new SystemSettings(getContentResolver());
 		Screen screen = new Screen(this);
 		ApplicationSettings appSettings = new ApplicationSettings(this);
@@ -53,8 +56,6 @@ public class RotationService extends Service {
 		serviceRevivalManager = new ServiceRevivalManager(this);
 		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, appSettings);
-
-		new EnvironmentErrorNotifier(this).clear();
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
