@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.LockScreenDetector;
@@ -14,35 +14,38 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class OrientationEnforcementMonitor extends State {
 
 	private final Context context;
-	private final ApplicationSettings settings;
+	private final ActivityMonitor activityMonitor;
 	private final ScreenOrientationEnforcer orientationEnforcer;
 	private final LockScreenDetector lockScreenDetector;
-	private AppPackage currentApp;
+	private final ApplicationSettings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
+	private Set<String> currentAppPackages;
 
-	public OrientationEnforcementMonitor(Context context, ApplicationSettings settings) {
+	public OrientationEnforcementMonitor(Context context, ApplicationSettings settings, ActivityMonitor activityMonitor) {
 		this.context = context;
-		this.settings = settings;
+		this.activityMonitor = activityMonitor;
 		orientationEnforcer = new ScreenOrientationEnforcer(context);
 		lockScreenDetector = new LockScreenDetector(context);
+		forcedOrientationAppPackagesSetting = settings.forcedOrientationAppPackages();
 	}
 
 	@Override
 	protected void start() {
-		currentApp = new AppPackage("");
-		lockScreenDetector.possiblyChanged().subscribe(subscriber);
+		currentAppPackages = Collections.emptySet();
+
+		lockScreenDetector.possiblyChanged().subscribe(lockStatusChangedSubscriber);
 		lockScreenDetector.ensureStarted();
+
+		activityMonitor.onChange().subscribe(currentApplicationChangedSubscriber);
 	}
 
 	@Override
 	protected void stop() {
-		lockScreenDetector.ensureStopped();
-		lockScreenDetector.possiblyChanged().unsubscribe(subscriber);
-		orientationEnforcer.ensureStopped();
-	}
+		activityMonitor.onChange().subscribe(currentApplicationChangedSubscriber);
 
-	public void reportApp(AppPackage activeApp) {
-		currentApp = activeApp;
-		updateEnforcement();
+		lockScreenDetector.ensureStopped();
+		lockScreenDetector.possiblyChanged().unsubscribe(lockStatusChangedSubscriber);
+
+		orientationEnforcer.ensureStopped();
 	}
 
 	private void updateEnforcement() {
@@ -53,23 +56,24 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private boolean isEnforced() {
-		return orientationEnforcedApps().contains(currentApp);
+		return !Collections.disjoint(orientationEnforcedApps(), currentAppPackages);
 	}
 
-	private Set<AppPackage> orientationEnforcedApps() {
-		Set<String> orientationEnforcedAppsPackagesNames = settings.forcedOrientationAppPackages().get();
-		Set<AppPackage> orientationEnforcedAppPackages = new HashSet<>(orientationEnforcedAppsPackagesNames.size());
-		for (String orientationEnforcedAppPackage : orientationEnforcedAppsPackagesNames) {
-			AppPackage orientationEnforcedApp = new AppPackage(orientationEnforcedAppPackage);
-			orientationEnforcedAppPackages.add(orientationEnforcedApp);
-		}
-
-		return orientationEnforcedAppPackages;
+	private Set<String> orientationEnforcedApps() {
+		return forcedOrientationAppPackagesSetting.get();
 	}
 
-	private EventHandler<Void> subscriber = new EventHandler<Void>() {
+	private final EventHandler<Void> lockStatusChangedSubscriber = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
+			updateEnforcement();
+		}
+	};
+
+	private final EventHandler<Set<String>> currentApplicationChangedSubscriber = new EventHandler<Set<String>>() {
+		@Override
+		public void update(Set<String> event) {
+			currentAppPackages = event;
 			updateEnforcement();
 		}
 	};
