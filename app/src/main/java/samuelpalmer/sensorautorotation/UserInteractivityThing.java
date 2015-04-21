@@ -38,11 +38,11 @@ public class UserInteractivityThing extends State {
 			if (user.active()) {
 				screenUpdater.ensureStarted();
 				orientationMessenger.ensureStarted();
-				userInteractivityMonitor.ensureStarted();
+				activityMonitor.ensureStarted();
 			} else {
 				screenUpdater.ensureStopped();
 				orientationMessenger.ensureStopped();
-				userInteractivityMonitor.ensureStopped();
+				activityMonitor.ensureStopped();
 
 				calculator.reset();
 			}
