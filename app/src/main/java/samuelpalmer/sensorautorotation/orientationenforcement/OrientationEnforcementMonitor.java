@@ -40,7 +40,7 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void stop() {
-		activityMonitor.onChange().subscribe(currentApplicationChangedSubscriber);
+		activityMonitor.onChange().unsubscribe(currentApplicationChangedSubscriber);
 
 		lockScreenDetector.ensureStopped();
 		lockScreenDetector.possiblyChanged().unsubscribe(lockStatusChangedSubscriber);
