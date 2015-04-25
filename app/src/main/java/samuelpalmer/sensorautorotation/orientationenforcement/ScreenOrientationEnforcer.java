@@ -21,7 +21,13 @@ public class ScreenOrientationEnforcer extends State {
 	}
 
 	private LayoutParams generateLayout() {
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.TYPE_SYSTEM_OVERLAY, 0, PixelFormat.TRANSPARENT);
+		LayoutParams layoutParams = new LayoutParams();
+		layoutParams.width = 0;
+		layoutParams.height = 0;
+		layoutParams.type = LayoutParams.TYPE_TOAST;
+		layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
+		layoutParams.format = PixelFormat.TRANSPARENT;
+		layoutParams.alpha = 0f;
 		layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 		return layoutParams;
 	}
