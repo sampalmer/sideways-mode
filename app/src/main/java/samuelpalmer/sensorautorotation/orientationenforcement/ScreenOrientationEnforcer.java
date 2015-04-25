@@ -6,7 +6,6 @@ import android.graphics.PixelFormat;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.LinearLayout;
 
 import samuelpalmer.sensorautorotation.State;
 
@@ -17,7 +16,7 @@ public class ScreenOrientationEnforcer extends State {
 
 	public ScreenOrientationEnforcer(Context owner) {
 		windows = (WindowManager) owner.getSystemService(Context.WINDOW_SERVICE);
-		view = new LinearLayout(owner);
+		view = new View(owner);
 	}
 
 	private LayoutParams generateLayout() {
