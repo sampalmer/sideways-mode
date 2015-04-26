@@ -18,7 +18,6 @@ public class OrientationEnforcementMonitor extends State {
 	private final ScreenOrientationEnforcer orientationEnforcer;
 	private final LockScreenDetector lockScreenDetector;
 	private final ApplicationSettings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
-	private Set<String> currentAppPackages;
 
 	public OrientationEnforcementMonitor(Context context, ApplicationSettings settings, ActivityMonitor activityMonitor) {
 		this.context = context;
@@ -30,12 +29,12 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void start() {
-		currentAppPackages = Collections.emptySet();
-
 		lockScreenDetector.possiblyChanged().subscribe(lockStatusChangedSubscriber);
 		lockScreenDetector.ensureStarted();
 
 		activityMonitor.onChange().subscribe(currentApplicationChangedSubscriber);
+
+		updateEnforcement();
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private boolean isEnforced() {
-		return !Collections.disjoint(orientationEnforcedApps(), currentAppPackages);
+		return !Collections.disjoint(orientationEnforcedApps(), activityMonitor.current());
 	}
 
 	private Set<String> orientationEnforcedApps() {
@@ -70,10 +69,9 @@ public class OrientationEnforcementMonitor extends State {
 		}
 	};
 
-	private final EventHandler<Set<String>> currentApplicationChangedSubscriber = new EventHandler<Set<String>>() {
+	private final EventHandler<Void> currentApplicationChangedSubscriber = new EventHandler<Void>() {
 		@Override
-		public void update(Set<String> event) {
-			currentAppPackages = event;
+		public void update(Void event) {
 			updateEnforcement();
 		}
 	};

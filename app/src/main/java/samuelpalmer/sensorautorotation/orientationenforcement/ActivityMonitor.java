@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.orientationenforcement;
 import android.content.Context;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,9 +15,9 @@ import samuelpalmer.sensorautorotation.orientationenforcement.currentapplication
 public class ActivityMonitor extends State {
 
 	private final RecurringRunner recurringRunner;
-	private final UpdatingEventRegistrar<Set<String>> onChange = new UpdatingEventRegistrar<>();
+	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 	private final CurrentApplicationRetriever currentApplicationRetriever;
-	private Set<String> lastPackages = new HashSet<>(0);
+	private Set<String> lastPackages = Collections.emptySet();
 
 	public ActivityMonitor(Context context) {
 		//Alternatively, use a Timer to run in a different thread.
@@ -32,6 +33,10 @@ public class ActivityMonitor extends State {
 		recurringRunner.stop();
 	}
 
+	public Set<String> current() {
+		return lastPackages;
+	}
+
 	private final Runnable updateEnforcement = new Runnable() {
 
 		@Override
@@ -41,13 +46,13 @@ public class ActivityMonitor extends State {
 
 			if (!currentPackages.equals(lastPackages)) {
 				lastPackages = currentPackages;
-				onChange.report(currentPackages);
+				onChange.report(null);
 			}
 		}
 
 	};
 
-	public EventRegistrar<Set<String>> onChange() {
+	public EventRegistrar<Void> onChange() {
 		return onChange;
 	}
 }
