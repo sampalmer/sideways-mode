@@ -15,6 +15,9 @@ public class PreLollipopCurrentApplicationRetriever extends CurrentApplicationRe
 	public String[] getPackages() {
 		@SuppressWarnings("deprecation")
 		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+		if (tasks.isEmpty())
+			return new String[] { };
+
 		ActivityManager.RunningTaskInfo currentTask = tasks.get(0);
 		ComponentName currentActivity = currentTask.topActivity;
 		return new String[] { currentActivity.getPackageName() };
