@@ -15,20 +15,22 @@ public class OrientationEnforcementMonitor extends State {
 
 	private final Context context;
 	private final ActivityMonitor activityMonitor;
-	private final ScreenOrientationEnforcer orientationEnforcer;
+	private final ScreenOrientationEnforcementManager orientationEnforcer;
 	private final LockScreenDetector lockScreenDetector;
 	private final ApplicationSettings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
 
 	public OrientationEnforcementMonitor(Context context, ApplicationSettings settings, ActivityMonitor activityMonitor) {
 		this.context = context;
 		this.activityMonitor = activityMonitor;
-		orientationEnforcer = new ScreenOrientationEnforcer(context);
+		orientationEnforcer = new ScreenOrientationEnforcementManager(context);
 		lockScreenDetector = new LockScreenDetector(context);
 		forcedOrientationAppPackagesSetting = settings.forcedOrientationAppPackages();
 	}
 
 	@Override
 	protected void start() {
+		orientationEnforcer.ensureStarted();
+
 		lockScreenDetector.possiblyChanged().subscribe(lockStatusChangedSubscriber);
 		lockScreenDetector.ensureStarted();
 
@@ -49,9 +51,9 @@ public class OrientationEnforcementMonitor extends State {
 
 	private void updateEnforcement() {
 		if (isEnforced() && !LockScreenStatus.isActive(context))
-			orientationEnforcer.ensureStarted();
+			orientationEnforcer.enforcer.ensureStarted();
 		else
-			orientationEnforcer.ensureStopped();
+			orientationEnforcer.enforcer.ensureStopped();
 	}
 
 	private boolean isEnforced() {
@@ -72,6 +74,8 @@ public class OrientationEnforcementMonitor extends State {
 	private final EventHandler<Void> currentApplicationChangedSubscriber = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
+//			Toast.makeText(context, new ArrayList<>(activityMonitor.current()).get(0), Toast.LENGTH_SHORT).show();
+
 			updateEnforcement();
 		}
 	};

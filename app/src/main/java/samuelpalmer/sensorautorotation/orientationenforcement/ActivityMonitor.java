@@ -1,58 +1,106 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
+import android.os.Handler;
 
-import java.util.Arrays;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.orientationenforcement.currentapplicationretrieval.CurrentApplicationRetriever;
 
 public class ActivityMonitor extends State {
 
-	private final RecurringRunner recurringRunner;
-	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
-	private final CurrentApplicationRetriever currentApplicationRetriever;
-	private Set<String> lastPackages = Collections.emptySet();
+	private final Context context;
+	private final ConcurrentHashMap<Integer, String> taskIdsToPackageNames;
+	private String lastPackage;
 
 	public ActivityMonitor(Context context) {
-		//Alternatively, use a Timer to run in a different thread.
-		recurringRunner = new RecurringRunner(updateEnforcement, 333);
-		currentApplicationRetriever = CurrentApplicationRetriever.create(context);
+		this.context = context;
+		this.taskIdsToPackageNames = new ConcurrentHashMap<>();
 	}
 
 	public void start() {
-		recurringRunner.start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Process process = new ProcessBuilder("su")
+							.redirectErrorStream(true)
+							.start();
+
+					PrintStream outputStream = null;
+					try {
+						outputStream = new PrintStream(new BufferedOutputStream(process.getOutputStream(), 8192));
+
+						String now = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US).format(new Date());
+						outputStream.println(String.format("logcat -b events -T '%s' am_new_intent am_resume_activity am_relaunch_resume_activity am_restart_activity *:S", now));
+						outputStream.flush();
+					} finally {
+						if (outputStream != null) {
+							outputStream.close();
+						}
+					}
+
+					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+					do {
+						String line = bufferedReader.readLine();
+						if (line == null) {
+							StringBuilder r = new StringBuilder();
+							BufferedReader e = new BufferedReader(new InputStreamReader(process.getInputStream()));
+							do {
+								String eL = e.readLine();
+								if (eL == null)
+									break;
+
+								r.append(eL);
+							} while (true);
+
+							throw new RuntimeException("Logcat finished: " + r.toString());
+						}
+
+						String[] components = line.split(",");
+						String componentName = components[3];
+						final String packageName = componentName.split("/")[0];
+						new Handler(context.getMainLooper()).post(new Runnable() {
+							@Override
+							public void run() {
+								if (!packageName.equals(lastPackage)) {
+									lastPackage = packageName;
+									onChange.report(null);
+								}
+							}
+						});
+					} while (true);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}).start();
 	}
 
 	public void stop() {
-		recurringRunner.stop();
+
 	}
 
-	public Set<String> current() {
-		return lastPackages;
+	public Collection<String> current() {
+		return Collections.singletonList(lastPackage);
 	}
-
-	private final Runnable updateEnforcement = new Runnable() {
-
-		@Override
-		public void run() {
-
-			Set<String> currentPackages = new HashSet<>(Arrays.asList(currentApplicationRetriever.getPackages()));
-
-			if (!currentPackages.equals(lastPackages)) {
-				lastPackages = currentPackages;
-				onChange.report(null);
-			}
-		}
-
-	};
 
 	public EventRegistrar<Void> onChange() {
 		return onChange;
 	}
+
+	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 }
