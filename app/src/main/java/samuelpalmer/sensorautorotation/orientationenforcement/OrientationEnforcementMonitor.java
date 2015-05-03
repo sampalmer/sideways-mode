@@ -74,8 +74,6 @@ public class OrientationEnforcementMonitor extends State {
 	private final EventHandler<Void> currentApplicationChangedSubscriber = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-//			Toast.makeText(context, new ArrayList<>(activityMonitor.current()).get(0), Toast.LENGTH_SHORT).show();
-
 			updateEnforcement();
 		}
 	};
