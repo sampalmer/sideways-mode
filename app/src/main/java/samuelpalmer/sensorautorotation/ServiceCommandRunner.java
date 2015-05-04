@@ -38,7 +38,9 @@ public class ServiceCommandRunner {
 		}
 
 		@Override
-		public void onServiceDisconnected(ComponentName name) {}
+		public void onServiceDisconnected(ComponentName name) {
+			//Service is already unbound on connection, so no need to unbind here.
+		}
 	};
 
 	public interface Command {
