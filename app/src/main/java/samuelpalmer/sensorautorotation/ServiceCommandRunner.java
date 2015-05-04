@@ -18,6 +18,10 @@ public class ServiceCommandRunner {
 		this.command = command;
 	}
 
+	/**
+	 * The service must be running before calling this or the service connection will be leaked.
+	 * (The service must be explicitly unbound from if the service isn't running.)
+	 */
 	public void run() {
 		Intent intent = new Intent(context, RotationService.class);
 		boolean bound = context.bindService(intent, connection, Context.BIND_ABOVE_CLIENT);
