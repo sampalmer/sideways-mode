@@ -33,21 +33,21 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		};
 
-		private final EventHandler<Void> onScreenOnSummaryUpdater = new EventHandler<Void>() {
+		private final EventHandler<Void> onScreenOffSummaryUpdater = new EventHandler<Void>() {
 			@Override
 			public void update(Void event) {
-				updateOnScreenOnSummary();
+				updateOnScreenOffSummary();
 			}
 		};
 
-		private void updateOnScreenOnSummary() {
-			ListPreference preference = (ListPreference)findPreference(settings.screenOnBehaviour().getKey());
+		private void updateOnScreenOffSummary() {
+			ListPreference preference = (ListPreference)findPreference(settings.screenOffBehaviour().getKey());
 			preference.setSummary(preference.getEntry());
 		}
 
 		private ApplicationSettings settings;
 		private EventRegistrar<Void> enabledChanged;
-		private EventRegistrar<Void> onScreenOnChanged;
+		private EventRegistrar<Void> onScreenOffChanged;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -58,17 +58,17 @@ public class SettingsActivity extends PreferenceActivity {
 
 			addPreferencesFromResource(R.xml.preferences);
 
-			updateOnScreenOnSummary();
+			updateOnScreenOffSummary();
 
 			enabledChanged = settings.enabled().onChange();
-			onScreenOnChanged = settings.screenOnBehaviour().onChange();
+			onScreenOffChanged = settings.screenOffBehaviour().onChange();
 		}
 
 		@Override
 		public void onResume() {
 			super.onResume();
 			enabledChanged.subscribe(enabledUpdater);
-			onScreenOnChanged.subscribe(onScreenOnSummaryUpdater);
+			onScreenOffChanged.subscribe(onScreenOffSummaryUpdater);
 
 			refresh();
 		}
@@ -81,7 +81,7 @@ public class SettingsActivity extends PreferenceActivity {
 		@Override
 		public void onPause() {
 			super.onPause();
-			onScreenOnChanged.unsubscribe(onScreenOnSummaryUpdater);
+			onScreenOffChanged.unsubscribe(onScreenOffSummaryUpdater);
 			enabledChanged.unsubscribe(enabledUpdater);
 		}
 

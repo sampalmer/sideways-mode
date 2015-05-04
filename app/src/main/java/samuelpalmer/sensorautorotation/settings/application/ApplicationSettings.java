@@ -30,7 +30,7 @@ public class ApplicationSettings {
 
 	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
-	public Setting<ScreenOnBehaviour> screenOnBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOnBehaviour.class), "screenOnBehaviour", ScreenOnBehaviour.DO_NOTHING); }
+	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
 	public Setting<Boolean> showNotificationAtTop() { return new Setting<>(new BooleanSetting(), "showNotificationAtTop", false); }
 	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
 

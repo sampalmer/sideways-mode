@@ -41,7 +41,7 @@
 	<string name="allow_upside_down_screen">Allow upside-down screen</string>
 	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
 
-	<string name="on_screen_on">When screen turned on</string>
+	<string name="on_screen_off">When screen turned off</string>
 	<string name="show_notification_at_top">Show notification at top</string>
 	<string name="show_notification_at_top_description">Try to show the notification before all others</string>
 
