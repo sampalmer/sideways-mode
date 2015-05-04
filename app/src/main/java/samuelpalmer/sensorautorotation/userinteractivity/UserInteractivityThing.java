@@ -45,11 +45,12 @@ public class UserInteractivityThing extends State {
 				orientationMessenger.ensureStarted();
 				activityMonitor.ensureStarted();
 			} else {
+				//This should happen before stopping the below things since they need to be triggered by this.
+				calculator.reset();
+
 				screenUpdater.ensureStopped();
 				orientationMessenger.ensureStopped();
 				activityMonitor.ensureStopped();
-
-				calculator.reset();
 			}
 		}
 	};
