@@ -32,9 +32,9 @@ public class ServiceCommandRunner {
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder untypedBinder) {
-			context.unbindService(this);
 			ServiceApiBinder service = (ServiceApiBinder)untypedBinder;
 			command.run(service);
+			context.unbindService(this);
 		}
 
 		@Override
