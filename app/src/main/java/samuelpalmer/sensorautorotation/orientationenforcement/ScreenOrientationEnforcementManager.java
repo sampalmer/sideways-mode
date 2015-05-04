@@ -25,6 +25,7 @@ public class ScreenOrientationEnforcementManager extends State {
 	protected void start() {
 		LayoutParams layout = generateLayout();
 		windows.addView(view, layout);
+		view.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
