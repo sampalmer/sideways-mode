@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ScreenOnBehaviour;
 

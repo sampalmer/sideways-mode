@@ -1,7 +1,10 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.screen;
 
 import android.content.Context;
 import android.view.WindowManager;
+
+import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.Orientation;
 
 public class Screen {
 

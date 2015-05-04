@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {

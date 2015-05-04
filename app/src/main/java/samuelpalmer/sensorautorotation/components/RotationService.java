@@ -11,18 +11,18 @@ import android.os.IBinder;
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.Screen;
-import samuelpalmer.sensorautorotation.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
-import samuelpalmer.sensorautorotation.UserInteractivityThing;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
+import samuelpalmer.sensorautorotation.screen.Screen;
+import samuelpalmer.sensorautorotation.screen.ScreenOrientationController;
+import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.userinteractivity.UserInteractivityThing;
 
 public class RotationService extends Service {
 

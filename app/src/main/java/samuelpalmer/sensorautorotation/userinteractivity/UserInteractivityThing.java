@@ -1,8 +1,13 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.userinteractivity;
 
 import android.content.Context;
 
+import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.OrientationMessenger;
+import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
+import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
 
 public class UserInteractivityThing extends State {
 	private final OrientationCalculator calculator;
