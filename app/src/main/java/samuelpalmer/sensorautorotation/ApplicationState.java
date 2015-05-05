@@ -5,10 +5,10 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ApplicationState {
 
-	private final ApplicationSettings settings;
+	private final ApplicationSettings applicationSettings;
 
 	public ApplicationState(ApplicationSettings applicationSettings, SystemSettings systemSettings) {
-		this.settings = applicationSettings;
+		this.applicationSettings = applicationSettings;
 
 		if (!applicationSettings.autoRotate().hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
@@ -20,32 +20,32 @@ public class ApplicationState {
 	}
 
 	public boolean autoRotate() {
-		return settings.autoRotate().get();
+		return applicationSettings.autoRotate().get();
 	}
 
 	public Orientation user() {
-		return new Orientation(settings.userOrientation().get());
+		return new Orientation(applicationSettings.userOrientation().get());
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
-		ApplicationSettings.Transaction transaction = settings.new Transaction();
-		settings.autoRotate().set(autoRotate, transaction);
-		settings.userOrientation().set(serialise(user), transaction);
+		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
+		applicationSettings.autoRotate().set(autoRotate, transaction);
+		applicationSettings.userOrientation().set(serialise(user), transaction);
 		transaction.commit();
 	}
 
 	public void autoRotate(boolean newValue) {
-		settings.autoRotate().setAndCommit(newValue);
+		applicationSettings.autoRotate().setAndCommit(newValue);
 	}
 
 	public void user(Orientation newValue) {
-		settings.userOrientation().setAndCommit(serialise(newValue));
+		applicationSettings.userOrientation().setAndCommit(serialise(newValue));
 	}
 
 	public void clear() {
-		ApplicationSettings.Transaction transaction = settings.new Transaction();
-		settings.autoRotate().remove(transaction);
-		settings.userOrientation().remove(transaction);
+		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
+		applicationSettings.autoRotate().remove(transaction);
+		applicationSettings.userOrientation().remove(transaction);
 		transaction.commit();
 	}
 
