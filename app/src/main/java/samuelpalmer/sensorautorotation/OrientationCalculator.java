@@ -15,7 +15,6 @@ public class OrientationCalculator {
 	private final ApplicationState state;
 
 	private Orientation device = DEFAULT;
-	private boolean deviceSpecified;
 
 	private final UpdatingEventRegistrar<Void> listener;
 
@@ -69,11 +68,6 @@ public class OrientationCalculator {
 		}
 
 		device = newDevice;
-
-		if (!deviceSpecified) {
-			inferUserFromScreen();
-			deviceSpecified = true;
-		}
 
 		reportUpdate();
 
