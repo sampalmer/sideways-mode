@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.orientationenforcement;
+package samuelpalmer.sensorautorotation.orientationenforcement.ui;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AppPackagesPreference extends MultiSelectListPreference {
@@ -41,28 +40,19 @@ public class AppPackagesPreference extends MultiSelectListPreference {
 		List<PackageInfo> installedPackages = packageManager
 				.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 
-		ArrayList<PackageInfo> appsWithActivities = new ArrayList<>();
+		ArrayList<InstalledApp> options = new ArrayList<>();
 		for (PackageInfo installedPackage : installedPackages)
 			if (installedPackage.activities != null && installedPackage.activities.length > 0)
-				appsWithActivities.add(installedPackage);
+				options.add(new InstalledApp(installedPackage));
 
-		ArrayList<InstalledApp> options = new ArrayList<>();
-		for (PackageInfo app : appsWithActivities)
-			options.add(new InstalledApp(app));
-
-		Collections.sort(options, new Comparator<InstalledApp>() {
-			@Override
-			public int compare(InstalledApp lhs, InstalledApp rhs) {
-				return lhs.label.toString().compareToIgnoreCase(rhs.label.toString());
-			}
-		});
+		Collections.sort(options, new InstalledAppComparator());
 		return options;
 	}
 
-	class InstalledApp {
+	public class InstalledApp {
 
-		private final CharSequence packageName;
-		private final CharSequence label;
+		public final CharSequence packageName;
+		public final CharSequence label;
 
 		public InstalledApp(PackageInfo app) {
 			packageName = app.packageName;
