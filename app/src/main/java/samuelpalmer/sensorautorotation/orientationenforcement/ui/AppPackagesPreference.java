@@ -42,11 +42,22 @@ public class AppPackagesPreference extends MultiSelectListPreference {
 
 		ArrayList<InstalledApp> options = new ArrayList<>();
 		for (PackageInfo installedPackage : installedPackages)
-			if (installedPackage.activities != null && installedPackage.activities.length > 0)
+			if (shouldShow(installedPackage))
 				options.add(new InstalledApp(installedPackage));
 
 		Collections.sort(options, new InstalledAppComparator());
 		return options;
+	}
+
+	private boolean shouldShow(PackageInfo installedPackage) {
+		return
+				installedPackage.activities != null
+				&&
+				installedPackage.activities.length > 0
+				&&
+				installedPackage.applicationInfo != null
+				&&
+				installedPackage.applicationInfo.enabled;
 	}
 
 	public class InstalledApp {
