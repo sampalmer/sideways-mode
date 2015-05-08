@@ -6,20 +6,17 @@ import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StateMonitor;
-import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
 
 public class UserInteractivityThing extends State {
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationUpdater screenUpdater;
-	private final ActivityMonitor activityMonitor;
 	private final OrientationMessenger orientationMessenger;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
-	public UserInteractivityThing(Context context, OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater, ActivityMonitor activityMonitor) {
+	public UserInteractivityThing(Context context, OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
 		this.calculator = calculator;
 		this.screenUpdater = screenUpdater;
-		this.activityMonitor = activityMonitor;
 		orientationMessenger = new OrientationMessenger(context, calculator);
 		userInteractivityMonitor = new UserInteractivityMonitor(context, listener);
 	}
@@ -31,7 +28,6 @@ public class UserInteractivityThing extends State {
 
 	@Override
 	protected void stop() {
-		activityMonitor.stop();
 		orientationMessenger.ensureStopped();
 		screenUpdater.ensureStopped();
 		userInteractivityMonitor.ensureStopped();
@@ -43,14 +39,12 @@ public class UserInteractivityThing extends State {
 			if (user.active()) {
 				screenUpdater.ensureStarted();
 				orientationMessenger.ensureStarted();
-				activityMonitor.ensureStarted();
 			} else {
 				//This should happen before stopping the below things since they need to be triggered by this.
 				calculator.reset();
 
 				screenUpdater.ensureStopped();
 				orientationMessenger.ensureStopped();
-				activityMonitor.ensureStopped();
 			}
 		}
 	};

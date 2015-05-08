@@ -15,8 +15,6 @@ import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
-import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
@@ -33,7 +31,6 @@ public class RotationService extends Service {
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotification serviceNotification;
 	private UserInteractivityThing userInteractivityThing;
-	private OrientationEnforcementMonitor orientationEnforcementMonitor;
 
 	@Override
 	public void onCreate() {
@@ -56,9 +53,7 @@ public class RotationService extends Service {
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager(this);
 
-		ActivityMonitor activityMonitor = new ActivityMonitor(this);
-		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater, activityMonitor);
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, appSettings, activityMonitor);
+		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
@@ -66,7 +61,6 @@ public class RotationService extends Service {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
 		serviceRevivalManager.ensureStarted();
-		orientationEnforcementMonitor.ensureStarted();
 	}
 
 	@Override
@@ -91,7 +85,6 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		orientationEnforcementMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityThing.ensureStopped();
