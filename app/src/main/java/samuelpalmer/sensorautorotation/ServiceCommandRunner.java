@@ -2,19 +2,16 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
-
 public class ServiceCommandRunner {
 
-	private final Context context;
 	private final Command command;
+	private final ServiceBinder serviceBinder;
 
 	public ServiceCommandRunner(Context context, Command command) {
-		this.context = context;
+		serviceBinder = new ServiceBinder(context, connection);
 		this.command = command;
 	}
 
@@ -23,11 +20,7 @@ public class ServiceCommandRunner {
 	 * (The service must be explicitly unbound from if the service isn't running.)
 	 */
 	public void run() {
-		Intent intent = new Intent(context, RotationService.class);
-		boolean bound = context.bindService(intent, connection, Context.BIND_ABOVE_CLIENT);
-		if (!bound)
-			//This seems to happen when the service being bound to isn't installed.
-			throw new RuntimeException("Couldn't bind to service");
+		serviceBinder.bind();
 	}
 
 	private final ServiceConnection connection = new ServiceConnection() {
@@ -35,7 +28,7 @@ public class ServiceCommandRunner {
 		public void onServiceConnected(ComponentName name, IBinder untypedBinder) {
 			ServiceApiBinder service = (ServiceApiBinder)untypedBinder;
 			command.run(service);
-			context.unbindService(this);
+			serviceBinder.unbind();
 		}
 
 		@Override
