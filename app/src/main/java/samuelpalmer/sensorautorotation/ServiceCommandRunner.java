@@ -40,7 +40,7 @@ public class ServiceCommandRunner {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			//Service is already unbound on connection, so no need to unbind here.
+			//Service is already unbound when first connected, so no need to unbind here.
 		}
 	};
 
