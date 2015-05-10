@@ -58,7 +58,7 @@ public class RotationService extends Service {
 		serviceRevivalManager = new ServiceRevivalManager(this);
 
 		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
-		activityMonitor = new ActivityMonitor();
+		activityMonitor = new ActivityMonitor(this);
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, appSettings, activityMonitor);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
@@ -67,6 +67,7 @@ public class RotationService extends Service {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
 		serviceRevivalManager.ensureStarted();
+		activityMonitor.ensureStarted();
 		orientationEnforcementMonitor.ensureStarted();
 	}
 
@@ -93,6 +94,7 @@ public class RotationService extends Service {
 		super.onDestroy();
 
 		orientationEnforcementMonitor.ensureStopped();
+		activityMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityThing.ensureStopped();
