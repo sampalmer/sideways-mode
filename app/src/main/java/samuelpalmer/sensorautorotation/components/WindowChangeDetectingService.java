@@ -2,60 +2,43 @@ package samuelpalmer.sensorautorotation.components;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.IBinder;
 import android.view.accessibility.AccessibilityEvent;
 
-import java.util.Set;
-
-import samuelpalmer.sensorautorotation.LockScreenDetector;
-import samuelpalmer.sensorautorotation.LockScreenStatus;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcementManager;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.ServiceApiBinder;
+import samuelpalmer.sensorautorotation.ServiceBinder;
 
 public class WindowChangeDetectingService
 		extends AccessibilityService {
 
-	private ScreenOrientationEnforcementManager orientationEnforcer;
-	private LockScreenDetector lockScreenDetector;
-	private ApplicationSettings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
-	private String lastApp;
+	private ServiceBinder serviceBinder;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		lastApp = "";
-
-		orientationEnforcer = new ScreenOrientationEnforcementManager(this);
-		lockScreenDetector = new LockScreenDetector(this);
-		forcedOrientationAppPackagesSetting = new ApplicationSettings(this).forcedOrientationAppPackages();
-
-		orientationEnforcer.ensureStarted();
-
-		lockScreenDetector.possiblyChanged().subscribe(lockStatusChangedSubscriber);
-		lockScreenDetector.ensureStarted();
-
-		updateEnforcement();
+		serviceBinder = new ServiceBinder(this, connection);
+		serviceBinder.bind();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		lockScreenDetector.ensureStopped();
-		lockScreenDetector.possiblyChanged().unsubscribe(lockStatusChangedSubscriber);
-
-		orientationEnforcer.ensureStopped();
+		serviceBinder.unbind();
 	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && isForActivity(event)) {
+		if (
+			mainService != null
+			&&
+			event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
+			&&
+			isForActivity(event)
+		) {
 			String currentApp = event.getPackageName().toString();
-			if (!currentApp.equals(lastApp)) {
-				lastApp = currentApp;
-				updateEnforcement();
-			}
+			mainService.updateCurrentApp(currentApp);
 		}
 	}
 
@@ -76,26 +59,18 @@ public class WindowChangeDetectingService
 	@Override
 	public void onInterrupt() {}
 
+	private ServiceApiBinder mainService;
 
-	private void updateEnforcement() {
-		if (isEnforced() && !LockScreenStatus.isActive(this))
-			orientationEnforcer.enforcer.ensureStarted();
-		else
-			orientationEnforcer.enforcer.ensureStopped();
-	}
-
-	private boolean isEnforced() {
-		return orientationEnforcedApps().contains(lastApp);
-	}
-
-	private Set<String> orientationEnforcedApps() {
-		return forcedOrientationAppPackagesSetting.get();
-	}
-
-	private final EventHandler<Void> lockStatusChangedSubscriber = new EventHandler<Void>() {
+	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
-		public void update(Void event) {
-			updateEnforcement();
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mainService = (ServiceApiBinder)service;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mainService = null;
+			serviceBinder.bind(); //So onServiceConnected will be called when the target service is back
 		}
 	};
 
