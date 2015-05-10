@@ -26,6 +26,7 @@ public class ServiceCommandRunner {
 		Intent intent = new Intent(context, RotationService.class);
 		boolean bound = context.bindService(intent, connection, Context.BIND_ABOVE_CLIENT);
 		if (!bound)
+			//This seems to happen when the service being bound to isn't installed.
 			throw new RuntimeException("Couldn't bind to service");
 	}
 
