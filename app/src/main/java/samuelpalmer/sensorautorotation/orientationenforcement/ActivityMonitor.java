@@ -54,14 +54,14 @@ public class ActivityMonitor extends State {
 			String reason = intent.getStringExtra("reason");
 			if (reason != null) {
 				if (reason.equals("homekey"))
-					setCurrentApp(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
+					trySetCurrentApp(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
 				else if (reason.equals("recentapps"))
-					setCurrentApp(new Intent("com.android.systemui.recents.SHOW_RECENTS"));
+					trySetCurrentApp(new Intent("com.android.systemui.recents.SHOW_RECENTS")); //NOT WORKING
 			}
 		}
 	};
 
-	private void setCurrentApp(Intent intent) {
+	private void trySetCurrentApp(Intent intent) {
 		ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (resolveInfo != null) {
 			String packageName = resolveInfo.activityInfo.packageName;
