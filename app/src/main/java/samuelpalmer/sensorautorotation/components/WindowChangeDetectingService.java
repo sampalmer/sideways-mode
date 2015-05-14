@@ -43,10 +43,17 @@ public class WindowChangeDetectingService
 	}
 
 	private boolean isForActivity(AccessibilityEvent event) {
+		if (event.getPackageName() == null || event.getClassName() == null)
+			return false;
+
 		ComponentName activityComponentName = new ComponentName(
 				event.getPackageName().toString(),
 				event.getClassName().toString());
 
+		return isActivity(activityComponentName);
+	}
+
+	private boolean isActivity(ComponentName activityComponentName) {
 		try {
 			getPackageManager().getActivityInfo(activityComponentName, 0);
 		} catch (PackageManager.NameNotFoundException e) {
