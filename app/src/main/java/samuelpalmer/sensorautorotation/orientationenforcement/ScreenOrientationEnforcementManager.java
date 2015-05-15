@@ -14,18 +14,18 @@ public class ScreenOrientationEnforcementManager extends State {
 	private final View view;
 	private final WindowManager windows;
 	public final ScreenOrientationEnforcer enforcer;
+	private LayoutParams layout;
 
 	public ScreenOrientationEnforcementManager(Context context) {
 		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
-		enforcer = new ScreenOrientationEnforcer(view);
+		layout = generateLayout();
+		enforcer = new ScreenOrientationEnforcer();
 	}
 
 	@Override
 	protected void start() {
-		LayoutParams layout = generateLayout();
 		windows.addView(view, layout);
-		view.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -53,9 +53,31 @@ public class ScreenOrientationEnforcementManager extends State {
 		layoutParams.format = PixelFormat.TRANSPARENT;
 		layoutParams.alpha = 0f;
 
-		layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
-
 		return layoutParams;
 	}
 
+	/**
+	 * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
+	 * slower, and removing and adding the view is even slower again.
+	 */
+	void setOrientation(int screenOrientation) {
+		layout.screenOrientation = screenOrientation;
+		windows.updateViewLayout(view, layout);
+	}
+
+	public class ScreenOrientationEnforcer extends State {
+
+		private ScreenOrientationEnforcer(){}
+
+		@Override
+		protected void start() {
+			setOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+		}
+
+		@Override
+		protected void stop() {
+			setOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
+
+	}
 }
