@@ -45,4 +45,5 @@
 	<string name="show_notification_at_top">Show notification at top</string>
 	<string name="show_notification_at_top_description">Try to show the notification before all others</string>
 
+	<string name="accessibility_service_description">Detects when you change apps so screen orientation enforcement can be enabled for the apps you have chosen.</string>
 </resources>
