@@ -20,31 +20,7 @@ public class Setting<T> {
 	private final T defaultValue;
 
 	//Mostly copied from ApplicationSettings.Setting
-	public final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
-
-		private final ContentObserver listener = new ContentObserver(null) {
-			@Override
-			public void onChange(boolean selfChange) {
-				super.onChange(selfChange);
-				report(null);
-			}
-		};
-
-		@Override
-		public void subscribe(EventHandler<Void> subscriber) {
-			if (noSubscriptions())
-				contentResolver.registerContentObserver(getUriFor(key), false, listener);
-			super.subscribe(subscriber);
-		}
-
-		@Override
-		public void unsubscribe(EventHandler<Void> subscriber) {
-			super.unsubscribe(subscriber);
-			if (noSubscriptions())
-				contentResolver.unregisterContentObserver(listener);
-		}
-
-	};
+	private final ExternalChangeRegistrar onExternalChange = new ExternalChangeRegistrar();
 
 	public Setting(ContentResolver contentResolver, String key, TypeConverter<T> converter, T defaultValue) {
 		this.contentResolver = contentResolver;
@@ -52,6 +28,8 @@ public class Setting<T> {
 		this.converter = converter;
 		this.defaultValue = defaultValue;
 	}
+
+	public final EventRegistrar<Void> onExternalChange() { return onExternalChange; }
 
 	public T get() {
 		String value = getOrNull(key);
@@ -71,9 +49,64 @@ public class Setting<T> {
 	}
 
 	private void set(String key, String value) throws SettingWriteFailedException {
-		boolean writeErrors = !putString(contentResolver, key, value);
+		onExternalChange.setEnabled(false);
+
+		boolean writeErrors;
+		try {
+			writeErrors = !putString(contentResolver, key, value);
+		}
+		finally {
+			onExternalChange.setEnabled(true);
+		}
+
 		if (writeErrors)
 			throw new SettingWriteFailedException(key, value);
 	}
 
+	private class ExternalChangeRegistrar extends UpdatingEventRegistrar<Void> {
+
+		private boolean registered;
+		private boolean enabled = true;
+
+		private final ContentObserver listener = new ContentObserver(null) {
+			@Override
+			public void onChange(boolean selfChange) {
+				super.onChange(selfChange);
+				report(null);
+			}
+		};
+
+		@Override
+		public void subscribe(EventHandler<Void> subscriber) {
+			super.subscribe(subscriber);
+			updateRegistration();
+		}
+
+		@Override
+		public void unsubscribe(EventHandler<Void> subscriber) {
+			super.unsubscribe(subscriber);
+			updateRegistration();
+		}
+
+		public void setEnabled(boolean newEnabled) {
+			enabled = newEnabled;
+			updateRegistration();
+		}
+
+		private boolean shouldBeRegistered() {
+			return !noSubscriptions() && enabled;
+		}
+
+		private void updateRegistration() {
+			if (shouldBeRegistered() != registered) {
+				if (shouldBeRegistered())
+					contentResolver.registerContentObserver(getUriFor(key), false, listener);
+				else
+					contentResolver.unregisterContentObserver(listener);
+
+				registered = shouldBeRegistered();
+			}
+		}
+
+	}
 }
