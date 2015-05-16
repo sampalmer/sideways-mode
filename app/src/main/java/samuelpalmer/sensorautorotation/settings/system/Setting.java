@@ -19,9 +19,6 @@ public class Setting<T> {
 	private final TypeConverter<T> converter;
 	private final T defaultValue;
 
-	//Mostly copied from ApplicationSettings.Setting
-	private final ExternalChangeRegistrar onExternalChange = new ExternalChangeRegistrar();
-
 	public Setting(ContentResolver contentResolver, String key, TypeConverter<T> converter, T defaultValue) {
 		this.contentResolver = contentResolver;
 		this.key = key;
@@ -29,7 +26,11 @@ public class Setting<T> {
 		this.defaultValue = defaultValue;
 	}
 
+	private final ChangeRegistrar onExternalChange = new ChangeRegistrar();
 	public final EventRegistrar<Void> onExternalChange() { return onExternalChange; }
+
+	private final ChangeRegistrar onChange = new ChangeRegistrar();
+	public final EventRegistrar<Void> onChange() { return onChange; }
 
 	public T get() {
 		String value = getOrNull(key);
@@ -63,7 +64,8 @@ public class Setting<T> {
 			throw new SettingWriteFailedException(key, value);
 	}
 
-	private class ExternalChangeRegistrar extends UpdatingEventRegistrar<Void> {
+	//Mostly copied from ApplicationSettings.Setting
+	private class ChangeRegistrar extends UpdatingEventRegistrar<Void> {
 
 		private boolean registered;
 		private boolean enabled = true;

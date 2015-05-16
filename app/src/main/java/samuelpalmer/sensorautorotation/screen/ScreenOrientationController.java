@@ -27,7 +27,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void start() {
-		settings.accelerometerRotation.onExternalChange().subscribe(systemAutoRotationChanged);
+		settings.accelerometerRotation.onChange().subscribe(systemAutoRotationChanged);
 		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
 
 		Orientation realOrientation = screen.realOrientation();
@@ -40,7 +40,7 @@ public class ScreenOrientationController extends State {
 	@Override
 	protected void stop() {
 		settings.userRotation.onExternalChange().unsubscribe(userRotationChanged);
-		settings.accelerometerRotation.onExternalChange().unsubscribe(systemAutoRotationChanged);
+		settings.accelerometerRotation.onChange().unsubscribe(systemAutoRotationChanged);
 
 		set(settings.accelerometerRotation, calculator.autoRotate());
 		propose(Orientation.NATURAL);
