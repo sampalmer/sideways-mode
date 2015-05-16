@@ -28,6 +28,7 @@ public class ScreenOrientationController extends State {
 	@Override
 	protected void start() {
 		settings.accelerometerRotation.onExternalChange().subscribe(systemAutoRotationChanged);
+		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
 
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
@@ -38,6 +39,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void stop() {
+		settings.userRotation.onExternalChange().unsubscribe(userRotationChanged);
 		settings.accelerometerRotation.onExternalChange().unsubscribe(systemAutoRotationChanged);
 
 		set(settings.accelerometerRotation, calculator.autoRotate());
@@ -75,5 +77,13 @@ public class ScreenOrientationController extends State {
 			new EnvironmentErrorNotifier(context).handle("System screen auto-rotation was enabled.");
 		}
 	}
+
+	private final EventHandler<Void> userRotationChanged = new EventHandler<Void>() {
+		@Override
+		public void update(Void event) {
+			new EnvironmentErrorNotifier(context).handle("Another application has changed the screen orientation.");
+		}
+	};
+
 
 }
