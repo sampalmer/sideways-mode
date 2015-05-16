@@ -41,7 +41,7 @@ public class ScreenOrientationController extends State {
 		settings.accelerometerRotation.onChange.unsubscribe(systemAutoRotationChanged);
 
 		set(settings.accelerometerRotation, calculator.autoRotate());
-		set(settings.userRotation, Orientation.NATURAL);
+		propose(Orientation.NATURAL);
 	}
 
 	public void propose(Orientation value) {
