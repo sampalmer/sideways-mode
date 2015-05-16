@@ -28,13 +28,14 @@ public class ScreenOrientationController extends State {
 	@Override
 	protected void start() {
 		settings.accelerometerRotation.onChange().subscribe(systemAutoRotationChanged);
-		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
 
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
 
 		set(settings.accelerometerRotation, false);
 		propose(realOrientation); //Just in case disabling system rotation reset this.
+
+		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
 	}
 
 	@Override
