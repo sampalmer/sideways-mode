@@ -54,6 +54,7 @@ public class WindowChangeDetectingService
 	}
 
 	private boolean isActivity(ComponentName activityComponentName) {
+		//I'm using exceptions for control flow here because I couldn't find a faster approach
 		try {
 			getPackageManager().getActivityInfo(activityComponentName, 0);
 		} catch (PackageManager.NameNotFoundException e) {
