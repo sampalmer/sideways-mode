@@ -24,11 +24,13 @@ public class RecurringRunner extends State {
 		}
 	};
 
-	public void start() {
+	@Override
+	protected void start() {
 		runAndEnqueue.run();
 	}
 
-	public void stop() {
+	@Override
+	protected void stop() {
 		handler.removeCallbacks(runAndEnqueue);
 	}
 }
