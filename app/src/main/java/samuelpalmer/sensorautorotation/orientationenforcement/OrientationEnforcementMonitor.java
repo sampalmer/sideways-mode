@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
 
+import java.util.Collections;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.LockScreenDetector;
@@ -56,7 +57,7 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private boolean isEnforced() {
-		return orientationEnforcedApps().contains(activityMonitor.current());
+		return !Collections.disjoint(orientationEnforcedApps(), activityMonitor.current());
 	}
 
 	private Set<String> orientationEnforcedApps() {
