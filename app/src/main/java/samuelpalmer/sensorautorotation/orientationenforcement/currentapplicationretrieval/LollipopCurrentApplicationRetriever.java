@@ -28,9 +28,22 @@ public class LollipopCurrentApplicationRetriever extends CurrentApplicationRetri
                  The first one provided by the OS seems to be
                  the one being switched to, so we stop here.
                 */
-				return process.pkgList;
+				return getPackages(process);
 
 		return new String[] { };
+	}
+
+	private String[] getPackages(ActivityManager.RunningAppProcessInfo process) {
+		if (process.pkgList == null)
+			return new String[]{};
+		else
+			/*
+			 This can happen if multiple apps are sharing this process. From a quick test,
+			 it looks like the order of the returned package list isn't related to which app
+			 is actually on top. It looks like it isn't very common for this to happen. We're
+			 just returning all of the packages since any of them could be the important one.
+			 */
+			return process.pkgList;
 	}
 
 	private boolean isTop(ActivityManager.RunningAppProcessInfo process) {
