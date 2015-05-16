@@ -8,14 +8,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.orientationenforcement.currentapplicationretrieval.CurrentApplicationRetriever;
 
 public class ActivityMonitor extends State {
 
@@ -23,25 +18,22 @@ public class ActivityMonitor extends State {
 
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 	private final Context context;
-	private final CurrentApplicationRetriever currentApplicationRetriever;
-	private final Set<String> lastApp = new HashSet<>(3); //I don't expect to pick up a process with more than 3 apps in it
+	private String lastApp;
 
 	public ActivityMonitor(Context context) {
 		this.context = context;
-		currentApplicationRetriever = CurrentApplicationRetriever.create(context);
 	}
 
-	public Set<String> current() {
+	public String current() {
 		return lastApp;
 	}
 
-	public void setCurrentApp(String... currentApps) {
-		Set<String> currentPackages = new HashSet<>(Arrays.asList(currentApps));
-		if (!currentPackages.equals(lastApp)) {
-			lastApp.clear();
-			lastApp.addAll(currentPackages);
+	public void setCurrentApp(String currentApp) {
+		if (!currentApp.equals(lastApp)) {
+			lastApp = currentApp;
 			onChange.report(null);
-			Log.i(TAG, "Current app detected: " + lastApp);
+			Log.i(TAG, "Current app detected: " + currentApp);
+//			Toast.makeText(context, lastApp, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -51,22 +43,8 @@ public class ActivityMonitor extends State {
 
 	@Override
 	protected void start() {
-		lastApp.clear();
-
-		new RecurringRunner(new Runnable() {
-			@Override
-			public void run() {
-				poll();
-			}
-		}, 333).ensureStarted();
-
+		lastApp = "";
 		context.registerReceiver(systemKeyPressReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-	}
-
-	private void poll() {
-		String[] currentApps = currentApplicationRetriever.getPackages();
-		if (currentApps.length > 0)
-			setCurrentApp(currentApps);
 	}
 
 	@Override
