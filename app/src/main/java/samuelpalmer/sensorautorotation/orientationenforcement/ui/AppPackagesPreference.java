@@ -19,7 +19,14 @@ public class AppPackagesPreference extends MultiSelectListPreference {
 
 		packageManager = context.getPackageManager();
 
+		setEntries(new CharSequence[]{});
+		setEntryValues(new CharSequence[]{});
+	}
+
+	@Override
+	protected void onClick() {
 		initialiseOptions();
+		super.onClick();
 	}
 
 	private void initialiseOptions() {
