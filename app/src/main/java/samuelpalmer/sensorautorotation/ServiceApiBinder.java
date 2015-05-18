@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Binder;
 import android.widget.Toast;
 
@@ -34,8 +35,8 @@ public class ServiceApiBinder extends Binder {
 			.show();
 	}
 
-	public void updateCurrentApp(String currentApp) {
-		activityMonitor.setCurrentApp(currentApp);
+	public void updateCurrentApp(ActivityInfo activity) {
+		activityMonitor.setCurrentApp(activity);
 	}
 
 	private void setAutoRotate(boolean newValue) {

@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.components;
 import android.accessibilityservice.AccessibilityService;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.view.accessibility.AccessibilityEvent;
@@ -30,38 +31,34 @@ public class WindowChangeDetectingService
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		if (
-			mainService != null
-			&&
-			event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
-			&&
-			isForActivity(event)
-		) {
-			String currentApp = event.getPackageName().toString();
-			mainService.updateCurrentApp(currentApp);
+		if (mainService != null && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+			ActivityInfo activity = getActivity(event);
+			if (activity != null)
+				mainService.updateCurrentApp(activity);
 		}
 	}
 
-	private boolean isForActivity(AccessibilityEvent event) {
+	private ActivityInfo getActivity(AccessibilityEvent event) {
+		ComponentName activityComponentName = buildComponentName(event);
+
+		if (activityComponentName != null)
+			//I'm using exceptions for control flow here because I didn't find a faster approach
+			try {
+				return getPackageManager().getActivityInfo(activityComponentName, 0);
+			} catch (PackageManager.NameNotFoundException ignored) {
+			}
+
+		return null;
+	}
+
+	private ComponentName buildComponentName(AccessibilityEvent event) {
 		if (event.getPackageName() == null || event.getClassName() == null)
-			return false;
+			return null;
 
-		ComponentName activityComponentName = new ComponentName(
-				event.getPackageName().toString(),
-				event.getClassName().toString());
-
-		return isActivity(activityComponentName);
-	}
-
-	private boolean isActivity(ComponentName activityComponentName) {
-		//I'm using exceptions for control flow here because I couldn't find a faster approach
-		try {
-			getPackageManager().getActivityInfo(activityComponentName, 0);
-		} catch (PackageManager.NameNotFoundException e) {
-			return false;
-		}
-
-		return true;
+		return new ComponentName(
+			event.getPackageName().toString(),
+			event.getClassName().toString()
+		);
 	}
 
 	@Override

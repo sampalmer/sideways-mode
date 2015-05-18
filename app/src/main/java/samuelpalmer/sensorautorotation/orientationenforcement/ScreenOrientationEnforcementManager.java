@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,14 +12,12 @@ public class ScreenOrientationEnforcementManager extends State {
 
 	private final View view;
 	private final WindowManager windows;
-	public final ScreenOrientationEnforcer enforcer;
 	private LayoutParams layout;
 
 	public ScreenOrientationEnforcementManager(Context context) {
 		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
 		layout = generateLayout();
-		enforcer = new ScreenOrientationEnforcer();
 	}
 
 	@Override
@@ -60,24 +57,9 @@ public class ScreenOrientationEnforcementManager extends State {
 	 * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
 	 * slower, and removing and adding the view is even slower again.
 	 */
-	void setOrientation(int screenOrientation) {
+	public void setOrientation(int screenOrientation) {
 		layout.screenOrientation = screenOrientation;
 		windows.updateViewLayout(view, layout);
 	}
 
-	public class ScreenOrientationEnforcer extends State {
-
-		private ScreenOrientationEnforcer(){}
-
-		@Override
-		protected void start() {
-			setOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		}
-
-		@Override
-		protected void stop() {
-			setOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-		}
-
-	}
 }

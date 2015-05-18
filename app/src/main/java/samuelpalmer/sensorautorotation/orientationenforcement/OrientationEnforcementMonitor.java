@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 
 import java.util.Set;
 
@@ -30,47 +31,40 @@ public class OrientationEnforcementMonitor extends State {
 	protected void start() {
 		orientationEnforcer.ensureStarted();
 
-		lockScreenDetector.possiblyChanged().subscribe(lockStatusChangedSubscriber);
+		lockScreenDetector.possiblyChanged().subscribe(enforcementUpdater);
 		lockScreenDetector.ensureStarted();
 
-		activityMonitor.onChange().subscribe(currentApplicationChangedSubscriber);
+		activityMonitor.onChange().subscribe(enforcementUpdater);
 
 		updateEnforcement();
 	}
 
 	@Override
 	protected void stop() {
-		activityMonitor.onChange().unsubscribe(currentApplicationChangedSubscriber);
+		activityMonitor.onChange().unsubscribe(enforcementUpdater);
 
 		lockScreenDetector.ensureStopped();
-		lockScreenDetector.possiblyChanged().unsubscribe(lockStatusChangedSubscriber);
+		lockScreenDetector.possiblyChanged().unsubscribe(enforcementUpdater);
 
 		orientationEnforcer.ensureStopped();
 	}
 
 	private void updateEnforcement() {
 		if (isEnforced() && !LockScreenStatus.isActive(context))
-			orientationEnforcer.enforcer.ensureStarted();
+			orientationEnforcer.setOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 		else
-			orientationEnforcer.enforcer.ensureStopped();
+			orientationEnforcer.setOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 
 	private boolean isEnforced() {
-		return orientationEnforcedApps().contains(activityMonitor.current());
+		return orientationEnforcedPackages().contains(activityMonitor.current().getPackage());
 	}
 
-	private Set<String> orientationEnforcedApps() {
+	private Set<String> orientationEnforcedPackages() {
 		return forcedOrientationAppPackagesSetting.get();
 	}
 
-	private final EventHandler<Void> lockStatusChangedSubscriber = new EventHandler<Void>() {
-		@Override
-		public void update(Void event) {
-			updateEnforcement();
-		}
-	};
-
-	private final EventHandler<Void> currentApplicationChangedSubscriber = new EventHandler<Void>() {
+	private final EventHandler<Void> enforcementUpdater = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
 			updateEnforcement();

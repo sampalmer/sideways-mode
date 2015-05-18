@@ -58,7 +58,7 @@ public class RotationService extends Service {
 		serviceRevivalManager = new ServiceRevivalManager(this);
 
 		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
-		activityMonitor = new ActivityMonitor(this);
+		activityMonitor = new ActivityMonitor();
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, appSettings, activityMonitor);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
