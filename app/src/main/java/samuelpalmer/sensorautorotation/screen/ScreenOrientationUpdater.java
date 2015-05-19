@@ -47,7 +47,7 @@ public class ScreenOrientationUpdater extends State {
 		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);
 	}
 
-	private UpdatingEventRegistrar<Void> onProposedOrientationChanged = new UpdatingEventRegistrar<>();
+	private final UpdatingEventRegistrar<Void> onProposedOrientationChanged = new UpdatingEventRegistrar<>();
 
 	public EventRegistrar<Void> onChange() {
 		return onProposedOrientationChanged;

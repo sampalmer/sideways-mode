@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 
 public class ServiceRevivalManager extends State {
 	private final Context context;
-	private ServiceReviver reviver;
+	private final ServiceReviver reviver;
 
 	public ServiceRevivalManager(Context context) {
 		this.context = context;
