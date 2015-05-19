@@ -15,8 +15,6 @@ import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
-import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
@@ -33,8 +31,6 @@ public class RotationService extends Service {
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotification serviceNotification;
 	private UserInteractivityThing userInteractivityThing;
-	private OrientationEnforcementMonitor orientationEnforcementMonitor;
-	private ActivityMonitor activityMonitor;
 
 	@Override
 	public void onCreate() {
@@ -58,8 +54,6 @@ public class RotationService extends Service {
 		serviceRevivalManager = new ServiceRevivalManager(this);
 
 		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
-		activityMonitor = new ActivityMonitor();
-		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, appSettings, activityMonitor);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
@@ -67,8 +61,6 @@ public class RotationService extends Service {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
 		serviceRevivalManager.ensureStarted();
-		activityMonitor.ensureStarted();
-		orientationEnforcementMonitor.ensureStarted();
 	}
 
 	@Override
@@ -86,15 +78,13 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new ServiceApiBinder(this, serviceNotification, calculator, activityMonitor);
+		return new ServiceApiBinder(this, serviceNotification, calculator);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		orientationEnforcementMonitor.ensureStopped();
-		activityMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityThing.ensureStopped();

@@ -1,12 +1,10 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Binder;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
-import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 
 /**
  * Must be called from process main thread
@@ -16,13 +14,11 @@ public class ServiceApiBinder extends Binder {
 	private final Context context;
 	private final ServiceNotification serviceNotification;
 	private final OrientationCalculator calculator;
-	private final ActivityMonitor activityMonitor;
 
-	public ServiceApiBinder(Context context, ServiceNotification serviceNotification, OrientationCalculator calculator, ActivityMonitor activityMonitor) {
+	public ServiceApiBinder(Context context, ServiceNotification serviceNotification, OrientationCalculator calculator) {
 		this.context = context;
 		this.serviceNotification = serviceNotification;
 		this.calculator = calculator;
-		this.activityMonitor = activityMonitor;
 	}
 
 	public void toggleRotation() {
@@ -33,10 +29,6 @@ public class ServiceApiBinder extends Binder {
 		Toast
 			.makeText(context, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
 			.show();
-	}
-
-	public void updateCurrentApp(ActivityInfo activity) {
-		activityMonitor.setCurrentApp(activity);
 	}
 
 	private void setAutoRotate(boolean newValue) {
