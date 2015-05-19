@@ -2,12 +2,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
 import android.app.Service;
-import android.content.Context;
 import android.os.Build;
-import android.view.Display;
-import android.view.WindowManager;
 
-import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.LockScreenStatus;
 import samuelpalmer.sensorautorotation.Orientation;
@@ -61,10 +57,8 @@ public class ServiceNotification {
 	}
 
 	private boolean overridden() {
-		Display display = ((WindowManager)service.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
 		Orientation requested = new SystemSettings(service.getContentResolver()).userRotation.get();
-		Orientation actual = new AndroidSurfaceRotation(display.getRotation()).orientation();
+		Orientation actual = screen.realOrientation();
 
 		return !requested.equals(actual);
 	}
