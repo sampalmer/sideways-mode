@@ -49,7 +49,9 @@ public class SettingsInitialiser {
 		private Setting<?> getSetting() {
 			try {
 				return (Setting<?>)method.invoke(source);
-			} catch (IllegalAccessException | InvocationTargetException e) {
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			} catch (InvocationTargetException e) { //Duplicated to avoid Android compatibility error
 				throw new RuntimeException(e);
 			}
 		}
