@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.screen;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
@@ -12,20 +12,20 @@ import samuelpalmer.sensorautorotation.Orientation;
 
 public class Screen {
 
-	private final WindowManager windows;
+	private final Display display;
 
 	public Screen(Context context) {
-		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		WindowManager windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		display = windows.getDefaultDisplay();
 	}
 
 	public Orientation realOrientation() {
-		AndroidSurfaceRotation rotation = new AndroidSurfaceRotation(windows.getDefaultDisplay().getRotation());
+		AndroidSurfaceRotation rotation = new AndroidSurfaceRotation(display.getRotation());
 		return rotation.orientation();
 	}
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	@SuppressLint("NewApi") /** Since {@link Display#getRealSize(Point)} is actually available as of API 14 */
 	public boolean deviceIsNaturallyPortrait() {
-		Display display = windows.getDefaultDisplay();
 		Point screenResolution = new Point();
 
 		//Getting the screen dimensions and rotation should be as close together as possible
