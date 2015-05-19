@@ -58,8 +58,10 @@ public class ScreenOrientationEnforcementManager extends State {
 	 * slower, and removing and adding the view is even slower again.
 	 */
 	public void setOrientation(int screenOrientation) {
-		layout.screenOrientation = screenOrientation;
-		windows.updateViewLayout(view, layout);
+		if (layout.screenOrientation != screenOrientation) {
+			layout.screenOrientation = screenOrientation;
+			windows.updateViewLayout(view, layout);
+		}
 	}
 
 }
