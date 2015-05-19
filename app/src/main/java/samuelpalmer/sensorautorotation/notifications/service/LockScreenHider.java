@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.content.Context;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.LockScreenDetector;
+import samuelpalmer.sensorautorotation.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
@@ -13,11 +13,11 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 public class LockScreenHider extends State {
 
 	private final ServiceNotification serviceNotification;
-	private final LockScreenDetector detector;
+	private final LockScreenMonitor detector;
 
 	public LockScreenHider(Context context, ServiceNotification serviceNotification) {
 		this.serviceNotification = serviceNotification;
-		this.detector = new LockScreenDetector(context);
+		this.detector = new LockScreenMonitor(context);
 	}
 
 	@Override

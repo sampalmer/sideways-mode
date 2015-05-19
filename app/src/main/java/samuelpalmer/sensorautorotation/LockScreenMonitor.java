@@ -13,12 +13,12 @@ import java.util.List;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
-public class LockScreenDetector extends State {
+public class LockScreenMonitor extends State {
 
 	private final Context context;
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 
-	public LockScreenDetector(Context context) {
+	public LockScreenMonitor(Context context) {
 		this.context = context;
 	}
 
