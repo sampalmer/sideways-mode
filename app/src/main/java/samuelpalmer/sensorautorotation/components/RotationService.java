@@ -48,7 +48,7 @@ public class RotationService extends Service {
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(this, systemSettings, screen, calculator);
 
-		serviceNotification = new ServiceNotification(this, appSettings, calculator);
+		serviceNotification = new ServiceNotification(this, appSettings, calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
 		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager(this);

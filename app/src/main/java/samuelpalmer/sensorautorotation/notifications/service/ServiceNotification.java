@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
@@ -23,11 +24,13 @@ public class ServiceNotification {
 	private final Service service;
 	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
+	private final Screen screen;
 
-	public ServiceNotification(Service service, ApplicationSettings settings, OrientationCalculator calculator) {
+	public ServiceNotification(Service service, ApplicationSettings settings, OrientationCalculator calculator, Screen screen) {
 		this.service = service;
 		this.settings = settings;
 		this.calculator = calculator;
+		this.screen = screen;
 	}
 
 	/**
@@ -70,7 +73,7 @@ public class ServiceNotification {
 		if (calculator.autoRotate())
 			return new AutoRotationMode();
 		else
-			return new LockedMode(service, calculator);
+			return new LockedMode(calculator, screen);
 	}
 
 	private void hideFromLockScreen(NotificationBuilderCompat builder) {
