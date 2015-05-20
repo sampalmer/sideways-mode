@@ -11,7 +11,6 @@ import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class SettingsActivity extends PreferenceActivity {
 	@Override
@@ -54,7 +53,6 @@ public class SettingsActivity extends PreferenceActivity {
 			super.onCreate(savedInstanceState);
 
 			settings = new ApplicationSettings(getActivity());
-			new SettingsInitialiser(settings).ensureInitialised();
 
 			addPreferencesFromResource(R.xml.preferences);
 
