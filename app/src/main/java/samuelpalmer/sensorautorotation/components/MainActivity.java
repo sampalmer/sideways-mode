@@ -45,9 +45,9 @@ public class MainActivity extends Activity {
 
 	private void confirmUninstall() {
 		new AlertDialog.Builder(this)
-				.setTitle("Uninstall?")
+				.setTitle(R.string.uninstall_title)
 				.setIcon(android.R.drawable.ic_menu_delete)
-				.setMessage("Rotation control by this app will be disabled. (You can re-enable it in this app's settings screen.) Disable and uninstall this app?")
+				.setMessage(R.string.uninstall_confirmation_message)
 				.setPositiveButton(android.R.string.yes, new Uninstaller(this))
 				.setNegativeButton(android.R.string.no, null)
 				.create()

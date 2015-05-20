@@ -44,4 +44,6 @@
 	<string name="on_screen_off">When screen turned off</string>
 	<string name="show_notification_at_top">Show notification at top</string>
 	<string name="show_notification_at_top_description">Try to show the notification before all others</string>
+	<string name="uninstall_title">Uninstall?</string>
+	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 </resources>
