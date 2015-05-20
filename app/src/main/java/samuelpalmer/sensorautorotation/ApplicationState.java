@@ -34,7 +34,7 @@ public class ApplicationState {
 		transaction.commit();
 	}
 
-	public void autoRotate(boolean newValue) {
+	private void autoRotate(boolean newValue) {
 		applicationSettings.autoRotate().setAndCommit(newValue);
 	}
 

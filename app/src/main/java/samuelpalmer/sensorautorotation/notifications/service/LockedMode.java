@@ -24,7 +24,7 @@ class LockedMode implements Mode {
 						(overridden ? R.drawable.ic_screen_rotation_locked_landscape_overridden : R.drawable.ic_screen_rotation_locked_landscape_normal);
 	}
 
-	public boolean isPortrait() {
+	private boolean isPortrait() {
 		boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
 		return inNaturalOrientation == screen.deviceIsNaturallyPortrait();
 	}
