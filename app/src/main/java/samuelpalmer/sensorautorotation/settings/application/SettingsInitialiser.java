@@ -47,11 +47,14 @@ public class SettingsInitialiser {
 		}
 
 		private Setting<?> getSetting() {
+			//Suppressing this warning because Android Studio says we need to do it this way
+			// for compatibility with API 19-.
+			//noinspection TryWithIdenticalCatches
 			try {
 				return (Setting<?>)method.invoke(source);
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);
-			} catch (InvocationTargetException e) { //Duplicated to avoid Android compatibility error
+			} catch (InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
 		}
