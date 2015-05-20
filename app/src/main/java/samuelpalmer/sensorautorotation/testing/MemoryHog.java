@@ -11,6 +11,7 @@ import android.content.Context;
  */
 public class MemoryHog {
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private final long[] data;
 
 	public MemoryHog(Context context) {
