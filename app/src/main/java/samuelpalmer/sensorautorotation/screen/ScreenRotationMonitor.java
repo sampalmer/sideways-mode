@@ -10,7 +10,7 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
-public class ScreenRotationWatcher extends State {
+public class ScreenRotationMonitor extends State {
 
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 	private final Object windowManagerService;
@@ -21,7 +21,7 @@ public class ScreenRotationWatcher extends State {
 		return onChange;
 	}
 
-	public ScreenRotationWatcher() {
+	public ScreenRotationMonitor() {
 		//noinspection TryWithIdenticalCatches
 		try {
 			Class<?> windowManagerGlobal = Class.forName("android.view.WindowManagerGlobal");
