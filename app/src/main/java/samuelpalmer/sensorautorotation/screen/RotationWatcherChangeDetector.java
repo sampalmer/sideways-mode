@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.screen;
 
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.IRotationWatcher;
 
@@ -21,12 +22,15 @@ class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetec
 
 		//noinspection TryWithIdenticalCatches
 		try {
-			Class<?> windowManagerGlobal = Class.forName("android.view.WindowManagerGlobal");
-			Method getWindowManagerService = windowManagerGlobal.getMethod("getWindowManagerService");
-			windowManagerService = getWindowManagerService.invoke(null);
+			Class<?> serviceManager = Class.forName("android.os.ServiceManager");
+			IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
+			Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
+			windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
 			watchRotation = windowManagerService.getClass().getMethod("watchRotation", IRotationWatcher.class);
-			removeRotationWatcher = windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
+			removeRotationWatcher = tryFindRemoveMethod();
 		} catch (ClassNotFoundException e) {
+			throw new NotSupportedException(e);
+		} catch (ClassCastException e) {
 			throw new NotSupportedException(e);
 		} catch (InvocationTargetException e) {
 			throw new NotSupportedException(e);
@@ -34,6 +38,15 @@ class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetec
 			throw new NotSupportedException(e);
 		} catch (IllegalAccessException e) {
 			throw new NotSupportedException(e);
+		}
+	}
+
+	private Method tryFindRemoveMethod() {
+		try {
+			return windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
+		}
+		catch (NoSuchMethodException ignored) {
+			return null;
 		}
 	}
 
@@ -51,13 +64,15 @@ class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetec
 
 	@Override
 	public void stop() throws NotSupportedException {
-		//noinspection TryWithIdenticalCatches
-		try {
-			removeRotationWatcher.invoke(windowManagerService, screenRotationChanged);
-		} catch (IllegalAccessException e) {
-			throw new NotSupportedException(e);
-		} catch (InvocationTargetException e) {
-			throw new NotSupportedException(e);
+		if (removeRotationWatcher != null) {
+			//noinspection TryWithIdenticalCatches
+			try {
+				removeRotationWatcher.invoke(windowManagerService, screenRotationChanged);
+			} catch (IllegalAccessException e) {
+				throw new NotSupportedException(e);
+			} catch (InvocationTargetException e) {
+				throw new NotSupportedException(e);
+			}
 		}
 	}
 
