@@ -9,6 +9,7 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.screen.ScreenRotationWatcher;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {
@@ -18,6 +19,7 @@ public class ServiceNotificationManager extends State {
 	private final ScreenOrientationUpdater screen;
 	private final LockScreenHider notificationHider;
 	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
+	private final ScreenRotationWatcher screenRotationWatcher;
 
 	public ServiceNotificationManager(Context context, ServiceNotification serviceNotification, ApplicationSettings settings, ScreenOrientationUpdater screen) {
 		this.context = context;
@@ -25,6 +27,7 @@ public class ServiceNotificationManager extends State {
 		this.screen = screen;
 		notificationHider = new LockScreenHider(context, serviceNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
+		screenRotationWatcher = new ScreenRotationWatcher();
 	}
 
 	@Override
@@ -33,12 +36,20 @@ public class ServiceNotificationManager extends State {
 		notificationHider.ensureStarted();
 		onShowNotificationAtTopChanged.subscribe(updateNotification);
 		screen.onChange().subscribe(updateNotification);
+
+		screenRotationWatcher.onChange().subscribe(updateNotification);
+		screenRotationWatcher.ensureStarted();
+
 		context.registerReceiver(screenRotationMightHaveChanged, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	@Override
 	protected void stop() {
 		context.unregisterReceiver(screenRotationMightHaveChanged);
+
+		screenRotationWatcher.ensureStopped();
+		screenRotationWatcher.onChange().unsubscribe(updateNotification);
+
 		screen.onChange().unsubscribe(updateNotification);
 		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
