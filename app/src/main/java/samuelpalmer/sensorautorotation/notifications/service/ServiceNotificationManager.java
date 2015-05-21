@@ -1,9 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
@@ -27,7 +24,7 @@ public class ServiceNotificationManager extends State {
 		this.screen = screen;
 		notificationHider = new LockScreenHider(context, serviceNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
-		screenRotationMonitor = new ScreenRotationMonitor();
+		screenRotationMonitor = new ScreenRotationMonitor(context);
 	}
 
 	@Override
@@ -39,14 +36,10 @@ public class ServiceNotificationManager extends State {
 
 		screenRotationMonitor.onChange().subscribe(updateNotification);
 		screenRotationMonitor.ensureStarted();
-
-		context.registerReceiver(screenRotationMightHaveChanged, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
 	}
 
 	@Override
 	protected void stop() {
-		context.unregisterReceiver(screenRotationMightHaveChanged);
-
 		screenRotationMonitor.ensureStopped();
 		screenRotationMonitor.onChange().unsubscribe(updateNotification);
 
@@ -58,13 +51,6 @@ public class ServiceNotificationManager extends State {
 	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			serviceNotification.set();
-		}
-	};
-
-	private final BroadcastReceiver screenRotationMightHaveChanged = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
 			serviceNotification.set();
 		}
 	};

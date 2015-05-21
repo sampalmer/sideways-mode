@@ -1,10 +1,7 @@
 package samuelpalmer.sensorautorotation.screen;
 
-import android.os.RemoteException;
-import android.view.IRotationWatcher;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import android.content.Context;
+import android.util.Log;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
@@ -12,61 +9,61 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class ScreenRotationMonitor extends State {
 
+	private final Context context;
+	private ChangeDetector changeDetector;
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
-	private final Object windowManagerService;
-	private final Method watchRotation;
-	private final Method removeRotationWatcher;
 
 	public EventRegistrar<Void> onChange() {
 		return onChange;
 	}
 
-	public ScreenRotationMonitor() {
-		//noinspection TryWithIdenticalCatches
+	public ScreenRotationMonitor(Context context) {
+		this.context = context;
+
 		try {
-			Class<?> windowManagerGlobal = Class.forName("android.view.WindowManagerGlobal");
-			Method getWindowManagerService = windowManagerGlobal.getMethod("getWindowManagerService");
-			windowManagerService = getWindowManagerService.invoke(null);
-			watchRotation = windowManagerService.getClass().getMethod("watchRotation", IRotationWatcher.class);
-			removeRotationWatcher = windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+			changeDetector = new RotationWatcherChangeDetector(callback);
+		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+			fallback(e);
 		}
 	}
 
 	@Override
 	protected void start() {
-		//noinspection TryWithIdenticalCatches
 		try {
-			watchRotation.invoke(windowManagerService, screenRotationChanged);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
+			changeDetector.start();
+		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+			fallback(e);
+			start();
 		}
 	}
 
 	@Override
 	protected void stop() {
-		//noinspection TryWithIdenticalCatches
 		try {
-			removeRotationWatcher.invoke(windowManagerService, screenRotationChanged);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
+			changeDetector.stop();
+		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+			fallback(e);
 		}
 	}
 
-	private final IRotationWatcher.Stub screenRotationChanged = new IRotationWatcher.Stub() {
+	public interface Callback {
+
+		void changed();
+
+	}
+	public interface ChangeDetector {
+		void start();
+		void stop();
+	}
+
+	private void fallback(RotationWatcherChangeDetector.NotSupportedException reason) {
+		Log.w(ScreenRotationMonitor.class.getSimpleName(), reason);
+		changeDetector = new ComponentCallbacksChangeDetector(context, callback);
+	}
+
+	private final Callback callback = new Callback() {
 		@Override
-		public void onRotationChanged(int rotation) throws RemoteException {
+		public void changed() {
 			onChange.report(null);
 		}
 	};
