@@ -10,15 +10,19 @@ import java.lang.reflect.Method;
 /**
  * Supports detection of all four screen rotations using a hidden API
  */
-class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetector {
+public class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetector {
 
 	private final Object windowManagerService;
 	private final Method watchRotation;
 	private final Method removeRotationWatcher;
 	private final ScreenRotationMonitor.Callback callback;
+	private final IRotationWatcher.Stub screenRotationChanged;
+
 
 	public RotationWatcherChangeDetector(ScreenRotationMonitor.Callback callback) throws NotSupportedException {
 		this.callback = callback;
+
+		screenRotationChanged = new Watcher();
 
 		//noinspection TryWithIdenticalCatches
 		try {
@@ -41,6 +45,9 @@ class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetec
 		}
 	}
 
+	/**
+	 * Since looking through the SDK indicates the remove method was only introduced in Android 4.3.
+	 */
 	private Method tryFindRemoveMethod() {
 		try {
 			return windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
@@ -76,17 +83,20 @@ class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetec
 		}
 	}
 
-	public class NotSupportedException extends RuntimeException {
-		NotSupportedException(Exception inner) {
+	public static class NotSupportedException extends RuntimeException {
+		public NotSupportedException(Exception inner) {
 			super(inner);
+		}
+
+		public NotSupportedException(String message) {
+			super(message);
 		}
 	}
 
-	private final IRotationWatcher.Stub screenRotationChanged = new IRotationWatcher.Stub() {
+	private class Watcher extends IRotationWatcher.Stub {
 		@Override
 		public void onRotationChanged(int rotation) throws RemoteException {
 			callback.changed();
 		}
-	};
-
+	}
 }
