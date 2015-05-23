@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.screen;
 
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.IRotationWatcher;
@@ -17,9 +18,10 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	private final Method removeRotationWatcher;
 	private final ScreenRotationMonitor.Callback callback;
 	private final IRotationWatcher.Stub screenRotationChanged;
-
+	private final Handler callerHandler;
 
 	public RotationWatcherChangeDetector(ScreenRotationMonitor.Callback callback) throws NotSupportedException {
+		callerHandler = new Handler();
 		this.callback = callback;
 
 		screenRotationChanged = new Watcher();
@@ -96,7 +98,16 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	private class Watcher extends IRotationWatcher.Stub {
 		@Override
 		public void onRotationChanged(int rotation) throws RemoteException {
-			callback.changed();
+			//We seem to get here in a different thread to the one in which we subscribed.
+			callerHandler.post(report);
 		}
 	}
+
+	private final Runnable report = new Runnable() {
+		@Override
+		public void run() {
+			callback.changed();
+		}
+	};
+
 }
