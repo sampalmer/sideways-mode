@@ -5,25 +5,21 @@
 		android:key="enabled"
 	    android:title="@string/app_enabled"
 	    android:summary="@string/app_enabled_description"
-		android:defaultValue="true"
 	/>
 	<CheckBoxPreference
 		android:key="allowUpsideDownScreen"
 	    android:title="@string/allow_upside_down_screen"
 	    android:summary="@string/allow_upside_down_screen_description"
-		android:defaultValue="false"
 	/>
 	<ListPreference
 		android:key="screenOnBehaviour"
 	    android:title="@string/on_screen_off"
 	    android:entries="@array/screen_off_behaviours"
 	    android:entryValues="@array/screen_off_behaviour_values"
-		android:defaultValue="DO_NOTHING"
 	/>
 	<CheckBoxPreference
 		android:key="showNotificationAtTop"
 	    android:title="@string/show_notification_at_top"
 	    android:summary="@string/show_notification_at_top_description"
-		android:defaultValue="false"
 	/>
 </PreferenceScreen>

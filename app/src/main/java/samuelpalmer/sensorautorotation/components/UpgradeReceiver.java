@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +23,6 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		PreferenceManager.setDefaultValues(context, R.xml.preferences, true);
 		upgradeUser(context);
 		new ServiceController(context).updateFromSettings();
 	}

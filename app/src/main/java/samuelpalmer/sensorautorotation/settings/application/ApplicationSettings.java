@@ -21,14 +21,14 @@ public class ApplicationSettings {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout"); }
-	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate"); }
-	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation"); }
+	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
+	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
+	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
 
-	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled"); }
-	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen"); }
-	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour"); }
-	public Setting<Boolean> showNotificationAtTop() { return new Setting<>(new BooleanSetting(), "showNotificationAtTop"); }
+	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
+	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
+	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
+	public Setting<Boolean> showNotificationAtTop() { return new Setting<>(new BooleanSetting(), "showNotificationAtTop", false); }
 
 	public class Setting<T> {
 
@@ -60,16 +60,26 @@ public class ApplicationSettings {
 
 		private final SettingType<T> type;
 		private final String key;
+		private final T defaultValue;
 
-		public Setting(SettingType<T> type, String key) {
+		public Setting(SettingType<T> type, String key, T defaultValue) {
 			this.type = type;
 			this.key = key;
+			this.defaultValue = defaultValue;
+		}
+
+		/**
+		 * Sets this to its default value if it hasn't been set before.
+		 */
+		public void ensureInitialised() {
+			if (!hasValue() && defaultValue != null)
+				setAndCommit(defaultValue);
 		}
 
 		public T tryGet() {
 			Object raw = getRaw();
 			if (raw == null)
-				return null;
+				return defaultValue;
 
 			return type.convertFromRaw(raw);
 		}
