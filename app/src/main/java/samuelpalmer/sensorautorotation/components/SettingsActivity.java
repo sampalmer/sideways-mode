@@ -54,6 +54,8 @@ public class SettingsActivity extends PreferenceActivity {
 			super.onCreate(savedInstanceState);
 
 			settings = new ApplicationSettings(getActivity());
+
+			//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 			new SettingsInitialiser(settings).ensureInitialised();
 
 			addPreferencesFromResource(R.xml.preferences);

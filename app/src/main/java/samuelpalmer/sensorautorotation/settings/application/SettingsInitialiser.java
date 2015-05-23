@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
 
+/**
+ * We're using this instead of {@link android.preference.PreferenceManager#setDefaultValues} since
+ * that doesn't actually set the default values when they're "false" on Android 4.0.4.
+ */
 public class SettingsInitialiser {
 
 	private final ApplicationSettings source;
