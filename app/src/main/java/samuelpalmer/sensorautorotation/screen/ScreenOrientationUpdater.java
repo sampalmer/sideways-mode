@@ -13,30 +13,38 @@ public class ScreenOrientationUpdater extends State {
 	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screen;
+	private final ApplicationSettings.Setting<Boolean> allowUpsideDownScreen;
 
 	public ScreenOrientationUpdater(ApplicationSettings settings, OrientationCalculator calculator, ScreenOrientationController screen) {
 		this.settings = settings;
 		this.calculator = calculator;
 		this.screen = screen;
+		allowUpsideDownScreen = settings.allowUpsideDownScreen();
 	}
 
 	@Override
 	protected void start() {
 		calculator.onChange().subscribe(applyChange);
+		allowUpsideDownScreen.onChange().subscribe(applyChange);
 	}
 
 	@Override
 	protected void stop() {
+		allowUpsideDownScreen.onChange().unsubscribe(applyChange);
 		calculator.onChange().unsubscribe(applyChange);
 	}
 
 	private final EventHandler<Void> applyChange = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			if (!upsideDown() || settings.allowUpsideDownScreen().get())
-				propose();
+			refresh();
 		}
 	};
+
+	private void refresh() {
+		if (!upsideDown() || allowUpsideDownScreen.get())
+			propose();
+	}
 
 	private void propose() {
 		screen.propose(calculator.proposedScreenOrientation());
