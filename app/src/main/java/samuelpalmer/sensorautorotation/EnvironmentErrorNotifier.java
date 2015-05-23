@@ -28,12 +28,12 @@ public class EnvironmentErrorNotifier{
 
 	private void show(String message) {
 		Notification notification = NotificationBuilderCompat.create(context)
-				.setSmallIcon(R.drawable.ic_error)
-				.setContentIntent(makeShowMessage(message))
-				.setContentTitle(getAppName())
-				.setContentText(message)
-				.setAutoCancel(true)
-				.setTicker(message)
+				.smallIcon.set(R.drawable.ic_error)
+				.contentIntent.set(makeShowMessage(message))
+				.contentTitle.set(getAppName())
+				.contentText.set(message)
+				.autoCancel.set(true)
+				.ticker.set(message)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 				.build();

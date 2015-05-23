@@ -51,11 +51,11 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	private void show(String upgradeMessage, Context context) {
 		Notification notification = NotificationBuilderCompat.create(context)
-				.setSmallIcon(R.drawable.ic_update)
-				.setContentIntent(makeShowMessage(upgradeMessage, context))
-				.setContentTitle(context.getString(R.string.upgraded_title))
-				.setContentText(context.getString(R.string.touch_for_details))
-				.setAutoCancel(true)
+				.smallIcon.set(R.drawable.ic_update)
+				.contentIntent.set(makeShowMessage(upgradeMessage, context))
+				.contentTitle.set(context.getString(R.string.upgraded_title))
+				.contentText.set(context.getString(R.string.touch_for_details))
+				.autoCancel.set(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 				.build();

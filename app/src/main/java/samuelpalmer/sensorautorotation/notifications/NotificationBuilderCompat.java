@@ -39,6 +39,55 @@ public class NotificationBuilderCompat {
 	public static final String CATEGORY_RECOMMENDATION = "recommendation";
 	public static final String CATEGORY_STATUS = "status";
 
+	public final Property<Integer> smallIcon = new Property<Integer>() {
+		@Override
+		protected void setInternal(Integer value) {
+			builder.setSmallIcon(value);
+		}
+	};
+
+	public final Property<PendingIntent> contentIntent = new Property<PendingIntent>() {
+		@Override
+		protected void setInternal(PendingIntent value) {
+			builder.setContentIntent(value);
+		}
+	};
+
+	public final Property<CharSequence> contentTitle = new Property<CharSequence>() {
+		@Override
+		protected void setInternal(CharSequence value) {
+			builder.setContentTitle(value);
+		}
+	};
+
+	public final Property<CharSequence> contentText = new Property<CharSequence>() {
+		@Override
+		protected void setInternal(CharSequence value) {
+			builder.setContentText(value);
+		}
+	};
+
+	public final Property<Long> when = new Property<Long>() {
+		@Override
+		protected void setInternal(Long value) {
+			builder.setWhen(value);
+		}
+	};
+
+	public final Property<Boolean> autoCancel = new Property<Boolean>() {
+		@Override
+		protected void setInternal(Boolean value) {
+			builder.setAutoCancel(value);
+		}
+	};
+
+	public final Property<CharSequence> ticker = new Property<CharSequence>() {
+		@Override
+		protected void setInternal(CharSequence value) {
+			builder.setTicker(value);
+		}
+	};
+
 	public static NotificationBuilderCompat create(Context context) {
 		if (Build.VERSION.SDK_INT >= 21)
 			return new V21(context);
@@ -54,26 +103,6 @@ public class NotificationBuilderCompat {
 		builder = new Notification.Builder(context);
 	}
 
-	public NotificationBuilderCompat setSmallIcon(int icon) {
-		builder.setSmallIcon(icon);
-		return this;
-	}
-
-	public NotificationBuilderCompat setContentIntent(PendingIntent intent) {
-		builder.setContentIntent(intent);
-		return this;
-	}
-
-	public NotificationBuilderCompat setContentTitle(CharSequence title) {
-		builder.setContentTitle(title);
-		return this;
-	}
-
-	public NotificationBuilderCompat setContentText(CharSequence text) {
-		builder.setContentText(text);
-		return this;
-	}
-
 	public NotificationBuilderCompat setCategory(String category) {
 		return this;
 	}
@@ -83,11 +112,6 @@ public class NotificationBuilderCompat {
 	}
 
 	public NotificationBuilderCompat setVisibility(int visibility) {
-		return this;
-	}
-
-	public NotificationBuilderCompat setWhen(long when) {
-		builder.setWhen(when);
 		return this;
 	}
 
@@ -104,14 +128,18 @@ public class NotificationBuilderCompat {
 		return this;
 	}
 
-	public NotificationBuilderCompat setAutoCancel(boolean autoCancel) {
-		builder.setAutoCancel(autoCancel);
-		return this;
+	public abstract class Property<T> {
+		public NotificationBuilderCompat set(T value) {
+			setInternal(value);
+			return NotificationBuilderCompat.this;
+		}
+
+		protected abstract void setInternal(T value);
 	}
 
-	public NotificationBuilderCompat setTicker(CharSequence tickerText) {
-		builder.setTicker(tickerText);
-		return this;
+	private class NullProperty<T> extends Property<T> {
+		@Override
+		protected void setInternal(T value) {}
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
