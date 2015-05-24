@@ -1,23 +1,20 @@
 package samuelpalmer.sensorautorotation.screen;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.view.Display;
-import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.Orientation;
-import samuelpalmer.sensorautorotation.ThisApplication;
+import samuelpalmer.sensorautorotation.SystemServices;
 
 public class Screen {
 
 	private final Display display;
 
 	public Screen() {
-		WindowManager windows = (WindowManager) ThisApplication.context().getSystemService(Context.WINDOW_SERVICE);
-		display = windows.getDefaultDisplay();
+		display = SystemServices.windowManager().getDefaultDisplay();
 	}
 
 	public Orientation realOrientation() {

@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-
+@SuppressWarnings("unused")
 public class Orientation {
 
 	private static final int numberOfPossibleRotations = 4;

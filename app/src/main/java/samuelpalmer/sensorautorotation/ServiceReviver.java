@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.os.SystemClock;
 
 import samuelpalmer.sensorautorotation.components.StartServiceReceiver;
@@ -17,7 +16,7 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void start() {
-		alarmManager().setInexactRepeating(
+		SystemServices.alarmManager().setInexactRepeating(
 				AlarmManager.ELAPSED_REALTIME,
 				firstTriggerTimeInMilliseconds(),
 				PERIOD_MILLISECONDS,
@@ -36,10 +35,7 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void stop() {
-		alarmManager().cancel(intent());
+		SystemServices.alarmManager().cancel(intent());
 	}
 
-	private AlarmManager alarmManager() {
-		return (AlarmManager) ThisApplication.context().getSystemService(Context.ALARM_SERVICE);
-	}
 }

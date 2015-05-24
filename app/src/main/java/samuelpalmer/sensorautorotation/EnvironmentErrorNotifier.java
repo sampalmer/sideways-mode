@@ -1,8 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 
@@ -32,7 +30,7 @@ public class EnvironmentErrorNotifier{
 				.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 				.build();
 
-		notificationManager().notify(NotificationIds.ERROR, notification);
+		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
 	}
 
 	private String getAppName() {
@@ -48,10 +46,7 @@ public class EnvironmentErrorNotifier{
 	}
 
 	public void clear() {
-		notificationManager().cancel(NotificationIds.ERROR);
+		SystemServices.notificationManager().cancel(NotificationIds.ERROR);
 	}
 
-	private NotificationManager notificationManager() {
-		return (NotificationManager) ThisApplication.context().getSystemService(Activity.NOTIFICATION_SERVICE);
-	}
 }

@@ -1,8 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 
@@ -57,9 +55,7 @@ public class UserUpgrader {
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 				.build();
 
-		NotificationManager notificationManager = (NotificationManager) ThisApplication.context().getSystemService(Activity.NOTIFICATION_SERVICE);
-
-		notificationManager.notify(NotificationIds.UPGRADE, notification);
+		SystemServices.notificationManager().notify(NotificationIds.UPGRADE, notification);
 	}
 
 	private PendingIntent makeDialogIntent(String message) {
