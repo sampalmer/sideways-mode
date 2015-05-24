@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -135,7 +136,7 @@ public class ApplicationSettings {
 		public void commit() {
 			if (!editor.commit())
 				// Since a look over the implementation of Editor.commit() indicates this represents a file system or other IO error.
-				new EnvironmentErrorNotifier(context).handle("Couldn't write application settings.");
+				new EnvironmentErrorNotifier(context).handle(context.getString(R.string.preference_write_failure_message));
 		}
 	}
 

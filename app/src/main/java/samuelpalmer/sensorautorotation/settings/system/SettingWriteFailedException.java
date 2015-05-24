@@ -4,8 +4,12 @@ public class SettingWriteFailedException extends Exception {
 
 	private static final long serialVersionUID = 2703215740394090412L;
 
+	public final String key;
+	public final Object value;
+
 	public SettingWriteFailedException(String key, Object value) {
-		super(String.format("Failed to write the value '%s' for system setting '%s'.", value, key));
+		this.key = key;
+		this.value = value;
 	}
 
 }
