@@ -152,6 +152,7 @@ public class NotificationBuilderCompat {
 	{
 		public V21(Context context) {
 			super(context);
+			setColor(0xFF795548);
 		}
 
 		@Override

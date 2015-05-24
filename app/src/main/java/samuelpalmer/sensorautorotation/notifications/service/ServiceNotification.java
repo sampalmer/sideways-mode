@@ -49,7 +49,6 @@ public class ServiceNotification {
 		hideFromLockScreen(builder);
 
 		builder.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
-		builder.setColor(0xFF795548);
 
 		Notification notification = builder.build();
 
