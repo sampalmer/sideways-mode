@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.components.DialogActivity;
@@ -14,21 +13,15 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class EnvironmentErrorNotifier{
 
-	private final Context context;
-
-	public EnvironmentErrorNotifier(Context context) {
-		this.context = context;
-	}
-
 	public void handle(int messageResourceId, Object... messageArguments) {
-		String messageEndingWithFullStop = context.getString(messageResourceId, messageArguments);
-		String formattedMessage = context.getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
+		String messageEndingWithFullStop = ThisApplication.context().getString(messageResourceId, messageArguments);
+		String formattedMessage = ThisApplication.context().getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
-		new ApplicationSettings(context).enabled().setAndCommit(false);
+		new ApplicationSettings(ThisApplication.context()).enabled().setAndCommit(false);
 	}
 
 	private void show(String message) {
-		Notification notification = NotificationBuilderCompat.create(context)
+		Notification notification = NotificationBuilderCompat.create(ThisApplication.context())
 				.setSmallIcon(R.drawable.ic_error)
 				.setContentIntent(makeShowMessage(message))
 				.setContentTitle(getAppName())
@@ -43,11 +36,11 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private String getAppName() {
-		return context.getString(R.string.app_name);
+		return ThisApplication.context().getString(R.string.app_name);
 	}
 
 	private PendingIntent makeShowMessage(String message) {
-		Intents intents = new Intents(context, DialogActivity.class);
+		Intents intents = new Intents(ThisApplication.context(), DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, getAppName());
@@ -59,6 +52,6 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private NotificationManager notificationManager() {
-		return (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
+		return (NotificationManager) ThisApplication.context().getSystemService(Activity.NOTIFICATION_SERVICE);
 	}
 }

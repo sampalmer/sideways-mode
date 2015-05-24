@@ -37,7 +37,7 @@ public class RotationService extends Service {
 		super.onCreate();
 
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-		new EnvironmentErrorNotifier(this).clear();
+		new EnvironmentErrorNotifier().clear();
 
 		SystemSettings systemSettings = new SystemSettings(getContentResolver());
 		Screen screen = new Screen(this);
