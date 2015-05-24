@@ -26,23 +26,20 @@ public class UserUpgrader {
 	public void upgradeUser() {
 		int newAppVersion = new VersionInfo(context).installedVersionCode();
 		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
-		Integer lastVersionUserInstructedAboutValue = lastVersionUserInstructedAbout.tryGet();
-		if (lastVersionUserInstructedAboutValue != null) {
-			StringBuilder upgradeMessage = new StringBuilder();
-			for (int version = lastVersionUserInstructedAboutValue + 1; version <= newAppVersion; ++version) {
-				Integer messageId = upgradeMessages.get(version);
-				if (messageId != null) {
-					String currentMessage = context.getString(messageId);
-					upgradeMessage.append(currentMessage);
-					upgradeMessage.append('\n');
-				}
+		StringBuilder upgradeMessage = new StringBuilder();
+		for (int version = lastVersionUserInstructedAbout.get() + 1; version <= newAppVersion; ++version) {
+			Integer messageId = upgradeMessages.get(version);
+			if (messageId != null) {
+				String currentMessage = context.getString(messageId);
+				upgradeMessage.append(currentMessage);
+				upgradeMessage.append('\n');
 			}
-
-			if (upgradeMessage.length() != 0)
-				notify(upgradeMessage.toString());
-
-			lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
 		}
+
+		if (upgradeMessage.length() != 0)
+			notify(upgradeMessage.toString());
+
+		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
 	}
 
 	private void notify(String upgradeMessage) {
