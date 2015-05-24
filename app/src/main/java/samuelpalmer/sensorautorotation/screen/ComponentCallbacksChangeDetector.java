@@ -26,7 +26,7 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 		ThisApplication.context().unregisterComponentCallbacks(componentCallbacks);
 	}
 
-	private ComponentCallbacks componentCallbacks = new ComponentCallbacks() {
+	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {
 		@Override
 		public void onConfigurationChanged(Configuration newConfig) {
 			callback.changed();

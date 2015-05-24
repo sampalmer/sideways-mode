@@ -10,13 +10,11 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ScreenOrientationUpdater extends State {
 
-	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screen;
 	private final ApplicationSettings.Setting<Boolean> allowUpsideDownScreen;
 
 	public ScreenOrientationUpdater(ApplicationSettings settings, OrientationCalculator calculator, ScreenOrientationController screen) {
-		this.settings = settings;
 		this.calculator = calculator;
 		this.screen = screen;
 		allowUpsideDownScreen = settings.allowUpsideDownScreen();
