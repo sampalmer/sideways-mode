@@ -48,7 +48,7 @@ public class RotationLockToggler {
 
 	private void showNotEnabledMessage() {
 		Toast
-				.makeText(context, R.string.not_enabled_message, Toast.LENGTH_SHORT)
+				.makeText(context, context.getString(R.string.not_enabled_message, context.getText(R.string.app_name)), Toast.LENGTH_SHORT)
 				.show();
 	}
 

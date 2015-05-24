@@ -29,7 +29,7 @@
 	<string name="disable_screen_rotation">Touch to lock screen rotation</string>
 
 	<string name="toggle_rotation_lock">Toggle Auto Rotation</string>
-	<string name="not_enabled_message">Screen Rotate is not enabled</string>
+	<string name="not_enabled_message">%1$s is not enabled</string>
 	<string name="upgraded_title">Screen Rotate Upgraded</string>
 	<string name="touch_for_details">Touch for details</string>
 
