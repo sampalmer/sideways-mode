@@ -1,12 +1,11 @@
 package samuelpalmer.sensorautorotation.deviceorientation;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
@@ -17,10 +16,10 @@ public class OrientationSensorHandler extends State {
 	private final UpdatingEventRegistrar<Orientation> subscriptions;
 	private Integer lastRotation;
 
-	public OrientationSensorHandler(final Context context) {
+	public OrientationSensorHandler() {
 		subscriptions = new UpdatingEventRegistrar<>();
 
-		listener = new WindowOrientationListener(context, null) {
+		listener = new WindowOrientationListener(ThisApplication.context(), null) {
 			@Override
 			public void onProposedRotationChanged(int rotation) {
 				listener.setCurrentRotation(rotation); //Might help reduce incorrect device orientation predictions

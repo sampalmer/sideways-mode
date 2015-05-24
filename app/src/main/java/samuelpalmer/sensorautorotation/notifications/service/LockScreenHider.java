@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import android.content.Context;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.LockScreenMonitor;
@@ -15,9 +14,9 @@ public class LockScreenHider extends State {
 	private final ServiceNotification serviceNotification;
 	private final LockScreenMonitor detector;
 
-	public LockScreenHider(Context context, ServiceNotification serviceNotification) {
+	public LockScreenHider(ServiceNotification serviceNotification) {
 		this.serviceNotification = serviceNotification;
-		this.detector = new LockScreenMonitor(context);
+		this.detector = new LockScreenMonitor();
 	}
 
 	@Override

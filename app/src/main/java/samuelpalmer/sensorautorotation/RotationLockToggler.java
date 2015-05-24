@@ -1,18 +1,15 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class RotationLockToggler {
 
-	private final Context context;
 	private final boolean showStatusToast;
 	private final CompletionCallback callback;
 
-	public RotationLockToggler(Context context, boolean showStatusToast, CompletionCallback callback) {
-		this.context = context;
+	public RotationLockToggler(boolean showStatusToast, CompletionCallback callback) {
 		this.showStatusToast = showStatusToast;
 		this.callback = callback;
 	}
@@ -27,13 +24,13 @@ public class RotationLockToggler {
 	}
 
 	private Boolean enabled() {
-		return new ApplicationSettings(context).enabled().get();
+		return new ApplicationSettings().enabled().get();
 	}
 
 	private void toggle() {
 		//Otherwise if the service wasn't running, it will be stopped on unbind.
-		new ServiceController(context).ensureStarted();
-		new ServiceCommandRunner(context, command).run();
+		new ServiceController().ensureStarted();
+		new ServiceCommandRunner(command).run();
 	}
 
 	private final ServiceCommandRunner.Command command = new ServiceCommandRunner.Command() {
@@ -48,7 +45,7 @@ public class RotationLockToggler {
 
 	private void showNotEnabledMessage() {
 		Toast
-				.makeText(context, context.getString(R.string.not_enabled_message, context.getText(R.string.app_name)), Toast.LENGTH_SHORT)
+				.makeText(ThisApplication.context(), ThisApplication.context().getString(R.string.not_enabled_message, ThisApplication.context().getText(R.string.app_name)), Toast.LENGTH_SHORT)
 				.show();
 	}
 

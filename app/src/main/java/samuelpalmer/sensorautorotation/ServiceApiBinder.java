@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Context;
 import android.os.Binder;
 import android.widget.Toast;
 
@@ -11,12 +10,10 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification
  */
 public class ServiceApiBinder extends Binder {
 
-	private final Context context;
 	private final ServiceNotification serviceNotification;
 	private final OrientationCalculator calculator;
 
-	public ServiceApiBinder(Context context, ServiceNotification serviceNotification, OrientationCalculator calculator) {
-		this.context = context;
+	public ServiceApiBinder(ServiceNotification serviceNotification, OrientationCalculator calculator) {
 		this.serviceNotification = serviceNotification;
 		this.calculator = calculator;
 	}
@@ -27,7 +24,7 @@ public class ServiceApiBinder extends Binder {
 
 	public void showStatusToast() {
 		Toast
-			.makeText(context, serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
+			.makeText(ThisApplication.context(), serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
 			.show();
 	}
 

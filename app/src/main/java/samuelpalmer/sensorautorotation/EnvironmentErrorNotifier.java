@@ -17,11 +17,11 @@ public class EnvironmentErrorNotifier{
 		String messageEndingWithFullStop = ThisApplication.context().getString(messageResourceId, messageArguments);
 		String formattedMessage = ThisApplication.context().getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
-		new ApplicationSettings(ThisApplication.context()).enabled().setAndCommit(false);
+		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
 	private void show(String message) {
-		Notification notification = NotificationBuilderCompat.create(ThisApplication.context())
+		Notification notification = NotificationBuilderCompat.create()
 				.setSmallIcon(R.drawable.ic_error)
 				.setContentIntent(makeShowMessage(message))
 				.setContentTitle(getAppName())
@@ -40,7 +40,7 @@ public class EnvironmentErrorNotifier{
 	}
 
 	private PendingIntent makeShowMessage(String message) {
-		Intents intents = new Intents(ThisApplication.context(), DialogActivity.class);
+		Intents intents = new Intents(DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, getAppName());

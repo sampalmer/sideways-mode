@@ -1,13 +1,13 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -15,11 +15,9 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class ApplicationSettings {
 
 	private final SharedPreferences prefs;
-	private final Context context;
 
-	public ApplicationSettings(Context context) {
-		this.context = context;
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	public ApplicationSettings() {
+		prefs = PreferenceManager.getDefaultSharedPreferences(ThisApplication.context());
 	}
 
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }

@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.userinteractivity;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.State;
@@ -14,11 +12,11 @@ public class UserInteractivityThing extends State {
 	private final OrientationMessenger orientationMessenger;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
-	public UserInteractivityThing(Context context, OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
+	public UserInteractivityThing(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
 		this.calculator = calculator;
 		this.screenUpdater = screenUpdater;
-		orientationMessenger = new OrientationMessenger(context, calculator);
-		userInteractivityMonitor = new UserInteractivityMonitor(context, listener);
+		orientationMessenger = new OrientationMessenger(calculator);
+		userInteractivityMonitor = new UserInteractivityMonitor(listener);
 	}
 
 	@Override

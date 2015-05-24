@@ -8,26 +8,24 @@ import android.os.Build;
 import android.os.PowerManager;
 
 import samuelpalmer.sensorautorotation.StateMonitor;
+import samuelpalmer.sensorautorotation.ThisApplication;
 
 public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 
-	private final Context context;
-
-	public UserInteractivityMonitor(Context context, Listener<UserInteractivity> listener) {
+	public UserInteractivityMonitor(Listener<UserInteractivity> listener) {
 		super(listener);
-		this.context = context;
 	}
 
 	@Override
 	protected void startInternal() {
-		context.registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		context.registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		ThisApplication.context().registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		ThisApplication.context().registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	@Override
 	protected void stop() {
-		context.unregisterReceiver(screenOffReceiver);
-		context.unregisterReceiver(screenOnReceiver);
+		ThisApplication.context().unregisterReceiver(screenOffReceiver);
+		ThisApplication.context().unregisterReceiver(screenOnReceiver);
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 	}
 
 	private boolean isInteractive() {
-		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		PowerManager pm = (PowerManager) ThisApplication.context().getSystemService(Context.POWER_SERVICE);
 
 		if (Build.VERSION.SDK_INT >= 20)
 			return pm.isInteractive();

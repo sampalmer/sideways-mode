@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.testing;
 import android.app.ActivityManager;
 import android.content.Context;
 
+import samuelpalmer.sensorautorotation.ThisApplication;
+
 /**
  * Useful for testing behaviour when the OS is low on RAM.
  * Put the following attribute on your &lt;application&gt; in your manifest:
@@ -14,8 +16,8 @@ public class MemoryHog {
 	@SuppressWarnings("FieldCanBeLocal")
 	private final long[] data;
 
-	public MemoryHog(Context context) {
-		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	public MemoryHog() {
+		ActivityManager activityManager = (ActivityManager) ThisApplication.context().getSystemService(Context.ACTIVITY_SERVICE);
 		int maxMemoryMegabytes = activityManager.getLargeMemoryClass();
 		int byteCount = fromMegabytes(maxMemoryMegabytes - 10);
 		int longCount = byteCount / 8;

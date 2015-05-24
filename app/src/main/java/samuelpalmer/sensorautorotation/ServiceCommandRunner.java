@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
@@ -10,8 +9,8 @@ public class ServiceCommandRunner {
 	private final Command command;
 	private final ServiceBinder serviceBinder;
 
-	public ServiceCommandRunner(Context context, Command command) {
-		serviceBinder = new ServiceBinder(context, connection);
+	public ServiceCommandRunner(Command command) {
+		serviceBinder = new ServiceBinder(connection);
 		this.command = command;
 	}
 

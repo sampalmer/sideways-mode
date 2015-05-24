@@ -9,13 +9,14 @@ import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.Orientation;
+import samuelpalmer.sensorautorotation.ThisApplication;
 
 public class Screen {
 
 	private final Display display;
 
-	public Screen(Context context) {
-		WindowManager windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	public Screen() {
+		WindowManager windows = (WindowManager) ThisApplication.context().getSystemService(Context.WINDOW_SERVICE);
 		display = windows.getDefaultDisplay();
 	}
 

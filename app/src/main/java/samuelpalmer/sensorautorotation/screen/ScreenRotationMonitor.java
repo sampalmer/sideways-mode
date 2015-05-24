@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.screen;
 
-import android.content.Context;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.State;
@@ -9,7 +8,6 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class ScreenRotationMonitor extends State {
 
-	private final Context context;
 	private ChangeDetector changeDetector;
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
 
@@ -17,8 +15,7 @@ public class ScreenRotationMonitor extends State {
 		return onChange;
 	}
 
-	public ScreenRotationMonitor(Context context) {
-		this.context = context;
+	public ScreenRotationMonitor() {
 
 		try {
 			changeDetector = new RotationWatcherChangeDetector(callback);
@@ -58,7 +55,7 @@ public class ScreenRotationMonitor extends State {
 
 	private void fallback(RotationWatcherChangeDetector.NotSupportedException reason) {
 		Log.w(ScreenRotationMonitor.class.getSimpleName(), reason);
-		changeDetector = new ComponentCallbacksChangeDetector(context, callback);
+		changeDetector = new ComponentCallbacksChangeDetector(callback);
 	}
 
 	private final Callback callback = new Callback() {

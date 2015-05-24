@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 
 public class Intents {
 
-	private final Context context;
 	private final Class<?> clazz;
 
-	public Intents(Context context, Class<?> clazz) {
-		this.context = context;
+	public Intents(Class<?> clazz) {
 		this.clazz = clazz;
 	}
 
@@ -26,11 +23,11 @@ public class Intents {
 		while (ancestorClass != null) {
 			ancestorClass = ancestorClass.getSuperclass();
 			if (ancestorClass == Activity.class)
-				return PendingIntent.getActivity(context, requestCode, intent, flags);
+				return PendingIntent.getActivity(ThisApplication.context(), requestCode, intent, flags);
 			else if (ancestorClass == BroadcastReceiver.class)
-				return PendingIntent.getBroadcast(context, requestCode, intent, flags);
+				return PendingIntent.getBroadcast(ThisApplication.context(), requestCode, intent, flags);
 			else if (ancestorClass == Service.class)
-				return PendingIntent.getService(context, requestCode, intent, flags);
+				return PendingIntent.getService(ThisApplication.context(), requestCode, intent, flags);
 		}
 
 		throw new RuntimeException(clazz + " doesn't appear to be a component");
@@ -41,7 +38,7 @@ public class Intents {
 	}
 
 	public Intent makeIntent() {
-		return new Intent(context, clazz);
+		return new Intent(ThisApplication.context(), clazz);
 	}
 
 }

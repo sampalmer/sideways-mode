@@ -9,7 +9,7 @@ public class ToggleRotationLockSmallApp extends SmallApplication {
 	@Override
 	protected void onCreate() {
 		super.onCreate();
-		new RotationLockToggler(this, true, callback).go();
+		new RotationLockToggler(true, callback).go();
 	}
 
 	private final RotationLockToggler.CompletionCallback callback = new RotationLockToggler.CompletionCallback() {

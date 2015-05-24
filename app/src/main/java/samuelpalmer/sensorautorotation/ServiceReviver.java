@@ -15,12 +15,6 @@ public class ServiceReviver extends State {
 
 	private final int PERIOD_MILLISECONDS = 500;
 
-	private final Context context;
-
-	public ServiceReviver(Context context) {
-		this.context = context;
-	}
-
 	@Override
 	protected void start() {
 		alarmManager().setInexactRepeating(
@@ -36,7 +30,7 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		Intents intents = new Intents(context, StartServiceReceiver.class);
+		Intents intents = new Intents(StartServiceReceiver.class);
 		return intents.makePending();
 	}
 
@@ -46,6 +40,6 @@ public class ServiceReviver extends State {
 	}
 
 	private AlarmManager alarmManager() {
-		return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		return (AlarmManager) ThisApplication.context().getSystemService(Context.ALARM_SERVICE);
 	}
 }

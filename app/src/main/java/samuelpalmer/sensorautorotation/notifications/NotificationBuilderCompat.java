@@ -3,8 +3,9 @@ package samuelpalmer.sensorautorotation.notifications;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.os.Build;
+
+import samuelpalmer.sensorautorotation.ThisApplication;
 
 /**
  * Basically a reinvented clone of NotificationCompat.Builder, except with a working setShowWhen
@@ -39,19 +40,19 @@ public class NotificationBuilderCompat {
 	public static final String CATEGORY_RECOMMENDATION = "recommendation";
 	public static final String CATEGORY_STATUS = "status";
 
-	public static NotificationBuilderCompat create(Context context) {
+	public static NotificationBuilderCompat create() {
 		if (Build.VERSION.SDK_INT >= 21)
-			return new V21(context);
+			return new V21();
 		else if (Build.VERSION.SDK_INT >= 17)
-			return new V17(context);
+			return new V17();
 		else if (Build.VERSION.SDK_INT >= 16)
-			return new V16(context);
+			return new V16();
 		else
-			return new NotificationBuilderCompat(context);
+			return new NotificationBuilderCompat();
 	}
 
-	private NotificationBuilderCompat(Context context) {
-		builder = new Notification.Builder(context);
+	private NotificationBuilderCompat() {
+		builder = new Notification.Builder(ThisApplication.context());
 	}
 
 	public NotificationBuilderCompat setSmallIcon(int icon) {
@@ -117,10 +118,6 @@ public class NotificationBuilderCompat {
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private static class V16 extends NotificationBuilderCompat
 	{
-		public V16(Context context) {
-			super(context);
-		}
-
 		@Override
 		public Notification build() {
 			return builder.build();
@@ -136,10 +133,6 @@ public class NotificationBuilderCompat {
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	private static class V17 extends V16
 	{
-		public V17(Context context) {
-			super(context);
-		}
-
 		@Override
 		public NotificationBuilderCompat setShowWhen(boolean show) {
 			builder.setShowWhen(show);
@@ -150,8 +143,7 @@ public class NotificationBuilderCompat {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	private static class V21 extends V17
 	{
-		public V21(Context context) {
-			super(context);
+		public V21() {
 			setColor(0xFF795548);
 		}
 

@@ -15,12 +15,7 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class LockScreenMonitor extends State {
 
-	private final Context context;
 	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
-
-	public LockScreenMonitor(Context context) {
-		this.context = context;
-	}
 
 	public EventRegistrar<Void> possiblyChanged() {
 		return onChange;
@@ -29,7 +24,7 @@ public class LockScreenMonitor extends State {
 	@Override
 	protected void start() {
 		for (String action : actions())
-			context.registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
+			ThisApplication.context().registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
 	}
 
 	private Iterable<String> actions() {
@@ -50,7 +45,7 @@ public class LockScreenMonitor extends State {
 
 	@Override
 	protected void stop() {
-		context.unregisterReceiver(notificationUpdateReceiver);
+		ThisApplication.context().unregisterReceiver(notificationUpdateReceiver);
 	}
 
 	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {

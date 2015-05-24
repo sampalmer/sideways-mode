@@ -40,20 +40,20 @@ public class RotationService extends Service {
 		new EnvironmentErrorNotifier().clear();
 
 		SystemSettings systemSettings = new SystemSettings(getContentResolver());
-		Screen screen = new Screen(this);
-		ApplicationSettings appSettings = new ApplicationSettings(this);
+		Screen screen = new Screen();
+		ApplicationSettings appSettings = new ApplicationSettings();
 
 		applicationState = new ApplicationState(appSettings, systemSettings);
 
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
-		screenOrientationController = new ScreenOrientationController(this, systemSettings, screen, calculator);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
 
 		serviceNotification = new ServiceNotification(this, appSettings, calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(this, serviceNotification, appSettings, screenUpdater);
-		serviceRevivalManager = new ServiceRevivalManager(this);
+		serviceNotificationManager = new ServiceNotificationManager(serviceNotification, appSettings, screenUpdater);
+		serviceRevivalManager = new ServiceRevivalManager();
 
-		userInteractivityThing = new UserInteractivityThing(this, calculator, screenUpdater);
+		userInteractivityThing = new UserInteractivityThing(calculator, screenUpdater);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
@@ -78,7 +78,7 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new ServiceApiBinder(this, serviceNotification, calculator);
+		return new ServiceApiBinder(serviceNotification, calculator);
 	}
 
 	@Override

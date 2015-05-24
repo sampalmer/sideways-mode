@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		new ServiceController(this).updateFromSettings();
+		new ServiceController().updateFromSettings();
 	}
 
 	@Override

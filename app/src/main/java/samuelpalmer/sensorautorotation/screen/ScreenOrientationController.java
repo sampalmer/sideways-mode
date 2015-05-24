@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.screen;
 
-import android.content.Context;
-
 import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
@@ -17,10 +15,8 @@ public class ScreenOrientationController extends State {
 	private final SystemSettings settings;
 	private final Screen screen;
 	private final OrientationCalculator calculator;
-	private final Context context;
 
-	public ScreenOrientationController(Context context, SystemSettings settings, Screen screen, OrientationCalculator calculator) {
-		this.context = context;
+	public ScreenOrientationController(SystemSettings settings, Screen screen, OrientationCalculator calculator) {
 		this.settings = settings;
 		this.screen = screen;
 		this.calculator = calculator;

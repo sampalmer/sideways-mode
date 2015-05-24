@@ -11,8 +11,8 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new UserUpgrader(context).upgradeUser();
-		new ServiceController(context).updateFromSettings();
+		new UserUpgrader().upgradeUser();
+		new ServiceController().updateFromSettings();
 	}
 
 }

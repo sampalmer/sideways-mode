@@ -8,6 +8,7 @@ import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.LockScreenStatus;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -33,14 +34,14 @@ public class ServiceNotification {
 	 * Reduces chance of being killed
 	 */
 	public void set() {
-		Intents intents = new Intents(service, ToggleRotationLockActivity.class);
+		Intents intents = new Intents(ToggleRotationLockActivity.class);
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
-		NotificationBuilderCompat builder = NotificationBuilderCompat.create(service)
+		NotificationBuilderCompat builder = NotificationBuilderCompat.create()
 				.setSmallIcon(mode().iconResourceId(overridden()))
 				.setContentIntent(intents.makePending())
-				.setContentTitle(service.getText(mode().summaryResourceId()))
-				.setContentText(service.getText(mode().actionDescriptionResourceId()));
+				.setContentTitle(ThisApplication.context().getText(mode().summaryResourceId()))
+				.setContentText(ThisApplication.context().getText(mode().actionDescriptionResourceId()));
 
 		if (settings.showNotificationAtTop().get())
 			moveToTop(builder);
@@ -56,7 +57,7 @@ public class ServiceNotification {
 	}
 
 	private boolean overridden() {
-		Orientation requested = new SystemSettings(service.getContentResolver()).userRotation.get();
+		Orientation requested = new SystemSettings(ThisApplication.context().getContentResolver()).userRotation.get();
 		Orientation actual = screen.realOrientation();
 
 		return !requested.equals(actual);
@@ -75,7 +76,7 @@ public class ServiceNotification {
 			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
 			builder.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET);
 
-			if (LockScreenStatus.isActive(service))
+			if (LockScreenStatus.isActive())
 				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
 		}
 	}

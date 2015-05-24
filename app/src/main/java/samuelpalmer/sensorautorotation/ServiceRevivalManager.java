@@ -1,26 +1,23 @@
 package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentCallbacks;
-import android.content.Context;
 import android.content.res.Configuration;
 
 public class ServiceRevivalManager extends State {
-	private final Context context;
 	private final ServiceReviver reviver;
 
-	public ServiceRevivalManager(Context context) {
-		this.context = context;
-		reviver = new ServiceReviver(context);
+	public ServiceRevivalManager() {
+		reviver = new ServiceReviver();
 	}
 
 	@Override
 	protected void start() {
-		context.registerComponentCallbacks(callback);
+		ThisApplication.context().registerComponentCallbacks(callback);
 	}
 
 	@Override
 	protected void stop() {
-		context.unregisterComponentCallbacks(callback);
+		ThisApplication.context().unregisterComponentCallbacks(callback);
 		reviver.ensureStopped();
 	}
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 
 import java.util.HashMap;
@@ -17,14 +16,12 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class UserUpgrader {
 
-	private final Context context;
 	private final ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout;
 	private final int newAppVersion;
 
-	public UserUpgrader(Context context) {
-		this.context = context;
-		lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
-		newAppVersion = new VersionInfo(context).installedVersionCode();
+	public UserUpgrader() {
+		lastVersionUserInstructedAbout = new ApplicationSettings().lastVersionUserInstructedAbout();
+		newAppVersion = new VersionInfo().installedVersionCode();
 	}
 
 	public void upgradeUser() {
@@ -40,7 +37,7 @@ public class UserUpgrader {
 		for (int version = lastVersionUserInstructedAbout.get() + 1; version <= newAppVersion; ++version) {
 			Integer messageId = upgradeMessages.get(version);
 			if (messageId != null) {
-				String currentMessage = context.getString(messageId);
+				String currentMessage = ThisApplication.context().getString(messageId);
 				upgradeMessage.append(currentMessage);
 				upgradeMessage.append('\n');
 			}
@@ -50,23 +47,23 @@ public class UserUpgrader {
 	}
 
 	private void notify(String upgradeMessage) {
-		Notification notification = NotificationBuilderCompat.create(context)
+		Notification notification = NotificationBuilderCompat.create()
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
-				.setContentText(context.getString(R.string.touch_for_details))
+				.setContentText(ThisApplication.context().getString(R.string.touch_for_details))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 				.build();
 
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
+		NotificationManager notificationManager = (NotificationManager) ThisApplication.context().getSystemService(Activity.NOTIFICATION_SERVICE);
 
 		notificationManager.notify(NotificationIds.UPGRADE, notification);
 	}
 
 	private PendingIntent makeDialogIntent(String message) {
-		Intents intents = new Intents(context, DialogActivity.class);
+		Intents intents = new Intents(DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, messageTitle());
@@ -74,7 +71,7 @@ public class UserUpgrader {
 	}
 
 	private String messageTitle() {
-		return context.getString(R.string.upgraded_title, context.getText(R.string.app_name));
+		return ThisApplication.context().getString(R.string.upgraded_title, ThisApplication.context().getText(R.string.app_name));
 	}
 
 	private final Map<Integer, Integer> upgradeMessages;
