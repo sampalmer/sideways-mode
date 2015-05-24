@@ -20,7 +20,8 @@ public class EnvironmentErrorNotifier{
 		this.context = context;
 	}
 
-	public void handle(String messageEndingWithFullStop) {
+	public void handle(int messageResourceId, Object... messageArguments) {
+		String messageEndingWithFullStop = context.getString(messageResourceId, messageArguments);
 		String formattedMessage = context.getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
 		new ServiceController(context).ensureStopped();

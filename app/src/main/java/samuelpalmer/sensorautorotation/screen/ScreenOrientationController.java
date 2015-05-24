@@ -60,7 +60,7 @@ public class ScreenOrientationController extends State {
 			setting.set(value);
 		} catch (SettingWriteFailedException e) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			new EnvironmentErrorNotifier(context).handle(context.getString(R.string.system_setting_write_failure_message, e.value, e.key));
+			new EnvironmentErrorNotifier(context).handle(R.string.system_setting_write_failure_message, e.value, e.key);
 		}
 	}
 
@@ -76,14 +76,14 @@ public class ScreenOrientationController extends State {
 		if (accelerometerRotation) {
 			//So when the service is stopped, the new auto rotation setting will be reapplied to the system. (Otherwise the user's change to system auto rotation could be reverted.)
 			calculator.setAutoRotate(true);
-			new EnvironmentErrorNotifier(context).handle(context.getString(R.string.system_rotation_enabled_message));
+			new EnvironmentErrorNotifier(context).handle(R.string.system_rotation_enabled_message);
 		}
 	}
 
 	private final EventHandler<Void> userRotationChanged = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			new EnvironmentErrorNotifier(context).handle(context.getString(R.string.user_rotation_changed_message));
+			new EnvironmentErrorNotifier(context).handle(R.string.user_rotation_changed_message);
 		}
 	};
 
