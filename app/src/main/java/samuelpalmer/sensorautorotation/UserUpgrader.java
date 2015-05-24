@@ -18,14 +18,24 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class UserUpgrader {
 
 	private final Context context;
+	private final ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout;
+	private final int newAppVersion;
 
 	public UserUpgrader(Context context) {
 		this.context = context;
+		lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
+		newAppVersion = new VersionInfo(context).installedVersionCode();
 	}
 
 	public void upgradeUser() {
-		int newAppVersion = new VersionInfo(context).installedVersionCode();
-		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(context).lastVersionUserInstructedAbout();
+		String upgradeMessage = buildUpgradeMessage();
+		if (upgradeMessage.length() != 0)
+			notify(upgradeMessage);
+
+		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
+	}
+
+	private String buildUpgradeMessage() {
 		StringBuilder upgradeMessage = new StringBuilder();
 		for (int version = lastVersionUserInstructedAbout.get() + 1; version <= newAppVersion; ++version) {
 			Integer messageId = upgradeMessages.get(version);
@@ -36,17 +46,14 @@ public class UserUpgrader {
 			}
 		}
 
-		if (upgradeMessage.length() != 0)
-			notify(upgradeMessage.toString());
-
-		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
+		return upgradeMessage.toString();
 	}
 
 	private void notify(String upgradeMessage) {
 		Notification notification = NotificationBuilderCompat.create(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
-				.setContentTitle(title())
+				.setContentTitle(messageTitle())
 				.setContentText(context.getString(R.string.touch_for_details))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
@@ -62,11 +69,11 @@ public class UserUpgrader {
 		Intents intents = new Intents(context, DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
-				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, title());
+				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, messageTitle());
 		return intents.makePending(intent);
 	}
 
-	private String title() {
+	private String messageTitle() {
 		return context.getString(R.string.upgraded_title, context.getText(R.string.app_name));
 	}
 
