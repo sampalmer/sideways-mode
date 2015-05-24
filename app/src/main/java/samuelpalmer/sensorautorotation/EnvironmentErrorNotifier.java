@@ -21,7 +21,8 @@ public class EnvironmentErrorNotifier{
 	}
 
 	public void handle(String messageEndingWithFullStop) {
-		show(messageEndingWithFullStop + " " + getAppName() + " has been disabled.");
+		String formattedMessage = context.getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
+		show(formattedMessage);
 		new ServiceController(context).ensureStopped();
 		new ApplicationSettings(context).enabled().setAndCommit(false);
 	}
