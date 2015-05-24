@@ -30,7 +30,7 @@
 
 	<string name="toggle_rotation_lock">Toggle Auto Rotation</string>
 	<string name="not_enabled_message">%1$s is not enabled</string>
-	<string name="upgraded_title">Screen Rotate Upgraded</string>
+	<string name="upgraded_title">%1$s Upgraded</string>
 	<string name="touch_for_details">Touch for details</string>
 
 	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation lets you do the same thing. See the instructions in the main screen for details.</string>

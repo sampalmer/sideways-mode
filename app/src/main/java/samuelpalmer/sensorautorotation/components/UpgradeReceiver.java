@@ -53,7 +53,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Notification notification = NotificationBuilderCompat.create(context)
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeShowMessage(upgradeMessage, context))
-				.setContentTitle(context.getString(R.string.upgraded_title))
+				.setContentTitle(title(context))
 				.setContentText(context.getString(R.string.touch_for_details))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
@@ -69,8 +69,12 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Intents intents = new Intents(context, DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
-				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, R.string.upgraded_title);
+				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, title(context));
 		return intents.makePending(intent);
+	}
+
+	private String title(Context context) {
+		return context.getString(R.string.upgraded_title, context.getText(R.string.app_name));
 	}
 
 	private static final Map<Integer, Integer> upgradeMessages;
