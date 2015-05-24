@@ -8,6 +8,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
  *
  * android:largeHeap="true"
  */
+@SuppressWarnings("unused")
 public class MemoryHog {
 
 	@SuppressWarnings("FieldCanBeLocal")

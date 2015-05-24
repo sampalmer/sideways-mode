@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.testing;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+@SuppressWarnings("unused")
 public class FieldConstants<TClass> {
 
 	private final Class<TClass> containingClass;
