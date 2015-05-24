@@ -37,10 +37,10 @@ public class ServiceNotification {
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		NotificationBuilderCompat builder = NotificationBuilderCompat.create(service)
-				.smallIcon.set(mode().iconResourceId(overridden()))
-				.contentIntent.set(intents.makePending())
-				.contentTitle.set(service.getText(mode().summaryResourceId()))
-				.contentText.set(service.getText(mode().actionDescriptionResourceId()));
+				.setSmallIcon(mode().iconResourceId(overridden()))
+				.setContentIntent(intents.makePending())
+				.setContentTitle(service.getText(mode().summaryResourceId()))
+				.setContentText(service.getText(mode().actionDescriptionResourceId()));
 
 		if (settings.showNotificationAtTop().get())
 			moveToTop(builder);
@@ -83,7 +83,7 @@ public class ServiceNotification {
 
 	private void moveToTop(NotificationBuilderCompat builder) {
 		builder.setPriority(NotificationBuilderCompat.PRIORITY_MAX);
-		builder.when.set(bestWhen());
+		builder.setWhen(bestWhen());
 	}
 
 	private long bestWhen() {
@@ -103,6 +103,6 @@ public class ServiceNotification {
 		if (Build.VERSION.SDK_INT >= 17)
 			builder.setShowWhen(false);
 		else
-			builder.when.set(0L);
+			builder.setWhen(0);
 	}
 }
