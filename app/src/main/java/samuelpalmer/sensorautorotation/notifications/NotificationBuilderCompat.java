@@ -115,6 +115,11 @@ public class NotificationBuilderCompat {
 		return this;
 	}
 
+	public NotificationBuilderCompat setContentInfo(CharSequence info) {
+		builder.setContentInfo(info);
+		return this;
+	}
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private static class V16 extends NotificationBuilderCompat
 	{

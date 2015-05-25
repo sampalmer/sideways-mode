@@ -35,6 +35,8 @@
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
 
+	<string name="notification_overridden">Overridden</string>
+
 	<string name="toggle_rotation_lock">Toggle Rotation</string>
 	<string name="not_enabled_message">%1$s is not enabled</string>
 	<string name="upgraded_title">%1$s Upgraded</string>

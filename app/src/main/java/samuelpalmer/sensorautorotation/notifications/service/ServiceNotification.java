@@ -37,15 +37,19 @@ public class ServiceNotification {
 	 */
 	public void set() {
 		currentMode = calculateMode();
+		boolean overridden = overridden();
 
 		Intents intents = new Intents(ToggleRotationLockActivity.class);
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		NotificationBuilderCompat builder = NotificationBuilderCompat.create()
-				.setSmallIcon(currentMode.iconResourceId(overridden()))
+				.setSmallIcon(currentMode.iconResourceId(overridden))
 				.setContentIntent(intents.makePending())
 				.setContentTitle(buildTitle())
 				.setContentText(ThisApplication.context().getText(currentMode.actionDescriptionResourceId()));
+
+		if (overridden)
+			builder.setContentInfo(ThisApplication.context().getText(R.string.notification_overridden));
 
 		if (settings.showNotificationAtTop().get())
 			moveToTop(builder);
