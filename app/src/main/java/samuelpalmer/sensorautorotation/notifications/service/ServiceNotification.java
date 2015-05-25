@@ -83,7 +83,7 @@ public class ServiceNotification {
 	}
 
 	private boolean overridden() {
-		Orientation requested = new SystemSettings(ThisApplication.context().getContentResolver()).userRotation.get();
+		Orientation requested = new SystemSettings().userRotation.get();
 		Orientation actual = screen.realOrientation();
 
 		return !requested.equals(actual);

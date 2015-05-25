@@ -39,7 +39,7 @@ public class RotationService extends Service {
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		new EnvironmentErrorNotifier().clear();
 
-		SystemSettings systemSettings = new SystemSettings(getContentResolver());
+		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen();
 		ApplicationSettings appSettings = new ApplicationSettings();
 
