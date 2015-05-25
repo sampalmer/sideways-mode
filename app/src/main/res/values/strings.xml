@@ -42,6 +42,9 @@
 	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
 
 	<string name="on_screen_off">When screen turned off</string>
+	<string name="on_screen_off_do_nothing">Do nothing</string>
+	<string name="on_screen_off_lock_rotation">Lock screen rotation</string>
+
 	<string name="show_notification_at_top">Show notification at top</string>
 	<string name="show_notification_at_top_description">Try to show the notification before all others</string>
 	<string name="uninstall_title">Uninstall?</string>

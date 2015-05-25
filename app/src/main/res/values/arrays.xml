@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="screen_off_behaviours">
-		<item>Do nothing</item>
-		<item>Lock screen rotation</item>
+		<item>@string/on_screen_off_do_nothing</item>
+		<item>@string/on_screen_off_lock_rotation</item>
 	</string-array>
 
 	<string-array name="screen_off_behaviour_values">
