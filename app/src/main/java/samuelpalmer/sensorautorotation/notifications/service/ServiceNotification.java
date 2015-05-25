@@ -9,7 +9,7 @@ import samuelpalmer.sensorautorotation.LockScreenStatus;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ThisApplication;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -46,10 +46,10 @@ public class ServiceNotification {
 				.setSmallIcon(currentMode.iconResourceId(overridden))
 				.setContentIntent(intents.makePending())
 				.setContentTitle(buildTitle())
-				.setContentText(ThisApplication.context().getText(currentMode.actionDescriptionResourceId()));
+				.setContentText(StringResource.get(currentMode.actionDescriptionResourceId()));
 
 		if (overridden)
-			builder.setContentInfo(ThisApplication.context().getText(R.string.notification_overridden));
+			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
 
 		if (settings.showNotificationAtTop().get())
 			moveToTop(builder);
@@ -69,9 +69,7 @@ public class ServiceNotification {
 	}
 
 	private CharSequence buildTitle() {
-		CharSequence autoRotationState = ThisApplication.context().getText(currentMode.autoRotationStateResourceId());
-		CharSequence userState = ThisApplication.context().getText(userStateResourceId());
-		return ThisApplication.context().getString(R.string.notification_summary, autoRotationState, userState);
+		return StringResource.format(R.string.notification_summary, currentMode.autoRotationStateResourceId(), userStateResourceId());
 	}
 
 	private int userStateResourceId() {

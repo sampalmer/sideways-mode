@@ -67,7 +67,7 @@ public class UserUpgrader {
 	}
 
 	private String messageTitle() {
-		return ThisApplication.context().getString(R.string.upgraded_title, ThisApplication.context().getText(R.string.app_name));
+		return StringResource.format(R.string.upgraded_title, R.string.app_name);
 	}
 
 	private final Map<Integer, Integer> upgradeMessages;

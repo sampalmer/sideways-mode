@@ -12,8 +12,8 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class EnvironmentErrorNotifier{
 
 	public void handle(int messageResourceId, Object... messageArguments) {
-		String messageEndingWithFullStop = ThisApplication.context().getString(messageResourceId, messageArguments);
-		String formattedMessage = ThisApplication.context().getString(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
+		String messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
+		String formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
 		new ApplicationSettings().enabled().setAndCommit(false);
 	}
@@ -33,8 +33,8 @@ public class EnvironmentErrorNotifier{
 		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
 	}
 
-	private String getAppName() {
-		return ThisApplication.context().getString(R.string.app_name);
+	private CharSequence getAppName() {
+		return StringResource.get(R.string.app_name);
 	}
 
 	private PendingIntent makeShowMessage(String message) {
