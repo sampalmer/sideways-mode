@@ -8,6 +8,7 @@ import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.LockScreenStatus;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -22,6 +23,7 @@ public class ServiceNotification {
 	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final Screen screen;
+	private Mode currentMode;
 
 	public ServiceNotification(Service service, ApplicationSettings settings, OrientationCalculator calculator, Screen screen) {
 		this.service = service;
@@ -34,14 +36,16 @@ public class ServiceNotification {
 	 * Reduces chance of being killed
 	 */
 	public void set() {
+		currentMode = calculateMode();
+
 		Intents intents = new Intents(ToggleRotationLockActivity.class);
 
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		NotificationBuilderCompat builder = NotificationBuilderCompat.create()
-				.setSmallIcon(mode().iconResourceId(overridden()))
+				.setSmallIcon(currentMode.iconResourceId(overridden()))
 				.setContentIntent(intents.makePending())
-				.setContentTitle(ThisApplication.context().getText(mode().summaryResourceId()))
-				.setContentText(ThisApplication.context().getText(mode().actionDescriptionResourceId()));
+				.setContentTitle(buildTitle())
+				.setContentText(ThisApplication.context().getText(currentMode.actionDescriptionResourceId()));
 
 		if (settings.showNotificationAtTop().get())
 			moveToTop(builder);
@@ -56,18 +60,29 @@ public class ServiceNotification {
 		service.startForeground(NotificationIds.SERVICE, notification);
 	}
 
+	public Mode calculateMode() {
+		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, screen);
+	}
+
+	private CharSequence buildTitle() {
+		CharSequence autoRotationState = ThisApplication.context().getText(currentMode.autoRotationStateResourceId());
+		CharSequence userState = ThisApplication.context().getText(userStateResourceId());
+		return ThisApplication.context().getString(R.string.notification_summary, autoRotationState, userState);
+	}
+
+	private int userStateResourceId() {
+		switch (calculator.user().getClockwiseRotationsFromNaturalOrientation()) {
+			case 0: return R.string.user_rotation_upright;
+			case 2: return R.string.user_rotation_upside_down;
+			default: return R.string.user_rotation_sideways;
+		}
+	}
+
 	private boolean overridden() {
 		Orientation requested = new SystemSettings(ThisApplication.context().getContentResolver()).userRotation.get();
 		Orientation actual = screen.realOrientation();
 
 		return !requested.equals(actual);
-	}
-
-	public Mode mode() {
-		if (calculator.autoRotate())
-			return new AutoRotationMode();
-		else
-			return new LockedMode(calculator, screen);
 	}
 
 	private void hideFromLockScreen(NotificationBuilderCompat builder) {

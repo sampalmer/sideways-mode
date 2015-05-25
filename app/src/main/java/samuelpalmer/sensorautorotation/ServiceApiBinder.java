@@ -24,7 +24,7 @@ public class ServiceApiBinder extends Binder {
 
 	public void showStatusToast() {
 		Toast
-			.makeText(ThisApplication.context(), serviceNotification.mode().summaryResourceId(), Toast.LENGTH_SHORT)
+			.makeText(ThisApplication.context(), serviceNotification.calculateMode().autoRotationStateResourceId(), Toast.LENGTH_SHORT)
 			.show();
 	}
 

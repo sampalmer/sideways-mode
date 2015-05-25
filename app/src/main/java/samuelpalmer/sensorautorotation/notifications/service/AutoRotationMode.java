@@ -10,7 +10,7 @@ class AutoRotationMode implements Mode {
 	}
 
 	@Override
-	public int summaryResourceId() {
+	public int autoRotationStateResourceId() {
 		return R.string.screen_rotation_enabled;
 	}
 

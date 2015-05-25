@@ -6,32 +6,26 @@ import samuelpalmer.sensorautorotation.screen.Screen;
 
 class LockedMode implements Mode {
 
-	private final OrientationCalculator calculator;
-	private final Screen screen;
+	private final boolean portrait;
 
 	public LockedMode(OrientationCalculator calculator, Screen screen) {
-		this.calculator = calculator;
-		this.screen = screen;
+		boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
+		portrait = inNaturalOrientation == screen.deviceIsNaturallyPortrait();
 	}
 
 	@Override
 	public int iconResourceId(boolean overridden) {
 		return
-				isPortrait()
+				portrait
 						?
 						(overridden ? R.drawable.ic_screen_rotation_locked_portrait_overridden : R.drawable.ic_screen_rotation_locked_portrait_normal)
 						:
 						(overridden ? R.drawable.ic_screen_rotation_locked_landscape_overridden : R.drawable.ic_screen_rotation_locked_landscape_normal);
 	}
 
-	private boolean isPortrait() {
-		boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
-		return inNaturalOrientation == screen.deviceIsNaturallyPortrait();
-	}
-
 	@Override
-	public int summaryResourceId() {
-		return R.string.screen_rotation_disabled;
+	public int autoRotationStateResourceId() {
+		return portrait ? R.string.screen_rotation_disabled_portrait : R.string.screen_rotation_disabled_landscape;
 	}
 
 	@Override

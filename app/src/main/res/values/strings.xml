@@ -23,10 +23,17 @@
 		to ensure the default screen rotation is not left in the wrong state.
 	</string>
 
-	<string name="screen_rotation_enabled">Auto-Rotating</string>
-	<string name="screen_rotation_disabled">Rotation Locked</string>
+	<!-- Notification -->
+	<string name="screen_rotation_enabled">Auto-Rotate</string>
+	<string name="screen_rotation_disabled_portrait">Portrait</string>
+	<string name="screen_rotation_disabled_landscape">Landscape</string>
 	<string name="enable_screen_rotation">Touch for auto rotation</string>
 	<string name="disable_screen_rotation">Touch to lock rotation</string>
+
+	<string name="notification_summary">%1$s (User %2$s)</string>
+	<string name="user_rotation_upright">Upright</string>
+	<string name="user_rotation_sideways">Sideways</string>
+	<string name="user_rotation_upside_down">Upside-down</string>
 
 	<string name="toggle_rotation_lock">Toggle Rotation</string>
 	<string name="not_enabled_message">%1$s is not enabled</string>
