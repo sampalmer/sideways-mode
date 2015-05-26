@@ -14,6 +14,7 @@ import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationPoster;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationUpdater;
 import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationController;
@@ -48,7 +49,7 @@ public class RotationService extends Service {
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
 
-		serviceNotificationUpdater = new ServiceNotificationUpdater(this, appSettings, calculator, screen);
+		serviceNotificationUpdater = new ServiceNotificationUpdater(new ServiceNotificationPoster(this), appSettings, calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
 		serviceNotificationManager = new ServiceNotificationManager(serviceNotificationUpdater, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
