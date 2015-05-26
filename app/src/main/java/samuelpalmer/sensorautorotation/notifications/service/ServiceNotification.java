@@ -11,17 +11,18 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
+import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceNotification {
 
 	private final Mode mode;
-	private final boolean showAtTop;
+	private final NotificationPriority priority;
 	private final boolean overridden;
 	private final Orientation user;
 	private NotificationBuilderCompat builder;
 
-	public ServiceNotification(boolean showAtTop, Mode mode, boolean overridden, Orientation user) {
-		this.showAtTop = showAtTop;
+	public ServiceNotification(NotificationPriority priority, Mode mode, boolean overridden, Orientation user) {
+		this.priority = priority;
 		this.mode = mode;
 		this.overridden = overridden;
 		this.user = user;
@@ -36,12 +37,13 @@ public class ServiceNotification {
 				.setSmallIcon(mode.iconResourceId(overridden))
 				.setContentIntent(new Intents(ToggleRotationLockActivity.class).makePending())
 				.setContentTitle(buildTitle())
-				.setContentText(StringResource.get(mode.actionDescriptionResourceId()));
+				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
+				.setPriority(priority.androidPriority());
 
 		if (overridden)
 			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
 
-		if (showAtTop)
+		if (priority == NotificationPriority.HIGH)
 			moveToTop();
 
 		hideTimestamp();
@@ -76,7 +78,6 @@ public class ServiceNotification {
 	}
 
 	private void moveToTop() {
-		builder.setPriority(NotificationBuilderCompat.PRIORITY_MAX);
 		builder.setWhen(NotificationTimestamp.highest());
 	}
 

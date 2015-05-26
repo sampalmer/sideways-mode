@@ -7,6 +7,7 @@ import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ServiceNotificationUpdater {
@@ -24,12 +25,12 @@ public class ServiceNotificationUpdater {
 	}
 
 	public void update() {
-		ServiceNotification notification = new ServiceNotification(showAtTop(), mode(), overridden(), calculator.user());
+		ServiceNotification notification = new ServiceNotification(priority(), mode(), overridden(), calculator.user());
 		service.startForeground(NotificationIds.SERVICE, notification.build());
 	}
 
-	private Boolean showAtTop() {
-		return settings.showNotificationAtTop().get();
+	private NotificationPriority priority() {
+		return settings.notificationPriority().get();
 	}
 
 	public Mode mode() {

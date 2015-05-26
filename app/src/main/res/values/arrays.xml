@@ -9,4 +9,16 @@
 		<item>DO_NOTHING</item>
 		<item>LOCK_SCREEN_ROTATION</item>
 	</string-array>
+
+	<string-array name="notification_priorities">
+		<item>@string/notification_priority_high</item>
+		<item>@string/notification_priority_normal</item>
+		<item>@string/notification_priority_low</item>
+	</string-array>
+
+	<string-array name="notification_priority_values">
+		<item>HIGH</item>
+		<item>NORMAL</item>
+		<item>LOW</item>
+	</string-array>
 </resources>

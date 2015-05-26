@@ -17,9 +17,10 @@
 	    android:entries="@array/screen_off_behaviours"
 	    android:entryValues="@array/screen_off_behaviour_values"
 	/>
-	<CheckBoxPreference
-		android:key="showNotificationAtTop"
-	    android:title="@string/show_notification_at_top"
-	    android:summary="@string/show_notification_at_top_description"
+	<ListPreference
+		android:key="notificationPriority"
+	    android:title="@string/notification_priority"
+		android:entries="@array/notification_priorities"
+		android:entryValues="@array/notification_priority_values"
 	/>
 </PreferenceScreen>

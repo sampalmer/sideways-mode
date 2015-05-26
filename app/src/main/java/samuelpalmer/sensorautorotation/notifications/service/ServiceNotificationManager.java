@@ -11,7 +11,7 @@ public class ServiceNotificationManager extends State {
 
 	private final ScreenOrientationUpdater screen;
 	private final LockScreenHider notificationHider;
-	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
+	private final EventRegistrar<Void> onPriorityChanged;
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final ServiceNotificationUpdater notificationUpdater;
 
@@ -19,7 +19,7 @@ public class ServiceNotificationManager extends State {
 		this.notificationUpdater = notificationUpdater;
 		this.screen = screen;
 		notificationHider = new LockScreenHider(updateNotification);
-		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
+		onPriorityChanged = settings.notificationPriority().onChange();
 		screenRotationMonitor = new ScreenRotationMonitor();
 	}
 
@@ -27,7 +27,7 @@ public class ServiceNotificationManager extends State {
 	protected void start() {
 		notificationUpdater.update();
 		notificationHider.ensureStarted();
-		onShowNotificationAtTopChanged.subscribe(updateNotification);
+		onPriorityChanged.subscribe(updateNotification);
 		screen.onChange().subscribe(updateNotification);
 
 		screenRotationMonitor.onChange().subscribe(updateNotification);
@@ -40,7 +40,7 @@ public class ServiceNotificationManager extends State {
 		screenRotationMonitor.onChange().unsubscribe(updateNotification);
 
 		screen.onChange().unsubscribe(updateNotification);
-		onShowNotificationAtTopChanged.unsubscribe(updateNotification);
+		onPriorityChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
 	}
 
