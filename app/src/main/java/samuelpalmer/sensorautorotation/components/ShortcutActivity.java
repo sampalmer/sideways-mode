@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 
 public class ShortcutActivity extends Activity {
 
@@ -16,7 +17,7 @@ public class ShortcutActivity extends Activity {
 		Intent launchIntent = new Intent(this, ToggleRotationLockActivity.class);
 
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent);
-		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.toggle_rotation_lock));
+		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, StringResource.get(R.string.toggle_rotation_lock));
 		shortcut.putExtra(
 				Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
 				Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher));

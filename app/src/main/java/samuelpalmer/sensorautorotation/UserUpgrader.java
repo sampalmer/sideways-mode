@@ -35,7 +35,7 @@ public class UserUpgrader {
 		for (int version = lastVersionUserInstructedAbout.get() + 1; version <= newAppVersion; ++version) {
 			Integer messageId = upgradeMessages.get(version);
 			if (messageId != null) {
-				String currentMessage = ThisApplication.context().getString(messageId);
+				CharSequence currentMessage = StringResource.get(messageId);
 				upgradeMessage.append(currentMessage);
 				upgradeMessage.append('\n');
 			}
@@ -49,7 +49,7 @@ public class UserUpgrader {
 				.setSmallIcon(R.drawable.ic_update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
-				.setContentText(ThisApplication.context().getString(R.string.touch_for_details))
+				.setContentText(StringResource.get(R.string.touch_for_details))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
