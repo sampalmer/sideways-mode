@@ -10,6 +10,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
 
 public class ServiceNotification {
 
@@ -76,20 +77,7 @@ public class ServiceNotification {
 
 	private void moveToTop() {
 		builder.setPriority(NotificationBuilderCompat.PRIORITY_MAX);
-		builder.setWhen(bestWhen());
-	}
-
-	private static long bestWhen() {
-		long result = System.currentTimeMillis();
-
-		if (Build.VERSION.SDK_INT < 21) //Because Android 5 actually ignores future 'when' values ordering and even doesn't update the notification time when they're future
-			result += millisecondsFromYears(10L); //Can't go too high (eg Integer.MAX_VALUE) since that seems to cause the opposite effect of what we want (at least in Android 4.3)
-
-		return result;
-	}
-
-	private static long millisecondsFromYears(long years) {
-		return years * 365L * 24L * 60L * 60L * 1000L;
+		builder.setWhen(NotificationTimestamp.highest());
 	}
 
 	private void hideTimestamp() {
