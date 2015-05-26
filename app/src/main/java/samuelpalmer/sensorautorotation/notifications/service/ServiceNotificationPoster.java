@@ -21,7 +21,9 @@ public class ServiceNotificationPoster {
 
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the
-	 * notification is updated on these Android versions of the emulator.
+	 * notification is updated on these Android versions of the emulators and Samsung Galaxy S II
+	 * (and probably other devices). Interestingly, the problem didn't happen on a Sony Xperia M
+	 * running Android 4.3.
 	 */
 	private void cancelIfNecessary(Notification notification) {
 		if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT <= 19) {
