@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
@@ -18,15 +17,15 @@ public class SettingsInitialiser {
 	public SettingsInitialiser(ApplicationSettings source) {
 		this.source = source;
 
-		for (Method publicMethod : publicMethods())
-			new CandidateMethod(publicMethod).consider();
+		for (Field field : fields())
+			new Candidate(field).consider();
 
 		if (settings.isEmpty())
 			throw new RuntimeException("Couldn't identify application settings.");
 	}
 
-	private Method[] publicMethods() {
-		return source.getClass().getMethods();
+	private Field[] fields() {
+		return source.getClass().getDeclaredFields();
 	}
 
 	public void ensureInitialised() {
@@ -34,11 +33,11 @@ public class SettingsInitialiser {
 			setting.ensureInitialised();
 	}
 
-	public class CandidateMethod {
-		private final Method method;
+	public class Candidate {
+		private final Field member;
 
-		public CandidateMethod(Method method) {
-			this.method = method;
+		public Candidate(Field member) {
+			this.member = member;
 		}
 
 		public void consider() {
@@ -47,18 +46,13 @@ public class SettingsInitialiser {
 		}
 
 		private boolean isSetting() {
-			return method.getReturnType() == Setting.class;
+			return member.getType() == Setting.class;
 		}
 
 		private Setting<?> getSetting() {
-			//Suppressing this warning because Android Studio says we need to do it this way
-			// for compatibility with API 19-.
-			//noinspection TryWithIdenticalCatches
 			try {
-				return (Setting<?>)method.invoke(source);
+				return (Setting<?>) member.get(source);
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
 		}

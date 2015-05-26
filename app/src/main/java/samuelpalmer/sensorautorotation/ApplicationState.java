@@ -10,42 +10,42 @@ public class ApplicationState {
 	public ApplicationState(ApplicationSettings applicationSettings, SystemSettings systemSettings) {
 		this.applicationSettings = applicationSettings;
 
-		if (!applicationSettings.autoRotate().hasValue()) {
+		if (!applicationSettings.autoRotate.hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
 			autoRotate(accelerometerRotation);
 		}
 
-		if (!applicationSettings.userOrientation().hasValue())
+		if (!applicationSettings.userOrientation.hasValue())
 			user(Orientation.NATURAL);
 	}
 
 	public boolean autoRotate() {
-		return applicationSettings.autoRotate().get();
+		return applicationSettings.autoRotate.get();
 	}
 
 	public Orientation user() {
-		return new Orientation(applicationSettings.userOrientation().get());
+		return new Orientation(applicationSettings.userOrientation.get());
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
 		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
-		applicationSettings.autoRotate().set(autoRotate, transaction);
-		applicationSettings.userOrientation().set(serialise(user), transaction);
+		applicationSettings.autoRotate.set(autoRotate, transaction);
+		applicationSettings.userOrientation.set(serialise(user), transaction);
 		transaction.commit();
 	}
 
 	private void autoRotate(boolean newValue) {
-		applicationSettings.autoRotate().setAndCommit(newValue);
+		applicationSettings.autoRotate.setAndCommit(newValue);
 	}
 
 	public void user(Orientation newValue) {
-		applicationSettings.userOrientation().setAndCommit(serialise(newValue));
+		applicationSettings.userOrientation.setAndCommit(serialise(newValue));
 	}
 
 	public void clear() {
 		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
-		applicationSettings.autoRotate().remove(transaction);
-		applicationSettings.userOrientation().remove(transaction);
+		applicationSettings.autoRotate.remove(transaction);
+		applicationSettings.userOrientation.remove(transaction);
 		transaction.commit();
 	}
 

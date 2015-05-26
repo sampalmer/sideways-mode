@@ -22,7 +22,7 @@ public class ThisApplication extends Application {
 		context = this;
 
 		ensureVersionRecorded();
-		enabledPreference = new ApplicationSettings().enabled();
+		enabledPreference = new ApplicationSettings().enabled;
 
 		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
@@ -35,7 +35,7 @@ public class ThisApplication extends Application {
 	}
 
 	private void ensureVersionRecorded() {
-		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings().lastVersionUserInstructedAbout();
+		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings().lastVersionUserInstructedAbout;
 		if (!instructedVersion.hasValue())
 			instructedVersion.setAndCommit(new VersionInfo().installedVersionCode());
 	}

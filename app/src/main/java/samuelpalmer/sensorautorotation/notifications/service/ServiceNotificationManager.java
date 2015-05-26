@@ -19,7 +19,7 @@ public class ServiceNotificationManager extends State {
 		this.notificationUpdater = notificationUpdater;
 		this.screen = screen;
 		notificationHider = new LockScreenHider(updateNotification);
-		onPriorityChanged = settings.notificationPriority().onChange();
+		onPriorityChanged = settings.notificationPriority.onChange();
 		screenRotationMonitor = new ScreenRotationMonitor();
 	}
 

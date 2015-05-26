@@ -29,7 +29,7 @@ public class OrientationCalculator {
 		device = DEFAULT;
 		Orientation newUser = DEFAULT;
 
-		ScreenOffBehaviour screenOffBehaviour = settings.screenOffBehaviour().get();
+		ScreenOffBehaviour screenOffBehaviour = settings.screenOnBehaviour.get();
 		if (screenOffBehaviour == ScreenOffBehaviour.LOCK_SCREEN_ROTATION)
 			state.set(false, newUser);
 		else
