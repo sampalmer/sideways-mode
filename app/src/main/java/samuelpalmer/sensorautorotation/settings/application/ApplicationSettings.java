@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
@@ -134,7 +134,7 @@ public class ApplicationSettings {
 		public void commit() {
 			if (!editor.commit())
 				// Since a look over the implementation of Editor.commit() indicates this represents a file system or other IO error.
-				new EnvironmentErrorNotifier().handle(R.string.preference_write_failure_message);
+				EnvironmentError.report(R.string.preference_write_failure_message);
 		}
 	}
 

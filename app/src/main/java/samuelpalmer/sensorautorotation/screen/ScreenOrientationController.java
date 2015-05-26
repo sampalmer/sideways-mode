@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.screen;
 
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.R;
@@ -51,12 +51,12 @@ public class ScreenOrientationController extends State {
 		set(settings.userRotation, value);
 	}
 
-	private <T> void set(Setting<T> setting, T value) {
+	private static <T> void set(Setting<T> setting, T value) {
 		try {
 			setting.set(value);
 		} catch (SettingWriteFailedException e) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			new EnvironmentErrorNotifier().handle(R.string.system_setting_write_failure_message, e.value, e.key);
+			EnvironmentError.report(R.string.system_setting_write_failure_message, e.value, e.key);
 		}
 	}
 
@@ -72,14 +72,14 @@ public class ScreenOrientationController extends State {
 		if (accelerometerRotation) {
 			//So when the service is stopped, the new auto rotation setting will be reapplied to the system. (Otherwise the user's change to system auto rotation could be reverted.)
 			calculator.setAutoRotate(true);
-			new EnvironmentErrorNotifier().handle(R.string.system_rotation_enabled_message);
+			EnvironmentError.report(R.string.system_rotation_enabled_message);
 		}
 	}
 
 	private final EventHandler<Void> userRotationChanged = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			new EnvironmentErrorNotifier().handle(R.string.user_rotation_changed_message);
+			EnvironmentError.report(R.string.user_rotation_changed_message);
 		}
 	};
 

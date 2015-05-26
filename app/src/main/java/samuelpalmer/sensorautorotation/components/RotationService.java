@@ -9,7 +9,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
-import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
@@ -38,7 +38,7 @@ public class RotationService extends Service {
 		super.onCreate();
 
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-		new EnvironmentErrorNotifier().clear();
+		EnvironmentError.clear();
 
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen();
