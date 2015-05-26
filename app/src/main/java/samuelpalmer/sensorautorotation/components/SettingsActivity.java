@@ -1,10 +1,13 @@
 package samuelpalmer.sensorautorotation.components;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+
+import java.util.Arrays;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
@@ -63,10 +66,21 @@ public class SettingsActivity extends PreferenceActivity {
 			addPreferencesFromResource(R.xml.preferences);
 
 			updateListPreferenceSummaries();
+			hideUnsupportedOptions();
 
 			enabledChanged = settings.enabled().onChange();
 			onScreenOffChanged = settings.screenOffBehaviour().onChange();
 			notificationPriorityChanged = settings.notificationPriority().onChange();
+		}
+
+		private void hideUnsupportedOptions() {
+			if (Build.VERSION.SDK_INT < 16) {
+				ListPreference notificationPriorityPreference = (ListPreference) findPreference(settings.notificationPriority().getKey());
+				CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
+				int newLength = originalEntries.length - 1;
+				notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
+				notificationPriorityPreference.setEntryValues(Arrays.copyOfRange(notificationPriorityPreference.getEntryValues(), 0, newLength));
+			}
 		}
 
 		@Override
