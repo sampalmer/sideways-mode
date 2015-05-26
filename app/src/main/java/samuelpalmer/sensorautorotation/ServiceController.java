@@ -7,11 +7,6 @@ import samuelpalmer.sensorautorotation.components.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceController {
-	private final ApplicationSettings settings;
-
-	public ServiceController() {
-		settings = new ApplicationSettings();
-	}
 
 	public void ensureStarted() {
 		ComponentName service = ThisApplication.context().startService(intent());
@@ -24,7 +19,7 @@ public class ServiceController {
 	}
 
 	public void updateFromSettings() {
-		boolean enabled = settings.enabled().get();
+		boolean enabled = new ApplicationSettings().enabled().get();
 		updateServiceState(enabled);
 	}
 
