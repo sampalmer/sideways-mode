@@ -13,9 +13,9 @@ public class ServiceNotificationManager extends State {
 	private final LockScreenHider notificationHider;
 	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 	private final ScreenRotationMonitor screenRotationMonitor;
-	private final ServiceNotificationGenerator notificationUpdater;
+	private final ServiceNotificationUpdater notificationUpdater;
 
-	public ServiceNotificationManager(ServiceNotificationGenerator notificationUpdater, ApplicationSettings settings, ScreenOrientationUpdater screen) {
+	public ServiceNotificationManager(ServiceNotificationUpdater notificationUpdater, ApplicationSettings settings, ScreenOrientationUpdater screen) {
 		this.notificationUpdater = notificationUpdater;
 		this.screen = screen;
 		notificationHider = new LockScreenHider(updateNotification);

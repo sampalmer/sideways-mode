@@ -9,14 +9,14 @@ import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-public class ServiceNotificationGenerator {
+public class ServiceNotificationUpdater {
 
 	private final Service service;
 	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final Screen screen;
 
-	public ServiceNotificationGenerator(Service service, ApplicationSettings settings, OrientationCalculator calculator, Screen screen) {
+	public ServiceNotificationUpdater(Service service, ApplicationSettings settings, OrientationCalculator calculator, Screen screen) {
 		this.service = service;
 		this.settings = settings;
 		this.calculator = calculator;
