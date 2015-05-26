@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.screen;
 
 import android.annotation.SuppressLint;
 import android.graphics.Point;
-import android.os.Build;
 import android.view.Display;
 
 import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
@@ -35,12 +34,7 @@ public class Screen {
 	@SuppressLint("NewApi") /** Since {@link Display#getRealSize(Point)} is actually available as of API 14 */
 	private Point screenResolution() {
 		Point screenResolution = new Point();
-
-		if (Build.VERSION.SDK_INT >= 14)
-			display.getRealSize(screenResolution);
-		else
-			display.getSize(screenResolution);
-
+		display.getRealSize(screenResolution);
 		return screenResolution;
 	}
 
