@@ -9,14 +9,14 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {
 
-	private final ServiceNotification serviceNotification;
 	private final ScreenOrientationUpdater screen;
 	private final LockScreenHider notificationHider;
 	private final EventRegistrar<Void> onShowNotificationAtTopChanged;
 	private final ScreenRotationMonitor screenRotationMonitor;
+	private final ServiceNotificationGenerator notificationUpdater;
 
-	public ServiceNotificationManager(ServiceNotification serviceNotification, ApplicationSettings settings, ScreenOrientationUpdater screen) {
-		this.serviceNotification = serviceNotification;
+	public ServiceNotificationManager(ServiceNotificationGenerator notificationUpdater, ApplicationSettings settings, ScreenOrientationUpdater screen) {
+		this.notificationUpdater = notificationUpdater;
 		this.screen = screen;
 		notificationHider = new LockScreenHider(updateNotification);
 		onShowNotificationAtTopChanged = settings.showNotificationAtTop().onChange();
@@ -25,7 +25,7 @@ public class ServiceNotificationManager extends State {
 
 	@Override
 	protected void start() {
-		serviceNotification.set();
+		notificationUpdater.update();
 		notificationHider.ensureStarted();
 		onShowNotificationAtTopChanged.subscribe(updateNotification);
 		screen.onChange().subscribe(updateNotification);
@@ -47,7 +47,7 @@ public class ServiceNotificationManager extends State {
 	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {
 		@Override
 		public void update(Void event) {
-			serviceNotification.set();
+			notificationUpdater.update();
 		}
 	};
 

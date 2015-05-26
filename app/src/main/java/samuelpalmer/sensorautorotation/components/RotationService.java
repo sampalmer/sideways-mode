@@ -13,7 +13,7 @@ import samuelpalmer.sensorautorotation.EnvironmentErrorNotifier;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationGenerator;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.screen.Screen;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationController;
@@ -29,7 +29,7 @@ public class RotationService extends Service {
 	private OrientationCalculator calculator;
 	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	private ServiceNotification serviceNotification;
+	private ServiceNotificationGenerator serviceNotificationGenerator;
 	private UserInteractivityThing userInteractivityThing;
 
 	@Override
@@ -48,9 +48,9 @@ public class RotationService extends Service {
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
 
-		serviceNotification = new ServiceNotification(this, appSettings, calculator, screen);
+		serviceNotificationGenerator = new ServiceNotificationGenerator(this, appSettings, calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceNotification, appSettings, screenUpdater);
+		serviceNotificationManager = new ServiceNotificationManager(serviceNotificationGenerator, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityThing = new UserInteractivityThing(calculator, screenUpdater);
@@ -78,7 +78,7 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new ServiceApiBinder(serviceNotification, calculator);
+		return new ServiceApiBinder(serviceNotificationGenerator, calculator);
 	}
 
 	@Override
