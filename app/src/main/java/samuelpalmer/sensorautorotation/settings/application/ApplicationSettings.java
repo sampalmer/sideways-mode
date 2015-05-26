@@ -14,22 +14,20 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class ApplicationSettings {
 
-	//Internal
-	public final Setting<Integer> lastVersionUserInstructedAbout = new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null);
-	public final Setting<Boolean> autoRotate = new Setting<>(new BooleanSetting(), "autoRotate", null);
-	public final Setting<Integer> userOrientation = new Setting<>(new IntegerSetting(), "userOrientation", null);
-
-	//User-visible
-	public final Setting<Boolean> enabled = new Setting<>(new BooleanSetting(), "enabled", true);
-	public final Setting<Boolean> allowUpsideDownScreen = new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false);
-	public final Setting<ScreenOffBehaviour> screenOnBehaviour = new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING);
-	public final Setting<NotificationPriority> notificationPriority = new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL);
-
 	private final SharedPreferences prefs;
 
 	public ApplicationSettings() {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ThisApplication.context());
 	}
+
+	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
+	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
+	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
+
+	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
+	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
+	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
+	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 
 	public class Setting<T> {
 

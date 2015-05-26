@@ -39,7 +39,7 @@ public class SettingsActivity extends PreferenceActivity {
 		};
 
 		private void updateOnScreenOffSummary() {
-			ListPreference preference = (ListPreference)findPreference(settings.screenOnBehaviour.getKey());
+			ListPreference preference = (ListPreference)findPreference(settings.screenOffBehaviour().getKey());
 			preference.setSummary(preference.getEntry());
 		}
 
@@ -60,8 +60,8 @@ public class SettingsActivity extends PreferenceActivity {
 
 			updateOnScreenOffSummary();
 
-			enabledChanged = settings.enabled.onChange();
-			onScreenOffChanged = settings.screenOnBehaviour.onChange();
+			enabledChanged = settings.enabled().onChange();
+			onScreenOffChanged = settings.screenOffBehaviour().onChange();
 		}
 
 		@Override
@@ -74,8 +74,8 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 
 		private void refresh() {
-			CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled.getKey());
-			preference.setChecked(settings.enabled.get());
+			CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
+			preference.setChecked(settings.enabled().get());
 		}
 
 		@Override

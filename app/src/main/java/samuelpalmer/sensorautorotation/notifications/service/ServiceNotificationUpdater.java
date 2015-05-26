@@ -30,7 +30,7 @@ public class ServiceNotificationUpdater {
 	}
 
 	private NotificationPriority priority() {
-		return settings.notificationPriority.get();
+		return settings.notificationPriority().get();
 	}
 
 	public Mode mode() {

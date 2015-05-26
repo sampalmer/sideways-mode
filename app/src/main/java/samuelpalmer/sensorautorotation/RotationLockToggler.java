@@ -24,7 +24,7 @@ public class RotationLockToggler {
 	}
 
 	private Boolean enabled() {
-		return new ApplicationSettings().enabled.get();
+		return new ApplicationSettings().enabled().get();
 	}
 
 	private void toggle() {

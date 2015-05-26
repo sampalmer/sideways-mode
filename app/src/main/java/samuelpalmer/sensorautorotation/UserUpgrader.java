@@ -18,7 +18,7 @@ public class UserUpgrader {
 	private final int newAppVersion;
 
 	public UserUpgrader() {
-		lastVersionUserInstructedAbout = new ApplicationSettings().lastVersionUserInstructedAbout;
+		lastVersionUserInstructedAbout = new ApplicationSettings().lastVersionUserInstructedAbout();
 		newAppVersion = new VersionInfo().installedVersionCode();
 	}
 

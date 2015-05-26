@@ -15,7 +15,7 @@ public class EnvironmentErrorNotifier{
 		String messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
 		String formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
-		new ApplicationSettings().enabled.setAndCommit(false);
+		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
 	private void show(String message) {
