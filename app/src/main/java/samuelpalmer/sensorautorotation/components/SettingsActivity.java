@@ -31,21 +31,25 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		};
 
-		private final EventHandler<Void> onScreenOffSummaryUpdater = new EventHandler<Void>() {
+		private final EventHandler<Void> listPreferenceSummaryUpdater = new EventHandler<Void>() {
 			@Override
 			public void update(Void event) {
-				updateOnScreenOffSummary();
+				updateListPreferenceSummaries();
 			}
 		};
 
-		private void updateOnScreenOffSummary() {
-			ListPreference preference = (ListPreference)findPreference(settings.screenOffBehaviour().getKey());
-			preference.setSummary(preference.getEntry());
+		private void updateListPreferenceSummaries() {
+			for (ApplicationSettings.Setting<?> setting : new ApplicationSettings.Setting[]{ settings.screenOffBehaviour(), settings.notificationPriority() }) {
+				ListPreference preference = (ListPreference) findPreference(setting.getKey());
+				preference.setSummary(preference.getEntry());
+			}
 		}
 
 		private ApplicationSettings settings;
+
 		private EventRegistrar<Void> enabledChanged;
 		private EventRegistrar<Void> onScreenOffChanged;
+		private EventRegistrar<Void> notificationPriorityChanged;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -58,17 +62,19 @@ public class SettingsActivity extends PreferenceActivity {
 
 			addPreferencesFromResource(R.xml.preferences);
 
-			updateOnScreenOffSummary();
+			updateListPreferenceSummaries();
 
 			enabledChanged = settings.enabled().onChange();
 			onScreenOffChanged = settings.screenOffBehaviour().onChange();
+			notificationPriorityChanged = settings.notificationPriority().onChange();
 		}
 
 		@Override
 		public void onResume() {
 			super.onResume();
 			enabledChanged.subscribe(enabledUpdater);
-			onScreenOffChanged.subscribe(onScreenOffSummaryUpdater);
+			onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
+			notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
 			refresh();
 		}
@@ -81,7 +87,8 @@ public class SettingsActivity extends PreferenceActivity {
 		@Override
 		public void onPause() {
 			super.onPause();
-			onScreenOffChanged.unsubscribe(onScreenOffSummaryUpdater);
+			notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
+			onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
 			enabledChanged.unsubscribe(enabledUpdater);
 		}
 
