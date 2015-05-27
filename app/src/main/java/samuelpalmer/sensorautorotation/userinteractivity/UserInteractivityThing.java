@@ -1,21 +1,21 @@
 package samuelpalmer.sensorautorotation.userinteractivity;
 
 import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.OrientationMessenger;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StateMonitor;
+import samuelpalmer.sensorautorotation.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
 
 public class UserInteractivityThing extends State {
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationUpdater screenUpdater;
-	private final OrientationMessenger orientationMessenger;
+	private final OrientationSensorHandler orientationSensorHandler;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
 	public UserInteractivityThing(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
 		this.calculator = calculator;
 		this.screenUpdater = screenUpdater;
-		orientationMessenger = new OrientationMessenger(calculator);
+		orientationSensorHandler = new OrientationSensorHandler(calculator);
 		userInteractivityMonitor = new UserInteractivityMonitor(listener);
 	}
 
@@ -26,7 +26,7 @@ public class UserInteractivityThing extends State {
 
 	@Override
 	protected void stop() {
-		orientationMessenger.ensureStopped();
+		orientationSensorHandler.ensureStopped();
 		screenUpdater.ensureStopped();
 		userInteractivityMonitor.ensureStopped();
 	}
@@ -36,13 +36,13 @@ public class UserInteractivityThing extends State {
 		public void stateChanged(UserInteractivity user) {
 			if (user.active()) {
 				screenUpdater.ensureStarted();
-				orientationMessenger.ensureStarted();
+				orientationSensorHandler.ensureStarted();
 			} else {
 				//This should happen before stopping the below things since they need to be triggered by this.
 				calculator.reset();
 
 				screenUpdater.ensureStopped();
-				orientationMessenger.ensureStopped();
+				orientationSensorHandler.ensureStopped();
 			}
 		}
 	};
