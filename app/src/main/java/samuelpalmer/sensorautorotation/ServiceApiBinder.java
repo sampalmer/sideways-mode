@@ -20,9 +20,10 @@ public class ServiceApiBinder extends Binder {
 
 	public void toggleRotation() {
 		setAutoRotate(!calculator.autoRotate());
+		showStatusToast();
 	}
 
-	public void showStatusToast() {
+	private void showStatusToast() {
 		Toast
 			.makeText(ThisApplication.context(), serviceNotificationUpdater.mode().autoRotationStateResourceId(), Toast.LENGTH_SHORT)
 			.show();

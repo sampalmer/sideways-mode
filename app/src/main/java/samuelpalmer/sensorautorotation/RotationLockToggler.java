@@ -6,11 +6,9 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class RotationLockToggler {
 
-	private final boolean showStatusToast;
 	private final CompletionCallback callback;
 
-	public RotationLockToggler(boolean showStatusToast, CompletionCallback callback) {
-		this.showStatusToast = showStatusToast;
+	public RotationLockToggler(CompletionCallback callback) {
 		this.callback = callback;
 	}
 
@@ -36,9 +34,6 @@ public class RotationLockToggler {
 	private final ServiceCommandRunner.Command command = new ServiceCommandRunner.Command() {
 		public void run(ServiceApiBinder service) {
 			service.toggleRotation();
-			if (showStatusToast)
-				service.showStatusToast();
-
 			callback.completed();
 		}
 	};
