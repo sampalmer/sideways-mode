@@ -39,6 +39,7 @@ public class OrientationSensorHandler extends State {
 	@Override
 	protected void start() {
 		lastRotation = null;
+		listener.setCurrentRotation(-1);
 		listener.enable();
 	}
 
