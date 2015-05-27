@@ -60,9 +60,9 @@ public class ScreenOrientationController extends State {
 		}
 	}
 
-	private final EventHandler<Void> systemAutoRotationChanged = new EventHandler<Void>() {
+	private final EventHandler systemAutoRotationChanged = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			checkIfSystemAutoRotationWasEnabled();
 		}
 	};
@@ -76,9 +76,9 @@ public class ScreenOrientationController extends State {
 		}
 	}
 
-	private final EventHandler<Void> userRotationChanged = new EventHandler<Void>() {
+	private final EventHandler userRotationChanged = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			EnvironmentError.report(R.string.user_rotation_changed_message);
 		}
 	};

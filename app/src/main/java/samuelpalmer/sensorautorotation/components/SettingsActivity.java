@@ -27,16 +27,16 @@ public class SettingsActivity extends PreferenceActivity {
 
 	public static class SettingsFragment extends PreferenceFragment {
 
-		private final EventHandler<Void> enabledUpdater = new EventHandler<Void>() {
+		private final EventHandler enabledUpdater = new EventHandler() {
 			@Override
-			public void update(Void event) {
+			public void update() {
 				refresh();
 			}
 		};
 
-		private final EventHandler<Void> listPreferenceSummaryUpdater = new EventHandler<Void>() {
+		private final EventHandler listPreferenceSummaryUpdater = new EventHandler() {
 			@Override
-			public void update(Void event) {
+			public void update() {
 				updateListPreferenceSummaries();
 			}
 		};
@@ -50,9 +50,9 @@ public class SettingsActivity extends PreferenceActivity {
 
 		private ApplicationSettings settings;
 
-		private EventRegistrar<Void> enabledChanged;
-		private EventRegistrar<Void> onScreenOffChanged;
-		private EventRegistrar<Void> notificationPriorityChanged;
+		private EventRegistrar enabledChanged;
+		private EventRegistrar onScreenOffChanged;
+		private EventRegistrar notificationPriorityChanged;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {

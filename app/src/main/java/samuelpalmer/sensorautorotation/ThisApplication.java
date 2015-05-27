@@ -40,9 +40,9 @@ public class ThisApplication extends Application {
 			instructedVersion.setAndCommit(new VersionInfo().installedVersionCode());
 	}
 
-	private final EventHandler<Void> serviceStateUpdater = new EventHandler<Void>() {
+	private final EventHandler serviceStateUpdater = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			new ServiceController().updateFromSettings();
 		}
 	};

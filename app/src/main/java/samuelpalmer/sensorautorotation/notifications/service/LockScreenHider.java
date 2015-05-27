@@ -12,9 +12,9 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 public class LockScreenHider extends State {
 
 	private final LockScreenMonitor detector;
-	private final EventHandler<Void> handleChange;
+	private final EventHandler handleChange;
 
-	public LockScreenHider(EventHandler<Void> handleChange) {
+	public LockScreenHider(EventHandler handleChange) {
 		this.handleChange = handleChange;
 		this.detector = new LockScreenMonitor();
 	}

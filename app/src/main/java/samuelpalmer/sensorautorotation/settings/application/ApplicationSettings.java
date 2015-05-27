@@ -31,25 +31,25 @@ public class ApplicationSettings {
 
 	public class Setting<T> {
 
-		private final EventRegistrar<Void> onChange = new UpdatingEventRegistrar<Void>() {
+		private final EventRegistrar onChange = new UpdatingEventRegistrar() {
 
 			private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 				@Override
 				public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 					if (key.equals(Setting.this.key))
-						report(null);
+						report();
 				}
 			};
 
 			@Override
-			public void subscribe(EventHandler<Void> subscriber) {
+			public void subscribe(EventHandler subscriber) {
 				if (noSubscriptions())
 					prefs.registerOnSharedPreferenceChangeListener(listener);
 				super.subscribe(subscriber);
 			}
 
 			@Override
-			public void unsubscribe(EventHandler<Void> subscriber) {
+			public void unsubscribe(EventHandler subscriber) {
 				super.unsubscribe(subscriber);
 				if (noSubscriptions())
 					prefs.unregisterOnSharedPreferenceChangeListener(listener);
@@ -117,7 +117,7 @@ public class ApplicationSettings {
 			return key;
 		}
 
-		public EventRegistrar<Void> onChange() {
+		public EventRegistrar onChange() {
 			return onChange;
 		}
 

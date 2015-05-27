@@ -15,9 +15,9 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public class LockScreenMonitor extends State {
 
-	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
+	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 
-	public EventRegistrar<Void> possiblyChanged() {
+	public EventRegistrar possiblyChanged() {
 		return onChange;
 	}
 
@@ -51,7 +51,7 @@ public class LockScreenMonitor extends State {
 	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			onChange.report(null);
+			onChange.report();
 		}
 	};
 }

@@ -9,9 +9,9 @@ import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 public class ScreenRotationMonitor extends State {
 
 	private ChangeDetector changeDetector;
-	private final UpdatingEventRegistrar<Void> onChange = new UpdatingEventRegistrar<>();
+	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 
-	public EventRegistrar<Void> onChange() {
+	public EventRegistrar onChange() {
 		return onChange;
 	}
 
@@ -61,7 +61,7 @@ public class ScreenRotationMonitor extends State {
 	private final Callback callback = new Callback() {
 		@Override
 		public void changed() {
-			onChange.report(null);
+			onChange.report();
 		}
 	};
 

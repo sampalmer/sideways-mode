@@ -26,10 +26,10 @@ public class Setting<T> {
 	}
 
 	private final ChangeRegistrar onExternalChange = new ChangeRegistrar();
-	public final EventRegistrar<Void> onExternalChange() { return onExternalChange; }
+	public final EventRegistrar onExternalChange() { return onExternalChange; }
 
 	private final ChangeRegistrar onChange = new ChangeRegistrar();
-	public final EventRegistrar<Void> onChange() { return onChange; }
+	public final EventRegistrar onChange() { return onChange; }
 
 	public T get() {
 		String value = getOrNull(key);
@@ -64,7 +64,7 @@ public class Setting<T> {
 	}
 
 	//Mostly copied from ApplicationSettings.Setting
-	private class ChangeRegistrar extends UpdatingEventRegistrar<Void> {
+	private class ChangeRegistrar extends UpdatingEventRegistrar {
 
 		private boolean registered;
 		private boolean enabled = true;
@@ -73,18 +73,18 @@ public class Setting<T> {
 			@Override
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);
-				report(null);
+				report();
 			}
 		};
 
 		@Override
-		public void subscribe(EventHandler<Void> subscriber) {
+		public void subscribe(EventHandler subscriber) {
 			super.subscribe(subscriber);
 			updateRegistration();
 		}
 
 		@Override
-		public void unsubscribe(EventHandler<Void> subscriber) {
+		public void unsubscribe(EventHandler subscriber) {
 			super.unsubscribe(subscriber);
 			updateRegistration();
 		}

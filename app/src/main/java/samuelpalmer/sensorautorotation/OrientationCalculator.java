@@ -16,13 +16,13 @@ public class OrientationCalculator {
 
 	private Orientation device = DEFAULT;
 
-	private final UpdatingEventRegistrar<Void> listener;
+	private final UpdatingEventRegistrar listener;
 
 	public OrientationCalculator(ApplicationSettings settings, Screen screen, ApplicationState state) {
 		this.settings = settings;
 		this.screen = screen;
 		this.state = state;
-		listener = new UpdatingEventRegistrar<>();
+		listener = new UpdatingEventRegistrar();
 	}
 
 	public void reset() {
@@ -73,10 +73,10 @@ public class OrientationCalculator {
 	}
 
 	private void reportUpdate() {
-		listener.report(null);
+		listener.report();
 	}
 
-	public EventRegistrar<Void> onChange() {
+	public EventRegistrar onChange() {
 		return listener;
 	}
 

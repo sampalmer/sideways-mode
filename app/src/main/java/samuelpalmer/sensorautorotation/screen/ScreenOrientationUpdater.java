@@ -32,9 +32,9 @@ public class ScreenOrientationUpdater extends State {
 		calculator.onChange().unsubscribe(applyChange);
 	}
 
-	private final EventHandler<Void> applyChange = new EventHandler<Void>() {
+	private final EventHandler applyChange = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			refresh();
 		}
 	};
@@ -46,16 +46,16 @@ public class ScreenOrientationUpdater extends State {
 
 	private void propose() {
 		screen.propose(calculator.proposedScreenOrientation());
-		onProposedOrientationChanged.report(null);
+		onProposedOrientationChanged.report();
 	}
 
 	private boolean upsideDown() {
 		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);
 	}
 
-	private final UpdatingEventRegistrar<Void> onProposedOrientationChanged = new UpdatingEventRegistrar<>();
+	private final UpdatingEventRegistrar onProposedOrientationChanged = new UpdatingEventRegistrar();
 
-	public EventRegistrar<Void> onChange() {
+	public EventRegistrar onChange() {
 		return onProposedOrientationChanged;
 	}
 }

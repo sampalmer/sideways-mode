@@ -48,9 +48,9 @@ public class OrientationSensorHandler extends State {
 		}
 	};
 
-	private final EventHandler<Void> deviceRotationOrAutoRotationChanged = new EventHandler<Void>() {
+	private final EventHandler deviceRotationOrAutoRotationChanged = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			updateRotationBias();
 		}
 	};

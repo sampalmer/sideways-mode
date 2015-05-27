@@ -11,7 +11,7 @@ public class ServiceNotificationManager extends State {
 
 	private final ScreenOrientationUpdater screen;
 	private final LockScreenHider notificationHider;
-	private final EventRegistrar<Void> onPriorityChanged;
+	private final EventRegistrar onPriorityChanged;
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final ServiceNotificationUpdater notificationUpdater;
 
@@ -44,9 +44,9 @@ public class ServiceNotificationManager extends State {
 		notificationHider.ensureStopped();
 	}
 
-	private final EventHandler<Void> updateNotification = new EventHandler<Void>() {
+	private final EventHandler updateNotification = new EventHandler() {
 		@Override
-		public void update(Void event) {
+		public void update() {
 			notificationUpdater.update();
 		}
 	};
