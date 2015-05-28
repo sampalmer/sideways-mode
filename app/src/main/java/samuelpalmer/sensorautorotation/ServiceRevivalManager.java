@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
+import android.util.Log;
 
 public class ServiceRevivalManager extends State {
 	private final ServiceReviver reviver;
@@ -29,6 +30,7 @@ public class ServiceRevivalManager extends State {
 		@Override
 		public void onLowMemory() {
 			reviver.ensureStarted();
+			Log.i(ServiceReviver.class.getSimpleName(), "Detected low system RAM. Prepared monitoring to revive the service.");
 		}
 	};
 }
