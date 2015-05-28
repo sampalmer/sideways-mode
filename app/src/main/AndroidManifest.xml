@@ -29,21 +29,19 @@
 		>
 
 		<activity
-			android:name=".components.MainActivity"
+			android:name=".components.InstructionsActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/instructions_heading"
+			android:parentActivityName=".components.SettingsActivity" />
+
+		<activity
+			android:name=".components.SettingsActivity"
 			android:configChanges="orientation|screenSize"
 		>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-		</activity>
-
-		<activity
-			android:name=".components.SettingsActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/action_settings"
-			android:parentActivityName=".components.MainActivity"
-			tools:ignore="UnusedAttribute">
 		</activity>
 
 		<activity android:name=".components.DialogActivity"
