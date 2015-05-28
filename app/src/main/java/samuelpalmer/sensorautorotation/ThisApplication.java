@@ -22,8 +22,8 @@ public class ThisApplication extends Application {
 		context = this;
 
 		ensureVersionRecorded();
+		serviceStateUpdater.update();
 		enabledPreference = new ApplicationSettings().enabled();
-
 		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
 

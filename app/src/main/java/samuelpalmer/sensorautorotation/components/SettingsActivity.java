@@ -8,15 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.settings.application.SettingsFragment;
 
 public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		new ServiceController().updateFromSettings();
 
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment())
