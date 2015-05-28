@@ -26,8 +26,6 @@ public class RotationLockToggler {
 	}
 
 	private void toggle() {
-		//Otherwise if the service wasn't running, it will be stopped on unbind.
-		new ServiceController().ensureStarted();
 		new ServiceCommandRunner(command).run();
 	}
 
