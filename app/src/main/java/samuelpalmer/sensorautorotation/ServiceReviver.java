@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.os.SystemClock;
 
-import samuelpalmer.sensorautorotation.components.StartServiceReceiver;
+import samuelpalmer.sensorautorotation.components.EnsureAppLoadedReceiver;
 
 /**
  * Useful for when the service is killed due to out-of-memory conditions
@@ -29,7 +29,7 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		Intents intents = new Intents(StartServiceReceiver.class);
+		Intents intents = new Intents(EnsureAppLoadedReceiver.class);
 		return intents.makePending();
 	}
 

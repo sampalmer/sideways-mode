@@ -47,9 +47,6 @@
 		<activity android:name=".components.DialogActivity"
 			android:theme="@style/Theme.NoDisplay"/>
 
-		<receiver
-			android:name=".components.StartServiceReceiver" />
-
 		<activity
 			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
