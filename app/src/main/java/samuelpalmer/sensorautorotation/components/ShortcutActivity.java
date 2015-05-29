@@ -14,6 +14,8 @@ public class ShortcutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		Intent shortcut = new Intent();
+
+		//If you try to send a broadcast from a shortcut, Android seems to just say "App not installed", so we're using a dummy activity.
 		Intent launchIntent = new Intent(this, ToggleRotationLockActivity.class);
 
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent);

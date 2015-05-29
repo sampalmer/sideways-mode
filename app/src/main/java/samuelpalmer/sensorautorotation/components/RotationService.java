@@ -7,12 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.ServiceApiBinder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
+import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationPoster;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationUpdater;
@@ -24,6 +25,27 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 import samuelpalmer.sensorautorotation.userinteractivity.UserInteractivityThing;
 
 public class RotationService extends Service {
+
+	/**
+	 * I'm using this instead of binding since this is mostly a single-threaded application and this
+	 * avoids the complexities of binding and inability to determine service running state.
+	 *
+	 * It should be reliable because the service maintains this value. If the service is killed by
+	 * the OS due to low memory or something like that, I believe the whole process is killed, which
+	 * should cause this value to be reset anyway.
+	 */
+	private static RotationService instance;
+
+	public static boolean isRunning() {
+		return instance != null;
+	}
+
+	public static RotationService instance() {
+		if (!isRunning())
+			throw new RuntimeException("Service not running");
+
+		return instance;
+	}
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -62,6 +84,9 @@ public class RotationService extends Service {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
 		serviceRevivalManager.ensureStarted();
+
+		//Don't want to expose this until initialisation has finished
+		instance = this;
 	}
 
 	@Override
@@ -79,12 +104,14 @@ public class RotationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return new ServiceApiBinder(serviceNotificationUpdater, calculator);
+		return null;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		instance = null;
 
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
@@ -93,6 +120,21 @@ public class RotationService extends Service {
 		serviceRevivalManager.ensureStopped();
 
 		applicationState.clear();
+	}
+
+	public void toggleRotation() {
+		setAutoRotate(!calculator.autoRotate());
+		showStatusToast();
+	}
+
+	private void showStatusToast() {
+		Toast
+				.makeText(ThisApplication.context(), serviceNotificationUpdater.mode().autoRotationStateResourceId(), Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	private void setAutoRotate(boolean newValue) {
+		calculator.setAutoRotate(newValue);
 	}
 
 }

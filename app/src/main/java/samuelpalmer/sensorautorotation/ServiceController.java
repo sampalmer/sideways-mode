@@ -9,13 +9,16 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class ServiceController {
 
 	private void ensureStarted() {
-		ComponentName service = ThisApplication.context().startService(intent());
-		if (service == null)
-			throw new RuntimeException("Service doesn't exist");
+		if (!RotationService.isRunning()) {
+			ComponentName name = ThisApplication.context().startService(intent());
+			if (name == null)
+				throw new RuntimeException("Service doesn't exist");
+		}
 	}
 
 	private void ensureStopped() {
-		ThisApplication.context().stopService(intent());
+		if (RotationService.isRunning())
+			ThisApplication.context().stopService(intent());
 	}
 
 	public void updateFromSettings() {

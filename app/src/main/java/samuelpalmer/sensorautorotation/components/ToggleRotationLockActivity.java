@@ -10,14 +10,8 @@ public class ToggleRotationLockActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		new RotationLockToggler(callback).go();
+		new RotationLockToggler().go();
+		finish();
 	}
-
-	private final RotationLockToggler.CompletionCallback callback = new RotationLockToggler.CompletionCallback() {
-		@Override
-		public void completed() {
-			finish();
-		}
-	};
 
 }
