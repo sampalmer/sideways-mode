@@ -2,13 +2,11 @@ package samuelpalmer.sensorautorotation;
 
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.components.RotationService;
-
 public class RotationLockToggler {
 
 	public void go() {
-		if (RotationService.isRunning())
-			RotationService.instance().toggleRotation();
+		if (ServiceHolder.isRunning())
+			ServiceHolder.instance().toggleRotation();
 		else
 			showNotRunningMessage();
 	}

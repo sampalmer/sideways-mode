@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.components;
 
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
+import samuelpalmer.sensorautorotation.ServiceHolder;
 import samuelpalmer.sensorautorotation.ServiceRevivalManager;
 import samuelpalmer.sensorautorotation.ThisApplication;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
@@ -25,27 +25,6 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 import samuelpalmer.sensorautorotation.userinteractivity.UserInteractivityThing;
 
 public class RotationService extends Service {
-
-	/**
-	 * I'm using this instead of binding since this is mostly a single-threaded application and this
-	 * avoids the complexities of binding and inability to determine service running state.
-	 *
-	 * It should be reliable because the service maintains this value. If the service is killed by
-	 * the OS due to low memory or something like that, I believe the whole process is killed, which
-	 * should cause this value to be reset anyway.
-	 */
-	private static RotationService instance;
-
-	public static boolean isRunning() {
-		return instance != null;
-	}
-
-	public static RotationService instance() {
-		if (!isRunning())
-			throw new RuntimeException("Service not running");
-
-		return instance;
-	}
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -86,7 +65,7 @@ public class RotationService extends Service {
 		serviceRevivalManager.ensureStarted();
 
 		//Don't want to expose this until initialisation has finished
-		instance = this;
+		ServiceHolder.started(this);
 	}
 
 	@Override
@@ -111,7 +90,7 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		instance = null;
+		ServiceHolder.stopped();
 
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
