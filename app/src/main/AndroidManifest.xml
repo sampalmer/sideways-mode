@@ -32,7 +32,14 @@
 			android:name=".instructions.InstructionsActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/instructions_heading"
-			android:parentActivityName=".components.SettingsActivity" />
+			android:parentActivityName=".components.SettingsActivity"
+			tools:ignore="UnusedAttribute">
+
+			<!-- Enables up navigation in API 14 & 15 -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".components.SettingsActivity" />
+		</activity>
 
 		<activity
 			android:name=".components.SettingsActivity"
