@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.SettingsFragment;
 
 public class SettingsActivity extends PreferenceActivity {
