@@ -11,18 +11,36 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 
 class InstructionsPagerAdapter extends FragmentPagerAdapter {
-	private static final int[] PAGE_TEXT_IDS = new int[] {
-			R.string.instructions_introduction,
-			R.string.instructions_modes,
-			R.string.instructions_toggling,
-			R.string.instructions_fixed_rotation,
-			R.string.instructions_auto_rotation,
-			R.string.instructions_overridden,
-			R.string.instructions_uninstalling,
-			R.string.instructions_help,
+	private static final CharSequence[] PAGE_TEXT_IDS = new CharSequence[] {
+			StringResource.format(R.string.instructions_introduction),
+			StringResource.format(R.string.instructions_modes),
+			StringResource.format(R.string.instructions_toggling, smallAppClause()),
+			StringResource.format(R.string.instructions_fixed_rotation),
+			StringResource.format(R.string.instructions_auto_rotation),
+			StringResource.format(R.string.instructions_overridden),
+			StringResource.format(R.string.instructions_uninstalling),
+			StringResource.format(R.string.instructions_help)
 	};
+
+	private static String smallAppClause() {
+		if (supportsSmallApp())
+			return StringResource.format(R.string.instructions_toggling_small_app, R.string.app_name);
+		else
+			return "";
+	}
+
+	private static boolean supportsSmallApp() {
+		try {
+			Class.forName("com.sony.smallapp.SmallApplication");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+
+		return true;
+	}
 
 	public InstructionsPagerAdapter(FragmentManager fragmentManager) {
 		super(fragmentManager);
