@@ -9,6 +9,6 @@ import samuelpalmer.sensorautorotation.RotationLockToggler;
 public class ToggleRotationLockReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new RotationLockToggler().go();
+		RotationLockToggler.toggle();
 	}
 }
