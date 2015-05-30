@@ -59,7 +59,7 @@
 	<string name="instructions_fixed_rotation">When auto-rotation is off, rotating your device will change whether this app thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen, so if the screen is facing sideways, this app will think you\'re also sideways. Your position is shown in the notification.\n\nUse this mode when you want to change your position or you don\'t want automatic screen orientation. For example, use this if you\'re upright and you want to lie down.</string>
 	<string name="instructions_auto_rotation">Automatic screen rotation works the same way as your device\'s screen rotation, except the screen will face <i>you</i> instead of always facing upright. For example, if the app thinks you\'re sideways, the screen will rotate to face sideways.</string>
 	<string name="instructions_overridden">Some of the apps on your device might control the screen orientation themselves, so this app might not work with them. When this happens, the notification will show this (icons).</string>
-	<string name="instructions_uninstalling">To uninstall this, use the menu item on this screen so the screen rotation isn\'t left in the wrong state.</string>
+	<string name="instructions_uninstalling">To uninstall this, use the menu item on the main screen so the screen rotation isn\'t left in the wrong state.</string>
 	<string name="instructions_help">If the screen is facing the wrong way:\n
 1. Turn the screen off and on again to reset your position to upright.\n
 2. Or turn auto-rotation off and rotate your device until the screen is facing the right way.
