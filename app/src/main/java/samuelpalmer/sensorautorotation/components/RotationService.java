@@ -38,6 +38,9 @@ public class RotationService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
+		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
+		ServiceHolder.started(this);
+
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentError.clear();
 
@@ -63,9 +66,6 @@ public class RotationService extends Service {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
 		serviceRevivalManager.ensureStarted();
-
-		//Don't want to expose this until initialisation has finished
-		ServiceHolder.started(this);
 	}
 
 	@Override
@@ -90,7 +90,6 @@ public class RotationService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		ServiceHolder.stopped();
 
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
@@ -99,6 +98,8 @@ public class RotationService extends Service {
 		serviceRevivalManager.ensureStopped();
 
 		applicationState.clear();
+
+		ServiceHolder.stopped();
 	}
 
 	public void toggleRotation() {
