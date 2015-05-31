@@ -66,7 +66,7 @@ public class UserUpgrader {
 		return intents.makePending(intent);
 	}
 
-	private String messageTitle() {
+	private CharSequence messageTitle() {
 		return StringResource.format(R.string.upgraded_title, R.string.app_name);
 	}
 

@@ -33,7 +33,7 @@ public class DialogActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return new AlertDialog.Builder(getActivity())
-					.setMessage(getArguments().getString(INTENT_EXTRA_MESSAGE))
+					.setMessage(getArguments().getCharSequence(INTENT_EXTRA_MESSAGE))
 					.setTitle(getArguments().getCharSequence(INTENT_EXTRA_TITLE))
 					.create();
 		}

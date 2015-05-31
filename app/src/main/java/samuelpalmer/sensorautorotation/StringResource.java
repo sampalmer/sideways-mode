@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
 public abstract class StringResource {
-	public static String format(int formatStringResource, Object... formatArguments) {
+	public static CharSequence format(int formatStringResource, Object... formatArguments) {
 		return ThisApplication.context().getString(formatStringResource, lookupTextIfNecessary(formatArguments));
 	}
 

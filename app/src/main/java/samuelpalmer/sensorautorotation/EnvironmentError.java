@@ -12,13 +12,13 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public abstract class EnvironmentError {
 
 	public static void report(int messageResourceId, Object... messageArguments) {
-		String messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		String formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
+		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
+		CharSequence formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
 		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
-	private static void show(String message) {
+	private static void show(CharSequence message) {
 		Notification notification = NotificationBuilderCompat.create()
 				.setSmallIcon(R.drawable.ic_error)
 				.setContentIntent(makeShowMessage(message))
@@ -37,7 +37,7 @@ public abstract class EnvironmentError {
 		return StringResource.get(R.string.app_name);
 	}
 
-	private static PendingIntent makeShowMessage(String message) {
+	private static PendingIntent makeShowMessage(CharSequence message) {
 		Intents intents = new Intents(DialogActivity.class);
 		Intent intent = intents.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)

@@ -34,7 +34,7 @@ class InstructionsPagerAdapter extends FragmentPagerAdapter {
 			}
 	};
 
-	private static String smallAppClause() {
+	private static CharSequence smallAppClause() {
 		if (supportsSmallApp())
 			return StringResource.format(R.string.instructions_toggling_small_app, R.string.app_name);
 		else
