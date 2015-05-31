@@ -45,7 +45,7 @@ public class ThisApplication extends Application {
 	private final EventHandler serviceStateUpdater = new EventHandler() {
 		@Override
 		public void update() {
-			new ServiceController().updateFromSettings();
+			ServiceController.updateFromSettings();
 		}
 	};
 }
