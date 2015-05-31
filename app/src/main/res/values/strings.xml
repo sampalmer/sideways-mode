@@ -37,13 +37,15 @@
 	<string name="on_screen_off_do_nothing">Do nothing</string>
 	<string name="on_screen_off_lock_rotation">Lock screen rotation</string>
 
+	<string name="notification_priority">Notification priority</string>
 	<string name="notification_priority_high">High</string>
 	<string name="notification_priority_normal">Normal</string>
 	<string name="notification_priority_low">Low</string>
 
-	<string name="notification_priority">Notification priority</string>
 	<string name="uninstall_title">Uninstall?</string>
 	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
+
+	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
 	<string name="missing_accelerometer_message">This application needs an accelerometer to run, but it didn\'t find one in this device. If the device does have one, try using the device\'s \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
 	<string name="user_rotation_changed_message">Another application has changed the screen orientation.</string>
