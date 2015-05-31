@@ -20,7 +20,9 @@ class InstructionsPagerAdapter extends FragmentPagerAdapter {
 			StringResource.format(R.string.instructions_toggling, smallAppClause()),
 			StringResource.format(R.string.instructions_fixed_rotation),
 			StringResource.format(R.string.instructions_auto_rotation),
-			StringResource.format(R.string.instructions_overridden),
+			StringResource.format(R.string.instructions_position),
+			StringResource.format(R.string.instructions_position_changing),
+			StringResource.format(R.string.instructions_overridden, R.string.notification_overridden),
 			StringResource.format(R.string.instructions_uninstalling),
 			StringResource.format(R.string.instructions_help)
 	};

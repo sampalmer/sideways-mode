@@ -54,15 +54,17 @@
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
 	<string name="instructions_introduction">Welcome to [Rotation]! This replaces your device\'s screen rotation, so don\'t try to control this app with [the device\'s screen rotation settings](link to display settings).</string>
-	<string name="instructions_modes">You can turn auto-rotation on (icon) or off (icons). To see if it\'s on, look at the notification in the notification drawer.</string>
-	<string name="instructions_toggling">To turn auto-rotation on or off, just touch the notification. You can also make a home screen shortcut %1$sto do this.</string>
+	<string name="instructions_modes">There are two modes: Auto-Rotate and Locked. To see which one you\'re using, look at the notification in the notification drawer.</string>
+	<string name="instructions_toggling">To change mode, just touch the notification. You can also make a home screen shortcut %1$sto do this.</string>
 	<string name="instructions_toggling_small_app">"or open the %1$s small app "</string> <!-- Using double-quotes to preserve the trailing space -->
-	<string name="instructions_fixed_rotation">When auto-rotation is off, rotating your device will change whether this app thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen, so if the screen is facing sideways, this app will think you\'re also sideways. Your position is shown in the notification.\n\nUse this mode when you want to change your position or you don\'t want automatic screen orientation. For example, use this if you\'re upright and you want to lie down.</string>
-	<string name="instructions_auto_rotation">Automatic screen rotation works the same way as your device\'s screen rotation, except the screen will face <i>you</i> instead of always facing upright. For example, if the app thinks you\'re sideways, the screen will rotate to face sideways.</string>
-	<string name="instructions_overridden">Some of the apps on your device might control the screen orientation themselves, so this app might not work with them. When this happens, the notification will show this (icons).</string>
-	<string name="instructions_uninstalling">To uninstall this, use the menu item on this app\'s main screen so the screen rotation isn\'t left in the wrong state.</string>
-	<string name="instructions_help">If the screen is facing the wrong way:\n
+	<string name="instructions_fixed_rotation">In Locked mode, rotating your device won\'t change the screen orientation. Instead, the screen will stay in its last orientation.</string>
+	<string name="instructions_auto_rotation">Auto-Rotate mode works the same way as your device\'s screen rotation, except the screen will face you instead of always facing up. For example, if the app thinks you\'re sideways, the screen will rotate to face sideways.</string>
+	<string name="instructions_position">Your orientation (whether you\'re lying down or upright) is also tracked. This is also shown in the notification.</string>
+	<string name="instructions_position_changing">To change your orientation, use Locked mode. In this mode, rotating your device will change whether this app thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen. For example, if the screen is facing sideways, this app will think you\'re sideways.</string>
+	<string name="instructions_overridden">Some of the apps on your device might control the screen orientation themselves, so this app might not work with them. When this happens, the notification will show \"%1$s\".</string>
+	<string name="instructions_uninstalling">To uninstall this, use the menu item on this app\'s main screen so the screen orientation isn\'t left in the wrong state.</string>
+	<string name="instructions_help">If the screen is facing the wrong way, either\n
 1. Turn the screen off and on again to reset your position to upright.\n
-2. Or turn auto-rotation off and rotate your device until the screen is facing the right way.
+2. Or turn Auto-Rotate off and rotate your device until the screen is facing the right way.
 </string>
 </resources>
