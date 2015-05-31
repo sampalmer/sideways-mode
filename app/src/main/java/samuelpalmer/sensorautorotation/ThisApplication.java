@@ -9,6 +9,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ThisApplication extends Application {
 
+	public static final String TAG = ThisApplication.class.getSimpleName();
 	private ApplicationSettings.Setting<Boolean> enabledPreference;
 	private static Context context;
 
@@ -19,7 +20,7 @@ public class ThisApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.i(ThisApplication.class.getSimpleName(), "App created");
+		Log.i(TAG, "App created");
 
 		context = this;
 
@@ -34,6 +35,8 @@ public class ThisApplication extends Application {
 		super.onTerminate();
 
 		enabledPreference.onChange().unsubscribe(serviceStateUpdater);
+
+		Log.i(TAG, "App terminated");
 	}
 
 	private void ensureVersionRecorded() {

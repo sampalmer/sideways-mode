@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
+import android.util.Log;
+
 import samuelpalmer.sensorautorotation.components.RotationService;
 
 /**
@@ -12,6 +14,7 @@ import samuelpalmer.sensorautorotation.components.RotationService;
  */
 public abstract class ServiceHolder {
 
+	public static final String TAG = ServiceHolder.class.getSimpleName();
 	private static RotationService instance;
 
 	public static boolean isRunning() {
@@ -30,6 +33,8 @@ public abstract class ServiceHolder {
 			throw new RuntimeException("Already running");
 
 		ServiceHolder.instance = instance;
+
+		Log.i(TAG, "Service started");
 	}
 
 	public static void stopped() {
@@ -37,5 +42,7 @@ public abstract class ServiceHolder {
 			throw new RuntimeException("Not running");
 
 		instance = null;
+
+		Log.i(TAG, "Service stopped");
 	}
 }
