@@ -16,16 +16,16 @@ import samuelpalmer.sensorautorotation.StringResource;
 
 class InstructionsPagerAdapter extends FragmentPagerAdapter {
 	private static final InstructionsPage[] PAGES = new InstructionsPage[] {
-			new InstructionsPage(R.string.instructions_introduction, R.string.app_name),
-			new InstructionsPage(R.string.instructions_modes, R.string.screen_rotation_disabled_portrait),
-			new InstructionsPage(R.string.instructions_toggling, smallAppClause()),
-			new InstructionsPage(R.string.instructions_fixed_rotation),
-			new InstructionsPage(R.string.instructions_auto_rotation),
-			new InstructionsPage(R.string.instructions_position),
-			new InstructionsPage(R.string.instructions_position_changing),
-			new InstructionsPage(R.string.instructions_overridden, R.string.notification_overridden),
-			new InstructionsPage(R.string.instructions_uninstalling),
-			new InstructionsPage(R.string.instructions_help) {
+			new InstructionsPage("rotation.svg", R.string.instructions_introduction, R.string.app_name),
+			new InstructionsPage("notification.svg", R.string.instructions_modes, R.string.screen_rotation_disabled_portrait),
+			new InstructionsPage("rotation.svg", R.string.instructions_toggling, smallAppClause()),
+			new InstructionsPage("portrait_lock.svg", R.string.instructions_fixed_rotation),
+			new InstructionsPage("rotation.svg", R.string.instructions_auto_rotation),
+			new InstructionsPage("person.svg", R.string.instructions_position),
+			new InstructionsPage("person.svg", R.string.instructions_position_changing),
+			new InstructionsPage("rotation_overridden.svg", R.string.instructions_overridden, R.string.notification_overridden),
+			new InstructionsPage("delete.svg", R.string.instructions_uninstalling),
+			new InstructionsPage("need_help.svg", R.string.instructions_help) {
 				@Override
 				public void applyText(TextView pageText) {
 					super.applyText(pageText);
@@ -66,10 +66,17 @@ class InstructionsPagerAdapter extends FragmentPagerAdapter {
 			@Nullable
 			@Override
 			public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-				View page = inflater.inflate(R.layout.instructions_page, container, false);
-				TextView pageTextView = (TextView) page.findViewById(R.id.instructions_page_text);
-				PAGES[position].applyText(pageTextView);
-				return page;
+				View pageLayout = inflater.inflate(R.layout.instructions_page, container, false);
+				InstructionsPage page = PAGES[position];
+
+				TextView pageTextView = (TextView) pageLayout.findViewById(R.id.instructions_page_text);
+				page.applyText(pageTextView);
+
+				com.caverock.androidsvg.SVGImageView background = (com.caverock.androidsvg.SVGImageView) pageLayout.findViewById(R.id.instructions_page_background);
+				background.setAlpha(0.1f);
+				page.setBackground(background);
+
+				return pageLayout;
 			}
 		};
 	}
