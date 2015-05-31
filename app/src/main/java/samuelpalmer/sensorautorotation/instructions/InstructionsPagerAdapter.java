@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 
 class InstructionsPagerAdapter extends FragmentPagerAdapter {
 	private static final InstructionsPage[] PAGES = new InstructionsPage[] {
-			new InstructionsPage(R.string.instructions_introduction),
+			new InstructionsPage(R.string.instructions_introduction, R.string.app_name),
 			new InstructionsPage(R.string.instructions_modes),
 			new InstructionsPage(R.string.instructions_toggling, smallAppClause()),
 			new InstructionsPage(R.string.instructions_fixed_rotation),

@@ -53,7 +53,7 @@
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
-	<string name="instructions_introduction">Welcome to [Rotation]! This replaces your device\'s screen rotation, so don\'t try to control this app with [the device\'s screen rotation settings](link to display settings).</string>
+	<string name="instructions_introduction">Welcome to %1$s! This replaces your device\'s screen rotation, so don\'t try to control this app with [the device\'s screen rotation settings](link to display settings).</string>
 	<string name="instructions_modes">There are two modes: Auto-Rotate and Locked. To see which one you\'re using, look at the notification in the notification drawer.</string>
 	<string name="instructions_toggling">To change mode, just touch the notification. You can also make a home screen shortcut %1$sto do this.</string>
 	<string name="instructions_toggling_small_app">"or open the %1$s small app "</string> <!-- Using double-quotes to preserve the trailing space -->
