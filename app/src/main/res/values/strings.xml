@@ -57,11 +57,11 @@
 	<string name="instructions_modes">There are two modes: %1$s and Locked. To see which one you\'re using, look at the notification in the notification drawer. In Locked mode, the notification will show the locked screen orientation, such as \"%2$s\".</string>
 	<string name="instructions_toggling">To change mode, touch the notification. You can also make a home screen shortcut %1$sto do this.</string>
 	<string name="instructions_toggling_small_app">"or open the %1$s small app "</string> <!-- Using double-quotes to preserve the trailing space -->
-	<string name="instructions_fixed_rotation">In Locked mode, you can\'t change the screen orientation by rotating the device.</string>
-	<string name="instructions_auto_rotation">%1$s mode is the same as the device\'s screen rotation, but the screen faces you instead of the sky. For example, if the app thinks you\'re sideways, the screen will face sideways.</string>
+	<string name="instructions_fixed_rotation">In Locked mode, you can\'t change the screen orientation.</string>
+	<string name="instructions_auto_rotation">%1$s mode is the same as the device\'s screen rotation, but the screen faces you instead of the sky. For example, if %2$s thinks you\'re sideways, the screen will face sideways.</string>
 	<string name="instructions_position">Your orientation (whether you\'re lying down or upright) is also tracked and shown in the notification.</string>
-	<string name="instructions_position_changing">To change your orientation, use Locked mode. In this mode, rotating the device will change whether this app thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen. For example, if the screen is facing sideways, this app will think you\'re sideways.</string>
-	<string name="instructions_overridden">This app might not work with apps that control the screen orientation. When this happens, the notification will show \"%1$s\".</string>
-	<string name="instructions_uninstalling">To uninstall, use the \"%1$s\" menu item on this app\'s main screen so the screen orientation won\'t be stuck.</string>
-	<string name="instructions_help">If the screen faces the wrong way:\n1. Turn %1$s off.\n2. Rotate the device until the screen is facing the right way.</string>
+	<string name="instructions_position_changing">To change your orientation, use Locked mode. In this mode, rotating the device will change whether %1$s thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen. For example, if the screen is facing sideways, %1$s will think you\'re sideways.</string>
+	<string name="instructions_overridden">%1$s might not work with apps that control the screen orientation. When this happens, the notification will show \"%2$s\".</string>
+	<string name="instructions_uninstalling">To uninstall, use the \"%1$s\" menu item on %2$s\'s main screen so the screen orientation won\'t be stuck.</string>
+	<string name="instructions_help">If the screen faces the wrong way:\n1. Turn %1$s mode off.\n2. Rotate the device until the screen is facing the right way.</string>
 </resources>
