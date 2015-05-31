@@ -17,15 +17,15 @@ import samuelpalmer.sensorautorotation.StringResource;
 class InstructionsPagerAdapter extends FragmentPagerAdapter {
 	private static final InstructionsPage[] PAGES = new InstructionsPage[] {
 			new InstructionsPage("rotation.svg", R.string.instructions_introduction, R.string.app_name),
-			new InstructionsPage("notification.svg", R.string.instructions_modes, R.string.screen_rotation_disabled_portrait),
+			new InstructionsPage("notification.svg", R.string.instructions_modes, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait),
 			new InstructionsPage("rotation.svg", R.string.instructions_toggling, smallAppClause()),
 			new InstructionsPage("portrait_lock.svg", R.string.instructions_fixed_rotation),
-			new InstructionsPage("rotation.svg", R.string.instructions_auto_rotation),
+			new InstructionsPage("rotation.svg", R.string.instructions_auto_rotation, R.string.screen_rotation_enabled),
 			new InstructionsPage("person.svg", R.string.instructions_position),
 			new InstructionsPage("person.svg", R.string.instructions_position_changing),
 			new InstructionsPage("rotation_overridden.svg", R.string.instructions_overridden, R.string.notification_overridden),
-			new InstructionsPage("delete.svg", R.string.instructions_uninstalling),
-			new InstructionsPage("need_help.svg", R.string.instructions_help) {
+			new InstructionsPage("delete.svg", R.string.instructions_uninstalling, R.string.action_uninstall),
+			new InstructionsPage("need_help.svg", R.string.instructions_help, R.string.screen_rotation_enabled) {
 				@Override
 				public void applyText(TextView pageText) {
 					super.applyText(pageText);
