@@ -6,14 +6,11 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import samuelpalmer.sensorautorotation.R;
 
 public class InstructionsActivity extends FragmentActivity {
 
 	private ViewPager pager;
-	private CirclePageIndicator indicator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +21,8 @@ public class InstructionsActivity extends FragmentActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		pager = (ViewPager)findViewById(R.id.pager);
-		pager.setAdapter(new InstructionsPagerAdapter(InstructionsActivity.this.getSupportFragmentManager()));
-
-		indicator = (CirclePageIndicator)findViewById(R.id.indicator);
-		indicator.setViewPager(pager);
+		InstructionsPagerAdapter pagerAdapter = new InstructionsPagerAdapter(InstructionsActivity.this.getSupportFragmentManager());
+		pager.setAdapter(pagerAdapter);
 	}
 
 	@Override
