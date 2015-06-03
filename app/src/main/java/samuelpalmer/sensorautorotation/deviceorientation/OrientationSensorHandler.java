@@ -25,7 +25,7 @@ public class OrientationSensorHandler extends State {
 	@Override
 	protected void start() {
 		lastRotation = null;
-		windowOrientationListener.setCurrentRotation(-1);
+		windowOrientationListener.setCurrentRotation(0);
 		windowOrientationListener.enable();
 
 		calculator.onChange().subscribe(deviceRotationOrAutoRotationChanged);
