@@ -109,7 +109,7 @@ public class RotationService extends Service {
 
 	private void showStatusToast() {
 		Toast
-				.makeText(ThisApplication.context(), serviceNotificationUpdater.mode().autoRotationStateResourceId(), Toast.LENGTH_SHORT)
+				.makeText(ThisApplication.context(), serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode()), Toast.LENGTH_SHORT)
 				.show();
 	}
 

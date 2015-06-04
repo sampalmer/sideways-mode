@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import samuelpalmer.sensorautorotation.CurrentStateSummary;
 import samuelpalmer.sensorautorotation.Orientation;
 import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.screen.Screen;
@@ -22,8 +23,13 @@ public class ServiceNotificationUpdater {
 	}
 
 	public void update() {
-		ServiceNotification builder = new ServiceNotification(priority(), mode(), overridden(), calculator.user());
+		Mode mode = mode();
+		ServiceNotification builder = new ServiceNotification(priority(), mode, overridden(), getSummary(mode));
 		poster.post(builder.build());
+	}
+
+	public CharSequence getSummary(Mode mode) {
+		return new CurrentStateSummary(mode, calculator.user()).buildTitle();
 	}
 
 	private NotificationPriority priority() {
