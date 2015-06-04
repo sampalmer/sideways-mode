@@ -1,40 +1,38 @@
 package samuelpalmer.sensorautorotation.instructions;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class InstructionsActivity extends FragmentActivity {
-
-	private ViewPager pager;
+public class InstructionsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_instructions);
 
-		//Enables "up" navigation in API 14 & 15
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		LinearLayout container = (LinearLayout) findViewById(R.id.container);
 
-		pager = (ViewPager)findViewById(R.id.pager);
-		InstructionsPagerAdapter pagerAdapter = new InstructionsPagerAdapter(InstructionsActivity.this.getSupportFragmentManager());
-		pager.setAdapter(pagerAdapter);
+		InstructionsPage[] pages = new InstructionsPages().PAGES;
+		for (InstructionsPage page : pages)
+			container.addView(inflate(page));
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			//Enables "up" navigation in API 14 & 15
-			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
-				return true;
-		}
+	private View inflate(InstructionsPage page) {
+		@SuppressLint("InflateParams") //The ids get mixed up if we add it to the container straight away
+		View pageLayout = getLayoutInflater().inflate(R.layout.instructions_page, null);
 
-		return super.onOptionsItemSelected(item);
+		TextView heading = (TextView) pageLayout.findViewById(R.id.instruction_heading);
+		TextView contents = (TextView) pageLayout.findViewById(R.id.instruction_contents);
+
+		heading.setText(page.heading);
+		contents.setText(page.text());
+		return pageLayout;
 	}
 
 }

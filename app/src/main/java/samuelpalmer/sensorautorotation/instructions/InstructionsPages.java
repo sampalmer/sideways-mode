@@ -1,29 +1,20 @@
 package samuelpalmer.sensorautorotation.instructions;
 
-import android.view.Gravity;
-import android.widget.TextView;
-
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
 class InstructionsPages {
 	public final InstructionsPage[] PAGES = new InstructionsPage[] {
-			new InstructionsPage("rotation.svg", R.string.instructions_introduction, R.string.app_name),
-			new InstructionsPage("notification.svg", R.string.instructions_modes, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait),
-			new InstructionsPage("rotation.svg", R.string.instructions_toggling, smallAppClause()),
-			new InstructionsPage("portrait_lock.svg", R.string.instructions_fixed_rotation),
-			new InstructionsPage("rotation.svg", R.string.instructions_auto_rotation, R.string.screen_rotation_enabled, R.string.app_name),
-			new InstructionsPage("person.svg", R.string.instructions_position),
-			new InstructionsPage("person.svg", R.string.instructions_position_changing, R.string.app_name),
-			new InstructionsPage("rotation_overridden.svg", R.string.instructions_overridden, R.string.app_name, R.string.notification_overridden),
-			new InstructionsPage("delete.svg", R.string.instructions_uninstalling, R.string.action_uninstall, R.string.app_name),
-			new InstructionsPage("need_help.svg", R.string.instructions_help, R.string.screen_rotation_enabled) {
-				@Override
-				public void applyText(TextView pageText) {
-					super.applyText(pageText);
-					pageText.setGravity(Gravity.START);
-				}
-			}
+			new InstructionsPage(R.string.instructions_introduction_heading, R.string.instructions_introduction_contents, R.string.app_name),
+			new InstructionsPage(R.string.instructions_modes_heading, R.string.instructions_modes_contents, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait),
+			new InstructionsPage(R.string.instructions_toggling_heading, R.string.instructions_toggling_contents, smallAppClause()),
+			new InstructionsPage(R.string.instructions_fixed_rotation_heading, R.string.instructions_fixed_rotation_contents),
+			new InstructionsPage(R.string.instructions_auto_rotation_heading, R.string.instructions_auto_rotation_contents, R.string.screen_rotation_enabled, R.string.app_name),
+			new InstructionsPage(R.string.instructions_position_heading, R.string.instructions_position_contents),
+			new InstructionsPage(R.string.instructions_position_changing_heading, R.string.instructions_position_changing_contents, R.string.app_name),
+			new InstructionsPage(R.string.instructions_overridden_heading, R.string.instructions_overridden_contents, R.string.app_name, R.string.notification_overridden),
+			new InstructionsPage(R.string.instructions_uninstalling_heading, R.string.instructions_uninstalling_contents, R.string.action_uninstall, R.string.app_name),
+			new InstructionsPage(R.string.instructions_help_heading, R.string.instructions_help_contents, R.string.screen_rotation_enabled)
 	};
 
 	private CharSequence smallAppClause() {
