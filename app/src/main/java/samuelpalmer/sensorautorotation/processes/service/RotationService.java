@@ -30,6 +30,7 @@ public class RotationService extends Service {
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotificationUpdater serviceNotificationUpdater;
 	private UserInteractivityThing userInteractivityThing;
+	private Toast statusToast;
 
 	@Override
 	public void onCreate() {
@@ -104,9 +105,11 @@ public class RotationService extends Service {
 	}
 
 	private void showStatusToast() {
-		Toast
-				.makeText(Process.context(), serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode()), Toast.LENGTH_SHORT)
-				.show();
+		if (statusToast != null)
+			statusToast.cancel();
+
+		statusToast = Toast.makeText(Process.context(), serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode()), Toast.LENGTH_SHORT);
+		statusToast.show();
 	}
 
 	private void setAutoRotate(boolean newValue) {
