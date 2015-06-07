@@ -9,7 +9,6 @@ import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationPoster;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationUpdater;
@@ -105,7 +104,7 @@ public class RotationService extends Service {
 
 	private void showStatusToast() {
 		CharSequence message = serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode());
-		sendBroadcast(new Intent(Process.context(), ToastReceiver.class).putExtra(null, message));
+		ToastReceiver.send(message);
 	}
 
 	private void setAutoRotate(boolean newValue) {

@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.widget.Toast;
 
-public abstract class Toaster {
+abstract class Toaster {
 
 	private static Toast statusToast;
 
