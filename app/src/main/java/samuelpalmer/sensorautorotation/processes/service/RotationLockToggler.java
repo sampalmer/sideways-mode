@@ -1,10 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.widget.Toast;
-
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 
 abstract class RotationLockToggler {
 
@@ -16,9 +14,8 @@ abstract class RotationLockToggler {
 	}
 
 	private static void showNotRunningMessage() {
-		Toast
-				.makeText(Process.context(), StringResource.format(R.string.not_running_message, R.string.app_name), Toast.LENGTH_SHORT)
-				.show();
+		CharSequence message = StringResource.format(R.string.not_running_message, R.string.app_name);
+		ToastReceiver.send(message);
 	}
 
 }
