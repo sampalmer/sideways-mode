@@ -5,7 +5,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.ThisApplication;
+import samuelpalmer.sensorautorotation.Process;
 
 /**
  * Basically a reinvented clone of NotificationCompat.Builder, except with a working setShowWhen
@@ -52,7 +52,7 @@ public class NotificationBuilderCompat {
 	}
 
 	private NotificationBuilderCompat() {
-		builder = new Notification.Builder(ThisApplication.context());
+		builder = new Notification.Builder(Process.context());
 	}
 
 	public NotificationBuilderCompat setSmallIcon(int icon) {

@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.screen.ScreenOrientationUpdater;
-import samuelpalmer.sensorautorotation.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {

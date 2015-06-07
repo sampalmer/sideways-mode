@@ -36,6 +36,6 @@ public abstract class SystemServices {
 	}
 
 	private static Object get(String name) {
-		return ThisApplication.context().getSystemService(name);
+		return Process.context().getSystemService(name);
 	}
 }

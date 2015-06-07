@@ -21,7 +21,7 @@
 		android:required="true" />
 
 	<application
-		android:name=".ThisApplication"
+		android:name=".Process"
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
@@ -29,14 +29,14 @@
 		>
 
 		<activity
-			android:name=".instructions.InstructionsActivity"
+			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/instructions_heading"
-			android:parentActivityName=".components.SettingsActivity"
+			android:parentActivityName=".processes.ui.SettingsActivity"
 			tools:ignore="UnusedAttribute" />
 
 		<activity
-			android:name=".components.SettingsActivity"
+			android:name=".processes.ui.SettingsActivity"
 			android:configChanges="orientation|screenSize"
 		>
 			<intent-filter>
@@ -45,22 +45,24 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".components.DialogActivity"
+		<activity android:name=".processes.ui.DialogActivity"
 			android:theme="@style/Theme.NoDisplay"/>
 
 		<activity
-			android:name=".components.ToggleRotationLockActivity"
+			android:name=".processes.ui.ToggleRotationLockActivity"
 			android:exported="true"
 			android:label="Toggle Rotation Lock"
 			android:theme="@android:style/Theme.NoDisplay"
 			android:launchMode="singleTask"
 			android:taskAffinity=""
-			android:excludeFromRecents="true" />
+			android:excludeFromRecents="true"
+			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<receiver android:name=".components.ToggleRotationLockReceiver" />
+		<receiver android:name=".components.ToggleRotationLockReceiver"
+		          android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<activity
-			android:name=".components.ShortcutActivity"
+			android:name=".processes.ui.ShortcutActivity"
 		    android:label="@string/toggle_rotation_lock"
 		>
 			<intent-filter>
@@ -70,9 +72,10 @@
 		</activity>
 
 		<service
-			android:name=".components.RotationService"
+			android:name=".processes.service.RotationService"
 			android:enabled="true"
-			android:exported="false" />
+			android:exported="false"
+			android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<receiver android:name=".components.EnsureAppLoadedReceiver">
 			<intent-filter>
@@ -93,9 +96,10 @@
 
 		<!--suppress AndroidDomInspection -->
 		<service
-			android:name=".components.ToggleRotationLockSmallApp"
+			android:name=".processes.ui.ToggleRotationLockSmallApp"
 			android:exported="true"
-			tools:ignore="ExportedService">
+			tools:ignore="ExportedService"
+			android:process=":samuelpalmer.sensorautorotation.service">
 			<intent-filter>
 				<action android:name="com.sony.smallapp.intent.action.MAIN" />
 				<category android:name="com.sony.smallapp.intent.category.LAUNCHER" />

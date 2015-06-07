@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.settings.system;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 
-import samuelpalmer.sensorautorotation.ThisApplication;
+import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -19,7 +19,7 @@ public class Setting<T> {
 	private final T defaultValue;
 
 	public Setting(String key, TypeConverter<T> converter, T defaultValue) {
-		this.contentResolver = ThisApplication.context().getContentResolver();
+		this.contentResolver = Process.context().getContentResolver();
 		this.key = key;
 		this.converter = converter;
 		this.defaultValue = defaultValue;

@@ -2,7 +2,7 @@ package android.view;
 
 import android.annotation.SuppressLint;
 
-import samuelpalmer.sensorautorotation.screen.RotationWatcherChangeDetector;
+import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherChangeDetector;
 
 /**
  * Copied from Android source code. Actual implementation shouldn't be used; this is present to

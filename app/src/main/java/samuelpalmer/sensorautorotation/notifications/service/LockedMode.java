@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import samuelpalmer.sensorautorotation.OrientationCalculator;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.screen.Screen;
+import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 
 class LockedMode implements Mode {
 

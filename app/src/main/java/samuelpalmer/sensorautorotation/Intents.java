@@ -23,11 +23,11 @@ public class Intents {
 		while (ancestorClass != null) {
 			ancestorClass = ancestorClass.getSuperclass();
 			if (ancestorClass == Activity.class)
-				return PendingIntent.getActivity(ThisApplication.context(), requestCode, intent, flags);
+				return PendingIntent.getActivity(Process.context(), requestCode, intent, flags);
 			else if (ancestorClass == BroadcastReceiver.class)
-				return PendingIntent.getBroadcast(ThisApplication.context(), requestCode, intent, flags);
+				return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
 			else if (ancestorClass == Service.class)
-				return PendingIntent.getService(ThisApplication.context(), requestCode, intent, flags);
+				return PendingIntent.getService(Process.context(), requestCode, intent, flags);
 		}
 
 		throw new RuntimeException(clazz + " doesn't appear to be a component");
@@ -38,7 +38,7 @@ public class Intents {
 	}
 
 	public Intent makeIntent() {
-		return new Intent(ThisApplication.context(), clazz);
+		return new Intent(Process.context(), clazz);
 	}
 
 }

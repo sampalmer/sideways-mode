@@ -2,9 +2,9 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 
 /**
  * Updates the service notification to try to prevent it from showing on the lock screen on Android 5

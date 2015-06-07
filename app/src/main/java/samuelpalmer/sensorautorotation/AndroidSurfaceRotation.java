@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation;
 
 import android.view.Surface;
 
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
+
 public class AndroidSurfaceRotation {
 
 	private final int value;

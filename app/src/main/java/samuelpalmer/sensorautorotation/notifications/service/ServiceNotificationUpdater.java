@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import samuelpalmer.sensorautorotation.CurrentStateSummary;
-import samuelpalmer.sensorautorotation.Orientation;
-import samuelpalmer.sensorautorotation.OrientationCalculator;
-import samuelpalmer.sensorautorotation.screen.Screen;
+import samuelpalmer.sensorautorotation.processes.service.CurrentStateSummary;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
