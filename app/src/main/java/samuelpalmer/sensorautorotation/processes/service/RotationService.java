@@ -105,10 +105,13 @@ public class RotationService extends Service {
 	}
 
 	private void showStatusToast() {
-		if (statusToast != null)
-			statusToast.cancel();
+		CharSequence message = serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode());
 
-		statusToast = Toast.makeText(Process.context(), serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode()), Toast.LENGTH_SHORT);
+		if (statusToast != null)
+			statusToast.setText(message);
+		else
+			statusToast = Toast.makeText(Process.context(), message, Toast.LENGTH_SHORT);
+
 		statusToast.show();
 	}
 
