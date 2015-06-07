@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.widget.Toast;
 
+import samuelpalmer.sensorautorotation.Process;
+
 abstract class Toaster {
 
 	private static Toast statusToast;
@@ -10,7 +12,7 @@ abstract class Toaster {
 		if (statusToast != null)
 			statusToast.setText(text);
 		else
-			statusToast = Toast.makeText(samuelpalmer.sensorautorotation.Process.context(), text, Toast.LENGTH_SHORT);
+			statusToast = Toast.makeText(Process.context(), text, Toast.LENGTH_SHORT);
 
 		statusToast.show();
 	}
