@@ -58,7 +58,8 @@
 			android:excludeFromRecents="true"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<receiver android:name=".components.ToggleRotationLockReceiver" />
+		<receiver android:name=".components.ToggleRotationLockReceiver"
+		          android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<activity
 			android:name=".processes.ui.ShortcutActivity"
@@ -97,7 +98,8 @@
 		<service
 			android:name=".processes.ui.ToggleRotationLockSmallApp"
 			android:exported="true"
-			tools:ignore="ExportedService">
+			tools:ignore="ExportedService"
+			android:process=":samuelpalmer.sensorautorotation.service">
 			<intent-filter>
 				<action android:name="com.sony.smallapp.intent.action.MAIN" />
 				<category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
