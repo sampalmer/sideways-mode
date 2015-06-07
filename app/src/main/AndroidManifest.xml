@@ -77,6 +77,8 @@
 			android:exported="false"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
+		<receiver android:name=".processes.ui.ToastReceiver" />
+
 		<receiver android:name=".components.EnsureAppLoadedReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
@@ -18,6 +17,7 @@ import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityThing;
+import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
@@ -30,7 +30,6 @@ public class RotationService extends Service {
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotificationUpdater serviceNotificationUpdater;
 	private UserInteractivityThing userInteractivityThing;
-	private Toast statusToast;
 
 	@Override
 	public void onCreate() {
@@ -106,13 +105,7 @@ public class RotationService extends Service {
 
 	private void showStatusToast() {
 		CharSequence message = serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode());
-
-		if (statusToast != null)
-			statusToast.setText(message);
-		else
-			statusToast = Toast.makeText(Process.context(), message, Toast.LENGTH_SHORT);
-
-		statusToast.show();
+		sendBroadcast(new Intent(Process.context(), ToastReceiver.class).putExtra(null, message));
 	}
 
 	private void setAutoRotate(boolean newValue) {
