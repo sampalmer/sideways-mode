@@ -1,8 +1,6 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import com.sony.smallapp.SmallApplication;
-
-import samuelpalmer.sensorautorotation.processes.service.RotationLockToggler;
 
 public class ToggleRotationLockSmallApp extends SmallApplication {
 

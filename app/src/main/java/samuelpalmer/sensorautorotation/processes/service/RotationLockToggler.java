@@ -6,7 +6,7 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
-public abstract class RotationLockToggler {
+abstract class RotationLockToggler {
 
 	public static void toggle() {
 		if (ServiceHolder.isRunning())

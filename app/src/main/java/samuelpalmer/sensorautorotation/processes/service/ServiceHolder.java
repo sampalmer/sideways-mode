@@ -10,7 +10,7 @@ import android.util.Log;
  * the OS due to low memory or something like that, I believe the whole process is killed, which
  * should cause this value to be reset anyway.
  */
-public abstract class ServiceHolder {
+abstract class ServiceHolder {
 
 	public static final String TAG = ServiceHolder.class.getSimpleName();
 	private static RotationService instance;

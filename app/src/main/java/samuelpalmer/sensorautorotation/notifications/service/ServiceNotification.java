@@ -6,10 +6,10 @@ import android.os.Build;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.components.ToggleRotationLockReceiver;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
+import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceNotification {

@@ -1,10 +1,8 @@
-package samuelpalmer.sensorautorotation.components;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import samuelpalmer.sensorautorotation.processes.service.RotationLockToggler;
 
 public class ToggleRotationLockReceiver extends BroadcastReceiver {
 	@Override

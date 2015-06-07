@@ -1,9 +1,7 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import samuelpalmer.sensorautorotation.processes.service.RotationLockToggler;
 
 public class ToggleRotationLockActivity extends Activity {
 

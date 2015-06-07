@@ -49,7 +49,7 @@
 			android:theme="@style/Theme.NoDisplay"/>
 
 		<activity
-			android:name=".processes.ui.ToggleRotationLockActivity"
+			android:name=".processes.service.ToggleRotationLockActivity"
 			android:exported="true"
 			android:label="Toggle Rotation Lock"
 			android:theme="@android:style/Theme.NoDisplay"
@@ -58,7 +58,7 @@
 			android:excludeFromRecents="true"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<receiver android:name=".components.ToggleRotationLockReceiver"
+		<receiver android:name=".processes.service.ToggleRotationLockReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<activity
@@ -96,7 +96,7 @@
 
 		<!--suppress AndroidDomInspection -->
 		<service
-			android:name=".processes.ui.ToggleRotationLockSmallApp"
+			android:name=".processes.service.ToggleRotationLockSmallApp"
 			android:exported="true"
 			tools:ignore="ExportedService"
 			android:process=":samuelpalmer.sensorautorotation.service">
