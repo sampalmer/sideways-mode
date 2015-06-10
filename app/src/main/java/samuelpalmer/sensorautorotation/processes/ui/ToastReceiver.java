@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.Process;
@@ -10,7 +8,7 @@ import samuelpalmer.sensorautorotation.Process;
  * Handles requests to show toasts. Displays them using the main process since displaying toasts
  * seems to increase the process's RAM usage by ~10MB.
  */
-public class ToastReceiver extends BroadcastReceiver {
+public class ToastReceiver extends UiReceiver {
 
 	private static final String EXTRA_MESSAGE = null;
 
@@ -21,7 +19,7 @@ public class ToastReceiver extends BroadcastReceiver {
 	}
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	protected void onReceive(Intent intent) {
 		Toaster.show(intent.getCharSequenceExtra(EXTRA_MESSAGE));
 	}
 

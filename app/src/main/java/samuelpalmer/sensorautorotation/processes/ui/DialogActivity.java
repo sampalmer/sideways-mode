@@ -1,20 +1,17 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-public class DialogActivity extends Activity {
+public class DialogActivity extends UiActivity {
 	public static final String INTENT_EXTRA_TITLE = "title";
 	public static final String INTENT_EXTRA_MESSAGE = "message";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+	protected void onCreate() {
 		Bundle extras = getIntent().getExtras();
 		if (extras == null)
 			throw new RuntimeException("No extras specified");

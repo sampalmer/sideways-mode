@@ -85,7 +85,7 @@
 			</intent-filter>
 		</receiver>
 
-		<receiver android:name=".components.UpgradeReceiver">
+		<receiver android:name=".processes.ui.UpgradeReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.PACKAGE_REPLACED" />
 				<data

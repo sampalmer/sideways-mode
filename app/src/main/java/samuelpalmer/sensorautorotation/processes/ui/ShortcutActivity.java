@@ -1,19 +1,15 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockActivity;
 
-public class ShortcutActivity extends Activity {
+public class ShortcutActivity extends UiActivity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+	protected void onCreate() {
 		Intent shortcut = new Intent();
 
 		//If you try to send a broadcast from a shortcut, Android seems to just say "App not installed", so we're using a dummy activity.

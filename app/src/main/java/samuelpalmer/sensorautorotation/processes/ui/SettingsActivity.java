@@ -2,8 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,11 +9,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.SettingsFragment;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends UiActivity {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+	protected void onCreate() {
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment())
 				.commit();

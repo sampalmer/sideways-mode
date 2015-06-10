@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,9 +7,13 @@ import android.content.Intent;
 import java.util.HashMap;
 import java.util.Map;
 
+import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class UserUpgrader {
