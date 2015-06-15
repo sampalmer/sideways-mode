@@ -1,11 +1,10 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-abstract class UiProcess {
+abstract class ServiceProcess {
 
 	private static boolean initialised = false;
 
@@ -24,12 +23,12 @@ abstract class UiProcess {
 	private static void initialise() {
 		ensureVersionRecorded();
 		serviceStateUpdater.update();
-		enabledPreference = new ApplicationSettings().enabled();
+		enabledPreference = new ApplicationSettings(Prefs.prefs()).enabled();
 		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
 
 	private static void ensureVersionRecorded() {
-		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings().lastVersionUserInstructedAbout();
+		ApplicationSettings.Setting<Integer> instructedVersion = new ApplicationSettings(Prefs.prefs()).lastVersionUserInstructedAbout();
 		if (!instructedVersion.hasValue())
 			instructedVersion.setAndCommit(new VersionInfo().installedVersionCode());
 	}

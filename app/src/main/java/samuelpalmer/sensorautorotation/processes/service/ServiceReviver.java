@@ -7,7 +7,6 @@ import android.os.SystemClock;
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.components.EnsureAppLoadedReceiver;
 
 /**
  * Useful for when the service is killed due to out-of-memory conditions

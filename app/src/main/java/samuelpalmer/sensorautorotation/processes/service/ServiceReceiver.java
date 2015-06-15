@@ -1,13 +1,13 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-abstract class UiReceiver extends BroadcastReceiver {
+abstract class ServiceReceiver extends BroadcastReceiver {
 	@Override
 	public final void onReceive(Context context, Intent intent) {
-		UiProcess.ensureInitialised();
+		ServiceProcess.ensureInitialised();
 		onReceive(intent);
 	}
 

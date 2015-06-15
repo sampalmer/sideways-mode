@@ -20,7 +20,7 @@ import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-public class RotationService extends Service {
+public class RotationService extends ServiceService {
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -42,7 +42,7 @@ public class RotationService extends Service {
 
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen();
-		ApplicationSettings appSettings = new ApplicationSettings();
+		ApplicationSettings appSettings = new ApplicationSettings(Prefs.prefs());
 
 		applicationState = new ApplicationState(appSettings, systemSettings);
 

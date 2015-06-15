@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 
-public class ToggleRotationLockReceiver extends BroadcastReceiver {
+public class ToggleRotationLockReceiver extends ServiceReceiver {
+
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	protected void onReceive(Intent intent) {
 		RotationLockToggler.toggle();
 	}
+
 }

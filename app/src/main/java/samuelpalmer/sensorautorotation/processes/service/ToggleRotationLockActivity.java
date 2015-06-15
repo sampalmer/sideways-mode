@@ -1,13 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.app.Activity;
-import android.os.Bundle;
-
-public class ToggleRotationLockActivity extends Activity {
+public class ToggleRotationLockActivity extends ServiceActivity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate() {
 		RotationLockToggler.toggle();
 		finish();
 	}

@@ -6,8 +6,8 @@ import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.service.ServiceDisabler;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class EnvironmentError {
 
@@ -15,7 +15,7 @@ public abstract class EnvironmentError {
 		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
 		CharSequence formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
 		show(formattedMessage);
-		new ApplicationSettings().enabled().setAndCommit(false);
+		ServiceDisabler.sendDisableRequest();
 	}
 
 	private static void show(CharSequence message) {

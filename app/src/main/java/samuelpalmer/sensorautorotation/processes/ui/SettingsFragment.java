@@ -1,16 +1,20 @@
-package samuelpalmer.sensorautorotation.settings.application;
+package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 
 import java.util.Arrays;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -28,14 +32,18 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	};
 
+	private ApplicationSettings settings;
+
 	private void updateListPreferenceSummaries() {
-		for (ApplicationSettings.Setting<?> setting : new ApplicationSettings.Setting[]{ settings.screenOffBehaviour(), settings.notificationPriority() }) {
-			ListPreference preference = (ListPreference) findPreference(setting.getKey());
-			preference.setSummary(preference.getEntry());
+		PreferenceScreen screen = getPreferenceScreen();
+		for (int i = 0; i < screen.getPreferenceCount(); ++i) {
+			Preference preference = screen.getPreference(i);
+			if (preference instanceof ListPreference) {
+				ListPreference listPreference = (ListPreference) preference;
+				listPreference.setSummary(listPreference.getEntry());
+			}
 		}
 	}
-
-	private ApplicationSettings settings;
 
 	private EventRegistrar enabledChanged;
 	private EventRegistrar onScreenOffChanged;
@@ -45,7 +53,7 @@ public class SettingsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		settings = new ApplicationSettings();
+		settings = new ApplicationSettings(getPreferenceManager().getSharedPreferences());
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		new SettingsInitialiser(settings).ensureInitialised();

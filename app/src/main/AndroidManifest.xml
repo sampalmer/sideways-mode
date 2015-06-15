@@ -28,6 +28,8 @@
 		android:theme="@style/Theme"
 		>
 
+		<!-- Main Process -->
+
 		<activity
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:configChanges="orientation|screenSize"
@@ -49,6 +51,40 @@
 			android:theme="@style/Theme.NoDisplay"/>
 
 		<activity
+			android:name=".processes.ui.ShortcutActivity"
+		    android:label="@string/toggle_rotation_lock"
+		>
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<receiver android:name=".processes.ui.ToastReceiver" />
+
+		<receiver android:name=".processes.service.ServiceDisabler"
+		          android:process=":samuelpalmer.sensorautorotation.service" />
+
+		<!-- Service Process -->
+
+		<receiver android:name=".processes.service.UpgradeReceiver"
+		          android:process=":samuelpalmer.sensorautorotation.service">
+			<intent-filter>
+				<action android:name="android.intent.action.PACKAGE_REPLACED" />
+				<data
+					android:scheme="package"
+					android:path="samuelpalmer.sensorautorotation" />
+			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".processes.service.EnsureAppLoadedReceiver"
+		          android:process=":samuelpalmer.sensorautorotation.service">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+
+		<activity
 			android:name=".processes.service.ToggleRotationLockActivity"
 			android:exported="true"
 			android:label="Toggle Rotation Lock"
@@ -61,38 +97,14 @@
 		<receiver android:name=".processes.service.ToggleRotationLockReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<activity
-			android:name=".processes.ui.ShortcutActivity"
-		    android:label="@string/toggle_rotation_lock"
-		>
-			<intent-filter>
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
 		<service
 			android:name=".processes.service.RotationService"
 			android:enabled="true"
 			android:exported="false"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<receiver android:name=".processes.ui.ToastReceiver" />
-
-		<receiver android:name=".components.EnsureAppLoadedReceiver">
-			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
-			</intent-filter>
-		</receiver>
-
-		<receiver android:name=".processes.ui.UpgradeReceiver">
-			<intent-filter>
-				<action android:name="android.intent.action.PACKAGE_REPLACED" />
-				<data
-					android:scheme="package"
-					android:path="samuelpalmer.sensorautorotation" />
-			</intent-filter>
-		</receiver>
+		<service android:name=".processes.service.SettingsService"
+		         android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 

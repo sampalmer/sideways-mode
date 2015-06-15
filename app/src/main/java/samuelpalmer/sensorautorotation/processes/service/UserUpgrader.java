@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -14,15 +14,16 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class UserUpgrader {
+class UserUpgrader {
 
 	private final ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout;
 	private final int newAppVersion;
 
 	public UserUpgrader() {
-		lastVersionUserInstructedAbout = new ApplicationSettings().lastVersionUserInstructedAbout();
+		lastVersionUserInstructedAbout = new ApplicationSettings(Prefs.prefs()).lastVersionUserInstructedAbout();
 		newAppVersion = new VersionInfo().installedVersionCode();
 	}
 
