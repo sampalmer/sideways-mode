@@ -1,13 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 
-public class UpgradeReceiver extends BroadcastReceiver {
-
+public class UpgradeReceiver extends ServiceReceiver {
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	protected void onReceive(Intent intent) {
 		new UserUpgrader().upgradeUser();
 	}
 }
