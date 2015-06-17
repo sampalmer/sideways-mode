@@ -103,9 +103,6 @@
 			android:exported="false"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<service android:name=".processes.service.SettingsService"
-		         android:process=":samuelpalmer.sensorautorotation.service" />
-
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 
 		<!--suppress AndroidDomInspection -->

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
@@ -18,6 +19,7 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityThing;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferencesServer;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class RotationService extends ServiceService {
@@ -61,6 +63,11 @@ public class RotationService extends ServiceService {
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
 		userInteractivityThing.ensureStarted();
+
+		prefs = Prefs.prefs();
+		binder = new RemoteSharedPreferencesServer(prefs);
+		prefs.registerOnSharedPreferenceChangeListener(listener);
+
 		serviceRevivalManager.ensureStarted();
 	}
 
@@ -79,7 +86,7 @@ public class RotationService extends ServiceService {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return null;
+		return binder;
 	}
 
 	@Override
@@ -95,6 +102,8 @@ public class RotationService extends ServiceService {
 		applicationState.clear();
 
 		ServiceHolder.stopped();
+
+		prefs.unregisterOnSharedPreferenceChangeListener(listener);
 	}
 
 	public void toggleRotation() {
@@ -110,5 +119,19 @@ public class RotationService extends ServiceService {
 	private void setAutoRotate(boolean newValue) {
 		calculator.setAutoRotate(newValue);
 	}
+
+
+
+
+	private SharedPreferences prefs;
+	private RemoteSharedPreferencesServer binder;
+
+
+	private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			binder.updateRemoteListeners(key);
+		}
+	};
 
 }
