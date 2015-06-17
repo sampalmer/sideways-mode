@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,19 +34,20 @@ public class SettingsActivity extends Activity {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
+			//It's tempting to just re-bind here, but if there's a bug causing the service to crash, it could cause endless crashes.
 			throw new RuntimeException("Lost service connection");
 		}
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onResume() {
+		super.onResume();
 		bindService(new Intent(Process.context(), RotationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onPause() {
+		super.onPause();
 		unbindService(serviceConnection);
 	}
 
