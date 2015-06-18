@@ -22,13 +22,16 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
 public class SettingsActivity extends Activity {
 
 	private RemoteSharedPreferencesAdaptor preferences;
+	private SettingsFragment fragment;
 
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));
+
+			fragment = new SettingsFragment();
 			getFragmentManager().beginTransaction()
-					.replace(android.R.id.content, new SettingsFragment())
+					.replace(android.R.id.content, fragment)
 					.commit();
 		}
 
@@ -48,6 +51,14 @@ public class SettingsActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		if (fragment != null) {
+			getFragmentManager().beginTransaction()
+					.remove(fragment)
+					.commit();
+			fragment = null;
+		}
+
 		unbindService(serviceConnection);
 	}
 
