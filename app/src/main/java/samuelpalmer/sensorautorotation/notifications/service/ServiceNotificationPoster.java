@@ -19,6 +19,10 @@ public class ServiceNotificationPoster {
 		service.startForeground(NotificationIds.SERVICE, notification);
 	}
 
+	public void ensureRemoved() {
+		service.stopForeground(true);
+	}
+
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the
 	 * notification is updated on these Android versions of the emulators and Samsung Galaxy S II
@@ -28,7 +32,7 @@ public class ServiceNotificationPoster {
 	private void cancelIfNecessary(Notification notification) {
 		if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT <= 19) {
 			if (lastPriority != null && notification.priority != lastPriority) {
-				service.stopForeground(true);
+				ensureRemoved();
 				SystemServices.notificationManager().cancel(NotificationIds.SERVICE);
 			}
 			lastPriority = notification.priority;

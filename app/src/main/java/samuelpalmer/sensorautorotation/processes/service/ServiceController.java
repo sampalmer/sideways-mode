@@ -9,13 +9,16 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 abstract class ServiceController {
 
 	private static void ensureStarted() {
-		ComponentName name = samuelpalmer.sensorautorotation.Process.context().startService(intent());
-		if (name == null)
-			throw new RuntimeException("Service doesn't exist");
+		if (!ServiceHolder.isRunning()) {
+			ComponentName name = Process.context().startService(intent());
+			if (name == null)
+				throw new RuntimeException("Service doesn't exist");
+		}
 	}
 
 	private static void ensureStopped() {
-		Process.context().stopService(intent());
+		if (ServiceHolder.isRunning())
+			ServiceHolder.instance().service.stopMainSubservice();
 	}
 
 	public static void updateFromSettings() {
