@@ -8,6 +8,8 @@ import android.os.IBinder;
  * Encapsulates both the settings server (for the UI) and the main background rotation logic.
  * They're both using this service since otherwise Android sometimes kills the main service when
  * the main activity task is removed.
+ *
+ * http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
  */
 public class RotationService extends ServiceService {
 
