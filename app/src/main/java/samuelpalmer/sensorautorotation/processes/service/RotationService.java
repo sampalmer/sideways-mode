@@ -69,4 +69,15 @@ public class RotationService extends ServiceService {
 		ensureMainStopped();
 		ensureSettingsStopped();
 	}
+
+	/**
+	 * Works around a bug in which Android kills this process when it receives a broadcast after
+	 * the UI is killed by the user (via swiping it away).
+	 */
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		Intent intent = new Intent(this, DummyActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
 }
