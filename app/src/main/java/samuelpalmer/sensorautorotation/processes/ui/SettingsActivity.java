@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,9 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferences;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferencesAdaptor;
 
+/**
+ * UI proxy to settings stored in background process.
+ */
 public class SettingsActivity extends Activity {
 
 	private RemoteSharedPreferencesAdaptor preferences;
@@ -29,36 +33,42 @@ public class SettingsActivity extends Activity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));
 
-			fragment = new SettingsFragment();
-			getFragmentManager().beginTransaction()
-					.replace(android.R.id.content, fragment)
-					.commit();
+			if (fragment == null) {
+				fragment = new SettingsFragment();
+				getFragmentManager().beginTransaction()
+						.replace(android.R.id.content, fragment)
+						.commit();
+			}
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			//It's tempting to just re-bind here, but if there's a bug causing the service to crash, it could cause endless crashes.
-			throw new RuntimeException("Lost service connection");
+			//We could have got here as a result of the user explicitly stopping the background service, so we shouldn't crash.
+			//If the service crashed, there's not much benefit to the UI also crashing. Might as well gracefully exit.
+			//Once the user re-opens the task, this activity should be created again anyway.
+
+			ensureUnbound(); //In case the OS tries to reestablish the connection.
+			finish();
 		}
 	};
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onCreate(Bundle savedInstanceState) {
+		// Prevents the fragment from automatically being recreated.
+		// We need to do this since the fragment shouldn't exist without the service binding.
+		super.onCreate(null);
 		bindService(new Intent(Process.context(), RotationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onDestroy() {
+		super.onDestroy();
 
-		if (fragment != null) {
-			getFragmentManager().beginTransaction()
-					.remove(fragment)
-					.commit();
-			fragment = null;
-		}
+		//So the OS doesn't complain about us leaking the ServiceConnection.
+		ensureUnbound();
+	}
 
+	private void ensureUnbound() {
 		unbindService(serviceConnection);
 	}
 
