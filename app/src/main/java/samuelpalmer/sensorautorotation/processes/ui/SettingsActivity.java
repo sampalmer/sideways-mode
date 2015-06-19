@@ -46,8 +46,6 @@ public class SettingsActivity extends Activity {
 			//We could have got here as a result of the user explicitly stopping the background service, so we shouldn't crash.
 			//If the service crashed, there's not much benefit to the UI also crashing. Might as well gracefully exit.
 			//Once the user re-opens the task, this activity should be created again anyway.
-
-			ensureUnbound(); //In case the OS tries to reestablish the connection.
 			finish();
 		}
 	};
@@ -57,19 +55,36 @@ public class SettingsActivity extends Activity {
 		// Prevents the fragment from automatically being recreated.
 		// We need to do this since the fragment shouldn't exist without the service binding.
 		super.onCreate(null);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		bindService(new Intent(Process.context(), RotationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onStop() {
+		super.onStop();
 
-		//So the OS doesn't complain about us leaking the ServiceConnection.
-		ensureUnbound();
+		if (fragment != null) {
+			getFragmentManager().beginTransaction()
+					.remove(fragment)
+					.commit();
+			preferences = null;
+			fragment = null;
+		}
+
+		ensureUnbound(); //So users can explicitly stop the service via the OS app manager if they want.
 	}
 
 	private void ensureUnbound() {
 		unbindService(serviceConnection);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding/removing the fragment while we're paused
 	}
 
 	@Override
