@@ -6,6 +6,12 @@
 	    android:title="@string/app_enabled"
 	    android:summary="@string/app_enabled_description"
 	/>
+	<ListPreference
+		android:key="notificationPriority"
+		android:title="@string/notification_priority"
+		android:entries="@array/notification_priorities"
+		android:entryValues="@array/notification_priority_values"
+		/>
 	<CheckBoxPreference
 		android:key="allowUpsideDownScreen"
 	    android:title="@string/allow_upside_down_screen"
@@ -16,11 +22,5 @@
 	    android:title="@string/on_screen_off"
 	    android:entries="@array/screen_off_behaviours"
 	    android:entryValues="@array/screen_off_behaviour_values"
-	/>
-	<ListPreference
-		android:key="notificationPriority"
-	    android:title="@string/notification_priority"
-		android:entries="@array/notification_priorities"
-		android:entryValues="@array/notification_priority_values"
 	/>
 </PreferenceScreen>
