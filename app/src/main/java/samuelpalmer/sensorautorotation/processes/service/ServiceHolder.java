@@ -13,20 +13,20 @@ import android.util.Log;
 abstract class ServiceHolder {
 
 	public static final String TAG = ServiceHolder.class.getSimpleName();
-	private static MainSubservice instance;
+	private static RotationService instance;
 
 	public static boolean isRunning() {
 		return instance != null;
 	}
 
-	public static MainSubservice instance() {
+	public static RotationService instance() {
 		if (!isRunning())
 			throw new RuntimeException("Service not running");
 
 		return instance;
 	}
 
-	public static void started(MainSubservice instance) {
+	public static void started(RotationService instance) {
 		if (isRunning())
 			throw new RuntimeException("Already running");
 

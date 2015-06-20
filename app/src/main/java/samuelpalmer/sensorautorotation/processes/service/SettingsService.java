@@ -1,26 +1,33 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.IBinder;
 
-import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferencesServer;
 
-public class SettingsSubservice extends State {
+public class SettingsService extends ServiceService {
+	private SharedPreferences prefs;
+	private RemoteSharedPreferencesServer binder;
 
 	@Override
-	protected void start() {
+	public void onCreate() {
+		super.onCreate();
 		prefs = Prefs.prefs();
 		binder = new RemoteSharedPreferencesServer(prefs);
 		prefs.registerOnSharedPreferenceChangeListener(listener);
 	}
 
 	@Override
-	protected void stop() {
+	public void onDestroy() {
+		super.onDestroy();
 		prefs.unregisterOnSharedPreferenceChangeListener(listener);
 	}
 
-	private SharedPreferences prefs;
-	public RemoteSharedPreferencesServer binder;
+	@Override
+	public IBinder onBind(Intent intent) {
+		return binder;
+	}
 
 	private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
@@ -28,5 +35,4 @@ public class SettingsSubservice extends State {
 			binder.updateRemoteListeners(key);
 		}
 	};
-
 }

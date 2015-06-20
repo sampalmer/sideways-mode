@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferences;
@@ -60,7 +60,8 @@ public class SettingsActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		bindService(new Intent(Process.context(), RotationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
+		bindService(new Intent(Process.context(), SettingsService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
