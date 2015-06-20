@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.settings.application.remote;
 
 import android.content.SharedPreferences;
+import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -119,6 +120,8 @@ public class RemoteSharedPreferencesAdaptor implements SharedPreferences {
 		if (remoteListener != null)
 			try {
 				remote.unregisterOnSharedPreferenceChangeListener(remoteListener);
+			} catch (DeadObjectException ignored) {
+				//The service has died, so it doesn't matter that unregistration failed
 			} catch (RemoteException e) {
 				throw new RuntimeException(e);
 			}
