@@ -28,7 +28,7 @@ public class SettingsActivity extends Activity {
 	private RemoteSharedPreferencesAdaptor preferences;
 	private SettingsFragment fragment;
 
-	private ServiceConnection serviceConnection = new ServiceConnection() {
+	private final ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));

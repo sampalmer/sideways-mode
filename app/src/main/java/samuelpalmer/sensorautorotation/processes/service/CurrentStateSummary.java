@@ -6,7 +6,7 @@ import samuelpalmer.sensorautorotation.notifications.service.Mode;
 
 public class CurrentStateSummary {
 
-	private Mode mode;
+	private final Mode mode;
 	private final Orientation user;
 
 	public CurrentStateSummary(Mode mode, Orientation user) {

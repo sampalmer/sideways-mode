@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.settings.application;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 
+@SuppressWarnings("unused")
 public enum NotificationPriority {
 	HIGH(NotificationBuilderCompat.PRIORITY_MAX),
 	NORMAL(NotificationBuilderCompat.PRIORITY_DEFAULT),

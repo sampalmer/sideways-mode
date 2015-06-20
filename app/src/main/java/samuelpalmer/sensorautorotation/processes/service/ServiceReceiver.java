@@ -8,9 +8,9 @@ abstract class ServiceReceiver extends BroadcastReceiver {
 	@Override
 	public final void onReceive(Context context, Intent intent) {
 		ServiceProcess.ensureInitialised();
-		onReceive(intent);
+		onReceive();
 	}
 
-	protected abstract void onReceive(Intent intent);
+	protected abstract void onReceive();
 
 }
