@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockActivity;
+import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
 
 public class ShortcutActivity extends Activity {
 

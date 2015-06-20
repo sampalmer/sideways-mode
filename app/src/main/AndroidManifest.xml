@@ -85,7 +85,7 @@
 		</receiver>
 
 		<activity
-			android:name=".processes.service.ToggleRotationLockActivity"
+			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
 			android:label="Toggle Rotation Lock"
 			android:theme="@android:style/Theme.NoDisplay"

@@ -4,7 +4,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 
-abstract class RotationLockToggler {
+public abstract class RotationLockToggler {
 
 	public static void toggle() {
 		if (ServiceHolder.isRunning())
