@@ -76,15 +76,13 @@ public class SettingsActivity extends Activity {
 			fragment = null;
 		}
 
-		ensureUnbound(); //So users can explicitly stop the service via the OS app manager if they want.
-	}
-
-	private void ensureUnbound() {
+		//Prevents the background process from being killed when this task is removed/dismissed
+		//Also prevents the background process and settings service from being kept around unnecessarily
 		unbindService(serviceConnection);
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@SuppressWarnings("NullableProblems") Bundle outState) {
 		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding/removing the fragment while we're paused
 	}
 
