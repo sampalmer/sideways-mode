@@ -55,12 +55,19 @@ public class SettingsActivity extends Activity {
 		// Prevents the fragment from automatically being recreated.
 		// We need to do this since the fragment shouldn't exist without the service binding.
 		super.onCreate(null);
+		ensureBound();
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onRestart() {
+		super.onRestart();
 
+		// Doing this as early as possible so the binding is established as close as possible to the
+		// time the activity is visible.
+		ensureBound();
+	}
+
+	private void ensureBound() {
 		bindService(new Intent(Process.context(), SettingsService.class), serviceConnection, Context.BIND_AUTO_CREATE);
 	}
 
