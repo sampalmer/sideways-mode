@@ -46,6 +46,7 @@ public class SettingsActivity extends Activity {
 			//We could have got here as a result of the user explicitly stopping the background service, so we shouldn't crash.
 			//If the service crashed, there's not much benefit to the UI also crashing. Might as well gracefully exit.
 			//Once the user re-opens the task, this activity should be created again anyway.
+			ensureUnbound();
 			finish();
 		}
 	};
@@ -85,6 +86,10 @@ public class SettingsActivity extends Activity {
 
 		//Prevents the background process from being killed when this task is removed/dismissed
 		//Also prevents the background process and settings service from being kept around unnecessarily
+		ensureUnbound();
+	}
+
+	private void ensureUnbound() {
 		unbindService(serviceConnection);
 	}
 
