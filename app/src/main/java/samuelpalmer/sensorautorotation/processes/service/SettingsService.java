@@ -29,6 +29,14 @@ public class SettingsService extends ServiceService {
 		return binder;
 	}
 
+	@Override
+	public boolean onUnbind(Intent intent) {
+		//Since the client isn't using BIND_AUTO_CREATE because it causes the background process to
+		//be killed when the UI task is removed.
+		stopSelf();
+		return false;
+	}
+
 	private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

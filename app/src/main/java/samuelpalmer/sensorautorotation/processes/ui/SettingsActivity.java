@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
@@ -26,19 +24,15 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
 public class SettingsActivity extends Activity {
 
 	private RemoteSharedPreferencesAdaptor preferences;
-	private SettingsFragment fragment;
 
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));
 
-			if (fragment == null) {
-				fragment = new SettingsFragment();
-				getFragmentManager().beginTransaction()
-						.replace(android.R.id.content, fragment)
-						.commit();
-			}
+			getFragmentManager().beginTransaction()
+					.replace(android.R.id.content, new SettingsFragment())
+					.commit();
 		}
 
 		@Override
@@ -46,56 +40,34 @@ public class SettingsActivity extends Activity {
 			//We could have got here as a result of the user explicitly stopping the background service, so we shouldn't crash.
 			//If the service crashed, there's not much benefit to the UI also crashing. Might as well gracefully exit.
 			//Once the user re-opens the task, this activity should be created again anyway.
-			ensureUnbound();
 			finish();
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// Prevents the fragment from automatically being recreated.
+		// Prevents the fragment from automatically being recreated when this cached process is recreated.
 		// We need to do this since the fragment shouldn't exist without the service binding.
 		super.onCreate(null);
-		ensureBound();
+
+		Intent serviceIntent = new Intent(this, SettingsService.class);
+
+		// I'm intentionally NOT using BIND_AUTO_CREATE and instead explicitly starting the service
+		// since this prevents the background process from being killed when the UI task is removed.
+		// See http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
+		bindService(serviceIntent, serviceConnection, 0);
+		startService(serviceIntent);
 	}
 
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-
-		// Doing this as early as possible so the binding is established as close as possible to the
-		// time the activity is visible.
-		ensureBound();
-	}
-
-	private void ensureBound() {
-		bindService(new Intent(Process.context(), SettingsService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-
-		if (fragment != null) {
-			getFragmentManager().beginTransaction()
-					.remove(fragment)
-					.commit();
-			preferences = null;
-			fragment = null;
-		}
-
-		//Prevents the background process from being killed when this task is removed/dismissed
-		//Also prevents the background process and settings service from being kept around unnecessarily
-		ensureUnbound();
-	}
-
-	private void ensureUnbound() {
+	protected void onDestroy() {
+		super.onDestroy();
 		unbindService(serviceConnection);
 	}
 
 	@Override
 	protected void onSaveInstanceState(@SuppressWarnings("NullableProblems") Bundle outState) {
-		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding/removing the fragment while we're paused
+		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding the fragment while we're paused
 	}
 
 	@Override
