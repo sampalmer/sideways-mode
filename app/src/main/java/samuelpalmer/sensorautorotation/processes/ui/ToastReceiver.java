@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.Process;
 
 /**
@@ -15,7 +16,7 @@ public class ToastReceiver extends BroadcastReceiver {
 	private static final String EXTRA_MESSAGE = null;
 
 	public static void send(CharSequence message) {
-		Intent intent = new Intent(Process.context(), ToastReceiver.class)
+		Intent intent = new Intents(ToastReceiver.class).makeIntent()
 				.putExtra(EXTRA_MESSAGE, message);
 		Process.context().sendBroadcast(intent);
 	}

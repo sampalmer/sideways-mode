@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.os.Build;
 
 public class Intents {
 
@@ -24,8 +25,10 @@ public class Intents {
 			ancestorClass = ancestorClass.getSuperclass();
 			if (ancestorClass == Activity.class)
 				return PendingIntent.getActivity(Process.context(), requestCode, intent, flags);
-			else if (ancestorClass == BroadcastReceiver.class)
+			else if (ancestorClass == BroadcastReceiver.class) {
+				workaroundOsKillBug(intent);
 				return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
+			}
 			else if (ancestorClass == Service.class)
 				return PendingIntent.getService(Process.context(), requestCode, intent, flags);
 		}
@@ -38,7 +41,16 @@ public class Intents {
 	}
 
 	public Intent makeIntent() {
-		return new Intent(Process.context(), clazz);
+		Intent result = new Intent(Process.context(), clazz);
+		workaroundOsKillBug(result);
+		return result;
+	}
+
+	private void workaroundOsKillBug(Intent intent) {
+		if (Build.VERSION.SDK_INT >= 16) {
+			//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 through 4.4
+			intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+		}
 	}
 
 }
