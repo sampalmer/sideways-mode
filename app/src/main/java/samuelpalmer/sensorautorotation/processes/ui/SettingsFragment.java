@@ -79,8 +79,8 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 		enabledChanged.subscribe(enabledUpdater);
 		onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
@@ -94,8 +94,8 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
 		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
 		onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
 		enabledChanged.unsubscribe(enabledUpdater);
