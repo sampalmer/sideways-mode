@@ -48,7 +48,7 @@ public class Intents {
 
 	private void workaroundOsKillBug(Intent intent) {
 		if (Build.VERSION.SDK_INT >= 16) {
-			//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 through 4.4
+			//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 and above
 			intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 		}
 	}
