@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
@@ -46,17 +46,11 @@ public class SettingsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// Prevents the fragment from automatically being recreated when this cached process is recreated.
+		// Prevents the fragment from automatically being recreated.
 		// We need to do this since the fragment shouldn't exist without the service binding.
 		super.onCreate(null);
 
-		Intent serviceIntent = new Intent(this, SettingsService.class);
-
-		// I'm intentionally NOT using BIND_AUTO_CREATE and instead explicitly starting the service
-		// since this prevents the background process from being killed when the UI task is removed.
-		// See http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
-		bindService(serviceIntent, serviceConnection, 0);
-		startService(serviceIntent);
+		bindService(new Intents(SettingsService.class).makeIntent(), serviceConnection, BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -67,7 +61,7 @@ public class SettingsActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(@SuppressWarnings("NullableProblems") Bundle outState) {
-		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding the fragment while we're paused
+		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding/removing the fragment while we're paused
 	}
 
 	@Override
@@ -87,7 +81,7 @@ public class SettingsActivity extends Activity {
 
 		switch (item.getItemId()) {
 			case R.id.action_instructions:
-				startActivity(new Intent(this, InstructionsActivity.class));
+				startActivity(new Intents(InstructionsActivity.class).makeIntent());
 				break;
 			case R.id.action_uninstall:
 				confirmUninstall();
