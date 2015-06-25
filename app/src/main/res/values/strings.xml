@@ -4,6 +4,7 @@
 	<string name="app_name">Rotation</string>
 
 	<string name="action_instructions">Instructions</string>
+	<string name="action_feedback">Send feedback</string>
 	<string name="action_uninstall">Uninstall</string>
 
 	<!-- Notification -->
@@ -86,4 +87,7 @@
 
 	<string name="instructions_help_heading">Troubleshooting</string>
 	<string name="instructions_help_contents">If the screen faces the wrong way:\n1. Turn %1$s mode off.\n2. Rotate the device until the screen is facing the right way.</string>
+
+	<string name="feedback_email_subject">"Feedback for %1$s"</string>
+
 </resources>
