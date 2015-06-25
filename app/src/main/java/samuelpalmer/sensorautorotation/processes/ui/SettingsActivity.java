@@ -1,12 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -14,7 +11,6 @@ import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.Intents;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -87,7 +83,7 @@ public class SettingsActivity extends ServiceSyncActivity {
 				startActivity(new Intents(InstructionsActivity.class).makeIntent());
 				break;
 			case R.id.action_feedback:
-				sendFeedback();
+				new Feedback().send();
 				break;
 			case R.id.action_uninstall:
 				confirmUninstall();
@@ -97,31 +93,6 @@ public class SettingsActivity extends ServiceSyncActivity {
 		}
 
 		return true;
-	}
-
-	private void sendFeedback() {
-		Intent intent = new Intent(Intent.ACTION_SENDTO)
-			.setData(new Uri.Builder().scheme("mailto").build())
-			.putExtra(Intent.EXTRA_EMAIL, new String[]{"Sam Palmer <sampalmer4+androidautorotate@gmail.com>"})
-			.putExtra(Intent.EXTRA_SUBJECT, StringResource.format(R.string.feedback_email_subject, R.string.app_name))
-			.putExtra(Intent.EXTRA_TEXT, "")
-			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) //So the email activity doesn't take over this one
-		;
-
-		ComponentName emailApp = intent.resolveActivity(getPackageManager());
-		ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
-		if (emailApp != null && !emailApp.equals(unsupportedAction))
-			try {
-				// Needed to customise the chooser dialog title since it might default to "Share with"
-				// Note that the chooser will still be skipped if only one app is matched
-				Intent chooser = Intent.createChooser(intent, "Send feedback with");
-				startActivity(chooser);
-				return;
-			}
-			catch (ActivityNotFoundException ignored) {
-			}
-
-		Toaster.show("Couldn't find an email app and account");
 	}
 
 	private void confirmUninstall() {
