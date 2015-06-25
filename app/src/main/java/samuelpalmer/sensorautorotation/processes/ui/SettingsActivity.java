@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -21,7 +20,7 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
 /**
  * UI proxy to settings stored in background process.
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends ServiceSyncActivity {
 
 	private RemoteSharedPreferencesAdaptor preferences;
 

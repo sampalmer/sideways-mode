@@ -1,15 +1,15 @@
 package samuelpalmer.sensorautorotation.processes.ui.instructions;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.ServiceSyncActivity;
 
-public class InstructionsActivity extends Activity {
+public class InstructionsActivity extends ServiceSyncActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

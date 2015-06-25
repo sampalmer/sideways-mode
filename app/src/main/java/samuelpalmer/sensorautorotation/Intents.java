@@ -7,6 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Build;
 
+/**
+ * Should be used for creation of all intents since this works around an Android bug.
+ */
 public class Intents {
 
 	private final Class<?> clazz;

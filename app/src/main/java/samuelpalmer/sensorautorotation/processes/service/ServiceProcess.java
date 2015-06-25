@@ -16,13 +16,16 @@ abstract class ServiceProcess {
 			initialise();
 			initialised = true;
 		}
+
+		//Since the service might have stopped unexpectedly without this process being killed.
+		//For example, the user might've explicitly stopped the service in the Android app manager.
+		serviceStateUpdater.update();
 	}
 
 	private static ApplicationSettings.Setting<Boolean> enabledPreference;
 
 	private static void initialise() {
 		ensureVersionRecorded();
-		serviceStateUpdater.update();
 		enabledPreference = new ApplicationSettings(Prefs.prefs()).enabled();
 		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
