@@ -62,10 +62,10 @@
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
+		<!-- Service Process -->
+
 		<receiver android:name=".processes.service.ServiceDisabler"
 		          android:process=":samuelpalmer.sensorautorotation.service" />
-
-		<!-- Service Process -->
 
 		<receiver android:name=".processes.service.UpgradeReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service">
