@@ -23,7 +23,7 @@ abstract class ServiceService extends Service {
 		Intent intent = new Intents(EnsureAppLoadedReceiver.class).makeIntent();
 
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0; i < 50; ++i)
 			sendBroadcast(intent);
 	}
 
