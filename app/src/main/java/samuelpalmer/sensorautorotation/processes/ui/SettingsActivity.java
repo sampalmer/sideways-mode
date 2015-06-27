@@ -1,14 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferences;
@@ -19,21 +17,21 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
  */
 public class SettingsActivity extends ServiceSyncActivity {
 
-	private static final int REQUEST_CODE_INSTRUCT_USER = 1;
+	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
 
 	private RemoteSharedPreferencesAdaptor preferences;
-	private ApplicationSettings.Setting<Integer> instructedVersion;
-	private boolean userInstructed;
 
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));
+
+			FirstRunLauncherFragment fragmentByTag = (FirstRunLauncherFragment) getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT);
+			fragmentByTag.onPreferencesAvailable(preferences);
+
 			getFragmentManager().beginTransaction()
 					.replace(android.R.id.content, new SettingsFragment())
 					.commit();
-
-			instructUserIfNecessary();
 		}
 
 		@Override
@@ -45,28 +43,6 @@ public class SettingsActivity extends ServiceSyncActivity {
 		}
 	};
 
-	private void instructUserIfNecessary() {
-		instructedVersion = new ApplicationSettings(preferences).lastVersionUserInstructedAbout();
-		if (!instructedVersion.hasValue())
-			if (userInstructed)
-				recordUserInstructed();
-			else
-				startActivityForResult(ComponentType.create(FirstRunActivity.class).makeIntent(), REQUEST_CODE_INSTRUCT_USER);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_INSTRUCT_USER && resultCode == RESULT_OK) {
-			userInstructed = true;
-			if (instructedVersion != null)
-				recordUserInstructed();
-		}
-	}
-
-	private void recordUserInstructed() {
-		instructedVersion.setAndCommit(VersionInfo.installedVersionCode());
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// Prevents the fragment from automatically being recreated.
@@ -76,6 +52,7 @@ public class SettingsActivity extends ServiceSyncActivity {
 		getFragmentManager()
 				.beginTransaction()
 				.add(new MainMenuFragment(), null)
+				.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT)
 				.commit();
 
 		bindService(ComponentType.create(SettingsService.class).makeIntent(), serviceConnection, BIND_AUTO_CREATE);
