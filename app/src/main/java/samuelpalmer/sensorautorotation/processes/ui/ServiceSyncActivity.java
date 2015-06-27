@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.app.Activity;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.processes.service.EnsureAppLoadedReceiver;
 
 /**
@@ -18,7 +18,7 @@ public abstract class ServiceSyncActivity extends Activity {
 	}
 
 	private void ensureBackgroundProcessIsLoaded() {
-		Intent intent = new Intents(EnsureAppLoadedReceiver.class).makeIntent();
+		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).makeIntent();
 		sendBroadcast(intent);
 	}
 

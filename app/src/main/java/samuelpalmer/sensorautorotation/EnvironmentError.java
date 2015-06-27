@@ -38,11 +38,11 @@ public abstract class EnvironmentError {
 	}
 
 	private static PendingIntent makeShowMessage(CharSequence message) {
-		Intents intents = new Intents(DialogActivity.class);
-		Intent intent = intents.makeIntent()
+		ComponentType componentType = ComponentType.create(DialogActivity.class);
+		Intent intent = componentType.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, getAppName());
-		return intents.makePending(intent);
+		return componentType.makePending(intent);
 	}
 
 	public static void clear() {

@@ -7,7 +7,7 @@ import android.content.Intent;
 import java.util.HashMap;
 import java.util.Map;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
@@ -19,25 +19,30 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 class UserUpgrader {
 
-	private final ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout;
 	private final int newAppVersion;
 
 	public UserUpgrader() {
-		lastVersionUserInstructedAbout = new ApplicationSettings(Prefs.prefs()).lastVersionUserInstructedAbout();
 		newAppVersion = new VersionInfo().installedVersionCode();
 	}
 
 	public void upgradeUser() {
-		String upgradeMessage = buildUpgradeMessage();
-		if (upgradeMessage.length() != 0)
-			notify(upgradeMessage);
+		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(Prefs.prefs()).lastVersionUserInstructedAbout();
+		Integer lastAppVersion = lastVersionUserInstructedAbout.tryGet();
 
-		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
+		//We only need to instruct the user about changes if he/she has actually run the app before.
+		if (lastAppVersion != null) {
+			String upgradeMessage = buildUpgradeMessage(lastAppVersion);
+			if (upgradeMessage.length() != 0)
+				notify(upgradeMessage);
+
+			lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
+		}
 	}
 
-	private String buildUpgradeMessage() {
+	private String buildUpgradeMessage(Integer lastAppVersion) {
 		StringBuilder upgradeMessage = new StringBuilder();
-		for (int version = lastVersionUserInstructedAbout.get() + 1; version <= newAppVersion; ++version) {
+
+		for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
 			Integer messageId = upgradeMessages.get(version);
 			if (messageId != null) {
 				CharSequence currentMessage = StringResource.get(messageId);
@@ -64,11 +69,11 @@ class UserUpgrader {
 	}
 
 	private PendingIntent makeDialogIntent(String message) {
-		Intents intents = new Intents(DialogActivity.class);
-		Intent intent = intents.makeIntent()
+		ComponentType componentType = ComponentType.create(DialogActivity.class);
+		Intent intent = componentType.makeIntent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, messageTitle());
-		return intents.makePending(intent);
+		return componentType.makePending(intent);
 	}
 
 	private CharSequence messageTitle() {

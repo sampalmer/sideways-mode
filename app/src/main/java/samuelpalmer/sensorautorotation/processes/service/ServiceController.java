@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.content.ComponentName;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -32,6 +32,6 @@ abstract class ServiceController {
 	}
 
 	private static Intent intent() {
-		return new Intents(RotationService.class).makeIntent();
+		return ComponentType.create(RotationService.class).makeIntent();
 	}
 }

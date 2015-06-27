@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceDisabler extends ServiceReceiver {
 	public static void sendDisableRequest() {
-		Process.context().sendBroadcast(new Intents(ServiceDisabler.class).makeIntent());
+		Process.context().sendBroadcast(ComponentType.create(ServiceDisabler.class).makeIntent());
 	}
 
 	@Override

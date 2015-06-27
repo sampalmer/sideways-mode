@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -34,7 +34,7 @@ public class ServiceNotification {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
 				.setSmallIcon(mode.iconResourceId(overridden))
-				.setContentIntent(new Intents(ToggleRotationLockReceiver.class).makePending())
+				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).makePending())
 				.setContentTitle(summary)
 				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
 				.setPriority(priority.androidPriority());

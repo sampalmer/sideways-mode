@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Service;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 
 abstract class ServiceService extends Service {
 
@@ -20,7 +20,7 @@ abstract class ServiceService extends Service {
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 
-		Intent intent = new Intents(EnsureAppLoadedReceiver.class).makeIntent();
+		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).makeIntent();
 
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
 		for (int i = 0; i < 50; ++i)

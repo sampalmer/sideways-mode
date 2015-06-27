@@ -30,6 +30,10 @@
 
 		<!-- Main Process -->
 
+		<activity android:name=".processes.ui.FirstRunActivity"
+            android:configChanges="orientation|screenSize"
+		/>
+
 		<activity
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:configChanges="orientation|screenSize"

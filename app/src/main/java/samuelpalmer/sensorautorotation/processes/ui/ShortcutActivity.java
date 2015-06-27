@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.components.ToggleRotationLockActivity;
@@ -18,7 +18,7 @@ public class ShortcutActivity extends Activity {
 		Intent shortcut = new Intent();
 
 		//If you try to send a broadcast from a shortcut, Android seems to just say "App not installed", so we're using a dummy activity.
-		Intent launchIntent = new Intents(ToggleRotationLockActivity.class).makeIntent();
+		Intent launchIntent = ComponentType.create(ToggleRotationLockActivity.class).makeIntent();
 
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent);
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, StringResource.get(R.string.toggle_rotation_lock));

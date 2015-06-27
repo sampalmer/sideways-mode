@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.os.SystemClock;
 
-import samuelpalmer.sensorautorotation.Intents;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
 
@@ -31,8 +31,8 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		Intents intents = new Intents(EnsureAppLoadedReceiver.class);
-		return intents.makePending();
+		ComponentType componentType = ComponentType.create(EnsureAppLoadedReceiver.class);
+		return componentType.makePending();
 	}
 
 	@Override
