@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -10,18 +9,22 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.Process;
 
-public class DialogActivity extends Activity {
+public class DialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
 	private static final String INTENT_EXTRA_MESSAGE = "message";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
+		Intent settingsIntent = ComponentType.create(SettingsActivity.class).intent();
+
 		ComponentType componentType = ComponentType.create(DialogActivity.class);
 		Intent intent = componentType.intent()
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title);
 
-		return componentType.pendingIntent(intent);
+		Intent[] intents = {settingsIntent, intent};
+		return PendingIntent.getActivities(Process.context(), 0, intents, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	@Override
