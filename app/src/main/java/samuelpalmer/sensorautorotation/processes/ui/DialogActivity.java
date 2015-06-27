@@ -4,12 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import samuelpalmer.sensorautorotation.ComponentType;
+
 public class DialogActivity extends Activity {
-	public static final String INTENT_EXTRA_TITLE = "title";
-	public static final String INTENT_EXTRA_MESSAGE = "message";
+	private static final String INTENT_EXTRA_TITLE = "title";
+	private static final String INTENT_EXTRA_MESSAGE = "message";
+
+	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
+		ComponentType componentType = ComponentType.create(DialogActivity.class);
+		Intent intent = componentType.intent()
+				.putExtra(INTENT_EXTRA_MESSAGE, message)
+				.putExtra(INTENT_EXTRA_TITLE, title);
+
+		return componentType.pendingIntent(intent);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

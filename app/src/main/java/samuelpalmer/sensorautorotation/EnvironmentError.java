@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -38,11 +37,7 @@ public abstract class EnvironmentError {
 	}
 
 	private static PendingIntent makeShowMessage(CharSequence message) {
-		ComponentType componentType = ComponentType.create(DialogActivity.class);
-		Intent intent = componentType.intent()
-				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
-				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, getAppName());
-		return componentType.pendingIntent(intent);
+		return DialogActivity.makePendingIntent(getAppName(), message);
 	}
 
 	public static void clear() {
