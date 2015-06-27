@@ -22,7 +22,7 @@ class UserUpgrader {
 	private final int newAppVersion;
 
 	public UserUpgrader() {
-		newAppVersion = new VersionInfo().installedVersionCode();
+		newAppVersion = VersionInfo.installedVersionCode();
 	}
 
 	public void upgradeUser() {

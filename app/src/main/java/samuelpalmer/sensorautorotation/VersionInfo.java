@@ -3,9 +3,9 @@ package samuelpalmer.sensorautorotation;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-public class VersionInfo {
+public abstract class VersionInfo {
 
-	public int installedVersionCode() {
+	public static int installedVersionCode() {
 		try {
 			PackageInfo packageInfo = Process.context().getPackageManager().getPackageInfo(Process.context().getPackageName(), 0);
 			return packageInfo.versionCode;

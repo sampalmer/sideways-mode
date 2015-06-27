@@ -69,7 +69,7 @@ public class SettingsActivity extends ServiceSyncActivity {
 	}
 
 	private void recordUserInstructed() {
-		instructedVersion.setAndCommit(new VersionInfo().installedVersionCode());
+		instructedVersion.setAndCommit(VersionInfo.installedVersionCode());
 	}
 
 	@Override
