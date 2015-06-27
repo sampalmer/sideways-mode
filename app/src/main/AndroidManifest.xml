@@ -44,6 +44,7 @@
 		<activity
 			android:name=".processes.ui.SettingsActivity"
 			android:configChanges="orientation|screenSize"
+		    android:launchMode="singleTop"
 		>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
