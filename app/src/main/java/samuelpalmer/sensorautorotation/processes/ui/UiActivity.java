@@ -9,7 +9,7 @@ import samuelpalmer.sensorautorotation.processes.service.EnsureAppLoadedReceiver
 /**
  * Ensures the background service is running if necessary in case it's died.
  */
-public abstract class ServiceSyncActivity extends Activity {
+public abstract class UiActivity extends Activity {
 
 	@Override
 	protected void onResume() {

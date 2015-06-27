@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class FirstRunActivity extends ServiceSyncActivity {
+public class FirstRunActivity extends UiActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

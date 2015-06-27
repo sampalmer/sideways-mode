@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
 /**
  * UI proxy to settings stored in background process.
  */
-public class SettingsActivity extends ServiceSyncActivity {
+public class SettingsActivity extends UiActivity {
 
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
 
