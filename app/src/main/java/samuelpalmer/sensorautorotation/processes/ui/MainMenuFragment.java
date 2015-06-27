@@ -30,7 +30,7 @@ public class MainMenuFragment extends Fragment {
 
 		switch (item.getItemId()) {
 			case R.id.action_instructions:
-				startActivity(ComponentType.create(InstructionsActivity.class).makeIntent());
+				startActivity(ComponentType.create(InstructionsActivity.class).intent());
 				break;
 			case R.id.action_feedback:
 				new Feedback().send();

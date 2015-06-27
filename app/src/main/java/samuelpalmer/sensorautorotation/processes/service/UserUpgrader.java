@@ -70,10 +70,10 @@ class UserUpgrader {
 
 	private PendingIntent makeDialogIntent(String message) {
 		ComponentType componentType = ComponentType.create(DialogActivity.class);
-		Intent intent = componentType.makeIntent()
+		Intent intent = componentType.intent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, messageTitle());
-		return componentType.makePending(intent);
+		return componentType.pendingIntent(intent);
 	}
 
 	private CharSequence messageTitle() {

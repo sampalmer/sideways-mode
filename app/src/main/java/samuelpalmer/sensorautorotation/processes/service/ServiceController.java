@@ -32,6 +32,6 @@ abstract class ServiceController {
 	}
 
 	private static Intent intent() {
-		return ComponentType.create(RotationService.class).makeIntent();
+		return ComponentType.create(RotationService.class).intent();
 	}
 }

@@ -39,10 +39,10 @@ public abstract class EnvironmentError {
 
 	private static PendingIntent makeShowMessage(CharSequence message) {
 		ComponentType componentType = ComponentType.create(DialogActivity.class);
-		Intent intent = componentType.makeIntent()
+		Intent intent = componentType.intent()
 				.putExtra(DialogActivity.INTENT_EXTRA_MESSAGE, message)
 				.putExtra(DialogActivity.INTENT_EXTRA_TITLE, getAppName());
-		return componentType.makePending(intent);
+		return componentType.pendingIntent(intent);
 	}
 
 	public static void clear() {

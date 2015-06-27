@@ -44,33 +44,33 @@ public abstract class ComponentType {
 
 	private Class<?> clazz;
 
-	public abstract PendingIntent makePending(Intent intent);
+	public abstract PendingIntent pendingIntent(Intent intent);
 
-	public Intent makeIntent() {
+	public Intent intent() {
 		return new Intent(Process.context(), clazz);
 	}
 
-	public PendingIntent makePending() {
-		return makePending(makeIntent());
+	public PendingIntent pendingIntent() {
+		return pendingIntent(intent());
 	}
 
 	private static class ActivityComponentType extends ComponentType {
 		@Override
-		public PendingIntent makePending(Intent intent) {
+		public PendingIntent pendingIntent(Intent intent) {
 			return PendingIntent.getActivity(Process.context(), requestCode, intent, flags);
 		}
 	}
 
 	private static class BroadcastReceiverComponentType extends ComponentType {
 		@Override
-		public PendingIntent makePending(Intent intent) {
+		public PendingIntent pendingIntent(Intent intent) {
 			workaroundOsKillBug(intent);
 			return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
 		}
 
 		@Override
-		public Intent makeIntent() {
-			Intent result = super.makeIntent();
+		public Intent intent() {
+			Intent result = super.intent();
 			workaroundOsKillBug(result);
 			return result;
 		}
@@ -86,7 +86,7 @@ public abstract class ComponentType {
 
 	private static class ServiceComponentType extends ComponentType {
 		@Override
-		public PendingIntent makePending(Intent intent) {
+		public PendingIntent pendingIntent(Intent intent) {
 			return PendingIntent.getService(Process.context(), requestCode, intent, flags);
 		}
 	}

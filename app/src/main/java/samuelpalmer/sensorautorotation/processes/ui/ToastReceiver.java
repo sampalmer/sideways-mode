@@ -16,7 +16,7 @@ public class ToastReceiver extends BroadcastReceiver {
 	private static final String EXTRA_MESSAGE = null;
 
 	public static void send(CharSequence message) {
-		Intent intent = ComponentType.create(ToastReceiver.class).makeIntent()
+		Intent intent = ComponentType.create(ToastReceiver.class).intent()
 				.putExtra(EXTRA_MESSAGE, message);
 		Process.context().sendBroadcast(intent);
 	}

@@ -31,7 +31,7 @@ public class FirstRunLauncherFragment extends Fragment {
 
 	private void instructUserIfNecessary() {
 		if (isResumed() && instructedVersionPreference != null && !instructedVersionPreference.hasValue())
-			startActivityForResult(ComponentType.create(FirstRunActivity.class).makeIntent(), REQUEST_CODE_INSTRUCT_USER);
+			startActivityForResult(ComponentType.create(FirstRunActivity.class).intent(), REQUEST_CODE_INSTRUCT_USER);
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class SettingsActivity extends ServiceSyncActivity {
 				.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT)
 				.commit();
 
-		bindService(ComponentType.create(SettingsService.class).makeIntent(), serviceConnection, BIND_AUTO_CREATE);
+		bindService(ComponentType.create(SettingsService.class).intent(), serviceConnection, BIND_AUTO_CREATE);
 	}
 
 	@Override

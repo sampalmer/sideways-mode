@@ -18,7 +18,7 @@ public abstract class ServiceSyncActivity extends Activity {
 	}
 
 	private void ensureBackgroundProcessIsLoaded() {
-		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).makeIntent();
+		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).intent();
 		sendBroadcast(intent);
 	}
 

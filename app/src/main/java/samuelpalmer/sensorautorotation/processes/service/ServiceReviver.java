@@ -32,7 +32,7 @@ public class ServiceReviver extends State {
 
 	private PendingIntent intent() {
 		ComponentType componentType = ComponentType.create(EnsureAppLoadedReceiver.class);
-		return componentType.makePending();
+		return componentType.pendingIntent();
 	}
 
 	@Override

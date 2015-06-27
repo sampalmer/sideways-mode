@@ -25,7 +25,7 @@ abstract class ServiceService extends Service {
 	 * https://code.google.com/p/android/issues/detail?id=178057
 	 */
 	private void clearImmediateDeath() {
-		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).makeIntent();
+		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).intent();
 
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
 		for (int i = 0; i < 50; ++i)

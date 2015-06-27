@@ -34,7 +34,7 @@ public class ServiceNotification {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
 				.setSmallIcon(mode.iconResourceId(overridden))
-				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).makePending())
+				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent())
 				.setContentTitle(summary)
 				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
 				.setPriority(priority.androidPriority());
