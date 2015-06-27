@@ -110,6 +110,20 @@
 		<service android:name=".processes.service.SettingsService"
 		         android:process=":samuelpalmer.sensorautorotation.service" />
 
+		<activity
+			android:name=".processes.service.DummyActivity"
+			android:theme="@android:style/Theme.NoDisplay"
+			android:enabled="true"
+			android:allowTaskReparenting="true"
+			android:noHistory="true"
+			android:excludeFromRecents="true"
+			android:alwaysRetainTaskState="false"
+			android:stateNotNeeded="true"
+			android:clearTaskOnLaunch="true"
+			android:finishOnTaskLaunch="true"
+			android:process=":samuelpalmer.sensorautorotation.service"
+			/>
+
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 
 		<!--suppress AndroidDomInspection -->
