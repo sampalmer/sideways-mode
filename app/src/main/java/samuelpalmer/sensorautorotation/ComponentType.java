@@ -77,7 +77,8 @@ public abstract class ComponentType {
 
 		private void workaroundOsKillBug(Intent intent) {
 			if (Build.VERSION.SDK_INT >= 16) {
-				//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 and above
+				//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 and above.
+				//Note that this doesn't help when the broadcast was sent by the OS.
 				intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 			}
 		}

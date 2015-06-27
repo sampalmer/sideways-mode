@@ -13,14 +13,18 @@ abstract class ServiceService extends Service {
 		ServiceProcess.ensureInitialised();
 	}
 
-	/**
-	 * Works around a bug in which swiping away the UI makes Android kill this process immediately or
-	 * later on (such as when it receives a broadcast).
-	 */
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
+		clearImmediateDeath();
 		clearPendingDeath();
+	}
 
+	/**
+	 * Works around a bug in which swiping away the UI makes Android kill this process immediately.
+	 *
+	 * https://code.google.com/p/android/issues/detail?id=178057
+	 */
+	private void clearImmediateDeath() {
 		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).makeIntent();
 
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
@@ -31,6 +35,8 @@ abstract class ServiceService extends Service {
 	/**
 	 * Resets the process's "waitingToKill" flag so it won't be killed on the next received broadcast.
 	 * This has a delayed effect since it only seems to apply once the activity has actually started.
+	 *
+	 * https://code.google.com/p/android/issues/detail?id=104308
 	 */
 	private void clearPendingDeath() {
 		Intent intent = new Intent(this, DummyActivity.class);
