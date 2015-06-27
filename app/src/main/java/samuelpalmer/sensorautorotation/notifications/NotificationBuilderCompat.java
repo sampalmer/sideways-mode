@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.R;
 
 /**
  * Basically a reinvented clone of NotificationCompat.Builder, except with a working setShowWhen
@@ -149,7 +150,7 @@ public class NotificationBuilderCompat {
 	private static class V21 extends V17
 	{
 		public V21() {
-			setColor(0xFF795548);
+			setColor(Process.context().getResources().getColor(R.color.primary_500));
 		}
 
 		@Override
