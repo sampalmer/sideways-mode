@@ -26,8 +26,8 @@ public class SettingsActivity extends UiActivity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			preferences = new RemoteSharedPreferencesAdaptor(RemoteSharedPreferences.Stub.asInterface(service));
 
-			FirstRunLauncherFragment fragmentByTag = (FirstRunLauncherFragment) getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT);
-			fragmentByTag.onPreferencesAvailable(preferences);
+			FirstRunLauncherFragment firstRunFragment = (FirstRunLauncherFragment) getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT);
+			firstRunFragment.onPreferencesAvailable(preferences);
 
 			getFragmentManager().beginTransaction()
 					.replace(android.R.id.content, new SettingsFragment())
@@ -36,6 +36,8 @@ public class SettingsActivity extends UiActivity {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
+			preferences = null;
+
 			//We could have got here as a result of the user explicitly stopping the background service, so we shouldn't crash.
 			//If the service crashed, there's not much benefit to the UI also crashing. Might as well gracefully exit.
 			//Once the user re-opens the task, this activity should be created again anyway.
@@ -72,7 +74,14 @@ public class SettingsActivity extends UiActivity {
 	@Override
 	public SharedPreferences getSharedPreferences(String name, int mode) {
 		//PreferenceFragment calls this for its underlying preference storage
-		return name.equals(ApplicationSettings.sharedPreferencesName()) ? preferences : super.getSharedPreferences(name, mode);
+		if (name.equals(ApplicationSettings.sharedPreferencesName())) {
+			if (preferences == null)
+				throw new RuntimeException("Preferences requested but not available.");
+
+			return preferences;
+		}
+		else
+			return super.getSharedPreferences(name, mode);
 	}
 
 }
