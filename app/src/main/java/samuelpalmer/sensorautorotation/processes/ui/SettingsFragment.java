@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -32,7 +33,11 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	};
 
-	private ApplicationSettings settings;
+	private boolean created;
+	private SharedPreferences preferences;
+	private boolean started;
+	private boolean initialised;
+	private boolean listening;
 
 	private void updateListPreferenceSummaries() {
 		PreferenceScreen screen = getPreferenceScreen();
@@ -45,6 +50,7 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	}
 
+	private ApplicationSettings settings;
 	private EventRegistrar enabledChanged;
 	private EventRegistrar onScreenOffChanged;
 	private EventRegistrar notificationPriorityChanged;
@@ -52,8 +58,23 @@ public class SettingsFragment extends PreferenceFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		created = true;
+		initialiseIfReady();
+	}
 
-		settings = new ApplicationSettings(getPreferenceManager().getSharedPreferences());
+	public void onPreferencesAvailable(SharedPreferences preferences) {
+		this.preferences = preferences;
+		initialiseIfReady();
+		listenIfReady();
+	}
+
+	private void initialiseIfReady() {
+		if (created && preferences != null)
+			initialise();
+	}
+
+	private void initialise() {
+		settings = new ApplicationSettings(preferences);
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		new SettingsInitialiser(settings).ensureInitialised();
@@ -66,6 +87,8 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledChanged = settings.enabled().onChange();
 		onScreenOffChanged = settings.screenOffBehaviour().onChange();
 		notificationPriorityChanged = settings.notificationPriority().onChange();
+
+		initialised = true;
 	}
 
 	private void hideUnsupportedOptions() {
@@ -81,11 +104,20 @@ public class SettingsFragment extends PreferenceFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		enabledChanged.subscribe(enabledUpdater);
-		onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
-		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
+		started = true;
+		listenIfReady();
+	}
 
-		refresh();
+	private void listenIfReady() {
+		if (initialised && started) {
+			enabledChanged.subscribe(enabledUpdater);
+			onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
+			notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
+
+			listening = true;
+
+			refresh();
+		}
 	}
 
 	private void refresh() {
@@ -96,9 +128,14 @@ public class SettingsFragment extends PreferenceFragment {
 	@Override
 	public void onStop() {
 		super.onStop();
-		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
-		onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
-		enabledChanged.unsubscribe(enabledUpdater);
-	}
+		started = false;
 
+		if (initialised && listening) {
+			notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
+			onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
+			enabledChanged.unsubscribe(enabledUpdater);
+
+			listening = false;
+		}
+	}
 }

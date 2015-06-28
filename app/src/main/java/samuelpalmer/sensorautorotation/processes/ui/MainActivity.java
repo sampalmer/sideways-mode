@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.SettingsService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedPreferences;
@@ -29,9 +30,8 @@ public class MainActivity extends UiActivity {
 			FirstRunLauncherFragment firstRunFragment = (FirstRunLauncherFragment) getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT);
 			firstRunFragment.onPreferencesAvailable(preferences);
 
-			getFragmentManager().beginTransaction()
-					.replace(android.R.id.content, new SettingsFragment())
-					.commit();
+			SettingsFragment settings = (SettingsFragment) getFragmentManager().findFragmentById(R.id.settings);
+			settings.onPreferencesAvailable(preferences);
 		}
 
 		@Override
@@ -47,9 +47,8 @@ public class MainActivity extends UiActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// Prevents the fragment from automatically being recreated.
-		// We need to do this since the fragment shouldn't exist without the service binding.
-		super.onCreate(null);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
 		getFragmentManager()
 				.beginTransaction()
@@ -64,11 +63,6 @@ public class MainActivity extends UiActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		unbindService(serviceConnection);
-	}
-
-	@Override
-	protected void onSaveInstanceState(@SuppressWarnings("NullableProblems") Bundle outState) {
-		//Don't invoke super.onSaveInstanceState since it'll prevent us from adding/removing the fragment while we're paused
 	}
 
 	@Override
