@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import samuelpalmer.sensorautorotation.settings.application.remote.RemoteSharedP
  */
 public class MainActivity extends UiActivity {
 
+	private static final String TAG_MENU = "menu";
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
 
 	private RemoteSharedPreferencesAdaptor preferences;
@@ -50,11 +52,14 @@ public class MainActivity extends UiActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		getFragmentManager()
-				.beginTransaction()
-				.add(new MainMenuFragment(), null)
-				.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT)
-				.commit();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+		if (getFragmentManager().findFragmentByTag(TAG_MENU) == null)
+			transaction.add(new MainMenuFragment(), TAG_MENU);
+		if (getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT) == null)
+			transaction.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT);
+
+		transaction.commit();
 
 		bindService(ComponentType.create(SettingsService.class).intent(), serviceConnection, BIND_AUTO_CREATE);
 	}
