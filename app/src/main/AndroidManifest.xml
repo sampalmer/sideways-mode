@@ -38,11 +38,11 @@
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/instructions_heading"
-			android:parentActivityName=".processes.ui.SettingsActivity"
+			android:parentActivityName=".processes.ui.MainActivity"
 			tools:ignore="UnusedAttribute" />
 
 		<activity
-			android:name=".processes.ui.SettingsActivity"
+			android:name=".processes.ui.MainActivity"
 			android:configChanges="orientation|screenSize"
 		    android:launchMode="singleTop"
 		>

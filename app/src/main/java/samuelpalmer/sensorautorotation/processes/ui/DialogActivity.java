@@ -16,7 +16,7 @@ public class DialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_MESSAGE = "message";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
-		Intent settingsIntent = ComponentType.create(SettingsActivity.class).intent();
+		Intent settingsIntent = ComponentType.create(MainActivity.class).intent();
 
 		ComponentType componentType = ComponentType.create(DialogActivity.class);
 		Intent intent = componentType.intent()
