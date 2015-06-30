@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,6 +15,7 @@ import samuelpalmer.sensorautorotation.Process;
 public class DialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
 	private static final String INTENT_EXTRA_MESSAGE = "message";
+	public static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
 		Intent settingsIntent = ComponentType.create(MainActivity.class).intent();
@@ -35,7 +37,8 @@ public class DialogActivity extends UiActivity {
 		if (extras == null)
 			throw new RuntimeException("No extras specified");
 
-		MyDialogFragment.newInstance(extras).show(getFragmentManager(), null);
+		if (getFragmentManager().findFragmentByTag(TAG) == null)
+			MyDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
 	}
 
 	public static class MyDialogFragment extends DialogFragment {
@@ -56,7 +59,11 @@ public class DialogActivity extends UiActivity {
 
 		@Override
 		public void onDismiss(DialogInterface dialog) {
-			getActivity().finish();
+			Activity activity = getActivity();
+
+			//For some reason the activity is null when the screen orientation changes
+			if (activity != null)
+				activity.finish();
 		}
 	}
 }
