@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
+import android.content.pm.PackageManager;
 import android.os.PowerManager;
 import android.view.WindowManager;
 
@@ -37,5 +38,9 @@ public abstract class SystemServices {
 
 	private static Object get(String name) {
 		return Process.context().getSystemService(name);
+	}
+
+	public static PackageManager packageManager() {
+		return Process.context().getPackageManager();
 	}
 }

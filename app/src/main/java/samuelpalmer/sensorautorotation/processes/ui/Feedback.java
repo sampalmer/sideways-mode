@@ -8,6 +8,7 @@ import android.net.Uri;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class Feedback {
@@ -31,7 +32,7 @@ public class Feedback {
 	}
 
 	private boolean hasEmailApp() {
-		ComponentName emailApp = intent.resolveActivity(Process.context().getPackageManager());
+		ComponentName emailApp = intent.resolveActivity(SystemServices.packageManager());
 		return emailApp != null && !emailApp.equals(unsupportedAction);
 	}
 

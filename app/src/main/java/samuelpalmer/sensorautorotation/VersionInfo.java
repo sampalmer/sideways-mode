@@ -11,7 +11,7 @@ public abstract class VersionInfo {
 
 	public static PackageInfo packageInfo() {
 		try {
-			return Process.context().getPackageManager().getPackageInfo(Process.context().getPackageName(), 0);
+			return SystemServices.packageManager().getPackageInfo(Process.context().getPackageName(), 0);
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new RuntimeException(e);
 		}
