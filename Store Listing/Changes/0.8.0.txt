@@ -1,0 +1,8 @@
+• Added notification priority setting
+• Shows your orientation in the notification
+• Reduced accidental screen orientation changes
+• Revised instructions
+• Shows in the notification when the screen orientation is being overridden by another app
+• Reduced RAM usage
+• Added colour
+• Minor improvements & bug fixes
