@@ -8,6 +8,7 @@ import android.net.Uri;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.VersionInfo;
 
 public class Feedback {
 	//The intent resolves to this when run on the official Android emulators if it doesn't match anything.
@@ -19,7 +20,7 @@ public class Feedback {
 		intent = new Intent(Intent.ACTION_SENDTO)
 			.setData(new Uri.Builder().scheme("mailto").build())
 			.putExtra(Intent.EXTRA_EMAIL, new String[]{"Sam Palmer <sampalmer4+androidautorotate@gmail.com>"})
-			.putExtra(Intent.EXTRA_SUBJECT, StringResource.format(R.string.feedback_email_subject, R.string.app_name))
+			.putExtra(Intent.EXTRA_SUBJECT, StringResource.format(R.string.feedback_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName))
 			.putExtra(Intent.EXTRA_TEXT, "")
 		;
 	}

@@ -88,7 +88,7 @@
 	<string name="instructions_help_heading">Troubleshooting</string>
 	<string name="instructions_help_contents">If the screen faces the wrong way:\n1. Turn %1$s mode off.\n2. Rotate the device until the screen is facing the right way.</string>
 
-	<string name="feedback_email_subject">"Feedback for %1$s"</string>
+	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
 	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
 
