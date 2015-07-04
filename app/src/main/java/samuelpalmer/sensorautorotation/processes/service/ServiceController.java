@@ -10,7 +10,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 abstract class ServiceController {
 
 	private static void ensureStarted() {
-		ComponentName name = samuelpalmer.sensorautorotation.Process.context().startService(intent());
+		ComponentName name = Process.context().startService(intent());
 		if (name == null)
 			throw new RuntimeException("Service doesn't exist");
 	}
