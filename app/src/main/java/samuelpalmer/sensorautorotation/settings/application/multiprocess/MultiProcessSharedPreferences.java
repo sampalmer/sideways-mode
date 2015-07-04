@@ -118,7 +118,12 @@ public class MultiProcessSharedPreferences implements SharedPreferences {
 
 	@Override
 	public Editor edit() {
-		return new MultiProcessEditor(preferences(), preferencesName, locker);
+		return locker.lock(new Operation<MultiProcessEditor>() {
+			@Override
+			public MultiProcessEditor run() {
+				return new MultiProcessEditor(preferences(), preferencesName, locker);
+			}
+		});
 	}
 
 	@Override

@@ -22,13 +22,7 @@ class MultiProcessEditor implements Editor {
 		this.underlyingPrefs = underlyingPrefs;
 		this.prefsName = prefsName;
 		this.locker = locker;
-
-		this.editor = locker.lock(new Operation<Editor>() {
-			@Override
-			public Editor run() {
-				return MultiProcessEditor.this.underlyingPrefs.edit();
-			}
-		});
+		this.editor = underlyingPrefs.edit();
 	}
 
 	public Editor putString(String key, String value) {
