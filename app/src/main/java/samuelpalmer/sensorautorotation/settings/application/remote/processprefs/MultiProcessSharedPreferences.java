@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.settings.application.remote.processprefs
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.
 
 public class MultiProcessSharedPreferences implements SharedPreferences {
 
-	private final String preferencesName;
+	public final String preferencesName;
 	private final SemaphoreLocker locker;
 
 	public MultiProcessSharedPreferences(String name) {
@@ -117,19 +118,26 @@ public class MultiProcessSharedPreferences implements SharedPreferences {
 
 	@Override
 	public Editor edit() {
-		//Make apply actually use commit
-		return new MultiProcessEditor(preferences().edit(), locker);
+		return new MultiProcessEditor(preferences(), preferencesName, locker);
 	}
 
 	@Override
-	public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
-
+	public synchronized void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+		if (!listeners.containsKey(listener)) {
+			MultiProcessChangeReceiver receiver = new MultiProcessChangeReceiver(this, listener);
+			receiver.register();
+			listeners.put(listener, receiver);
+		}
 	}
 
 	@Override
-	public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
-
+	public synchronized void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+		MultiProcessChangeReceiver receiver = listeners.remove(listener);
+		if (receiver != null)
+			receiver.unregister();
 	}
+
+	private final Map<OnSharedPreferenceChangeListener, MultiProcessChangeReceiver> listeners = new HashMap<>();
 
 	/**
 	 * Makes a new instance on each call since apparently that circumvents process-wide caching.
@@ -137,7 +145,10 @@ public class MultiProcessSharedPreferences implements SharedPreferences {
 	 * See https://code.google.com/p/android/issues/detail?id=66625
 	 */
 	private SharedPreferences preferences() {
-		return Process.context().getSharedPreferences(preferencesName, Context.MODE_MULTI_PROCESS);
+		return Process.context().getSharedPreferences(
+			preferencesName,
+			Context.MODE_MULTI_PROCESS //This actually just causes the preferences to be reloaded from storage in this method call
+		);
 	}
 
 }

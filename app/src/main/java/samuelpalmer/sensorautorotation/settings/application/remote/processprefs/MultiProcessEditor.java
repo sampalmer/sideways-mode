@@ -1,18 +1,27 @@
 package samuelpalmer.sensorautorotation.settings.application.remote.processprefs;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.SemaphoreLocker.Operation;
 
 class MultiProcessEditor implements Editor {
 
+	private final SharedPreferences underlyingPrefs;
+	private final String prefsName;
 	private final Editor editor;
 	private final SemaphoreLocker locker;
 
-	public MultiProcessEditor(Editor editor, SemaphoreLocker locker) {
-		this.editor = editor;
+	@SuppressLint("CommitPrefEdits")
+	public MultiProcessEditor(SharedPreferences underlyingPrefs, String prefsName, SemaphoreLocker locker) {
+		this.underlyingPrefs = underlyingPrefs;
+		this.prefsName = prefsName;
+		this.editor = underlyingPrefs.edit();
 		this.locker = locker;
 	}
 
@@ -53,13 +62,30 @@ class MultiProcessEditor implements Editor {
 
 			@Override
 			public Boolean run() {
-				return editor.commit();
+				final ArrayList<String> affectedKeys = new ArrayList<>();
+
+				OnSharedPreferenceChangeListener listener = new OnSharedPreferenceChangeListener() {
+					@Override
+					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+						affectedKeys.add(key);
+					}
+				};
+
+				underlyingPrefs.registerOnSharedPreferenceChangeListener(listener);
+				boolean result = editor.commit();
+				underlyingPrefs.unregisterOnSharedPreferenceChangeListener(listener);
+
+				MultiProcessChangeReceiver.broadcastChange(prefsName, affectedKeys);
+
+				return result;
 			}
 
 		});
 	}
 
 	public void apply() {
+		// This _must_ be done synchronously because we don't want the file to change outside of the
+		// semaphore.
 		commit();
 	}
 
