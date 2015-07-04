@@ -1,23 +1,12 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentName;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-abstract class ServiceController {
-
-	private static void ensureStarted() {
-		ComponentName name = Process.context().startService(intent());
-		if (name == null)
-			throw new RuntimeException("Service doesn't exist");
-	}
-
-	private static void ensureStopped() {
-		Process.context().stopService(intent());
-	}
+public abstract class ServiceController {
 
 	public static void updateFromSettings() {
 		boolean enabled = new ApplicationSettings().enabled().get();
@@ -29,6 +18,16 @@ abstract class ServiceController {
 			ensureStarted();
 		else
 			ensureStopped();
+	}
+
+	private static void ensureStarted() {
+		ComponentName name = Process.context().startService(intent());
+		if (name == null)
+			throw new RuntimeException("Service doesn't exist");
+	}
+
+	private static void ensureStopped() {
+		Process.context().stopService(intent());
 	}
 
 	private static Intent intent() {

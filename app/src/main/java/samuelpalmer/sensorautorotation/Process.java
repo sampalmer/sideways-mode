@@ -4,10 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
+
 public class Process extends Application {
 
 	public static final String TAG = Process.class.getSimpleName();
 	private static Context context;
+	private Setting<Boolean> enabledPreference;
 
 	public static Context context() {
 		return context;
@@ -16,15 +21,29 @@ public class Process extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
 		Log.i(TAG, "Process created");
 
 		context = this;
+
+		enabledPreference = new ApplicationSettings().enabled();
+		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
 
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
 
+		enabledPreference.onChange().unsubscribe(serviceStateUpdater);
+
 		Log.i(TAG, "Process terminated");
 	}
+
+	private static final EventHandler serviceStateUpdater = new EventHandler() {
+		@Override
+		public void update() {
+			ServiceController.updateFromSettings();
+		}
+	};
+
 }
