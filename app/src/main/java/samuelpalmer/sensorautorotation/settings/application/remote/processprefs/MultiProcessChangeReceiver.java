@@ -8,6 +8,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import java.util.ArrayList;
 
+import samuelpalmer.sensorautorotation.BroadcastKillFix;
 import samuelpalmer.sensorautorotation.Process;
 
 class MultiProcessChangeReceiver extends BroadcastReceiver {
@@ -19,6 +20,9 @@ class MultiProcessChangeReceiver extends BroadcastReceiver {
 		Intent intent = new Intent(action())
 			.putExtra(EXTRA_SHARED_PREFS_NAME, preferencesName)
 			.putStringArrayListExtra(EXTRA_PREF_KEYS, keys);
+
+		BroadcastKillFix.apply(intent);
+
 		Process.context().sendBroadcast(intent);
 	}
 

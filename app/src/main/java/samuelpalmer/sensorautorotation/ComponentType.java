@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.os.Build;
 
 /**
  * Should be used for creation of all intents since this works around an Android bug.
@@ -64,24 +63,17 @@ public abstract class ComponentType {
 	private static class BroadcastReceiverComponentType extends ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
-			workaroundOsKillBug(intent);
+			BroadcastKillFix.apply(intent);
 			return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
 		}
 
 		@Override
 		public Intent intent() {
 			Intent result = super.intent();
-			workaroundOsKillBug(result);
+			BroadcastKillFix.apply(result);
 			return result;
 		}
 
-		private void workaroundOsKillBug(Intent intent) {
-			if (Build.VERSION.SDK_INT >= 16) {
-				//Fixes bug in which process is killed when it receives a broadcast after task removal in Android 4.1 and above.
-				//Note that this doesn't help when the broadcast was sent by the OS.
-				intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-			}
-		}
 	}
 
 	private static class ServiceComponentType extends ComponentType {
