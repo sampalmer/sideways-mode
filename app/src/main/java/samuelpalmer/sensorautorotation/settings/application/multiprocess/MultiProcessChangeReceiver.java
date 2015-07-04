@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.settings.application.remote.processprefs;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

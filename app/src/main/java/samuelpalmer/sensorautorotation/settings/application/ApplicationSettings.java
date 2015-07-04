@@ -10,7 +10,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.MultiProcessSharedPreferences;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
 
 public class ApplicationSettings {
 

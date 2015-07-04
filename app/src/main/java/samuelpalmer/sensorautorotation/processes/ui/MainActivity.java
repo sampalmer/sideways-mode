@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.MultiProcessSharedPreferences;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
 
 /**
  * UI proxy to settings stored in background process.

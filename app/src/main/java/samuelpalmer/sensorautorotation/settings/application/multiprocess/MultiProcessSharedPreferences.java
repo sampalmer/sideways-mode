@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.settings.application.remote.processprefs;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.SemaphoreLocker.Operation;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.SemaphoreLocker.Operation;
 
 public class MultiProcessSharedPreferences implements SharedPreferences {
 

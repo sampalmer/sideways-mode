@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.settings.application.remote.processprefs;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import java.util.ArrayList;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.settings.application.remote.processprefs.SemaphoreLocker.Operation;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.SemaphoreLocker.Operation;
 
 class MultiProcessEditor implements Editor {
 
