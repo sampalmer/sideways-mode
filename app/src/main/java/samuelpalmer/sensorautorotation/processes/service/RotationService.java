@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceNotification
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
-import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityThing;
+import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
@@ -35,7 +35,7 @@ public class RotationService extends ServiceService {
 	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceNotificationUpdater serviceNotificationUpdater;
-	private UserInteractivityThing userInteractivityThing;
+	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 
 	@Override
 	public void onCreate() {
@@ -61,13 +61,13 @@ public class RotationService extends ServiceService {
 		serviceNotificationManager = new ServiceNotificationManager(serviceNotificationUpdater, appSettings, screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
 
-		userInteractivityThing = new UserInteractivityThing(calculator, screenUpdater);
+		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
-		userInteractivityThing.ensureStarted();
+		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 	}
 
@@ -95,7 +95,7 @@ public class RotationService extends ServiceService {
 
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
-		userInteractivityThing.ensureStopped();
+		userInteractivityChangeHandler.ensureStopped();
 		serviceNotificationManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 

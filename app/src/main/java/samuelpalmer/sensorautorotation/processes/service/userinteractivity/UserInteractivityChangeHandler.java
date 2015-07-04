@@ -6,13 +6,13 @@ import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 
-public class UserInteractivityThing extends State {
+public class UserInteractivityChangeHandler extends State {
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
-	public UserInteractivityThing(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
+	public UserInteractivityChangeHandler(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
 		this.calculator = calculator;
 		this.screenUpdater = screenUpdater;
 		orientationSensorHandler = new OrientationSensorHandler(calculator);

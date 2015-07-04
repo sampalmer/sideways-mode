@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import samuelpalmer.sensorautorotation.processes.service.CurrentStateSummary;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;

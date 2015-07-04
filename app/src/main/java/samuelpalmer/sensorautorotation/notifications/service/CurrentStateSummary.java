@@ -1,8 +1,8 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.notifications.service;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.notifications.service.Mode;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
 
 public class CurrentStateSummary {
 
