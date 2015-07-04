@@ -7,7 +7,6 @@ import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
 import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
@@ -36,14 +35,12 @@ public class ServiceNotification {
 				.setSmallIcon(mode.iconResourceId(overridden))
 				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent())
 				.setContentTitle(summary)
-				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
-				.setPriority(priority.androidPriority());
+				.setContentText(StringResource.get(mode.actionDescriptionResourceId()));
 
 		if (overridden)
 			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
 
-		if (priority == NotificationPriority.HIGH)
-			moveToTop();
+		priority.apply(builder);
 
 		hideTimestamp();
 		hideFromLockScreen();
@@ -62,10 +59,6 @@ public class ServiceNotification {
 			if (LockScreenStatus.isActive())
 				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
 		}
-	}
-
-	private void moveToTop() {
-		builder.setWhen(NotificationTimestamp.highest());
 	}
 
 	private void hideTimestamp() {

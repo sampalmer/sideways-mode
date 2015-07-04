@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
 
 @SuppressWarnings("unused")
 public enum NotificationPriority {
@@ -14,7 +15,14 @@ public enum NotificationPriority {
 		this.androidPriority = androidPriority;
 	}
 
-	public int androidPriority() {
-		return androidPriority;
+	public void apply(NotificationBuilderCompat builder) {
+		builder.setPriority(androidPriority);
+		if (this == NotificationPriority.HIGH)
+			moveToTop(builder);
 	}
+
+	private void moveToTop(NotificationBuilderCompat builder) {
+		builder.setWhen(NotificationTimestamp.highest());
+	}
+
 }
