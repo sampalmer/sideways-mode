@@ -4,9 +4,14 @@ import android.net.LocalServerSocket;
 
 import java.io.IOException;
 
+/**
+ * Provides mutual exclusion for multiple processes and/or threads. Note that this class itself
+ * isn't "thread-safe"; you shouldn't use one instance in multiple threads. Instead, use a different
+ * instance in each thread but with the same identifier.
+ */
 class Semaphore {
 
-	private static final int TIMEOUT_MILLISECONDS = 5000;
+	private static final int TIMEOUT_MILLISECONDS = 10000;
 	private LocalServerSocket lock;
 
 	public Semaphore(String identifier) {
@@ -26,7 +31,7 @@ class Semaphore {
 		} while (lock == null);
 	}
 
-	public synchronized void release() {
+	public void release() {
 		if (lock == null)
 			throw new RuntimeException("Already released");
 
