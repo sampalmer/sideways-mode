@@ -35,7 +35,8 @@ public class ServiceNotification {
 				.setSmallIcon(mode.iconResourceId(overridden))
 				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent())
 				.setContentTitle(summary)
-				.setContentText(StringResource.get(mode.actionDescriptionResourceId()));
+				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
+				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
 		if (overridden)
 			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
@@ -45,9 +46,14 @@ public class ServiceNotification {
 		hideTimestamp();
 		hideFromLockScreen();
 
-		builder.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
-
 		return builder.build();
+	}
+
+	private void hideTimestamp() {
+		if (Build.VERSION.SDK_INT >= 17)
+			builder.setShowWhen(false);
+		else
+			builder.setWhen(0);
 	}
 
 	private void hideFromLockScreen() {
@@ -59,12 +65,5 @@ public class ServiceNotification {
 			if (LockScreenStatus.isActive())
 				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
 		}
-	}
-
-	private void hideTimestamp() {
-		if (Build.VERSION.SDK_INT >= 17)
-			builder.setShowWhen(false);
-		else
-			builder.setWhen(0);
 	}
 }
