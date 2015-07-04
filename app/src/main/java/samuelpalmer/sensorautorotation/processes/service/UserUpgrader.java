@@ -24,7 +24,7 @@ class UserUpgrader {
 	}
 
 	public void upgradeUser() {
-		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings(Prefs.prefs()).lastVersionUserInstructedAbout();
+		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = new ApplicationSettings().lastVersionUserInstructedAbout();
 		Integer lastAppVersion = lastVersionUserInstructedAbout.tryGet();
 
 		//We only need to instruct the user about changes if he/she has actually run the app before.

@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.VersionInfo;
@@ -13,24 +12,14 @@ public class FirstRunLauncherFragment extends Fragment {
 
 	private static final int REQUEST_CODE_INSTRUCT_USER = 1;
 
-	private ApplicationSettings.Setting<Integer> instructedVersionPreference;
-	private boolean recordUserInstructed;
-
-	public void onPreferencesAvailable(SharedPreferences prefs) {
-		instructedVersionPreference = new ApplicationSettings(prefs).lastVersionUserInstructedAbout();
-
-		recordUserInstructedIfNecessary();
-		instructUserIfNecessary();
-	}
-
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 		instructUserIfNecessary();
 	}
 
 	private void instructUserIfNecessary() {
-		if (isResumed() && instructedVersionPreference != null && !instructedVersionPreference.hasValue())
+		if (!instructedVersionPreference().hasValue())
 			startActivityForResult(ComponentType.create(FirstRunActivity.class).intent(), REQUEST_CODE_INSTRUCT_USER);
 	}
 
@@ -38,17 +27,16 @@ public class FirstRunLauncherFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_CODE_INSTRUCT_USER && resultCode == Activity.RESULT_OK) {
-			recordUserInstructed = true;
+		if (requestCode == REQUEST_CODE_INSTRUCT_USER && resultCode == Activity.RESULT_OK)
 			recordUserInstructedIfNecessary();
-		}
 	}
 
 	private void recordUserInstructedIfNecessary() {
-		if (instructedVersionPreference != null && recordUserInstructed) {
-			instructedVersionPreference.setAndCommit(VersionInfo.installedVersionCode());
-			recordUserInstructed = false;
-		}
+		instructedVersionPreference().setAndCommit(VersionInfo.installedVersionCode());
+	}
+
+	public ApplicationSettings.Setting<Integer> instructedVersionPreference() {
+		return new ApplicationSettings().lastVersionUserInstructedAbout();
 	}
 
 }

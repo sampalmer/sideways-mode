@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -33,12 +32,6 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	};
 
-	private boolean created;
-	private SharedPreferences preferences;
-	private boolean started;
-	private boolean initialised;
-	private boolean listening;
-
 	private void updateListPreferenceSummaries() {
 		PreferenceScreen screen = getPreferenceScreen();
 		for (int i = 0; i < screen.getPreferenceCount(); ++i) {
@@ -58,23 +51,8 @@ public class SettingsFragment extends PreferenceFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		created = true;
-		initialiseIfReady();
-	}
 
-	public void onPreferencesAvailable(SharedPreferences preferences) {
-		this.preferences = preferences;
-		initialiseIfReady();
-		listenIfReady();
-	}
-
-	private void initialiseIfReady() {
-		if (created && preferences != null)
-			initialise();
-	}
-
-	private void initialise() {
-		settings = new ApplicationSettings(preferences);
+		settings = new ApplicationSettings();
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		new SettingsInitialiser(settings).ensureInitialised();
@@ -87,8 +65,6 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledChanged = settings.enabled().onChange();
 		onScreenOffChanged = settings.screenOffBehaviour().onChange();
 		notificationPriorityChanged = settings.notificationPriority().onChange();
-
-		initialised = true;
 	}
 
 	private void hideUnsupportedOptions() {
@@ -104,38 +80,25 @@ public class SettingsFragment extends PreferenceFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		started = true;
-		listenIfReady();
-	}
 
-	private void listenIfReady() {
-		if (initialised && started) {
-			enabledChanged.subscribe(enabledUpdater);
-			onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
-			notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
+		enabledChanged.subscribe(enabledUpdater);
+		onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
+		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
-			listening = true;
-
-			refresh();
-		}
-	}
-
-	private void refresh() {
-		CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
-		preference.setChecked(settings.enabled().get());
+		refresh();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		started = false;
 
-		if (initialised && listening) {
-			notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
-			onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
-			enabledChanged.unsubscribe(enabledUpdater);
+		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
+		onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
+		enabledChanged.unsubscribe(enabledUpdater);
+	}
 
-			listening = false;
-		}
+	private void refresh() {
+		CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
+		preference.setChecked(settings.enabled().get());
 	}
 }

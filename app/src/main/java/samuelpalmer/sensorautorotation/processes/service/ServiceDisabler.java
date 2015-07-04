@@ -11,7 +11,7 @@ public class ServiceDisabler extends ServiceReceiver {
 
 	@Override
 	protected void onReceive() {
-		new ApplicationSettings(Prefs.prefs()).enabled().setAndCommit(false);
+		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
 }

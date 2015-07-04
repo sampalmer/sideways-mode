@@ -24,7 +24,7 @@ abstract class ServiceProcess {
 	private static ApplicationSettings.Setting<Boolean> enabledPreference;
 
 	private static void initialise() {
-		enabledPreference = new ApplicationSettings(Prefs.prefs()).enabled();
+		enabledPreference = new ApplicationSettings().enabled();
 		enabledPreference.onChange().subscribe(serviceStateUpdater);
 	}
 

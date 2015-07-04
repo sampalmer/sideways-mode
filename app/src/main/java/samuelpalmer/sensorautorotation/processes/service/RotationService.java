@@ -49,7 +49,7 @@ public class RotationService extends ServiceService {
 
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen();
-		ApplicationSettings appSettings = new ApplicationSettings(Prefs.prefs());
+		ApplicationSettings appSettings = new ApplicationSettings();
 
 		applicationState = new ApplicationState(appSettings, systemSettings);
 

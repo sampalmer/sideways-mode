@@ -20,7 +20,7 @@ abstract class ServiceController {
 	}
 
 	public static void updateFromSettings() {
-		boolean enabled = new ApplicationSettings(Prefs.prefs()).enabled().get();
+		boolean enabled = new ApplicationSettings().enabled().get();
 		updateServiceState(enabled);
 	}
 
