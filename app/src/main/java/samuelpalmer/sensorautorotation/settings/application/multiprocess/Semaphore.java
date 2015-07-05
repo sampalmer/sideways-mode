@@ -4,6 +4,8 @@ import android.net.LocalServerSocket;
 
 import java.io.IOException;
 
+import samuelpalmer.sensorautorotation.BuildConfig;
+
 /**
  * Provides mutual exclusion for multiple processes and/or threads. Note that this class itself
  * isn't "thread-safe"; you shouldn't use one instance in multiple threads. Instead, use a different
@@ -25,7 +27,7 @@ class Semaphore {
 					Thread.sleep(1);
 				} catch (InterruptedException ignored) {}
 
-				if (System.currentTimeMillis() > timeout)
+				if (!BuildConfig.DEBUG && System.currentTimeMillis() > timeout)
 					throw new RuntimeException("Locking took longer than " + TIMEOUT_MILLISECONDS + "ms.");
 			}
 		} while (lock == null);
