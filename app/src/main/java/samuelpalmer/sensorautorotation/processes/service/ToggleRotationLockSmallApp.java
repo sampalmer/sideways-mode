@@ -7,8 +7,7 @@ public class ToggleRotationLockSmallApp extends SmallApplication {
 	@Override
 	protected void onCreate() {
 		super.onCreate();
-		ServiceProcess.ensureInitialised();
-		RotationLockToggler.toggle();
+		RotationLockToggler.updateAndToggle();
 		finish();
 	}
 

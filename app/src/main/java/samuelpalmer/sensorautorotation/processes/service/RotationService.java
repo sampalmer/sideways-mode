@@ -29,6 +29,8 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
  */
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
+	public static final String ACTION_TOGGLE = "toggle";
+
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
@@ -73,6 +75,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (ACTION_TOGGLE.equals(intent.getAction()))
+			toggleRotation();
+
 		return Service.START_STICKY;
 	}
 

@@ -8,8 +8,7 @@ public class ToggleRotationLockReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		ServiceProcess.ensureInitialised();
-		RotationLockToggler.toggle();
+		RotationLockToggler.updateAndToggle();
 	}
 
 }

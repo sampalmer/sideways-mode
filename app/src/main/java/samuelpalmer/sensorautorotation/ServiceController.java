@@ -15,22 +15,22 @@ public abstract class ServiceController {
 
 	private static void updateServiceState(boolean enabled) {
 		if (enabled)
-			ensureStarted();
+			ensureStarted(intent());
 		else
 			ensureStopped();
 	}
 
-	private static void ensureStarted() {
-		ComponentName name = Process.context().startService(intent());
+	public static void ensureStarted(Intent intent) {
+		ComponentName name = Process.context().startService(intent);
 		if (name == null)
-			throw new RuntimeException("Service doesn't exist");
+			throw new RuntimeException("Service doesn't exist: " + intent.getComponent());
 	}
 
 	private static void ensureStopped() {
 		Process.context().stopService(intent());
 	}
 
-	private static Intent intent() {
+	public static Intent intent() {
 		return ComponentType.create(RotationService.class).intent();
 	}
 }
