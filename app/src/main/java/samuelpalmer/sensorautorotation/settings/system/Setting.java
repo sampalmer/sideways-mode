@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.settings.system;
 
 import android.content.ContentResolver;
 import android.database.ContentObserver;
+import android.os.Handler;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
@@ -9,7 +10,9 @@ import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
-import static android.provider.Settings.System.*;
+import static android.provider.Settings.System.getString;
+import static android.provider.Settings.System.getUriFor;
+import static android.provider.Settings.System.putString;
 
 public class Setting<T> {
 
@@ -69,7 +72,7 @@ public class Setting<T> {
 		private boolean registered;
 		private boolean enabled = true;
 
-		private final ContentObserver listener = new ContentObserver(null) {
+		private final ContentObserver listener = new ContentObserver(new Handler() /* Otherwise the callback is called in a different thread */ ) {
 			@Override
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);
