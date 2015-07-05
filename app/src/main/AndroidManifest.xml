@@ -75,7 +75,7 @@
 			</intent-filter>
 		</receiver>
 
-		<receiver android:name=".processes.service.EnsureAppLoadedReceiver"
+		<receiver android:name=".processes.service.ServiceStateUpdatingReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />

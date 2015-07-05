@@ -31,7 +31,7 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		ComponentType componentType = ComponentType.create(EnsureAppLoadedReceiver.class);
+		ComponentType componentType = ComponentType.create(ServiceStateUpdatingReceiver.class);
 		return componentType.pendingIntent();
 	}
 
