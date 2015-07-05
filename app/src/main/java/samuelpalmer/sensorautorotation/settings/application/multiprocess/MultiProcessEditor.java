@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,67 +81,59 @@ class MultiProcessEditor implements Editor {
 	}
 
 	public boolean commit() {
-		return locker.lock(new Operation<Boolean>() {
+		synchronized (this) {
+			return locker.lock(new Operation<Boolean>() {
 
-			@Override
-			public Boolean run() {
+				@Override
+				public Boolean run() {
 
-				SharedPreferences underlyingPrefs = factory.preferences();
-				Editor editor = underlyingPrefs.edit();
+					SharedPreferences underlyingPrefs = factory.preferences();
+					Editor editor = underlyingPrefs.edit();
 
-				if (mClear)
-					editor.clear();
+					if (mClear)
+						editor.clear();
 
-				for (Map.Entry<String, Object> e : mModified.entrySet()) {
-					String key = e.getKey();
-					Object value = e.getValue();
+					for (Map.Entry<String, Object> e : mModified.entrySet()) {
+						String key = e.getKey();
+						Object value = e.getValue();
 
-					// "this" is the magic value for a removal mutation. In addition,
-					// setting a value to "null" for a given key is specified to be
-					// equivalent to calling remove on that key.
-					if (value == MultiProcessEditor.this || value == null)
-						editor.remove(key);
-					else {
-						if (value instanceof String)
-							editor.putString(key, (String)value);
-						else if (value instanceof Set)
-							//noinspection unchecked
-							editor.putStringSet(key, (Set<String>) value);
-						else if (value instanceof Integer)
-							editor.putInt(key, (int) value);
-						else if (value instanceof Long)
-							editor.putLong(key, (long) value);
-						else if (value instanceof Float)
-							editor.putFloat(key, (float) value);
-						else if (value instanceof Boolean)
-							editor.putBoolean(key, (boolean) value);
-						else
-							throw new RuntimeException("Unsupported value type: " + value.getClass());
+						// "this" is the magic value for a removal mutation. In addition,
+						// setting a value to "null" for a given key is specified to be
+						// equivalent to calling remove on that key.
+						if (value == MultiProcessEditor.this || value == null)
+							editor.remove(key);
+						else {
+							if (value instanceof String)
+								editor.putString(key, (String) value);
+							else if (value instanceof Set)
+								//noinspection unchecked
+								editor.putStringSet(key, (Set<String>) value);
+							else if (value instanceof Integer)
+								editor.putInt(key, (int) value);
+							else if (value instanceof Long)
+								editor.putLong(key, (long) value);
+							else if (value instanceof Float)
+								editor.putFloat(key, (float) value);
+							else if (value instanceof Boolean)
+								editor.putBoolean(key, (boolean) value);
+							else
+								throw new RuntimeException("Unsupported value type: " + value.getClass());
+						}
 					}
+
+					boolean result = editor.commit();
+
+					//Note that this is different to the Android implementation in that this broadcasts all _requested_ changes rather than all _actual_ changes.
+					MultiProcessChangeReceiver.broadcastChange(prefsName, new ArrayList<>(mModified.keySet()));
+
+					mClear = false;
+					mModified.clear();
+
+					return result;
 				}
 
-				final ArrayList<String> affectedKeys = new ArrayList<>();
-
-				OnSharedPreferenceChangeListener listener = new OnSharedPreferenceChangeListener() {
-					@Override
-					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-						affectedKeys.add(key);
-					}
-				};
-
-				underlyingPrefs.registerOnSharedPreferenceChangeListener(listener);
-				boolean result = editor.commit();
-				underlyingPrefs.unregisterOnSharedPreferenceChangeListener(listener);
-
-				mClear = false;
-				mModified.clear();
-
-				MultiProcessChangeReceiver.broadcastChange(prefsName, affectedKeys);
-
-				return result;
-			}
-
-		});
+			});
+		}
 	}
 
 	public void apply() {
