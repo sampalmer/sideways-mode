@@ -5,13 +5,7 @@ import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 
-abstract class ServiceService extends Service {
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		ServiceProcess.ensureInitialised();
-	}
+abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {

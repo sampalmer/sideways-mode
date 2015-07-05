@@ -27,7 +27,7 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
  *
  * http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
  */
-public class RotationService extends ServiceService {
+public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
