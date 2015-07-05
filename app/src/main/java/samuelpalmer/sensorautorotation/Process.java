@@ -12,7 +12,7 @@ public class Process extends Application {
 
 	public static final String TAG = Process.class.getSimpleName();
 	private static Context context;
-	private Setting<Boolean> enabledPreference;
+	private static Setting<Boolean> enabledPreference;
 
 	public static Context context() {
 		return context;

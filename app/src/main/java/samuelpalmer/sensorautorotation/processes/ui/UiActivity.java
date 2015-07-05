@@ -2,15 +2,13 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.EnsureAppLoadedReceiver;
+import samuelpalmer.sensorautorotation.ServiceController;
 
 /**
  * Ensures the background service is running if necessary in case it's died.
@@ -37,12 +35,7 @@ public abstract class UiActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		ensureBackgroundProcessIsLoaded();
-	}
-
-	private void ensureBackgroundProcessIsLoaded() {
-		Intent intent = ComponentType.create(EnsureAppLoadedReceiver.class).intent();
-		sendBroadcast(intent);
+		ServiceController.updateFromSettings();
 	}
 
 }

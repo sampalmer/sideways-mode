@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 
-import samuelpalmer.sensorautorotation.processes.service.ServiceDisabler;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 class Uninstaller implements DialogInterface.OnClickListener {
 
@@ -25,7 +25,7 @@ class Uninstaller implements DialogInterface.OnClickListener {
 	}
 
 	private void disableService() {
-		ServiceDisabler.sendDisableRequest();
+		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
 	private Intent uninstallIntent() {

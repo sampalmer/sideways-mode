@@ -65,9 +65,6 @@
 
 		<!-- Service Process -->
 
-		<receiver android:name=".processes.service.ServiceDisabler"
-		          android:process=":samuelpalmer.sensorautorotation.service" />
-
 		<receiver android:name=".processes.service.UpgradeReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service">
 			<intent-filter>
