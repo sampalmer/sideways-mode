@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.ServiceController;
 
-abstract class ServiceProcess {
+public abstract class ServiceProcess {
 
 	/**
 	 * Must be called at all entry points to this process
