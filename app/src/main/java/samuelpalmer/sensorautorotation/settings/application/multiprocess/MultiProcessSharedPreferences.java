@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.HashMap;
@@ -12,12 +11,14 @@ import samuelpalmer.sensorautorotation.settings.application.multiprocess.Semapho
 
 public class MultiProcessSharedPreferences implements SharedPreferences {
 
+	private final UnderlyingSharedPreferencesFactory factory;
 	public final String preferencesName;
 	private final SemaphoreLocker locker;
 
 	public MultiProcessSharedPreferences(String name) {
+		factory = new UnderlyingSharedPreferencesFactory(name);
 		preferencesName = name;
-		locker = new SemaphoreLocker(Process.context().getPackageName() + "." + preferencesName);		
+		locker = new SemaphoreLocker(Process.context().getPackageName() + "." + preferencesName);
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class MultiProcessSharedPreferences implements SharedPreferences {
 		return locker.lock(new Operation<MultiProcessEditor>() {
 			@Override
 			public MultiProcessEditor run() {
-				return new MultiProcessEditor(preferences(), preferencesName, locker);
+				return new MultiProcessEditor(factory, preferencesName, locker);
 			}
 		});
 	}
@@ -144,16 +145,8 @@ public class MultiProcessSharedPreferences implements SharedPreferences {
 
 	private final Map<OnSharedPreferenceChangeListener, MultiProcessChangeReceiver> listeners = new HashMap<>();
 
-	/**
-	 * Makes a new instance on each call since apparently that circumvents process-wide caching.
-	 *
-	 * See https://code.google.com/p/android/issues/detail?id=66625
-	 */
 	private SharedPreferences preferences() {
-		return Process.context().getSharedPreferences(
-			preferencesName,
-			Context.MODE_MULTI_PROCESS //This actually just causes the preferences to be reloaded from storage in this method call
-		);
+		return factory.preferences();
 	}
 
 }

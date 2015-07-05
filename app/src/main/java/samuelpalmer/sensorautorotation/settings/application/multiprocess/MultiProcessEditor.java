@@ -6,55 +6,79 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.SemaphoreLocker.Operation;
 
 class MultiProcessEditor implements Editor {
 
-	private final SharedPreferences underlyingPrefs;
+	private final UnderlyingSharedPreferencesFactory factory;
 	private final String prefsName;
-	private final Editor editor;
 	private final SemaphoreLocker locker;
 
 	@SuppressLint("CommitPrefEdits")
-	public MultiProcessEditor(SharedPreferences underlyingPrefs, String prefsName, SemaphoreLocker locker) {
-		this.underlyingPrefs = underlyingPrefs;
+	public MultiProcessEditor(UnderlyingSharedPreferencesFactory underlyingPrefs, String prefsName, SemaphoreLocker locker) {
+		this.factory = underlyingPrefs;
 		this.prefsName = prefsName;
 		this.locker = locker;
-		this.editor = underlyingPrefs.edit();
 	}
+
+	private final Map<String, Object> mModified = new HashMap<>();
+	private boolean mClear = false;
 
 	public Editor putString(String key, String value) {
-		return editor.putString(key, value);
+		synchronized (this) {
+			mModified.put(key, value);
+			return this;
+		}
 	}
-
 	public Editor putStringSet(String key, Set<String> values) {
-		return editor.putStringSet(key, values);
+		synchronized (this) {
+			mModified.put(key,
+					(values == null) ? null : new HashSet<>(values));
+			return this;
+		}
 	}
-
 	public Editor putInt(String key, int value) {
-		return editor.putInt(key, value);
+		synchronized (this) {
+			mModified.put(key, value);
+			return this;
+		}
 	}
-
 	public Editor putLong(String key, long value) {
-		return editor.putLong(key, value);
+		synchronized (this) {
+			mModified.put(key, value);
+			return this;
+		}
 	}
-
 	public Editor putFloat(String key, float value) {
-		return editor.putFloat(key, value);
+		synchronized (this) {
+			mModified.put(key, value);
+			return this;
+		}
 	}
-
 	public Editor putBoolean(String key, boolean value) {
-		return editor.putBoolean(key, value);
+		synchronized (this) {
+			mModified.put(key, value);
+			return this;
+		}
 	}
 
 	public Editor remove(String key) {
-		return editor.remove(key);
+		synchronized (this) {
+			mModified.put(key, this);
+			return this;
+		}
 	}
 
 	public Editor clear() {
-		return editor.clear();
+		synchronized (this) {
+			mClear = true;
+			return this;
+		}
 	}
 
 	public boolean commit() {
@@ -62,6 +86,41 @@ class MultiProcessEditor implements Editor {
 
 			@Override
 			public Boolean run() {
+
+				SharedPreferences underlyingPrefs = factory.preferences();
+				Editor editor = underlyingPrefs.edit();
+
+				if (mClear)
+					editor.clear();
+
+				for (Map.Entry<String, Object> e : mModified.entrySet()) {
+					String key = e.getKey();
+					Object value = e.getValue();
+
+					// "this" is the magic value for a removal mutation. In addition,
+					// setting a value to "null" for a given key is specified to be
+					// equivalent to calling remove on that key.
+					if (value == MultiProcessEditor.this || value == null)
+						editor.remove(key);
+					else {
+						if (value instanceof String)
+							editor.putString(key, (String)value);
+						else if (value instanceof Set)
+							//noinspection unchecked
+							editor.putStringSet(key, (Set<String>) value);
+						else if (value instanceof Integer)
+							editor.putInt(key, (int) value);
+						else if (value instanceof Long)
+							editor.putLong(key, (long) value);
+						else if (value instanceof Float)
+							editor.putFloat(key, (float) value);
+						else if (value instanceof Boolean)
+							editor.putBoolean(key, (boolean) value);
+						else
+							throw new RuntimeException("Unsupported value type: " + value.getClass());
+					}
+				}
+
 				final ArrayList<String> affectedKeys = new ArrayList<>();
 
 				OnSharedPreferenceChangeListener listener = new OnSharedPreferenceChangeListener() {
@@ -74,6 +133,9 @@ class MultiProcessEditor implements Editor {
 				underlyingPrefs.registerOnSharedPreferenceChangeListener(listener);
 				boolean result = editor.commit();
 				underlyingPrefs.unregisterOnSharedPreferenceChangeListener(listener);
+
+				mClear = false;
+				mModified.clear();
 
 				MultiProcessChangeReceiver.broadcastChange(prefsName, affectedKeys);
 
