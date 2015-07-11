@@ -75,7 +75,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (ACTION_TOGGLE.equals(intent.getAction()))
+		if (intent != null && ACTION_TOGGLE.equals(intent.getAction()))
 			toggleRotation();
 
 		return Service.START_STICKY;
