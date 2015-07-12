@@ -138,7 +138,7 @@ public class ApplicationSettings {
 		public void commit() {
 			if (!editor.commit())
 				// Since a look over the implementation of Editor.commit() indicates this represents a file system or other IO error.
-				EnvironmentError.report(R.string.preference_write_failure_message);
+				EnvironmentError.report(R.string.setting_write_failure_summary, R.string.preference_write_failure_message);
 		}
 	}
 

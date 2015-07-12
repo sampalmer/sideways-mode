@@ -48,9 +48,17 @@
 
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
+
+	<string name="missing_accelerometer_summary">No accelerometer</string>
 	<string name="missing_accelerometer_message">Couldn\'t find an accelerometer. %1$s needs an accelerometer to run. If the device has one, try using the device\'s \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
+
+	<string name="user_rotation_changed_summary">Screen orientation changed</string>
 	<string name="user_rotation_changed_message">Another application has changed the screen orientation.</string>
+
+	<string name="system_rotation_enabled_summary">System rotation enabled</string>
 	<string name="system_rotation_enabled_message">System screen auto-rotation was enabled.</string>
+
+	<string name="setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="preference_write_failure_message">Couldn\'t write application settings.</string>
 	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
 

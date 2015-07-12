@@ -10,18 +10,20 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class EnvironmentError {
 
-	public static void report(int messageResourceId, Object... messageArguments) {
+	public static void report(int summaryResourceId, int messageResourceId, Object... messageArguments) {
 		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		CharSequence formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, getAppName());
-		show(formattedMessage);
+		CharSequence formattedMessage = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
+		show(summaryResourceId, formattedMessage);
 		new ApplicationSettings().enabled().setAndCommit(false);
 	}
 
-	private static void show(CharSequence message) {
+	private static void show(int summaryResourceId, CharSequence message) {
+		CharSequence summary = StringResource.get(summaryResourceId);
+
 		Notification notification = NotificationBuilderCompat.create()
 				.setSmallIcon(R.drawable.ic_error)
-				.setContentIntent(makeShowMessage(message))
-				.setContentTitle(getAppName())
+				.setContentIntent(makeShowMessage(summary, message))
+				.setContentTitle(summary)
 				.setContentText(message)
 				.setAutoCancel(true)
 				.setTicker(message)
@@ -32,12 +34,8 @@ public abstract class EnvironmentError {
 		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
 	}
 
-	private static CharSequence getAppName() {
-		return StringResource.get(R.string.app_name);
-	}
-
-	private static PendingIntent makeShowMessage(CharSequence message) {
-		return DialogActivity.makePendingIntent(getAppName(), message);
+	private static PendingIntent makeShowMessage(CharSequence summary, CharSequence message) {
+		return DialogActivity.makePendingIntent(summary, message);
 	}
 
 	public static void clear() {
