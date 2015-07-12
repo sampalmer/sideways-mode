@@ -154,6 +154,14 @@ public class NotificationBuilderCompat {
 		}
 
 		@Override
+		public NotificationBuilderCompat setTicker(CharSequence tickerText) {
+			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
+			// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
+			builder.setVibrate(new long[]{});
+			return super.setTicker(tickerText);
+		}
+
+		@Override
 		public NotificationBuilderCompat setCategory(String category) {
 			builder.setCategory(category);
 			return this;
