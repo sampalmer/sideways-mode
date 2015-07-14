@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.instructions;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.Reflection;
 import samuelpalmer.sensorautorotation.StringResource;
 
 class InstructionsPages {
@@ -25,12 +26,7 @@ class InstructionsPages {
 	}
 
 	private boolean supportsSmallApp() {
-		try {
-			Class.forName("com.sony.smallapp.SmallApplication");
-		} catch (ClassNotFoundException e) {
-			return false;
-		}
-
-		return true;
+		return Reflection.classExists("com.sony.smallapp.SmallApplication");
 	}
+
 }

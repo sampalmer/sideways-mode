@@ -13,17 +13,13 @@ import samuelpalmer.sensorautorotation.settings.application.NotificationPriority
 
 public class ServiceNotification {
 
-	private final Mode mode;
 	private final NotificationPriority priority;
-	private final boolean overridden;
-	private final CharSequence summary;
+	private final NotificationParameters params;
 	private NotificationBuilderCompat builder;
 
-	public ServiceNotification(NotificationPriority priority, Mode mode, boolean overridden, CharSequence summary) {
+	public ServiceNotification(NotificationPriority priority, NotificationParameters notificationParameters) {
 		this.priority = priority;
-		this.mode = mode;
-		this.overridden = overridden;
-		this.summary = summary;
+		params = notificationParameters;
 	}
 
 	/**
@@ -32,13 +28,13 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(mode.iconResourceId(overridden))
+				.setSmallIcon(params.mode.iconResourceId(params.overridden))
 				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent())
-				.setContentTitle(summary)
-				.setContentText(StringResource.get(mode.actionDescriptionResourceId()))
+				.setContentTitle(params.summary)
+				.setContentText(StringResource.get(params.mode.actionDescriptionResourceId()))
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
-		if (overridden)
+		if (params.overridden)
 			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
 
 		priority.apply(builder);

@@ -1,1 +1,1 @@
-include ':app', ':com.sony.smallapp'
+include ':app', ':com.sony.smallapp', ':org.cyanogenmod.platform.sdk'

@@ -13,18 +13,26 @@ public class ServiceNotificationUpdater {
 	private final ApplicationSettings settings;
 	private final OrientationCalculator calculator;
 	private final Screen screen;
+	private final QuickSetting quickSetting;
 
 	public ServiceNotificationUpdater(ServiceNotificationPoster poster, ApplicationSettings settings, OrientationCalculator calculator, Screen screen) {
 		this.poster = poster;
 		this.settings = settings;
 		this.calculator = calculator;
 		this.screen = screen;
+		quickSetting = new QuickSetting();
 	}
 
 	public void update() {
 		Mode mode = mode();
-		ServiceNotification builder = new ServiceNotification(priority(), mode, overridden(), getSummary(mode));
+		NotificationParameters params = new NotificationParameters(mode, overridden(), getSummary(mode));
+		ServiceNotification builder = new ServiceNotification(priority(), params);
 		poster.post(builder.build());
+		quickSetting.update(params);
+	}
+
+	public void cancel() {
+		quickSetting.cancel();
 	}
 
 	public CharSequence getSummary(Mode mode) {

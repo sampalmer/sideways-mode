@@ -26,6 +26,7 @@ public class ServiceNotificationManager extends State {
 	@Override
 	protected void start() {
 		notificationUpdater.update();
+
 		notificationHider.ensureStarted();
 		onPriorityChanged.subscribe(updateNotification);
 		screen.onChange().subscribe(updateNotification);
@@ -42,6 +43,8 @@ public class ServiceNotificationManager extends State {
 		screen.onChange().unsubscribe(updateNotification);
 		onPriorityChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
+
+		notificationUpdater.cancel();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {

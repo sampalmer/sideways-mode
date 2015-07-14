@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.sony.smallapp/com.sony.smallapp.iml" filepath="$PROJECT_DIR$/com.sony.smallapp/com.sony.smallapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.cyanogenmod.platform.sdk/org.cyanogenmod.platform.sdk.iml" filepath="$PROJECT_DIR$/org.cyanogenmod.platform.sdk/org.cyanogenmod.platform.sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensorautorotation_as.iml" filepath="$PROJECT_DIR$/sensorautorotation_as.iml" />
     </modules>
   </component>
