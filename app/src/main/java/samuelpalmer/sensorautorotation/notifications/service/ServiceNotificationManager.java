@@ -29,7 +29,7 @@ public class ServiceNotificationManager extends State {
 
 		notificationHider.ensureStarted();
 		onPriorityChanged.subscribe(updateNotification);
-		screen.onChange().subscribe(updateNotification);
+		screen.onProposedOrientationChanged().subscribe(updateNotification);
 
 		screenRotationMonitor.onChange().subscribe(updateNotification);
 		screenRotationMonitor.ensureStarted();
@@ -40,7 +40,7 @@ public class ServiceNotificationManager extends State {
 		screenRotationMonitor.ensureStopped();
 		screenRotationMonitor.onChange().unsubscribe(updateNotification);
 
-		screen.onChange().unsubscribe(updateNotification);
+		screen.onProposedOrientationChanged().unsubscribe(updateNotification);
 		onPriorityChanged.unsubscribe(updateNotification);
 		notificationHider.ensureStopped();
 

@@ -55,7 +55,7 @@ public class ScreenOrientationUpdater extends State {
 
 	private final UpdatingEventRegistrar onProposedOrientationChanged = new UpdatingEventRegistrar();
 
-	public EventRegistrar onChange() {
+	public EventRegistrar onProposedOrientationChanged() {
 		return onProposedOrientationChanged;
 	}
 }
