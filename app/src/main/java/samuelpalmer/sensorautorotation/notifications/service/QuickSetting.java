@@ -33,7 +33,7 @@ public class QuickSetting {
 	private CustomTile tile(NotificationParameters params) {
 		return new Builder(Process.context())
 				.setIcon(params.mode.iconResourceId(params.overridden))
-				.setLabel(params.mode.autoRotationStateResourceId())
+				.setLabel(params.summary.toString())
 				.setOnClickIntent(toggleIntent())
 				.setOnSettingsClickIntent(settingsIntent())
 				.build();
