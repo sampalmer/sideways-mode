@@ -12,12 +12,13 @@ import samuelpalmer.sensorautorotation.Reflection;
 import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
-public class QuickSetting {
+public class QuickSettingServiceStatusDisplay extends ServiceStatusDisplay {
 
 	//Don't change this or the user could end up with multiple tiles on upgrade
 	public static final int TILE_ID = 1;
 	private final boolean supported = Reflection.classExists("cyanogenmod.app.CustomTile");
 
+	@Override
 	public void update(NotificationParameters params) {
 		if (supported) {
 			CustomTile tile = tile(params);
@@ -25,6 +26,7 @@ public class QuickSetting {
 		}
 	}
 
+	@Override
 	public void cancel() {
 		if (supported)
 			statusBarManager().removeTile(TILE_ID);

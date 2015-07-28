@@ -9,16 +9,16 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
-public class ServiceNotificationPoster {
+public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 	private final Service service;
 	private final ApplicationSettings settings;
 
-	public ServiceNotificationPoster(Service service, ApplicationSettings settings) {
+	public NotificationServiceStatusDisplay(Service service, ApplicationSettings settings) {
 		this.service = service;
 		this.settings = settings;
 	}
 
-	public void post(NotificationParameters params) {
+	public void update(NotificationParameters params) {
 		ServiceNotification builder = new ServiceNotification(priority(), params);
 		Notification notification = builder.build();
 

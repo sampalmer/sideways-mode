@@ -7,23 +7,23 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ServiceNotificationUpdater {
 
-	private final ServiceNotificationPoster poster;
+	private final NotificationServiceStatusDisplay notification;
 	private final OrientationCalculator calculator;
 	private final Screen screen;
-	private final QuickSetting quickSetting;
+	private final QuickSettingServiceStatusDisplay quickSetting;
 
-	public ServiceNotificationUpdater(ServiceNotificationPoster poster, OrientationCalculator calculator, Screen screen) {
-		this.poster = poster;
+	public ServiceNotificationUpdater(NotificationServiceStatusDisplay notification, OrientationCalculator calculator, Screen screen) {
+		this.notification = notification;
 		this.calculator = calculator;
 		this.screen = screen;
-		quickSetting = new QuickSetting();
+		quickSetting = new QuickSettingServiceStatusDisplay();
 	}
 
 	public void update() {
 		Mode mode = mode();
 		NotificationParameters params = new NotificationParameters(mode, overridden(), getSummary(mode));
 
-		poster.post(params);
+		notification.update(params);
 		quickSetting.update(params);
 	}
 
