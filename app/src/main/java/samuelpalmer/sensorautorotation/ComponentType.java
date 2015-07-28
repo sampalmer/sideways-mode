@@ -12,7 +12,7 @@ import android.content.Intent;
 public abstract class ComponentType {
 
 	private static final int requestCode = 0;
-	private static final int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+	private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT;
 
 	public static ComponentType create(Class<?> clazz) {
 		Class<?> ancestorClass = clazz;
