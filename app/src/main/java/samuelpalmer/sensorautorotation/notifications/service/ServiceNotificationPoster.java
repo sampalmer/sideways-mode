@@ -6,17 +6,28 @@ import android.os.Build;
 
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceNotificationPoster {
 	private final Service service;
+	private final ApplicationSettings settings;
 
-	public ServiceNotificationPoster(Service service) {
+	public ServiceNotificationPoster(Service service, ApplicationSettings settings) {
 		this.service = service;
+		this.settings = settings;
 	}
 
-	public void post(Notification notification) {
+	public void post(NotificationParameters params) {
+		ServiceNotification builder = new ServiceNotification(priority(), params);
+		Notification notification = builder.build();
+
 		cancelIfNecessary(notification);
 		service.startForeground(NotificationIds.SERVICE, notification);
+	}
+
+	private NotificationPriority priority() {
+		return settings.notificationPriority().get();
 	}
 
 	/**
