@@ -24,8 +24,6 @@ public class ServiceNotificationManager extends State {
 	protected void start() {
 		updateNotification.update();
 
-		display.ensureStarted();
-
 		for (EventRegistrar trigger : display.updateTriggers())
 			trigger.subscribe(updateNotification);
 
@@ -41,7 +39,7 @@ public class ServiceNotificationManager extends State {
 		for (EventRegistrar trigger : display.updateTriggers())
 			trigger.unsubscribe(updateNotification);
 
-		display.ensureStopped();
+		display.cancel();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {

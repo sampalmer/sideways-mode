@@ -26,12 +26,6 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 		priority = settings.notificationPriority();
 	}
 
-	@Override
-	protected void start() {}
-
-	@Override
-	protected void stop() {}
-
 	public void update(NotificationParameters params) {
 		ServiceNotification builder = new ServiceNotification(priority.get(), params);
 		Notification notification = builder.build();
@@ -50,6 +44,9 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 
 		return result;
 	}
+
+	@Override
+	public void cancel() {}
 
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the

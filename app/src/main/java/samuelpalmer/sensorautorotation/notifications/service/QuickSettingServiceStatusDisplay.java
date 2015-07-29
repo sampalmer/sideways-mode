@@ -26,10 +26,7 @@ public class QuickSettingServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	@Override
-	protected void start() {}
-
-	@Override
-	protected void stop() {
+	public void cancel() {
 		statusBarManager().removeTile(TILE_ID);
 	}
 

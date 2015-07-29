@@ -39,14 +39,9 @@ public class CompositeServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	@Override
-	protected void start() {
+	public void cancel() {
 		for (ServiceStatusDisplay display : wrapped)
-			display.ensureStarted();
+			display.cancel();
 	}
 
-	@Override
-	protected void stop() {
-		for (ServiceStatusDisplay display : wrapped)
-			display.ensureStopped();
-	}
 }
