@@ -3,8 +3,11 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class CompositeServiceStatusDisplay extends ServiceStatusDisplay {
@@ -26,9 +29,24 @@ public class CompositeServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	@Override
-	public void cancel() {
+	public Set<EventRegistrar> updateTriggers() {
+		HashSet<EventRegistrar> result = new HashSet<>();
+
 		for (ServiceStatusDisplay display : wrapped)
-			display.cancel();
+			result.addAll(display.updateTriggers());
+
+		return result;
 	}
 
+	@Override
+	protected void start() {
+		for (ServiceStatusDisplay display : wrapped)
+			display.ensureStarted();
+	}
+
+	@Override
+	protected void stop() {
+		for (ServiceStatusDisplay display : wrapped)
+			display.ensureStopped();
+	}
 }

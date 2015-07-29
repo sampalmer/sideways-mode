@@ -11,7 +11,7 @@ import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.CompositeServiceStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationUpdater;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
@@ -36,7 +36,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private OrientationCalculator calculator;
 	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	private ServiceNotificationUpdater serviceNotificationUpdater;
+	private ServiceStatusGenerator serviceStatusGenerator;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 
 	@Override
@@ -58,9 +58,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		calculator = new OrientationCalculator(appSettings, screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
 
-		serviceNotificationUpdater = new ServiceNotificationUpdater(new CompositeServiceStatusDisplay(this, appSettings), calculator, screen);
+		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceNotificationUpdater, appSettings, screenUpdater);
+		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new CompositeServiceStatusDisplay(this, appSettings), screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);
@@ -115,7 +115,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	}
 
 	private void showStatusToast() {
-		CharSequence message = serviceNotificationUpdater.getSummary(serviceNotificationUpdater.mode());
+		CharSequence message = serviceStatusGenerator.getSummary(serviceStatusGenerator.mode());
 		ToastReceiver.send(message);
 	}
 

@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 
 /**
@@ -12,30 +12,28 @@ import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 public class LockScreenHider extends State {
 
 	private final LockScreenMonitor detector;
-	private final EventHandler handleChange;
 
-	public LockScreenHider(EventHandler handleChange) {
-		this.handleChange = handleChange;
+	public LockScreenHider() {
 		this.detector = new LockScreenMonitor();
+	}
+
+	public EventRegistrar onChange() {
+		return detector.possiblyChanged();
 	}
 
 	@Override
 	protected void start() {
-		if (android5()) {
-			detector.possiblyChanged().subscribe(handleChange);
+		if (needed())
 			detector.ensureStarted();
-		}
 	}
 
 	@Override
 	protected void stop() {
-		if (android5()) {
+		if (needed())
 			detector.ensureStopped();
-			detector.possiblyChanged().unsubscribe(handleChange);
-		}
 	}
 
-	private boolean android5() {
+	private boolean needed() {
 		return Build.VERSION.SDK_INT >= 21;
 	}
 

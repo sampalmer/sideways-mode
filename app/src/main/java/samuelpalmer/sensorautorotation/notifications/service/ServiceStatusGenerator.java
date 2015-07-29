@@ -5,27 +5,19 @@ import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-public class ServiceNotificationUpdater {
+public class ServiceStatusGenerator {
 
-	private final ServiceStatusDisplay display;
 	private final OrientationCalculator calculator;
 	private final Screen screen;
 
-	public ServiceNotificationUpdater(ServiceStatusDisplay display, OrientationCalculator calculator, Screen screen) {
-		this.display = display;
+	public ServiceStatusGenerator(OrientationCalculator calculator, Screen screen) {
 		this.calculator = calculator;
 		this.screen = screen;
 	}
 
-	public void update() {
+	public NotificationParameters generate() {
 		Mode mode = mode();
-		NotificationParameters params = new NotificationParameters(mode, overridden(), getSummary(mode));
-
-		display.update(params);
-	}
-
-	public void cancel() {
-		display.cancel();
+		return new NotificationParameters(mode, overridden(), getSummary(mode));
 	}
 
 	public CharSequence getSummary(Mode mode) {

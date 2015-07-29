@@ -3,12 +3,16 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.PendingIntent;
 import android.content.Intent;
 
+import java.util.Collections;
+import java.util.Set;
+
 import cyanogenmod.app.CMStatusBarManager;
 import cyanogenmod.app.CustomTile;
 import cyanogenmod.app.CustomTile.Builder;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.Reflection;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
@@ -22,14 +26,22 @@ public class QuickSettingServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	@Override
+	protected void start() {}
+
+	@Override
+	protected void stop() {
+		statusBarManager().removeTile(TILE_ID);
+	}
+
+	@Override
 	public void update(NotificationParameters params) {
 		CustomTile tile = tile(params);
 		statusBarManager().publishTile(TILE_ID, tile);
 	}
 
 	@Override
-	public void cancel() {
-		statusBarManager().removeTile(TILE_ID);
+	public Set<EventRegistrar> updateTriggers() {
+		return Collections.emptySet();
 	}
 
 	private CustomTile tile(NotificationParameters params) {

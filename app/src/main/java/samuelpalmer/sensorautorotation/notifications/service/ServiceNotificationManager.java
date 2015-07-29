@@ -5,32 +5,31 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceNotificationManager extends State {
 
+	private final ServiceStatusDisplay display;
 	private final ScreenOrientationUpdater screen;
-	private final LockScreenHider notificationHider;
-	private final EventRegistrar onPriorityChanged;
 	private final ScreenRotationMonitor screenRotationMonitor;
-	private final ServiceNotificationUpdater notificationUpdater;
+	private final ServiceStatusGenerator statusGenerator;
 
-	public ServiceNotificationManager(ServiceNotificationUpdater notificationUpdater, ApplicationSettings settings, ScreenOrientationUpdater screen) {
-		this.notificationUpdater = notificationUpdater;
+	public ServiceNotificationManager(ServiceStatusGenerator statusGenerator, ServiceStatusDisplay display, ScreenOrientationUpdater screen) {
+		this.statusGenerator = statusGenerator;
+		this.display = display;
 		this.screen = screen;
-		notificationHider = new LockScreenHider(updateNotification);
-		onPriorityChanged = settings.notificationPriority().onChange();
 		screenRotationMonitor = new ScreenRotationMonitor();
 	}
 
 	@Override
 	protected void start() {
-		notificationUpdater.update();
+		updateNotification.update();
 
-		notificationHider.ensureStarted();
-		onPriorityChanged.subscribe(updateNotification);
+		display.ensureStarted();
+
+		for (EventRegistrar trigger : display.updateTriggers())
+			trigger.subscribe(updateNotification);
+
 		screen.onProposedOrientationChanged().subscribe(updateNotification);
-
 		screenRotationMonitor.onChange().subscribe(updateNotification);
 		screenRotationMonitor.ensureStarted();
 	}
@@ -39,18 +38,19 @@ public class ServiceNotificationManager extends State {
 	protected void stop() {
 		screenRotationMonitor.ensureStopped();
 		screenRotationMonitor.onChange().unsubscribe(updateNotification);
-
 		screen.onProposedOrientationChanged().unsubscribe(updateNotification);
-		onPriorityChanged.unsubscribe(updateNotification);
-		notificationHider.ensureStopped();
 
-		notificationUpdater.cancel();
+		for (EventRegistrar trigger : display.updateTriggers())
+			trigger.unsubscribe(updateNotification);
+
+		display.ensureStopped();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {
 		@Override
 		public void update() {
-			notificationUpdater.update();
+			NotificationParameters params = statusGenerator.generate();
+			display.update(params);
 		}
 	};
 
