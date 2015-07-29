@@ -2,21 +2,13 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
-public class ScreenRotationMonitor extends State {
+public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 
 	private ChangeDetector changeDetector;
-	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
-
-	public EventRegistrar onChange() {
-		return onChange;
-	}
 
 	public ScreenRotationMonitor() {
-
 		try {
 			changeDetector = new RotationWatcherChangeDetector(callback);
 		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
@@ -25,17 +17,17 @@ public class ScreenRotationMonitor extends State {
 	}
 
 	@Override
-	protected void start() {
+	protected void subscribeToAdaptee() {
 		try {
 			changeDetector.start();
 		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
 			fallback(e);
-			start();
+			subscribeToAdaptee();
 		}
 	}
 
 	@Override
-	protected void stop() {
+	protected void unsubscribeFromAdaptee() {
 		try {
 			changeDetector.stop();
 		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
@@ -44,10 +36,9 @@ public class ScreenRotationMonitor extends State {
 	}
 
 	public interface Callback {
-
 		void changed();
-
 	}
+
 	public interface ChangeDetector {
 		void start();
 		void stop();
@@ -61,7 +52,7 @@ public class ScreenRotationMonitor extends State {
 	private final Callback callback = new Callback() {
 		@Override
 		public void changed() {
-			onChange.report();
+			report();
 		}
 	};
 

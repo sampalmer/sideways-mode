@@ -30,14 +30,12 @@ public class ServiceNotificationManager extends State {
 			trigger.subscribe(updateNotification);
 
 		screen.onProposedOrientationChanged().subscribe(updateNotification);
-		screenRotationMonitor.onChange().subscribe(updateNotification);
-		screenRotationMonitor.ensureStarted();
+		screenRotationMonitor.subscribe(updateNotification);
 	}
 
 	@Override
 	protected void stop() {
-		screenRotationMonitor.ensureStopped();
-		screenRotationMonitor.onChange().unsubscribe(updateNotification);
+		screenRotationMonitor.unsubscribe(updateNotification);
 		screen.onProposedOrientationChanged().unsubscribe(updateNotification);
 
 		for (EventRegistrar trigger : display.updateTriggers())
