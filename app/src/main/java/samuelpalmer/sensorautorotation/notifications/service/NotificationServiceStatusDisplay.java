@@ -4,37 +4,33 @@ import android.app.Notification;
 import android.app.Service;
 import android.os.Build;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 	private final Service service;
-	private final LockScreenHider notificationHider;
+	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
 	public NotificationServiceStatusDisplay(Service service, ApplicationSettings settings) {
 		this.service = service;
-		notificationHider = new LockScreenHider();
+		lockScreenMonitor = new LockScreenMonitor();
 		priority = settings.notificationPriority();
 	}
 
 	@Override
-	protected void start() {
-		notificationHider.ensureStarted();
-	}
+	protected void start() {}
 
 	@Override
-	protected void stop() {
-		notificationHider.ensureStopped();
-	}
+	protected void stop() {}
 
 	public void update(NotificationParameters params) {
 		ServiceNotification builder = new ServiceNotification(priority.get(), params);
@@ -46,10 +42,13 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 
 	@Override
 	public Set<EventRegistrar> updateTriggers() {
-		return new HashSet<>(Arrays.asList(
-			notificationHider.onChange(),
-			priority.onChange()
-		));
+		Set<EventRegistrar> result = new HashSet<>();
+
+		result.add(priority.onChange());
+		if (hideFromLockScreen())
+			result.add(lockScreenMonitor);
+
+		return result;
 	}
 
 	/**
@@ -66,6 +65,10 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 			}
 			lastPriority = notification.priority;
 		}
+	}
+
+	private static boolean hideFromLockScreen() {
+		return Build.VERSION.SDK_INT >= 21;
 	}
 
 	private Integer lastPriority;

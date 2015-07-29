@@ -11,22 +11,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
-public class LockScreenMonitor extends State {
+public class LockScreenMonitor extends EventRegistrarAdaptor {
 
-	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
-
-	public EventRegistrar possiblyChanged() {
-		return onChange;
+	@Override
+	protected void subscribeToAdaptee() {
+		for (String action : actions())
+			Process.context().registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
 	}
 
 	@Override
-	protected void start() {
-		for (String action : actions())
-			Process.context().registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
+	protected void unsubscribeFromAdaptee() {
+		Process.context().unregisterReceiver(notificationUpdateReceiver);
 	}
 
 	private Iterable<String> actions() {
@@ -45,15 +42,10 @@ public class LockScreenMonitor extends State {
 		return result;
 	}
 
-	@Override
-	protected void stop() {
-		Process.context().unregisterReceiver(notificationUpdateReceiver);
-	}
-
 	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			onChange.report();
+			report();
 		}
 	};
 }
