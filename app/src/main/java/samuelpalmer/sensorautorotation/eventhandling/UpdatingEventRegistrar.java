@@ -1,39 +1,10 @@
 package samuelpalmer.sensorautorotation.eventhandling;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class UpdatingEventRegistrar implements EventRegistrar {
-
-	private final Set<EventHandler> subscriptions = new HashSet<>();
+public class UpdatingEventRegistrar extends IntolerantEventRegistrar {
 
 	@Override
-	public void subscribe(EventHandler subscriber) {
-		if (subscribed(subscriber))
-			throw new RuntimeException("Already subscribed: " + subscriber);
-
-		subscriptions.add(subscriber);
-	}
-
-	@Override
-	public void unsubscribe(EventHandler subscriber) {
-		if (!subscribed(subscriber))
-			throw new RuntimeException("Unknown subscriber: " + subscriber);
-
-		subscriptions.remove(subscriber);
-	}
-
-	private boolean subscribed(EventHandler subscriber) {
-		return subscriptions.contains(subscriber);
-	}
-
 	public void report() {
-		for (EventHandler subscriber : subscriptions)
-			subscriber.update();
-	}
-
-	protected boolean noSubscriptions() {
-		return subscriptions.isEmpty();
+		super.report();
 	}
 
 }

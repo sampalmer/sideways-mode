@@ -7,9 +7,8 @@ import android.content.SharedPreferences.Editor;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
 
 public class ApplicationSettings {
@@ -35,7 +34,7 @@ public class ApplicationSettings {
 
 	public class Setting<T> {
 
-		private final EventRegistrar onChange = new UpdatingEventRegistrar() {
+		private final EventRegistrar onChange = new EventRegistrarAdaptor() {
 
 			private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 				@Override
@@ -46,17 +45,13 @@ public class ApplicationSettings {
 			};
 
 			@Override
-			public void subscribe(EventHandler subscriber) {
-				if (noSubscriptions())
-					prefs.registerOnSharedPreferenceChangeListener(listener);
-				super.subscribe(subscriber);
+			protected void subscribeToAdaptee() {
+				prefs.registerOnSharedPreferenceChangeListener(listener);
 			}
 
 			@Override
-			public void unsubscribe(EventHandler subscriber) {
-				super.unsubscribe(subscriber);
-				if (noSubscriptions())
-					prefs.unregisterOnSharedPreferenceChangeListener(listener);
+			protected void unsubscribeFromAdaptee() {
+				prefs.unregisterOnSharedPreferenceChangeListener(listener);
 			}
 
 		};
