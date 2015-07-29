@@ -44,7 +44,7 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 	public Set<EventRegistrar> updateTriggers() {
 		Set<EventRegistrar> result = new HashSet<>();
 
-		result.add(priority.onChange());
+		result.add(priority);
 		if (hideFromLockScreen())
 			result.add(lockScreenMonitor);
 

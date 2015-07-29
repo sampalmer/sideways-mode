@@ -62,9 +62,9 @@ public class SettingsFragment extends PreferenceFragment {
 		updateListPreferenceSummaries();
 		hideUnsupportedOptions();
 
-		enabledChanged = settings.enabled().onChange();
-		onScreenOffChanged = settings.screenOffBehaviour().onChange();
-		notificationPriorityChanged = settings.notificationPriority().onChange();
+		enabledChanged = settings.enabled();
+		onScreenOffChanged = settings.screenOffBehaviour();
+		notificationPriorityChanged = settings.notificationPriority();
 	}
 
 	private void hideUnsupportedOptions() {

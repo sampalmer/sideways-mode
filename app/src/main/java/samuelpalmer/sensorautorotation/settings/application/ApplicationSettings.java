@@ -7,7 +7,6 @@ import android.content.SharedPreferences.Editor;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
 
@@ -32,29 +31,7 @@ public class ApplicationSettings {
 	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 
-	public class Setting<T> {
-
-		private final EventRegistrar onChange = new EventRegistrarAdaptor() {
-
-			private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-				@Override
-				public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-					if (key.equals(Setting.this.key))
-						report();
-				}
-			};
-
-			@Override
-			protected void subscribeToAdaptee() {
-				prefs.registerOnSharedPreferenceChangeListener(listener);
-			}
-
-			@Override
-			protected void unsubscribeFromAdaptee() {
-				prefs.unregisterOnSharedPreferenceChangeListener(listener);
-			}
-
-		};
+	public class Setting<T> extends EventRegistrarAdaptor {
 
 		private final SettingType<T> type;
 		private final String key;
@@ -116,9 +93,23 @@ public class ApplicationSettings {
 			return key;
 		}
 
-		public EventRegistrar onChange() {
-			return onChange;
+		@Override
+		protected void subscribeToAdaptee() {
+			prefs.registerOnSharedPreferenceChangeListener(listener);
 		}
+
+		@Override
+		protected void unsubscribeFromAdaptee() {
+			prefs.unregisterOnSharedPreferenceChangeListener(listener);
+		}
+
+		private final SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+				if (key.equals(Setting.this.key))
+					report();
+			}
+		};
 
 	}
 

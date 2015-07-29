@@ -27,14 +27,14 @@ public class Process extends Application {
 		context = this;
 
 		enabledPreference = new ApplicationSettings().enabled();
-		enabledPreference.onChange().subscribe(serviceStateUpdater);
+		enabledPreference.subscribe(serviceStateUpdater);
 	}
 
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
 
-		enabledPreference.onChange().unsubscribe(serviceStateUpdater);
+		enabledPreference.unsubscribe(serviceStateUpdater);
 
 		Log.i(TAG, "Process terminated");
 	}
