@@ -17,10 +17,5 @@
 	    android:title="@string/allow_upside_down_screen"
 	    android:summary="@string/allow_upside_down_screen_description"
 	/>
-	<ListPreference
-		android:key="screenOnBehaviour"
-	    android:title="@string/on_screen_off"
-	    android:entries="@array/screen_off_behaviours"
-	    android:entryValues="@array/screen_off_behaviour_values"
-	/>
+
 </PreferenceScreen>

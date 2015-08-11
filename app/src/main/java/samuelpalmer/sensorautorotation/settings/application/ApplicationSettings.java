@@ -28,7 +28,6 @@ public class ApplicationSettings {
 
 	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", false); }
-	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 
 	public class Setting<T> extends EventRegistrarAdaptor {

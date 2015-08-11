@@ -4,14 +4,10 @@ import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.ScreenOffBehaviour;
-
 
 public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
-	private final ApplicationSettings settings;
 	private final Screen screen;
 	private final ApplicationState state;
 
@@ -19,8 +15,7 @@ public class OrientationCalculator {
 
 	private final UpdatingEventRegistrar listener;
 
-	public OrientationCalculator(ApplicationSettings settings, Screen screen, ApplicationState state) {
-		this.settings = settings;
+	public OrientationCalculator(Screen screen, ApplicationState state) {
 		this.screen = screen;
 		this.state = state;
 		listener = new UpdatingEventRegistrar();
@@ -30,11 +25,7 @@ public class OrientationCalculator {
 		device = DEFAULT;
 		Orientation newUser = DEFAULT;
 
-		ScreenOffBehaviour screenOffBehaviour = settings.screenOffBehaviour().get();
-		if (screenOffBehaviour == ScreenOffBehaviour.LOCK_SCREEN_ROTATION)
-			state.set(false, newUser);
-		else
-			state.user(newUser);
+		state.user(newUser);
 
 		reportUpdate();
 	}

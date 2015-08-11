@@ -45,7 +45,6 @@ public class SettingsFragment extends PreferenceFragment {
 
 	private ApplicationSettings settings;
 	private EventRegistrar enabledChanged;
-	private EventRegistrar onScreenOffChanged;
 	private EventRegistrar notificationPriorityChanged;
 
 	@Override
@@ -63,7 +62,6 @@ public class SettingsFragment extends PreferenceFragment {
 		hideUnsupportedOptions();
 
 		enabledChanged = settings.enabled();
-		onScreenOffChanged = settings.screenOffBehaviour();
 		notificationPriorityChanged = settings.notificationPriority();
 	}
 
@@ -82,7 +80,6 @@ public class SettingsFragment extends PreferenceFragment {
 		super.onStart();
 
 		enabledChanged.subscribe(enabledUpdater);
-		onScreenOffChanged.subscribe(listPreferenceSummaryUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
 		refresh();
@@ -93,7 +90,6 @@ public class SettingsFragment extends PreferenceFragment {
 		super.onStop();
 
 		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
-		onScreenOffChanged.unsubscribe(listPreferenceSummaryUpdater);
 		enabledChanged.unsubscribe(enabledUpdater);
 	}
 

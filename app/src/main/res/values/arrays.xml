@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string-array name="screen_off_behaviours">
-		<item>@string/on_screen_off_do_nothing</item>
-		<item>@string/on_screen_off_lock_rotation</item>
-	</string-array>
-
-	<string-array name="screen_off_behaviour_values">
-		<item>DO_NOTHING</item>
-		<item>LOCK_SCREEN_ROTATION</item>
-	</string-array>
-
 	<string-array name="notification_priorities">
 		<item>@string/notification_priority_high</item>
 		<item>@string/notification_priority_normal</item>

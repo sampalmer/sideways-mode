@@ -34,10 +34,6 @@
 	<string name="allow_upside_down_screen">Allow upside-down screen</string>
 	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
 
-	<string name="on_screen_off">When screen turned off</string>
-	<string name="on_screen_off_do_nothing">Do nothing</string>
-	<string name="on_screen_off_lock_rotation">Lock screen rotation</string>
-
 	<string name="notification_priority">Notification priority</string>
 	<string name="notification_priority_high">High</string>
 	<string name="notification_priority_normal">Normal</string>
