@@ -14,12 +14,10 @@ public class CompositeServiceStatusDisplay extends ServiceStatusDisplay {
 
 	private final List<ServiceStatusDisplay> wrapped;
 
-	//TODO: Don't show the notification unless it's actually enabled.
-	public CompositeServiceStatusDisplay(Service service, ApplicationSettings appSettings) {
+	public CompositeServiceStatusDisplay(Service service, ApplicationSettings settings) {
 		wrapped = new ArrayList<>();
 
-		if (appSettings.showNotification().get())
-			wrapped.add(new NotificationServiceStatusDisplay(service, appSettings));
+		wrapped.add(new NotificationServiceStatusDisplay(service, settings));
 		if (QuickSettingServiceStatusDisplay.isSupported())
 			wrapped.add(new QuickSettingServiceStatusDisplay());
 	}

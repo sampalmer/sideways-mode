@@ -102,9 +102,6 @@
 			android:exported="false"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<service android:name=".processes.service.ServiceNotificationHider"
-		         android:process=":samuelpalmer.sensorautorotation.service" />
-
 		<activity
 			android:name=".processes.service.DummyActivity"
 			android:theme="@android:style/Theme.NoDisplay"

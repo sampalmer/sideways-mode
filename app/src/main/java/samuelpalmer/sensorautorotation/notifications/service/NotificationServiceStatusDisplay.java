@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.os.Build;
 
@@ -12,7 +11,6 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
-import samuelpalmer.sensorautorotation.processes.service.NotificationException;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
@@ -33,12 +31,7 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 		Notification notification = builder.build();
 
 		cancelIfNecessary(notification);
-
-		try {
-			service.startForeground(NotificationIds.SERVICE, notification);
-		} catch (Exception ex) {
-			throw new NotificationException(ex);
-		}
+		service.startForeground(NotificationIds.SERVICE, notification);
 	}
 
 	@Override
@@ -53,16 +46,7 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	@Override
-	public void cancel() {
-		NotificationManager notificationManager = SystemServices.notificationManager();
-
-		try {
-			service.stopForeground(true);
-			notificationManager.cancel(NotificationIds.SERVICE); //Just in case
-		} catch (Exception ex) {
-			throw new NotificationException(ex);
-		}
-	}
+	public void cancel() {}
 
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the
@@ -72,8 +56,10 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 	 */
 	private void cancelIfNecessary(Notification notification) {
 		if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT <= 19) {
-			if (lastPriority != null && notification.priority != lastPriority)
-				cancel();
+			if (lastPriority != null && notification.priority != lastPriority) {
+				service.stopForeground(true);
+				SystemServices.notificationManager().cancel(NotificationIds.SERVICE);
+			}
 			lastPriority = notification.priority;
 		}
 	}

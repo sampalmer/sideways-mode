@@ -45,7 +45,8 @@ public class ServiceNotificationManager extends State {
 	private final EventHandler updateNotification = new EventHandler() {
 		@Override
 		public void update() {
-			statusGenerator.update(display);
+			NotificationParameters params = statusGenerator.generate();
+			display.update(params);
 		}
 	};
 

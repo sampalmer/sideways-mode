@@ -8,9 +8,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.notifications.service.CompositeServiceStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
@@ -36,9 +34,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
-	protected ServiceNotificationManager serviceNotificationManager;
+	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	protected ServiceStatusGenerator serviceStatusGenerator;
+	private ServiceStatusGenerator serviceStatusGenerator;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 
 	@Override
@@ -70,12 +68,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
 		screenOrientationController.ensureStarted();
-
-		//TODO: Probably shouldn't start the notification manager until after the hack is applied
 		serviceNotificationManager.ensureStarted();
-		if (!appSettings.showNotification().get())
-			ServiceController.ensureStarted(ComponentType.create(ServiceNotificationHider.class).intent()); //TODO: Support changing this at runtime
-
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 	}

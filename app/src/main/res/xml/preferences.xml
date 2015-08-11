@@ -6,20 +6,12 @@
 	    android:title="@string/app_enabled"
 	    android:summary="@string/app_enabled_description"
 	/>
-
-	<CheckBoxPreference
-		android:key="showNotification"
-	    android:title="@string/show_notification"
-	    android:summary="@string/show_notification_description"
-		/>
 	<ListPreference
 		android:key="notificationPriority"
 		android:title="@string/notification_priority"
 		android:entries="@array/notification_priorities"
 		android:entryValues="@array/notification_priority_values"
-	    android:dependency="showNotification"
 		/>
-
 	<CheckBoxPreference
 		android:key="allowUpsideDownScreen"
 	    android:title="@string/allow_upside_down_screen"

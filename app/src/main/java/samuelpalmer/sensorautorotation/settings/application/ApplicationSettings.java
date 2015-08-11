@@ -31,9 +31,6 @@ public class ApplicationSettings {
 	public Setting<ScreenOffBehaviour> screenOffBehaviour() { return new Setting<>(new EnumSetting<>(ScreenOffBehaviour.class), "screenOnBehaviour", ScreenOffBehaviour.DO_NOTHING); }
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 
-	//TODO: Make the default value depend on whether the quick setting is available
-	public Setting<Boolean> showNotification() { return new Setting<>(new BooleanSetting(), "showNotification", true); }
-
 	public class Setting<T> extends EventRegistrarAdaptor {
 
 		private final SettingType<T> type;
