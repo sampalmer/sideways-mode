@@ -15,9 +15,10 @@ public class ServiceStatusGenerator {
 		this.screen = screen;
 	}
 
-	public NotificationParameters generate() {
+	public void update(ServiceStatusDisplay display) {
 		Mode mode = mode();
-		return new NotificationParameters(mode, overridden(), getSummary(mode));
+		NotificationParameters params = new NotificationParameters(mode, overridden(), getSummary(mode));
+		display.update(params);
 	}
 
 	public CharSequence getSummary(Mode mode) {

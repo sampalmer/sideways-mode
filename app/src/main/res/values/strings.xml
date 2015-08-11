@@ -38,6 +38,9 @@
 	<string name="on_screen_off_do_nothing">Do nothing</string>
 	<string name="on_screen_off_lock_rotation">Lock screen rotation</string>
 
+	<string name="show_notification">Show notification</string>
+	<string name="show_notification_description">Show this app\'s status in the notification drawer</string>
+
 	<string name="notification_priority">Notification priority</string>
 	<string name="notification_priority_high">High</string>
 	<string name="notification_priority_normal">Normal</string>
@@ -61,6 +64,9 @@
 	<string name="setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="preference_write_failure_message">Couldn\'t write application settings.</string>
 	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
+
+	<string name="notification_hiding_failed_summary">Couldn\'t hide the notification</string>
+	<string name="notification_hiding_failed_message">On this device, the notification is needed to prevent Android from stopping this app</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
