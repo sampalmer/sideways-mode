@@ -72,8 +72,7 @@
 	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which one you\'re using, look at the notification in the notification drawer. In Locked mode, the notification shows the locked screen orientation, such as \"%2$s\".</string>
 
 	<string name="instructions_toggling_heading">Changing Mode</string>
-	<string name="instructions_toggling_contents">To change mode, touch the notification. You can also make a home screen shortcut %1$sto do this.</string>
-	<string name="instructions_toggling_small_app">"or open the %1$s small app "</string> <!-- Using double-quotes to preserve the trailing space -->
+	<string name="instructions_toggling_contents">To change mode, touch the notification. You can also make a home screen shortcut to do this.</string>
 
 	<string name="instructions_fixed_rotation_heading">Locked Mode</string>
 	<string name="instructions_fixed_rotation_contents">In Locked mode, you can\'t change the screen orientation.</string>
