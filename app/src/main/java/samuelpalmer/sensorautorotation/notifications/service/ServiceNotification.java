@@ -24,12 +24,14 @@ public class ServiceNotification {
 
 	private final NotificationPriority priority;
 	private final NotificationParameters params;
+	private final NotificationStyles styles;
 	private NotificationBuilderCompat builder;
 	private RemoteViews content;
 
 	public ServiceNotification(NotificationPriority priority, NotificationParameters notificationParameters) {
 		this.priority = priority;
 		params = notificationParameters;
+		styles = new NotificationStyles();
 	}
 
 	/**
@@ -43,8 +45,12 @@ public class ServiceNotification {
 
 		int icon = params.mode.iconResourceId(params.overridden);
 		content.setImageViewResource(R.id.notification_icon, icon);
+
 		content.setTextViewText(R.id.notification_title, params.summary);
+		styles.titleStyle.applyTo(content, R.id.notification_title);
+
 		content.setTextViewText(R.id.notification_text, StringResource.get(params.mode.actionDescriptionResourceId()));
+		styles.textStyle.applyTo(content, R.id.notification_text);
 
 		builder = NotificationBuilderCompat.create()
 				.setSmallIcon(icon)

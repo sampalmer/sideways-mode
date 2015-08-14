@@ -1,10 +1,13 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.Process;
@@ -13,9 +16,12 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 
 public class NotificationStyles {
 
-	private Integer textColor = null;
-	private float textSize = 11;
-	private final String COLOR_SEARCH_RECURSE_TIP = "SOME_SAMPLE_TEXT";
+	public final StyleType titleStyle = new StyleType("TITLE");
+	public final StyleType textStyle = new StyleType("TEXT");
+
+	public NotificationStyles() {
+		extractColors();
+	}
 
 	private void recurseGroup(ViewGroup viewGroup)
 	{
@@ -28,14 +34,14 @@ public class NotificationStyles {
 				TextView textView = (TextView) view;
 				String text = textView.getText().toString();
 
-				if (COLOR_SEARCH_RECURSE_TIP.equals(text))
-				{
-					textColor = textView.getTextColors().getDefaultColor();
-					textSize = textView.getTextSize();
-					DisplayMetrics metrics = new DisplayMetrics();
-					SystemServices.windowManager().getDefaultDisplay().getMetrics(metrics);
-					textSize /= metrics.scaledDensity;
-				}
+				for (StyleType type : new StyleType[] { titleStyle, textStyle })
+					if (text.equals(type.searchTip))
+					{
+						DisplayMetrics metrics = new DisplayMetrics();
+						SystemServices.windowManager().getDefaultDisplay().getMetrics(metrics);
+						type.size = textView.getTextSize() / metrics.scaledDensity;
+						type.colour = textView.getTextColors().getDefaultColor();
+					}
 			}
 			else if (view instanceof ViewGroup)
 				recurseGroup((ViewGroup) view);
@@ -47,8 +53,8 @@ public class NotificationStyles {
 		try
 		{
 			Notification notification = NotificationBuilderCompat.create()
-				.setContentTitle(COLOR_SEARCH_RECURSE_TIP)
-				.setContentText("Utest")
+				.setContentTitle(titleStyle.searchTip)
+				.setContentText(textStyle.searchTip)
 				.build();
 
 			LinearLayout group = new LinearLayout(Process.context());
@@ -56,14 +62,23 @@ public class NotificationStyles {
 			recurseGroup(event);
 			group.removeAllViews();
 		}
-		catch (Exception e)
-		{
-			textColor = android.R.color.black;
+		catch (Exception e) {
+			Log.w(NotificationStyles.class.getSimpleName(), e);
 		}
 	}
 
-	public NotificationStyles() {
+	public class StyleType {
+		private int colour = Color.BLACK;
+		private float size = 11;
+		private String searchTip;
 
+		public StyleType(String tip) {
+			searchTip = tip;
+		}
+
+		public void applyTo(RemoteViews content, int id) {
+			content.setTextColor(id, colour);
+			content.setFloat(id, "setTextSize", size);
+		}
 	}
-
 }

@@ -53,7 +53,7 @@
     <ImageButton
         android:id="@+id/rotate_right_button"
         android:scaleType="fitCenter"
-        android:layout_width="100px"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"/>
 </LinearLayout>
