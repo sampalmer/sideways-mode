@@ -92,7 +92,7 @@
 			android:excludeFromRecents="true"
 			android:process=":samuelpalmer.sensorautorotation.service" />
 
-		<receiver android:name=".processes.service.ToggleRotationLockReceiver"
+		<receiver android:name=".processes.service.RotationServiceReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service" />
 
 		<service

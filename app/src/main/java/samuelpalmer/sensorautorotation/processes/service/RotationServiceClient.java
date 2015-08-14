@@ -8,21 +8,22 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public abstract class RotationLockToggler {
+public abstract class RotationServiceClient {
 
-	public static void updateAndToggle() {
+	public static void send(String action) {
 		if (ServiceHolder.isRunning())
-			ServiceHolder.instance().toggleRotation(); //This seems to have less lag than an intent
+			ServiceHolder.instance().handle(action); //This seems to have less lag than an intent
 		else if (enabled())
-			ServiceController.ensureStarted(toggleIntent());
+			ServiceController.ensureStarted(toggleIntent(action));
 		else
 			showDisabledMessage();
 	}
 
-	private static Intent toggleIntent() {
+	private static Intent toggleIntent(String action) {
 		return
-			ServiceController.intent()
-			.setAction(RotationService.ACTION_TOGGLE);
+			ServiceController
+				.intent()
+				.setAction(action);
 	}
 
 	private static Boolean enabled() {

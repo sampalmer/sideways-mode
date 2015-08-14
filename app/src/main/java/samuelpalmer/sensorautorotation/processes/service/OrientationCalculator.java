@@ -38,6 +38,12 @@ public class OrientationCalculator {
 		return state.user();
 	}
 
+	public void offsetUser(int clockwiseRotations) {
+		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
+		state.user(newUser);
+		reportUpdate();
+	}
+
 	public void setAutoRotate(boolean newValue) {
 		/* Since the current app/window might be overriding the current proposed orientation.
 		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
@@ -79,5 +85,4 @@ public class OrientationCalculator {
 	private Rotation userOffset() {
 		return Orientation.NATURAL.minus(state.user());
 	}
-
 }

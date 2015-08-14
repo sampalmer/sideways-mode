@@ -1,14 +1,23 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
+import android.widget.RemoteViews;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+
+import java.io.IOException;
+
+import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
-import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceNotification {
@@ -16,6 +25,7 @@ public class ServiceNotification {
 	private final NotificationPriority priority;
 	private final NotificationParameters params;
 	private NotificationBuilderCompat builder;
+	private RemoteViews content;
 
 	public ServiceNotification(NotificationPriority priority, NotificationParameters notificationParameters) {
 		this.priority = priority;
@@ -27,11 +37,21 @@ public class ServiceNotification {
 	 */
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
+		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
+		configureButton("ic_rotate_left.svg", RotationService.ACTION_ROTATE_LEFT);
+		configureButton("ic_rotate_right.svg", RotationService.ACTION_ROTATE_RIGHT);
+
+		int icon = params.mode.iconResourceId(params.overridden);
+		content.setImageViewResource(R.id.notification_icon, icon);
+		content.setTextViewText(R.id.notification_title, params.summary);
+		content.setTextViewText(R.id.notification_text, StringResource.get(params.mode.actionDescriptionResourceId()));
+
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(params.mode.iconResourceId(params.overridden))
-				.setContentIntent(ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent())
+				.setSmallIcon(icon)
+				.setContentIntent(RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE))
 				.setContentTitle(params.summary)
 				.setContentText(StringResource.get(params.mode.actionDescriptionResourceId()))
+				.setContent(content)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
 		if (params.overridden)
@@ -43,6 +63,33 @@ public class ServiceNotification {
 		hideFromLockScreen();
 
 		return builder.build();
+	}
+
+	private void configureButton(String iconFilename, String action) {
+		content.setOnClickPendingIntent(R.id.rotate_left_button, RotationServiceReceiver.getPendingIntent(action));
+
+		// Read an SVG from the assets folder
+		SVG svg;
+		try {
+			svg = SVG.getFromAsset(Process.context().getAssets(), iconFilename);
+		} catch (SVGParseException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		Bitmap bitmap = Bitmap.createBitmap(
+			50,
+			50,
+			Bitmap.Config.ARGB_8888
+		);
+
+		Canvas canvas = new Canvas(bitmap);
+		svg.setDocumentWidth(bitmap.getWidth());
+		svg.setDocumentHeight(bitmap.getHeight());
+		svg.renderToCanvas(canvas);
+
+		content.setImageViewBitmap(R.id.rotate_left_button, bitmap);
 	}
 
 	private void hideTimestamp() {

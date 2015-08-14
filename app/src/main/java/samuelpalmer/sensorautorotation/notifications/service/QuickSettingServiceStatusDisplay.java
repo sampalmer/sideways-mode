@@ -13,7 +13,8 @@ import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.Reflection;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.processes.service.ToggleRotationLockReceiver;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 public class QuickSettingServiceStatusDisplay extends ServiceStatusDisplay {
@@ -51,7 +52,7 @@ public class QuickSettingServiceStatusDisplay extends ServiceStatusDisplay {
 	}
 
 	private PendingIntent toggleIntent() {
-		return ComponentType.create(ToggleRotationLockReceiver.class).pendingIntent();
+		return RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE);
 	}
 
 	private Intent settingsIntent() {

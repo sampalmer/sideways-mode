@@ -30,6 +30,8 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	public static final String ACTION_TOGGLE = "toggle";
+	public static final String ACTION_ROTATE_LEFT = "rotate_left";
+	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -75,10 +77,27 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent != null && ACTION_TOGGLE.equals(intent.getAction()))
-			toggleRotation();
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action != null)
+				handle(action);
+		}
 
 		return Service.START_STICKY;
+	}
+
+	public void handle(String action) {
+		switch (action) {
+			case ACTION_TOGGLE:
+				toggleRotation();
+				break;
+			case ACTION_ROTATE_LEFT:
+				calculator.offsetUser(-1);
+				break;
+			case ACTION_ROTATE_RIGHT:
+				calculator.offsetUser(2);
+				break;
+		}
 	}
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
@@ -109,7 +128,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ServiceHolder.stopped();
 	}
 
-	public void toggleRotation() {
+	private void toggleRotation() {
 		calculator.setAutoRotate(!calculator.autoRotate());
 		showStatusToast();
 	}

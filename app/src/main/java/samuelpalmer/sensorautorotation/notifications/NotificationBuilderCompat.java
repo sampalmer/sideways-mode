@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.os.Build;
+import android.widget.RemoteViews;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
@@ -58,6 +59,11 @@ public class NotificationBuilderCompat {
 
 	public NotificationBuilderCompat setSmallIcon(int icon) {
 		builder.setSmallIcon(icon);
+		return this;
+	}
+
+	public NotificationBuilderCompat setContent(RemoteViews views) {
+		builder.setContent(views);
 		return this;
 	}
 
