@@ -38,8 +38,8 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
-		configureButton("ic_rotate_left.svg", RotationService.ACTION_ROTATE_LEFT);
-		configureButton("ic_rotate_right.svg", RotationService.ACTION_ROTATE_RIGHT);
+		configureButton(R.id.rotate_left_button, "ic_rotate_left.svg", RotationService.ACTION_ROTATE_LEFT);
+		configureButton(R.id.rotate_right_button, "ic_rotate_right.svg", RotationService.ACTION_ROTATE_RIGHT);
 
 		int icon = params.mode.iconResourceId(params.overridden);
 		content.setImageViewResource(R.id.notification_icon, icon);
@@ -65,11 +65,12 @@ public class ServiceNotification {
 		return builder.build();
 	}
 
-	private void configureButton(String iconFilename, String action) {
-		content.setOnClickPendingIntent(R.id.rotate_left_button, RotationServiceReceiver.getPendingIntent(action));
+	private void configureButton(int id, String iconFilename, String action) {
+		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
 
 		// Read an SVG from the assets folder
 		SVG svg;
+		//noinspection TryWithIdenticalCatches
 		try {
 			svg = SVG.getFromAsset(Process.context().getAssets(), iconFilename);
 		} catch (SVGParseException e) {
@@ -89,7 +90,7 @@ public class ServiceNotification {
 		svg.setDocumentHeight(bitmap.getHeight());
 		svg.renderToCanvas(canvas);
 
-		content.setImageViewBitmap(R.id.rotate_left_button, bitmap);
+		content.setImageViewBitmap(id, bitmap);
 	}
 
 	private void hideTimestamp() {
