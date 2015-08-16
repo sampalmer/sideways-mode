@@ -1,15 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.widget.RemoteViews;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
-
-import java.io.IOException;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
@@ -40,8 +33,8 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
-		configureButton(R.id.rotate_left_button, "ic_rotate_left.svg", RotationService.ACTION_ROTATE_LEFT);
-		configureButton(R.id.rotate_right_button, "ic_rotate_right.svg", RotationService.ACTION_ROTATE_RIGHT);
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT);
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT);
 
 		int icon = params.mode.iconResourceId(params.overridden);
 		content.setImageViewResource(R.id.notification_icon, icon);
@@ -71,32 +64,8 @@ public class ServiceNotification {
 		return builder.build();
 	}
 
-	private void configureButton(int id, String iconFilename, String action) {
+	private void configureButton(int id, String action) {
 		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
-
-		// Read an SVG from the assets folder
-		SVG svg;
-		//noinspection TryWithIdenticalCatches
-		try {
-			svg = SVG.getFromAsset(Process.context().getAssets(), iconFilename);
-		} catch (SVGParseException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		Bitmap bitmap = Bitmap.createBitmap(
-			50,
-			50,
-			Bitmap.Config.ARGB_8888
-		);
-
-		Canvas canvas = new Canvas(bitmap);
-		svg.setDocumentWidth(bitmap.getWidth());
-		svg.setDocumentHeight(bitmap.getHeight());
-		svg.renderToCanvas(canvas);
-
-		content.setImageViewBitmap(id, bitmap);
 	}
 
 	private void hideTimestamp() {
