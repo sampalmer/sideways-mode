@@ -19,7 +19,10 @@
               android:layout_width="match_parent"
               android:layout_height="64dp"
               android:orientation="horizontal"
-              android:baselineAligned="false">
+              android:baselineAligned="false"
+              android:theme="@style/Theme">
+    <!-- The theme is needed to make the buttons animate when pressed -->
+
     <FrameLayout
         android:id="@+id/notification_main_column"
         android:layout_width="match_parent"
