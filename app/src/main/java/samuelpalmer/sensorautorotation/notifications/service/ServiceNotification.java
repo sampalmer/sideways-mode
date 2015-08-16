@@ -58,13 +58,14 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT);
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT);
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_ic_rotate_left);
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_ic_rotate_right);
 
 		notification.contentView = content;
 	}
 
-	private void configureButton(int id, String action) {
+	private void configureButton(int id, String action, int image) {
+		content.setImageViewResource(id, image);
 		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
 	}
 
