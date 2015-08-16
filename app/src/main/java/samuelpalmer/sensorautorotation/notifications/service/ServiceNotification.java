@@ -32,25 +32,11 @@ public class ServiceNotification {
 	 */
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
-		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT);
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT);
-
-		int icon = params.mode.iconResourceId(params.overridden);
-		content.setImageViewResource(R.id.notification_icon, icon);
-
-		content.setTextViewText(R.id.notification_title, params.summary);
-		styles.titleStyle.applyTo(content, R.id.notification_title);
-
-		content.setTextViewText(R.id.notification_text, StringResource.get(params.mode.actionDescriptionResourceId()));
-		styles.textStyle.applyTo(content, R.id.notification_text);
-
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(icon)
+				.setSmallIcon(params.mode.iconResourceId(params.overridden))
 				.setContentIntent(RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE))
 				.setContentTitle(params.summary)
 				.setContentText(StringResource.get(params.mode.actionDescriptionResourceId()))
-				.setContent(content)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
 		if (params.overridden)
@@ -61,7 +47,21 @@ public class ServiceNotification {
 		hideTimestamp();
 		hideFromLockScreen();
 
-		return builder.build();
+		Notification notification = builder.build();
+		addActions(notification);
+
+		return notification;
+	}
+
+	private void addActions(Notification notification) {
+		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
+		content.removeAllViews(R.id.notification_main_column);
+		content.addView(R.id.notification_main_column, notification.contentView);
+
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT);
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT);
+
+		notification.contentView = content;
 	}
 
 	private void configureButton(int id, String action) {
