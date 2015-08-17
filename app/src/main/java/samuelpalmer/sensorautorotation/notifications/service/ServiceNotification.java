@@ -3,18 +3,16 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.DrawFilter;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
-import com.caverock.androidsvg.SVGParser;
 
 import java.io.IOException;
 
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -23,6 +21,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceNotification {
@@ -46,7 +45,7 @@ public class ServiceNotification {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
 				.setSmallIcon(params.mode.iconResourceId(params.overridden))
-				.setContentIntent(RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE))
+				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
 				.setContentTitle(params.summary)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 

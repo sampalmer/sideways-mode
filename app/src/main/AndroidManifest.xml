@@ -40,7 +40,7 @@
 
 		<activity
 			android:name=".processes.ui.MainActivity"
-		    android:launchMode="singleTop"
+		    android:launchMode="singleTask"
 		>
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
