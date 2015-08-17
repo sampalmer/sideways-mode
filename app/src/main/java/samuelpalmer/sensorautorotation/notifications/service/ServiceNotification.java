@@ -1,12 +1,21 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
+
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+
+import java.io.IOException;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
@@ -58,15 +67,44 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_ic_rotate_left);
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_ic_rotate_right);
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg");
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg");
 
 		notification.contentView = content;
 	}
 
-	private void configureButton(int id, String action, int image) {
-		content.setImageViewResource(id, image);
+	private void configureButton(int id, String action, String iconFilename) {
 		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
+
+		// Read an SVG from the assets folder
+		SVG svg;
+		//noinspection TryWithIdenticalCatches
+		try {
+			svg = SVG.getFromAsset(Process.context().getAssets(), iconFilename);
+		} catch (SVGParseException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		DisplayMetrics display = new DisplayMetrics();
+		SystemServices.windowManager().getDefaultDisplay().getMetrics(display);
+
+		int lengthInDp = 50;
+		int lengthInPx = lengthInDp * (display.densityDpi / 160);
+
+		Bitmap bitmap = Bitmap.createBitmap(
+			lengthInPx,
+			lengthInPx,
+			Bitmap.Config.ARGB_8888
+		);
+
+		Canvas canvas = new Canvas(bitmap);
+		svg.setDocumentWidth(bitmap.getWidth());
+		svg.setDocumentHeight(bitmap.getHeight());
+		svg.renderToCanvas(canvas);
+
+		content.setImageViewBitmap(id, bitmap);
 	}
 
 	private void hideTimestamp() {
