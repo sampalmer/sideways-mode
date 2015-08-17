@@ -1,1 +1,1 @@
-include ':app', ':org.cyanogenmod.platform.sdk', ':androidsvg'
+include ':app', ':androidsvg'

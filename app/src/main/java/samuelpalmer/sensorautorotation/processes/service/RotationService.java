@@ -9,7 +9,7 @@ import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.notifications.service.CompositeServiceStatusDisplay;
+import samuelpalmer.sensorautorotation.notifications.service.NotificationServiceStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
@@ -62,7 +62,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new CompositeServiceStatusDisplay(this, appSettings), screenUpdater);
+		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, appSettings), screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);
