@@ -68,7 +68,7 @@ public class NotificationStyles {
 	}
 
 	public class StyleType {
-		private int colour = Color.BLACK;
+		public int colour = Color.BLACK;
 		private float size = 11;
 		private String searchTip;
 

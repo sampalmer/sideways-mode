@@ -3,12 +3,15 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.DrawFilter;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
+import com.caverock.androidsvg.SVGParser;
 
 import java.io.IOException;
 
@@ -100,10 +103,12 @@ public class ServiceNotification {
 		);
 
 		Canvas canvas = new Canvas(bitmap);
+
 		svg.setDocumentWidth(bitmap.getWidth());
 		svg.setDocumentHeight(bitmap.getHeight());
 		svg.renderToCanvas(canvas);
 
+		content.setInt(id, "setColorFilter", styles.titleStyle.colour);
 		content.setImageViewBitmap(id, bitmap);
 	}
 
