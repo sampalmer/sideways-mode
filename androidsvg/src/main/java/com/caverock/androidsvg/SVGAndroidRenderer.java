@@ -15,9 +15,7 @@
 */
 
 package com.caverock.androidsvg;
-import java.util.*;
 
-import android.graphics.*;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +30,9 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
-import android.util.*;
+import android.graphics.Typeface;
+import android.util.Base64;
+import android.util.Log;
 
 import com.caverock.androidsvg.SVG.Box;
 import com.caverock.androidsvg.SVG.ClipPath;
@@ -103,8 +103,6 @@ public class SVGAndroidRenderer
    // Canvas stack for when we are processing mask elements
    private Stack<Canvas>  canvasStack;
    private Stack<Bitmap>  bitmapStack;
-
-private ColorFilter colorFilter;
 
 
    private static final float  BEZIER_ARC_FACTOR = 0.5522847498f;
@@ -205,12 +203,11 @@ private ColorFilter colorFilter;
     * @param defaultDPI the DPI setting to use when converting real-world units such as centimetres.
     */
 
-   protected SVGAndroidRenderer(Canvas canvas, SVG.Box viewPort, float defaultDPI, ColorFilter colorFilter)
+   protected SVGAndroidRenderer(Canvas canvas, SVG.Box viewPort, float defaultDPI)
    {
       this.canvas = canvas;
       this.dpi = defaultDPI;
       this.canvasViewPort = viewPort;
-      this.colorFilter = colorFilter;
    }
 
 
@@ -1980,8 +1977,6 @@ private ColorFilter colorFilter;
     */
    private void updateStyle(RendererState state, Style style)
    {
-	   state.fillPaint.setColorFilter(colorFilter);
-	   state.strokePaint.setColorFilter(colorFilter);
       // Now update each style property we know about
       if (isSpecified(style, SVG.SPECIFIED_COLOR))
       {
