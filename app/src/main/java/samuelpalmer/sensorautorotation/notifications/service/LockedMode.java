@@ -33,8 +33,4 @@ class LockedMode implements Mode {
 		return portrait ? R.string.screen_rotation_disabled_portrait : R.string.screen_rotation_disabled_landscape;
 	}
 
-	@Override
-	public int actionDescriptionResourceId() {
-		return R.string.enable_screen_rotation;
-	}
 }

@@ -48,7 +48,6 @@ public class ServiceNotification {
 				.setSmallIcon(params.mode.iconResourceId(params.overridden))
 				.setContentIntent(RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE))
 				.setContentTitle(params.summary)
-				.setContentText(StringResource.get(params.mode.actionDescriptionResourceId()))
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
 		if (params.overridden)

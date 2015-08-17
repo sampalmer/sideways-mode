@@ -11,8 +11,6 @@
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
 	<string name="screen_rotation_disabled_portrait">Portrait</string>
 	<string name="screen_rotation_disabled_landscape">Landscape</string>
-	<string name="enable_screen_rotation">Touch for auto rotation</string>
-	<string name="disable_screen_rotation">Touch to lock rotation</string>
 
 	<string name="notification_summary">%1$s (User %2$s)</string>
 	<string name="user_rotation_upright">Upright</string>
