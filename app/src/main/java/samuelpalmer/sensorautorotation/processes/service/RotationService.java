@@ -32,6 +32,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public static final String ACTION_TOGGLE = "toggle";
 	public static final String ACTION_ROTATE_LEFT = "rotate_left";
 	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
+	public static final String ACTION_STOP = "stop";
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -96,6 +97,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				break;
 			case ACTION_ROTATE_RIGHT:
 				calculator.offsetUser(1);
+				break;
+			case ACTION_STOP:
+				new ApplicationSettings().enabled().setAndCommit(false);
 				break;
 		}
 	}

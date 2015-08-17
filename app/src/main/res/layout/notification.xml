@@ -34,7 +34,13 @@
         android:layout_weight="0"
         android:orientation="horizontal">
 
-        <include layout="@layout/notification_button_divider"/>
+	    <include layout="@layout/notification_button_divider"/>
+
+	    <include
+		    layout="@layout/notification_button"
+		    android:id="@+id/stop_button"/>
+
+	    <include layout="@layout/notification_button_divider"/>
 
         <include
             layout="@layout/notification_button"
