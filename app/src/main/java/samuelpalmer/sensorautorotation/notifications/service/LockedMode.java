@@ -14,6 +14,11 @@ class LockedMode implements Mode {
 	}
 
 	@Override
+	public String iconSvgFileName() {
+		return portrait ? "portrait_lock.svg" : "landscape_lock.svg";
+	}
+
+	@Override
 	public int iconResourceId(boolean overridden) {
 		return
 				portrait
