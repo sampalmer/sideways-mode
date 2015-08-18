@@ -93,12 +93,12 @@ public class ServiceNotification {
 		DisplayMetrics display = new DisplayMetrics();
 		SystemServices.windowManager().getDefaultDisplay().getMetrics(display);
 
-		int lengthInDp = 50;
-		int lengthInPx = lengthInDp * (display.densityDpi / 160);
+		int lengthInDp = 32; //Standard action button icon size
 
 		Bitmap bitmap = Bitmap.createBitmap(
-			lengthInPx,
-			lengthInPx,
+			//Not using densityDpi since it's sometimes 0 (seen in Genymotion 240x320 120dpi display, also http://stackoverflow.com/q/27590213/238753)
+			dpToPx(lengthInDp, display.xdpi),
+			dpToPx(lengthInDp, display.ydpi),
 			Bitmap.Config.ARGB_8888
 		);
 
@@ -110,6 +110,10 @@ public class ServiceNotification {
 
 		content.setInt(id, "setColorFilter", styles.titleStyle.colour);
 		content.setImageViewBitmap(id, bitmap);
+	}
+
+	private int dpToPx(int lengthInDp, float dpi) {
+		return Math.round(lengthInDp * (dpi / 160));
 	}
 
 	private void hideTimestamp() {
