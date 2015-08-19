@@ -14,18 +14,20 @@ class LockedMode implements Mode {
 	}
 
 	@Override
-	public String iconSvgFileName() {
-		return portrait ? "portrait_lock.svg" : "landscape_lock.svg";
-	}
-
-	@Override
-	public int iconResourceId(boolean overridden) {
+	public String iconSvgFileName(boolean overridden) {
 		return
 				portrait
 						?
-						(overridden ? R.drawable.ic_screen_rotation_locked_portrait_overridden : R.drawable.ic_screen_rotation_locked_portrait_normal)
+						(overridden ? "portrait_overridden.svg" : "portrait_lock.svg")
 						:
-						(overridden ? R.drawable.ic_screen_rotation_locked_landscape_overridden : R.drawable.ic_screen_rotation_locked_landscape_normal);
+						(overridden ? "landscape_overridden.svg" : "landscape_lock.svg");
+
+	}
+
+	@Override
+	public int iconResourceId() {
+		return
+				portrait ? R.drawable.ic_portrait_lock : R.drawable.ic_landscape_lock;
 	}
 
 	@Override

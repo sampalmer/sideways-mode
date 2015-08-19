@@ -46,7 +46,7 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(params.mode.iconResourceId(params.overridden))
+				.setSmallIcon(params.mode.iconResourceId())
 				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
 				.setContentTitle(params.summary)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
@@ -71,7 +71,7 @@ public class ServiceNotification {
 		content.addView(R.id.notification_main_column, notification.contentView);
 
 		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "x.svg");
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName());
+		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden));
 		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg");
 		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg");
 
@@ -108,11 +108,17 @@ public class ServiceNotification {
 		svg.setDocumentWidth(bitmap.getWidth());
 		svg.setDocumentHeight(bitmap.getHeight());
 
-		Integer colour = styles.actionButtonStyle.colour;
-		if (colour == null) //Android 4.0 doesn't have notification actions
-			colour = styles.titleStyle.colour;
-		if (colour == null)
-			colour = Color.BLACK;
+		int colour;
+		if (styles.actionButtonStyle.colour != null)
+			colour = styles.actionButtonStyle.colour;
+		else {
+			if (styles.titleStyle.colour != null) //Android 4.0 doesn't have notification actions
+				colour = Color.rgb(Color.red(styles.titleStyle.colour), Color.green(styles.titleStyle.colour), Color.blue(styles.titleStyle.colour));
+			else
+				colour = Color.BLACK;
+
+			colour = Color.argb((int) (255 * .8), Color.red(colour), Color.green(colour), Color.blue(colour));
+		}
 
 		svg.setColorFilter(new ColorMatrixColorFilter(new float[] {
 			0, 0, 0, 0, Color.red(colour),
