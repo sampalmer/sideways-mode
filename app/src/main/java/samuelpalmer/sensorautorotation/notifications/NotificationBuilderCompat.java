@@ -127,6 +127,10 @@ public class NotificationBuilderCompat {
 		return this;
 	}
 
+	public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+		return this;
+	}
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private static class V16 extends NotificationBuilderCompat
 	{
@@ -138,6 +142,12 @@ public class NotificationBuilderCompat {
 		@Override
 		public NotificationBuilderCompat setPriority(int pri) {
 			builder.setPriority(pri);
+			return this;
+		}
+
+		@Override
+		public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+			builder.addAction(icon, title, intent);
 			return this;
 		}
 	}

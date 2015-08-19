@@ -16,23 +16,17 @@
 
 package com.caverock.androidsvg;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Picture;
-import android.graphics.RectF;
-import android.util.Log;
+import android.content.*;
+import android.content.res.*;
+import android.graphics.*;
+import android.util.*;
 
 import com.caverock.androidsvg.CSSParser.Ruleset;
 
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -246,7 +240,16 @@ public class SVG
       return renderDPI;
    }
 
-
+   private ColorFilter colorFilter;
+   /**
+    * Set a ColorFilter in the paint that will render this SVG. 
+    * With Android's color filters you can easily modify colors, eg. convert to greyscale, ligten/darken, invert, replace colors, saturate, Porter-Duff, etc.  
+    * 07 Apr 2015
+    * @param colorFilter if null, remove any color filter.
+    */
+   public void setColorFilter(ColorFilter colorFilter) {
+	   this.colorFilter = colorFilter;
+   }
    //===============================================================================
    // SVG document rendering to a Picture object (indirect rendering)
 
@@ -301,7 +304,7 @@ public class SVG
       Canvas   canvas = picture.beginRecording(widthInPixels, heightInPixels);
       Box      viewPort = new Box(0f, 0f, (float) widthInPixels, (float) heightInPixels);
 
-      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI);
+      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI, colorFilter);
 
       renderer.renderDocument(this, null, null, false);
 
@@ -342,7 +345,7 @@ public class SVG
       Canvas   canvas = picture.beginRecording(widthInPixels, heightInPixels);
       Box      viewPort = new Box(0f, 0f, (float) widthInPixels, (float) heightInPixels);
 
-      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI);
+      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI, colorFilter);
 
       renderer.renderDocument(this, view.viewBox, view.preserveAspectRatio, false);
 
@@ -383,7 +386,7 @@ public class SVG
          svgViewPort = new Box(0f, 0f, (float) canvas.getWidth(), (float) canvas.getHeight());
       }
 
-      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI);
+      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI, colorFilter);
 
       renderer.renderDocument(this, null, null, true);
    }
@@ -445,7 +448,7 @@ public class SVG
          svgViewPort = new Box(0f, 0f, (float) canvas.getWidth(), (float) canvas.getHeight());
       }
 
-      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI);
+      SVGAndroidRenderer  renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI, colorFilter);
 
       renderer.renderDocument(this, view.viewBox, view.preserveAspectRatio, true);
    }

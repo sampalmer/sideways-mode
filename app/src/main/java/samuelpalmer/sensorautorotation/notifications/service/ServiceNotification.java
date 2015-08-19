@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
@@ -93,7 +95,7 @@ public class ServiceNotification {
 		DisplayMetrics display = new DisplayMetrics();
 		SystemServices.windowManager().getDefaultDisplay().getMetrics(display);
 
-		int lengthInDp = 32; //Standard action button icon size
+		int lengthInDp = 32; //As per docs: http://developer.android.com/reference/android/app/Notification.Builder.html#addAction(int, java.lang.CharSequence, android.app.PendingIntent)
 
 		Bitmap bitmap = Bitmap.createBitmap(
 			//Not using densityDpi since it's sometimes 0 (seen in Genymotion 240x320 120dpi display, also http://stackoverflow.com/q/27590213/238753)
@@ -103,12 +105,24 @@ public class ServiceNotification {
 		);
 
 		Canvas canvas = new Canvas(bitmap);
-
 		svg.setDocumentWidth(bitmap.getWidth());
 		svg.setDocumentHeight(bitmap.getHeight());
+
+		Integer colour = styles.actionButtonStyle.colour;
+		if (colour == null) //Android 4.0 doesn't have notification actions
+			colour = styles.titleStyle.colour;
+		if (colour == null)
+			colour = Color.BLACK;
+
+		svg.setColorFilter(new ColorMatrixColorFilter(new float[] {
+			0, 0, 0, 0, Color.red(colour),
+			0, 0, 0, 0, Color.green(colour),
+			0, 0, 0, 0, Color.blue(colour),
+			0, 0, 0, Color.alpha(colour) / 255.0f, 0
+		}));
+
 		svg.renderToCanvas(canvas);
 
-		content.setInt(id, "setColorFilter", styles.titleStyle.colour);
 		content.setImageViewBitmap(id, bitmap);
 	}
 
