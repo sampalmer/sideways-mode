@@ -16,12 +16,7 @@ public class ServiceStatusGenerator {
 	}
 
 	public NotificationParameters generate() {
-		Mode mode = mode();
-		return new NotificationParameters(mode, overridden(), getSummary(mode));
-	}
-
-	public CharSequence getSummary(Mode mode) {
-		return new CurrentStateSummary(mode, calculator.user()).buildTitle();
+		return new NotificationParameters(mode(), overridden(), new UserOrientation(calculator.user()));
 	}
 
 	public Mode mode() {

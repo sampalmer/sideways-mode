@@ -25,12 +25,6 @@ class LockedMode implements Mode {
 	}
 
 	@Override
-	public int iconResourceId() {
-		return
-				portrait ? R.drawable.ic_portrait_lock : R.drawable.ic_landscape_lock;
-	}
-
-	@Override
 	public int autoRotationStateResourceId() {
 		return portrait ? R.string.screen_rotation_disabled_portrait : R.string.screen_rotation_disabled_landscape;
 	}

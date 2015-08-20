@@ -138,7 +138,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	}
 
 	private void showStatusToast() {
-		CharSequence message = serviceStatusGenerator.getSummary(serviceStatusGenerator.mode());
+		CharSequence message = serviceStatusGenerator.generate().getSummary();
 		ToastReceiver.send(message);
 	}
 

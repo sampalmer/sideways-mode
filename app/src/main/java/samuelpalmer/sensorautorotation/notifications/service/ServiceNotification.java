@@ -47,9 +47,10 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(params.mode.iconResourceId())
+				.setSmallIcon(params.user.iconId())
 				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
-				.setContentTitle(params.summary)
+				.setContentTitle(StringResource.get(R.string.app_name))
+				.setContentText(StringResource.get(params.user.descriptionId()))
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
 		if (params.overridden)

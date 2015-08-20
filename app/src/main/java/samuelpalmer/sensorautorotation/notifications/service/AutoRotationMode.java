@@ -10,11 +10,6 @@ class AutoRotationMode implements Mode {
 	}
 
 	@Override
-	public int iconResourceId() {
-		return R.drawable.ic_rotation;
-	}
-
-	@Override
 	public int autoRotationStateResourceId() {
 		return R.string.screen_rotation_enabled;
 	}
