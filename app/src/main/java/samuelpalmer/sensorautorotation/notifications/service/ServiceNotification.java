@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
 
@@ -70,16 +71,19 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "x.svg");
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden));
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg");
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg");
+		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "x.svg", R.string.action_stop);
+		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden), R.string.action_toggle_auto_rotation);
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg", R.string.action_rotate_left);
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg", R.string.action_rotate_right);
 
 		notification.contentView = content;
 	}
 
-	private void configureButton(int id, String action, String iconFilename) {
+	private void configureButton(int id, String action, String iconFilename, int contentDescriptionId) {
 		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
+
+		if (VERSION.SDK_INT >= 15)
+			content.setContentDescription(id, StringResource.get(contentDescriptionId));
 
 		// Read an SVG from the assets folder
 		SVG svg;

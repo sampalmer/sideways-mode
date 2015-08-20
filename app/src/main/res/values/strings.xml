@@ -19,6 +19,11 @@
 
 	<string name="notification_overridden">Overridden</string>
 
+	<string name="action_stop">Stop</string>
+	<string name="action_toggle_auto_rotation">Toggle Auto-Rotation</string>
+	<string name="action_rotate_left">Rotate Left</string>
+	<string name="action_rotate_right">Rotate Right</string>
+
 	<string name="toggle_rotation_lock">Toggle Rotation</string>
 	<string name="disabled_message">%1$s is not enabled</string>
 	<string name="upgraded_title">%1$s Upgraded</string>
