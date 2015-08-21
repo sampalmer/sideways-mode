@@ -16,7 +16,7 @@ public class ServiceStatusGenerator {
 	}
 
 	public NotificationParameters generate() {
-		return new NotificationParameters(mode(), overridden(), new UserOrientation(calculator.user()));
+		return new NotificationParameters(mode(), overridden(), new UserOrientation(calculator.user(), screen, calculator.proposedScreenOrientation()));
 	}
 
 	public Mode mode() {
