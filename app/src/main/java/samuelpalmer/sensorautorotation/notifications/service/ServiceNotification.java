@@ -2,24 +2,16 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
-
-import java.io.IOException;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.SvgToBitmapFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
@@ -86,33 +78,6 @@ public class ServiceNotification {
 		if (VERSION.SDK_INT >= 15)
 			content.setContentDescription(id, StringResource.get(contentDescriptionId));
 
-		// Read an SVG from the assets folder
-		SVG svg;
-		//noinspection TryWithIdenticalCatches
-		try {
-			svg = SVG.getFromAsset(Process.context().getAssets(), iconFilename);
-		} catch (SVGParseException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		DisplayMetrics display = new DisplayMetrics();
-		SystemServices.windowManager().getDefaultDisplay().getMetrics(display);
-
-		int lengthInDp = 32; //As per docs: http://developer.android.com/reference/android/app/Notification.Builder.html#addAction(int, java.lang.CharSequence, android.app.PendingIntent)
-
-		Bitmap bitmap = Bitmap.createBitmap(
-			//Not using densityDpi since it's sometimes 0 (seen in Genymotion 240x320 120dpi display, also http://stackoverflow.com/q/27590213/238753)
-			dpToPx(lengthInDp, display.xdpi),
-			dpToPx(lengthInDp, display.ydpi),
-			Bitmap.Config.ARGB_8888
-		);
-
-		Canvas canvas = new Canvas(bitmap);
-		svg.setDocumentWidth(bitmap.getWidth());
-		svg.setDocumentHeight(bitmap.getHeight());
-
 		int colour;
 		if (styles.actionButtonStyle.colour != null)
 			colour = styles.actionButtonStyle.colour;
@@ -125,20 +90,8 @@ public class ServiceNotification {
 			colour = Color.argb((int) (255 * .8), Color.red(colour), Color.green(colour), Color.blue(colour));
 		}
 
-		svg.setColorFilter(new ColorMatrixColorFilter(new float[] {
-			0, 0, 0, 0, Color.red(colour),
-			0, 0, 0, 0, Color.green(colour),
-			0, 0, 0, 0, Color.blue(colour),
-			0, 0, 0, Color.alpha(colour) / 255.0f, 0
-		}));
-
-		svg.renderToCanvas(canvas);
-
+		Bitmap bitmap = SvgToBitmapFactory.load(iconFilename, colour);
 		content.setImageViewBitmap(id, bitmap);
-	}
-
-	private int dpToPx(int lengthInDp, float dpi) {
-		return Math.round(lengthInDp * (dpi / 160));
 	}
 
 	private void hideTimestamp() {
