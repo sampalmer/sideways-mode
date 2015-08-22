@@ -3,13 +3,13 @@
       tools:context=".SettingsActivity">
 	<item android:id="@+id/action_instructions"
 	      android:title="@string/action_instructions"
-		  android:icon="@android:drawable/ic_menu_help"
+		  android:icon="@drawable/ic_help"
 		/>
 	<item android:id="@+id/action_feedback"
 	      android:title="@string/action_feedback"
-	      android:icon="@android:drawable/ic_dialog_email"
+	      android:icon="@drawable/ic_feedback"
 		/>
 	<item android:id="@+id/action_uninstall"
 	      android:title="@string/action_uninstall"
-          android:icon="@android:drawable/ic_menu_delete"/>
+          android:icon="@drawable/ic_delete"/>
 </menu>
