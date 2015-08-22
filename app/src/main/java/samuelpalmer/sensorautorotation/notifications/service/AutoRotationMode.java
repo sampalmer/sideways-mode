@@ -14,4 +14,9 @@ class AutoRotationMode implements Mode {
 		return R.string.screen_rotation_enabled;
 	}
 
+	@Override
+	public int toggleToOtherModeAResourceId() {
+		return R.string.action_disable_auto_rotation;
+	}
+
 }

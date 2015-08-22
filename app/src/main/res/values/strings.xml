@@ -20,7 +20,10 @@
 	<string name="notification_overridden">Overridden</string>
 
 	<string name="action_stop">Stop</string>
-	<string name="action_toggle_auto_rotation">Toggle Auto-Rotation</string>
+
+	<string name="action_enable_auto_rotation">Enable Auto-Rotation</string>
+	<string name="action_disable_auto_rotation">Disable Auto-Rotation</string>
+
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
 
