@@ -5,6 +5,7 @@
 		android:key="enabled"
 	    android:title="@string/app_enabled"
 	    android:summary="@string/app_enabled_description"
+	    android:icon="@drawable/ic_power"
 	/>
 	<ListPreference
 		android:key="notificationPriority"

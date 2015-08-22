@@ -61,7 +61,7 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "x.svg", R.string.action_stop);
+		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "ic_power.svg", R.string.action_stop);
 		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden), params.mode.toggleToOtherModeAResourceId());
 		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg", R.string.action_rotate_left);
 		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg", R.string.action_rotate_right);
