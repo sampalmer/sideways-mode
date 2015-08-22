@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiPr
 
 public class ApplicationSettings {
 
-	public final SharedPreferences prefs;
+	private final SharedPreferences prefs;
 
 	public ApplicationSettings() {
 		this.prefs = new MultiProcessSharedPreferences(sharedPreferencesName());

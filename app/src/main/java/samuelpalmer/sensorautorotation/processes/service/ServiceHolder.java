@@ -12,7 +12,7 @@ import android.util.Log;
  */
 abstract class ServiceHolder {
 
-	public static final String TAG = ServiceHolder.class.getSimpleName();
+	private static final String TAG = ServiceHolder.class.getSimpleName();
 	private static RotationService instance;
 
 	public static boolean isRunning() {

@@ -13,8 +13,8 @@ import samuelpalmer.sensorautorotation.Process;
 
 class MultiProcessChangeReceiver extends BroadcastReceiver {
 
-	public static final String EXTRA_SHARED_PREFS_NAME = "sharedprefs name";
-	public static final String EXTRA_PREF_KEYS = "pref keys";
+	private static final String EXTRA_SHARED_PREFS_NAME = "sharedprefs name";
+	private static final String EXTRA_PREF_KEYS = "pref keys";
 
 	public static void broadcastChange(String preferencesName, ArrayList<String> keys) {
 		Intent intent = new Intent(action())

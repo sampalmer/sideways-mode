@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.Process;
 public class DialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
 	private static final String INTENT_EXTRA_MESSAGE = "message";
-	public static final String TAG = "dialog";
+	private static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
 		Intent settingsIntent = ComponentType.create(MainActivity.class).intent();

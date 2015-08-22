@@ -19,7 +19,7 @@ public class ServiceStatusGenerator {
 		return new NotificationParameters(mode(), overridden(), new UserOrientation(calculator.user(), screen, calculator.proposedScreenOrientation()));
 	}
 
-	public Mode mode() {
+	private Mode mode() {
 		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, screen);
 	}
 

@@ -75,7 +75,7 @@ public class NotificationStyles {
 
 	public class StyleType {
 		public Integer colour;
-		private String searchTip;
+		private final String searchTip;
 
 		public StyleType(String tip) {
 			searchTip = tip;

@@ -35,7 +35,7 @@ public class FirstRunLauncherFragment extends Fragment {
 		instructedVersionPreference().setAndCommit(VersionInfo.installedVersionCode());
 	}
 
-	public ApplicationSettings.Setting<Integer> instructedVersionPreference() {
+	private ApplicationSettings.Setting<Integer> instructedVersionPreference() {
 		return new ApplicationSettings().lastVersionUserInstructedAbout();
 	}
 

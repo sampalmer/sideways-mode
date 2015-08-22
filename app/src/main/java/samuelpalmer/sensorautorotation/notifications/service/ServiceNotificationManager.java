@@ -38,8 +38,6 @@ public class ServiceNotificationManager extends State {
 
 		for (EventRegistrar trigger : display.updateTriggers())
 			trigger.unsubscribe(updateNotification);
-
-		display.cancel();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {

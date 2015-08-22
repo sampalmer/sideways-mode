@@ -10,7 +10,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.
 
 public class Process extends Application {
 
-	public static final String TAG = Process.class.getSimpleName();
+	private static final String TAG = Process.class.getSimpleName();
 	private static Context context;
 	private static Setting<Boolean> enabledPreference;
 

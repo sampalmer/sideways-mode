@@ -45,9 +45,6 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 		return result;
 	}
 
-	@Override
-	public void cancel() {}
-
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the
 	 * notification is updated on these Android versions of the emulators and Samsung Galaxy S II

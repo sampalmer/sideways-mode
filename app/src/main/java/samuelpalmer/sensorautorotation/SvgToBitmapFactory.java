@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public abstract class SvgToBitmapFactory {
 
-	private static HashMap<String, Bitmap> cache = new HashMap<>();
+	private static final HashMap<String, Bitmap> cache = new HashMap<>();
 
 	public static Bitmap load(String iconFilename, int colour) {
 
