@@ -45,9 +45,6 @@ public class ServiceNotification {
 				.setContentText(StringResource.get(params.user.descriptionId()))
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
 
-		if (params.overridden)
-			builder.setContentInfo(StringResource.get(R.string.notification_overridden));
-
 		priority.apply(builder);
 
 		hideTimestamp();
@@ -65,7 +62,7 @@ public class ServiceNotification {
 		content.addView(R.id.notification_main_column, notification.contentView);
 
 		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "x.svg", R.string.action_stop);
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden), R.string.action_toggle_auto_rotation);
+		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden), R.string.action_toggle_auto_rotation); //TODO: Make this dynamic
 		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg", R.string.action_rotate_left);
 		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg", R.string.action_rotate_right);
 

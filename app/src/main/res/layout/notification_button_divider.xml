@@ -6,4 +6,6 @@
     android:layout_width="1dp"
     android:layout_height="match_parent"
     android:background="#29000000"
-    tools:showIn="@layout/notification"/>
+    tools:showIn="@layout/notification"
+    android:contentDescription="@string/divider"
+    />

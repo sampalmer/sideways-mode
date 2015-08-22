@@ -97,5 +97,6 @@
 	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
 	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
+	<string name="divider">Divider</string>
 
 </resources>
