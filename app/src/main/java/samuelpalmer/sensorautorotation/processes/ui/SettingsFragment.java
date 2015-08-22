@@ -2,11 +2,11 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 
 import java.util.Arrays;
 
@@ -94,7 +94,7 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	private void refresh() {
-		SwitchPreference preference = (SwitchPreference) findPreference(settings.enabled().getKey());
+		CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
 		preference.setChecked(settings.enabled().get());
 	}
 }
