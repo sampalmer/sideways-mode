@@ -14,14 +14,13 @@ class LockedMode implements Mode {
 	}
 
 	@Override
-	public int icon(boolean overridden) {
-		return
-				portrait
-						?
-						(overridden ? R.drawable.ic_action_portrait_overridden : R.drawable.ic_action_portrait_lock)
-						:
-						(overridden ? R.drawable.ic_action_landscape_overridden : R.drawable.ic_action_landscape_lock);
+	public int notificationIcon() {
+		return portrait ? R.drawable.ic_portrait_lock : R.drawable.ic_landscape_lock;
+	}
 
+	@Override
+	public int actionIcon() {
+		return portrait ? R.drawable.ic_action_portrait_lock : R.drawable.ic_action_landscape_lock;
 	}
 
 	@Override

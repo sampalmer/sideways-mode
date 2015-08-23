@@ -5,8 +5,13 @@ import samuelpalmer.sensorautorotation.R;
 class AutoRotationMode implements Mode {
 
 	@Override
-	public int icon(boolean overridden) {
-		return overridden ? R.drawable.ic_action_rotation_overridden : R.drawable.ic_action_rotation;
+	public int notificationIcon() {
+		return R.drawable.ic_rotation;
+	}
+
+	@Override
+	public int actionIcon() {
+		return R.drawable.ic_action_rotation;
 	}
 
 	@Override

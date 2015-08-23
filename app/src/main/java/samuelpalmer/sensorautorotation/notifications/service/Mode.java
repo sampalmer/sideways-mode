@@ -1,7 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 public interface Mode {
-	int icon(boolean overridden);
+	int notificationIcon();
+	int actionIcon();
 	int autoRotationStateResourceId();
 	int toggleToOtherModeAResourceId();
 }

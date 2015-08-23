@@ -34,7 +34,7 @@ public class ServiceNotification {
 	public Notification build() {
 		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
 		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(params.user.iconId())
+				.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon())
 				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
 				.setContentTitle(StringResource.get(R.string.app_name))
 				.setContentText(StringResource.get(params.user.descriptionId()))
@@ -46,18 +46,18 @@ public class ServiceNotification {
 		hideFromLockScreen();
 
 		Notification notification = builder.build();
-		addActions(notification);
+		addButtons(notification);
 
 		return notification;
 	}
 
-	private void addActions(Notification notification) {
+	private void addButtons(Notification notification) {
 		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
 		configureButton(R.id.stop_button, RotationService.ACTION_STOP, R.drawable.ic_action_power, R.string.action_stop);
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.icon(params.overridden), params.mode.toggleToOtherModeAResourceId());
+		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.actionIcon(), params.mode.toggleToOtherModeAResourceId());
 		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_rotate_left, R.string.action_rotate_left);
 		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_rotate_right, R.string.action_rotate_right);
 
