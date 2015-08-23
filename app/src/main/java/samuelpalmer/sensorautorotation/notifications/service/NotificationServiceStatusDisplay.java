@@ -11,19 +11,25 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class NotificationServiceStatusDisplay {
 	private final Service service;
+	private final ScreenOrientationUpdater screen;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
+	private final ScreenRotationMonitor screenRotationMonitor;
 
-	public NotificationServiceStatusDisplay(Service service) {
+	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screen) {
 		this.service = service;
+		this.screen = screen;
 		lockScreenMonitor = new LockScreenMonitor();
 		priority = ApplicationSettings.notificationPriority();
+		screenRotationMonitor = new ScreenRotationMonitor();
 	}
 
 	public void update(NotificationParameters params) {
@@ -40,6 +46,8 @@ public class NotificationServiceStatusDisplay {
 		result.add(priority);
 		if (hideFromLockScreen())
 			result.add(lockScreenMonitor);
+		result.add(screenRotationMonitor);
+		result.add(screen.onProposedOrientationChanged());
 
 		return result;
 	}
