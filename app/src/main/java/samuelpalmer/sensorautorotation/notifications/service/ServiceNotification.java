@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.widget.RemoteViews;
@@ -21,14 +20,12 @@ public class ServiceNotification {
 
 	private final NotificationPriority priority;
 	private final NotificationParameters params;
-	private final NotificationStyles styles;
 	private NotificationBuilderCompat builder;
 	private RemoteViews content;
 
 	public ServiceNotification(NotificationPriority priority, NotificationParameters notificationParameters) {
 		this.priority = priority;
 		params = notificationParameters;
-		styles = new NotificationStyles();
 	}
 
 	/**
@@ -73,20 +70,8 @@ public class ServiceNotification {
 		if (VERSION.SDK_INT >= 15)
 			content.setContentDescription(id, StringResource.get(contentDescriptionId));
 
-		int colour;
-		if (styles.actionButtonStyle.colour != null)
-			colour = styles.actionButtonStyle.colour;
-		else {
-			if (styles.titleStyle.colour != null) //Android 4.0 doesn't have notification actions
-				colour = Color.rgb(Color.red(styles.titleStyle.colour), Color.green(styles.titleStyle.colour), Color.blue(styles.titleStyle.colour));
-			else
-				colour = Color.BLACK;
-
-			colour = Color.argb((int) (255 * .8), Color.red(colour), Color.green(colour), Color.blue(colour));
-		}
-
 		content.setImageViewResource(id, icon);
-		content.setInt(id, "setColorFilter", colour);
+		content.setInt(id, "setColorFilter", NotificationStyles.getActionButtonColour());
 	}
 
 	private void hideTimestamp() {
