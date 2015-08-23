@@ -5,8 +5,8 @@ import samuelpalmer.sensorautorotation.R;
 class AutoRotationMode implements Mode {
 
 	@Override
-	public String iconSvgFileName(boolean overridden) {
-		return overridden ? "rotation_overridden.svg" : "rotation.svg";
+	public int icon(boolean overridden) {
+		return overridden ? R.drawable.ic_action_rotation_overridden : R.drawable.ic_action_rotation;
 	}
 
 	@Override

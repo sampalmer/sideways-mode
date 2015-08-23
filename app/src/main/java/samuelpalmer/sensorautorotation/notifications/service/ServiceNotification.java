@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -11,7 +10,6 @@ import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SvgToBitmapFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenStatus;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
@@ -61,15 +59,15 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.stop_button, RotationService.ACTION_STOP, "ic_power.svg", R.string.action_stop);
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.iconSvgFileName(params.overridden), params.mode.toggleToOtherModeAResourceId());
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, "ic_rotate_left.svg", R.string.action_rotate_left);
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, "ic_rotate_right.svg", R.string.action_rotate_right);
+		configureButton(R.id.stop_button, RotationService.ACTION_STOP, R.drawable.ic_action_power, R.string.action_stop);
+		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.icon(params.overridden), params.mode.toggleToOtherModeAResourceId());
+		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_rotate_left, R.string.action_rotate_left);
+		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_rotate_right, R.string.action_rotate_right);
 
 		notification.contentView = content;
 	}
 
-	private void configureButton(int id, String action, String iconFilename, int contentDescriptionId) {
+	private void configureButton(int id, String action, int icon, int contentDescriptionId) {
 		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
 
 		if (VERSION.SDK_INT >= 15)
@@ -87,8 +85,8 @@ public class ServiceNotification {
 			colour = Color.argb((int) (255 * .8), Color.red(colour), Color.green(colour), Color.blue(colour));
 		}
 
-		Bitmap bitmap = SvgToBitmapFactory.load(iconFilename, colour);
-		content.setImageViewBitmap(id, bitmap);
+		content.setImageViewResource(id, icon);
+		content.setInt(id, "setColorFilter", colour);
 	}
 
 	private void hideTimestamp() {
