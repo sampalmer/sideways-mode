@@ -43,10 +43,10 @@ public class NotificationServiceStatusDisplay {
 	public Set<EventRegistrar> updateTriggers() {
 		Set<EventRegistrar> result = new HashSet<>();
 
-		result.add(priority);
+		result.add(priority); //To change notification priority
 		if (hideFromLockScreen())
 			result.add(lockScreenMonitor);
-		result.add(screenRotationMonitor);
+		result.add(screenRotationMonitor); //For "overridden" detection
 		result.add(screen.onProposedOrientationChanged());
 
 		return result;

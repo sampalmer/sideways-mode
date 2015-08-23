@@ -11,9 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 public class LockScreenMonitor extends EventRegistrarAdaptor {
+
+	public static boolean isOnLockScreen() {
+		if (Build.VERSION.SDK_INT >= 16)
+			return SystemServices.keyguardManager().isKeyguardLocked();
+		else
+			return SystemServices.keyguardManager().inKeyguardRestrictedInputMode();
+	}
 
 	@Override
 	protected void subscribeToAdaptee() {
