@@ -26,7 +26,7 @@ public class Process extends Application {
 
 		context = this;
 
-		enabledPreference = new ApplicationSettings().enabled();
+		enabledPreference = ApplicationSettings.enabled();
 		enabledPreference.subscribe(serviceStateUpdater);
 	}
 

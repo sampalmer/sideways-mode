@@ -10,27 +10,23 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
 
-public class ApplicationSettings {
+public abstract class ApplicationSettings {
 
-	private final SharedPreferences prefs;
-
-	public ApplicationSettings() {
-		this.prefs = new MultiProcessSharedPreferences(sharedPreferencesName());
-	}
+	private static final SharedPreferences prefs = new MultiProcessSharedPreferences(sharedPreferencesName());
 
 	public static String sharedPreferencesName() {
 		return Process.context().getPackageName() + "_preferences";
 	}
 
-	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
-	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
-	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
+	public static Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
+	public static Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
+	public static Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
 
-	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
-	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", true); }
-	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
+	public static Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", true); }
+	public static Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", true); }
+	public static Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 
-	public class Setting<T> extends EventRegistrarAdaptor {
+	public static class Setting<T> extends EventRegistrarAdaptor {
 
 		private final SettingType<T> type;
 		private final String key;
@@ -112,7 +108,7 @@ public class ApplicationSettings {
 
 	}
 
-	public class Transaction {
+	public static class Transaction {
 		private final Editor editor;
 
 		@SuppressLint("CommitPrefEdits")

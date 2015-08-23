@@ -54,16 +54,15 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen();
-		ApplicationSettings appSettings = new ApplicationSettings();
 
-		applicationState = new ApplicationState(appSettings, systemSettings);
+		applicationState = new ApplicationState(systemSettings);
 
 		calculator = new OrientationCalculator(screen, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
 
 		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen);
-		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(appSettings, calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, appSettings), screenUpdater);
+		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
+		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this), screenUpdater);
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);
@@ -99,7 +98,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				calculator.offsetUser(1);
 				break;
 			case ACTION_STOP:
-				new ApplicationSettings().enabled().setAndCommit(false);
+				ApplicationSettings.enabled().setAndCommit(false);
 				break;
 		}
 	}

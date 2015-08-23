@@ -43,7 +43,6 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	}
 
-	private ApplicationSettings settings;
 	private EventRegistrar enabledChanged;
 	private EventRegistrar notificationPriorityChanged;
 
@@ -51,23 +50,21 @@ public class SettingsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		settings = new ApplicationSettings();
-
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
-		new SettingsInitialiser(settings).ensureInitialised();
+		new SettingsInitialiser().ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);
 
 		updateListPreferenceSummaries();
 		hideUnsupportedOptions();
 
-		enabledChanged = settings.enabled();
-		notificationPriorityChanged = settings.notificationPriority();
+		enabledChanged = ApplicationSettings.enabled();
+		notificationPriorityChanged = ApplicationSettings.notificationPriority();
 	}
 
 	private void hideUnsupportedOptions() {
 		if (Build.VERSION.SDK_INT < 16) {
-			ListPreference notificationPriorityPreference = (ListPreference) findPreference(settings.notificationPriority().getKey());
+			ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.notificationPriority().getKey());
 			CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
 			int newLength = originalEntries.length - 1;
 			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
@@ -94,7 +91,7 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	private void refresh() {
-		CheckBoxPreference preference = (CheckBoxPreference) findPreference(settings.enabled().getKey());
-		preference.setChecked(settings.enabled().get());
+		CheckBoxPreference preference = (CheckBoxPreference) findPreference(ApplicationSettings.enabled().getKey());
+		preference.setChecked(ApplicationSettings.enabled().get());
 	}
 }

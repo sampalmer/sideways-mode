@@ -2,51 +2,48 @@ package samuelpalmer.sensorautorotation;
 
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Transaction;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ApplicationState {
 
-	private final ApplicationSettings applicationSettings;
-
-	public ApplicationState(ApplicationSettings applicationSettings, SystemSettings systemSettings) {
-		this.applicationSettings = applicationSettings;
-
-		if (!applicationSettings.autoRotate().hasValue()) {
+	public ApplicationState(SystemSettings systemSettings) {
+		if (!ApplicationSettings.autoRotate().hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
 			autoRotate(accelerometerRotation);
 		}
 
-		if (!applicationSettings.userOrientation().hasValue())
+		if (!ApplicationSettings.userOrientation().hasValue())
 			user(Orientation.NATURAL);
 	}
 
 	public boolean autoRotate() {
-		return applicationSettings.autoRotate().get();
+		return ApplicationSettings.autoRotate().get();
 	}
 
 	public Orientation user() {
-		return new Orientation(applicationSettings.userOrientation().get());
+		return new Orientation(ApplicationSettings.userOrientation().get());
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
-		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
-		applicationSettings.autoRotate().set(autoRotate, transaction);
-		applicationSettings.userOrientation().set(serialise(user), transaction);
+		Transaction transaction = new Transaction();
+		ApplicationSettings.autoRotate().set(autoRotate, transaction);
+		ApplicationSettings.userOrientation().set(serialise(user), transaction);
 		transaction.commit();
 	}
 
 	private void autoRotate(boolean newValue) {
-		applicationSettings.autoRotate().setAndCommit(newValue);
+		ApplicationSettings.autoRotate().setAndCommit(newValue);
 	}
 
 	public void user(Orientation newValue) {
-		applicationSettings.userOrientation().setAndCommit(serialise(newValue));
+		ApplicationSettings.userOrientation().setAndCommit(serialise(newValue));
 	}
 
 	public void clear() {
-		ApplicationSettings.Transaction transaction = applicationSettings.new Transaction();
-		applicationSettings.autoRotate().remove(transaction);
-		applicationSettings.userOrientation().remove(transaction);
+		Transaction transaction = new Transaction();
+		ApplicationSettings.autoRotate().remove(transaction);
+		ApplicationSettings.userOrientation().remove(transaction);
 		transaction.commit();
 	}
 

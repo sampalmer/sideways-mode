@@ -20,10 +20,10 @@ public class NotificationServiceStatusDisplay {
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
-	public NotificationServiceStatusDisplay(Service service, ApplicationSettings settings) {
+	public NotificationServiceStatusDisplay(Service service) {
 		this.service = service;
 		lockScreenMonitor = new LockScreenMonitor();
-		priority = settings.notificationPriority();
+		priority = ApplicationSettings.notificationPriority();
 	}
 
 	public void update(NotificationParameters params) {
