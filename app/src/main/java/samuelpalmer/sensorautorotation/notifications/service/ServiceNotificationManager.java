@@ -8,12 +8,12 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 
 public class ServiceNotificationManager extends State {
 
-	private final ServiceStatusDisplay display;
+	private final NotificationServiceStatusDisplay display;
 	private final ScreenOrientationUpdater screen;
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final ServiceStatusGenerator statusGenerator;
 
-	public ServiceNotificationManager(ServiceStatusGenerator statusGenerator, ServiceStatusDisplay display, ScreenOrientationUpdater screen) {
+	public ServiceNotificationManager(ServiceStatusGenerator statusGenerator, NotificationServiceStatusDisplay display, ScreenOrientationUpdater screen) {
 		this.statusGenerator = statusGenerator;
 		this.display = display;
 		this.screen = screen;

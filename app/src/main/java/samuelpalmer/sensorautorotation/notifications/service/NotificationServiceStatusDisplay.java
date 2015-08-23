@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
-public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
+public class NotificationServiceStatusDisplay {
 	private final Service service;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
@@ -34,7 +34,6 @@ public class NotificationServiceStatusDisplay extends ServiceStatusDisplay {
 		service.startForeground(NotificationIds.SERVICE, notification);
 	}
 
-	@Override
 	public Set<EventRegistrar> updateTriggers() {
 		Set<EventRegistrar> result = new HashSet<>();
 
