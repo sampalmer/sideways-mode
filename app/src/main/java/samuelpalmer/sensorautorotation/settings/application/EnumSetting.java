@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.settings.application;
 
 import android.content.SharedPreferences;
 
-class EnumSetting<T extends Enum<T>> extends SettingType<T> {
+public class EnumSetting<T extends Enum<T>> extends SettingType<T> {
 	private final Class<T> clazz;
 
 	public EnumSetting(Class<T> clazz) {

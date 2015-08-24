@@ -1,10 +1,7 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -14,42 +11,41 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
-class UserUpgrader {
+public class Upgrader {
 
 	private final int newAppVersion;
+	private final Setting<Integer> lastVersionUserInstructedAbout;
+	private final Integer lastAppVersion;
 
-	public UserUpgrader() {
+	public Upgrader() {
 		newAppVersion = VersionInfo.installedVersionCode();
+		lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
+		lastAppVersion = lastVersionUserInstructedAbout.tryGet();
 	}
 
-	public void upgradeUser() {
-		ApplicationSettings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
-		Integer lastAppVersion = lastVersionUserInstructedAbout.tryGet();
-
+	public void upgradeIfNecessary() {
 		//We only need to instruct the user about changes if he/she has actually run the app before.
-		if (lastAppVersion != null) {
-			String upgradeMessage = buildUpgradeMessage(lastAppVersion);
-			if (upgradeMessage.length() != 0)
-				notify(upgradeMessage);
-
-			lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
-		}
+		if (lastAppVersion != null)
+			upgrade();
 	}
 
-	private String buildUpgradeMessage(Integer lastAppVersion) {
+	private void upgrade() {
 		StringBuilder upgradeMessage = new StringBuilder();
 
 		for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
-			Integer messageId = upgradeMessages.get(version);
-			if (messageId != null) {
-				CharSequence currentMessage = StringResource.get(messageId);
-				upgradeMessage.append(currentMessage);
-				upgradeMessage.append('\n');
+			Migration migration = Migrations.map().get(version);
+			if (migration != null) {
+				upgradeMessage.append(migration.message());
+				migration.upgradeData();
 			}
 		}
 
-		return upgradeMessage.toString();
+		if (upgradeMessage.length() != 0)
+			notify(upgradeMessage.toString());
+
+		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
 	}
 
 	private void notify(String upgradeMessage) {
@@ -72,12 +68,6 @@ class UserUpgrader {
 
 	private CharSequence messageTitle() {
 		return StringResource.format(R.string.upgraded_title, R.string.app_name);
-	}
-
-	private final Map<Integer, Integer> upgradeMessages;
-	{
-		upgradeMessages = new HashMap<>();
-		upgradeMessages.put(18, R.string.v18_upgrade);
 	}
 
 }

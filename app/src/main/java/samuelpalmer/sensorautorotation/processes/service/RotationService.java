@@ -14,6 +14,7 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenera
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -44,6 +45,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		//Data version should be up-to-date before the service even tries to do anything
+		new Upgrader().upgradeIfNecessary();
 
 		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
 		ServiceHolder.started(this);

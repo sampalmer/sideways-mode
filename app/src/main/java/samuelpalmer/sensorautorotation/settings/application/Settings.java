@@ -37,7 +37,7 @@ public class Settings {
 		private final String key;
 		private final T defaultValue;
 
-		protected Setting(SettingType<T> type, String key, T defaultValue) {
+		public Setting(SettingType<T> type, String key, T defaultValue) {
 			this.type = type;
 			this.key = key;
 			this.defaultValue = defaultValue;
