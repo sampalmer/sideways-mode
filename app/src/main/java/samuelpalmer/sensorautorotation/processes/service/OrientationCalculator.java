@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.ApplicationState;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;

@@ -1,6 +1,5 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Transaction;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
