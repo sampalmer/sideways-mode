@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.Service;
 import android.os.Build;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
+import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -20,13 +22,15 @@ import samuelpalmer.sensorautorotation.settings.application.NotificationPriority
 public class NotificationServiceStatusDisplay {
 	private final Service service;
 	private final ScreenOrientationUpdater screen;
+	private final OrientationCalculator calculator;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 	private final ScreenRotationMonitor screenRotationMonitor;
 
-	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screen) {
+	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screen, OrientationCalculator calculator) {
 		this.service = service;
 		this.screen = screen;
+		this.calculator = calculator;
 		lockScreenMonitor = new LockScreenMonitor();
 		priority = ApplicationSettings.notificationPriority();
 		screenRotationMonitor = new ScreenRotationMonitor();
@@ -41,13 +45,17 @@ public class NotificationServiceStatusDisplay {
 	}
 
 	public Set<EventRegistrar> updateTriggers() {
-		Set<EventRegistrar> result = new HashSet<>();
+		Set<EventRegistrar> result = new HashSet<>(
+			Arrays.asList(
+				priority, //To change notification priority
+				screenRotationMonitor, //For "overridden" detection
+				screen.onProposedOrientationChanged(), //For "overridden" detection
+				calculator.onChange() //For mode change detection
+			)
+		);
 
-		result.add(priority); //To change notification priority
 		if (hideFromLockScreen())
 			result.add(lockScreenMonitor);
-		result.add(screenRotationMonitor); //For "overridden" detection
-		result.add(screen.onProposedOrientationChanged());
 
 		return result;
 	}
