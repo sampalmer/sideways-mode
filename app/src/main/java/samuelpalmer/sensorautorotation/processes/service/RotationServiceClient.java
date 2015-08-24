@@ -27,7 +27,7 @@ public abstract class RotationServiceClient {
 	}
 
 	private static Boolean enabled() {
-		return ApplicationSettings.enabled().get();
+		return ApplicationSettings.instance().enabled().get();
 	}
 
 	private static void showDisabledMessage() {

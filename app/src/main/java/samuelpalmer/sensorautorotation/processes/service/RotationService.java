@@ -98,7 +98,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				calculator.offsetUser(1);
 				break;
 			case ACTION_STOP:
-				ApplicationSettings.enabled().setAndCommit(false);
+				ApplicationSettings.instance().enabled().setAndCommit(false);
 				break;
 		}
 	}

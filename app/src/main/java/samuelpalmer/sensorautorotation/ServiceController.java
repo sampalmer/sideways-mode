@@ -9,7 +9,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public abstract class ServiceController {
 
 	public static void updateFromSettings() {
-		boolean enabled = ApplicationSettings.enabled().get();
+		boolean enabled = ApplicationSettings.instance().enabled().get();
 		updateServiceState(enabled);
 	}
 

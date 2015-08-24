@@ -25,7 +25,7 @@ class Uninstaller implements DialogInterface.OnClickListener {
 	}
 
 	private void disableService() {
-		ApplicationSettings.enabled().setAndCommit(false);
+		ApplicationSettings.instance().enabled().setAndCommit(false);
 	}
 
 	private Intent uninstallIntent() {

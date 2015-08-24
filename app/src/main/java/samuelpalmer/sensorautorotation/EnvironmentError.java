@@ -19,7 +19,7 @@ public class EnvironmentError {
 		instance.message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
 
 		instance.show();
-		ApplicationSettings.enabled().setAndCommit(false);
+		ApplicationSettings.instance().enabled().setAndCommit(false);
 	}
 
 	private EnvironmentError(){}

@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
+import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 /**
  * We're using this instead of {@link android.preference.PreferenceManager#setDefaultValues} since
@@ -52,7 +52,7 @@ public class SettingsInitialiser {
 			// for compatibility with API 19-.
 			//noinspection TryWithIdenticalCatches
 			try {
-				return (Setting<?>)method.invoke(null);
+				return (Setting<?>)method.invoke(ApplicationSettings.instance());
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {

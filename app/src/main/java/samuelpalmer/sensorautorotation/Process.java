@@ -6,7 +6,7 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings.Setting;
+import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 public class Process extends Application {
 
@@ -26,7 +26,7 @@ public class Process extends Application {
 
 		context = this;
 
-		enabledPreference = ApplicationSettings.enabled();
+		enabledPreference = ApplicationSettings.instance().enabled();
 		enabledPreference.subscribe(serviceStateUpdater);
 	}
 
