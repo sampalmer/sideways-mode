@@ -64,6 +64,9 @@
 	<string name="preference_write_failure_message">Couldn\'t write application settings.</string>
 	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
 
+	<string name="permission_denied_summary">Permission needed</string>
+	<string name="permission_denied_message">This app hasn\'t been given permission to change the screen rotation. In order to use it, you must give it access to change the system settings.</string>
+
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
 

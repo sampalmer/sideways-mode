@@ -6,8 +6,6 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
-import samuelpalmer.sensorautorotation.settings.system.Setting;
-import samuelpalmer.sensorautorotation.settings.system.SettingWriteFailedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
@@ -29,7 +27,7 @@ public class ScreenOrientationController extends State {
 		Orientation realOrientation = screen.realOrientation();
 		propose(realOrientation);
 
-		set(settings.accelerometerRotation, false);
+		settings.accelerometerRotation.set(false);
 		propose(realOrientation); //Just in case disabling system rotation reset this.
 
 		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
@@ -40,7 +38,7 @@ public class ScreenOrientationController extends State {
 		settings.userRotation.onExternalChange().unsubscribe(userRotationChanged);
 		settings.accelerometerRotation.onChange().unsubscribe(systemAutoRotationChanged);
 
-		set(settings.accelerometerRotation, calculator.autoRotate());
+		settings.accelerometerRotation.set(calculator.autoRotate());
 		propose(Orientation.NATURAL);
 	}
 
@@ -48,16 +46,7 @@ public class ScreenOrientationController extends State {
 		if (value == null)
 			throw new IllegalArgumentException();
 
-		set(settings.userRotation, value);
-	}
-
-	private static <T> void set(Setting<T> setting, T value) {
-		try {
-			setting.set(value);
-		} catch (SettingWriteFailedException e) {
-			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			EnvironmentError.report(R.string.setting_write_failure_summary, R.string.system_setting_write_failure_message, e.value, e.key);
-		}
+		settings.userRotation.set(value);
 	}
 
 	private final EventHandler systemAutoRotationChanged = new EventHandler() {

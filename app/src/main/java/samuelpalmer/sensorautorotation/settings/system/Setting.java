@@ -1,10 +1,15 @@
 package samuelpalmer.sensorautorotation.settings.system;
 
+import android.Manifest.permission;
 import android.content.ContentResolver;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.os.Build.VERSION;
 import android.os.Handler;
 
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
@@ -42,7 +47,7 @@ public class Setting<T> {
 		return converter.tryParse(value);
 	}
 
-	public void set(T value) throws SettingWriteFailedException {
+	public void set(T value) {
 		String textValue = converter.format(value);
 		set(key, textValue);
 	}
@@ -51,7 +56,15 @@ public class Setting<T> {
 		return getString(contentResolver, key);
 	}
 
-	private void set(String key, String value) throws SettingWriteFailedException {
+	private void set(String key, String value) {
+		if (
+			VERSION.SDK_INT >= 23
+			&& Process.context().checkSelfPermission(permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED
+		) {
+			EnvironmentError.report(R.string.permission_denied_summary, R.string.permission_denied_message);
+			return;
+		}
+
 		onExternalChange.setEnabled(false);
 
 		boolean writeErrors;
@@ -62,8 +75,10 @@ public class Setting<T> {
 			onExternalChange.setEnabled(true);
 		}
 
-		if (writeErrors)
-			throw new SettingWriteFailedException(key, value);
+		if (writeErrors) {
+			//Because the developer can't do anything about this; it seems to be a problem on the device.
+			EnvironmentError.report(R.string.setting_write_failure_summary, R.string.system_setting_write_failure_message, key, value);
+		}
 	}
 
 	//Mostly copied from ApplicationSettings.Setting
