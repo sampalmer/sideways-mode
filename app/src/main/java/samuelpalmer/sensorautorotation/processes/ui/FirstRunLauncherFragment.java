@@ -13,8 +13,8 @@ public class FirstRunLauncherFragment extends Fragment {
 	private static final int REQUEST_CODE_INSTRUCT_USER = 1;
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onResume() {
+		super.onResume();
 		instructUserIfNecessary();
 	}
 
