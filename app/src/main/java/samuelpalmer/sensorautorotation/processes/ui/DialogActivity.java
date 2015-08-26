@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.ComponentType;
@@ -39,6 +40,15 @@ public class DialogActivity extends UiActivity {
 
 		if (getFragmentManager().findFragmentByTag(TAG) == null)
 			MyDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		//Prevents a crash on Android M developer preview
+		if (VERSION.SDK_INT >= 23)
+			setVisible(true);
 	}
 
 	public static class MyDialogFragment extends DialogFragment {
