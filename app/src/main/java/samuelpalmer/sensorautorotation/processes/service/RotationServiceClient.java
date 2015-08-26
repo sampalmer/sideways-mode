@@ -6,14 +6,13 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class RotationServiceClient {
 
 	public static void send(String action) {
 		if (ServiceHolder.isRunning())
 			ServiceHolder.instance().handle(action); //This seems to have less lag than an intent
-		else if (enabled())
+		else if (ServiceController.serviceEnabled())
 			ServiceController.ensureStarted(toggleIntent(action));
 		else
 			showDisabledMessage();
@@ -24,10 +23,6 @@ public abstract class RotationServiceClient {
 			ServiceController
 				.intent()
 				.setAction(action);
-	}
-
-	private static Boolean enabled() {
-		return ApplicationSettings.instance().enabled().get();
 	}
 
 	private static void showDisabledMessage() {

@@ -2,15 +2,18 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
 import java.util.Arrays;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -18,10 +21,14 @@ import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class SettingsFragment extends PreferenceFragment {
 
+	private CheckBoxPreference enabledCheckbox() {
+		return (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
+	}
+
 	private final EventHandler enabledUpdater = new EventHandler() {
 		@Override
 		public void update() {
-			CheckBoxPreference preference = (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
+			CheckBoxPreference preference = enabledCheckbox();
 			preference.setChecked(ApplicationSettings.instance().enabled().get());
 		}
 	};
@@ -64,6 +71,21 @@ public class SettingsFragment extends PreferenceFragment {
 
 		enabledChanged.subscribe(enabledUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
+
+		enabledCheckbox().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				//We want to update the service state _after_ the shared preferences has been set
+				new Handler().post(new Runnable() {
+					@Override
+					public void run() {
+						ServiceController.updateFromSettings();
+					}
+				});
+
+				return true;
+			}
+		});
 	}
 
 	private void hideUnsupportedOptions() {
