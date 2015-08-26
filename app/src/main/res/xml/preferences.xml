@@ -7,19 +7,23 @@
 	    android:summary="@string/app_enabled_description"
 	    android:icon="@drawable/ic_power"
 	/>
-	<ListPreference
-		android:key="notificationPriority"
-		android:title="@string/notification_priority"
-		android:entries="@array/notification_priorities"
-		android:entryValues="@array/notification_priority_values"
-		android:dialogIcon="@drawable/ic_notification_priority"
-	    android:icon="@drawable/ic_notification_priority"
+	<PreferenceCategory
+		android:title="@string/settings"
+		android:dependency="enabled">
+		<ListPreference
+			android:key="notificationPriority"
+			android:title="@string/notification_priority"
+			android:entries="@array/notification_priorities"
+			android:entryValues="@array/notification_priority_values"
+			android:dialogIcon="@drawable/ic_notification_priority"
+		    android:icon="@drawable/ic_notification_priority"
+			/>
+		<CheckBoxPreference
+			android:key="allowUpsideDownScreen"
+		    android:title="@string/allow_upside_down_screen"
+		    android:summary="@string/allow_upside_down_screen_description"
+		    android:icon="@drawable/ic_screen_upside_down"
+			android:dependency="enabled"
 		/>
-	<CheckBoxPreference
-		android:key="allowUpsideDownScreen"
-	    android:title="@string/allow_upside_down_screen"
-	    android:summary="@string/allow_upside_down_screen_description"
-	    android:icon="@drawable/ic_screen_upside_down"
-	/>
-
+	</PreferenceCategory>
 </PreferenceScreen>

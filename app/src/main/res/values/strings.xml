@@ -7,6 +7,11 @@
 	<string name="action_feedback">Send feedback</string>
 	<string name="action_uninstall">Uninstall</string>
 
+	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
+
+	<string name="uninstall_title">Uninstall?</string>
+	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
+
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
 	<string name="screen_rotation_disabled_portrait">Portrait</string>
@@ -32,10 +37,11 @@
 	<string name="upgraded_title">%1$s Upgraded</string>
 	<string name="touch_for_details">Touch for details</string>
 
-	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
-
+	<!-- Preferences -->
 	<string name="app_enabled">Enabled</string>
 	<string name="app_enabled_description">Use this app to control screen rotation</string>
+
+	<string name="settings">Settings</string>
 
 	<string name="allow_upside_down_screen">Allow reverse screen</string>
 	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
@@ -44,9 +50,6 @@
 	<string name="notification_priority_high">High</string>
 	<string name="notification_priority_normal">Normal</string>
 	<string name="notification_priority_low">Low</string>
-
-	<string name="uninstall_title">Uninstall?</string>
-	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
