@@ -21,7 +21,8 @@ public class SettingsFragment extends PreferenceFragment {
 	private final EventHandler enabledUpdater = new EventHandler() {
 		@Override
 		public void update() {
-			refresh();
+			CheckBoxPreference preference = (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
+			preference.setChecked(ApplicationSettings.instance().enabled().get());
 		}
 	};
 
@@ -60,6 +61,9 @@ public class SettingsFragment extends PreferenceFragment {
 
 		enabledChanged = ApplicationSettings.instance().enabled();
 		notificationPriorityChanged = ApplicationSettings.instance().notificationPriority();
+
+		enabledChanged.subscribe(enabledUpdater);
+		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 	}
 
 	private void hideUnsupportedOptions() {
@@ -73,25 +77,11 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
-		enabledChanged.subscribe(enabledUpdater);
-		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
-
-		refresh();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
+	public void onDestroy() {
+		super.onDestroy();
 
 		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
 		enabledChanged.unsubscribe(enabledUpdater);
 	}
 
-	private void refresh() {
-		CheckBoxPreference preference = (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
-		preference.setChecked(ApplicationSettings.instance().enabled().get());
-	}
 }
