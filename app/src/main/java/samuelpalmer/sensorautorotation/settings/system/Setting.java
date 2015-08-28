@@ -1,11 +1,10 @@
 package samuelpalmer.sensorautorotation.settings.system;
 
-import android.Manifest.permission;
 import android.content.ContentResolver;
-import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.os.Build.VERSION;
 import android.os.Handler;
+import android.provider.Settings;
 
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
@@ -59,7 +58,8 @@ public class Setting<T> {
 	private void set(String key, String value) {
 		if (
 			VERSION.SDK_INT >= 23
-			&& Process.context().checkSelfPermission(permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED
+			&&
+			!Settings.System.canWrite(Process.context())
 		) {
 			EnvironmentError.report(R.string.permission_needed_summary, R.string.permission_needed_message);
 			return;
