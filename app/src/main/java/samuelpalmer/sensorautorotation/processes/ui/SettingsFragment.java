@@ -14,7 +14,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
+import android.preference.PreferenceGroup;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -46,17 +46,19 @@ public class SettingsFragment extends PreferenceFragment {
 	private final EventHandler listPreferenceSummaryUpdater = new EventHandler() {
 		@Override
 		public void update() {
-			updateListPreferenceSummaries();
+			updateListPreferenceSummaries(getPreferenceScreen());
 		}
 	};
 
-	private void updateListPreferenceSummaries() {
-		PreferenceScreen screen = getPreferenceScreen();
-		for (int i = 0; i < screen.getPreferenceCount(); ++i) {
-			Preference preference = screen.getPreference(i);
+	private void updateListPreferenceSummaries(PreferenceGroup group) {
+		for (int i = 0; i < group.getPreferenceCount(); ++i) {
+			Preference preference = group.getPreference(i);
 			if (preference instanceof ListPreference) {
 				ListPreference listPreference = (ListPreference) preference;
 				listPreference.setSummary(listPreference.getEntry());
+			}
+			else if (preference instanceof PreferenceGroup) {
+				updateListPreferenceSummaries((PreferenceGroup) preference);
 			}
 		}
 	}
@@ -73,7 +75,7 @@ public class SettingsFragment extends PreferenceFragment {
 
 		addPreferencesFromResource(R.xml.preferences);
 
-		updateListPreferenceSummaries();
+		updateListPreferenceSummaries(getPreferenceScreen());
 		hideUnsupportedOptions();
 
 		enabledChanged = ApplicationSettings.instance().enabled();
@@ -86,18 +88,19 @@ public class SettingsFragment extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				if (
-					VERSION.SDK_INT >= 23
-					&&
-					(boolean) newValue
-					&&
-					!Settings.System.canWrite(getContext())
-				) {
+						VERSION.SDK_INT >= 23
+								&&
+								(boolean) newValue
+								&&
+								!Settings.System.canWrite(getContext())
+						) {
 					new AlertDialog.Builder(getContext())
 							.setTitle(R.string.permission_needed_summary)
 							.setMessage(R.string.permission_needed_message)
 							.setNegativeButton(android.R.string.cancel, new OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog, int which) {}
+								public void onClick(DialogInterface dialog, int which) {
+								}
 							})
 							.setPositiveButton(android.R.string.ok, new OnClickListener() {
 								@Override
