@@ -10,9 +10,6 @@ import android.view.WindowManager;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 
-/**
- * Ensures the background service is running if necessary in case it's died.
- */
 public abstract class UiActivity extends Activity {
 
 	@Override
@@ -32,6 +29,9 @@ public abstract class UiActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Ensures the background service is running if necessary in case it's died.
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();

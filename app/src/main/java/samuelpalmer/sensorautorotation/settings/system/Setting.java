@@ -61,7 +61,7 @@ public class Setting<T> {
 			VERSION.SDK_INT >= 23
 			&& Process.context().checkSelfPermission(permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED
 		) {
-			EnvironmentError.report(R.string.permission_denied_summary, R.string.permission_denied_message);
+			EnvironmentError.report(R.string.permission_needed_summary, R.string.permission_needed_message);
 			return;
 		}
 

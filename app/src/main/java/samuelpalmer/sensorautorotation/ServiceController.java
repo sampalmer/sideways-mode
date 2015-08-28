@@ -9,11 +9,11 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public abstract class ServiceController {
 
 	public static void updateFromSettings() {
-		updateServiceState();
+		updateServiceState(serviceEnabled());
 	}
 
-	private static void updateServiceState() {
-		if (serviceEnabled())
+	private static void updateServiceState(boolean enabled) {
+		if (enabled)
 			ensureStarted(intent());
 		else
 			ensureStopped();
@@ -29,7 +29,7 @@ public abstract class ServiceController {
 			throw new RuntimeException("Service doesn't exist: " + intent.getComponent());
 	}
 
-	public static void ensureStopped() {
+	private static void ensureStopped() {
 		Process.context().stopService(intent());
 	}
 
@@ -37,8 +37,16 @@ public abstract class ServiceController {
 		return ComponentType.create(RotationService.class).intent();
 	}
 
+	public static void enableService() {
+		setEnabled(true);
+	}
+
 	public static void disableService() {
-		ApplicationSettings.instance().enabled().setAndCommit(false);
-		ensureStopped();
+		setEnabled(false);
+	}
+
+	private static void setEnabled(boolean value) {
+		ApplicationSettings.instance().enabled().setAndCommit(value);
+		updateServiceState(value);
 	}
 }

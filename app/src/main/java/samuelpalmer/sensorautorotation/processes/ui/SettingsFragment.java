@@ -1,6 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.Manifest.permission;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -9,6 +15,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -20,6 +27,9 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class SettingsFragment extends PreferenceFragment {
+
+	public static final int PERMISSION_REQUEST_CODE = 1;
+	private static final String REQUIRED_PERMISSION = permission.WRITE_SETTINGS;
 
 	private CheckBoxPreference enabledCheckbox() {
 		return (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
@@ -75,17 +85,63 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledCheckbox().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				//We want to update the service state _after_ the shared preferences has been set
-				new Handler().post(new Runnable() {
-					@Override
-					public void run() {
-						ServiceController.updateFromSettings();
+				if (
+					VERSION.SDK_INT >= 23
+					&&
+					(boolean)newValue
+					&&
+					getActivity().checkSelfPermission(REQUIRED_PERMISSION) != PackageManager.PERMISSION_GRANTED
+				) {
+					if (getActivity().shouldShowRequestPermissionRationale(REQUIRED_PERMISSION)) {
+						new AlertDialog.Builder(getContext())
+							.setTitle(R.string.permission_needed_summary)
+							.setMessage(R.string.permission_needed_message)
+							.setOnDismissListener(new OnDismissListener() {
+								@Override
+								public void onDismiss(DialogInterface dialog) {
+									requestPermission();
+								}
+							})
+							.show();
 					}
-				});
+					else
+						requestPermission();
 
-				return true;
+					return false;
+				}
+				else {
+					//We want to update the service state _after_ the shared preferences has been set
+					new Handler().post(new Runnable() {
+						@Override
+						public void run() {
+							ServiceController.updateFromSettings();
+						}
+					});
+					return true;
+				}
 			}
 		});
+	}
+
+	private void requestPermission() {
+		requestPermissions(new String[]{REQUIRED_PERMISSION}, PERMISSION_REQUEST_CODE);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+		if (requestCode == PERMISSION_REQUEST_CODE)
+			for (int i = 0; i < permissions.length; ++i) {
+				if (permissions[i].equals(REQUIRED_PERMISSION)) {
+					if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+						ServiceController.enableService();
+					else
+						Toast
+								.makeText(getContext(), R.string.warning_wasn_enabled_permission_denied, Toast.LENGTH_LONG)
+								.show();
+				}
+			}
 	}
 
 	private void hideUnsupportedOptions() {
