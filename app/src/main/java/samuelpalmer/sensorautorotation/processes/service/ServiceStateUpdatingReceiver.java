@@ -4,13 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceStateUpdatingReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		ServiceController.updateFromSettings();
+		new ServiceSynchroniser(ApplicationSettings.local()).updateFromSettings();
 	}
 
 }

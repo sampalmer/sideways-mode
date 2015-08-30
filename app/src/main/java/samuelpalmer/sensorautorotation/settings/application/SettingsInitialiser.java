@@ -13,8 +13,11 @@ import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 public class SettingsInitialiser {
 
 	private final ArrayList<Setting<?>> settings = new ArrayList<>();
+	private final ApplicationSettings applicationSettings;
 
-	public SettingsInitialiser() {
+	public SettingsInitialiser(ApplicationSettings applicationSettings) {
+		this.applicationSettings = applicationSettings;
+
 		for (Method publicMethod : publicMethods())
 			new CandidateMethod(publicMethod).consider();
 
@@ -52,7 +55,7 @@ public class SettingsInitialiser {
 			// for compatibility with API 19-.
 			//noinspection TryWithIdenticalCatches
 			try {
-				return (Setting<?>)method.invoke(ApplicationSettings.instance());
+				return (Setting<?>)method.invoke(applicationSettings);
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {

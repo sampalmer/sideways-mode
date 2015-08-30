@@ -8,7 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class UiActivity extends Activity {
 
@@ -35,7 +36,7 @@ public abstract class UiActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		ServiceController.updateFromSettings();
+		new ServiceSynchroniser(ApplicationSettings.remote()).updateFromSettings();
 	}
 
 }

@@ -36,7 +36,7 @@ public class FirstRunLauncherFragment extends Fragment {
 	}
 
 	private ApplicationSettings.Setting<Integer> instructedVersionPreference() {
-		return ApplicationSettings.instance().lastVersionUserInstructedAbout();
+		return ApplicationSettings.remote().lastVersionUserInstructedAbout();
 	}
 
 }

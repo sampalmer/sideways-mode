@@ -32,7 +32,7 @@ public class NotificationServiceStatusDisplay {
 		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.calculator = calculator;
 		lockScreenMonitor = new LockScreenMonitor();
-		priority = ApplicationSettings.instance().notificationPriority();
+		priority = ApplicationSettings.local().notificationPriority();
 		screenRotationMonitor = screen;
 	}
 

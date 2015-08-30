@@ -21,7 +21,7 @@ import android.widget.Toast;
 import java.util.Arrays;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -32,14 +32,14 @@ public class SettingsFragment extends PreferenceFragment {
 	public static final int PERMISSION_REQUEST_CODE = 1;
 
 	private CheckBoxPreference enabledCheckbox() {
-		return (CheckBoxPreference) findPreference(ApplicationSettings.instance().enabled().getKey());
+		return (CheckBoxPreference) findPreference(ApplicationSettings.remote().enabled().getKey());
 	}
 
 	private final EventHandler enabledUpdater = new EventHandler() {
 		@Override
 		public void update() {
 			CheckBoxPreference preference = enabledCheckbox();
-			preference.setChecked(ApplicationSettings.instance().enabled().get());
+			preference.setChecked(ApplicationSettings.remote().enabled().get());
 		}
 	};
 
@@ -71,15 +71,15 @@ public class SettingsFragment extends PreferenceFragment {
 		super.onCreate(savedInstanceState);
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
-		new SettingsInitialiser().ensureInitialised();
+		new SettingsInitialiser(ApplicationSettings.remote()).ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);
 
 		updateListPreferenceSummaries(getPreferenceScreen());
 		hideUnsupportedOptions();
 
-		enabledChanged = ApplicationSettings.instance().enabled();
-		notificationPriorityChanged = ApplicationSettings.instance().notificationPriority();
+		enabledChanged = ApplicationSettings.remote().enabled();
+		notificationPriorityChanged = ApplicationSettings.remote().notificationPriority();
 
 		enabledChanged.subscribe(enabledUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
@@ -116,7 +116,7 @@ public class SettingsFragment extends PreferenceFragment {
 					new Handler().post(new Runnable() {
 						@Override
 						public void run() {
-							ServiceController.updateFromSettings();
+							new ServiceSynchroniser(ApplicationSettings.remote()).updateFromSettings();
 						}
 					});
 
@@ -131,7 +131,7 @@ public class SettingsFragment extends PreferenceFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (Settings.System.canWrite(getContext()))
-			ServiceController.enableService();
+			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
 		else
 			Toast
 					.makeText(getContext(), R.string.warning_wasn_enabled_permission_denied, Toast.LENGTH_LONG)
@@ -140,7 +140,7 @@ public class SettingsFragment extends PreferenceFragment {
 
 	private void hideUnsupportedOptions() {
 		if (Build.VERSION.SDK_INT < 16) {
-			ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.instance().notificationPriority().getKey());
+			ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.remote().notificationPriority().getKey());
 			CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
 			int newLength = originalEntries.length - 1;
 			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));

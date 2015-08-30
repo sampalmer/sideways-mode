@@ -21,7 +21,7 @@ class Migrations {
 		migrations.put(25, new Migration(null) {
 			@Override
 			public void upgradeData() {
-				ApplicationSettings applicationSettings = ApplicationSettings.instance();
+				ApplicationSettings applicationSettings = ApplicationSettings.local();
 				Setting<Boolean> oldAutoRotate = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Setting<Integer> oldUserOrientation = applicationSettings.new Setting<Integer>(new IntegerSetting(), "userOrientation", null);
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);

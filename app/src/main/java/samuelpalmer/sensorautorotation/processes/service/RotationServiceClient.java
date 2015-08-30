@@ -4,15 +4,17 @@ import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class RotationServiceClient {
 
 	public static void send(String action) {
 		if (ServiceHolder.isRunning())
 			ServiceHolder.instance().handle(action); //This seems to have less lag than an intent
-		else if (ServiceController.serviceEnabled())
+		else if (new ServiceSynchroniser(ApplicationSettings.local()).serviceEnabled())
 			ServiceController.ensureStarted(toggleIntent(action));
 		else
 			showDisabledMessage();

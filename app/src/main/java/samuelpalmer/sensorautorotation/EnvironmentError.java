@@ -5,6 +5,7 @@ import android.app.Notification;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class EnvironmentError {
 
@@ -18,7 +19,7 @@ public class EnvironmentError {
 		instance.message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
 
 		instance.show();
-		ServiceController.disableService();
+		new ServiceSynchroniser(ApplicationSettings.remote()).disableService();
 	}
 
 	private EnvironmentError(){}
