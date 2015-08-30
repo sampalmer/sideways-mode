@@ -2,9 +2,9 @@ package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.ContainsContract;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetAllContract;
@@ -14,6 +14,8 @@ import samuelpalmer.sensorautorotation.settings.application.multiprocess.contrac
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetLongContract;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetStringContract;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetStringSetContract;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.RegisterOnSharedPreferenceChangeListenerContract;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.UnregisterOnSharedPreferenceChangeListenerContract;
 
 public class ContentProviderSharedPreferences implements SharedPreferences {
 
@@ -68,19 +70,21 @@ public class ContentProviderSharedPreferences implements SharedPreferences {
 		return new MultiProcessEditor(remote);
 	}
 
-	private final WeakHashMap<OnSharedPreferenceChangeListener, ClientListener> mListeners = new WeakHashMap<>();
+	private final HashMap<OnSharedPreferenceChangeListener, ClientListener> mListeners = new HashMap<>();
 
 	public void registerOnSharedPreferenceChangeListener(final OnSharedPreferenceChangeListener listener) {
 		synchronized(this) {
-			//SUBSCRIBE
-			mListeners.put(listener, new ClientListener(this, listener));
+			ClientListener client = new ClientListener(this, listener);
+			remote.process(new RegisterOnSharedPreferenceChangeListenerContract(), client);
+			mListeners.put(listener, client);
 		}
 	}
 
 	public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
 		synchronized(this) {
-			//UNSUBSCRIBE
-			mListeners.remove(listener);
+			ClientListener client = mListeners.remove(listener);
+			if (client != null)
+				remote.process(new UnregisterOnSharedPreferenceChangeListenerContract(), client);
 		}
 	}
 

@@ -16,10 +16,12 @@ public abstract class OnSharedPreferenceChangeListenerContract implements Contra
 		synchronized (listeners) {
 			ServerListener removed = listeners.remove(binder);
 
-			sharedPreferences.unregisterOnSharedPreferenceChangeListener(removed.nativeListener);
+			if (removed != null) {
+				sharedPreferences.unregisterOnSharedPreferenceChangeListener(removed.nativeListener);
 
-			if (binder != null)
-				binder.unlinkToDeath(removed.deathRecipient, 0);
+				if (binder != null)
+					binder.unlinkToDeath(removed.deathRecipient, 0);
+			}
 		}
 	}
 
@@ -30,6 +32,7 @@ public abstract class OnSharedPreferenceChangeListenerContract implements Contra
 	}
 
 	public IContentProviderSharedPreferenceChangeListener deserialiseArgs(Bundle serialised) {
+		serialised.setClassLoader(ParcelableBinder.class.getClassLoader());
 		IBinder binder = (IBinder) SingleValueSerialiser.deserialise(serialised.get(BINDER));
 		return IContentProviderSharedPreferenceChangeListener.Stub.asInterface(binder);
 	}

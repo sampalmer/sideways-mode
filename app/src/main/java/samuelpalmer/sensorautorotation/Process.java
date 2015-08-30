@@ -10,6 +10,9 @@ public class Process extends Application {
 	private static Context context;
 
 	public static Context context() {
+		if (context == null)
+			throw new RuntimeException("Haven't got a context yet");
+
 		return context;
 	}
 

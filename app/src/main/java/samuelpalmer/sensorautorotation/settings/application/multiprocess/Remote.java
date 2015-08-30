@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 import android.net.Uri;
 import android.os.Bundle;
 
+import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
@@ -15,7 +16,7 @@ class Remote {
 	}
 
 	public <TArgs, TResult> TResult process(Contract<TArgs, TResult> contract, TArgs args) {
-		Bundle serialisedResult = samuelpalmer.sensorautorotation.Process.context().getContentResolver().call(
+		Bundle serialisedResult = Process.context().getContentResolver().call(
 			new Uri.Builder()
 				.scheme("content")
 				.authority(StringResource.get(R.string.content_provider_authority).toString())
