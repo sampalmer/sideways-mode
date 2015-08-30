@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.ContentProviderSharedPreferences;
 
 /**
  * UI proxy to settings stored in background process.
@@ -35,7 +35,7 @@ public class MainActivity extends UiActivity {
 	public SharedPreferences getSharedPreferences(String name, int mode) {
 		//PreferenceFragment calls this for its underlying preference storage
 		if (name.equals(ApplicationSettings.sharedPreferencesName()))
-			return new MultiProcessSharedPreferences(name);
+			return new ContentProviderSharedPreferences(name);
 		else
 			return super.getSharedPreferences(name, mode);
 	}

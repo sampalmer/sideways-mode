@@ -1,0 +1,15 @@
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+public interface Contract<TArgs, TResult> {
+
+	String methodName();
+	TResult process(SharedPreferences sharedPreferences, TArgs args);
+	Bundle serialiseArgs(TArgs value);
+	TArgs deserialiseArgs(Bundle serialised);
+	Bundle serialiseResult(TResult value);
+	TResult deserialiseResult(Bundle serialised);
+
+}

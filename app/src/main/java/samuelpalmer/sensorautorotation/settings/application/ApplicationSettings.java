@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
 import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.MultiProcessSharedPreferences;
+import samuelpalmer.sensorautorotation.settings.application.multiprocess.ContentProviderSharedPreferences;
 
 public class ApplicationSettings extends Settings {
 
@@ -18,7 +18,7 @@ public class ApplicationSettings extends Settings {
 	}
 
 	private ApplicationSettings() {
-		super(new MultiProcessSharedPreferences(sharedPreferencesName()));
+		super(new ContentProviderSharedPreferences(sharedPreferencesName()));
 	}
 
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }

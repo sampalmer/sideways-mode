@@ -65,6 +65,12 @@
 
 		<!-- Service Process -->
 
+		<provider
+			android:authorities="@string/content_provider_authority"
+			android:name=".settings.application.multiprocess.SharedPreferencesContentProvider"
+		    android:exported="false"
+			android:process=":samuelpalmer.sensorautorotation.service" />
+
 		<receiver android:name=".processes.service.ServiceStateUpdatingReceiver"
 		          android:process=":samuelpalmer.sensorautorotation.service">
 			<intent-filter>
