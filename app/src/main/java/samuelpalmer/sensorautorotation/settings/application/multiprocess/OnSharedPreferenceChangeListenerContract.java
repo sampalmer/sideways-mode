@@ -38,7 +38,7 @@ public abstract class OnSharedPreferenceChangeListenerContract implements Contra
 	}
 
 	public Bundle serialiseResult(Void value) {
-		return null;
+		return new Bundle();
 	}
 
 	public Void deserialiseResult(Bundle serialised) {

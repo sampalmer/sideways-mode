@@ -26,6 +26,9 @@ class Remote {
 			contract.serialiseArgs(args)
 		);
 
+		if (serialisedResult == null)
+			throw new RuntimeException("Got back null. The content provider probably crashed.");
+
 		return contract.deserialiseResult(serialisedResult);
 	}
 

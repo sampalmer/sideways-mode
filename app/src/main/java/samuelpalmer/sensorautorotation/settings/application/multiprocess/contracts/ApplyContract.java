@@ -23,7 +23,7 @@ public class ApplyContract extends EditorContract<Void> {
 
 	@Override
 	public Bundle serialiseResult(Void value) {
-		return null;
+		return new Bundle();
 	}
 
 	@Override
