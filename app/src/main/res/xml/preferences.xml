@@ -7,6 +7,9 @@
 	    android:summary="@string/app_enabled_description"
 	    android:icon="@drawable/ic_power"
 	/>
+
+	<!-- The "dependency" attribute needs to be specified for all children since setting it on the
+	 PreferenceCategory alone doesn't work in the API 14 emulator -->
 	<PreferenceCategory
 		android:title="@string/settings"
 		android:dependency="enabled">
@@ -17,6 +20,7 @@
 			android:entryValues="@array/notification_priority_values"
 			android:dialogIcon="@drawable/ic_notification_priority"
 		    android:icon="@drawable/ic_notification_priority"
+			android:dependency="enabled"
 			/>
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"
