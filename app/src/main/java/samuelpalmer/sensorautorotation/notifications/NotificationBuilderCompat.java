@@ -2,8 +2,12 @@ package samuelpalmer.sensorautorotation.notifications;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.Notification.Action;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.widget.RemoteViews;
 
 import samuelpalmer.sensorautorotation.Process;
@@ -15,8 +19,6 @@ import samuelpalmer.sensorautorotation.R;
  */
 @SuppressWarnings({"UnusedDeclaration", "UnusedReturnValue"})
 public class NotificationBuilderCompat {
-	protected final Notification.Builder builder;
-
 	public static final int PRIORITY_DEFAULT = 0;
 	public static final int PRIORITY_LOW = -1;
 	public static final int PRIORITY_MIN = -2;
@@ -43,7 +45,9 @@ public class NotificationBuilderCompat {
 	public static final String CATEGORY_STATUS = "status";
 
 	public static NotificationBuilderCompat create() {
-		if (Build.VERSION.SDK_INT >= 21)
+		if (Build.VERSION.SDK_INT >= 23)
+			return new V23();
+		else if (Build.VERSION.SDK_INT >= 21)
 			return new V21();
 		else if (Build.VERSION.SDK_INT >= 17)
 			return new V17();
@@ -53,8 +57,12 @@ public class NotificationBuilderCompat {
 			return new NotificationBuilderCompat();
 	}
 
+	protected final Context context;
+	protected final Notification.Builder builder;
+
 	private NotificationBuilderCompat() {
-		builder = new Notification.Builder(Process.context());
+		context = Process.context();
+		builder = new Notification.Builder(context);
 	}
 
 	public NotificationBuilderCompat setSmallIcon(int icon) {
@@ -147,6 +155,7 @@ public class NotificationBuilderCompat {
 
 		@Override
 		public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+			//noinspection deprecation
 			builder.addAction(icon, title, intent);
 			return this;
 		}
@@ -192,6 +201,16 @@ public class NotificationBuilderCompat {
 		@Override
 		public NotificationBuilderCompat setVisibility(int visibility) {
 			builder.setVisibility(visibility);
+			return this;
+		}
+	}
+
+	@TargetApi(VERSION_CODES.M)
+	private static class V23 extends V21
+	{
+		@Override
+		public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+			builder.addAction(new Action.Builder(Icon.createWithResource(context, icon), title, intent).build());
 			return this;
 		}
 	}
