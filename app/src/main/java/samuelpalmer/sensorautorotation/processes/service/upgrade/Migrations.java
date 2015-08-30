@@ -10,6 +10,7 @@ import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
 import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Transaction;
+import samuelpalmer.sensorautorotation.settings.application.StringSetting;
 
 class Migrations {
 	static Map<Integer, Migration> map() {
@@ -23,6 +24,7 @@ class Migrations {
 				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> oldAutoRotate = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Setting<Integer> oldUserOrientation = applicationSettings.new Setting<Integer>(new IntegerSetting(), "userOrientation", null);
+				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 
 				ServiceSettings serviceSettings = new ServiceSettings();
 				Transaction copyTransaction = serviceSettings.new Transaction();
@@ -33,6 +35,7 @@ class Migrations {
 				Transaction deleteTransaction = applicationSettings.new Transaction();
 				oldAutoRotate.remove(deleteTransaction);
 				oldUserOrientation.remove(deleteTransaction);
+				screenOffBehaviour.remove(deleteTransaction);
 				deleteTransaction.commit();
 			}
 		});
