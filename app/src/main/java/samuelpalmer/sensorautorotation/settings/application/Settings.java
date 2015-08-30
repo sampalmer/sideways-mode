@@ -68,7 +68,7 @@ public class Settings {
 		}
 
 		public boolean hasValue() {
-			return getRaw() != null;
+			return prefs.contains(key);
 		}
 
 		private Object getRaw() {
