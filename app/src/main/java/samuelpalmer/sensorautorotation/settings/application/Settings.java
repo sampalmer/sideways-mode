@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 public class Settings {
@@ -25,10 +23,10 @@ public class Settings {
 		}
 
 		public void commit() {
-			if (!editor.commit())
-				// Since a look over the implementation of Editor.commit() indicates this represents a file system or other IO error.
-				EnvironmentError.report(R.string.setting_write_failure_summary, R.string.preference_write_failure_message);
+			//It'd be nice to call commit() and check the return value, but doing so introduces lag
+			editor.apply();
 		}
+
 	}
 
 	public class Setting<T> extends EventRegistrarAdaptor {

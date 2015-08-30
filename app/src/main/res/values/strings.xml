@@ -64,7 +64,6 @@
 	<string name="system_rotation_enabled_message">System screen auto-rotation was enabled.</string>
 
 	<string name="setting_write_failure_summary">Couldn\'t write setting</string>
-	<string name="preference_write_failure_message">Couldn\'t write application settings.</string>
 	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
 
 	<string name="permission_needed_summary">Permission needed</string>
