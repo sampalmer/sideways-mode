@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.Process;
-
 public class SharedPreferencesContentProvider extends ContentProvider {
 
 	@Override
@@ -20,7 +18,7 @@ public class SharedPreferencesContentProvider extends ContentProvider {
 	public Bundle call(String method, String arg, Bundle extras) {
 		Contract contract = ContractMap.lookup(method);
 		Object args = contract.deserialiseArgs(extras);
-		Object result = contract.process(Process.context().getSharedPreferences(arg, 0), args);
+		Object result = contract.process(getContext().getSharedPreferences(arg, 0), args);
 		return contract.serialiseResult(result);
 	}
 
