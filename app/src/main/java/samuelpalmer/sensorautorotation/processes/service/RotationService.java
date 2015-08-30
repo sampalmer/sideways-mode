@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenera
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
@@ -60,12 +61,14 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		applicationState = new ApplicationState(systemSettings);
 
-		calculator = new OrientationCalculator(screen, applicationState);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screen, calculator);
+		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 
-		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen);
+		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
+
+		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen, screenRotationMonitor);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, screenUpdater, calculator));
+		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, screenUpdater, calculator, screenRotationMonitor));
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);

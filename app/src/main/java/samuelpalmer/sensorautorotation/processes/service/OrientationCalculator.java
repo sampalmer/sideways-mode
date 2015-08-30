@@ -2,19 +2,19 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class OrientationCalculator {
 
 	private static final Orientation DEFAULT = Orientation.NATURAL;
-	private final Screen screen;
+	private final ScreenRotationMonitor screen;
 	private final ApplicationState state;
 
 	private Orientation device = DEFAULT;
 
 	private final UpdatingEventRegistrar listener;
 
-	public OrientationCalculator(Screen screen, ApplicationState state) {
+	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
 		this.screen = screen;
 		this.state = state;
 		listener = new UpdatingEventRegistrar();
@@ -53,7 +53,7 @@ public class OrientationCalculator {
 	}
 
 	private Orientation inferredUser() {
-		return Orientation.NATURAL.plus(device.minus(screen.realOrientation()));
+		return Orientation.NATURAL.plus(device.minus(screen.currentRotation()));
 	}
 
 	public void setDevice(Orientation newDevice) {

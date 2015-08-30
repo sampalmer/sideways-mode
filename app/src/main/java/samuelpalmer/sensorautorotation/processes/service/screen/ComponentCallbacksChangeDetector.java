@@ -4,6 +4,7 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 
 import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
 
 /**
  * Only detects changes between landscape and portrait.
@@ -11,9 +12,11 @@ import samuelpalmer.sensorautorotation.Process;
 class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDetector {
 
 	private final ScreenRotationMonitor.Callback callback;
+	private final Screen screen;
 
-	public ComponentCallbacksChangeDetector(ScreenRotationMonitor.Callback callback) {
+	public ComponentCallbacksChangeDetector(ScreenRotationMonitor.Callback callback, Screen screen) {
 		this.callback = callback;
+		this.screen = screen;
 	}
 
 	@Override
@@ -24,6 +27,11 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 	@Override
 	public void stop() {
 		Process.context().unregisterComponentCallbacks(componentCallbacks);
+	}
+
+	@Override
+	public Orientation currentRotation() {
+		return screen.realOrientation();
 	}
 
 	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {

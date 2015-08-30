@@ -8,6 +8,10 @@ import android.view.IRotationWatcher;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor.Callback;
+
 /**
  * Supports detection of all four screen rotations using a hidden API
  */
@@ -19,10 +23,14 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	private final ScreenRotationMonitor.Callback callback;
 	private final IRotationWatcher.Stub screenRotationChanged;
 	private final Handler callerHandler;
+	private final Screen screen;
 
-	public RotationWatcherChangeDetector(ScreenRotationMonitor.Callback callback) throws NotSupportedException {
+	private boolean monitoring;
+
+	public RotationWatcherChangeDetector(Callback callback, Screen screen) throws NotSupportedException {
 		callerHandler = new Handler();
 		this.callback = callback;
+		this.screen = screen;
 
 		screenRotationChanged = new Watcher();
 
@@ -69,10 +77,14 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 		} catch (InvocationTargetException e) {
 			throw new NotSupportedException(e);
 		}
+
+		monitoring = true;
 	}
 
 	@Override
 	public void stop() throws NotSupportedException {
+		monitoring = false;
+
 		if (removeRotationWatcher != null) {
 			//noinspection TryWithIdenticalCatches
 			try {
@@ -86,28 +98,41 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	}
 
 	public static class NotSupportedException extends RuntimeException {
+
 		public NotSupportedException(Exception inner) {
 			super(inner);
 		}
-
 		public NotSupportedException(String message) {
 			super(message);
 		}
+
+	}
+
+	private Orientation currentRotation;
+
+	@Override
+	public Orientation currentRotation() {
+		if (monitoring) {
+			if (currentRotation == null)
+				currentRotation = screen.realOrientation();
+			return currentRotation;
+		}
+		else
+			return screen.realOrientation();
 	}
 
 	private class Watcher extends IRotationWatcher.Stub {
 		@Override
-		public void onRotationChanged(int rotation) throws RemoteException {
+		public void onRotationChanged(final int rotation) throws RemoteException {
 			//We seem to get here in a different thread to the one in which we subscribed.
-			callerHandler.post(report);
+			callerHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					currentRotation = new AndroidSurfaceRotation(rotation).orientation();
+					callback.changed();
+				}
+			});
 		}
 	}
-
-	private final Runnable report = new Runnable() {
-		@Override
-		public void run() {
-			callback.changed();
-		}
-	};
 
 }

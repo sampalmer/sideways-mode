@@ -11,10 +11,10 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 public class ScreenOrientationController extends State {
 
 	private final SystemSettings settings;
-	private final Screen screen;
+	private final ScreenRotationMonitor screen;
 	private final OrientationCalculator calculator;
 
-	public ScreenOrientationController(SystemSettings settings, Screen screen, OrientationCalculator calculator) {
+	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator) {
 		this.settings = settings;
 		this.screen = screen;
 		this.calculator = calculator;
@@ -24,7 +24,7 @@ public class ScreenOrientationController extends State {
 	protected void start() {
 		settings.accelerometerRotation.onChange().subscribe(systemAutoRotationChanged);
 
-		Orientation realOrientation = screen.realOrientation();
+		Orientation realOrientation = screen.currentRotation();
 		propose(realOrientation);
 
 		settings.accelerometerRotation.set(false);

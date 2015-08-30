@@ -1,17 +1,32 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import android.graphics.Point;
+
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 class LockedMode implements Mode {
 
 	private final boolean portrait;
 
-	public LockedMode(OrientationCalculator calculator, Screen screen) {
+	public LockedMode(OrientationCalculator calculator, Screen screen, ScreenRotationMonitor screenRotationMonitor) {
 		boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
-		portrait = inNaturalOrientation == screen.deviceIsNaturallyPortrait();
+		portrait = inNaturalOrientation == deviceIsNaturallyPortrait(screen, screenRotationMonitor);
 	}
+
+	public static boolean deviceIsNaturallyPortrait(Screen screen, ScreenRotationMonitor screenRotationMonitor) {
+		//Getting the screen dimensions and rotation should be as close together as possible
+		//since it's possible for them to be retrieved out of sync
+		Point screenResolution = screen.screenResolution();
+		Orientation orientation = screenRotationMonitor.currentRotation();
+
+		boolean portrait = screenResolution.x < screenResolution.y;
+		return portrait == orientation.isNaturalOrUpsideDown();
+	}
+
 
 	@Override
 	public int notificationIcon() {

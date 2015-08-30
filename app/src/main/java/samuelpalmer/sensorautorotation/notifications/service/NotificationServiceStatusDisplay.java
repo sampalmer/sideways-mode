@@ -21,19 +21,19 @@ import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 public class NotificationServiceStatusDisplay {
 	private final Service service;
-	private final ScreenOrientationUpdater screen;
+	private final ScreenOrientationUpdater screenOrientationUpdater;
 	private final OrientationCalculator calculator;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 	private final ScreenRotationMonitor screenRotationMonitor;
 
-	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screen, OrientationCalculator calculator) {
+	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screenOrientationUpdater, OrientationCalculator calculator, ScreenRotationMonitor screen) {
 		this.service = service;
-		this.screen = screen;
+		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.calculator = calculator;
 		lockScreenMonitor = new LockScreenMonitor();
 		priority = ApplicationSettings.instance().notificationPriority();
-		screenRotationMonitor = new ScreenRotationMonitor();
+		screenRotationMonitor = screen;
 	}
 
 	public void update(NotificationParameters params) {
@@ -49,7 +49,7 @@ public class NotificationServiceStatusDisplay {
 			Arrays.asList(
 				priority, //To change notification priority
 				screenRotationMonitor, //For "overridden" detection
-				screen.onProposedOrientationChanged(), //For "overridden" detection
+				screenOrientationUpdater.onProposedOrientationChanged(), //For "overridden" detection
 				calculator.onChange() //For mode change detection
 			)
 		);

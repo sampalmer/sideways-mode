@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.IntegerUtilities;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
-import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class UserOrientation {
 
@@ -11,9 +11,9 @@ public class UserOrientation {
 	private final Orientation proposed;
 	private final Orientation screen;
 
-	public UserOrientation(Orientation user, Screen screen, Orientation proposed) {
+	public UserOrientation(Orientation user, ScreenRotationMonitor screenRotationMonitor, Orientation proposed) {
 		this.user = user;
-		this.screen = screen.realOrientation();
+		this.screen = screenRotationMonitor.currentRotation();
 		this.proposed = proposed;
 	}
 
