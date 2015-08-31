@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationServiceStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
@@ -19,7 +18,6 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -34,7 +32,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public static final String ACTION_TOGGLE = "toggle";
 	public static final String ACTION_ROTATE_LEFT = "rotate_left";
 	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
-	public static final String ACTION_STOP = "stop";
 
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -103,9 +100,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				break;
 			case ACTION_ROTATE_RIGHT:
 				calculator.offsetUser(1);
-				break;
-			case ACTION_STOP:
-				new ServiceSynchroniser(ApplicationSettings.local()).disableService();
 				break;
 		}
 	}

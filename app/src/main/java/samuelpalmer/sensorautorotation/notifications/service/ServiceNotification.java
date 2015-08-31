@@ -56,7 +56,6 @@ public class ServiceNotification {
 		content.removeAllViews(R.id.notification_main_column);
 		content.addView(R.id.notification_main_column, notification.contentView);
 
-		configureButton(R.id.stop_button, RotationService.ACTION_STOP, R.drawable.ic_action_power, R.string.action_stop);
 		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.actionIcon(), params.mode.toggleToOtherModeAResourceId());
 		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_rotate_left, R.string.action_rotate_left);
 		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_rotate_right, R.string.action_rotate_right);
