@@ -78,10 +78,7 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return device.plus(userOffset());
+		return Orientation.NATURAL.plus(device.minus(state.user()));
 	}
 
-	private Rotation userOffset() {
-		return Orientation.NATURAL.minus(state.user());
-	}
 }
