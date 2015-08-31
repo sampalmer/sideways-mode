@@ -25,8 +25,6 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	private final Handler callerHandler;
 	private final Screen screen;
 
-	private boolean monitoring;
-
 	public RotationWatcherChangeDetector(Callback callback, Screen screen) throws NotSupportedException {
 		callerHandler = new Handler();
 		this.callback = callback;
@@ -71,19 +69,17 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	public void start() throws NotSupportedException {
 		//noinspection TryWithIdenticalCatches
 		try {
-			watchRotation.invoke(windowManagerService, screenRotationChanged);
+			currentRotation = wrap((int)watchRotation.invoke(windowManagerService, screenRotationChanged));
 		} catch (IllegalAccessException e) {
 			throw new NotSupportedException(e);
 		} catch (InvocationTargetException e) {
 			throw new NotSupportedException(e);
 		}
-
-		monitoring = true;
 	}
 
 	@Override
 	public void stop() throws NotSupportedException {
-		monitoring = false;
+		currentRotation = null;
 
 		if (removeRotationWatcher != null) {
 			//noinspection TryWithIdenticalCatches
@@ -112,11 +108,8 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 
 	@Override
 	public Orientation currentRotation() {
-		if (monitoring) {
-			if (currentRotation == null)
-				currentRotation = screen.realOrientation();
+		if (currentRotation != null)
 			return currentRotation;
-		}
 		else
 			return screen.realOrientation();
 	}
@@ -128,11 +121,15 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 			callerHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					currentRotation = new AndroidSurfaceRotation(rotation).orientation();
+					currentRotation = wrap(rotation);
 					callback.changed();
 				}
 			});
 		}
+	}
+
+	private static Orientation wrap(int rotation) {
+		return new AndroidSurfaceRotation(rotation).orientation();
 	}
 
 }
