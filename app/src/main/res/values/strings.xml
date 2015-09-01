@@ -9,6 +9,10 @@
 
 	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
 
+	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
+	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
+	<string name="email_app_chooser_title">Send feedback with</string>
+
 	<string name="uninstall_title">Uninstall?</string>
 	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 
@@ -75,34 +79,27 @@
 	<string name="instructions_introduction_contents">Welcome to %1$s! This replaces Android\'s screen rotation, so don\'t use the normal Android screen rotation settings.</string>
 
 	<string name="instructions_modes_heading">Modes</string>
-	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which one you\'re using, look at the notification in the notification drawer. In Locked mode, the notification shows the locked screen orientation, such as \"%2$s\".</string>
+	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which one you\'re using, look at the notification in the notification drawer.</string>
 
 	<string name="instructions_toggling_heading">Changing Mode</string>
-	<string name="instructions_toggling_contents">To change mode, touch the notification. You can also make a home screen shortcut to do this.</string>
-
-	<string name="instructions_fixed_rotation_heading">Locked Mode</string>
-	<string name="instructions_fixed_rotation_contents">In Locked mode, you can\'t change the screen orientation.</string>
+	<string name="instructions_toggling_contents">To change mode, press the button in the notification. You can also make a home screen shortcut to do this.</string>
 
 	<string name="instructions_auto_rotation_heading">Auto-Rotate Mode</string>
-	<string name="instructions_auto_rotation_contents">%1$s mode is the same as Android\'s screen rotation, but the screen faces you instead of the sky. For example, if %2$s thinks you\'re sideways, the screen will face sideways.</string>
+	<string name="instructions_auto_rotation_contents">%1$s mode is the same as Android\'s screen rotation, but if %2$s thinks you\'re sideways, the screen will face sideways.</string>
 
 	<string name="instructions_position_heading">Your Position</string>
 	<string name="instructions_position_contents">Your orientation (whether you\'re lying down or upright) is also tracked and shown in the notification.</string>
 
 	<string name="instructions_position_changing_heading">Changing Your Position</string>
-	<string name="instructions_position_changing_contents">To change your orientation, use Locked mode. In this mode, rotating the device will change whether %1$s thinks you\'re lying down or upright. It thinks you\'re facing the same direction as the screen. For example, if the screen is facing sideways, %1$s will think you\'re sideways.</string>
+	<string name="instructions_position_changing_contents">To change your orientation, either use Locked mode or use the %1$s and %2$s notification buttons.</string>
 
 	<string name="instructions_overridden_heading">Incompatible Apps</string>
-	<string name="instructions_overridden_contents">%1$s might not work with apps that control the screen orientation. When this happens, the notification will show \"%2$s\".</string>
+	<string name="instructions_overridden_contents">%1$s might not work with apps that control the screen orientation. When this happens, the notification icon will show your orientation.</string>
 
 	<string name="instructions_uninstalling_heading">Uninstalling</string>
-	<string name="instructions_uninstalling_contents">To uninstall, use the \"%1$s\" menu item on %2$s\'s main screen so the screen orientation won\'t be stuck.</string>
+	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen.</string>
 
 	<string name="instructions_help_heading">Troubleshooting</string>
-	<string name="instructions_help_contents">If the screen faces the wrong way:\n1. Turn %1$s mode off.\n2. Rotate the device until the screen is facing the right way.</string>
-
-	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
-	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
-	<string name="email_app_chooser_title">Send feedback with</string>
+	<string name="instructions_help_contents">"If the screen faces the wrong way:\n1. Ensure the app you're using isn't controlling the screen\n2. Use the %1$s and %2$s buttons in the notification to correct it."</string>
 
 </resources>
