@@ -20,7 +20,7 @@ public class Feedback {
 	public Feedback() {
 		intent = new Intent(Intent.ACTION_SENDTO)
 			.setData(new Uri.Builder().scheme("mailto").build())
-			.putExtra(Intent.EXTRA_EMAIL, new String[]{"Sam Palmer <sampalmer4+androidautorotate@gmail.com>"})
+			.putExtra(Intent.EXTRA_EMAIL, new String[]{ StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>" })
 			.putExtra(Intent.EXTRA_SUBJECT, StringResource.format(R.string.feedback_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName))
 			.putExtra(Intent.EXTRA_TEXT, "")
 		;
