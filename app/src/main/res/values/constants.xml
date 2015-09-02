@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="content_provider_authority">samuelpalmer.sensorautorotation.settings.application.multiprocess.SharedPreferencesContentProvider</string>
+	<string name="service_process_name">:samuelpalmer.sensorautorotation.service</string>
 </resources>

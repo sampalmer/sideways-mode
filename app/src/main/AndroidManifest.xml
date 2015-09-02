@@ -69,10 +69,10 @@
 			android:authorities="@string/content_provider_authority"
 			android:name=".settings.application.multiprocess.SharedPreferencesContentProvider"
 		    android:exported="false"
-			android:process=":samuelpalmer.sensorautorotation.service" />
+			android:process="@string/service_process_name" />
 
 		<receiver android:name=".processes.service.ServiceStateUpdatingReceiver"
-		          android:process=":samuelpalmer.sensorautorotation.service">
+		          android:process="@string/service_process_name">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
@@ -89,16 +89,16 @@
 			android:launchMode="singleTask"
 			android:taskAffinity=""
 			android:excludeFromRecents="true"
-			android:process=":samuelpalmer.sensorautorotation.service" />
+			android:process="@string/service_process_name" />
 
 		<receiver android:name=".processes.service.RotationServiceReceiver"
-		          android:process=":samuelpalmer.sensorautorotation.service" />
+		          android:process="@string/service_process_name" />
 
 		<service
 			android:name=".processes.service.RotationService"
 			android:enabled="true"
 			android:exported="false"
-			android:process=":samuelpalmer.sensorautorotation.service" />
+			android:process="@string/service_process_name" />
 
 		<activity
 			android:name=".processes.service.DummyActivity"
@@ -111,7 +111,7 @@
 			android:stateNotNeeded="true"
 			android:clearTaskOnLaunch="true"
 			android:finishOnTaskLaunch="true"
-			android:process=":samuelpalmer.sensorautorotation.service"
+			android:process="@string/service_process_name"
 			/>
 
 	</application>

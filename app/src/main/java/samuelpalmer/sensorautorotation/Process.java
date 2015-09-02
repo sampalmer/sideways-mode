@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
+import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
+
 public class Process extends Application {
 
 	private static final String TAG = Process.class.getSimpleName();
@@ -21,8 +24,10 @@ public class Process extends Application {
 		super.onCreate();
 
 		Log.i(TAG, "Process created");
-
 		context = this;
+
+		if (ServiceProcess.isServiceProcess())
+			new Upgrader().upgradeIfNecessary();
 	}
 
 	@Override
