@@ -28,8 +28,8 @@ class Migrations {
 
 				ServiceSettings serviceSettings = new ServiceSettings();
 				Transaction copyTransaction = serviceSettings.new Transaction();
-				serviceSettings.autoRotate().set(oldAutoRotate.tryGet(), copyTransaction);
-				serviceSettings.userOrientation().set(oldUserOrientation.tryGet(), copyTransaction);
+				copyIfPresent(oldAutoRotate, serviceSettings.autoRotate(), copyTransaction);
+				copyIfPresent(oldUserOrientation, serviceSettings.userOrientation(), copyTransaction);
 				copyTransaction.commit();
 
 				Transaction deleteTransaction = applicationSettings.new Transaction();
@@ -37,6 +37,13 @@ class Migrations {
 				oldUserOrientation.remove(deleteTransaction);
 				screenOffBehaviour.remove(deleteTransaction);
 				deleteTransaction.commit();
+			}
+
+			private <T> void copyIfPresent(Setting<T> source, Setting<T> destination, Transaction transaction) {
+				T value = source.tryGet();
+
+				if (value != null)
+					destination.set(value, transaction);
 			}
 		});
 
