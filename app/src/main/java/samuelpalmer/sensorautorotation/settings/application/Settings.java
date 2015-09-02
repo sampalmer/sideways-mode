@@ -80,6 +80,9 @@ public class Settings {
 		}
 
 		public void set(T value, Transaction transaction) {
+			if (value == null)
+				throw new IllegalArgumentException("value is null");
+
 			type.put(transaction.editor, key, value);
 		}
 
