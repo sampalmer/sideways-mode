@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.util.Log;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -27,8 +28,10 @@ public class Upgrader {
 
 	public void upgradeIfNecessary() {
 		//We only need to instruct the user about changes if he/she has actually run the app before.
-		if (lastAppVersion != null)
+		if (lastAppVersion != null) {
+			Log.i(Upgrader.class.getSimpleName(), "Upgrading from " + lastAppVersion + " to " + newAppVersion);
 			upgrade();
+		}
 	}
 
 	private void upgrade() {
