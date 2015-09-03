@@ -39,6 +39,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ServiceRevivalManager serviceRevivalManager;
 	private ServiceStatusGenerator serviceStatusGenerator;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
+	private LockScreenUserOrientationInferrer userOrientationInferrer;
 
 	@Override
 	public void onCreate() {
@@ -62,17 +63,21 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screen, screenRotationMonitor);
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, screenUpdater, calculator, screenRotationMonitor));
+		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor();
+		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, screenUpdater, calculator, screenRotationMonitor, lockScreenMonitor));
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater);
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
+		userOrientationInferrer = new LockScreenUserOrientationInferrer(lockScreenMonitor, screenRotationMonitor, calculator);
+
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
+		userOrientationInferrer.ensureStarted();
 	}
 
 	@Override
@@ -122,6 +127,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userInteractivityChangeHandler.ensureStopped();
 		serviceNotificationManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
+		userOrientationInferrer.ensureStopped();
 
 		applicationState.clear();
 

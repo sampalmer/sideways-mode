@@ -37,6 +37,11 @@ public class OrientationCalculator {
 		return state.user();
 	}
 
+	public void inferUser(Orientation screenOrientation) {
+		state.user(inferredUser(screenOrientation));
+		reportUpdate();
+	}
+
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
 		state.user(newUser);
@@ -48,12 +53,12 @@ public class OrientationCalculator {
 		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
-		state.set(newValue, inferredUser());
+		state.set(newValue, inferredUser(screen.currentRotation()));
 		reportUpdate();
 	}
 
-	private Orientation inferredUser() {
-		return Orientation.NATURAL.plus(device.minus(screen.currentRotation()));
+	private Orientation inferredUser(Orientation currentScreenOrientation) {
+		return Orientation.NATURAL.plus(device.minus(currentScreenOrientation));
 	}
 
 	public void setDevice(Orientation newDevice) {

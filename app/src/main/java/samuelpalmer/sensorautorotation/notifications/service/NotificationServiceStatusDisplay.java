@@ -27,11 +27,11 @@ public class NotificationServiceStatusDisplay {
 	private final Setting<NotificationPriority> priority;
 	private final ScreenRotationMonitor screenRotationMonitor;
 
-	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screenOrientationUpdater, OrientationCalculator calculator, ScreenRotationMonitor screen) {
+	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screenOrientationUpdater, OrientationCalculator calculator, ScreenRotationMonitor screen, LockScreenMonitor lockScreenMonitor) {
 		this.service = service;
 		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.calculator = calculator;
-		lockScreenMonitor = new LockScreenMonitor();
+		this.lockScreenMonitor = lockScreenMonitor;
 		priority = ApplicationSettings.local().notificationPriority();
 		screenRotationMonitor = screen;
 	}
