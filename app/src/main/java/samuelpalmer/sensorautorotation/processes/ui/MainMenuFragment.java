@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,14 +73,9 @@ public class MainMenuFragment extends Fragment {
 	}
 
 	private void confirmUninstall() {
-		new AlertDialog.Builder(getActivity())
-				.setTitle(R.string.uninstall_title)
-				.setIcon(R.drawable.ic_delete)
-				.setMessage(R.string.uninstall_confirmation_message)
-				.setPositiveButton(android.R.string.yes, new Uninstaller(getActivity()))
-				.setNegativeButton(android.R.string.no, null)
-				.create()
-				.show();
+		final Uninstaller uninstaller = new Uninstaller(getActivity());
+
+		uninstaller.uninstallOrPrompt();
 	}
 
 }

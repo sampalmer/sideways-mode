@@ -1,27 +1,51 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-class Uninstaller implements DialogInterface.OnClickListener {
+class Uninstaller {
 
 	private final Activity parent;
+	private final ServiceSynchroniser serviceSynchroniser;
 
 	public Uninstaller(Activity parent) {
 		this.parent = parent;
+		serviceSynchroniser = new ServiceSynchroniser(ApplicationSettings.remote());
 	}
 
-	public void onClick(DialogInterface dialog, int id) {
-		uninstall();
+	void uninstallOrPrompt() {
+		if (serviceSynchroniser.serviceEnabled())
+			new AlertDialog.Builder(parent)
+				.setTitle(R.string.uninstall_title)
+				.setIcon(R.drawable.ic_delete)
+				.setMessage(R.string.uninstall_confirmation_message)
+				.setPositiveButton(android.R.string.yes, onClickListener)
+				.setNegativeButton(android.R.string.no, null)
+				.create()
+				.show();
+		else
+			uninstall();
 	}
+
+	private final OnClickListener onClickListener = new OnClickListener() {
+		@Override
+
+		public void onClick(DialogInterface dialog, int id) {
+			uninstall();
+		}
+
+	};
 
 	private void uninstall() {
-		new ServiceSynchroniser(ApplicationSettings.remote()).disableService();
+		serviceSynchroniser.disableService();
 		parent.startActivity(uninstallIntent());
 	}
 
@@ -32,5 +56,4 @@ class Uninstaller implements DialogInterface.OnClickListener {
 	private Uri packageUri() {
 		return Uri.fromParts("package", parent.getPackageName(), null);
 	}
-
 }
