@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
-import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
@@ -12,14 +11,14 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 public class ServiceStatusGenerator {
 
 	private final OrientationCalculator calculator;
-	private final Screen screen;
 	private final ScreenRotationMonitor screenRotationMonitor;
+	private final NaturalOrientationDetector naturalOrientationDetector;
 	private final Setting<NotificationPriority> priority;
 
-	public ServiceStatusGenerator(OrientationCalculator calculator, Screen screen, ScreenRotationMonitor screenRotationMonitor) {
+	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector) {
 		this.calculator = calculator;
-		this.screen = screen;
 		this.screenRotationMonitor = screenRotationMonitor;
+		this.naturalOrientationDetector = naturalOrientationDetector;
 		priority = ApplicationSettings.local().notificationPriority();
 	}
 
@@ -33,7 +32,7 @@ public class ServiceStatusGenerator {
 	}
 
 	private Mode mode() {
-		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, screen, screenRotationMonitor);
+		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, naturalOrientationDetector.deviceIsNaturallyPortrait());
 	}
 
 	private boolean overridden() {
