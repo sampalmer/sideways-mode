@@ -48,4 +48,12 @@ class LockedMode implements Mode {
 		return R.string.action_enable_auto_rotation;
 	}
 
+	@Override
+	public boolean equals(Mode other) {
+		return
+			LockedMode.class.equals(other.getClass())
+			&&
+			portrait == ((LockedMode)other).portrait;
+	}
+
 }

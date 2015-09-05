@@ -8,13 +8,11 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 public class UserOrientation {
 
 	private final Orientation user;
-	private final Orientation proposed;
-	private final Orientation screen;
+	private final int rotations;
 
 	public UserOrientation(Orientation user, ScreenRotationMonitor screenRotationMonitor, Orientation proposed) {
 		this.user = user;
-		this.screen = screenRotationMonitor.currentRotation();
-		this.proposed = proposed;
+		rotations = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	public int descriptionId() {
@@ -26,8 +24,6 @@ public class UserOrientation {
 	}
 
 	public int iconId() {
-		int rotations = IntegerUtilities.wrap(screen.minus(proposed).clockwiseCount(), 4);
-
 		switch (rotations) {
 			case 0: return R.drawable.ic_user_upright;
 			case 1: return R.drawable.ic_user_left_side;
@@ -35,6 +31,13 @@ public class UserOrientation {
 			case 3: return R.drawable.ic_user_right_side;
 			default: throw new RuntimeException("Unknown user rotation: " + rotations);
 		}
+	}
+
+	public boolean equals(UserOrientation other) {
+		return
+			user.equals(other.user)
+			&&
+			rotations == other.rotations;
 	}
 
 }

@@ -24,4 +24,9 @@ class AutoRotationMode implements Mode {
 		return R.string.action_disable_auto_rotation;
 	}
 
+	@Override
+	public boolean equals(Mode other) {
+		return getClass() == other.getClass();
+	}
+
 }

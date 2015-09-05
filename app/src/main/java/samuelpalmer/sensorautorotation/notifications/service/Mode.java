@@ -5,4 +5,5 @@ public interface Mode {
 	int actionIcon();
 	int autoRotationStateResourceId();
 	int toggleToOtherModeAResourceId();
+	boolean equals(Mode other);
 }

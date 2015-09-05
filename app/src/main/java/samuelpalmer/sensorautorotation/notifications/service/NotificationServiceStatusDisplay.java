@@ -37,12 +37,18 @@ public class NotificationServiceStatusDisplay {
 	}
 
 	public void update(NotificationParameters params) {
-		ServiceNotification builder = new ServiceNotification(priority.get(), params);
-		Notification notification = builder.build();
+		if (lastNotificationParams == null || !params.equals(lastNotificationParams)) {
+			ServiceNotification builder = new ServiceNotification(params);
+			Notification notification = builder.build();
 
-		cancelIfNecessary(notification);
-		service.startForeground(NotificationIds.SERVICE, notification);
+			cancelIfNecessary(notification);
+			service.startForeground(NotificationIds.SERVICE, notification);
+
+			lastNotificationParams = params;
+		}
 	}
+
+	private NotificationParameters lastNotificationParams;
 
 	public Set<EventRegistrar> updateTriggers() {
 		Set<EventRegistrar> result = new HashSet<>(
