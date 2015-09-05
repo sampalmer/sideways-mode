@@ -7,6 +7,7 @@ abstract class SettingType<T> {
 	public T convertFromRaw(Object raw) {
 		return (T)raw;
 	}
-
 	public abstract void put(SharedPreferences.Editor editor, String key, T value);
+	public abstract boolean supportsNull();
+	public abstract T getOrDefault(SharedPreferences prefs, String key, T defaultValue);
 }

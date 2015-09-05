@@ -50,11 +50,15 @@ public class Settings {
 		}
 
 		public T tryGet() {
-			Object raw = getRaw();
-			if (raw == null)
-				return defaultValue;
+			if (defaultValue != null || type.supportsNull())
+				return type.getOrDefault(prefs, key, defaultValue);
+			else {
+				Object raw = prefs.getAll().get(key);
+				if (raw == null)
+					return null;
 
-			return type.convertFromRaw(raw);
+				return type.convertFromRaw(raw);
+			}
 		}
 
 		public T get() {
@@ -67,10 +71,6 @@ public class Settings {
 
 		public boolean hasValue() {
 			return prefs.contains(key);
-		}
-
-		private Object getRaw() {
-			return prefs.getAll().get(key);
 		}
 
 		public void setAndCommit(T value) {

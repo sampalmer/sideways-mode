@@ -11,4 +11,14 @@ public class StringSetSetting extends SettingType<Set<String>> {
 		editor.putStringSet(key, value);
 	}
 
+	@Override
+	public boolean supportsNull() {
+		return true;
+	}
+
+	@Override
+	public Set<String> getOrDefault(SharedPreferences prefs, String key, Set<String> defaultValue) {
+		return prefs.getStringSet(key, defaultValue);
+	}
+
 }
