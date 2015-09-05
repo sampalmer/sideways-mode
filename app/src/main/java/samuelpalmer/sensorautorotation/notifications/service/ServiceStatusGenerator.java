@@ -39,7 +39,7 @@ public class ServiceStatusGenerator {
 		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, naturalOrientationDetector.deviceIsNaturallyPortrait());
 	}
 
-	private boolean overridden() {
+	public boolean overridden() {
 		Orientation requested = screenOrientationUpdater.proposedOrientation();
 		Orientation actual = screenRotationMonitor.currentRotation();
 

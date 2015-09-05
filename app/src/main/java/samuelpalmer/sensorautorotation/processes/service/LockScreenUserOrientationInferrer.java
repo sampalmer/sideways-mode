@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class LockScreenUserOrientationInferrer extends State {
@@ -9,61 +11,44 @@ public class LockScreenUserOrientationInferrer extends State {
 	private final LockScreenMonitor lockScreenMonitor;
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final OrientationCalculator calculator;
+	private final ServiceStatusGenerator serviceStatusGenerator;
+	private final ScreenOrientationUpdater screenOrientationUpdater;
 
-	public LockScreenUserOrientationInferrer(LockScreenMonitor lockScreenMonitor, ScreenRotationMonitor screenRotationMonitor, OrientationCalculator calculator) {
+	public LockScreenUserOrientationInferrer(LockScreenMonitor lockScreenMonitor, ScreenRotationMonitor screenRotationMonitor, OrientationCalculator calculator, ServiceStatusGenerator serviceStatusGenerator, ScreenOrientationUpdater screenOrientationUpdater) {
 		this.lockScreenMonitor = lockScreenMonitor;
 		this.screenRotationMonitor = screenRotationMonitor;
 		this.calculator = calculator;
+		this.serviceStatusGenerator = serviceStatusGenerator;
+		this.screenOrientationUpdater = screenOrientationUpdater;
 	}
 
 	@Override
 	protected void start() {
-		lockScreenMonitor.subscribe(lockScreenChangeHandler);
+		lockScreenMonitor.subscribe(lockScreenChanged);
+		screenOrientationUpdater.onProposedOrientationChanged().subscribe(proposedOrientationChanged);
 	}
 
 	@Override
 	protected void stop() {
-		lockScreenMonitor.unsubscribe(lockScreenChangeHandler);
-		if (isMonitoring())
-			stopMonitoring();
+		screenOrientationUpdater.onProposedOrientationChanged().unsubscribe(proposedOrientationChanged);
+		lockScreenMonitor.unsubscribe(lockScreenChanged);
 	}
 
-	private Orientation lockScreenOrientation;
-
-	private final EventHandler lockScreenChangeHandler = new EventHandler() {
+	private final EventHandler lockScreenChanged = new EventHandler() {
 		@Override
 		public void update() {
-			boolean isOnLockScreen = LockScreenMonitor.isOnLockScreen();
-			if (isOnLockScreen != isMonitoring()) {
-				if (isOnLockScreen) {
-					screenRotationMonitor.subscribe(screenRotationChanged);
-					cacheScreenOrientation();
-				}
-				else {
-					calculator.inferUser(lockScreenOrientation);
-					stopMonitoring();
-				}
-			}
+			onLockScreen = LockScreenMonitor.isOnLockScreen();
 		}
 	};
 
-	private void stopMonitoring() {
-		lockScreenOrientation = null;
-		screenRotationMonitor.unsubscribe(screenRotationChanged);
-	}
+	private Boolean onLockScreen;
 
-	private boolean isMonitoring() {
-		return lockScreenOrientation != null;
-	}
-
-	private final EventHandler screenRotationChanged = new EventHandler() {
+	private final EventHandler proposedOrientationChanged = new EventHandler() {
 		@Override
 		public void update() {
-			cacheScreenOrientation();
+			if (onLockScreen != null && onLockScreen && serviceStatusGenerator.overridden())
+				calculator.inferUser(screenRotationMonitor.currentRotation());
 		}
 	};
 
-	private void cacheScreenOrientation() {
-		lockScreenOrientation = screenRotationMonitor.currentRotation();
-	}
 }
