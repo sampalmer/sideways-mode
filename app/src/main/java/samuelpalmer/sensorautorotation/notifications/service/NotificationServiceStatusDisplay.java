@@ -55,7 +55,7 @@ public class NotificationServiceStatusDisplay {
 			Arrays.asList(
 				priority, //To change notification priority
 				screenRotationMonitor, //For "overridden" detection
-				screenOrientationUpdater.onProposedOrientationChanged(), //For "overridden" detection
+				calculator.onProposedOrientationChanged(), //For "overridden" detection, user orientation changes
 				calculator.onAutoRotateChanged
 			)
 		);
