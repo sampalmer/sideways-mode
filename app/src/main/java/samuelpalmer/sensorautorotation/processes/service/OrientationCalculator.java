@@ -26,7 +26,7 @@ public class OrientationCalculator {
 
 		state.user(newUser);
 
-		reportUpdate();
+		reportOrientationChange();
 	}
 
 	public boolean autoRotate() {
@@ -39,13 +39,13 @@ public class OrientationCalculator {
 
 	public void inferUser(Orientation screenOrientation) {
 		state.user(inferredUser(screenOrientation));
-		reportUpdate();
+		reportOrientationChange();
 	}
 
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
 		state.user(newUser);
-		reportUpdate();
+		reportOrientationChange();
 	}
 
 	public void setAutoRotate(boolean newValue) {
@@ -54,8 +54,11 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
 		state.set(newValue, inferredUser(screen.currentRotation()));
-		reportUpdate();
+		reportOrientationChange();
+		onAutoRotateChanged.report();
 	}
+
+	public UpdatingEventRegistrar onAutoRotateChanged = new UpdatingEventRegistrar();
 
 	private Orientation inferredUser(Orientation currentScreenOrientation) {
 		return Orientation.NATURAL.plus(device.minus(currentScreenOrientation));
@@ -70,15 +73,15 @@ public class OrientationCalculator {
 
 		device = newDevice;
 
-		reportUpdate();
+		reportOrientationChange();
 
 	}
 
-	private void reportUpdate() {
+	private void reportOrientationChange() {
 		listener.report();
 	}
 
-	public EventRegistrar onChange() {
+	public EventRegistrar onProposedOrientationChanged() {
 		return listener;
 	}
 

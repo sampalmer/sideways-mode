@@ -22,14 +22,14 @@ public class ScreenOrientationUpdater extends State {
 
 	@Override
 	protected void start() {
-		calculator.onChange().subscribe(applyChange);
+		calculator.onProposedOrientationChanged().subscribe(applyChange);
 		allowUpsideDownScreen.subscribe(applyChange);
 	}
 
 	@Override
 	protected void stop() {
 		allowUpsideDownScreen.unsubscribe(applyChange);
-		calculator.onChange().unsubscribe(applyChange);
+		calculator.onProposedOrientationChanged().unsubscribe(applyChange);
 	}
 
 	private final EventHandler applyChange = new EventHandler() {
