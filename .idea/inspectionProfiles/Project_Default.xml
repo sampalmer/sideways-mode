@@ -8,7 +8,7 @@
     </inspection_tool>
     <inspection_tool class="AssignmentUsedAsCondition" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="BooleanMethodIsAlwaysInverted" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="BooleanParameter" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="BooleanParameter" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="onlyReportMultiple" value="true" />
     </inspection_tool>
     <inspection_tool class="EmptyClass" enabled="true" level="WARNING" enabled_by_default="true">
