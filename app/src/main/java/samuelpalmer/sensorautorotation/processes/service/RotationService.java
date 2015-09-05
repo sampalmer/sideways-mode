@@ -62,8 +62,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
 
-		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen, screenRotationMonitor));
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
+		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen, screenRotationMonitor), screenUpdater);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor();
 		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, screenUpdater, calculator, screenRotationMonitor, lockScreenMonitor));
 		serviceRevivalManager = new ServiceRevivalManager();

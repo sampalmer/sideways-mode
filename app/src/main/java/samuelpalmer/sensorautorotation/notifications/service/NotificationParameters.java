@@ -10,12 +10,14 @@ public class NotificationParameters {
 	public final boolean overridden;
 	public final UserOrientation user;
 	public final NotificationPriority priority;
+	public final boolean onLockScreen;
 
-	public NotificationParameters(Mode mode, boolean overridden, UserOrientation user, NotificationPriority priority) {
+	public NotificationParameters(Mode mode, boolean overridden, UserOrientation user, NotificationPriority priority, boolean onLockScreen) {
 		this.mode = mode;
 		this.overridden = overridden;
 		this.user = user;
 		this.priority = priority;
+		this.onLockScreen = onLockScreen;
 	}
 
 	public CharSequence getSummary() {
@@ -30,7 +32,9 @@ public class NotificationParameters {
 			&&
 			user.equals(other.user)
 			&&
-			priority == other.priority;
+			priority.equals(other.priority)
+			&&
+			onLockScreen == other.onLockScreen;
 	}
 
 }

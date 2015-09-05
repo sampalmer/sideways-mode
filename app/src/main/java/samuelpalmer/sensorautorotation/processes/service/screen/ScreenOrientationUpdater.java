@@ -35,19 +35,29 @@ public class ScreenOrientationUpdater extends State {
 	private final EventHandler applyChange = new EventHandler() {
 		@Override
 		public void update() {
-			refresh();
+			propose();
 		}
 	};
 
-	private void refresh() {
-		if (!upsideDown() || allowUpsideDownScreen.get())
-			propose();
+	private void propose() {
+		if (lastProposed == null || !proposedOrientation().equals(lastProposed)) {
+			lastProposed = proposedOrientation();
+
+			screen.propose(proposedOrientation());
+			onProposedOrientationChanged.report();
+		}
 	}
 
-	private void propose() {
-		screen.propose(calculator.proposedScreenOrientation());
-		onProposedOrientationChanged.report();
+	public Orientation proposedOrientation() {
+		if (!upsideDown() || allowUpsideDownScreen.get())
+			return calculator.proposedScreenOrientation();
+		else if (lastProposed != null)
+			return lastProposed;
+		else
+			return Orientation.NATURAL;
 	}
+
+	private Orientation lastProposed;
 
 	private boolean upsideDown() {
 		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);

@@ -1,24 +1,27 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ServiceStatusGenerator {
 
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final NaturalOrientationDetector naturalOrientationDetector;
+	private final ScreenOrientationUpdater screenOrientationUpdater;
 	private final Setting<NotificationPriority> priority;
 
-	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector) {
+	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater) {
 		this.calculator = calculator;
 		this.screenRotationMonitor = screenRotationMonitor;
 		this.naturalOrientationDetector = naturalOrientationDetector;
+		this.screenOrientationUpdater = screenOrientationUpdater;
 		priority = ApplicationSettings.local().notificationPriority();
 	}
 
@@ -27,7 +30,8 @@ public class ServiceStatusGenerator {
 			mode(),
 			overridden(),
 			new UserOrientation(calculator.user(), screenRotationMonitor, calculator.proposedScreenOrientation()),
-			priority.get()
+			priority.get(),
+			LockScreenMonitor.isOnLockScreen()
 		);
 	}
 
@@ -36,7 +40,7 @@ public class ServiceStatusGenerator {
 	}
 
 	private boolean overridden() {
-		Orientation requested = new SystemSettings().userRotation.get();
+		Orientation requested = screenOrientationUpdater.proposedOrientation();
 		Orientation actual = screenRotationMonitor.currentRotation();
 
 		return !requested.equals(actual);

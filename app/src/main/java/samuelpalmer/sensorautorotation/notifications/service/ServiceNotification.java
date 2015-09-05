@@ -10,7 +10,6 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
@@ -61,7 +60,7 @@ public class ServiceNotification {
 			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
 			builder.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET);
 
-			if (LockScreenMonitor.isOnLockScreen())
+			if (params.onLockScreen)
 				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
 		}
 	}
