@@ -11,13 +11,13 @@ public class OrientationCalculator {
 
 	private Orientation device = DEFAULT;
 
-	public final UpdatingEventRegistrar onProposedOrientationChanged;
+	public final UpdatingEventRegistrar onAnythingChanged;
 	private boolean lockingOverride;
 
 	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
 		this.screen = screen;
 		this.state = state;
-		onProposedOrientationChanged = new UpdatingEventRegistrar();
+		onAnythingChanged = new UpdatingEventRegistrar();
 	}
 
 	public void reset() {
@@ -26,7 +26,7 @@ public class OrientationCalculator {
 
 		state.setUser(newUser);
 
-		reportOrientationChange();
+		reportChange();
 	}
 
 	public boolean autoRotate() {
@@ -40,7 +40,7 @@ public class OrientationCalculator {
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
 		state.setUser(newUser);
-		reportOrientationChange();
+		reportChange();
 	}
 
 	public void setAutoRotate(boolean newValue) {
@@ -49,16 +49,13 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
 		state.set(newValue, inferredUser());
-		reportOrientationChange();
-		onAutoRotateChanged.report();
+		reportChange();
 	}
 
 	public void setLockingOverride(boolean lockingOverride) {
-		reportOrientationChange();
+		reportChange();
 		this.lockingOverride = lockingOverride;
 	}
-
-	public UpdatingEventRegistrar onAutoRotateChanged = new UpdatingEventRegistrar();
 
 	private Orientation inferredUser() {
 		return Orientation.NATURAL.plus(device.minus(screen.currentRotation()));
@@ -73,12 +70,12 @@ public class OrientationCalculator {
 
 		device = newDevice;
 
-		reportOrientationChange();
+		reportChange();
 
 	}
 
-	private void reportOrientationChange() {
-		onProposedOrientationChanged.report();
+	private void reportChange() {
+		onAnythingChanged.report();
 	}
 
 	public Orientation proposedScreenOrientation() {
