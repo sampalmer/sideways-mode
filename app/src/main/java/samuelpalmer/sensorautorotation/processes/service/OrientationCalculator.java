@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
@@ -12,13 +11,13 @@ public class OrientationCalculator {
 
 	private Orientation device = DEFAULT;
 
-	private final UpdatingEventRegistrar listener;
+	public final UpdatingEventRegistrar onProposedOrientationChanged;
 	private boolean lockingOverride;
 
 	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
 		this.screen = screen;
 		this.state = state;
-		listener = new UpdatingEventRegistrar();
+		onProposedOrientationChanged = new UpdatingEventRegistrar();
 	}
 
 	public void reset() {
@@ -79,11 +78,7 @@ public class OrientationCalculator {
 	}
 
 	private void reportOrientationChange() {
-		listener.report();
-	}
-
-	public EventRegistrar onProposedOrientationChanged() {
-		return listener;
+		onProposedOrientationChanged.report();
 	}
 
 	public Orientation proposedScreenOrientation() {

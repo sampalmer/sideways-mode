@@ -52,10 +52,10 @@ public class NotificationServiceStatusDisplay {
 
 	public Set<EventRegistrar> updateTriggers() {
 		Set<EventRegistrar> result = new HashSet<>(
-			Arrays.asList(
+			Arrays.<EventRegistrar>asList(
 				priority, //To change notification priority
 				screenRotationMonitor, //For "overridden" detection
-				calculator.onProposedOrientationChanged(), //For "overridden" detection, user orientation changes
+				calculator.onProposedOrientationChanged, //For "overridden" detection, user orientation changes
 				calculator.onAutoRotateChanged
 			)
 		);
