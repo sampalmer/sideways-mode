@@ -20,26 +20,39 @@ public class ApplicationState {
 	}
 
 	public boolean getAutoRotate() {
-		return serviceSettings.autoRotate().get();
+		if (autoRotate == null)
+			autoRotate = serviceSettings.autoRotate().get();
+		return autoRotate;
 	}
 
 	private void setAutoRotate(boolean newValue) {
 		serviceSettings.autoRotate().setAndCommit(newValue);
+		autoRotate = newValue;
 	}
 
+	private Boolean autoRotate;
+
 	public Orientation getUser() {
-		return new Orientation(serviceSettings.userOrientation().get());
+		if (user == null)
+			user = new Orientation(serviceSettings.userOrientation().get());
+		return user;
 	}
 
 	public void setUser(Orientation newValue) {
 		serviceSettings.userOrientation().setAndCommit(serialise(newValue));
+		user = newValue;
 	}
+
+	private Orientation user;
 
 	public void set(boolean autoRotate, Orientation user) {
 		Transaction transaction = serviceSettings.new Transaction();
 		serviceSettings.autoRotate().set(autoRotate, transaction);
 		serviceSettings.userOrientation().set(serialise(user), transaction);
 		transaction.commit();
+
+		this.autoRotate = autoRotate;
+		this.user = user;
 	}
 
 	public void clear() {
@@ -47,6 +60,9 @@ public class ApplicationState {
 		serviceSettings.autoRotate().remove(transaction);
 		serviceSettings.userOrientation().remove(transaction);
 		transaction.commit();
+
+		this.autoRotate = null;
+		this.user = null;
 	}
 
 	private int serialise(Orientation user) {
