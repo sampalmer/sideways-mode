@@ -15,13 +15,15 @@ public class ServiceStatusGenerator {
 	private final ScreenRotationMonitor screenRotationMonitor;
 	private final NaturalOrientationDetector naturalOrientationDetector;
 	private final ScreenOrientationUpdater screenOrientationUpdater;
+	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
-	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater) {
+	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
 		this.calculator = calculator;
 		this.screenRotationMonitor = screenRotationMonitor;
 		this.naturalOrientationDetector = naturalOrientationDetector;
 		this.screenOrientationUpdater = screenOrientationUpdater;
+		this.lockScreenMonitor = lockScreenMonitor;
 		priority = ApplicationSettings.local().notificationPriority();
 	}
 
@@ -31,7 +33,7 @@ public class ServiceStatusGenerator {
 			overridden(),
 			new UserOrientation(calculator.user(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority.get(),
-			LockScreenMonitor.isOnLockScreen()
+			lockScreenMonitor.isOnLockScreen()
 		);
 	}
 

@@ -16,7 +16,20 @@ import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 public class LockScreenMonitor extends EventRegistrarAdaptor {
 
-	public static boolean isOnLockScreen() {
+	private Boolean isOnLockScreen;
+	private boolean monitoring;
+
+	public boolean isOnLockScreen() {
+		if (!monitoring)
+			return poll();
+		else {
+			if (isOnLockScreen == null)
+				isOnLockScreen = poll();
+			return isOnLockScreen;
+		}
+	}
+
+	private static boolean poll() {
 		if (Build.VERSION.SDK_INT >= 16)
 			return SystemServices.keyguardManager().isKeyguardLocked();
 		else
@@ -27,10 +40,13 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	protected void subscribeToAdaptee() {
 		for (String action : actions())
 			Process.context().registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
+		monitoring = true;
 	}
 
 	@Override
 	protected void unsubscribeFromAdaptee() {
+		monitoring = false;
+		isOnLockScreen = null;
 		Process.context().unregisterReceiver(notificationUpdateReceiver);
 	}
 
@@ -53,7 +69,11 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			report();
+			boolean newValue = poll();
+			if (isOnLockScreen == null || isOnLockScreen != newValue) {
+				isOnLockScreen = newValue;
+				report();
+			}
 		}
 	};
 }

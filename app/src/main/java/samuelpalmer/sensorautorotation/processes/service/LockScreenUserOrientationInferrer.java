@@ -32,7 +32,7 @@ public class LockScreenUserOrientationInferrer extends State {
 	};
 
 	private void update() {
-		calculator.setLockingOverride(LockScreenMonitor.isOnLockScreen());
+		calculator.setLockingOverride(lockScreenMonitor.isOnLockScreen());
 	}
 
 }
