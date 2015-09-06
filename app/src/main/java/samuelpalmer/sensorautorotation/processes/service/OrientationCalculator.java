@@ -13,6 +13,7 @@ public class OrientationCalculator {
 	private Orientation device = DEFAULT;
 
 	private final UpdatingEventRegistrar listener;
+	private boolean lockingOverride;
 
 	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
 		this.screen = screen;
@@ -37,11 +38,6 @@ public class OrientationCalculator {
 		return state.user();
 	}
 
-	public void inferUser(Orientation screenOrientation) {
-		state.user(inferredUser(screenOrientation));
-		reportOrientationChange();
-	}
-
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
 		state.user(newUser);
@@ -53,20 +49,25 @@ public class OrientationCalculator {
 		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
-		state.set(newValue, inferredUser(screen.currentRotation()));
+		state.set(newValue, inferredUser());
 		reportOrientationChange();
 		onAutoRotateChanged.report();
 	}
 
+	public void setLockingOverride(boolean lockingOverride) {
+		reportOrientationChange();
+		this.lockingOverride = lockingOverride;
+	}
+
 	public UpdatingEventRegistrar onAutoRotateChanged = new UpdatingEventRegistrar();
 
-	private Orientation inferredUser(Orientation currentScreenOrientation) {
-		return Orientation.NATURAL.plus(device.minus(currentScreenOrientation));
+	private Orientation inferredUser() {
+		return Orientation.NATURAL.plus(device.minus(screen.currentRotation()));
 	}
 
 	public void setDevice(Orientation newDevice) {
 
-		if (!autoRotate()) {
+		if (!autoRotate() || lockingOverride) {
 			Rotation deviceChange = newDevice.minus(device);
 			state.user(state.user().plus(deviceChange));
 		}
@@ -88,5 +89,4 @@ public class OrientationCalculator {
 	public Orientation proposedScreenOrientation() {
 		return Orientation.NATURAL.plus(device.minus(state.user()));
 	}
-
 }

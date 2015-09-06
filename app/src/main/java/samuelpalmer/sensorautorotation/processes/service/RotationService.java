@@ -72,7 +72,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		userOrientationInferrer = new LockScreenUserOrientationInferrer(lockScreenMonitor, screenRotationMonitor, calculator, serviceStatusGenerator, screenUpdater);
+		userOrientationInferrer = new LockScreenUserOrientationInferrer(lockScreenMonitor, calculator);
 
 		screenOrientationController.ensureStarted();
 		serviceNotificationManager.ensureStarted();
