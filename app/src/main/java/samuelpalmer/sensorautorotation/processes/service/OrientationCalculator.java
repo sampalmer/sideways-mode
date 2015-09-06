@@ -25,22 +25,22 @@ public class OrientationCalculator {
 		device = DEFAULT;
 		Orientation newUser = DEFAULT;
 
-		state.user(newUser);
+		state.setUser(newUser);
 
 		reportOrientationChange();
 	}
 
 	public boolean autoRotate() {
-		return state.autoRotate();
+		return state.getAutoRotate();
 	}
 
 	public Orientation user() {
-		return state.user();
+		return state.getUser();
 	}
 
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
-		state.user(newUser);
+		state.setUser(newUser);
 		reportOrientationChange();
 	}
 
@@ -69,7 +69,7 @@ public class OrientationCalculator {
 
 		if (!autoRotate() || lockingOverride) {
 			Rotation deviceChange = newDevice.minus(device);
-			state.user(state.user().plus(deviceChange));
+			state.setUser(state.getUser().plus(deviceChange));
 		}
 
 		device = newDevice;
@@ -87,6 +87,6 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return Orientation.NATURAL.plus(device.minus(state.user()));
+		return Orientation.NATURAL.plus(device.minus(state.getUser()));
 	}
 }

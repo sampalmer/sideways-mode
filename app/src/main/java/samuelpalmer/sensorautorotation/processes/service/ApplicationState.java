@@ -12,19 +12,27 @@ public class ApplicationState {
 
 		if (!serviceSettings.autoRotate().hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
-			autoRotate(accelerometerRotation);
+			setAutoRotate(accelerometerRotation);
 		}
 
 		if (!serviceSettings.userOrientation().hasValue())
-			user(Orientation.NATURAL);
+			setUser(Orientation.NATURAL);
 	}
 
-	public boolean autoRotate() {
+	public boolean getAutoRotate() {
 		return serviceSettings.autoRotate().get();
 	}
 
-	public Orientation user() {
+	private void setAutoRotate(boolean newValue) {
+		serviceSettings.autoRotate().setAndCommit(newValue);
+	}
+
+	public Orientation getUser() {
 		return new Orientation(serviceSettings.userOrientation().get());
+	}
+
+	public void setUser(Orientation newValue) {
+		serviceSettings.userOrientation().setAndCommit(serialise(newValue));
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
@@ -32,14 +40,6 @@ public class ApplicationState {
 		serviceSettings.autoRotate().set(autoRotate, transaction);
 		serviceSettings.userOrientation().set(serialise(user), transaction);
 		transaction.commit();
-	}
-
-	private void autoRotate(boolean newValue) {
-		serviceSettings.autoRotate().setAndCommit(newValue);
-	}
-
-	public void user(Orientation newValue) {
-		serviceSettings.userOrientation().setAndCommit(serialise(newValue));
 	}
 
 	public void clear() {
