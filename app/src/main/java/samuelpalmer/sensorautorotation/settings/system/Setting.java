@@ -32,9 +32,6 @@ public class Setting<T> {
 		this.defaultValue = defaultValue;
 	}
 
-	private final ChangeRegistrar onExternalChange = new ChangeRegistrar();
-	public final EventRegistrar onExternalChange() { return onExternalChange; }
-
 	private final ChangeRegistrar onChange = new ChangeRegistrar();
 	public final EventRegistrar onChange() { return onChange; }
 
@@ -65,16 +62,7 @@ public class Setting<T> {
 			return;
 		}
 
-		onExternalChange.setEnabled(false);
-
-		boolean writeErrors;
-		try {
-			writeErrors = !putString(contentResolver, key, value);
-		}
-		finally {
-			onExternalChange.setEnabled(true);
-		}
-
+		boolean writeErrors = !putString(contentResolver, key, value);
 		if (writeErrors) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
 			EnvironmentError.report(R.string.setting_write_failure_summary, R.string.system_setting_write_failure_message, key, value);

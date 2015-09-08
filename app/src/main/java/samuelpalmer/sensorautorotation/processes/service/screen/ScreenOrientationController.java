@@ -29,13 +29,10 @@ public class ScreenOrientationController extends State {
 
 		settings.accelerometerRotation.set(false);
 		propose(realOrientation); //Just in case disabling system rotation reset this.
-
-		settings.userRotation.onExternalChange().subscribe(userRotationChanged);
 	}
 
 	@Override
 	protected void stop() {
-		settings.userRotation.onExternalChange().unsubscribe(userRotationChanged);
 		settings.accelerometerRotation.onChange().unsubscribe(systemAutoRotationChanged);
 
 		settings.accelerometerRotation.set(calculator.autoRotate());
@@ -64,13 +61,5 @@ public class ScreenOrientationController extends State {
 			EnvironmentError.report(R.string.system_rotation_enabled_summary, R.string.system_rotation_enabled_message);
 		}
 	}
-
-	private final EventHandler userRotationChanged = new EventHandler() {
-		@Override
-		public void update() {
-			EnvironmentError.report(R.string.user_rotation_changed_summary, R.string.user_rotation_changed_message);
-		}
-	};
-
 
 }
