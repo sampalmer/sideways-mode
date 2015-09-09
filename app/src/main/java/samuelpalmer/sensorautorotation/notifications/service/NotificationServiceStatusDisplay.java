@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
@@ -70,13 +69,14 @@ public class NotificationServiceStatusDisplay {
 	 * notification is updated on these Android versions of the emulators and Samsung Galaxy S II
 	 * (and probably other devices). Interestingly, the problem didn't happen on a Sony Xperia M
 	 * running Android 4.3.
+	 *
+	 * This might also be necessary to fix the rare bug that occurs when you open a notification from
+	 * the lock screen and this app's notification becomes partially blank.
 	 */
 	private void cancelIfNecessary(Notification notification) {
-		if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT <= 19) {
-			if (lastPriority != null && notification.priority != lastPriority) {
+		if (Build.VERSION.SDK_INT >= 16) {
+			if (lastPriority != null && notification.priority != lastPriority)
 				service.stopForeground(true);
-				SystemServices.notificationManager().cancel(NotificationIds.SERVICE);
-			}
 			lastPriority = notification.priority;
 		}
 	}
