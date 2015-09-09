@@ -7,7 +7,13 @@ public abstract class EventRegistrarAdaptor extends IntolerantEventRegistrar {
 		boolean wasEmpty = noSubscriptions();
 		super.subscribe(subscriber);
 		if (wasEmpty)
-			subscribeToAdaptee();
+			try {
+				subscribeToAdaptee();
+			}
+			catch (Exception ex) {
+				super.unsubscribe(subscriber);
+				throw ex;
+			}
 	}
 
 	@Override

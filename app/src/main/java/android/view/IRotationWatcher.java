@@ -2,7 +2,7 @@ package android.view;
 
 import android.annotation.SuppressLint;
 
-import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherChangeDetector;
+import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 
 /**
  * Copied from Android source code. Actual implementation shouldn't be used; this is present to
@@ -16,7 +16,7 @@ public interface IRotationWatcher extends android.os.IInterface
 	{
 		public Stub()
 		{
-			throw new RotationWatcherChangeDetector.NotSupportedException("Didn't load the system implementation");
+			throw new RotationWatcherNotSupportedException("Didn't load the system implementation");
 		}
 
 		public static IRotationWatcher asInterface(android.os.IBinder obj)

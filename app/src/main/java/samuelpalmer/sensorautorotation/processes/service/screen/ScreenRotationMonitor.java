@@ -4,6 +4,7 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 
 public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 
@@ -15,7 +16,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 
 		try {
 			changeDetector = new RotationWatcherChangeDetector(callback, screen);
-		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+		} catch (RotationWatcherNotSupportedException e) {
 			fallback(e);
 		}
 	}
@@ -28,7 +29,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	protected void subscribeToAdaptee() {
 		try {
 			changeDetector.start();
-		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+		} catch (RotationWatcherNotSupportedException e) {
 			fallback(e);
 			subscribeToAdaptee();
 		}
@@ -38,7 +39,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	protected void unsubscribeFromAdaptee() {
 		try {
 			changeDetector.stop();
-		} catch (RotationWatcherChangeDetector.NotSupportedException e) {
+		} catch (RotationWatcherNotSupportedException e) {
 			fallback(e);
 		}
 	}
@@ -53,7 +54,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 		Orientation currentRotation();
 	}
 
-	private void fallback(RotationWatcherChangeDetector.NotSupportedException reason) {
+	private void fallback(RotationWatcherNotSupportedException reason) {
 		Log.w(ScreenRotationMonitor.class.getSimpleName(), reason);
 		changeDetector = new ComponentCallbacksChangeDetector(callback, screen);
 	}
