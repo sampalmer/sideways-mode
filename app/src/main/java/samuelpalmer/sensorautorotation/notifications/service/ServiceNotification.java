@@ -32,12 +32,11 @@ public class ServiceNotification {
 				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
 				.setContentTitle(StringResource.get(R.string.app_name))
 				.setContentText(StringResource.get(params.user.descriptionId()))
-				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS);
+				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+				.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET); //To decrease likelihood of showing on lock screen
 
 		params.priority.apply(builder);
-
 		hideTimestamp();
-		hideFromLockScreen();
 
 		Notification notification = builder.build();
 		addButtons(notification);
@@ -52,17 +51,6 @@ public class ServiceNotification {
 			builder.setShowWhen(false);
 		else
 			builder.setWhen(0);
-	}
-
-	private void hideFromLockScreen() {
-		//Notifications only show on lock screen as of Android 5
-		if (Build.VERSION.SDK_INT >= 21) {
-			//This seems to be the best we've got: http://stackoverflow.com/questions/27035202/how-to-suppress-notification-on-lock-screen-in-android-5-lollipop-but-let-it-i
-			builder.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET);
-
-			if (params.onLockScreen)
-				builder.setPriority(NotificationBuilderCompat.PRIORITY_MIN);
-		}
 	}
 
 	private void addButtons(Notification notification) {

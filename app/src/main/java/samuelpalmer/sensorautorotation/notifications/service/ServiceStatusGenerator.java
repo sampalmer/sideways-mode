@@ -32,8 +32,7 @@ public class ServiceStatusGenerator {
 			mode(),
 			overridden(),
 			new UserOrientation(calculator.user(), screenRotationMonitor, calculator.proposedScreenOrientation()),
-			priority.get(),
-			lockScreenMonitor.isOnLockScreen()
+			priority()
 		);
 	}
 
@@ -46,6 +45,10 @@ public class ServiceStatusGenerator {
 		Orientation actual = screenRotationMonitor.currentRotation();
 
 		return !requested.equals(actual);
+	}
+
+	private NotificationPriority priority() {
+		return lockScreenMonitor.isOnLockScreen() && NotificationServiceStatusDisplay.hideFromLockScreen() ? NotificationPriority.LOW : priority.get();
 	}
 
 }

@@ -81,7 +81,7 @@ public class NotificationServiceStatusDisplay {
 		}
 	}
 
-	private static boolean hideFromLockScreen() {
+	public static boolean hideFromLockScreen() {
 		return Build.VERSION.SDK_INT >= 21;
 	}
 
