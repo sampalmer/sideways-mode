@@ -18,6 +18,10 @@ public abstract class State {
 		}
 	}
 
+	protected boolean started() {
+		return started;
+	}
+
 	protected abstract void start();
 
 	protected abstract void stop();

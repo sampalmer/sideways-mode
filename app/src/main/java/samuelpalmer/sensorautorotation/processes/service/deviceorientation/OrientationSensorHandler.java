@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 
+import android.util.Log;
+
 import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
@@ -41,6 +43,13 @@ public class OrientationSensorHandler extends State {
 	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(Process.context(), null) {
 		@Override
 		public void onProposedRotationChanged(int rotation) {
+			if (!started()) {
+				//This happens if you quickly repeatedly enable and disable the service on an emulator.
+				//It might only affect older versions of Android (API 14-16)
+				Log.w(OrientationSensorHandler.class.getSimpleName(), "Got callback while stopped");
+				return;
+			}
+
 			if (lastRotation == null || lastRotation != rotation) {
 				lastRotation = rotation;
 				calculator.setDevice(new AndroidSurfaceRotation(rotation).orientation());
