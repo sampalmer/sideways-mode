@@ -5,6 +5,7 @@ import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class UserInteractivityChangeHandler extends State {
 	private final OrientationCalculator calculator;
@@ -12,10 +13,10 @@ public class UserInteractivityChangeHandler extends State {
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final UserInteractivityMonitor userInteractivityMonitor;
 
-	public UserInteractivityChangeHandler(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater) {
+	public UserInteractivityChangeHandler(OrientationCalculator calculator, ScreenOrientationUpdater screenUpdater, ScreenRotationMonitor screen) {
 		this.calculator = calculator;
 		this.screenUpdater = screenUpdater;
-		orientationSensorHandler = new OrientationSensorHandler(calculator);
+		orientationSensorHandler = new OrientationSensorHandler(calculator, screen);
 		userInteractivityMonitor = new UserInteractivityMonitor(listener);
 	}
 

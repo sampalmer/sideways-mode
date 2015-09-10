@@ -8,16 +8,22 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 
 public class OrientationSensorHandler extends State {
 
 	private final OrientationCalculator calculator;
+	private final ScreenRotationMonitor screen;
 
 	private Integer lastRotation;
-	public OrientationSensorHandler(OrientationCalculator calculator) {
+	private Integer oldBias;
+
+	public OrientationSensorHandler(OrientationCalculator calculator, ScreenRotationMonitor screen) {
 		this.calculator = calculator;
+		this.screen = screen;
 
 		if (!windowOrientationListener.canDetectOrientation())
 			//A user of an HTC One X reported that he/she got this error. Apparently system auto rotation also wasn't working, so it was probably a problem with the phone.
@@ -27,15 +33,17 @@ public class OrientationSensorHandler extends State {
 	@Override
 	protected void start() {
 		lastRotation = null;
-		windowOrientationListener.setCurrentRotation(0);
+		updateRotationBias();
 		windowOrientationListener.enable();
 
-		calculator.onAnythingChanged.subscribe(deviceRotationOrAutoRotationChanged);
+		calculator.onAnythingChanged.subscribe(screenUserOrAutoRotateChanged);
+		screen.subscribe(screenUserOrAutoRotateChanged);
 	}
 
 	@Override
 	protected void stop() {
-		calculator.onAnythingChanged.unsubscribe(deviceRotationOrAutoRotationChanged);
+		screen.unsubscribe(screenUserOrAutoRotateChanged);
+		calculator.onAnythingChanged.unsubscribe(screenUserOrAutoRotateChanged);
 
 		windowOrientationListener.disable();
 	}
@@ -57,7 +65,7 @@ public class OrientationSensorHandler extends State {
 		}
 	};
 
-	private final EventHandler deviceRotationOrAutoRotationChanged = new EventHandler() {
+	private final EventHandler screenUserOrAutoRotateChanged = new EventHandler() {
 		@Override
 		public void update() {
 			updateRotationBias();
@@ -65,13 +73,16 @@ public class OrientationSensorHandler extends State {
 	};
 
 	private void updateRotationBias() {
-		//Might help reduce incorrect device orientation predictions
-		windowOrientationListener.setCurrentRotation(deviceRotationBias());
+		int newBias = deviceRotationBias();
+		if (oldBias == null || newBias != oldBias) {
+			windowOrientationListener.setCurrentRotation(newBias);
+			oldBias = newBias;
+		}
 	}
 
 	private int deviceRotationBias() {
-		if (calculator.autoRotate() && lastRotation != null)
-			return lastRotation;
+		if (calculator.effectivelyAutoRotate())
+			return calculator.user().plus(screen.currentRotation().minus(Orientation.NATURAL)).getClockwiseRotationsFromNaturalOrientation();
 		else
 			return -1;
 	}

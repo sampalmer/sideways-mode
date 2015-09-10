@@ -63,7 +63,7 @@ public class OrientationCalculator {
 
 	public void setDevice(Orientation newDevice) {
 
-		if (!autoRotate() || lockingOverride) {
+		if (!effectivelyAutoRotate()) {
 			Rotation deviceChange = newDevice.minus(device);
 			state.setUser(state.getUser().plus(deviceChange));
 		}
@@ -72,6 +72,10 @@ public class OrientationCalculator {
 
 		reportChange();
 
+	}
+
+	public boolean effectivelyAutoRotate() {
+		return autoRotate() && !lockingOverride;
 	}
 
 	private void reportChange() {
