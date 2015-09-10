@@ -66,12 +66,12 @@ public class NotificationServiceStatusDisplay {
 
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the
-	 * notification is updated on these Android versions of the emulators and Samsung Galaxy S II
+	 * notification is updated on API 16 - 19 on the emulators and Samsung Galaxy S II
 	 * (and probably other devices). Interestingly, the problem didn't happen on a Sony Xperia M
 	 * running Android 4.3.
 	 *
-	 * This might also be necessary to fix the rare bug that occurs when you open a notification from
-	 * the lock screen and this app's notification becomes partially blank.
+	 * This also semes to fix an occasional bug that causes the notification's main content to be
+	 * temporarily blank when the user opens or closes the lock screen.
 	 */
 	private void cancelIfNecessary(Notification notification) {
 		if (Build.VERSION.SDK_INT >= 16) {
