@@ -24,10 +24,16 @@
 			/>
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"
-		    android:title="@string/allow_upside_down_screen"
-		    android:summary="@string/allow_upside_down_screen_description"
-		    android:icon="@drawable/ic_screen_upside_down"
+			android:title="@string/allow_upside_down_screen"
+			android:summary="@string/allow_upside_down_screen_description"
+			android:icon="@drawable/ic_screen_upside_down"
 			android:dependency="enabled"
-		/>
+			/>
+		<CheckBoxPreference
+			android:key="inferUserWhenDeviceLocked"
+			android:title="@string/infer_user"
+			android:summary="@string/infer_user_description"
+			android:dependency="enabled"
+			/>
 	</PreferenceCategory>
 </PreferenceScreen>

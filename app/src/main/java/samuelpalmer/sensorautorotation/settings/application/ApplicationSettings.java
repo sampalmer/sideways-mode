@@ -42,5 +42,6 @@ public class ApplicationSettings extends Settings {
 	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", false); }
 	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", true); }
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
+	public Setting<Boolean> inferUserWhenLocked() { return new Setting<>(new BooleanSetting(), "inferUserWhenDeviceLocked", false); }
 
 }

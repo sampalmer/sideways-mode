@@ -45,13 +45,16 @@
 
 	<string name="settings">Settings</string>
 
-	<string name="allow_upside_down_screen">Allow reverse screen</string>
-	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
-
 	<string name="notification_priority">Notification priority</string>
 	<string name="notification_priority_high">High</string>
 	<string name="notification_priority_normal">Normal</string>
 	<string name="notification_priority_low">Low</string>
+
+	<string name="allow_upside_down_screen">Allow reverse screen</string>
+	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
+
+	<string name="infer_user">Detect orientation when locked</string>
+	<string name="infer_user_description">Detect which way you\'re facing when you\'re on the lock screen</string>
 
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
