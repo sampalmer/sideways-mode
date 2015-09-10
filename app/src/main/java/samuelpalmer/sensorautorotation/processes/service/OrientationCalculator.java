@@ -53,8 +53,8 @@ public class OrientationCalculator {
 	}
 
 	public void setLockingOverride(boolean lockingOverride) {
-		reportChange();
 		this.lockingOverride = lockingOverride;
+		reportChange();
 	}
 
 	private Orientation inferredUser() {

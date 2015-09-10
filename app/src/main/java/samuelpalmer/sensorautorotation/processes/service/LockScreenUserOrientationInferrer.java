@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class LockScreenUserOrientationInferrer extends State {
 
@@ -23,6 +22,7 @@ public class LockScreenUserOrientationInferrer extends State {
 	@Override
 	protected void stop() {
 		lockScreenMonitor.unsubscribe(lockScreenChanged);
+		calculator.setLockingOverride(false);
 	}
 
 	private final EventHandler lockScreenChanged = new EventHandler() {
@@ -33,9 +33,7 @@ public class LockScreenUserOrientationInferrer extends State {
 	};
 
 	private void update() {
-		boolean onLockScreen = lockScreenMonitor.isOnLockScreen();
-		if (!onLockScreen || ApplicationSettings.local().inferUserWhenLocked().get())
-			calculator.setLockingOverride(onLockScreen);
+		calculator.setLockingOverride(lockScreenMonitor.isOnLockScreen());
 	}
 
 }
