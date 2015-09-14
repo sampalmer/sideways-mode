@@ -176,6 +176,7 @@ public class NotificationBuilderCompat {
 	{
 		public V21() {
 			setColor(Process.context().getResources().getColor(R.color.primary_500));
+			setVisibility(NotificationBuilderCompat.VISIBILITY_PUBLIC);
 		}
 
 		@Override
