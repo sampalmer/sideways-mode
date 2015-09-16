@@ -19,6 +19,12 @@ public class CurrentProcessInfo {
 		}
 	}
 
+	/**
+	 * Apparently this sometimes fails, such as when running Xposed. However, I couldn't reproduce
+	 * such a problem.
+	 *
+	 * See http://stackoverflow.com/a/21389402/238753
+	 */
 	private static String getNameFromCommandLine() {
 		BufferedReader cmdlineReader = null;
 		try {
