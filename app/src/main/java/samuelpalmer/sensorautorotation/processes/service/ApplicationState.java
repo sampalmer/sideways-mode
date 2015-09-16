@@ -34,12 +34,12 @@ public class ApplicationState {
 
 	public Orientation getUser() {
 		if (user == null)
-			user = new Orientation(serviceSettings.userOrientation().get());
+			user = serviceSettings.userOrientation().get();
 		return user;
 	}
 
 	public void setUser(Orientation newValue) {
-		serviceSettings.userOrientation().setAndCommit(serialise(newValue));
+		serviceSettings.userOrientation().setAndCommit(newValue);
 		user = newValue;
 	}
 
@@ -48,7 +48,7 @@ public class ApplicationState {
 	public void set(boolean autoRotate, Orientation user) {
 		Transaction transaction = serviceSettings.new Transaction();
 		serviceSettings.autoRotate().set(autoRotate, transaction);
-		serviceSettings.userOrientation().set(serialise(user), transaction);
+		serviceSettings.userOrientation().set(user, transaction);
 		transaction.commit();
 
 		this.autoRotate = autoRotate;
@@ -63,13 +63,6 @@ public class ApplicationState {
 
 		this.autoRotate = null;
 		this.user = null;
-	}
-
-	private int serialise(Orientation user) {
-		if (user == null)
-			throw new RuntimeException("No user orientation");
-
-		return user.getClockwiseRotationsFromNaturalOrientation();
 	}
 
 }

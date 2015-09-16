@@ -4,7 +4,7 @@ import android.content.Context;
 
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
-import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
+import samuelpalmer.sensorautorotation.settings.application.OrientationSetting;
 import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 /**
@@ -17,6 +17,6 @@ public class ServiceSettings extends Settings {
 	}
 
 	public Setting<Boolean> autoRotate() { return new Setting<>(new BooleanSetting(), "autoRotate", null); }
-	public Setting<Integer> userOrientation() { return new Setting<>(new IntegerSetting(), "userOrientation", null); }
+	public Setting<Orientation> userOrientation() { return new Setting<>(new OrientationSetting(), "userOrientation", null); }
 
 }

@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
-import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
+import samuelpalmer.sensorautorotation.settings.application.OrientationSetting;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Transaction;
 import samuelpalmer.sensorautorotation.settings.application.StringSetting;
@@ -23,7 +24,7 @@ class Migrations {
 			public void upgradeData() {
 				ApplicationSettings applicationSettings = ApplicationSettings.local();
 				Setting<Boolean> oldAutoRotate = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
-				Setting<Integer> oldUserOrientation = applicationSettings.new Setting<Integer>(new IntegerSetting(), "userOrientation", null);
+				Setting<Orientation> oldUserOrientation = applicationSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 
 				ServiceSettings serviceSettings = new ServiceSettings();
