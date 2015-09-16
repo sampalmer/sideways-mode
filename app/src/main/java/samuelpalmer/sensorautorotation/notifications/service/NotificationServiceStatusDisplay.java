@@ -12,7 +12,6 @@ import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
-import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
@@ -20,15 +19,13 @@ import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 public class NotificationServiceStatusDisplay {
 	private final Service service;
-	private final ScreenOrientationUpdater screenOrientationUpdater;
 	private final OrientationCalculator calculator;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 	private final ScreenRotationMonitor screenRotationMonitor;
 
-	public NotificationServiceStatusDisplay(Service service, ScreenOrientationUpdater screenOrientationUpdater, OrientationCalculator calculator, ScreenRotationMonitor screen, LockScreenMonitor lockScreenMonitor) {
+	public NotificationServiceStatusDisplay(Service service, OrientationCalculator calculator, ScreenRotationMonitor screen, LockScreenMonitor lockScreenMonitor) {
 		this.service = service;
-		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.calculator = calculator;
 		this.lockScreenMonitor = lockScreenMonitor;
 		priority = ApplicationSettings.local().notificationPriority();
