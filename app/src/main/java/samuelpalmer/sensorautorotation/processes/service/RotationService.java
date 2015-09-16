@@ -9,9 +9,9 @@ import android.os.IBinder;
 
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.NaturalOrientationDetector;
-import samuelpalmer.sensorautorotation.notifications.service.NotificationServiceStatusDisplay;
+import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
+import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusGenerator;
 import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
@@ -38,7 +38,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private OrientationCalculator calculator;
 	private ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	private ServiceStatusGenerator serviceStatusGenerator;
+	private NotificationParametersFactory notificationParametersFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 
@@ -64,8 +64,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor();
-		serviceStatusGenerator = new ServiceStatusGenerator(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen, screenRotationMonitor), screenUpdater, lockScreenMonitor);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusGenerator, new NotificationServiceStatusDisplay(this, calculator, screenRotationMonitor, lockScreenMonitor));
+		notificationParametersFactory = new NotificationParametersFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen, screenRotationMonitor), screenUpdater, lockScreenMonitor);
+		serviceNotificationManager = new ServiceNotificationManager(notificationParametersFactory, new NotificationUpdater(this));
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater, screenRotationMonitor);
@@ -141,7 +141,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	}
 
 	private void showStatusToast() {
-		CharSequence message = serviceStatusGenerator.generate().getSummary();
+		CharSequence message = notificationParametersFactory.generate().getSummary();
 		ToastReceiver.send(message);
 	}
 

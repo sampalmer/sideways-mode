@@ -1,5 +1,12 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import android.os.Build;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -9,7 +16,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
-public class ServiceStatusGenerator {
+public class NotificationParametersFactory {
 
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screenRotationMonitor;
@@ -18,13 +25,28 @@ public class ServiceStatusGenerator {
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
-	public ServiceStatusGenerator(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
+	public NotificationParametersFactory(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
 		this.calculator = calculator;
 		this.screenRotationMonitor = screenRotationMonitor;
 		this.naturalOrientationDetector = naturalOrientationDetector;
 		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.lockScreenMonitor = lockScreenMonitor;
 		priority = ApplicationSettings.local().notificationPriority();
+	}
+
+	public Set<EventRegistrar> updateTriggers() {
+		Set<EventRegistrar> result = new HashSet<>(
+			Arrays.<EventRegistrar>asList(
+				priority, //To change notification priority
+				screenRotationMonitor, //For "overridden" detection
+				calculator.onAnythingChanged //For "overridden" detection, user orientation changes, auto rotation mode changes
+			)
+		);
+
+		if (hideFromLockScreen())
+			result.add(lockScreenMonitor);
+
+		return result;
 	}
 
 	public NotificationParameters generate() {
@@ -40,7 +62,7 @@ public class ServiceStatusGenerator {
 		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, naturalOrientationDetector.deviceIsNaturallyPortrait());
 	}
 
-	public boolean overridden() {
+	private boolean overridden() {
 		Orientation requested = screenOrientationUpdater.proposedOrientation();
 		Orientation actual = screenRotationMonitor.currentRotation();
 
@@ -48,7 +70,11 @@ public class ServiceStatusGenerator {
 	}
 
 	private NotificationPriority priority() {
-		return lockScreenMonitor.isOnLockScreen() && NotificationServiceStatusDisplay.hideFromLockScreen() ? NotificationPriority.LOW : priority.get();
+		return lockScreenMonitor.isOnLockScreen() && hideFromLockScreen() ? NotificationPriority.LOW : priority.get();
+	}
+
+	private static boolean hideFromLockScreen() {
+		return Build.VERSION.SDK_INT >= 21;
 	}
 
 }
