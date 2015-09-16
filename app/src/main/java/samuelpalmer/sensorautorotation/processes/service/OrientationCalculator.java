@@ -22,9 +22,7 @@ public class OrientationCalculator {
 
 	public void reset() {
 		device = DEFAULT;
-		Orientation newUser = DEFAULT;
-
-		state.setUser(newUser);
+		state.setUser(DEFAULT);
 
 		reportChange();
 	}
