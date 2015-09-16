@@ -8,20 +8,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
-
 public class CurrentProcessInfo {
 	public static String currentProcessName() {
 		try {
-			return cmdGetProcName();
+			return getNameFromCommandLine();
 		}
 		catch (Exception ex) {
 			log(ex);
-			return am();
+			return getNameFromActivityManager();
 		}
 	}
 
-	private static String cmdGetProcName() {
+	private static String getNameFromCommandLine() {
 		BufferedReader cmdlineReader = null;
 		try {
 			cmdlineReader = new BufferedReader(
@@ -55,10 +53,10 @@ public class CurrentProcessInfo {
 	}
 
 	private static void log(Exception ex) {
-		Log.w(ServiceProcess.class.getSimpleName(), ex);
+		Log.w(CurrentProcessInfo.class.getSimpleName(), ex);
 	}
 
-	private static String am() {
+	private static String getNameFromActivityManager() {
 		int pid = getPid();
 
 		for (RunningAppProcessInfo process : SystemServices.activityManager().getRunningAppProcesses())
