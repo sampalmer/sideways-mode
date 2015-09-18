@@ -19,7 +19,12 @@ public class SharedPreferencesContentProvider extends ContentProvider {
 		Contract contract = ContractMap.lookup(method);
 		Object args = contract.deserialiseArgs(extras);
 		Object result = contract.process(getContext().getSharedPreferences(arg, 0), args);
-		return contract.serialiseResult(result);
+		Bundle serialisedResult = contract.serialiseResult(result);
+
+		if (serialisedResult == null)
+			throw new RuntimeException("Serialised result was null. null is reserved for error conditions.");
+
+		return serialisedResult;
 	}
 
 	@Override
