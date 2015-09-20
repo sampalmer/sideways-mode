@@ -32,7 +32,7 @@ public class FirstRunLauncherFragment extends Fragment {
 	}
 
 	private void recordUserInstructedIfNecessary() {
-		instructedVersionPreference().setAndCommit(VersionInfo.installedVersionCode());
+		instructedVersionPreference().set(VersionInfo.installedVersionCode());
 	}
 
 	private ApplicationSettings.Setting<Integer> instructedVersionPreference() {

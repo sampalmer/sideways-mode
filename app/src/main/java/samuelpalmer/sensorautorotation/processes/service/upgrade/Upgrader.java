@@ -48,7 +48,7 @@ public class Upgrader {
 		if (upgradeMessage.length() != 0)
 			notify(upgradeMessage.toString());
 
-		lastVersionUserInstructedAbout.setAndCommit(newAppVersion);
+		lastVersionUserInstructedAbout.set(newAppVersion);
 	}
 
 	private void notify(String upgradeMessage) {

@@ -1,58 +1,37 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.sensorautorotation.settings.CachedSetting;
 import samuelpalmer.sensorautorotation.settings.application.Settings.Transaction;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ApplicationState {
 
 	private final ServiceSettings serviceSettings;
+	public final CachedSetting<Boolean> autoRotate;
+	public final CachedSetting<Orientation> user;
 
 	public ApplicationState(SystemSettings systemSettings) {
 		serviceSettings = new ServiceSettings();
+		autoRotate = new CachedSetting<>(serviceSettings.autoRotate());
+		user = new CachedSetting<>(serviceSettings.userOrientation());
 
 		if (!serviceSettings.autoRotate().hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
-			setAutoRotate(accelerometerRotation);
+			autoRotate.set(accelerometerRotation);
 		}
 
 		if (!serviceSettings.userOrientation().hasValue())
-			setUser(Orientation.NATURAL);
+			user.set(Orientation.NATURAL);
 	}
-
-	public boolean getAutoRotate() {
-		if (autoRotate == null)
-			autoRotate = serviceSettings.autoRotate().get();
-		return autoRotate;
-	}
-
-	private void setAutoRotate(boolean newValue) {
-		serviceSettings.autoRotate().setAndCommit(newValue);
-		autoRotate = newValue;
-	}
-
-	private Boolean autoRotate;
-
-	public Orientation getUser() {
-		if (user == null)
-			user = serviceSettings.userOrientation().get();
-		return user;
-	}
-
-	public void setUser(Orientation newValue) {
-		serviceSettings.userOrientation().setAndCommit(newValue);
-		user = newValue;
-	}
-
-	private Orientation user;
 
 	public void set(boolean autoRotate, Orientation user) {
 		Transaction transaction = serviceSettings.new Transaction();
-		serviceSettings.autoRotate().set(autoRotate, transaction);
-		serviceSettings.userOrientation().set(user, transaction);
+		serviceSettings.autoRotate().enqueue(autoRotate, transaction);
+		serviceSettings.userOrientation().enqueue(user, transaction);
 		transaction.commit();
 
-		this.autoRotate = autoRotate;
-		this.user = user;
+		this.autoRotate.updateCache(autoRotate);
+		this.user.updateCache(user);
 	}
 
 	public void clear() {
@@ -61,8 +40,8 @@ public class ApplicationState {
 		serviceSettings.userOrientation().remove(transaction);
 		transaction.commit();
 
-		this.autoRotate = null;
-		this.user = null;
+		this.autoRotate.updateCache(null);
+		this.user.updateCache(null);
 	}
 
 }

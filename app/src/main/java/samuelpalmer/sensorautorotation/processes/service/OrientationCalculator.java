@@ -22,22 +22,22 @@ public class OrientationCalculator {
 
 	public void reset() {
 		device = DEFAULT;
-		state.setUser(DEFAULT);
+		state.user.set(DEFAULT);
 
 		reportChange();
 	}
 
 	public boolean autoRotate() {
-		return state.getAutoRotate();
+		return state.autoRotate.get();
 	}
 
 	public Orientation user() {
-		return state.getUser();
+		return state.user.get();
 	}
 
 	public void offsetUser(int clockwiseRotations) {
 		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
-		state.setUser(newUser);
+		state.user.set(newUser);
 		reportChange();
 	}
 
@@ -63,7 +63,7 @@ public class OrientationCalculator {
 
 		if (!effectivelyAutoRotate()) {
 			Rotation deviceChange = newDevice.minus(device);
-			state.setUser(state.getUser().plus(deviceChange));
+			state.user.set(state.user.get().plus(deviceChange));
 		}
 
 		device = newDevice;
@@ -81,6 +81,6 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return Orientation.NATURAL.plus(device.minus(state.getUser()));
+		return Orientation.NATURAL.plus(device.minus(state.user.get()));
 	}
 }

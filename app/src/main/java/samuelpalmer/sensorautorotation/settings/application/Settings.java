@@ -29,7 +29,7 @@ public class Settings {
 
 	}
 
-	public class Setting<T> extends EventRegistrarAdaptor {
+	public class Setting<T> extends EventRegistrarAdaptor implements samuelpalmer.sensorautorotation.settings.Setting<T> {
 
 		private final SettingType<T> type;
 		private final String key;
@@ -46,7 +46,7 @@ public class Settings {
 		 */
 		public void ensureInitialised() {
 			if (!hasValue() && defaultValue != null)
-				setAndCommit(defaultValue);
+				set(defaultValue);
 		}
 
 		public T tryGet() {
@@ -73,13 +73,13 @@ public class Settings {
 			return prefs.contains(key);
 		}
 
-		public void setAndCommit(T value) {
+		public void set(T value) {
 			Transaction transaction = new Transaction();
-			set(value, transaction);
+			enqueue(value, transaction);
 			transaction.commit();
 		}
 
-		public void set(T value, Transaction transaction) {
+		public void enqueue(T value, Transaction transaction) {
 			if (value == null)
 				throw new IllegalArgumentException("value is null");
 

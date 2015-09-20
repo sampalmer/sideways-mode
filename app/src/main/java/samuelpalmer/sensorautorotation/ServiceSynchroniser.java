@@ -23,7 +23,7 @@ public class ServiceSynchroniser {
 	}
 
 	private void setEnabled(boolean value) {
-		applicationSettings.enabled().setAndCommit(value);
+		applicationSettings.enabled().set(value);
 		ServiceController.updateServiceState(value);
 	}
 

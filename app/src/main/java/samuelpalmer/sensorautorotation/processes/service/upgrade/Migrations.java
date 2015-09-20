@@ -44,7 +44,7 @@ class Migrations {
 				T value = source.tryGet();
 
 				if (value != null)
-					destination.set(value, transaction);
+					destination.enqueue(value, transaction);
 			}
 		});
 
