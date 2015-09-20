@@ -9,9 +9,8 @@ import android.provider.Settings;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
 import static android.provider.Settings.System.getString;
@@ -70,10 +69,7 @@ public class Setting<T> implements samuelpalmer.sensorautorotation.settings.Sett
 	}
 
 	//Mostly copied from ApplicationSettings.Setting
-	private class ChangeRegistrar extends UpdatingEventRegistrar {
-
-		private boolean registered;
-		private boolean enabled = true;
+	private class ChangeRegistrar extends EventRegistrarAdaptor {
 
 		private final ContentObserver listener = new ContentObserver(new Handler() /* Otherwise the callback is called in a different thread */ ) {
 			@Override
@@ -84,35 +80,13 @@ public class Setting<T> implements samuelpalmer.sensorautorotation.settings.Sett
 		};
 
 		@Override
-		public void subscribe(EventHandler subscriber) {
-			super.subscribe(subscriber);
-			updateRegistration();
+		protected void subscribeToAdaptee() {
+			contentResolver.registerContentObserver(getUriFor(key), false, listener);
 		}
 
 		@Override
-		public void unsubscribe(EventHandler subscriber) {
-			super.unsubscribe(subscriber);
-			updateRegistration();
-		}
-
-		public void setEnabled(boolean newEnabled) {
-			enabled = newEnabled;
-			updateRegistration();
-		}
-
-		private boolean shouldBeRegistered() {
-			return !noSubscriptions() && enabled;
-		}
-
-		private void updateRegistration() {
-			if (shouldBeRegistered() != registered) {
-				if (shouldBeRegistered())
-					contentResolver.registerContentObserver(getUriFor(key), false, listener);
-				else
-					contentResolver.unregisterContentObserver(listener);
-
-				registered = shouldBeRegistered();
-			}
+		protected void unsubscribeFromAdaptee() {
+			contentResolver.unregisterContentObserver(listener);
 		}
 
 	}
