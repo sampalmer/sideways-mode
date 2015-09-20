@@ -81,8 +81,11 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
 
 		systemAutoRotationMonitor.ensureStarted();
+
+		//CORE STARTUP LOGIC: ORDER IS CRITICAL
 		screenOrientationController.ensureStarted();
 		calculator.reset();
+
 		serviceNotificationManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
