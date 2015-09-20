@@ -18,7 +18,7 @@ import static android.provider.Settings.System.getString;
 import static android.provider.Settings.System.getUriFor;
 import static android.provider.Settings.System.putString;
 
-public class Setting<T> {
+public class Setting<T> implements samuelpalmer.sensorautorotation.settings.Setting<T> {
 
 	private final ContentResolver contentResolver;
 	private final String key;

@@ -18,6 +18,8 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
+import samuelpalmer.sensorautorotation.settings.CachedSetting;
+import samuelpalmer.sensorautorotation.settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -60,8 +62,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 
-		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
+		Setting<Orientation> proposedScreenOrientation = new CachedSetting<>(systemSettings.userRotation);
+		calculator = new OrientationCalculator(screenRotationMonitor, applicationState, proposedScreenOrientation);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator, proposedScreenOrientation);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor();
@@ -79,6 +82,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
+		calculator.reset();
 		serviceNotificationManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();

@@ -1,8 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.util.Log;
+
+import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
@@ -10,20 +14,24 @@ public class ScreenOrientationController extends State {
 	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
 	private final OrientationCalculator calculator;
+	private final Setting<Orientation> proposedScreenOrientation;
 
-	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator) {
+	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator, Setting<Orientation> proposedScreenOrientation) {
 		this.settings = settings;
 		this.screen = screen;
 		this.calculator = calculator;
+		this.proposedScreenOrientation = proposedScreenOrientation;
 	}
 
 	@Override
 	protected void start() {
-		Orientation realOrientation = screen.currentRotation();
-		propose(realOrientation);
+		if (settings.accelerometerRotation.get()) {
+			Orientation realOrientation = screen.currentRotation();
+			propose(realOrientation);
 
-		settings.accelerometerRotation.set(false);
-		propose(realOrientation); //Just in case disabling system rotation reset this.
+			settings.accelerometerRotation.set(false);
+			propose(realOrientation); //Just in case disabling system rotation reset this.
+		}
 	}
 
 	@Override
@@ -36,7 +44,10 @@ public class ScreenOrientationController extends State {
 		if (value == null)
 			throw new IllegalArgumentException();
 
-		settings.userRotation.set(value);
+		if (BuildConfig.DEBUG)
+			Log.d(getClass().getSimpleName(), "Proposing " + value);
+
+		proposedScreenOrientation.set(value);
 	}
 
 }
