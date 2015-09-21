@@ -58,8 +58,15 @@ public class OrientationCalculator {
 	}
 
 	public void setLockingOverride(boolean lockingOverride) {
-		this.lockingOverride = lockingOverride;
-		reportChange();
+		if (this.lockingOverride != lockingOverride) {
+			if (autoRotate() && lockingOverride) {
+				state.user.set(Orientation.NATURAL);
+				device = Orientation.NATURAL;
+			}
+
+			this.lockingOverride = lockingOverride;
+			reportChange();
+		}
 	}
 
 	private Orientation inferredUser() {
