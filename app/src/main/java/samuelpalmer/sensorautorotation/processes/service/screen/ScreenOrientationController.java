@@ -2,9 +2,9 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.util.Log;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;

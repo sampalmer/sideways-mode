@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.system;
 
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.settings.system.types.BooleanTypeConverter;
 import samuelpalmer.sensorautorotation.settings.system.types.OrientationTypeConverter;
 

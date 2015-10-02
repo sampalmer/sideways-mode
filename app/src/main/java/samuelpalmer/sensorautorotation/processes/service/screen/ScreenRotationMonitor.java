@@ -2,8 +2,9 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.util.Log;
 
+import samuelpalmer.common.Orientation;
+import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 
 public class ScreenRotationMonitor extends EventRegistrarAdaptor {

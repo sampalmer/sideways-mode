@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.processes.service.upgrade;
 import java.util.HashMap;
 import java.util.Map;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;

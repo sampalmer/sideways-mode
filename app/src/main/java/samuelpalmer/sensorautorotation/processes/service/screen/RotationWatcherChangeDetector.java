@@ -1,7 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import samuelpalmer.common.Orientation;
+import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor.Callback;
 

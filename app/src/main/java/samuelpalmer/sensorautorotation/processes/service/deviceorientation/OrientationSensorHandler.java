@@ -2,13 +2,13 @@ package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
+import samuelpalmer.common.AndroidSurfaceRotation;
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 

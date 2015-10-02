@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.common;
 
 /**
  * Represents the difference between two orientations; change in orientation

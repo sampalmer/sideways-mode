@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.screen;
+package samuelpalmer.common;
 
 import android.annotation.SuppressLint;
 import android.graphics.Point;
@@ -6,17 +6,14 @@ import android.os.Build.VERSION;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayInfo;
-
-import samuelpalmer.sensorautorotation.AndroidSurfaceRotation;
-import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import android.view.WindowManager;
 
 public class Screen {
 
 	private final Display display;
 
-	public Screen() {
-		display = SystemServices.windowManager().getDefaultDisplay();
+	public Screen(WindowManager windowManager) {
+		display = windowManager.getDefaultDisplay();
 	}
 
 	/**

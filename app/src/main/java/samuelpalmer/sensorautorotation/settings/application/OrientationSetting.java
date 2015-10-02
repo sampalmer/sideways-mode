@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
+import samuelpalmer.common.Orientation;
 
 public class OrientationSetting extends WrapperSetting<Orientation, Integer> {
 

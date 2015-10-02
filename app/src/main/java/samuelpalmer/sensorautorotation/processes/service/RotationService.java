@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import samuelpalmer.common.NaturalOrientationDetector;
+import samuelpalmer.common.Orientation;
+import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.notifications.service.NaturalOrientationDetector;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
-import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -56,7 +58,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		EnvironmentError.clear();
 
 		SystemSettings systemSettings = new SystemSettings();
-		Screen screen = new Screen();
+		Screen screen = new Screen(SystemServices.windowManager());
 
 		applicationState = new ApplicationState(systemSettings);
 

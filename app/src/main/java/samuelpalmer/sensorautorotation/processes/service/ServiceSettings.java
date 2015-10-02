@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.Context;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
 import samuelpalmer.sensorautorotation.settings.application.OrientationSetting;

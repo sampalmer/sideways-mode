@@ -3,8 +3,9 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 
+import samuelpalmer.common.Orientation;
+import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 
 /**
  * Only detects changes between landscape and portrait.

@@ -1,8 +1,6 @@
-package samuelpalmer.sensorautorotation.notifications.service;
+package samuelpalmer.common;
 
 import android.graphics.Point;
-
-import samuelpalmer.sensorautorotation.processes.service.screen.Screen;
 
 public class NaturalOrientationDetector {
 

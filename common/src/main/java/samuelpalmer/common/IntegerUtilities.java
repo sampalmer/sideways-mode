@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.common;
 
 public class IntegerUtilities {
 	public static int wrap(int value, int length) {

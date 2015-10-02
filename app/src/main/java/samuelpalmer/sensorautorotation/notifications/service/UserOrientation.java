@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import samuelpalmer.common.IntegerUtilities;
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.IntegerUtilities;
-import samuelpalmer.sensorautorotation.processes.service.Orientation;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class UserOrientation {
