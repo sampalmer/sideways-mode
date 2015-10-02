@@ -6,3 +6,4 @@
 /.gradle
 Thumbs.db
 *.alloc
+/captures
