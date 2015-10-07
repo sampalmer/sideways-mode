@@ -2,19 +2,6 @@ package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import java.util.HashMap;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.ApplyContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.CommitContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.ContainsContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetAllContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetBooleanContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetFloatContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetIntContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetLongContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetStringContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.GetStringSetContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.RegisterOnSharedPreferenceChangeListenerContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.UnregisterOnSharedPreferenceChangeListenerContract;
-
 class ContractMap {
 
 	public static Contract lookup(String method) {

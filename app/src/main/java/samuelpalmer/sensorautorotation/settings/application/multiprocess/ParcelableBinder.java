@@ -4,7 +4,7 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ParcelableBinder implements Parcelable {
+class ParcelableBinder implements Parcelable {
 
 	public final IBinder binder;
 

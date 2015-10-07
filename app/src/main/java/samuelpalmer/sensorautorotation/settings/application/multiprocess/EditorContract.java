@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import java.util.Map;
 
-public abstract class EditorContract<TResult> implements Contract<EditorArgs, TResult> {
+abstract class EditorContract<TResult> implements Contract<EditorArgs, TResult> {
 
 	private static final String MODIFIED = "modified";
 	private static final String CLEAR = "clear";

@@ -1,13 +1,10 @@
-package samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.EditorArgs;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.EditorContract;
-
-public class ApplyContract extends EditorContract<Void> {
+class ApplyContract extends EditorContract<Void> {
 
 	@Override
 	public String methodName() {

@@ -1,14 +1,11 @@
-package samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import java.util.Map;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.Contract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.SingleValueSerialiser;
-
-public class GetAllContract implements Contract<Void, Map<String,?>> {
+class GetAllContract implements Contract<Void, Map<String,?>> {
 
 	private static final String VALUES = "values";
 

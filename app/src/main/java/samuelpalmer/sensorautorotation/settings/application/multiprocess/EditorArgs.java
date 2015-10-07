@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 import java.util.Map;
 import java.util.Set;
 
-public class EditorArgs {
+class EditorArgs {
 	public Map<String, Object> modified;
 	public boolean clear;
 

@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.ApplyContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts.CommitContract;
-
 class MultiProcessEditor implements Editor {
 
 	private final Remote remote;

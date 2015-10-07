@@ -1,15 +1,11 @@
-package samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.IBinder.DeathRecipient;
 import android.os.RemoteException;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.IContentProviderSharedPreferenceChangeListener;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.OnSharedPreferenceChangeListenerContract;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.ServerListener;
-
-public class RegisterOnSharedPreferenceChangeListenerContract extends OnSharedPreferenceChangeListenerContract {
+class RegisterOnSharedPreferenceChangeListenerContract extends OnSharedPreferenceChangeListenerContract {
 
 	@Override
 	public String methodName() {

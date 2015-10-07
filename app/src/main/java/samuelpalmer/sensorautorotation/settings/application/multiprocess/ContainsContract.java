@@ -1,11 +1,9 @@
-package samuelpalmer.sensorautorotation.settings.application.multiprocess.contracts;
+package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.Contract;
-
-public class ContainsContract implements Contract<String, Boolean> {
+class ContainsContract implements Contract<String, Boolean> {
 
 	private static final String KEY = "key";
 	private static final String CONTAINED_KEY = "containedKey";

@@ -7,7 +7,7 @@ import android.os.IBinder;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class OnSharedPreferenceChangeListenerContract implements Contract<IContentProviderSharedPreferenceChangeListener, Void> {
+abstract class OnSharedPreferenceChangeListenerContract implements Contract<IContentProviderSharedPreferenceChangeListener, Void> {
 
 	public static final String BINDER = "binder";
 	protected static final Map<IBinder, ServerListener> listeners = new HashMap<>();

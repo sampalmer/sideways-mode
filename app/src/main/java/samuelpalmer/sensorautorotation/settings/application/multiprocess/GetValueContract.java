@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 @SuppressWarnings("unchecked")
-public abstract class GetValueContract<TValue> implements Contract<GetValueArgs<TValue>, TValue> {
+abstract class GetValueContract<TValue> implements Contract<GetValueArgs<TValue>, TValue> {
 
 	private static final String KEY = "key";
 	private static final String DEF_VALUE = "defValue";

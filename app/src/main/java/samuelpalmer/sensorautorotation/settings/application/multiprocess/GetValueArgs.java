@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
-public class GetValueArgs<T> {
+class GetValueArgs<T> {
 
 	public String key;
 	public T defValue;

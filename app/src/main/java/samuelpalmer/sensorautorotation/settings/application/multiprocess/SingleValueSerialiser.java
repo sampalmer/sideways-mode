@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SingleValueSerialiser {
+abstract class SingleValueSerialiser {
 	public static void serialise(Bundle result, String key, Object currentValue) {
 		if (currentValue == null || currentValue instanceof String)
 			result.putString(key, (String)currentValue);

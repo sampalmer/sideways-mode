@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-public interface Contract<TArgs, TResult> {
+interface Contract<TArgs, TResult> {
 
 	String methodName();
 	TResult process(SharedPreferences sharedPreferences, TArgs args);
