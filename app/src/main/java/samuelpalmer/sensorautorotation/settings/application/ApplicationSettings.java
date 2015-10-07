@@ -2,10 +2,10 @@ package samuelpalmer.sensorautorotation.settings.application;
 
 import android.content.SharedPreferences;
 
+import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderSharedPreferences;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.settings.application.multiprocess.ContentProviderSharedPreferences;
 
 public class ApplicationSettings extends Settings {
 
