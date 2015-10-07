@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.HashMap;
@@ -10,8 +11,8 @@ public class ContentProviderSharedPreferences implements SharedPreferences {
 
 	private final Remote remote;
 
-	public ContentProviderSharedPreferences(String name) {
-		remote = new Remote(name);
+	public ContentProviderSharedPreferences(Context context, String contentProviderAuthority, String preferencesName) {
+		remote = new Remote(context, contentProviderAuthority, preferencesName);
 	}
 
 	@Override

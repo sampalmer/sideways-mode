@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.settings.application;
 import android.content.SharedPreferences;
 
 import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.settings.application.multiprocess.ContentProviderSharedPreferences;
 
 public class ApplicationSettings extends Settings {
@@ -18,7 +20,7 @@ public class ApplicationSettings extends Settings {
 	 */
 	public static ApplicationSettings remote() {
 		if (remote == null)
-			remote = new ApplicationSettings(new ContentProviderSharedPreferences(sharedPreferencesName()));
+			remote = new ApplicationSettings(new ContentProviderSharedPreferences(Process.context(), StringResource.get(R.string.content_provider_authority).toString(), sharedPreferencesName()));
 		return remote;
 	}
 
@@ -33,8 +35,11 @@ public class ApplicationSettings extends Settings {
 		return local;
 	}
 
+	public final SharedPreferences sharedPreferences;
+
 	private ApplicationSettings(SharedPreferences sharedPreferences) {
 		super(sharedPreferences);
+		this.sharedPreferences = sharedPreferences;
 	}
 
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }

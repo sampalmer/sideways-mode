@@ -1,25 +1,27 @@
 package samuelpalmer.sensorautorotation.settings.application.multiprocess;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 
 class Remote {
 
 	private final String preferencesName;
+	private final String authority;
+	private final ContentResolver contentResolver;
 
-	public Remote(String preferencesName) {
+	public Remote(Context context, String authority, String preferencesName) {
 		this.preferencesName = preferencesName;
+		this.authority = authority;
+		contentResolver = context.getContentResolver();
 	}
 
 	public <TArgs, TResult> TResult process(Contract<TArgs, TResult> contract, TArgs args) {
-		Bundle serialisedResult = Process.context().getContentResolver().call(
+		Bundle serialisedResult = contentResolver.call(
 			new Uri.Builder()
 				.scheme("content")
-				.authority(StringResource.get(R.string.content_provider_authority).toString())
+				.authority(authority)
 				.build(),
 			contract.methodName(),
 			preferencesName,
