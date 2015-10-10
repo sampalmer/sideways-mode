@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class SystemAutoRotationMonitor extends State {

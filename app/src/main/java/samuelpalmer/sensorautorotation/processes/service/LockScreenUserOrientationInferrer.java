@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 
 public class LockScreenUserOrientationInferrer extends State {
 

@@ -20,10 +20,10 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 

@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.Setting;
 

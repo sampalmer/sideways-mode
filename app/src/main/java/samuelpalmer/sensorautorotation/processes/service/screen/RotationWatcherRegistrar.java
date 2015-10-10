@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
+import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.BuildConfig;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 /**
  * Single point of entry to RotationWatcher. Protects against duplicate subscriptions and handles

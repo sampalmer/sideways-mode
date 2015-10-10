@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 
 public class ServiceNotificationManager extends State {
 

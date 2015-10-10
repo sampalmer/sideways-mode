@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import samuelpalmer.common.Orientation;
+import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
