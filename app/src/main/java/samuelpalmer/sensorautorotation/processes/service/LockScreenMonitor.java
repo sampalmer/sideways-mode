@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +12,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
-import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.SystemServices;
 
 public class LockScreenMonitor extends EventRegistrarAdaptor {
+
+	private final KeyguardManager keyguardManager;
+	private final Context context;
+
+	public LockScreenMonitor(Context context) {
+		this.context = context;
+		keyguardManager = (KeyguardManager) this.context.getSystemService(Context.KEYGUARD_SERVICE);
+	}
 
 	private Boolean isOnLockScreen;
 	private boolean monitoring;
@@ -29,17 +36,17 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 		}
 	}
 
-	private static boolean poll() {
+	private boolean poll() {
 		if (Build.VERSION.SDK_INT >= 16)
-			return SystemServices.keyguardManager().isKeyguardLocked();
+			return keyguardManager.isKeyguardLocked();
 		else
-			return SystemServices.keyguardManager().inKeyguardRestrictedInputMode();
+			return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 
 	@Override
 	protected void subscribeToAdaptee() {
 		for (String action : actions())
-			Process.context().registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
+			context.registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
 		monitoring = true;
 	}
 
@@ -47,7 +54,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	protected void unsubscribeFromAdaptee() {
 		monitoring = false;
 		isOnLockScreen = null;
-		Process.context().unregisterReceiver(notificationUpdateReceiver);
+		context.unregisterReceiver(notificationUpdateReceiver);
 	}
 
 	private Iterable<String> actions() {
