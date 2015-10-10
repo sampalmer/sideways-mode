@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Screen;

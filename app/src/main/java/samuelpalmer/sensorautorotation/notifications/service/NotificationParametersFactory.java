@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.processes.service.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
