@@ -52,7 +52,7 @@ import android.util.Log;
 public abstract class WindowOrientationListener {
 	private static final String TAG = "WindowOrientationListener";
 
-	private static final boolean USE_GRAVITY_SENSOR = false;
+	private static final boolean USE_GRAVITY_SENSOR = true;
 
 	private Handler mHandler;
 	private SensorManager mSensorManager;
@@ -90,8 +90,7 @@ public abstract class WindowOrientationListener {
 		mHandler = handler;
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
-		mSensor = mSensorManager.getDefaultSensor(USE_GRAVITY_SENSOR
-				? Sensor.TYPE_GRAVITY : Sensor.TYPE_ACCELEROMETER);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
 		if (mSensor != null) {
 			// Create listener only if sensors do exist
 			mSensorEventListener = new SensorEventListenerImpl();
@@ -394,9 +393,9 @@ public abstract class WindowOrientationListener {
 				// The vector given in the SensorEvent points straight up (towards the sky) under
 				// ideal conditions (the phone is not accelerating).  I'll call this up vector
 				// elsewhere.
-				float x = event.values[ACCELEROMETER_DATA_X];
-				float y = event.values[ACCELEROMETER_DATA_Y];
-				float z = event.values[ACCELEROMETER_DATA_Z];
+//				float x = event.values[ACCELEROMETER_DATA_X];
+//				float y = event.values[ACCELEROMETER_DATA_Y];
+//				float z = event.values[ACCELEROMETER_DATA_Z];
 
 				// Apply a low-pass filter to the acceleration up vector in cartesian space.
 				// Reset the orientation listener state if the samples are too far apart in time
@@ -408,24 +407,26 @@ public abstract class WindowOrientationListener {
 				final boolean skipSample;
 				if (now < then
 						|| now > then + MAX_FILTER_DELTA_TIME_NANOS
-						|| (x == 0 && y == 0 && z == 0)) {
+						/*|| (x == 0 && y == 0 && z == 0)*/) {
 					resetLocked();
 					skipSample = true;
 				} else {
-					final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
-					x = alpha * (x - mLastFilteredX) + mLastFilteredX;
-					y = alpha * (y - mLastFilteredY) + mLastFilteredY;
-					z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+//					if (mSensor.getType() != Sensor.TYPE_GRAVITY) {
+//						final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
+//						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
+//						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
+//						z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+//					}
 					skipSample = false;
 				}
 				mLastFilteredTimestampNanos = now;
-				mLastFilteredX = x;
-				mLastFilteredY = y;
-				mLastFilteredZ = z;
+//				mLastFilteredX = x;
+//				mLastFilteredY = y;
+//				mLastFilteredZ = z;
 
 				if (!skipSample) {
 					// Calculate the magnitude of the acceleration vector.
-					final float magnitude = (float) Math.sqrt(x * x + y * y + z * z);
+					final float magnitude = SensorManager.GRAVITY_EARTH; //(float) Math.sqrt(x * x + y * y + z * z);
 					if (magnitude < NEAR_ZERO_MAGNITUDE) {
 						clearPredictedRotationLocked();
 					} else {
@@ -435,14 +436,30 @@ public abstract class WindowOrientationListener {
 							mAccelerationTimestampNanos = now;
 						}
 
+						float[] mRotationMatrixFromVector = new float[16];
+						float[] mRotationMatrix = new float[16];
+						float[] orientationVals = new float[3];
+
+						// Convert the rotation-vector to a 4x4 matrix.
+						SensorManager.getRotationMatrixFromVector(mRotationMatrixFromVector, event.values);
+						SensorManager.remapCoordinateSystem(mRotationMatrixFromVector,
+							SensorManager.AXIS_X, SensorManager.AXIS_Z,
+							mRotationMatrix);
+						SensorManager.getOrientation(mRotationMatrix, orientationVals);
+
+						// Optionally convert the result from radians to degrees
+						orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
+						orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
+						orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
+
 						// Calculate the tilt angle.
 						// This is the angle between the up vector and the x-y plane (the plane of
 						// the screen) in a range of [-90, 90] degrees.
 						//   -90 degrees: screen horizontal and facing the ground (overhead)
 						//     0 degrees: screen vertical
 						//    90 degrees: screen horizontal and facing the sky (on table)
-						final int tiltAngle = (int) Math.round(
-								Math.asin(z / magnitude) * RADIANS_TO_DEGREES);
+						final int tiltAngle = (int) Math.round(orientationVals[1] /*
+								Math.asin(z / magnitude) * RADIANS_TO_DEGREES*/);
 						addTiltHistoryEntryLocked(now, tiltAngle);
 
 						// Determine whether the device appears to be flat or swinging.
@@ -461,8 +478,8 @@ public abstract class WindowOrientationListener {
 							// Calculate the orientation angle.
 							// This is the angle between the x-y projection of the up vector onto
 							// the +y-axis, increasing clockwise in a range of [0, 360] degrees.
-							int orientationAngle = (int) Math.round(
-									-Math.atan2(-x, y) * RADIANS_TO_DEGREES);
+							int orientationAngle = (int) Math.round(-orientationVals[2] /*
+									-Math.atan2(-x, y) * RADIANS_TO_DEGREES*/);
 							if (orientationAngle < 0) {
 								// atan2 returns [-180, 180]; normalize to [0, 360]
 								orientationAngle += 360;
