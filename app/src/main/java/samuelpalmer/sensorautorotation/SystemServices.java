@@ -5,10 +5,17 @@ import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.pm.PackageManager;
+import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.view.WindowManager;
 
-import static android.content.Context.*;
+import static android.content.Context.ACTIVITY_SERVICE;
+import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.KEYGUARD_SERVICE;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.POWER_SERVICE;
+import static android.content.Context.SENSOR_SERVICE;
+import static android.content.Context.WINDOW_SERVICE;
 
 @SuppressWarnings("unused")
 public abstract class SystemServices {
@@ -34,6 +41,10 @@ public abstract class SystemServices {
 
 	public static PowerManager powerManager() {
 		return (PowerManager) get(POWER_SERVICE);
+	}
+
+	public static SensorManager sensorManager() {
+		return (SensorManager) get(SENSOR_SERVICE);
 	}
 
 	private static Object get(String name) {

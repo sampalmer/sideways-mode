@@ -6,7 +6,6 @@ import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -17,6 +16,7 @@ public class OrientationSensorHandler extends State {
 
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screen;
+	private final DeviceOrientationProvider windowOrientationListener;
 
 	private Integer lastRotation;
 	private Integer oldBias;
@@ -25,9 +25,15 @@ public class OrientationSensorHandler extends State {
 		this.calculator = calculator;
 		this.screen = screen;
 
-		if (!windowOrientationListener.canDetectOrientation())
+		windowOrientationListener = DeviceOrientationProviderFactory.create();
+
+		if (!windowOrientationListener.supported())
 			//A user of an HTC One X reported that he/she got this error. Apparently system auto rotation also wasn't working, so it was probably a problem with the phone.
 			EnvironmentError.report(R.string.missing_accelerometer_summary, R.string.missing_accelerometer_message, R.string.app_name);
+
+		Log.i(OrientationSensorHandler.class.getSimpleName(), "Using " + windowOrientationListener.getClass().getSimpleName());
+
+		windowOrientationListener.setListener(listener);
 	}
 
 	@Override
@@ -48,9 +54,9 @@ public class OrientationSensorHandler extends State {
 		windowOrientationListener.disable();
 	}
 
-	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(Process.context(), null) {
+	private final DeviceOrientationListener listener = new DeviceOrientationListener() {
 		@Override
-		public void onProposedRotationChanged(int rotation) {
+		public void changed(int rotation) {
 			if (!started()) {
 				//This happens if you quickly repeatedly enable and disable the service on an emulator.
 				//It might only affect older versions of Android (API 14-16)
@@ -75,7 +81,7 @@ public class OrientationSensorHandler extends State {
 	private void updateRotationBias() {
 		int newBias = deviceRotationBias();
 		if (oldBias == null || newBias != oldBias) {
-			windowOrientationListener.setCurrentRotation(newBias);
+			windowOrientationListener.setBias(newBias);
 			oldBias = newBias;
 		}
 	}

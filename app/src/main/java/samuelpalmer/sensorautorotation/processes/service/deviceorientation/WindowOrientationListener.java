@@ -22,6 +22,7 @@
  * -Logging removed to fix errors due to inaccessible code
  * -Suppression of lint checks and warnings
  * -Removed XML-based tilt tolerance config
+ * -Reduced class accessibility
  */
 
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
@@ -51,7 +52,7 @@ import java.io.PrintWriter;
  */
 @SuppressWarnings("ALL")
 @SuppressLint("all")
-public abstract class WindowOrientationListener {
+abstract class WindowOrientationListener {
 	private static final String TAG = "WindowOrientationListener";
 
 	private static final boolean USE_GRAVITY_SENSOR = false;
