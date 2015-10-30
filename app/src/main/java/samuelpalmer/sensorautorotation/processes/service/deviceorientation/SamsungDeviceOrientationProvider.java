@@ -21,7 +21,12 @@ class SamsungDeviceOrientationProvider implements DeviceOrientationProvider {
 
 	@Override
 	public boolean supported() {
-		return sensor != null;
+		return
+			sensor != null
+			&&
+			sensor.getVendor().toLowerCase().contains("samsung")
+			&&
+			sensor.getName().toLowerCase().contains("screen orientation");
 	}
 
 	@Override

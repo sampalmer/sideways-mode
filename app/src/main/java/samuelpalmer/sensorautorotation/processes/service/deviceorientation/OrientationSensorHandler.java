@@ -5,8 +5,6 @@ import android.util.Log;
 import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -26,10 +24,6 @@ public class OrientationSensorHandler extends State {
 		this.screen = screen;
 
 		windowOrientationListener = DeviceOrientationProviderFactory.create();
-
-		if (!windowOrientationListener.supported())
-			//A user of an HTC One X reported that he/she got this error. Apparently system auto rotation also wasn't working, so it was probably a problem with the phone.
-			EnvironmentError.report(R.string.missing_accelerometer_summary, R.string.missing_accelerometer_message, R.string.app_name);
 
 		Log.i(OrientationSensorHandler.class.getSimpleName(), "Using " + windowOrientationListener.getClass().getSimpleName());
 
