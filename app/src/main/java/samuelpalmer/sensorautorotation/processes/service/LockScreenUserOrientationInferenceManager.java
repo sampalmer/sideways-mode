@@ -16,13 +16,14 @@ public class LockScreenUserOrientationInferenceManager extends State {
 
 	@Override
 	protected void start() {
-		setting.subscribe(refresh);
 		refresh();
+		setting.subscribe(refresh);
 	}
 
 	@Override
 	protected void stop() {
 		setting.unsubscribe(refresh);
+		inferrer.ensureStopped();
 	}
 
 	private final EventHandler refresh = new EventHandler() {
