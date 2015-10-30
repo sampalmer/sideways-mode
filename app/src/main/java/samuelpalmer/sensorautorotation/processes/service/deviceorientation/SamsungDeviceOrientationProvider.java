@@ -7,6 +7,16 @@ import android.hardware.SensorManager;
 
 import samuelpalmer.sensorautorotation.SystemServices;
 
+/**
+ * Has much less lag than the AOSP mechanism while still being very accurate.
+ *
+ * Only tested on Samsung Galaxy S5, but Google searches suggest the sensor is present in other devices:
+ * -Galaxy Note 2 (https://github.com/hbibel/TapToUnlock/wiki/Sensor-Dumps-of-Different-Devices)
+ * -Galaxy Tab (http://androidfragmentation.com/database/v/dr/688354/oem/samsung/dm/SM-T310)
+ * -Galaxy A5 (http://androidfragmentation.com/database/v/dr/688592/oem/samsung/dm/SM-A500H)
+ * -Galaxy Tab 3 (http://androidfragmentation.com/database/v/dr/688547/oem/samsung/dm/SM-T211)
+ * -Galaxy Grand 2 (http://androidfragmentation.com/database/v/dr/657556/oem/samsung/dm/SM-G7102)
+ */
 class SamsungDeviceOrientationProvider implements DeviceOrientationProvider {
 
 	public static final int TYPE_SCREEN_ORIENTATION = 65558;
