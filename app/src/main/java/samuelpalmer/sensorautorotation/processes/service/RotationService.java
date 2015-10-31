@@ -9,7 +9,6 @@ import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
-import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.SystemServices;
@@ -21,8 +20,6 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
-import samuelpalmer.sensorautorotation.settings.CachedSetting;
-import samuelpalmer.sensorautorotation.settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -65,9 +62,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 
-		Setting<Orientation> proposedScreenOrientation = new CachedSetting<>(systemSettings.userRotation);
-		calculator = new OrientationCalculator(screenRotationMonitor, applicationState, proposedScreenOrientation);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator, proposedScreenOrientation);
+		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(samuelpalmer.sensorautorotation.Process.context());
@@ -84,11 +80,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
 
 		systemAutoRotationMonitor.ensureStarted();
-
-		//CORE STARTUP LOGIC: ORDER IS CRITICAL
 		screenOrientationController.ensureStarted();
-		calculator.reset();
-
 		serviceNotificationManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();

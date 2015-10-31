@@ -6,7 +6,6 @@ import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
-import samuelpalmer.sensorautorotation.settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
@@ -14,13 +13,11 @@ public class ScreenOrientationController extends State {
 	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
 	private final OrientationCalculator calculator;
-	private final Setting<Orientation> proposedScreenOrientation;
 
-	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator, Setting<Orientation> proposedScreenOrientation) {
+	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator) {
 		this.settings = settings;
 		this.screen = screen;
 		this.calculator = calculator;
-		this.proposedScreenOrientation = proposedScreenOrientation;
 	}
 
 	@Override
@@ -47,7 +44,7 @@ public class ScreenOrientationController extends State {
 		if (BuildConfig.DEBUG)
 			Log.d(getClass().getSimpleName(), "Proposing " + value);
 
-		proposedScreenOrientation.set(value);
+		settings.userRotation.set(value);
 	}
 
 }
