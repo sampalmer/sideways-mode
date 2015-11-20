@@ -38,7 +38,12 @@ public class OrientationCalculator {
 	}
 
 	public void offsetUser(int clockwiseRotations) {
-		Orientation newUser = user().plus(new Rotation(-clockwiseRotations));
+		Orientation newUser = user();
+
+		do
+			newUser = newUser.plus(new Rotation(-clockwiseRotations));
+		while (newUser.equals(Orientation.UPSIDE_DOWN));
+
 		state.user.set(newUser);
 		reportChange();
 	}
