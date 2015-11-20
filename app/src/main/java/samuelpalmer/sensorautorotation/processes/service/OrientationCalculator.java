@@ -53,7 +53,8 @@ public class OrientationCalculator {
 		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
-		state.set(newValue, inferredUser());
+		Orientation inferredUser = inferredUser();
+		state.set(newValue, inferredUser.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : inferredUser);
 		reportChange();
 	}
 
