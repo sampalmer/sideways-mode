@@ -54,7 +54,7 @@ public class NotificationParametersFactory {
 		return new NotificationParameters(
 			mode(),
 			overridden(),
-			new UserOrientation(calculator.user(), screenRotationMonitor, calculator.proposedScreenOrientation()),
+			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority()
 		);
 	}
@@ -68,6 +68,16 @@ public class NotificationParametersFactory {
 		Orientation actual = screenRotationMonitor.currentRotation();
 
 		return !requested.equals(actual);
+	}
+
+	/**
+	 * Even if the user is technically upside-down, we swap them to upright
+	 * once they go into auto-rotate mode, so from their perspective, they
+	 * weren't actually upside-down.
+	 */
+	private Orientation effectiveUser() {
+		Orientation result = calculator.user();
+		return result.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : result;
 	}
 
 	private NotificationPriority priority() {
