@@ -5,13 +5,15 @@ import samuelpalmer.sensorautorotation.R;
 
 abstract class DeviceOrientationProviderFactory {
 
-	private static final DeviceOrientationProvider[] prioritisedProviders = new DeviceOrientationProvider[]{
-		new SamsungDeviceOrientationProvider(),
-		new AospDeviceOrientationProvider()
-	};
+	private static DeviceOrientationProvider[] prioritisedProviders() {
+		return new DeviceOrientationProvider[]{
+			new SamsungDeviceOrientationProvider(),
+			new AospDeviceOrientationProvider()
+		};
+	}
 
 	public static DeviceOrientationProvider create() {
-		for (DeviceOrientationProvider provider : prioritisedProviders)
+		for (DeviceOrientationProvider provider : prioritisedProviders())
 			if (provider.supported())
 				return provider;
 
