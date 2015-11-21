@@ -54,16 +54,20 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
 		Orientation inferredUser = inferredUser();
+
 		state.set(newValue, inferredUser.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : inferredUser);
 		reportChange();
 	}
 
 	public void setLockingOverride(boolean lockingOverride) {
 		if (this.lockingOverride != lockingOverride) {
-			if (autoRotate() && lockingOverride) {
-				state.user.set(Orientation.NATURAL);
-				device = Orientation.NATURAL;
-			}
+			if (autoRotate())
+				if (lockingOverride) {
+					state.user.set(Orientation.NATURAL);
+					device = Orientation.NATURAL;
+				} else if (user().equals(Orientation.UPSIDE_DOWN)) {
+					state.user.set(Orientation.NATURAL);
+				}
 
 			this.lockingOverride = lockingOverride;
 			reportChange();
@@ -96,6 +100,6 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return Orientation.NATURAL.plus(device.minus(state.user.get()));
+		return Orientation.NATURAL.plus(device.minus(user()));
 	}
 }
