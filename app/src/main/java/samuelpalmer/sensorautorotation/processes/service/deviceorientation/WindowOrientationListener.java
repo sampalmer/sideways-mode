@@ -34,7 +34,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.util.Log;
 
 import java.io.PrintWriter;
 
@@ -67,6 +69,29 @@ abstract class WindowOrientationListener {
 
 	private final Object mLock = new Object();
 
+	private Sensor mAccelerometer;
+	private boolean mGotGravityEvent;
+	public static final int EXPECTED_GRAVITY_EVENT_WINDOW_MS = 1000;
+
+	private final Runnable checkForGravityEvent = new Runnable() {
+		@Override
+		public void run() {
+			synchronized (mLock) {
+				if (mEnabled && !mGotGravityEvent) {
+					Log.i(WindowOrientationListener.class.getSimpleName(), "Didn't get a gravity event after " + EXPECTED_GRAVITY_EVENT_WINDOW_MS + "ms. Falling back to accelerometer.");
+
+					disable();
+					mSensor = mAccelerometer;
+					enable();
+				}
+			}
+		}
+	};
+
+	private Handler effectiveHandler() {
+		return mHandler == null ? new Handler(Looper.getMainLooper()) : mHandler;
+	}
+
 	/**
 	 * Creates a new WindowOrientationListener.
 	 *
@@ -94,8 +119,9 @@ abstract class WindowOrientationListener {
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		if (mSensor == null)
-			mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mSensor = mAccelerometer;
 
 		if (mSensor != null) {
 			// Create listener only if sensors do exist
@@ -114,9 +140,14 @@ abstract class WindowOrientationListener {
 			}
 			if (mEnabled == false) {
 				mSensorEventListener.resetLocked();
-				//For gravity sensor, delays of 55000 or higher cause the sensor values to go bad when the device is swung
+				//For gravity sensor, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
 				mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() == Sensor.TYPE_GRAVITY ? 54999 : mRate, mHandler);
 				mEnabled = true;
+
+				// Apparently it's possible to successfully register for gravity events but not receive any:
+				// http://stackoverflow.com/a/10447302/238753
+				if (mSensor.getType() == Sensor.TYPE_GRAVITY)
+					effectiveHandler().postDelayed(checkForGravityEvent, EXPECTED_GRAVITY_EVENT_WINDOW_MS);
 			}
 		}
 	}
@@ -132,6 +163,8 @@ abstract class WindowOrientationListener {
 			if (mEnabled == true) {
 				mSensorManager.unregisterListener(mSensorEventListener);
 				mEnabled = false;
+
+				effectiveHandler().removeCallbacks(checkForGravityEvent);
 			}
 		}
 	}
@@ -496,6 +529,9 @@ abstract class WindowOrientationListener {
 			int oldProposedRotation;
 
 			synchronized (mLock) {
+				if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
+					mGotGravityEvent = true;
+
 				// The vector given in the SensorEvent points straight up (towards the sky) under
 				// ideal conditions (the phone is not accelerating).  I'll call this up vector
 				// elsewhere.
