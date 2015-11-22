@@ -73,6 +73,15 @@ abstract class WindowOrientationListener {
 	private boolean mGotGravityEvent;
 	public static final int EXPECTED_GRAVITY_EVENT_WINDOW_MS = 1000;
 
+	private void setSensor(Sensor sensor) {
+		mSensor = sensor;
+
+		if (sensor != null)
+			Log.i(WindowOrientationListener.class.getSimpleName(),  "Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion());
+		else
+			Log.i(WindowOrientationListener.class.getSimpleName(),  "No suitable sensor found");
+	}
+
 	private final Runnable checkForGravityEvent = new Runnable() {
 		@Override
 		public void run() {
@@ -81,7 +90,7 @@ abstract class WindowOrientationListener {
 					Log.i(WindowOrientationListener.class.getSimpleName(), "Didn't get a gravity event after " + EXPECTED_GRAVITY_EVENT_WINDOW_MS + "ms. Falling back to accelerometer.");
 
 					disable();
-					mSensor = mAccelerometer;
+					setSensor(mAccelerometer);
 					enable();
 				}
 			}
@@ -118,10 +127,9 @@ abstract class WindowOrientationListener {
 		mHandler = handler;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
-		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+		Sensor gravitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		if (mSensor == null)
-			mSensor = mAccelerometer;
+		setSensor(gravitySensor != null ? gravitySensor : mAccelerometer);
 
 		if (mSensor != null) {
 			// Create listener only if sensors do exist
