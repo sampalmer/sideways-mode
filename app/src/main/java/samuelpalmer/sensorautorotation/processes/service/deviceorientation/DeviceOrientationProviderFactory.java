@@ -7,7 +7,7 @@ abstract class DeviceOrientationProviderFactory {
 
 	private static DeviceOrientationProvider[] prioritisedProviders() {
 		return new DeviceOrientationProvider[]{
-			new SamsungDeviceOrientationProvider(),
+//			new SamsungDeviceOrientationProvider(),
 			new AospDeviceOrientationProvider()
 		};
 	}

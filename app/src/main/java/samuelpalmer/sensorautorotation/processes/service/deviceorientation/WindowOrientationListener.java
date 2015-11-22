@@ -93,8 +93,10 @@ abstract class WindowOrientationListener {
 		mHandler = handler;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
-		mSensor = mSensorManager.getDefaultSensor(USE_GRAVITY_SENSOR
-			? Sensor.TYPE_GRAVITY : Sensor.TYPE_ACCELEROMETER);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+		if (mSensor == null)
+			mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
 		if (mSensor != null) {
 			// Create listener only if sensors do exist
 			mSensorEventListener = new SensorEventListenerImpl(context);
@@ -112,7 +114,8 @@ abstract class WindowOrientationListener {
 			}
 			if (mEnabled == false) {
 				mSensorEventListener.resetLocked();
-				mSensorManager.registerListener(mSensorEventListener, mSensor, mRate, mHandler);
+				//For gravity sensor, delays of 55000 or higher cause the sensor values to go bad when the device is swung
+				mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() == Sensor.TYPE_GRAVITY ? 54999 : mRate, mHandler);
 				mEnabled = true;
 			}
 		}
@@ -514,10 +517,12 @@ abstract class WindowOrientationListener {
 					resetLocked();
 					skipSample = true;
 				} else {
-					final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
-					x = alpha * (x - mLastFilteredX) + mLastFilteredX;
-					y = alpha * (y - mLastFilteredY) + mLastFilteredY;
-					z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+					if (mSensor.getType() != Sensor.TYPE_GRAVITY) {
+						final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
+						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
+						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
+						z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+					}
 					skipSample = false;
 				}
 				mLastFilteredTimestampNanos = now;
