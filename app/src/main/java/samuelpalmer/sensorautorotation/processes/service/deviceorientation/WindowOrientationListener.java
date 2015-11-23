@@ -41,6 +41,9 @@ import android.util.Log;
 
 import java.io.PrintWriter;
 
+import samuelpalmer.sensorautorotation.EnvironmentError;
+import samuelpalmer.sensorautorotation.R;
+
 /**
  * A special helper class used by the WindowManager
  * for receiving notifications from the SensorManager when
@@ -114,7 +117,10 @@ abstract class WindowOrientationListener {
 					Log.w(WindowOrientationListener.class.getSimpleName(), "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms. Falling back.");
 
 					disable();
+					Sensor badSensor = mSensor;
 					setSensor(findNextBestSensor());
+					if (mSensor == null)
+						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message, badSensor.getName());
 					enable();
 				}
 			}

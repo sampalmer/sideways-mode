@@ -62,6 +62,9 @@
 	<string name="missing_accelerometer_summary">No accelerometer</string>
 	<string name="missing_accelerometer_message">Couldn\'t find an accelerometer. %1$s needs an accelerometer to run. If the device has one, try using the device\'s \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
 
+	<string name="bad_sensor_data_summary">Sensor problem</string>
+	<string name="bad_sensor_data_message">The \"%1$s\" sensor didn\'t produce any data. Couldn\'t find a working sensor to use.</string>
+
 	<string name="system_rotation_enabled_summary">System rotation enabled</string>
 	<string name="system_rotation_enabled_message">System screen auto-rotation was enabled.</string>
 
