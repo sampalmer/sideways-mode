@@ -80,6 +80,7 @@ abstract class WindowOrientationListener {
 			Sensor.TYPE_ACCELEROMETER,
 		};
 	}
+	private boolean mMeasuringAcceleration;
 
 	private void setSensor(Sensor sensor) {
 		mSensor = sensor;
@@ -92,6 +93,17 @@ abstract class WindowOrientationListener {
 			:
 				"No suitable sensor found"
 		);
+
+		if (mSensor != null) {
+			if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER
+				|| mSensor.getType() == Sensor.TYPE_GRAVITY)
+				mMeasuringAcceleration = true;
+			else if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR
+				|| mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+				mMeasuringAcceleration = false;
+			else
+				throw new RuntimeException("Unknown sensor type: " + mSensor.getType());
+		}
 	}
 
 	private final Runnable checkForSensorEvent = new Runnable() {
@@ -127,16 +139,6 @@ abstract class WindowOrientationListener {
 		}
 
 		return null;
-	}
-
-	private boolean measuringAcceleration() {
-		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER
-			|| mSensor.getType() == Sensor.TYPE_GRAVITY)
-			return true;
-		if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR
-			|| mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
-			return false;
-		throw new RuntimeException("Unknown sensor type: " + mSensor.getType());
 	}
 
 	/**
@@ -568,8 +570,9 @@ abstract class WindowOrientationListener {
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		}
 
-		final float[] mRotationMatrixFromVector = new float[16];
-		final float[] mRotationMatrix = new float[16];
+		//These are cached and recycled here to avoid continual heap allocation
+		final float[] mRotationMatrixFromVector = new float[9];
+		final float[] mRotationMatrix = new float[9];
 		final float[] orientationVals = new float[3];
 
 		@Override
@@ -624,7 +627,7 @@ abstract class WindowOrientationListener {
 				boolean isSwinging = false;
 				if (!skipSample) {
 					// Calculate the magnitude of the acceleration vector.
-					final float magnitude = measuringAcceleration() ? (float) Math.sqrt(x * x + y * y + z * z) : SensorManager.GRAVITY_EARTH;
+					final float magnitude = mMeasuringAcceleration ? (float) Math.sqrt(x * x + y * y + z * z) : SensorManager.GRAVITY_EARTH;
 					if (magnitude < NEAR_ZERO_MAGNITUDE) {
 						clearPredictedRotationLocked();
 					} else {
@@ -635,7 +638,7 @@ abstract class WindowOrientationListener {
 							mAccelerationTimestampNanos = now;
 						}
 
-						if (!measuringAcceleration()) {
+						if (!mMeasuringAcceleration) {
 							SensorManager.getRotationMatrixFromVector(mRotationMatrixFromVector, event.values);
 							if (!SensorManager.remapCoordinateSystem(mRotationMatrixFromVector,
 								SensorManager.AXIS_X, SensorManager.AXIS_Z,
@@ -650,7 +653,7 @@ abstract class WindowOrientationListener {
 						//   -90 degrees: screen horizontal and facing the ground (overhead)
 						//     0 degrees: screen vertical
 						//    90 degrees: screen horizontal and facing the sky (on table)
-						final int tiltAngle = (int) Math.round((measuringAcceleration() ? Math.asin(z / magnitude) : orientationVals[1]) * RADIANS_TO_DEGREES);
+						final int tiltAngle = (int) Math.round((mMeasuringAcceleration ? Math.asin(z / magnitude) : orientationVals[1]) * RADIANS_TO_DEGREES);
 						addTiltHistoryEntryLocked(now, tiltAngle);
 
 						// Determine whether the device appears to be flat or swinging.
@@ -678,7 +681,7 @@ abstract class WindowOrientationListener {
 							// Calculate the orientation angle.
 							// This is the angle between the x-y projection of the up vector onto
 							// the +y-axis, increasing clockwise in a range of [0, 360] degrees.
-							int orientationAngle = (int) Math.round(-(measuringAcceleration() ? Math.atan2(-x, y) : orientationVals[2]) * RADIANS_TO_DEGREES);
+							int orientationAngle = (int) Math.round(-(mMeasuringAcceleration ? Math.atan2(-x, y) : orientationVals[2]) * RADIANS_TO_DEGREES);
 							if (orientationAngle < 0) {
 								// atan2 returns [-180, 180]; normalize to [0, 360]
 								orientationAngle += 360;
