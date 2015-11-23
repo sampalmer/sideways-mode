@@ -88,16 +88,12 @@ abstract class WindowOrientationListener {
 	private void setSensor(Sensor sensor) {
 		mSensor = sensor;
 
-		Log.i(
-			WindowOrientationListener.class.getSimpleName(),
-			sensor != null
-			?
-				"Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion()
-			:
-				"No suitable sensor found"
-		);
-
 		if (mSensor != null) {
+			Log.i(
+				WindowOrientationListener.class.getSimpleName(),
+				"Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion()
+			);
+
 			if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER
 				|| mSensor.getType() == Sensor.TYPE_GRAVITY)
 				mMeasuringAcceleration = true;
