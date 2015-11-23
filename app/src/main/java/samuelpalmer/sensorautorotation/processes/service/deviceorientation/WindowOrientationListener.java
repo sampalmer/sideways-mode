@@ -23,6 +23,7 @@
  * -Suppression of lint checks and warnings
  * -Removed XML-based tilt tolerance config
  * -Reduced class accessibility
+ * -Added support for gravity and rotation sensors for reduced lag
  */
 
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
@@ -69,28 +70,39 @@ abstract class WindowOrientationListener {
 
 	private final Object mLock = new Object();
 
-	private Sensor mAccelerometer;
-	private boolean mGotGravityEvent;
-	public static final int EXPECTED_GRAVITY_EVENT_WINDOW_MS = 1000;
+	private boolean mGotSensorEvent;
+	private static final int EXPECTED_EVENT_WINDOW_MS = 1000;
+	private int[] prioritisedSensorTypes() {
+		return new int[] {
+			Sensor.TYPE_GAME_ROTATION_VECTOR,
+			Sensor.TYPE_ROTATION_VECTOR,
+			Sensor.TYPE_GRAVITY,
+			Sensor.TYPE_ACCELEROMETER,
+		};
+	}
 
 	private void setSensor(Sensor sensor) {
 		mSensor = sensor;
 
-		if (sensor != null)
-			Log.i(WindowOrientationListener.class.getSimpleName(),  "Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion());
-		else
-			Log.i(WindowOrientationListener.class.getSimpleName(),  "No suitable sensor found");
+		Log.i(
+			WindowOrientationListener.class.getSimpleName(),
+			sensor != null
+			?
+				"Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion()
+			:
+				"No suitable sensor found"
+		);
 	}
 
-	private final Runnable checkForGravityEvent = new Runnable() {
+	private final Runnable checkForSensorEvent = new Runnable() {
 		@Override
 		public void run() {
 			synchronized (mLock) {
-				if (mEnabled && !mGotGravityEvent) {
-					Log.i(WindowOrientationListener.class.getSimpleName(), "Didn't get a gravity event after " + EXPECTED_GRAVITY_EVENT_WINDOW_MS + "ms. Falling back to accelerometer.");
+				if (mEnabled && !mGotSensorEvent) {
+					Log.w(WindowOrientationListener.class.getSimpleName(), "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms. Falling back.");
 
 					disable();
-					setSensor(mAccelerometer);
+					setSensor(findNextBestSensor());
 					enable();
 				}
 			}
@@ -99,6 +111,32 @@ abstract class WindowOrientationListener {
 
 	private Handler effectiveHandler() {
 		return mHandler == null ? new Handler(Looper.getMainLooper()) : mHandler;
+	}
+
+	private Sensor findNextBestSensor() {
+		boolean foundCurrentSensor = mSensor == null;
+
+		for (int type : prioritisedSensorTypes()) {
+			Sensor sensor = mSensorManager.getDefaultSensor(type);
+			if (foundCurrentSensor) {
+				if (sensor != null)
+					return sensor;
+			}
+			else if (sensor.getType() == mSensor.getType())
+				foundCurrentSensor = true;
+		}
+
+		return null;
+	}
+
+	private boolean measuringAcceleration() {
+		if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER
+			|| mSensor.getType() == Sensor.TYPE_GRAVITY)
+			return true;
+		if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR
+			|| mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+			return false;
+		throw new RuntimeException("Unknown sensor type: " + mSensor.getType());
 	}
 
 	/**
@@ -127,9 +165,8 @@ abstract class WindowOrientationListener {
 		mHandler = handler;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
-		Sensor gravitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		setSensor(gravitySensor != null ? gravitySensor : mAccelerometer);
+
+		setSensor(findNextBestSensor());
 
 		if (mSensor != null) {
 			// Create listener only if sensors do exist
@@ -148,14 +185,14 @@ abstract class WindowOrientationListener {
 			}
 			if (mEnabled == false) {
 				mSensorEventListener.resetLocked();
-				//For gravity sensor, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-				mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() == Sensor.TYPE_GRAVITY ? 54999 : mRate, mHandler);
+				//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
+				mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler);
 				mEnabled = true;
 
 				// Apparently it's possible to successfully register for gravity events but not receive any:
 				// http://stackoverflow.com/a/10447302/238753
-				if (mSensor.getType() == Sensor.TYPE_GRAVITY)
-					effectiveHandler().postDelayed(checkForGravityEvent, EXPECTED_GRAVITY_EVENT_WINDOW_MS);
+				mGotSensorEvent = false;
+				effectiveHandler().postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
 			}
 		}
 	}
@@ -172,7 +209,7 @@ abstract class WindowOrientationListener {
 				mSensorManager.unregisterListener(mSensorEventListener);
 				mEnabled = false;
 
-				effectiveHandler().removeCallbacks(checkForGravityEvent);
+				effectiveHandler().removeCallbacks(checkForSensorEvent);
 			}
 		}
 	}
@@ -531,14 +568,20 @@ abstract class WindowOrientationListener {
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		}
 
+		final float[] mRotationMatrixFromVector = new float[16];
+		final float[] mRotationMatrix = new float[16];
+		final float[] orientationVals = new float[3];
+
 		@Override
 		public void onSensorChanged(SensorEvent event) {
+			if (event.sensor.getType() != mSensor.getType() || !mEnabled)
+				return;
+
 			int proposedRotation;
 			int oldProposedRotation;
 
 			synchronized (mLock) {
-				if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
-					mGotGravityEvent = true;
+				mGotSensorEvent = true;
 
 				// The vector given in the SensorEvent points straight up (towards the sky) under
 				// ideal conditions (the phone is not accelerating).  I'll call this up vector
@@ -561,7 +604,7 @@ abstract class WindowOrientationListener {
 					resetLocked();
 					skipSample = true;
 				} else {
-					if (mSensor.getType() != Sensor.TYPE_GRAVITY) {
+					if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 						final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
 						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
 						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
@@ -570,16 +613,18 @@ abstract class WindowOrientationListener {
 					skipSample = false;
 				}
 				mLastFilteredTimestampNanos = now;
-				mLastFilteredX = x;
-				mLastFilteredY = y;
-				mLastFilteredZ = z;
+				if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+					mLastFilteredX = x;
+					mLastFilteredY = y;
+					mLastFilteredZ = z;
+				}
 
 				boolean isAccelerating = false;
 				boolean isFlat = false;
 				boolean isSwinging = false;
 				if (!skipSample) {
 					// Calculate the magnitude of the acceleration vector.
-					final float magnitude = (float) Math.sqrt(x * x + y * y + z * z);
+					final float magnitude = measuringAcceleration() ? (float) Math.sqrt(x * x + y * y + z * z) : SensorManager.GRAVITY_EARTH;
 					if (magnitude < NEAR_ZERO_MAGNITUDE) {
 						clearPredictedRotationLocked();
 					} else {
@@ -590,14 +635,22 @@ abstract class WindowOrientationListener {
 							mAccelerationTimestampNanos = now;
 						}
 
+						if (!measuringAcceleration()) {
+							SensorManager.getRotationMatrixFromVector(mRotationMatrixFromVector, event.values);
+							if (!SensorManager.remapCoordinateSystem(mRotationMatrixFromVector,
+								SensorManager.AXIS_X, SensorManager.AXIS_Z,
+								mRotationMatrix))
+								throw new RuntimeException("Couldn't remap coordinate system. In length: " + mRotationMatrixFromVector.length + ", out length: " + mRotationMatrix.length);
+							SensorManager.getOrientation(mRotationMatrix, orientationVals);
+						}
+
 						// Calculate the tilt angle.
 						// This is the angle between the up vector and the x-y plane (the plane of
 						// the screen) in a range of [-90, 90] degrees.
 						//   -90 degrees: screen horizontal and facing the ground (overhead)
 						//     0 degrees: screen vertical
 						//    90 degrees: screen horizontal and facing the sky (on table)
-						final int tiltAngle = (int) Math.round(
-							Math.asin(z / magnitude) * RADIANS_TO_DEGREES);
+						final int tiltAngle = (int) Math.round((measuringAcceleration() ? Math.asin(z / magnitude) : orientationVals[1]) * RADIANS_TO_DEGREES);
 						addTiltHistoryEntryLocked(now, tiltAngle);
 
 						// Determine whether the device appears to be flat or swinging.
@@ -625,8 +678,7 @@ abstract class WindowOrientationListener {
 							// Calculate the orientation angle.
 							// This is the angle between the x-y projection of the up vector onto
 							// the +y-axis, increasing clockwise in a range of [0, 360] degrees.
-							int orientationAngle = (int) Math.round(
-								-Math.atan2(-x, y) * RADIANS_TO_DEGREES);
+							int orientationAngle = (int) Math.round(-(measuringAcceleration() ? Math.atan2(-x, y) : orientationVals[2]) * RADIANS_TO_DEGREES);
 							if (orientationAngle < 0) {
 								// atan2 returns [-180, 180]; normalize to [0, 360]
 								orientationAngle += 360;
