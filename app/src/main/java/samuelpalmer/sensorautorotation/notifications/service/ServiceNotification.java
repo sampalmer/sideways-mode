@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.widget.RemoteViews;
+import android.view.View;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
@@ -39,7 +39,24 @@ public class ServiceNotification {
 		hideTimestamp();
 
 		Notification notification = builder.build();
-		addButtons(notification);
+
+		NotificationButtons notificationButtons = new NotificationButtons(Process.context());
+
+		if (VERSION.SDK_INT >= 17)
+			//The rotate left button should always be on the left side regardless of locale
+			notificationButtons.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+		notificationButtons
+			.configureButton(
+				R.drawable.ic_action_rotate_left,
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT), StringResource.get(R.string.action_rotate_left))
+			.configureButton(
+				params.mode.actionIcon(),
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE), StringResource.get(params.mode.toggleToOtherModeAResourceId()))
+			.configureButton(
+				R.drawable.ic_action_rotate_right,
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT), StringResource.get(R.string.action_rotate_right))
+			.applyTo(notification);
 
 		return notification;
 	}
@@ -53,27 +70,4 @@ public class ServiceNotification {
 			builder.setWhen(0);
 	}
 
-	private void addButtons(Notification notification) {
-		content = new RemoteViews(Process.context().getPackageName(), R.layout.notification);
-		content.removeAllViews(R.id.notification_main_column);
-		content.addView(R.id.notification_main_column, notification.contentView);
-
-		configureButton(R.id.toggle_mode_button, RotationService.ACTION_TOGGLE, params.mode.actionIcon(), params.mode.toggleToOtherModeAResourceId());
-		configureButton(R.id.rotate_left_button, RotationService.ACTION_ROTATE_LEFT, R.drawable.ic_action_rotate_left, R.string.action_rotate_left);
-		configureButton(R.id.rotate_right_button, RotationService.ACTION_ROTATE_RIGHT, R.drawable.ic_action_rotate_right, R.string.action_rotate_right);
-
-		notification.contentView = content;
-	}
-
-	private void configureButton(int id, String action, int icon, int contentDescriptionId) {
-		content.setOnClickPendingIntent(id, RotationServiceReceiver.getPendingIntent(action));
-
-		if (VERSION.SDK_INT >= 15)
-			content.setContentDescription(id, StringResource.get(contentDescriptionId));
-
-		content.setImageViewResource(id, icon);
-		content.setInt(id, "setColorFilter", NotificationStyles.getActionButtonColour());
-	}
-
-	private RemoteViews content;
 }

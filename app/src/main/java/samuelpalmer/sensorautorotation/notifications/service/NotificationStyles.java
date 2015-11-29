@@ -1,52 +1,90 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
+import android.app.Notification.Action;
+import android.app.Notification.Builder;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.os.Build.VERSION;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
-
-public final class NotificationStyles {
-
-	private static Integer actionButtonColour;
-
-	public static int getActionButtonColour() {
-		if (actionButtonColour != null)
-			return actionButtonColour;
-
-		NotificationStyles styles = new NotificationStyles();
-		styles.extractColors();
-
-		if (styles.actionButton.colour != null)
-			actionButtonColour = styles.actionButton.colour;
-		else { //Android 4.0 doesn't have notification actions
-			if (styles.title.colour != null)
-				actionButtonColour = Color.rgb(Color.red(styles.title.colour), Color.green(styles.title.colour), Color.blue(styles.title.colour));
-			else
-				actionButtonColour = Color.BLACK;
-
-			actionButtonColour = Color.argb((int) (255 * .8), Color.red(actionButtonColour), Color.green(actionButtonColour), Color.blue(actionButtonColour));
-		}
-
-		return actionButtonColour;
-	}
+final class NotificationStyles {
 
 	private final StyleType title = new StyleType("TITLE");
 	private final StyleType actionButton = new StyleType("ACTION");
+	private final Context context;
+	private final int exampleIconResource;
 
-	private NotificationStyles(){}
+	public NotificationStyles(Context context, int exampleIconResource) {
+		this.context = context;
+		this.exampleIconResource = exampleIconResource;
+		extractColors();
+	}
+
+	public int getActionButtonColour() {
+		int result;
+
+		if (actionButton.colour != null)
+			result = actionButton.colour;
+		else { //Android 4.0 doesn't have notification actions
+			if (title.colour != null)
+				result = Color.rgb(Color.red(title.colour), Color.green(title.colour), Color.blue(title.colour));
+			else
+				result = Color.BLACK;
+
+			result = Color.argb((int) (255 * .8), Color.red(result), Color.green(result), Color.blue(result));
+		}
+
+		return result;
+	}
+
+	private void extractColors()
+	{
+		Builder builder = new Builder(context).setContentTitle(title.searchTip);
+
+		//Add action button
+		String actionTitle = actionButton.searchTip;
+		PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent(""), 0);
+
+		if (VERSION.SDK_INT >= 23)
+			builder.addAction(new Action.Builder(Icon.createWithResource(context, exampleIconResource), actionTitle, intent).build());
+		else if (VERSION.SDK_INT >= 16)
+			//noinspection deprecation
+			builder.addAction(exampleIconResource, actionTitle, intent);
+
+		//Build
+		Notification notification;
+		if (VERSION.SDK_INT >= 16)
+			notification = builder.build();
+		else
+			//noinspection deprecation
+			notification = builder.getNotification();
+
+		LinearLayout group = new LinearLayout(context);
+
+		RemoteViews contentView;
+		if (VERSION.SDK_INT >= 16)
+			contentView = notification.bigContentView;
+		else
+			contentView = notification.contentView;
+
+		ViewGroup event = (ViewGroup) contentView.apply(context, group);
+		recurseGroup(event);
+		group.removeAllViews();
+
+		if (title.colour == null)
+			Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification title colour");
+	}
 
 	private void recurseGroup(ViewGroup viewGroup)
 	{
@@ -63,7 +101,8 @@ public final class NotificationStyles {
 					if (text.equals(type.searchTip))
 					{
 						DisplayMetrics metrics = new DisplayMetrics();
-						SystemServices.windowManager().getDefaultDisplay().getMetrics(metrics);
+						WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+						windowManager.getDefaultDisplay().getMetrics(metrics);
 						type.colour = textView.getTextColors().getDefaultColor();
 					}
 			}
@@ -72,30 +111,7 @@ public final class NotificationStyles {
 		}
 	}
 
-	private void extractColors()
-	{
-		Notification notification = NotificationBuilderCompat.create()
-			.setContentTitle(title.searchTip)
-			.addAction(R.drawable.ic_error, actionButton.searchTip, ComponentType.create(MainActivity.class).pendingIntent())
-			.build();
-
-		LinearLayout group = new LinearLayout(Process.context());
-
-		RemoteViews contentView;
-		if (VERSION.SDK_INT >= 16)
-			contentView = notification.bigContentView;
-		else
-			contentView = notification.contentView;
-
-		ViewGroup event = (ViewGroup) contentView.apply(Process.context(), group);
-		recurseGroup(event);
-		group.removeAllViews();
-
-		if (title.colour == null)
-			Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification title colour");
-	}
-
-	public static class StyleType {
+	private static class StyleType {
 		public Integer colour;
 		private final String searchTip;
 

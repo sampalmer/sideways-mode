@@ -15,36 +15,12 @@
     />
 
 	<LinearLayout
+		android:id="@+id/notification_buttons_container"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 	    android:orientation="horizontal"
-	    android:layoutDirection="ltr"
-	    android:layout_weight="3"
+	    android:layout_weight="1"
 		android:baselineAligned="false"
-		tools:ignore="UnusedAttribute"
-		>
-		<include
-			layout="@layout/notification_button"
-			android:id="@+id/rotate_left_button"
-			android:layout_height="match_parent"
-			android:layout_width="0dp"
-			android:layout_weight="1"
-			tools:ignore="NestedWeights"
-			/>
-
-		<include
-			layout="@layout/notification_button"
-			android:id="@+id/toggle_mode_button"
-			android:layout_height="match_parent"
-			android:layout_width="0dp"
-			android:layout_weight="1"/>
-
-		<include
-			layout="@layout/notification_button"
-			android:id="@+id/rotate_right_button"
-			android:layout_height="match_parent"
-			android:layout_width="0dp"
-			android:layout_weight="1"/>
-	</LinearLayout>
+		tools:ignore="UnusedAttribute" />
 
 </LinearLayout>
