@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.view.View;
 
+import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
