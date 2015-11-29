@@ -3,10 +3,10 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.content.Context;
 
 import samuelpalmer.common.Orientation;
+import samuelpalmer.common.settings.application.BooleanSetting;
+import samuelpalmer.common.settings.application.OrientationSetting;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.Process;
-import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
-import samuelpalmer.sensorautorotation.settings.application.OrientationSetting;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 /**
  * Holds service state using standard non-process-safe preferences for performance.

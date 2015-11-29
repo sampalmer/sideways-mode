@@ -10,12 +10,12 @@ import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventRegistrar;
+import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
-import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 public class NotificationParametersFactory {
 

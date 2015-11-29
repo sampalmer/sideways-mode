@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 public class LockScreenUserOrientationInferenceManager extends State {
 

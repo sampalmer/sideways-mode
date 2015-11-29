@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import samuelpalmer.common.Orientation;
+import samuelpalmer.common.settings.application.BooleanSetting;
+import samuelpalmer.common.settings.application.OrientationSetting;
+import samuelpalmer.common.settings.application.Settings.Setting;
+import samuelpalmer.common.settings.application.Settings.Transaction;
+import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
-import samuelpalmer.sensorautorotation.settings.application.OrientationSetting;
-import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
-import samuelpalmer.sensorautorotation.settings.application.Settings.Transaction;
-import samuelpalmer.sensorautorotation.settings.application.StringSetting;
 
 class Migrations {
 	static Map<Integer, Migration> map() {

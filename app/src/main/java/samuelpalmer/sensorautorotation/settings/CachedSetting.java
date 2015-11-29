@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.settings;
 
+import samuelpalmer.common.settings.Setting;
+
 public class CachedSetting<T> implements Setting<T> {
 
 	private final Setting<T> source;

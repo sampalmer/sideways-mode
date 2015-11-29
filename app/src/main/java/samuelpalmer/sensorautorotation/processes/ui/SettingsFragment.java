@@ -22,10 +22,10 @@ import java.util.Arrays;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
+import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class SettingsFragment extends PreferenceFragment {
 

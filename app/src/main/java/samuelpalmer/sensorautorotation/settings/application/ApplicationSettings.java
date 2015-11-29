@@ -3,6 +3,10 @@ package samuelpalmer.sensorautorotation.settings.application;
 import android.content.SharedPreferences;
 
 import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderSharedPreferences;
+import samuelpalmer.common.settings.application.BooleanSetting;
+import samuelpalmer.common.settings.application.EnumSetting;
+import samuelpalmer.common.settings.application.IntegerSetting;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
