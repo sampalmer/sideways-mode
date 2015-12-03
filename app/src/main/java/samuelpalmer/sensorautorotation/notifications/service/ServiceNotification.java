@@ -2,8 +2,6 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.view.View;
 
 import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.ComponentType;
@@ -41,22 +39,24 @@ public class ServiceNotification {
 
 		Notification notification = builder.build();
 
-		NotificationButtons notificationButtons = new NotificationButtons(Process.context());
-
-		if (VERSION.SDK_INT >= 17)
-			//The rotate left button should always be on the left side regardless of locale
-			notificationButtons.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+		NotificationButtons notificationButtons = new NotificationButtons(Process.context(), R.layout.notification);
 
 		notificationButtons
 			.configureButton(
+				R.id.rotate_left_button,
 				R.drawable.ic_action_rotate_left,
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT), StringResource.get(R.string.action_rotate_left))
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT),
+				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
+				R.id.toggle_mode_button,
 				params.mode.actionIcon(),
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE), StringResource.get(params.mode.toggleToOtherModeAResourceId()))
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE),
+				StringResource.get(params.mode.toggleToOtherModeAResourceId()))
 			.configureButton(
+				R.id.rotate_right_button,
 				R.drawable.ic_action_rotate_right,
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT), StringResource.get(R.string.action_rotate_right))
+				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
+				StringResource.get(R.string.action_rotate_right))
 			.applyTo(notification);
 
 		return notification;
