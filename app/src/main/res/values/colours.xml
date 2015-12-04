@@ -2,4 +2,5 @@
 <resources>
 	<color name="primary_500">#795548</color>
 	<color name="primary_700">#5D4037</color>
+	<color name="accent_700">#0091EA</color>
 </resources>
