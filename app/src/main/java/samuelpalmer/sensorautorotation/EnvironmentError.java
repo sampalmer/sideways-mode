@@ -26,7 +26,7 @@ public class EnvironmentError {
 
 	private void show() {
 		Notification notification = NotificationBuilderCompat.create()
-				.setSmallIcon(R.drawable.ic_error)
+				.setSmallIcon(R.drawable.error)
 				.setContentIntent(DialogActivity.makePendingIntent(summary, message))
 				.setContentTitle(summary)
 				.setContentText(message)

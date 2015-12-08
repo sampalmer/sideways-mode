@@ -5,7 +5,7 @@
 		android:key="enabled"
 	    android:title="@string/app_enabled"
 	    android:summary="@string/app_enabled_description"
-	    android:icon="@drawable/ic_power"
+	    android:icon="@drawable/power"
 	/>
 
 	<!-- The "dependency" attribute needs to be specified for all children since setting it on the
@@ -18,15 +18,15 @@
 			android:title="@string/notification_priority"
 			android:entries="@array/notification_priorities"
 			android:entryValues="@array/notification_priority_values"
-			android:dialogIcon="@drawable/ic_notification_priority"
-		    android:icon="@drawable/ic_notification_priority"
+			android:dialogIcon="@drawable/notification_priority"
+		    android:icon="@drawable/notification_priority"
 			android:dependency="enabled"
 			/>
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"
 			android:title="@string/allow_upside_down_screen"
 			android:summary="@string/allow_upside_down_screen_description"
-			android:icon="@drawable/ic_screen_upside_down"
+			android:icon="@drawable/screen_upside_down"
 			android:dependency="enabled"
 			/>
 		<CheckBoxPreference

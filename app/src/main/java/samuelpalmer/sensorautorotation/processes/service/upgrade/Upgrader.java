@@ -53,7 +53,7 @@ public class Upgrader {
 
 	private void notify(String upgradeMessage) {
 		Notification notification = NotificationBuilderCompat.create()
-				.setSmallIcon(R.drawable.ic_update)
+				.setSmallIcon(R.drawable.update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
 				.setContentText(StringResource.get(R.string.touch_for_details))

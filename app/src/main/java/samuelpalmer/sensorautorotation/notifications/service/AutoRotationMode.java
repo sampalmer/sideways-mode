@@ -6,12 +6,12 @@ class AutoRotationMode implements Mode {
 
 	@Override
 	public int notificationIcon() {
-		return R.drawable.ic_rotation;
+		return R.drawable.rotation;
 	}
 
 	@Override
 	public int actionIcon() {
-		return R.drawable.ic_action_rotation;
+		return R.drawable.action_rotation;
 	}
 
 	@Override

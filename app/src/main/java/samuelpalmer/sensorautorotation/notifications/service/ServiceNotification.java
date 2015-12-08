@@ -44,7 +44,7 @@ public class ServiceNotification {
 		notificationButtons
 			.configureButton(
 				R.id.rotate_left_button,
-				R.drawable.ic_action_rotate_left,
+				R.drawable.action_rotate_left,
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT),
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
@@ -54,7 +54,7 @@ public class ServiceNotification {
 				StringResource.get(params.mode.toggleToOtherModeAResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
-				R.drawable.ic_action_rotate_right,
+				R.drawable.action_rotate_right,
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
 				StringResource.get(R.string.action_rotate_right))
 			.applyTo(notification);
