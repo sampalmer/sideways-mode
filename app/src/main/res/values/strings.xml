@@ -5,12 +5,15 @@
 
 	<string name="action_instructions">Instructions</string>
 	<string name="action_feedback">Send feedback</string>
+	<string name="action_feedback_email">Email</string>
+	<string name="action_feedback_google_play">Google Play Store</string>
 	<string name="action_uninstall">Uninstall</string>
 
 	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
 
 	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
 	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
+	<string name="error_no_market_app">Couldn\'t find Google Play app</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
 
 	<string name="uninstall_title">Uninstall?</string>

@@ -5,10 +5,23 @@
 	      android:title="@string/action_instructions"
 		  android:icon="@drawable/ic_help"
 		/>
-	<item android:id="@+id/action_feedback"
-	      android:title="@string/action_feedback"
+	<item
+		  android:title="@string/action_feedback"
 	      android:icon="@drawable/ic_feedback"
-		/>
+	>
+		<menu>
+			<item
+				android:id="@+id/action_feedback_email"
+				android:title="@string/action_feedback_email"
+				android:icon="@drawable/ic_feedback_email"
+				/>
+			<item
+				android:id="@+id/action_feedback_google_play"
+				android:title="@string/action_feedback_google_play"
+				android:icon="@drawable/ic_feedback_google_play"
+				/>
+		</menu>
+	</item>
 	<item android:id="@+id/action_uninstall"
 	      android:title="@string/action_uninstall"
           android:icon="@drawable/ic_delete"/>

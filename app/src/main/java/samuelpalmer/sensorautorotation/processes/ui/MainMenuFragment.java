@@ -1,11 +1,15 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -59,8 +63,19 @@ public class MainMenuFragment extends Fragment {
 			case R.id.action_instructions:
 				startActivity(ComponentType.create(InstructionsActivity.class).intent());
 				break;
-			case R.id.action_feedback:
+			case R.id.action_feedback_email:
 				new Feedback().send();
+				break;
+			case R.id.action_feedback_google_play:
+				Intent intent = new Intent(Intent.ACTION_VIEW)
+					.setData(Uri.parse("market://details?id=" + getActivity().getPackageName()));
+				try {
+					startActivity(intent);
+				}
+				catch (ActivityNotFoundException ex) {
+					Toast.makeText(getActivity(), R.string.error_no_market_app, Toast.LENGTH_LONG).show();
+				}
+
 				break;
 			case R.id.action_uninstall:
 				confirmUninstall();
