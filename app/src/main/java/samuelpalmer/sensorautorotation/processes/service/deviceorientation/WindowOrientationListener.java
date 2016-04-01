@@ -74,7 +74,12 @@ abstract class WindowOrientationListener {
 	private final Object mLock = new Object();
 
 	private boolean mGotSensorEvent;
-	private static final int EXPECTED_EVENT_WINDOW_MS = 1000;
+
+	//5000ms wasn't enough time for these devices in the Google Cloud Test Lab, but 15000ms was.
+	// * Moto G (2nd Gen) (titan_umts)
+	// * Moto X (2nd Gen) (victara)
+	private static final int EXPECTED_EVENT_WINDOW_MS = 15000;
+
 	private int[] prioritisedSensorTypes() {
 		return new int[] {
 			Sensor.TYPE_GAME_ROTATION_VECTOR,
