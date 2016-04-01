@@ -132,12 +132,11 @@ abstract class WindowOrientationListener {
 
 		for (int type : prioritisedSensorTypes()) {
 			Sensor sensor = mSensorManager.getDefaultSensor(type);
-			if (foundCurrentSensor) {
-				if (sensor != null)
+			if (sensor != null)
+				if (foundCurrentSensor)
 					return sensor;
-			}
-			else if (sensor.getType() == mSensor.getType())
-				foundCurrentSensor = true;
+				else if (sensor.getType() == mSensor.getType())
+					foundCurrentSensor = true;
 		}
 
 		return null;
