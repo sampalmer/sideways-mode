@@ -79,7 +79,7 @@ abstract class WindowOrientationListener {
 	// * Moto G (2nd Gen) (titan_umts)
 	// * Moto X (2nd Gen) (victara)
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
-	private static final int EXPECTED_EVENT_WINDOW_MS = 60000;
+	private static final int EXPECTED_EVENT_WINDOW_MS = 15000;
 
 	private int[] prioritisedSensorTypes() {
 		return new int[] {
