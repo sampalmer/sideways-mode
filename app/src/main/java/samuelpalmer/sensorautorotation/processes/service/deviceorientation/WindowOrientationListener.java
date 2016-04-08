@@ -96,7 +96,7 @@ abstract class WindowOrientationListener {
 
 		if (mSensor != null) {
 			Log.i(
-				WindowOrientationListener.class.getSimpleName(),
+				WindowOrientationListener.TAG,
 				"Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion()
 			);
 
@@ -116,13 +116,13 @@ abstract class WindowOrientationListener {
 		public void run() {
 			synchronized (mLock) {
 				if (mEnabled && !mGotSensorEvent) {
-					Log.w(WindowOrientationListener.class.getSimpleName(), "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms. Falling back.");
+					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms. Falling back.");
 
 					disable();
 					Sensor badSensor = mSensor;
 					setSensor(findNextBestSensor());
 					if (mSensor == null)
-						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message, badSensor.getName());
+						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message_no_data, badSensor.getName());
 					enable();
 				}
 			}
@@ -194,8 +194,21 @@ abstract class WindowOrientationListener {
 			}
 			if (mEnabled == false) {
 				mSensorEventListener.resetLocked();
-				//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-				mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler);
+
+				while (true) {
+					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
+					if (mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler))
+						 break;
+
+					Log.w(WindowOrientationListener.TAG, "Sensor registration failed. Falling back.");
+
+					Sensor badSensor = mSensor;
+					setSensor(findNextBestSensor());
+					if (mSensor == null) {
+						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message_registration_failed, badSensor.getName());
+						break;
+					}
+				}
 				mEnabled = true;
 
 				// Apparently it's possible to successfully register for gravity events but not receive any:
