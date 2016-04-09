@@ -40,6 +40,10 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
@@ -67,7 +71,7 @@ abstract class WindowOrientationListener {
 	private SensorManager mSensorManager;
 	private boolean mEnabled;
 	private int mRate;
-	private Sensor mSensor;
+	private ArrayList<Sensor> mSensors;
 	private SensorEventListenerImpl mSensorEventListener;
 	private int mCurrentRotation = -1;
 
@@ -81,49 +85,22 @@ abstract class WindowOrientationListener {
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
 	private static final int EXPECTED_EVENT_WINDOW_MS = 15000;
 
-	private int[] prioritisedSensorTypes() {
-		return new int[] {
-			Sensor.TYPE_GAME_ROTATION_VECTOR,
-			Sensor.TYPE_ROTATION_VECTOR,
-			Sensor.TYPE_GRAVITY,
-			Sensor.TYPE_ACCELEROMETER,
-		};
-	}
+	private List<Integer> prioritisedSensorTypes = Arrays.asList(
+		Sensor.TYPE_GAME_ROTATION_VECTOR,
+		Sensor.TYPE_ROTATION_VECTOR,
+		Sensor.TYPE_GRAVITY,
+		Sensor.TYPE_ACCELEROMETER
+	);
 	private boolean mMeasuringAcceleration;
-
-	private void setSensor(Sensor sensor) {
-		mSensor = sensor;
-
-		if (mSensor != null) {
-			Log.i(
-				WindowOrientationListener.TAG,
-				"Using sensor: type " + mSensor.getType() + ", name " + mSensor.getName() + ", vendor " + mSensor.getVendor() + ", version " + mSensor.getVersion()
-			);
-
-			if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER
-				|| mSensor.getType() == Sensor.TYPE_GRAVITY)
-				mMeasuringAcceleration = true;
-			else if (mSensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR
-				|| mSensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
-				mMeasuringAcceleration = false;
-			else
-				throw new RuntimeException("Unknown sensor type: " + mSensor.getType());
-		}
-	}
+	private int mLastSensorType;
 
 	private final Runnable checkForSensorEvent = new Runnable() {
 		@Override
 		public void run() {
 			synchronized (mLock) {
 				if (mEnabled && !mGotSensorEvent) {
-					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms. Falling back.");
-
-					disable();
-					Sensor badSensor = mSensor;
-					setSensor(findNextBestSensor());
-					if (mSensor == null)
-						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message_no_data, badSensor.getName());
-					enable();
+					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
+					EnvironmentError.report(R.string.sensor_error_summary, R.string.bad_sensor_data_message_no_data);
 				}
 			}
 		}
@@ -131,21 +108,6 @@ abstract class WindowOrientationListener {
 
 	private Handler effectiveHandler() {
 		return mHandler == null ? new Handler(Looper.getMainLooper()) : mHandler;
-	}
-
-	private Sensor findNextBestSensor() {
-		boolean foundCurrentSensor = mSensor == null;
-
-		for (int type : prioritisedSensorTypes()) {
-			Sensor sensor = mSensorManager.getDefaultSensor(type);
-			if (sensor != null)
-				if (foundCurrentSensor)
-					return sensor;
-				else if (sensor.getType() == mSensor.getType())
-					foundCurrentSensor = true;
-		}
-
-		return null;
 	}
 
 	/**
@@ -175,12 +137,16 @@ abstract class WindowOrientationListener {
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 
-		setSensor(findNextBestSensor());
-
-		if (mSensor != null) {
-			// Create listener only if sensors do exist
-			mSensorEventListener = new SensorEventListenerImpl(context);
+		mSensors = new ArrayList<>();
+		for (int type : prioritisedSensorTypes) {
+			Sensor sensor = mSensorManager.getDefaultSensor(type);
+			if (sensor != null)
+				mSensors.add(sensor);
 		}
+
+		Log.i(WindowOrientationListener.TAG, "Using sensors: " + mSensors);
+
+		mSensorEventListener = new SensorEventListenerImpl(context);
 	}
 
 	/**
@@ -189,32 +155,33 @@ abstract class WindowOrientationListener {
 	 */
 	public void enable() {
 		synchronized (mLock) {
-			if (mSensor == null) {
-				return;
-			}
 			if (mEnabled == false) {
 				mSensorEventListener.resetLocked();
 
-				while (true) {
+				Iterator<Sensor> iterator = mSensors.iterator();
+				while (iterator.hasNext()) {
+					Sensor sensor = iterator.next();
+
 					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-					if (mSensorManager.registerListener(mSensorEventListener, mSensor, mSensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler))
-						 break;
-
-					Log.w(WindowOrientationListener.TAG, "Sensor registration failed. Falling back.");
-
-					Sensor badSensor = mSensor;
-					setSensor(findNextBestSensor());
-					if (mSensor == null) {
-						EnvironmentError.report(R.string.bad_sensor_data_summary, R.string.bad_sensor_data_message_registration_failed, badSensor.getName());
-						break;
+					if (!mSensorManager.registerListener(mSensorEventListener, sensor, sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler)) {
+						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + sensor);
+						iterator.remove();
 					}
 				}
+
+				if (mSensors.isEmpty()) {
+					EnvironmentError.report(R.string.sensor_error_summary, R.string.bad_sensor_data_message_registration_failed);
+					return;
+				}
+
 				mEnabled = true;
 
 				// Apparently it's possible to successfully register for gravity events but not receive any:
 				// http://stackoverflow.com/a/10447302/238753
 				mGotSensorEvent = false;
 				effectiveHandler().postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
+
+				mLastSensorType = Sensor.TYPE_ALL;
 			}
 		}
 	}
@@ -224,11 +191,9 @@ abstract class WindowOrientationListener {
 	 */
 	public void disable() {
 		synchronized (mLock) {
-			if (mSensor == null) {
-				return;
-			}
 			if (mEnabled == true) {
-				mSensorManager.unregisterListener(mSensorEventListener);
+				for (Sensor sensor : mSensors)
+					mSensorManager.unregisterListener(mSensorEventListener, sensor);
 				mEnabled = false;
 
 				effectiveHandler().removeCallbacks(checkForSensorEvent);
@@ -287,7 +252,7 @@ abstract class WindowOrientationListener {
 	 */
 	public boolean canDetectOrientation() {
 		synchronized (mLock) {
-			return mSensor != null;
+			return !mSensors.isEmpty();
 		}
 	}
 
@@ -309,7 +274,7 @@ abstract class WindowOrientationListener {
 			prefix += "  ";
 			pw.println(prefix + "mEnabled=" + mEnabled);
 			pw.println(prefix + "mCurrentRotation=" + mCurrentRotation);
-			pw.println(prefix + "mSensor=" + mSensor);
+			pw.println(prefix + "mSensors=" + mSensors);
 			pw.println(prefix + "mRate=" + mRate);
 
 			if (mSensorEventListener != null) {
@@ -597,8 +562,38 @@ abstract class WindowOrientationListener {
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			if (event.sensor.getType() != mSensor.getType() || !mEnabled)
+			if (!mEnabled)
 				return;
+
+			//This method should be called a lot, so we only want to do this stuff when necessary.
+			if (event.sensor.getType() != mLastSensorType) {
+				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + event.sensor);
+
+				if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER || event.sensor.getType() == Sensor.TYPE_GRAVITY)
+					mMeasuringAcceleration = true;
+				else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR || event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+					mMeasuringAcceleration = false;
+				else
+					return;
+
+				if (mSensors.size() > 1) {
+					int currentSensorPriority = prioritisedSensorTypes.indexOf(event.sensor.getType());
+
+					Iterator<Sensor> iterator = mSensors.iterator();
+					while (iterator.hasNext()) {
+						Sensor registeredSensor = iterator.next();
+						int registeredSensorPriority = prioritisedSensorTypes.indexOf(registeredSensor.getType());
+
+						if (registeredSensorPriority > currentSensorPriority) {
+							Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + registeredSensor);
+							mSensorManager.unregisterListener(mSensorEventListener, registeredSensor);
+							iterator.remove();
+						}
+					}
+				}
+
+				mLastSensorType = event.sensor.getType();
+			}
 
 			int proposedRotation;
 			int oldProposedRotation;
@@ -627,7 +622,7 @@ abstract class WindowOrientationListener {
 					resetLocked();
 					skipSample = true;
 				} else {
-					if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+					if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 						final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
 						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
 						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
@@ -636,7 +631,7 @@ abstract class WindowOrientationListener {
 					skipSample = false;
 				}
 				mLastFilteredTimestampNanos = now;
-				if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 					mLastFilteredX = x;
 					mLastFilteredY = y;
 					mLastFilteredZ = z;
