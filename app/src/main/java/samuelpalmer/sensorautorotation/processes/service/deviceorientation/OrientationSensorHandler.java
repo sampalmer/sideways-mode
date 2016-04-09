@@ -5,7 +5,6 @@ import android.util.Log;
 import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
@@ -26,7 +25,7 @@ public class OrientationSensorHandler extends State {
 		this.screen = screen;
 
 		if (!windowOrientationListener.canDetectOrientation())
-			EnvironmentError.report(R.string.sensor_error_summary, R.string.missing_accelerometer_message, R.string.app_name);
+			WindowOrientationListener.reportSensorError(R.string.missing_accelerometer_message);
 	}
 
 	@Override

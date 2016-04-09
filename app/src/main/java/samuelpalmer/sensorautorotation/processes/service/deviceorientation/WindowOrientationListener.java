@@ -100,11 +100,15 @@ abstract class WindowOrientationListener {
 			synchronized (mLock) {
 				if (mEnabled && !mGotSensorEvent) {
 					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
-					EnvironmentError.report(R.string.sensor_error_summary, R.string.bad_sensor_data_message_no_data);
+					reportSensorError(R.string.bad_sensor_data_message_no_data);
 				}
 			}
 		}
 	};
+
+	public static void reportSensorError(int message) {
+		EnvironmentError.report(R.string.sensor_error_summary, R.string.sensor_error_message, message, R.string.app_name);
+	}
 
 	private Handler effectiveHandler() {
 		return mHandler == null ? new Handler(Looper.getMainLooper()) : mHandler;
@@ -170,7 +174,7 @@ abstract class WindowOrientationListener {
 				}
 
 				if (mSensors.isEmpty()) {
-					EnvironmentError.report(R.string.sensor_error_summary, R.string.bad_sensor_data_message_registration_failed);
+					reportSensorError(R.string.bad_sensor_data_message_registration_failed);
 					return;
 				}
 
