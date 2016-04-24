@@ -37,6 +37,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.PrintWriter;
@@ -148,9 +149,21 @@ abstract class WindowOrientationListener {
 				mSensors.add(sensor);
 		}
 
-		Log.i(WindowOrientationListener.TAG, "Using sensors: " + mSensors);
+		String[] formattedSensors = new String[mSensors.size()];
+		for (int i = 0; i < mSensors.size(); ++i)
+			formattedSensors[i] = stringify(mSensors.get(i));
+		Log.i(WindowOrientationListener.TAG, "Using sensors: [" + TextUtils.join(", ", formattedSensors) + "]");
 
 		mSensorEventListener = new SensorEventListenerImpl(context);
+	}
+
+	/**
+	 * Equivalent of {@link android.hardware.Sensor#toString()} in API 23 SDK since not all devices implement it.
+	 */
+	private String stringify(Sensor sensor) {
+		return "{Sensor name=\"" + sensor.getName() + "\", vendor=\"" + sensor.getVendor() + "\", version=" + sensor.getVersion()
+			+ ", type=" + sensor.getType() + ", maxRange=" + sensor.getMaximumRange() + ", resolution=" + sensor.getResolution()
+			+ ", power=" + sensor.getPower() + ", minDelay=" + sensor.getMinDelay() + "}";
 	}
 
 	/**
@@ -168,7 +181,7 @@ abstract class WindowOrientationListener {
 
 					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
 					if (!mSensorManager.registerListener(mSensorEventListener, sensor, sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler)) {
-						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + sensor);
+						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
 						iterator.remove();
 					}
 				}
@@ -571,7 +584,7 @@ abstract class WindowOrientationListener {
 
 			//This method should be called a lot, so we only want to do this stuff when necessary.
 			if (event.sensor.getType() != mLastSensorType) {
-				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + event.sensor);
+				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
 
 				if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER || event.sensor.getType() == Sensor.TYPE_GRAVITY)
 					mMeasuringAcceleration = true;
@@ -589,7 +602,7 @@ abstract class WindowOrientationListener {
 						int registeredSensorPriority = prioritisedSensorTypes.indexOf(registeredSensor.getType());
 
 						if (registeredSensorPriority > currentSensorPriority) {
-							Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + registeredSensor);
+							Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + stringify(registeredSensor));
 							mSensorManager.unregisterListener(mSensorEventListener, registeredSensor);
 							iterator.remove();
 						}
