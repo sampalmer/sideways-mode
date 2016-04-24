@@ -75,6 +75,8 @@
 	<string name="setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
 
+	<string name="system_setting_write_denied_message">This app doesn\'t have permission to modify system settings. To fix this, please re-enable the app on the following screen.</string>
+
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_message">In order to control the screen rotation, this app needs permission to modify system settings. Please enable this on the following screen.</string>
 	<string name="warning_wasn_enabled_permission_denied">This app can\'t work without permission to change system settings.</string>

@@ -57,7 +57,7 @@ public class Setting<T> {
 			&&
 			!Settings.System.canWrite(Process.context())
 		) {
-			EnvironmentError.report(R.string.permission_needed_summary, R.string.permission_needed_message);
+			EnvironmentError.report(R.string.permission_needed_summary, R.string.system_setting_write_denied_message);
 			return;
 		}
 
