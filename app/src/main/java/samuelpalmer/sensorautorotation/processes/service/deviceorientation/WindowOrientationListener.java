@@ -111,10 +111,6 @@ abstract class WindowOrientationListener {
 		EnvironmentError.report(R.string.sensor_error_summary, R.string.sensor_error_message, message, R.string.app_name);
 	}
 
-	private Handler effectiveHandler() {
-		return mHandler == null ? new Handler(Looper.getMainLooper()) : mHandler;
-	}
-
 	/**
 	 * Creates a new WindowOrientationListener.
 	 *
@@ -138,7 +134,7 @@ abstract class WindowOrientationListener {
 	 * This constructor is private since no one uses it.
 	 */
 	private WindowOrientationListener(Context context, Handler handler, int rate) {
-		mHandler = handler;
+		mHandler = handler == null ? new Handler(Looper.getMainLooper()) : handler;;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 
@@ -196,7 +192,7 @@ abstract class WindowOrientationListener {
 				// Apparently it's possible to successfully register for gravity events but not receive any:
 				// http://stackoverflow.com/a/10447302/238753
 				mGotSensorEvent = false;
-				effectiveHandler().postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
+				mHandler.postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
 
 				mLastSensorType = Sensor.TYPE_ALL;
 			}
@@ -213,7 +209,7 @@ abstract class WindowOrientationListener {
 					mSensorManager.unregisterListener(mSensorEventListener, sensor);
 				mEnabled = false;
 
-				effectiveHandler().removeCallbacks(checkForSensorEvent);
+				mHandler.removeCallbacks(checkForSensorEvent);
 			}
 		}
 	}
