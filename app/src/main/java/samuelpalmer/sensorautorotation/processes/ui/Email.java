@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.Process;
@@ -37,6 +38,16 @@ public class Email {
 			.putExtra(Intent.EXTRA_TEXT, body);
 
 		emailActivities = Process.context().getPackageManager().queryIntentActivities(emailIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+
+		//The official Android emulators seem to resolve a single "unsupported action" activity if the intent can't be handled.
+		//Also, for some reason, I once saw the Android API 14 emulator resolve both the correct email app and the "unsupported action" activity.
+		Iterator<ResolveInfo> iterator = emailActivities.iterator();
+		while (iterator.hasNext()) {
+			ResolveInfo resolveInfo = iterator.next();
+			ActivityInfo firstActivity = resolveInfo.activityInfo;
+			if (makeComponentName(firstActivity).equals(unsupportedAction))
+				iterator.remove();
+		}
 	}
 
 	private static Intent emailIntent() {
@@ -50,12 +61,7 @@ public class Email {
 	}
 
 	private boolean hasEmailApp() {
-		if (emailActivities.size() > 0) {
-			ActivityInfo firstActivity = emailActivities.get(0).activityInfo;
-			return !makeComponentName(firstActivity).equals(unsupportedAction);
-		}
-
-		return false;
+		return emailActivities.size() > 0;
 	}
 
 	private static ComponentName makeComponentName(ActivityInfo firstActivity) {
