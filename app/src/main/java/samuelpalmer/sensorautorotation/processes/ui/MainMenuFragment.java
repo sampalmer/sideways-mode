@@ -89,7 +89,7 @@ public class MainMenuFragment extends Fragment {
 				new Email(
 					emailRecipients(),
 					StringResource.format(R.string.report_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
-					String.format("logcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo()),
+					String.format("\n\nPlease describe the problem above (or at the bottom of the email)\n\nlogcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo()),
 					null
 				).send();
 				break;
