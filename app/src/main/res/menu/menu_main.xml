@@ -22,6 +22,9 @@
 				/>
 		</menu>
 	</item>
+	<item android:id="@+id/action_report"
+	      android:title="@string/action_report"
+	      android:icon="@drawable/report" />
 	<item android:id="@+id/action_uninstall"
 	      android:title="@string/action_uninstall"
           android:icon="@drawable/delete"/>

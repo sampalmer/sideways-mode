@@ -15,7 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 
 public class MainMenuFragment extends Fragment {
@@ -64,7 +67,12 @@ public class MainMenuFragment extends Fragment {
 				startActivity(ComponentType.create(InstructionsActivity.class).intent());
 				break;
 			case R.id.action_feedback_email:
-				new Feedback().send();
+				new Email(
+					emailRecipients(),
+					StringResource.format(R.string.feedback_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
+					"",
+					null
+				).send();
 				break;
 			case R.id.action_feedback_google_play:
 				Intent intent = new Intent(Intent.ACTION_VIEW)
@@ -77,6 +85,14 @@ public class MainMenuFragment extends Fragment {
 				}
 
 				break;
+			case R.id.action_report:
+				new Email(
+					emailRecipients(),
+					StringResource.format(R.string.report_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
+					String.format("logcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo()),
+					null
+				).send();
+				break;
 			case R.id.action_uninstall:
 				confirmUninstall();
 				break;
@@ -85,6 +101,10 @@ public class MainMenuFragment extends Fragment {
 		}
 
 		return true;
+	}
+
+	private String[] emailRecipients() {
+		return new String[]{StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>"};
 	}
 
 	private void confirmUninstall() {
