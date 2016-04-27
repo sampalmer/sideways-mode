@@ -24,12 +24,19 @@ public class Email {
 	private final Intent sendIntent;
 	private final List<ResolveInfo> emailActivities;
 
-	public Email(String[] recipients, String subject, CharSequence body) {
+	public Email(String recipient, String subject, CharSequence body) {
+		//Putting the info in the URI seems to work better for the Sony Xperia M (Android 4.1.2) messaging app
+		Uri uri = Uri.parse(
+			String.format("mailto:%s?subject=%s",
+				Uri.encode(recipient),
+				Uri.encode(subject)
+			)
+		);
+
 		sendIntent = new Intent(Intent.ACTION_SENDTO)
-			.setData(new Uri.Builder().scheme("mailto").build())
-			.putExtra(Intent.EXTRA_EMAIL, recipients)
-			.putExtra(Intent.EXTRA_SUBJECT, subject)
-			.putExtra(Intent.EXTRA_TEXT, body);
+			.setData(uri)
+			.putExtra(Intent.EXTRA_SUBJECT, subject) //Just in case the one in the query string is ignored
+			.putExtra(Intent.EXTRA_TEXT, body); //We could also put this in the URI, but it could make the URI really long, which might cause problems
 
 		emailActivities = Process.context().getPackageManager().queryIntentActivities(sendIntent, PackageManager.MATCH_DEFAULT_ONLY);
 

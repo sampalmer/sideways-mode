@@ -101,8 +101,8 @@ public class MainMenuFragment extends Fragment {
 		return true;
 	}
 
-	private String[] emailRecipients() {
-		return new String[]{StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>"};
+	private String emailRecipients() {
+		return StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
 	}
 
 	private void confirmUninstall() {
