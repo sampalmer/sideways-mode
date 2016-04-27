@@ -70,8 +70,7 @@ public class MainMenuFragment extends Fragment {
 				new Email(
 					emailRecipients(),
 					StringResource.format(R.string.feedback_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
-					"",
-					null
+					""
 				).send();
 				break;
 			case R.id.action_feedback_google_play:
@@ -89,8 +88,7 @@ public class MainMenuFragment extends Fragment {
 				new Email(
 					emailRecipients(),
 					StringResource.format(R.string.report_email_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
-					String.format("\n\nPlease describe the problem above (or at the bottom of the email)\n\nlogcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo()),
-					null
+					String.format("\n\nPlease describe the problem above (or at the bottom of the email)\n\nlogcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo())
 				).send();
 				break;
 			case R.id.action_uninstall:

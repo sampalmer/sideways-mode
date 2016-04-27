@@ -24,20 +24,14 @@ public class Email {
 	private final Intent sendIntent;
 	private final List<ResolveInfo> emailActivities;
 
-	public Email(String[] recipients, String subject, CharSequence body, Attachment attachment) {
-		if (attachment != null) {
-			sendIntent = new Intent(Intent.ACTION_SEND);
-			attachment.addTo(sendIntent);
-		}
-		else
-			sendIntent = emailIntent();
-
-		sendIntent
+	public Email(String[] recipients, String subject, CharSequence body) {
+		sendIntent = new Intent(Intent.ACTION_SENDTO)
+			.setData(new Uri.Builder().scheme("mailto").build())
 			.putExtra(Intent.EXTRA_EMAIL, recipients)
 			.putExtra(Intent.EXTRA_SUBJECT, subject)
 			.putExtra(Intent.EXTRA_TEXT, body);
 
-		emailActivities = Process.context().getPackageManager().queryIntentActivities(emailIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+		emailActivities = Process.context().getPackageManager().queryIntentActivities(sendIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
 		//The official Android emulators seem to resolve a single "unsupported action" activity if the intent can't be handled.
 		//Also, for some reason, I once saw the Android API 14 emulator resolve both the correct email app and the "unsupported action" activity.
@@ -50,11 +44,6 @@ public class Email {
 		}
 	}
 
-	private static Intent emailIntent() {
-		return new Intent(Intent.ACTION_SENDTO)
-			.setData(new Uri.Builder().scheme("mailto").build());
-	}
-
 	public void send() {
 		if (!hasEmailApp() || !openEmail())
 			Toaster.show(StringResource.get(R.string.error_no_email_app));
@@ -64,10 +53,10 @@ public class Email {
 		return emailActivities.size() > 0;
 	}
 
-	private static ComponentName makeComponentName(ActivityInfo firstActivity) {
-		boolean isRelativeClassName = firstActivity.name.length() > 0 && firstActivity.name.startsWith(".");
-		String fullClassName = isRelativeClassName ? firstActivity.packageName + firstActivity.name : firstActivity.name;
-		return new ComponentName(firstActivity.packageName, fullClassName);
+	private static ComponentName makeComponentName(ActivityInfo activity) {
+		boolean isRelativeClassName = activity.name.length() > 0 && activity.name.startsWith(".");
+		String fullClassName = isRelativeClassName ? activity.packageName + activity.name : activity.name;
+		return new ComponentName(activity.packageName, fullClassName);
 	}
 
 	private boolean openEmail() {
@@ -92,38 +81,6 @@ public class Email {
 		catch (ActivityNotFoundException ignored) {
 			return false;
 		}
-	}
-
-	public static class Attachment {
-
-		private final Uri uri;
-		private final String mimeType;
-
-		/**
-		 * @param uri
-		 *
-		 * Must be accessible by the email application.
-		 *
-		 * For file URIs, ensure the file is world-readable.
-		 * Setting the world-readable flag is apparently deprecated,
-		 * so it might be better to put the file in the user's downloads directory.
-		 * However, putting the user's info in a easily-accessed file might raise security concerns.
-		 * Putting the file in the user's downloads could waste space if the file is full of logs.
-		 *
-		 * Sounds like the content-provider mechanism combined with FLAG_GRANT_READ_URI_PERMISSION
-		 * might be the way to go. Or just use the email body instead of an attachment.
-		 */
-		public Attachment(Uri uri, String mimeType) {
-			this.uri = uri;
-			this.mimeType = mimeType;
-		}
-
-		void addTo(Intent intent) {
-			intent
-				.setType(mimeType)
-				.putExtra(Intent.EXTRA_STREAM, uri);
-		}
-
 	}
 
 }
