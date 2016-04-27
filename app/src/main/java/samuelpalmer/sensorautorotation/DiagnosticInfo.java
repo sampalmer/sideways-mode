@@ -30,6 +30,9 @@ public class DiagnosticInfo {
 				.redirectErrorStream(true)
 				.start();
 
+			//This log message is needed to prevent logcat from hanging if it doesn't have anything to dump, which occurs on Sony Xperia M (Android 4.1.2)
+			Log.i(DiagnosticInfo.class.getSimpleName(), "Dumping logcat");
+
 			return dump(process.getInputStream());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
