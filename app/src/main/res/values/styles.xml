@@ -2,9 +2,12 @@
 <resources>
 	<style name="Theme" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
 		<item name="android:actionBarStyle">@style/Theme.ActionBar</item>
+
+		<!-- Makes the action bar menu have a white background for better contrast with the brown menu item icons -->
+		<item name="android:actionBarWidgetTheme">@null</item>
 	</style>
 
-	<style name="Theme.ActionBar" parent="android:Widget.DeviceDefault.Light.ActionBar.Solid">
+	<style name="Theme.ActionBar" parent="android:Widget.DeviceDefault.ActionBar.Solid">
 		<item name="android:titleTextStyle">@style/Theme.ActionBar.TitleTextStyle</item>
 		<item name="android:background">@color/primary_500</item>
 	</style>
