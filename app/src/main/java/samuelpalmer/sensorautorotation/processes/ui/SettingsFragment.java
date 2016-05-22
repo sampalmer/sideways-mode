@@ -31,7 +31,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class SettingsFragment extends PreferenceFragment {
 
-	public static final int PERMISSION_REQUEST_CODE = 1;
+	private static final int PERMISSION_REQUEST_CODE = 1;
 
 	private CheckBoxPreference enabledCheckbox() {
 		return (CheckBoxPreference) findPreference(ApplicationSettings.remote().enabled().getKey());

@@ -10,12 +10,13 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.widget.RemoteViews;
 
+import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 
 /**
  * Basically a reinvented clone of NotificationCompat.Builder, except with a working setShowWhen
- * implementation. Avoiding use of the compat library reduces installation size and RAM use.
+ * implementation. Not using the compat library since it increases installation size, build times, and device RAM use.
  */
 @SuppressWarnings({"UnusedDeclaration", "UnusedReturnValue"})
 public class NotificationBuilderCompat {
@@ -175,7 +176,7 @@ public class NotificationBuilderCompat {
 	private static class V21 extends V17
 	{
 		public V21() {
-			setColor(Process.context().getResources().getColor(R.color.primary_500));
+			setColor(ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
 			setVisibility(NotificationBuilderCompat.VISIBILITY_PUBLIC);
 		}
 
