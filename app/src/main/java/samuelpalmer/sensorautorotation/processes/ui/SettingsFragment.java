@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -87,29 +89,8 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledCheckbox().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if (
-						VERSION.SDK_INT >= 23
-								&&
-								(boolean) newValue
-								&&
-								!Settings.System.canWrite(getContext())
-						) {
-					new AlertDialog.Builder(getContext())
-							.setTitle(R.string.environment_error_permission_needed_summary)
-							.setMessage(R.string.environment_error_permission_needed_message)
-							.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
-							})
-							.setPositiveButton(android.R.string.ok, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null)), PERMISSION_REQUEST_CODE);
-								}
-							})
-							.show();
-
+				if (VERSION.SDK_INT >= 23 && (boolean) newValue && !Settings.System.canWrite(getContext())) {
+					requestSystemSettingsPermission();
 					return false;
 				} else {
 					//We want to update the service state _after_ the shared preferences has been set
@@ -126,16 +107,41 @@ public class SettingsFragment extends PreferenceFragment {
 		});
 	}
 
+	@TargetApi(VERSION_CODES.M)
+	private void requestSystemSettingsPermission() {
+		new AlertDialog.Builder(getContext())
+			.setTitle(R.string.environment_error_permission_needed_summary)
+			.setMessage(R.string.environment_error_permission_needed_message)
+			.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			})
+			.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null)), PERMISSION_REQUEST_CODE);
+				}
+			})
+			.show();
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if (VERSION.SDK_INT >= 23 && requestCode == PERMISSION_REQUEST_CODE)
+			handleSystemSettingsRequestResult();
+	}
+
+	@TargetApi(VERSION_CODES.M)
+	private void handleSystemSettingsRequestResult() {
 		if (Settings.System.canWrite(getContext()))
 			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
 		else
 			Toast
-					.makeText(getContext(), R.string.warning_permission_not_granted, Toast.LENGTH_LONG)
-					.show();
+				.makeText(getContext(), R.string.warning_permission_not_granted, Toast.LENGTH_LONG)
+				.show();
 	}
 
 	private void hideUnsupportedOptions() {
