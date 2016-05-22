@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="content_provider_authority">samuelpalmer.sensorautorotation.settings.application.multiprocess.SharedPreferencesContentProvider</string>
-	<string name="service_process_name">:samuelpalmer.sensorautorotation.service</string>
+	<string name="content_provider_authority" translatable="false">samuelpalmer.sensorautorotation.settings.application.multiprocess.SharedPreferencesContentProvider</string>
+	<string name="service_process_name" translatable="false">:samuelpalmer.sensorautorotation.service</string>
+
+	<string name="email_feedback_subject" translatable="false">"Feedback for %1$s %2$s"</string>
+	<string name="email_problem_subject" translatable="false">"Error report for %1$s %2$s"</string>
 </resources>

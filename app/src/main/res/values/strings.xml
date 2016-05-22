@@ -14,8 +14,6 @@
 	<string name="upgrade_notification_content">Touch for details</string>
 	<string name="upgrade_v18">Locking the screen rotation is now supported. The user orientation screen has been removed since locking the screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
 
-	<string name="email_feedback_subject">"Feedback for %1$s %2$s"</string>
-	<string name="email_problem_subject">"Error report for %1$s %2$s"</string>
 	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
 
