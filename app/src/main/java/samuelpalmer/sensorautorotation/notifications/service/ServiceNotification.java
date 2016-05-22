@@ -51,7 +51,7 @@ public class ServiceNotification {
 				R.id.toggle_mode_button,
 				params.mode.actionIcon(),
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE),
-				StringResource.get(params.mode.toggleToOtherModeAResourceId()))
+				StringResource.get(params.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,

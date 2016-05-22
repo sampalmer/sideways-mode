@@ -20,7 +20,7 @@ class AutoRotationMode implements Mode {
 	}
 
 	@Override
-	public int toggleToOtherModeAResourceId() {
+	public int toggleToOtherModeResourceId() {
 		return R.string.action_disable_auto_rotation;
 	}
 

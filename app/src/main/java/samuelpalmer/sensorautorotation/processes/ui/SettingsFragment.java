@@ -95,8 +95,8 @@ public class SettingsFragment extends PreferenceFragment {
 								!Settings.System.canWrite(getContext())
 						) {
 					new AlertDialog.Builder(getContext())
-							.setTitle(R.string.permission_needed_summary)
-							.setMessage(R.string.permission_needed_message)
+							.setTitle(R.string.environment_error_permission_needed_summary)
+							.setMessage(R.string.environment_error_permission_needed_message)
 							.setNegativeButton(android.R.string.cancel, new OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
@@ -134,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment {
 			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
 		else
 			Toast
-					.makeText(getContext(), R.string.warning_wasn_enabled_permission_denied, Toast.LENGTH_LONG)
+					.makeText(getContext(), R.string.warning_permission_not_granted, Toast.LENGTH_LONG)
 					.show();
 	}
 

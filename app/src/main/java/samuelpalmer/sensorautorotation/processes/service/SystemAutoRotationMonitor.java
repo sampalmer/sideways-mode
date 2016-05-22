@@ -38,7 +38,7 @@ public class SystemAutoRotationMonitor extends State {
 		if (accelerometerRotation) {
 			//So when the service is stopped, the new auto rotation setting will be reapplied to the system. (Otherwise the user's change to system auto rotation could be reverted.)
 			calculator.setAutoRotate(true);
-			EnvironmentError.report(R.string.system_rotation_enabled_summary, R.string.system_rotation_enabled_message);
+			EnvironmentError.report(R.string.environment_error_system_rotation_enabled_summary, R.string.environment_error_system_rotation_enabled_message);
 		}
 	}
 

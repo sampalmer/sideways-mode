@@ -10,7 +10,7 @@ class InstructionsPages {
 			new InstructionsPage(R.string.instructions_auto_rotation_heading, R.string.instructions_auto_rotation_contents, R.string.screen_rotation_enabled, R.string.app_name),
 			new InstructionsPage(R.string.instructions_position_heading, R.string.instructions_position_contents),
 			new InstructionsPage(R.string.instructions_position_changing_heading, R.string.instructions_position_changing_contents, R.string.action_rotate_left, R.string.action_rotate_right),
-			new InstructionsPage(R.string.instructions_overridden_heading, R.string.instructions_overridden_contents, R.string.app_name, R.string.notification_overridden),
+			new InstructionsPage(R.string.instructions_overridden_heading, R.string.instructions_overridden_contents, R.string.app_name),
 			new InstructionsPage(R.string.instructions_uninstalling_heading, R.string.instructions_uninstalling_contents, R.string.action_uninstall, R.string.app_name),
 			new InstructionsPage(R.string.instructions_help_heading, R.string.instructions_help_contents, R.string.action_rotate_left, R.string.action_rotate_right)
 	};

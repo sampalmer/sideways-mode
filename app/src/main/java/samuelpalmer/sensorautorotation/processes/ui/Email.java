@@ -56,7 +56,7 @@ public class Email {
 
 	public void send() {
 		if (!hasEmailApp() || !openEmail())
-			Toaster.show(StringResource.get(R.string.error_no_email_app));
+			Toaster.show(StringResource.get(R.string.email_error_no_email_app));
 	}
 
 	private boolean hasEmailApp() {

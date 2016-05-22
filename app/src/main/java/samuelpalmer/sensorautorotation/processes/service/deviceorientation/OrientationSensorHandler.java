@@ -25,7 +25,7 @@ public class OrientationSensorHandler extends State {
 		this.screen = screen;
 
 		if (!windowOrientationListener.canDetectOrientation())
-			WindowOrientationListener.reportSensorError(R.string.missing_accelerometer_message);
+			WindowOrientationListener.reportSensorError(R.string.environment_error_sensor_missing_message);
 	}
 
 	@Override

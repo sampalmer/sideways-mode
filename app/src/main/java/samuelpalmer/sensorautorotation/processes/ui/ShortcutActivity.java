@@ -21,7 +21,7 @@ public class ShortcutActivity extends Activity {
 		Intent launchIntent = ComponentType.create(ToggleRotationLockActivity.class).intent();
 
 		shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent);
-		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, StringResource.get(R.string.toggle_rotation_lock));
+		shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, StringResource.get(R.string.action_toggle_rotation_lock));
 		shortcut.putExtra(
 				Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
 				Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher));

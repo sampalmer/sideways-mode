@@ -56,7 +56,7 @@ public class Upgrader {
 				.setSmallIcon(R.drawable.update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
-				.setContentText(StringResource.get(R.string.touch_for_details))
+				.setContentText(StringResource.get(R.string.upgrade_notification_content))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
@@ -70,7 +70,7 @@ public class Upgrader {
 	}
 
 	private CharSequence messageTitle() {
-		return StringResource.format(R.string.upgraded_title, R.string.app_name);
+		return StringResource.format(R.string.upgrade_summary, R.string.app_name);
 	}
 
 }

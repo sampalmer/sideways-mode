@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="notification_priorities">
-		<item>@string/notification_priority_high</item>
-		<item>@string/notification_priority_normal</item>
-		<item>@string/notification_priority_low</item>
+		<item>@string/preference_notification_priority_high</item>
+		<item>@string/preference_notification_priority_normal</item>
+		<item>@string/preference_notification_priority_low</item>
 	</string-array>
 
 	<string-array name="notification_priority_values">

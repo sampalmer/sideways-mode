@@ -4,6 +4,6 @@ public interface Mode {
 	int notificationIcon();
 	int actionIcon();
 	int autoRotationStateResourceId();
-	int toggleToOtherModeAResourceId();
+	int toggleToOtherModeResourceId();
 	boolean equals(Mode other);
 }

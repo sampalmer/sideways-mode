@@ -57,7 +57,7 @@
 
 		<activity
 			android:name=".processes.ui.ShortcutActivity"
-		    android:label="@string/toggle_rotation_lock"
+		    android:label="@string/action_toggle_rotation_lock"
 		>
 			<intent-filter>
 				<action android:name="android.intent.action.CREATE_SHORTCUT" />

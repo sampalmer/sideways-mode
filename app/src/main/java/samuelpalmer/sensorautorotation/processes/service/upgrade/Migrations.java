@@ -17,7 +17,7 @@ class Migrations {
 	static Map<Integer, Migration> map() {
 		Map<Integer, Migration> migrations = new HashMap<>();
 
-		migrations.put(18, new Migration(R.string.v18_upgrade));
+		migrations.put(18, new Migration(R.string.upgrade_v18));
 
 		migrations.put(25, new Migration(null) {
 			@Override

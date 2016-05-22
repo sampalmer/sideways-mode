@@ -10,16 +10,17 @@
 	<string name="action_report">Report problem</string>
 	<string name="action_uninstall">Uninstall</string>
 
-	<string name="v18_upgrade">Locking screen rotation is now supported. The user orientation screen has been removed since locking screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
+	<string name="upgrade_summary">%1$s Upgraded</string>
+	<string name="upgrade_notification_content">Touch for details</string>
+	<string name="upgrade_v18">Locking the screen rotation is now supported. The user orientation screen has been removed since locking the screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
 
-	<string name="feedback_email_subject">"Feedback for %1$s %2$s"</string>
-	<string name="report_email_subject">"Error report for %1$s %2$s"</string>
-	<string name="error_no_email_app">Couldn\'t find an email app and account</string>
-	<string name="error_no_market_app">Couldn\'t find Google Play app</string>
+	<string name="email_feedback_subject">"Feedback for %1$s %2$s"</string>
+	<string name="email_problem_subject">"Error report for %1$s %2$s"</string>
+	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
 
 	<string name="uninstall_title">Uninstall?</string>
-	<string name="uninstall_confirmation_message">Rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
+	<string name="uninstall_confirmation_message">Screen rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
@@ -31,57 +32,53 @@
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
 
-	<string name="notification_overridden">Overridden</string>
-
 	<string name="action_enable_auto_rotation">Enable Auto-Rotation</string>
 	<string name="action_disable_auto_rotation">Disable Auto-Rotation</string>
-
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
+	<string name="action_toggle_rotation_lock">Toggle Auto-Rotation</string>
 
-	<string name="toggle_rotation_lock">Toggle Rotation</string>
-	<string name="disabled_message">%1$s is not enabled</string>
-	<string name="upgraded_title">%1$s Upgraded</string>
-	<string name="touch_for_details">Touch for details</string>
+	<string name="app_disabled_message">%1$s is not enabled</string>
 
 	<!-- Preferences -->
-	<string name="app_enabled">Enabled</string>
-	<string name="app_enabled_description">Use this app to control screen rotation</string>
+	<string name="preference_enabled_title">Enabled</string>
+	<string name="preference_enabled_description">Use this app to control screen rotation</string>
 
-	<string name="settings">Settings</string>
+	<string name="preference_settings_title">Settings</string>
 
-	<string name="notification_priority">Notification priority</string>
-	<string name="notification_priority_high">High</string>
-	<string name="notification_priority_normal">Normal</string>
-	<string name="notification_priority_low">Low</string>
+	<string name="preference_notification_priority_title">Notification priority</string>
+	<string name="preference_notification_priority_high">High</string>
+	<string name="preference_notification_priority_normal">Normal</string>
+	<string name="preference_notification_priority_low">Low</string>
 
-	<string name="allow_upside_down_screen">Allow reverse screen</string>
-	<string name="allow_upside_down_screen_description">Support holding the device upside-down</string>
+	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
+	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
 
-	<string name="infer_user">Detect orientation when locked</string>
-	<string name="infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
+	<string name="preference_infer_user_title">Detect orientation when locked</string>
+	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
 
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
 
-	<string name="sensor_error_summary">Sensor problem</string>
-	<string name="sensor_error_message">%1$s %2$s needs a working accelerometer to run. If the device has one, try using the device\'s \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
+	<string name="environment_error_sensor_summary">Sensor problem</string>
+	<string name="environment_error_sensor_message">%1$s %2$s needs a working accelerometer to run. If the device has one, try using the device\'s built-in \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
 
-	<string name="missing_accelerometer_message">Couldn\'t find an accelerometer.</string>
-	<string name="bad_sensor_data_message_no_data">The sensor didn\'t produce any data.</string>
-	<string name="bad_sensor_data_message_registration_failed">Couldn\'t access accelerometer.</string>
+	<string name="environment_error_sensor_missing_message">Couldn\'t find an accelerometer.</string>
+	<string name="environment_error_sensor_no_data_message">The sensor didn\'t produce any data.</string>
+	<string name="environment_error_sensor_registration_failed_message">Couldn\'t access accelerometer.</string>
 
-	<string name="system_rotation_enabled_summary">System rotation enabled</string>
-	<string name="system_rotation_enabled_message">System screen auto-rotation was enabled.</string>
+	<string name="environment_error_system_rotation_enabled_summary">System rotation enabled</string>
+	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was enabled.</string>
 
-	<string name="setting_write_failure_summary">Couldn\'t write setting</string>
-	<string name="system_setting_write_failure_message">Failed to write the value \'%1$s\' for system setting \'%2$s\'.</string>
+	<string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
+	<string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
+	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, re-enable the app on the following screen.</string>
 
-	<string name="system_setting_write_denied_message">This app doesn\'t have permission to modify system settings. To fix this, please re-enable the app on the following screen.</string>
+	<string name="environment_error_permission_needed_summary">Permission needed</string>
+	<string name="environment_error_permission_needed_message">In order to control the screen rotation, this app needs permission to change system settings. Please enable this on the following screen.</string>
+	<string name="warning_permission_not_granted">This app can\'t work without permission to change system settings.</string>
 
-	<string name="permission_needed_summary">Permission needed</string>
-	<string name="permission_needed_message">In order to control the screen rotation, this app needs permission to modify system settings. Please enable this on the following screen.</string>
-	<string name="warning_wasn_enabled_permission_denied">This app can\'t work without permission to change system settings.</string>
+	<string name="error_no_market_app">Couldn\'t find Google Play app</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
@@ -90,7 +87,7 @@
 	<string name="instructions_introduction_contents">Welcome to %1$s! This replaces Android\'s screen rotation, so don\'t use the normal Android screen rotation settings.</string>
 
 	<string name="instructions_modes_heading">Modes</string>
-	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which one you\'re using, look at the notification in the notification drawer.</string>
+	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which mode you\'re using, look at the notification icon in the notification drawer.</string>
 
 	<string name="instructions_toggling_heading">Changing Mode</string>
 	<string name="instructions_toggling_contents">To change mode, press the button in the notification. You can also make a home screen shortcut to do this.</string>
@@ -102,15 +99,19 @@
 	<string name="instructions_position_contents">Your orientation (whether you\'re lying down or upright) is also tracked and shown in the notification.</string>
 
 	<string name="instructions_position_changing_heading">Changing Your Position</string>
-	<string name="instructions_position_changing_contents">To change your orientation, either use Locked mode or use the %1$s and %2$s notification buttons.</string>
+	<string name="instructions_position_changing_contents">To change your orientation, either use Locked mode or use the %1$s and %2$s buttons in the notification.</string>
 
 	<string name="instructions_overridden_heading">Incompatible Apps</string>
-	<string name="instructions_overridden_contents">%1$s might not work with apps that control the screen orientation. When this happens, the notification icon will show your orientation.</string>
+	<string name="instructions_overridden_contents">%1$s might not work when an app is open that controls the screen orientation. When this happens, the notification icon will show your orientation instead of the current mode.</string>
 
 	<string name="instructions_uninstalling_heading">Uninstalling</string>
 	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen.</string>
 
 	<string name="instructions_help_heading">Troubleshooting</string>
-	<string name="instructions_help_contents">"If the screen faces the wrong way:\n1. Ensure the app you're using isn't controlling the screen\n2. Use the %1$s and %2$s buttons in the notification to correct it."</string>
+	<string name="instructions_help_contents">
+		If the screen faces the wrong way:\n
+		1. Ensure the app you\'re using isn\'t controlling the screen\n
+		2. Use the %1$s and %2$s buttons in the notification to correct it.
+	</string>
 
 </resources>
