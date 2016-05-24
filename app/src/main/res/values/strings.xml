@@ -76,7 +76,7 @@
 	<string name="environment_error_permission_needed_message">In order to control the screen rotation, this app needs permission to change system settings. Please enable this on the following screen.</string>
 	<string name="warning_permission_not_granted">This app can\'t work without permission to change system settings.</string>
 
-	<string name="error_no_market_app">Couldn\'t find Google Play app</string>
+	<string name="error_no_market_app">Couldn\'t find Google Play Store</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
