@@ -6,7 +6,7 @@
 		<item>@string/preference_notification_priority_low</item>
 	</string-array>
 
-	<string-array name="notification_priority_values">
+	<string-array translatable="false" name="notification_priority_values">
 		<item>HIGH</item>
 		<item>NORMAL</item>
 		<item>LOW</item>
