@@ -39,7 +39,7 @@
 	<string name="app_disabled_message">%1$s не включено</string>
 
 	<!-- Preferences -->
-	<string name="preference_enabled_title">Включено</string>
+	<string name="preference_enabled_title">Включение</string>
 	<string name="preference_enabled_description">Использовать это приложение для управления вращением экрана</string>
 
 	<string name="preference_settings_title">Настройки</string>
