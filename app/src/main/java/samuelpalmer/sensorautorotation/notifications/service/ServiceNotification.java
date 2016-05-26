@@ -15,25 +15,25 @@ import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 public class ServiceNotification {
 
-	private final NotificationParameters params;
+	private final NotificationBuilderCompat builder;
 
-	public ServiceNotification(NotificationParameters notificationParameters) {
-		params = notificationParameters;
+	public ServiceNotification() {
+		//Caching and re-using the builder prevents the notification from disappearing and
+		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
+		builder = NotificationBuilderCompat.create()
+			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
+			.setContentTitle(StringResource.get(R.string.app_name))
+			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
+		;
 	}
 
 	/**
 	 * Reduces chance of being killed
 	 */
-	public Notification build() {
-		//Intentionally not using NotificationCompat since setShowWhen doesn't work in it
-		builder = NotificationBuilderCompat.create()
-				.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon())
-				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
-				.setContentTitle(StringResource.get(R.string.app_name))
-				.setContentText(StringResource.get(params.user.descriptionId()))
-				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-				.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET); //To decrease likelihood of showing on lock screen
-
+	public Notification build(NotificationParameters params) {
+		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon())
+			.setContentText(StringResource.get(params.user.descriptionId()));
 		params.priority.apply(builder);
 		hideTimestamp();
 
@@ -61,8 +61,6 @@ public class ServiceNotification {
 
 		return notification;
 	}
-
-	private NotificationBuilderCompat builder;
 
 	private void hideTimestamp() {
 		if (Build.VERSION.SDK_INT >= 17)

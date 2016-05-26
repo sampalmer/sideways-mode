@@ -8,15 +8,16 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 
 public class NotificationUpdater {
 	private final Service service;
+	private ServiceNotification builder;
 
 	public NotificationUpdater(Service service) {
 		this.service = service;
+		builder = new ServiceNotification();
 	}
 
 	public void update(NotificationParameters params) {
 		if (lastNotificationParams == null || !params.equals(lastNotificationParams)) {
-			ServiceNotification builder = new ServiceNotification(params);
-			Notification notification = builder.build();
+			Notification notification = builder.build(params);
 
 			cancelIfNecessary(notification);
 			service.startForeground(NotificationIds.SERVICE, notification);
