@@ -1,9 +1,12 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Notification;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.common.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -29,16 +32,22 @@ public class EnvironmentError {
 	private EnvironmentError(){}
 
 	private void show() {
-		Notification notification = NotificationBuilderCompat.create()
-				.setSmallIcon(R.drawable.error)
-				.setContentIntent(DialogActivity.makePendingIntent(summary, message))
-				.setContentTitle(summary)
-				.setContentText(message)
-				.setAutoCancel(true)
-				.setTicker(message)
-				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-				.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
-				.build();
+		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
+			.setSmallIcon(R.drawable.error)
+			.setContentIntent(DialogActivity.makePendingIntent(summary, message))
+			.setContentTitle(summary)
+			.setContentText(message)
+			.setAutoCancel(true)
+			.setTicker(message)
+			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR);
+
+		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP)
+			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
+			// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
+			builder.setVibrate(new long[]{});
+
+		Notification notification = builder.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
 	}

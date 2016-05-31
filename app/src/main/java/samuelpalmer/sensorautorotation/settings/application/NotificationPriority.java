@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.settings.application;
 
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationTimestamp;
 
 @SuppressWarnings("unused")

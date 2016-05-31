@@ -4,12 +4,13 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.util.Log;
 
+import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.VersionInfo;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -52,7 +53,7 @@ public class Upgrader {
 	}
 
 	private void notify(String upgradeMessage) {
-		Notification notification = NotificationBuilderCompat.create()
+		Notification notification = NotificationBuilderFactory.create()
 				.setSmallIcon(R.drawable.update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
