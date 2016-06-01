@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
+import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
@@ -40,7 +41,7 @@ public class ServiceNotification {
 		params.priority.apply(builder);
 		hideTimestamp();
 
-		NotificationButtons notificationButtons = new NotificationButtons(Process.context(), R.layout.notification);
+		NotificationButtons notificationButtons = new NotificationButtons(Process.context(), R.layout.notification, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
 
 		notificationButtons
 			.configureButton(
@@ -63,6 +64,8 @@ public class ServiceNotification {
 
 		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3)
 			notification = builder
+				//DecoratedCustomViewStyle seems to add the icon and heading _above_ the notification content
+				//It mightn't be adding the notification summary/description
 				.setStyle(new android.app.Notification.DecoratedCustomViewStyle())
 				.setCustomContentView(notificationButtons.getContentView())
 				.build();
