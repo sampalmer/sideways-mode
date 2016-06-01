@@ -20,6 +20,8 @@ public class NotificationUpdater {
 			Notification notification = builder.build(params);
 
 			cancelIfNecessary(notification);
+
+			// Reduces chance of being killed
 			service.startForeground(NotificationIds.SERVICE, notification);
 
 			lastNotificationParams = params;
