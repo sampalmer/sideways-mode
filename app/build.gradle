@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 23
+	compileSdkVersion 'android-N'
 	buildToolsVersion '23.0.3'
 
 	defaultConfig {
 		applicationId "samuelpalmer.sensorautorotation"
-		minSdkVersion 14
+		minSdkVersion 'N'
 		targetSdkVersion 23
 		versionCode 40
 		versionName "0.9.7"

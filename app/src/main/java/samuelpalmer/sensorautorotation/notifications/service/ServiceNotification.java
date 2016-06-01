@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.widget.RemoteViews;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
@@ -38,8 +40,6 @@ public class ServiceNotification {
 		params.priority.apply(builder);
 		hideTimestamp();
 
-		Notification notification = builder.build();
-
 		NotificationButtons notificationButtons = new NotificationButtons(Process.context(), R.layout.notification);
 
 		notificationButtons
@@ -57,8 +57,21 @@ public class ServiceNotification {
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
-				StringResource.get(R.string.action_rotate_right))
-			.applyTo(notification);
+				StringResource.get(R.string.action_rotate_right));
+
+		Notification notification;
+
+		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3)
+			notification = builder
+				.setStyle(new android.app.Notification.DecoratedCustomViewStyle())
+				.setCustomContentView(notificationButtons.getContentView())
+				.build();
+		else {
+			notification = builder.build();
+			RemoteViews content = notificationButtons.getContentView();
+			content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, notification.contentView);
+			notification.contentView = content;
+		}
 
 		return notification;
 	}
