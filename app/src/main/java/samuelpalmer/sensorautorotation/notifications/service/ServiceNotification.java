@@ -64,8 +64,10 @@ public class ServiceNotification {
 
 		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3)
 			notification = builder
-				//DecoratedCustomViewStyle seems to add the icon and heading _above_ the notification content
-				//It mightn't be adding the notification summary/description
+				//DecoratedCustomViewStyle seems to
+				// * add the icon and app name _above_ the notification content
+				// * omits the notification summary/description
+				// * add a lot of padding around the whole notification
 				.setStyle(new android.app.Notification.DecoratedCustomViewStyle())
 				.setCustomContentView(notificationButtons.getContentView())
 				.build();
