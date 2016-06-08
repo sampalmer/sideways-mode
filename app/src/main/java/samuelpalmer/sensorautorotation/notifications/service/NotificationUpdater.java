@@ -6,7 +6,7 @@ import android.os.Build;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 
-public class NotificationUpdater {
+public class NotificationUpdater implements ServiceStatusDisplay {
 	private final Service service;
 	private ServiceNotification builder;
 
@@ -16,19 +16,13 @@ public class NotificationUpdater {
 	}
 
 	public void update(NotificationParameters params) {
-		if (lastNotificationParams == null || !params.equals(lastNotificationParams)) {
-			Notification notification = builder.build(params);
+		Notification notification = builder.build(params);
 
-			cancelIfNecessary(notification);
+		cancelIfNecessary(notification);
 
-			// Reduces chance of being killed
-			service.startForeground(NotificationIds.SERVICE, notification);
-
-			lastNotificationParams = params;
-		}
+		// Reduces chance of being killed
+		service.startForeground(NotificationIds.SERVICE, notification);
 	}
-
-	private NotificationParameters lastNotificationParams;
 
 	/**
 	 * Turns out that the notification's presence in the status bar doesn't change when the

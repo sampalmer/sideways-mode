@@ -38,9 +38,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
-	private ServiceNotificationManager serviceNotificationManager;
+	ServiceNotificationManager serviceNotificationManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	private NotificationParametersFactory notificationParametersFactory;
+	NotificationParametersFactory notificationParametersFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
@@ -48,9 +48,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
-		ServiceHolder.started(this);
 
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentError.clear();
@@ -68,7 +65,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(samuelpalmer.sensorautorotation.Process.context());
 		notificationParametersFactory = new NotificationParametersFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
-		serviceNotificationManager = new ServiceNotificationManager(notificationParametersFactory, new NotificationUpdater(this));
+		serviceNotificationManager = new ServiceNotificationManager(notificationParametersFactory);
+		serviceNotificationManager.onParamsChanged.add(new NotificationUpdater(this));
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater, screenRotationMonitor);
@@ -85,6 +83,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
+
+		//TODO: Ensure none of the preceding code can crash due to reliance or this being set earlier in this method
+		ServiceHolder.started(this);
 	}
 
 	@Override
