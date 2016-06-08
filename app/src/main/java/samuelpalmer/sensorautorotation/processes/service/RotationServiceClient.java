@@ -15,12 +15,12 @@ public abstract class RotationServiceClient {
 		if (ServiceHolder.isRunning())
 			ServiceHolder.instance().handle(action); //This seems to have less lag than an intent
 		else if (new ServiceSynchroniser(ApplicationSettings.local()).serviceEnabled())
-			ServiceController.ensureStarted(toggleIntent(action));
+			ServiceController.ensureStarted(makeIntent(action));
 		else
 			showDisabledMessage();
 	}
 
-	private static Intent toggleIntent(String action) {
+	private static Intent makeIntent(String action) {
 		return
 			ServiceController
 				.intent()
