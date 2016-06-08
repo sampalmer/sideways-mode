@@ -8,7 +8,7 @@ android {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 'N'
 		targetSdkVersion 23
-		versionCode 40
+		versionCode 41
 		versionName "0.9.7"
 	}
 	buildTypes {

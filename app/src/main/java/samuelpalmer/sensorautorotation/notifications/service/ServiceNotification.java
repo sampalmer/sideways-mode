@@ -32,9 +32,6 @@ public class ServiceNotification {
 		;
 	}
 
-	/**
-	 * Reduces chance of being killed
-	 */
 	public Notification build(NotificationParameters params) {
 		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon())
 			.setContentText(StringResource.get(params.user.descriptionId()));
