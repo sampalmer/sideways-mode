@@ -8,6 +8,7 @@
 
 	<include layout="@layout/notification_content" />
 
+	<!-- Forcing LTR direction so the "rotate left" button is always on the left. -->
 	<LinearLayout
 		style="@style/notification_buttons"
 		android:layoutDirection="ltr"
