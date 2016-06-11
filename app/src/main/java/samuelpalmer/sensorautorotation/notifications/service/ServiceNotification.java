@@ -65,22 +65,11 @@ public class ServiceNotification {
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
 				StringResource.get(R.string.action_rotate_right));
 
-		Notification notification;
+		RemoteViews content = notificationButtons.getContentView();
+		content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, builder.createContentView());
+		builder.setCustomContentView(content);
 
-		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3) {
-			notification = builder.build();
-			RemoteViews content = notificationButtons.getContentView();
-			content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, builder.createContentView());
-			builder.setCustomContentView(content);
-		}
-		else {
-			notification = builder.build();
-			RemoteViews content = notificationButtons.getContentView();
-			content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, notification.contentView);
-			notification.contentView = content;
-		}
-
-		return notification;
+		return builder.build();
 	}
 
 	private void hideTimestamp() {
