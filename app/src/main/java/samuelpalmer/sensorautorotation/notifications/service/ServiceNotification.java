@@ -26,15 +26,23 @@ public class ServiceNotification {
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
 			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
-			.setContentTitle(StringResource.get(R.string.app_name))
-			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+ 			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
 	}
 
 	public Notification build(NotificationParameters params) {
-		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon())
-			.setContentText(StringResource.get(params.user.descriptionId()));
+		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon());
+
+		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3) {
+			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
+			builder.setContentTitle(StringResource.get(params.user.descriptionId()));
+		}
+		else {
+			builder.setContentTitle(StringResource.get(R.string.app_name));
+			builder.setContentText(StringResource.get(params.user.descriptionId()));
+		}
+
 		params.priority.apply(builder);
 		hideTimestamp();
 
@@ -59,15 +67,12 @@ public class ServiceNotification {
 
 		Notification notification;
 
-		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3)
-			notification = builder
-				//DecoratedCustomViewStyle seems to
-				// * add the icon and app name _above_ the notification content
-				// * omits the notification summary/description
-				// * add a lot of padding around the whole notification
-				.setStyle(new android.app.Notification.DecoratedCustomViewStyle())
-				.setCustomContentView(notificationButtons.getContentView())
-				.build();
+		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3) {
+			notification = builder.build();
+			RemoteViews content = notificationButtons.getContentView();
+			content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, builder.createContentView());
+			builder.setCustomContentView(content);
+		}
 		else {
 			notification = builder.build();
 			RemoteViews content = notificationButtons.getContentView();
