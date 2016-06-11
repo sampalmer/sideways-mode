@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               style="@style/notification"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
->
+	>
 
-	<include layout="@layout/notification_content"/>
+	<!--<include layout="@layout/notification_content"/>-->
 
-	<LinearLayout
-        style="@style/notification_buttons"
-	    android:layoutDirection="ltr"
-        tools:ignore="UnusedAttribute"
-    >
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Custom notification"
+		/>
+
+	<!--<LinearLayout-->
+	    <!--android:layoutDirection="ltr"-->
+        <!--tools:ignore="UnusedAttribute"-->
+        <!--android:layout_width="wrap_content"-->
+	    <!--android:layout_height="wrap_content"-->
+	    <!--android:padding="0dp"-->
+	    <!--android:minHeight="0dp"-->
+    <!--&gt;-->
 
         <include layout="@layout/notification_button" android:id="@+id/rotate_left_button" />
         <include layout="@layout/notification_button" android:id="@+id/toggle_mode_button" />
         <include layout="@layout/notification_button" android:id="@+id/rotate_right_button" />
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>
