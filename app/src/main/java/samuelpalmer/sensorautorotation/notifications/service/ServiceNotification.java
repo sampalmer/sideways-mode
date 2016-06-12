@@ -66,6 +66,7 @@ public class ServiceNotification {
 				StringResource.get(R.string.action_rotate_right));
 
 		RemoteViews content = notificationButtons.getContentView();
+		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 		content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, builder.createContentView());
 		builder.setCustomContentView(content);
 
