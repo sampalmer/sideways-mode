@@ -41,10 +41,20 @@ public class QuickSettingService extends TileService {
 		RotationServiceClient.send(RotationService.ACTION_TOGGLE);
 
 		//TODO: Change this to show a dialog/activity allowing access to the rotate actions
+//		if (isLocked())
+//			startActivity();
+//		else
+//			showDialog(null);
+
 		//TODO: Maybe do something different if the service isn't actually running? Or maybe it already shows the toast and is OK?
 	}
 
-	//TODO: Maybe also update the tile when it is added?
+	@Override
+	public void onTileAdded() {
+		super.onTileAdded();
+
+		//TODO: If tile is an active tile, request listening state so it can be updated.
+	}
 
 	@Override
 	public void onStartListening() {
@@ -72,7 +82,7 @@ public class QuickSettingService extends TileService {
 
 		//TODO: Remove duplication of default tile properties in manifest
 		Tile tile = getQsTile();
-		tile.setState(parameters == null ? Tile.STATE_UNAVAILABLE : Tile.STATE_ACTIVE); //TODO: Maybe make the state inactive when the user orientation is overriden?
+		tile.setState(parameters == null ? Tile.STATE_UNAVAILABLE : Tile.STATE_ACTIVE); //TODO: Maybe make the state STATE_INACTIVE when the user orientation is overriden?
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.actionIcon()));
 		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name) : parameters.getSummary());
