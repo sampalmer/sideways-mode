@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
+import samuelpalmer.common.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
@@ -20,6 +21,7 @@ import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 public class ServiceNotification {
 
 	private final NotificationBuilderCompat builder;
+	private final int actionButtonColour; //Cached for RAM & CPU efficiency
 
 	public ServiceNotification() {
 		//Caching and re-using the builder prevents the notification from disappearing and
@@ -29,6 +31,9 @@ public class ServiceNotification {
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
+
+		NotificationStyles styles = new NotificationStyles(Process.context(), R.id.toggle_mode_button, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
+		actionButtonColour = styles.getActionButtonColour();
 	}
 
 	public Notification build(NotificationParameters params) {
@@ -46,7 +51,11 @@ public class ServiceNotification {
 		params.priority.apply(builder);
 		hideTimestamp();
 
-		NotificationButtons notificationButtons = new NotificationButtons(Process.context(), R.layout.notification, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
+		NotificationButtons notificationButtons = new NotificationButtons(
+			Process.context(),
+			R.layout.notification,
+			actionButtonColour
+		);
 
 		notificationButtons
 			.configureButton(
