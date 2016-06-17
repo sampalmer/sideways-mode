@@ -51,6 +51,12 @@ public class ServiceNotification {
 		params.priority.apply(builder);
 		hideTimestamp();
 
+		applyButtons(params);
+
+		return builder.build();
+	}
+
+	private void applyButtons(NotificationParameters params) {
 		NotificationButtons notificationButtons = new NotificationButtons(
 			Process.context(),
 			R.layout.notification,
@@ -78,8 +84,6 @@ public class ServiceNotification {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 		content.addView(samuelpalmer.common.R.id.notification_buttons_main_content, builder.createContentView());
 		builder.setCustomContentView(content);
-
-		return builder.build();
 	}
 
 	private void hideTimestamp() {

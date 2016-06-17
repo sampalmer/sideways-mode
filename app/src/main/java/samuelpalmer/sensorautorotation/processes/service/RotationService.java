@@ -84,7 +84,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
 
-		//TODO: Ensure none of the preceding code can crash due to reliance or this being set earlier in this method
+		//TODO: Ensure none of the preceding code can crash due to reliance on this being set earlier in this method
 		ServiceHolder.started(this);
 	}
 

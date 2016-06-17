@@ -10,8 +10,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationParameters;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplay;
 
-//TODO: Hook up the tile's settings screen to the main activity
-//TODO: The tile seems to remain unupdated until a moment after the notification drawer is pulled down. Maybe make the service an "active" service?
+//TODO: The tile seems to remain unupdated until a moment after the notification drawer is pulled down. Maybe make this an "active" tile service?
 public class QuickSettingService extends TileService {
 
 	private ServiceStatusDisplay notificationParamsChanged = new ServiceStatusDisplay() {
