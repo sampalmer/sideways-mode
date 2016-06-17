@@ -32,7 +32,7 @@ public class ServiceNotification {
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
 
-		NotificationStyles styles = new NotificationStyles(Process.context(), R.id.toggle_mode_button, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(Process.context(), R.drawable.action_rotation, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 	}
 
