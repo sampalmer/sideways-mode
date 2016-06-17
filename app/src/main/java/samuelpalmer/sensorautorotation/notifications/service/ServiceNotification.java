@@ -39,7 +39,7 @@ public class ServiceNotification {
 	public Notification build(NotificationParameters params) {
 		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon());
 
-		if (VERSION.SDK_INT >= 23 && VERSION.PREVIEW_SDK_INT == 3) {
+		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
 			builder.setContentTitle(StringResource.get(params.user.descriptionId()));
 		}
