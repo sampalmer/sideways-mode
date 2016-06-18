@@ -80,7 +80,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
 
-		//TODO: Ensure none of the preceding code can crash due to reliance on this being set earlier in this method
+		//Don't want anything accessing the service 'til it's finished initialising.
 		ServiceHolder.started(this);
 	}
 
@@ -126,6 +126,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onDestroy() {
 		super.onDestroy();
 
+		//Don't want anything accessing the service during deinitialisation.
 		ServiceHolder.stopped();
 
 		systemAutoRotationMonitor.ensureStopped();

@@ -21,6 +21,8 @@ public abstract class ServiceController {
 	}
 
 	private static void ensureStopped() {
+		// It's important that we try to stop the service even if it doesn't look like it's running
+		// since maybe the service has started but hasn't yet been stored in ServiceHolder.
 		Process.context().stopService(intent());
 	}
 
