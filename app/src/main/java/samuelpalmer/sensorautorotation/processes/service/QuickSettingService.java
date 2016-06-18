@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.annotation.TargetApi;
 import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
@@ -11,9 +13,10 @@ import samuelpalmer.sensorautorotation.notifications.service.NotificationParamet
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplay;
 
 //TODO: The tile seems to remain unupdated until a moment after the notification drawer is pulled down. Maybe make this an "active" tile service?
+@TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
-	private ServiceStatusDisplay notificationParamsChanged = new ServiceStatusDisplay() {
+	private final ServiceStatusDisplay notificationParamsChanged = new ServiceStatusDisplay() {
 		@Override
 		public void update(NotificationParameters params) {
 			updateTile();

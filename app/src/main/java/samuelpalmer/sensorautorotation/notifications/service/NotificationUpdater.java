@@ -8,7 +8,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 
 public class NotificationUpdater implements ServiceStatusDisplay {
 	private final Service service;
-	private ServiceNotification builder;
+	private final ServiceNotification builder;
 
 	public NotificationUpdater(Service service) {
 		this.service = service;

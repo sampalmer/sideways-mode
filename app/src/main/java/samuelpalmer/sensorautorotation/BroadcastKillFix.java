@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation;
 import android.content.Intent;
 import android.os.Build;
 
-public abstract class BroadcastKillFix {
+abstract class BroadcastKillFix {
 	/**
 	 * Prevents the receiving process from being killed by the OS when it receives the broadcast
 	 * after task removal in Android 4.1 and above.
