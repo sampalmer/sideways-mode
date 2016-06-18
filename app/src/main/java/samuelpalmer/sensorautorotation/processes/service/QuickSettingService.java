@@ -36,6 +36,9 @@ public class QuickSettingService extends TileService {
 			ServiceHolder.instance().serviceNotificationManager.onParamsChanged.add(notificationParamsChanged);
 	}
 
+	/**
+	 * Doesn't seem to fire if when the tile is in STATE_UNAVAILABLE
+	 */
 	@Override
 	public void onClick() {
 		super.onClick();
@@ -84,7 +87,9 @@ public class QuickSettingService extends TileService {
 
 		//TODO: Remove duplication of default tile properties in manifest
 		Tile tile = getQsTile();
-		tile.setState(parameters == null ? Tile.STATE_UNAVAILABLE : Tile.STATE_ACTIVE); //TODO: Maybe make the state STATE_INACTIVE when the user orientation is overriden?
+
+		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
+		tile.setState(parameters == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.actionIcon()));
 		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name) : parameters.getSummary());
