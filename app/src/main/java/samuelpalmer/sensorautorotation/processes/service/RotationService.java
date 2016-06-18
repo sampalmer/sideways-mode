@@ -11,6 +11,7 @@ import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
+import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
@@ -22,13 +23,6 @@ import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserI
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-/**
- * Encapsulates both the settings server (for the UI) and the main background rotation logic.
- * They're both using this service since otherwise Android sometimes kills the main service when
- * the main activity task is removed.
- *
- * http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
- */
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	public static final String ACTION_TOGGLE = "toggle";
