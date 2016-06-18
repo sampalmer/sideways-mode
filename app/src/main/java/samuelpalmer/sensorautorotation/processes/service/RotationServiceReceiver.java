@@ -7,6 +7,9 @@ import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 
+/**
+ * Provides a way to communicate with RotationService using broadcasts.
+ */
 public class RotationServiceReceiver extends BroadcastReceiver {
 
 	public static PendingIntent getPendingIntent(String action) {

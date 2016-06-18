@@ -43,6 +43,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onCreate() {
 		super.onCreate();
 
+		//TODO: Maybe check if the service is actually enabled and stop if it's not?
+
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentError.clear();
 
@@ -124,6 +126,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onDestroy() {
 		super.onDestroy();
 
+		ServiceHolder.stopped();
+
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
@@ -133,8 +137,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userOrientationInferrer.ensureStopped();
 
 		applicationState.clear();
-
-		ServiceHolder.stopped();
 	}
 
 	private void toggleRotation() {
