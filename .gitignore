@@ -1,4 +1,7 @@
 /local.properties
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/modules.xml
 /.idea/workspace.xml
 /.idea/libraries
 /*/build
@@ -8,3 +11,4 @@ Thumbs.db
 *.alloc
 /captures
 *.log
+*.iml
