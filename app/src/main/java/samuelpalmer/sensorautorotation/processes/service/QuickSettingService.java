@@ -50,8 +50,6 @@ public class QuickSettingService extends TileService {
 //			startActivity();
 //		else
 //			showDialog(null);
-
-		//TODO: Maybe do something different if the service isn't actually running? Or maybe it already shows the toast and is OK?
 	}
 
 	@Override
