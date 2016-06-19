@@ -5,13 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
@@ -59,10 +60,13 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(samuelpalmer.sensorautorotation.Process.context());
+		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(Process.context());
 		notificationParametersFactory = new NotificationParametersFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
 		serviceNotificationManager = new ServiceNotificationManager(notificationParametersFactory);
 		serviceNotificationManager.onParamsChanged.add(new NotificationUpdater(this));
+		if (Build.VERSION.SDK_INT >= 24)
+			serviceNotificationManager.onParamsChanged.add(new QuickSettingStatusDisplay());
+
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater, screenRotationMonitor);

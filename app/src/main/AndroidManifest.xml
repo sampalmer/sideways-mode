@@ -132,6 +132,11 @@
 			<intent-filter>
 				<action android:name="android.service.quicksettings.action.QS_TILE" />
 			</intent-filter>
+
+			<!-- Non-active tiles only seem to update after the notification drawer has been
+			 pulled down, resulting in a noticeable lag in tile updates _while_ pulling the drawer down. -->
+			<meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+			           android:value="true" />
 		</service>
 
 	</application>
