@@ -15,6 +15,9 @@ public class NotificationUpdater implements ServiceStatusDisplay {
 		builder = new ServiceNotification();
 	}
 
+	@Override
+	public void onServiceStopped() {}
+
 	public void update(NotificationParameters params) {
 		Notification notification = builder.build(params);
 

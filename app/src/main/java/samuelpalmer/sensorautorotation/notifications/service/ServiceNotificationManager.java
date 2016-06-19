@@ -29,6 +29,9 @@ public class ServiceNotificationManager extends State {
 	protected void stop() {
 		for (EventRegistrar trigger : statusGenerator.updateTriggers())
 			trigger.unsubscribe(updateNotification);
+
+		for (ServiceStatusDisplay display : onParamsChanged)
+			display.onServiceStopped();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {

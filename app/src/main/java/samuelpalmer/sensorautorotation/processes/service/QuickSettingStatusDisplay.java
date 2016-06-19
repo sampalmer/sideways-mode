@@ -11,6 +11,11 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDispla
 public class QuickSettingStatusDisplay implements ServiceStatusDisplay {
 
 	@Override
+	public void onServiceStopped() {
+		QuickSettingService.requestTileUpdate();
+	}
+
+	@Override
 	public void update(NotificationParameters params) {
 		//TODO: Have the quick setting service hang onto "params" to save recreated it unnecessarily.
 		QuickSettingService.requestTileUpdate();
