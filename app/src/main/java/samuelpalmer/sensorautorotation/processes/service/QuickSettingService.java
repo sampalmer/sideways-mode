@@ -108,7 +108,7 @@ public class QuickSettingService extends TileService {
 		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
 		tile.setState(parameters == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.actionIcon()));
+		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.notificationIcon()));
 		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name) : parameters.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 
