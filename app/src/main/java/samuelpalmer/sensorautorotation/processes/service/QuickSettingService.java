@@ -1,13 +1,17 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+import android.view.View;
 
+import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -25,13 +29,40 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
-		RotationServiceClient.send(RotationService.ACTION_TOGGLE);
+//		RotationServiceClient.send(RotationService.ACTION_TOGGLE);
 
 		//TODO: Change this to show a dialog/activity allowing access to the rotate actions
 //		if (isLocked())
 //			startActivity();
 //		else
-//			showDialog(null);
+
+		//TODO: Use different behaviour if the app isn't enabled.
+		NotificationParameters params = makeParamsIfAvailable();
+
+		View apply = new NotificationButtons(
+				Process.context(),
+				R.layout.notification,
+				Color.GREEN
+		)
+				.configureButton(
+						R.id.rotate_left_button,
+						R.drawable.action_rotate_left,
+						RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT),
+						StringResource.get(R.string.action_rotate_left))
+				.configureButton(
+						R.id.toggle_mode_button,
+						params.mode.actionIcon(),
+						RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE),
+						StringResource.get(params.mode.toggleToOtherModeResourceId()))
+				.configureButton(
+						R.id.rotate_right_button,
+						R.drawable.action_rotate_right,
+						RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
+						StringResource.get(R.string.action_rotate_right))
+				.getContentView().apply(this, null);
+		Dialog dialog = new Dialog(this);
+		dialog.setContentView(apply);
+		showDialog(dialog);
 	}
 
 	@Override
