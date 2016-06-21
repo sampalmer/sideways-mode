@@ -57,9 +57,12 @@ public class ServiceNotification {
 	}
 
 	private void applyButtons(NotificationParameters params) {
+		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
+
 		NotificationButtons notificationButtons = new NotificationButtons(
 			Process.context(),
 			R.layout.notification,
+			builder.createContentView(),
 			actionButtonColour
 		);
 
@@ -80,10 +83,7 @@ public class ServiceNotification {
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
 				StringResource.get(R.string.action_rotate_right));
 
-		RemoteViews content = notificationButtons.getContentView();
-		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
-		content.addView(samuelpalmer.common.R.id.notification_content, builder.createContentView());
-		builder.setCustomContentView(content);
+		builder.setCustomContentView(notificationButtons.getContentView());
 	}
 
 	private void hideTimestamp() {
