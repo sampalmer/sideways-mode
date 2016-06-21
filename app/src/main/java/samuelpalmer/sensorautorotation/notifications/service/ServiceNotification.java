@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
-class ServiceNotification {
+public class ServiceNotification {
 
 	private final NotificationBuilderCompat builder;
 	private final int actionButtonColour; //Cached for RAM & CPU efficiency
