@@ -43,4 +43,5 @@ abstract class ServiceHolder {
 
 		Log.i(TAG, "Service stopped");
 	}
+
 }

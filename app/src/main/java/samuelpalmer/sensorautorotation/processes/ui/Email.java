@@ -17,7 +17,7 @@ import java.util.List;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
-public class Email {
+class Email {
 
 	//The intent resolves to this when run on the official Android emulators if it doesn't match anything.
 	private static final ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
