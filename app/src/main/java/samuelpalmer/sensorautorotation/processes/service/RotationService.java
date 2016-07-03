@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -33,7 +33,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
-	ServiceNotificationManager serviceNotificationManager;
+	ServiceStatusDisplayManager serviceStatusDisplayManager;
 	private ServiceRevivalManager serviceRevivalManager;
 	ServiceStatusFactory serviceStatusFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
@@ -62,10 +62,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(Process.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
-		serviceNotificationManager = new ServiceNotificationManager(serviceStatusFactory);
-		serviceNotificationManager.onServiceStatusChanged.add(new NotificationUpdater(this));
+		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
+		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationUpdater(this));
 		if (Build.VERSION.SDK_INT >= 24)
-			serviceNotificationManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
+			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
 
 		serviceRevivalManager = new ServiceRevivalManager();
 
@@ -79,7 +79,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
-		serviceNotificationManager.ensureStarted();
+		serviceStatusDisplayManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
@@ -137,7 +137,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityChangeHandler.ensureStopped();
-		serviceNotificationManager.ensureStopped();
+		serviceStatusDisplayManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 		userOrientationInferrer.ensureStopped();
 
