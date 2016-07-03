@@ -1,21 +1,17 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.ComponentName;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
-import android.view.View;
 
-import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.notifications.service.NotificationParameters;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -99,12 +95,12 @@ public class QuickSettingService extends TileService {
 	}
 
 	private void updateTile() {
-		//TODO: Only update when the service running state or params have changed.
+		//TODO: Only update when the service running state or serviceStatus have changed.
 
 		if (listeningInstance == null)
 			throw new RuntimeException("Not allowed to update the tile outside of listening state.");
 
-		NotificationParameters parameters = makeParamsIfAvailable();
+		ServiceStatus parameters = makeServiceStatusIfAvailable();
 
 		//TODO: Remove duplication of default tile properties in manifest
 		Tile tile = getQsTile();
@@ -123,10 +119,10 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Updated tile");
 	}
 
-	private NotificationParameters makeParamsIfAvailable() {
+	private ServiceStatus makeServiceStatusIfAvailable() {
 		if (ServiceHolder.isRunning()) {
 			RotationService service = ServiceHolder.instance();
-			return service.notificationParametersFactory.generate();
+			return service.serviceStatusFactory.generate();
 		}
 
 		return null;

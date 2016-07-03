@@ -9,13 +9,13 @@ import samuelpalmer.sensorautorotation.State;
 
 public class ServiceNotificationManager extends State {
 
-	private final NotificationParametersFactory statusGenerator;
+	private final ServiceStatusFactory statusGenerator;
 
-	public ServiceNotificationManager(NotificationParametersFactory statusGenerator) {
+	public ServiceNotificationManager(ServiceStatusFactory statusGenerator) {
 		this.statusGenerator = statusGenerator;
 	}
 
-	public final Set<ServiceStatusDisplay> onParamsChanged = new HashSet<>();
+	public final Set<ServiceStatusDisplay> onServiceStatusChanged = new HashSet<>();
 
 	@Override
 	protected void start() {
@@ -30,23 +30,23 @@ public class ServiceNotificationManager extends State {
 		for (EventRegistrar trigger : statusGenerator.updateTriggers())
 			trigger.unsubscribe(updateNotification);
 
-		for (ServiceStatusDisplay display : onParamsChanged)
+		for (ServiceStatusDisplay display : onServiceStatusChanged)
 			display.onServiceStopped();
 	}
 
 	private final EventHandler updateNotification = new EventHandler() {
 		@Override
 		public void update() {
-			NotificationParameters params = statusGenerator.generate();
+			ServiceStatus serviceStatus = statusGenerator.generate();
 
-			if (lastNotificationParams == null || !params.equals(lastNotificationParams)) {
-				for (ServiceStatusDisplay display : onParamsChanged)
-					display.update(params);
+			if (lastServiceStatus == null || !serviceStatus.equals(lastServiceStatus)) {
+				for (ServiceStatusDisplay display : onServiceStatusChanged)
+					display.update(serviceStatus);
 
-				lastNotificationParams = params;
+				lastServiceStatus = serviceStatus;
 			}
 		}
 	};
 
-	private NotificationParameters lastNotificationParams;
+	private ServiceStatus lastServiceStatus;
 }

@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.widget.RemoteViews;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
@@ -36,27 +35,27 @@ class ServiceNotification {
 		actionButtonColour = styles.getActionButtonColour();
 	}
 
-	public Notification build(NotificationParameters params) {
-		builder.setSmallIcon(params.overridden ? params.user.iconId() : params.mode.notificationIcon());
+	public Notification build(ServiceStatus serviceStatus) {
+		builder.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon());
 
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
-			builder.setContentTitle(StringResource.get(params.user.descriptionId()));
+			builder.setContentTitle(StringResource.get(serviceStatus.user.descriptionId()));
 		}
 		else {
 			builder.setContentTitle(StringResource.get(R.string.app_name));
-			builder.setContentText(StringResource.get(params.user.descriptionId()));
+			builder.setContentText(StringResource.get(serviceStatus.user.descriptionId()));
 		}
 
-		params.priority.apply(builder);
+		serviceStatus.priority.apply(builder);
 		hideTimestamp();
 
-		applyButtons(params);
+		applyButtons(serviceStatus);
 
 		return builder.build();
 	}
 
-	private void applyButtons(NotificationParameters params) {
+	private void applyButtons(ServiceStatus serviceStatus) {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
@@ -74,9 +73,9 @@ class ServiceNotification {
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
-				params.mode.actionIcon(),
+				serviceStatus.mode.actionIcon(),
 				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE),
-				StringResource.get(params.mode.toggleToOtherModeResourceId()))
+				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
