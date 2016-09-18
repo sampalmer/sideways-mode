@@ -139,6 +139,10 @@
 			           android:value="true" />
 		</service>
 
+		<service
+			android:name=".processes.service.ServiceStatusService"
+		    android:process="@string/service_process_name"/>
+
 	</application>
 
 </manifest>
