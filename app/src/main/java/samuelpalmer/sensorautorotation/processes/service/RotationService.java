@@ -66,6 +66,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationUpdater(this));
 		if (Build.VERSION.SDK_INT >= 24)
 			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
+		serviceStatusDisplayManager.onServiceStatusChanged.add(new ServiceStatusContentProvider.RemoteStatusDisplay());
 
 		serviceRevivalManager = new ServiceRevivalManager();
 

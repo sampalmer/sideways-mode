@@ -69,14 +69,22 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".processes.ui.PopupActivity" />
+
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
 		<!-- Service Process -->
 
 		<provider
-			android:authorities="@string/content_provider_authority"
+			android:authorities="@string/preferences_provider_authority"
 			android:name="samuelpalmer.common.contentprovidersharedpreferences.SharedPreferencesContentProvider"
-		    android:exported="false"
+			android:exported="false"
+			android:process="@string/service_process_name" />
+
+		<provider
+			android:authorities="@string/status_provider_authority"
+			android:name=".processes.service.ServiceStatusContentProvider"
+			android:exported="false"
 			android:process="@string/service_process_name" />
 
 		<receiver android:name=".processes.service.ServiceStateUpdatingReceiver"
@@ -138,10 +146,6 @@
 			<meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
 			           android:value="true" />
 		</service>
-
-		<service
-			android:name=".processes.service.ServiceStatusService"
-		    android:process="@string/service_process_name"/>
 
 	</application>
 

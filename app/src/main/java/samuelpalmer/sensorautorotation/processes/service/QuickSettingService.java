@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.annotation.TargetApi;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
@@ -12,6 +13,7 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
+import samuelpalmer.sensorautorotation.processes.ui.PopupActivity;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -25,15 +27,15 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
-//		RotationServiceClient.send(RotationService.ACTION_TOGGLE);
+		//TODO: Confirm this works OK on the lock screen
+		startActivityAndCollapse(new Intent(this, PopupActivity.class));
 
-		//TODO: Change this to show a dialog/activity allowing access to the rotate actions
 //		if (isLocked())
 //			startActivity();
 //		else
+//          showDialog();
 
 		//TODO: Use different behaviour if the app isn't enabled.
-		//TODO: Launch little popup thinggy
 	}
 
 	@Override

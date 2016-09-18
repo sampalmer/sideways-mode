@@ -48,5 +48,9 @@ public class ServiceStatusDisplayManager extends State {
 		}
 	};
 
+	public ServiceStatus getLastStatus() {
+		return lastServiceStatus;
+	}
+
 	private ServiceStatus lastServiceStatus;
 }
