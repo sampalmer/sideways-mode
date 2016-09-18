@@ -69,7 +69,9 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".processes.ui.PopupActivity" />
+		<activity android:name=".processes.ui.PopupActivity"
+		          android:launchMode="singleTask"
+		          android:showOnLockScreen="true" />
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 

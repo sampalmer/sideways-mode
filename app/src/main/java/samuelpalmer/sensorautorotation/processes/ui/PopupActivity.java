@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
@@ -18,8 +20,15 @@ public class PopupActivity extends UiActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+//		setContentView(R.id.)
+
 		serviceClient = new ServiceStatusContentProvider.Client(this);
 		handler = new Handler();
+
+
+		Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 	}
 
 	@Override
