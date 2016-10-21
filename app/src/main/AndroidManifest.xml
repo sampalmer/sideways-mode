@@ -56,7 +56,7 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".processes.ui.DialogActivity"
+		<activity android:name=".processes.ui.MessageDialogActivity"
 			android:theme="@style/Theme.NoDisplay"/>
 
 		<activity
@@ -69,8 +69,11 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".processes.ui.PopupActivity"
-		          android:launchMode="singleTask"
+		<activity android:name=".processes.ui.PopupControlPanelActivity"
+		          android:launchMode="singleInstance"
+		          android:excludeFromRecents="true"
+		          android:taskAffinity=""
+		          android:theme="@style/Theme.Dialog"
 		          android:showOnLockScreen="true" />
 
 		<receiver android:name=".processes.ui.ToastReceiver" />

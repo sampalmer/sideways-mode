@@ -13,7 +13,7 @@ import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.ui.PopupActivity;
+import samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -28,7 +28,7 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
 		//TODO: Confirm this works OK on the lock screen
-		startActivityAndCollapse(new Intent(this, PopupActivity.class));
+		startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class));
 
 //		if (isLocked())
 //			startActivity();
