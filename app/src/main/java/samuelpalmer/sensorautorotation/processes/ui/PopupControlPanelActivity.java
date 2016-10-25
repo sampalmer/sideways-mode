@@ -9,8 +9,6 @@ import samuelpalmer.sensorautorotation.R;
 
 public class PopupControlPanelActivity extends Activity {
 
-	private static final String TAG = "dialog";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,9 +18,13 @@ public class PopupControlPanelActivity extends Activity {
 				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
 		setContentView(R.layout.control_panel);
+	}
 
-//		if (getFragmentManager().findFragmentByTag(TAG) == null)
-//			new PopupControlPanelDialog().show(getFragmentManager(), TAG);
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		//This makes the popup go away when you pull down the notification drawer
+		if (!hasFocus)
+			finish();
 	}
 
 	@Override
