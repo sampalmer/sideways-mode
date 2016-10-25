@@ -8,6 +8,7 @@
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
 	<uses-feature
 		android:name="android.hardware.sensor.accelerometer"
@@ -74,9 +75,22 @@
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
 		          android:theme="@style/Theme.Dialog"
-		          android:showOnLockScreen="true" />
+		          android:showOnLockScreen="true"
+		          android:noHistory="true"
+			/>
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
+
+		<!--suppress AndroidDomInspection -->
+		<service
+			android:name=".processes.ui.ControlPanelSmallApp"
+			android:exported="true"
+			tools:ignore="ExportedService">
+			<intent-filter>
+				<action android:name="com.sony.smallapp.intent.action.MAIN" />
+				<category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
+			</intent-filter>
+		</service>
 
 		<!-- Service Process -->
 
@@ -152,6 +166,7 @@
 			           android:value="true" />
 		</service>
 
+		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 	</application>
 
 </manifest>
