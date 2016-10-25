@@ -168,7 +168,8 @@ abstract class WindowOrientationListener {
 	 */
 	public void enable() {
 		synchronized (mLock) {
-			if (mEnabled == false) {
+			//Don't want to proceed when there are no sensors to use since it will break later validation checks
+			if (mEnabled == false && mSensors.size() > 0) {
 				mSensorEventListener.resetLocked();
 
 				Iterator<Sensor> iterator = mSensors.iterator();
