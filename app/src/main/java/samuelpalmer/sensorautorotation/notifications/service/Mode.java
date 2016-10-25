@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-public interface Mode {
+import android.os.Parcelable;
+
+public interface Mode extends Parcelable {
 	int notificationIcon();
 	int actionIcon();
 	int autoRotationStateResourceId();

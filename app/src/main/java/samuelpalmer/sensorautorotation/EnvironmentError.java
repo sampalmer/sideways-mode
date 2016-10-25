@@ -8,7 +8,7 @@ import android.util.Log;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
+import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class EnvironmentError {
@@ -34,7 +34,7 @@ public class EnvironmentError {
 	private void show() {
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.error)
-			.setContentIntent(DialogActivity.makePendingIntent(summary, message))
+			.setContentIntent(MessageDialogActivity.makePendingIntent(summary, message))
 			.setContentTitle(summary)
 			.setContentText(message)
 			.setAutoCancel(true)

@@ -5,16 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
+import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -22,13 +24,6 @@ import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserI
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-/**
- * Encapsulates both the settings server (for the UI) and the main background rotation logic.
- * They're both using this service since otherwise Android sometimes kills the main service when
- * the main activity task is removed.
- *
- * http://stackoverflow.com/questions/30892299/removing-task-kills-background-process-when-bound
- */
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	public static final String ACTION_TOGGLE = "toggle";
@@ -38,9 +33,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
-	private ServiceNotificationManager serviceNotificationManager;
+	ServiceStatusDisplayManager serviceStatusDisplayManager;
 	private ServiceRevivalManager serviceRevivalManager;
-	private NotificationParametersFactory notificationParametersFactory;
+	ServiceStatusFactory serviceStatusFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
@@ -49,8 +44,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onCreate() {
 		super.onCreate();
 
-		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
-		ServiceHolder.started(this);
+		//TODO: Maybe check if the service is actually enabled and stop if it's not?
 
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentError.clear();
@@ -66,9 +60,14 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(samuelpalmer.sensorautorotation.Process.context());
-		notificationParametersFactory = new NotificationParametersFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
-		serviceNotificationManager = new ServiceNotificationManager(notificationParametersFactory, new NotificationUpdater(this));
+		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(Process.context());
+		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
+		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
+		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationUpdater(this));
+		if (Build.VERSION.SDK_INT >= 24)
+			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
+		serviceStatusDisplayManager.onServiceStatusChanged.add(new ServiceStatusContentProvider.RemoteStatusDisplay());
+
 		serviceRevivalManager = new ServiceRevivalManager();
 
 		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater, screenRotationMonitor);
@@ -81,10 +80,13 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
-		serviceNotificationManager.ensureStarted();
+		serviceStatusDisplayManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
+
+		//Don't want anything accessing the service 'til it's finished initialising.
+		ServiceHolder.started(this);
 	}
 
 	@Override
@@ -129,17 +131,18 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onDestroy() {
 		super.onDestroy();
 
+		//Don't want anything accessing the service during deinitialisation.
+		ServiceHolder.stopped();
+
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityChangeHandler.ensureStopped();
-		serviceNotificationManager.ensureStopped();
+		serviceStatusDisplayManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 		userOrientationInferrer.ensureStopped();
 
 		applicationState.clear();
-
-		ServiceHolder.stopped();
 	}
 
 	private void toggleRotation() {
@@ -148,7 +151,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	}
 
 	private void showStatusToast() {
-		CharSequence message = notificationParametersFactory.generate().getSummary();
+		CharSequence message = serviceStatusFactory.generate().getSummary();
 		ToastReceiver.send(message);
 	}
 
