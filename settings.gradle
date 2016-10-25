@@ -1,1 +1,1 @@
-include ':app', ':common', ':com.sony.smallapp'
+include ':app', ':common'

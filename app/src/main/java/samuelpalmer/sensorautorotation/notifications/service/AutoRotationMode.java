@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import android.os.Parcel;
-
 import samuelpalmer.sensorautorotation.R;
 
 class AutoRotationMode implements Mode {
@@ -31,23 +29,4 @@ class AutoRotationMode implements Mode {
 		return getClass() == other.getClass();
 	}
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {}
-
-	public static final Creator<AutoRotationMode> CREATOR = new Creator<AutoRotationMode>() {
-		@Override
-		public AutoRotationMode createFromParcel(Parcel in) {
-			return new AutoRotationMode();
-		}
-
-		@Override
-		public AutoRotationMode[] newArray(int size) {
-			return new AutoRotationMode[size];
-		}
-	};
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
 }

@@ -13,7 +13,7 @@ import android.os.Bundle;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.Process;
 
-public class MessageDialogActivity extends UiActivity {
+public class DialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
 	private static final String INTENT_EXTRA_MESSAGE = "message";
 	private static final String TAG = "dialog";
@@ -21,7 +21,7 @@ public class MessageDialogActivity extends UiActivity {
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message) {
 		Intent settingsIntent = ComponentType.create(MainActivity.class).intent();
 
-		ComponentType componentType = ComponentType.create(MessageDialogActivity.class);
+		ComponentType componentType = ComponentType.create(DialogActivity.class);
 		Intent intent = componentType.intent()
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title);
@@ -39,22 +39,22 @@ public class MessageDialogActivity extends UiActivity {
 			throw new RuntimeException("No extras specified");
 
 		if (getFragmentManager().findFragmentByTag(TAG) == null)
-			MessageDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
+			MyDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		//Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity} did not call finish() prior to onResume() completing"
+		//Prevents a crash on Android M developer preview
 		if (VERSION.SDK_INT >= 23)
 			setVisible(true);
 	}
 
-	public static class MessageDialogFragment extends DialogFragment {
+	public static class MyDialogFragment extends DialogFragment {
 
-		public static MessageDialogFragment newInstance(Bundle args) {
-			MessageDialogFragment frag = new MessageDialogFragment();
+		public static MyDialogFragment newInstance(Bundle args) {
+			MyDialogFragment frag = new MyDialogFragment();
 			frag.setArguments(args);
 			return frag;
 		}

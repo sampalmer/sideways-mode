@@ -24,7 +24,7 @@ public class ApplicationSettings extends Settings {
 	 */
 	public static ApplicationSettings remote() {
 		if (remote == null)
-			remote = new ApplicationSettings(new ContentProviderSharedPreferences(Process.context(), StringResource.get(R.string.preferences_provider_authority).toString(), sharedPreferencesName()));
+			remote = new ApplicationSettings(new ContentProviderSharedPreferences(Process.context(), StringResource.get(R.string.content_provider_authority).toString(), sharedPreferencesName()));
 		return remote;
 	}
 

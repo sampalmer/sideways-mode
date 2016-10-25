@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
+import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class Upgrader {
@@ -67,7 +67,7 @@ public class Upgrader {
 	}
 
 	private PendingIntent makeDialogIntent(String message) {
-		return MessageDialogActivity.makePendingIntent(messageTitle(), message);
+		return DialogActivity.makePendingIntent(messageTitle(), message);
 	}
 
 	private CharSequence messageTitle() {
