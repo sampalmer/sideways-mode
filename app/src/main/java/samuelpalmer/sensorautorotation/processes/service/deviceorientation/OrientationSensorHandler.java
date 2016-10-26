@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
@@ -46,7 +48,7 @@ public class OrientationSensorHandler extends State {
 		windowOrientationListener.disable();
 	}
 
-	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(Process.context(), null) {
+	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(Process.context(), new Handler(Looper.getMainLooper())) {
 		@Override
 		public void onProposedRotationChanged(int rotation) {
 			if (!started()) {
