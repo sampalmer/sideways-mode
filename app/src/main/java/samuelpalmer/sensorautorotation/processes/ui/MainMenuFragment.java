@@ -5,14 +5,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
@@ -33,30 +29,6 @@ public class MainMenuFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_main, menu);
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-		showIcons(menu);
-	}
-
-	/**
-	 * http://stackoverflow.com/a/22288914/238753
-	 */
-	private void showIcons(Menu menu) {
-		if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-			try{
-				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-				m.setAccessible(true);
-				m.invoke(menu, true);
-			}
-			catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException e) {
-				Log.w(getClass().getSimpleName(), e);
-			} catch(Exception e){
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	@Override
