@@ -11,12 +11,12 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.preference.TwoStatePreference;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -33,14 +33,14 @@ public class SettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
 
-	private CheckBoxPreference enabledCheckbox() {
-		return (CheckBoxPreference) findPreference(ApplicationSettings.remote().enabled().getKey());
+	private TwoStatePreference enabledControl() {
+		return (TwoStatePreference) findPreference(ApplicationSettings.remote().enabled().getKey());
 	}
 
 	private final EventHandler enabledUpdater = new EventHandler() {
 		@Override
 		public void update() {
-			CheckBoxPreference preference = enabledCheckbox();
+			TwoStatePreference preference = enabledControl();
 			preference.setChecked(ApplicationSettings.remote().enabled().get());
 		}
 	};
@@ -86,7 +86,7 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledChanged.subscribe(enabledUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
-		enabledCheckbox().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		enabledControl().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				if (VERSION.SDK_INT >= 23 && (boolean) newValue && !Settings.System.canWrite(getContext())) {
