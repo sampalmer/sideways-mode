@@ -82,7 +82,7 @@ public class OrientationSensorHandler extends State {
 
 	private int deviceRotationBias() {
 		if (calculator.effectivelyAutoRotate())
-			return calculator.user().plus(screen.currentRotation().minus(Orientation.NATURAL)).getClockwiseRotationsFromNaturalOrientation();
+			return calculator.user().plus(screen.currentRotation().minus(Orientation.NATURAL)).getClockwiseRotationsFromNaturalOrientation(); //TODO: Figure out if the user reference needs to change
 		else
 			return -1;
 	}

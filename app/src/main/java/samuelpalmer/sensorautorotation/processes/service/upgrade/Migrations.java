@@ -48,6 +48,15 @@ class Migrations {
 			}
 		});
 
+		migrations.put(43, new Migration(null) {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+
+				//TODO: Remove "user" preference and replace with new "offset" preference. Calculate the new value.
+			}
+		});
+
 		return migrations;
 	}
 }

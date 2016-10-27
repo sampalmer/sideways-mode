@@ -18,7 +18,7 @@ public class UserOrientation {
 	public int descriptionId() {
 		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
 			case 0: return R.string.user_rotation_upright;
-			case 2: return R.string.user_rotation_upside_down;
+			case 2: return R.string.user_rotation_upside_down; //TODO: This shouldn't be possible
 			default: return R.string.user_rotation_sideways;
 		}
 	}

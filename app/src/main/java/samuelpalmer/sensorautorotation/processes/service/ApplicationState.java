@@ -9,12 +9,12 @@ public class ApplicationState {
 
 	private final ServiceSettings serviceSettings;
 	public final CachedSetting<Boolean> autoRotate;
-	public final CachedSetting<Orientation> user;
+	public final CachedSetting<Orientation> offset; //TODO: Find a good name for this
 
 	public ApplicationState(SystemSettings systemSettings) {
 		serviceSettings = new ServiceSettings();
 		autoRotate = new CachedSetting<>(serviceSettings.autoRotate());
-		user = new CachedSetting<>(serviceSettings.userOrientation());
+		offset = new CachedSetting<>(serviceSettings.userOrientation());
 
 		if (!serviceSettings.autoRotate().hasValue()) {
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
@@ -22,7 +22,7 @@ public class ApplicationState {
 		}
 
 		if (!serviceSettings.userOrientation().hasValue())
-			user.set(Orientation.NATURAL);
+			offset.set(Orientation.NATURAL);
 	}
 
 	public void set(boolean autoRotate, Orientation user) {
@@ -32,7 +32,7 @@ public class ApplicationState {
 		transaction.commit();
 
 		this.autoRotate.updateCache(autoRotate);
-		this.user.updateCache(user);
+		this.offset.updateCache(user);
 	}
 
 	public void clear() {
@@ -42,7 +42,7 @@ public class ApplicationState {
 		transaction.commit();
 
 		this.autoRotate.updateCache(null);
-		this.user.updateCache(null);
+		this.offset.updateCache(null);
 	}
 
 }
