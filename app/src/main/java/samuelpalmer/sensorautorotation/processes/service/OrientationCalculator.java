@@ -34,13 +34,14 @@ public class OrientationCalculator {
 	}
 
 	public Orientation user() {
-		return calculateUser(offset());
+		return calculateUser(autoRotate(), offset());
 	}
 
-	private Orientation calculateUser(Orientation offset) {
+	//TODO: WARNING: This seems to be backwards; left side and right side user orientations are swapped!
+	private Orientation calculateUser(boolean autoRotate, Orientation offset) {
 		//TODO: Consolidate this logic with the proposed screen orientation logic
 
-		return (effectivelyAutoRotate() ? Orientation.NATURAL : device).plus(offset.minus(Orientation.NATURAL));
+		return (effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device).plus(offset.minus(Orientation.NATURAL));
 	}
 
 	private Orientation offset() {
@@ -53,7 +54,7 @@ public class OrientationCalculator {
 
 		do
 			newValue = newValue.plus(new Rotation(-clockwiseRotations));
-		while (calculateUser(newValue).equals(Orientation.UPSIDE_DOWN));
+		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
 
 		state.offset.set(newValue);
 		reportChange();
@@ -61,15 +62,23 @@ public class OrientationCalculator {
 
 	public void setAutoRotate(boolean newValue) {
 		/* Since the current app/window might be overriding the current proposed orientation.
-		 Matching the actual screen orientation seems to provide a more consistent and intuitive user experience.
+		 Matching the actual screen orientation seems to provide a more consistent and intuitive newUser experience.
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
-		 Unlocking the screen orientation (AKA locking the user orientation) locks the user orientation derived from the screen. */
+		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
 		//TODO: Consolidate this logic with the proposed screen orientation logic
-		Orientation inferredOffset = Orientation.NATURAL.plus((effectivelyAutoRotate() /* TODO: This should instead rely on the *new* effective auto rotate value */ ? Orientation.NATURAL : device).minus(screen.currentRotation()));
-		Orientation user = calculateUser(inferredOffset); //TODO: This is wrong since it relies on the *previous* auto rotation value
+		boolean newEffectivelyAutoRotate = effectivelyAutoRotate(newValue);
+		Orientation newOffset = Orientation.NATURAL.plus((newEffectivelyAutoRotate ? device : Orientation.NATURAL).minus(screen.currentRotation()));
+		Orientation newUser = calculateUser(newValue, newOffset);
 
-		state.set(newValue, inferredOffset); //TODO: Add fallback in case the new user orientation will be upside-down
+		//TODO: Add fallback in case the new newUser orientation will be upside-down
+//		if (newUser.equals(Orientation.UPSIDE_DOWN))
+//			if (newEffectivelyAutoRotate)
+//				newOffset = Orientation.NATURAL;
+//			else
+//				newOffset =
+
+		state.set(newValue, newOffset);
 		reportChange();
 	}
 
@@ -93,8 +102,8 @@ public class OrientationCalculator {
 		reportChange();
 	}
 
-	public boolean effectivelyAutoRotate() {
-		return autoRotate() && !lockingOverride;
+	public boolean effectivelyAutoRotate(boolean autoRotate) {
+		return autoRotate && !lockingOverride;
 	}
 
 	private void reportChange() {
@@ -102,6 +111,6 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return Orientation.NATURAL.plus((effectivelyAutoRotate() ? device : Orientation.NATURAL).minus(offset()));
+		return Orientation.NATURAL.plus((effectivelyAutoRotate(autoRotate()) ? device : Orientation.NATURAL).minus(offset()));
 	}
 }
