@@ -37,11 +37,15 @@ public class OrientationCalculator {
 		return calculateUser(autoRotate(), offset());
 	}
 
-	//TODO: WARNING: This seems to be backwards; left side and right side user orientations are swapped!
 	private Orientation calculateUser(boolean autoRotate, Orientation offset) {
 		//TODO: Consolidate this logic with the proposed screen orientation logic
 
 		return (effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device).plus(offset.minus(Orientation.NATURAL));
+	}
+
+	private Orientation calculateOffset(boolean autoRotate, Orientation user) {
+		//TODO: Consolidate this logic with the proposed screen orientation logic
+		return Orientation.NATURAL.plus(user.minus(effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device));
 	}
 
 	private Orientation offset() {
@@ -67,32 +71,28 @@ public class OrientationCalculator {
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
 		//TODO: Consolidate this logic with the proposed screen orientation logic
-		boolean newEffectivelyAutoRotate = effectivelyAutoRotate(newValue);
-		Orientation newOffset = Orientation.NATURAL.plus((newEffectivelyAutoRotate ? device : Orientation.NATURAL).minus(screen.currentRotation()));
-		Orientation newUser = calculateUser(newValue, newOffset);
+		Orientation newOffset = Orientation.NATURAL.plus((effectivelyAutoRotate(newValue) ? device : Orientation.NATURAL).minus(screen.currentRotation()));
 
-		//TODO: Add fallback in case the new newUser orientation will be upside-down
-//		if (newUser.equals(Orientation.UPSIDE_DOWN))
-//			if (newEffectivelyAutoRotate)
-//				newOffset = Orientation.NATURAL;
-//			else
-//				newOffset =
+		Orientation newUser = calculateUser(newValue, newOffset);
+		if (newUser.equals(Orientation.UPSIDE_DOWN))
+			newOffset = calculateOffset(newValue, Orientation.NATURAL);
 
 		state.set(newValue, newOffset);
 		reportChange();
 	}
 
 	public void setLockingOverride(boolean lockingOverride) {
-		//TODO: Fix this; it broke when the meaning of the user state variable changed
 		if (this.lockingOverride != lockingOverride) {
-			if (autoRotate())
-				if (lockingOverride) {
-					device = Orientation.NATURAL;
-				} else if (user().equals(Orientation.UPSIDE_DOWN)) {
-					state.offset.set(Orientation.NATURAL);
-				}
-
 			this.lockingOverride = lockingOverride;
+
+			if (autoRotate()) {
+				if (lockingOverride || user().equals(Orientation.UPSIDE_DOWN))
+					state.offset.set(calculateOffset(true, Orientation.NATURAL));
+
+				if (lockingOverride)
+					device = Orientation.NATURAL;
+			}
+
 			reportChange();
 		}
 	}
