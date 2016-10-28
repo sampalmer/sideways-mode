@@ -67,10 +67,7 @@ public class OrientationCalculator {
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
 		Rotation newOffset = baseScreenOrientation(effectivelyAutoRotate(newValue)).minus(screen.currentRotation());
-
-		Orientation newUser = calculateUser(newValue, newOffset);
-		if (newUser.equals(Orientation.UPSIDE_DOWN))
-			newOffset = calculateOffset(newValue, Orientation.NATURAL);
+		newOffset = preventUpsideDownUser(newValue, newOffset);
 
 		state.set(newValue, newOffset);
 		reportChange();
@@ -86,15 +83,22 @@ public class OrientationCalculator {
 					state.offset.set(new Rotation(0));
 				else {
 					Rotation newOffset = device.minus(Orientation.NATURAL);
-					Orientation newUser = calculateUser(autoRotate(), newOffset);
-					if (newUser.equals(Orientation.UPSIDE_DOWN))
-						newOffset = calculateOffset(autoRotate(), Orientation.NATURAL);
+					newOffset = preventUpsideDownUser(autoRotate(), newOffset);
 
 					state.offset.set(newOffset);
 				}
 
 			reportChange();
 		}
+	}
+
+	private Rotation preventUpsideDownUser(boolean autoRotate, Rotation proposedOffset) {
+		Orientation newUser = calculateUser(autoRotate, proposedOffset);
+
+		if (newUser.equals(Orientation.UPSIDE_DOWN))
+			return calculateOffset(autoRotate, Orientation.NATURAL);
+		else
+			return proposedOffset;
 	}
 
 	public void setDevice(Orientation newDevice) {
