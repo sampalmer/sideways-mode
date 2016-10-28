@@ -76,17 +76,22 @@ public class OrientationCalculator {
 		reportChange();
 	}
 
-	public void setLockingOverride(boolean lockingOverride) {
-		if (this.lockingOverride != lockingOverride) {
-			this.lockingOverride = lockingOverride;
+	public void setLockingOverride(boolean newValue) {
+		if (this.lockingOverride != newValue) {
+			this.lockingOverride = newValue;
 
-			if (autoRotate()) {
-				if (lockingOverride || user().equals(Orientation.UPSIDE_DOWN))
-					state.offset.set(calculateOffset(true, Orientation.NATURAL));
+			if (autoRotate())
+				if (newValue)
+					//Lock the device in its natural orientation
+					state.offset.set(new Rotation(0));
+				else {
+					Rotation newOffset = device.minus(Orientation.NATURAL);
+					Orientation newUser = calculateUser(autoRotate(), newOffset);
+					if (newUser.equals(Orientation.UPSIDE_DOWN))
+						newOffset = calculateOffset(autoRotate(), Orientation.NATURAL);
 
-				if (lockingOverride)
-					device = Orientation.NATURAL;
-			}
+					state.offset.set(newOffset);
+				}
 
 			reportChange();
 		}
