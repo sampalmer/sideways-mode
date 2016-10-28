@@ -25,14 +25,14 @@ public class ApplicationState {
 			offset.set(Orientation.NATURAL);
 	}
 
-	public void set(boolean autoRotate, Orientation user) {
+	public void set(boolean autoRotate, Orientation offset) {
 		Transaction transaction = serviceSettings.new Transaction();
 		serviceSettings.autoRotate().enqueue(autoRotate, transaction);
-		serviceSettings.userOrientation().enqueue(user, transaction);
+		serviceSettings.userOrientation().enqueue(offset, transaction);
 		transaction.commit();
 
 		this.autoRotate.updateCache(autoRotate);
-		this.offset.updateCache(user);
+		this.offset.updateCache(offset);
 	}
 
 	public void clear() {

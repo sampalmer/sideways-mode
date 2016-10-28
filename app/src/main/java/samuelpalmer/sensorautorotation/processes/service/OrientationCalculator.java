@@ -52,8 +52,7 @@ public class OrientationCalculator {
 		return state.offset.get();
 	}
 
-	//TODO: Rename this
-	public void offsetUser(int clockwiseRotations) {
+	public void offsetScreenBy(int clockwiseRotations) {
 		Orientation newValue = offset();
 
 		do

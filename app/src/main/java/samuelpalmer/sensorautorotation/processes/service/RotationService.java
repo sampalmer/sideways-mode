@@ -104,10 +104,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				toggleRotation();
 				break;
 			case ACTION_ROTATE_LEFT:
-				calculator.offsetUser(-1);
+				calculator.offsetScreenBy(-1);
 				break;
 			case ACTION_ROTATE_RIGHT:
-				calculator.offsetUser(1);
+				calculator.offsetScreenBy(1);
 				break;
 		}
 	}
