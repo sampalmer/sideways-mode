@@ -38,14 +38,11 @@ public class OrientationCalculator {
 	}
 
 	private Orientation calculateUser(boolean autoRotate, Rotation offset) {
-		//TODO: Consolidate this logic with the proposed screen orientation logic
-
-		return (effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device).plus(offset);
+		return baseScreenOrientation(!effectivelyAutoRotate(autoRotate)).plus(offset);
 	}
 
 	private Rotation calculateOffset(boolean autoRotate, Orientation user) {
-		//TODO: Consolidate this logic with the proposed screen orientation logic
-		return user.minus(effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device);
+		return user.minus(baseScreenOrientation(!effectivelyAutoRotate(autoRotate)));
 	}
 
 	private Rotation offset() {
@@ -69,8 +66,7 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
-		//TODO: Consolidate this logic with the proposed screen orientation logic
-		Rotation newOffset = (effectivelyAutoRotate(newValue) ? device : Orientation.NATURAL).minus(screen.currentRotation());
+		Rotation newOffset = baseScreenOrientation(effectivelyAutoRotate(newValue)).minus(screen.currentRotation());
 
 		Orientation newUser = calculateUser(newValue, newOffset);
 		if (newUser.equals(Orientation.UPSIDE_DOWN))
@@ -110,6 +106,15 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return (effectivelyAutoRotate(autoRotate()) ? device : Orientation.NATURAL).minus(offset());
+		return baseScreenOrientation(effectivelyAutoRotate(autoRotate())).minus(offset());
+	}
+
+	/**
+	 * The screen orientation before applying an offset.
+	 * This seems to be a common factor in various calculations, but it was hard to come up with
+	 * a good name for it.
+	 */
+	private Orientation baseScreenOrientation(boolean effectivelyAutoRotate) {
+		return effectivelyAutoRotate ? device : Orientation.NATURAL;
 	}
 }
