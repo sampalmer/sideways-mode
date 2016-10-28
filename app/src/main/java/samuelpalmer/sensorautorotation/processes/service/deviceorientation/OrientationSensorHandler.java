@@ -5,7 +5,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
@@ -82,7 +81,7 @@ public class OrientationSensorHandler extends State {
 
 	private int deviceRotationBias() {
 		if (calculator.effectivelyAutoRotate(calculator.autoRotate()))
-			return calculator.user().plus(screen.currentRotation().minus(Orientation.NATURAL)).getClockwiseRotationsFromNaturalOrientation(); //TODO: Figure out if the user reference needs to change
+			return screen.currentRotation().minus(calculator.user()).clockwiseCount();
 		else
 			return -1;
 	}
