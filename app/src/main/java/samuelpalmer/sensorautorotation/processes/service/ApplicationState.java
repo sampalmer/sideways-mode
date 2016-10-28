@@ -22,7 +22,7 @@ public class ApplicationState {
 		}
 
 		if (!serviceSettings.screenOrientationOffset().hasValue())
-			offset.set(new Rotation(0));
+			offset.set(new Rotation(0)); //TODO: This might be wrong when auto rotate is off. Instead infer the appropriate value from the current USER_ROTATION value
 	}
 
 	public void set(boolean autoRotate, Rotation offset) {
