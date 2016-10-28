@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.sensorautorotation.settings.CachedSetting;
@@ -16,13 +17,13 @@ public class ApplicationState {
 		autoRotate = new CachedSetting<>(serviceSettings.autoRotate());
 		offset = new CachedSetting<>(serviceSettings.screenOrientationOffset());
 
-		if (!serviceSettings.autoRotate().hasValue()) {
+		if (!serviceSettings.autoRotate().hasValue()) { //TODO: Replace with !autoRotate.hasValue()?
 			boolean accelerometerRotation = systemSettings.accelerometerRotation.get();
 			autoRotate.set(accelerometerRotation);
 		}
 
-		if (!serviceSettings.screenOrientationOffset().hasValue())
-			offset.set(new Rotation(0)); //TODO: This might be wrong when auto rotate is off. Instead infer the appropriate value from the current USER_ROTATION value
+		if (!serviceSettings.screenOrientationOffset().hasValue()) //TODO: Replace with !offset.hasValue()?
+			offset.set(autoRotate.get() ? new Rotation(0) : systemSettings.userRotation.get().minus(Orientation.NATURAL));
 	}
 
 	public void set(boolean autoRotate, Rotation offset) {
