@@ -38,7 +38,7 @@ public class OrientationCalculator {
 	}
 
 	private Orientation calculateUser(boolean autoRotate, Rotation offset) {
-		return Orientation.NATURAL.plus(Orientation.NATURAL.minus(baseScreenOrientation(!effectivelyAutoRotate(autoRotate)).plus(offset)));
+		return Orientation.NATURAL.plus(Orientation.NATURAL.minus(baseScreenOrientation(!effectivelyAutoRotate(autoRotate)).minus(offset)));
 	}
 
 	private Rotation calculateOffset(boolean autoRotate, Orientation user) {
@@ -53,8 +53,9 @@ public class OrientationCalculator {
 		Rotation newValue = offset();
 
 		do
-			newValue = new Rotation(newValue.clockwiseCount() - clockwiseRotations);
+			newValue = new Rotation(newValue.clockwiseCount() + clockwiseRotations);
 		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
+		//TODO: Don't allow the loop to continue infinitely (clockwiseRotations % 4 == 0)
 
 		state.offset.set(newValue);
 		reportChange();
@@ -66,7 +67,7 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
-		Rotation newOffset = baseScreenOrientation(effectivelyAutoRotate(newValue)).minus(screen.currentRotation());
+		Rotation newOffset = new Rotation(-baseScreenOrientation(effectivelyAutoRotate(newValue)).minus(screen.currentRotation()).clockwiseCount());
 		newOffset = preventUpsideDownUser(newValue, newOffset);
 
 		state.set(newValue, newOffset);
@@ -82,7 +83,7 @@ public class OrientationCalculator {
 					//Lock the device in its natural orientation
 					state.offset.set(new Rotation(0));
 				else {
-					Rotation newOffset = device.minus(Orientation.NATURAL);
+					Rotation newOffset = Orientation.NATURAL.minus(device);
 					newOffset = preventUpsideDownUser(autoRotate(), newOffset);
 
 					state.offset.set(newOffset);
@@ -115,7 +116,7 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return baseScreenOrientation(effectivelyAutoRotate(autoRotate())).minus(offset());
+		return baseScreenOrientation(effectivelyAutoRotate(autoRotate())).plus(offset());
 	}
 
 	/**
