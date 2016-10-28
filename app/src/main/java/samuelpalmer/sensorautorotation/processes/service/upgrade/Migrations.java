@@ -28,9 +28,11 @@ class Migrations {
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 
 				ServiceSettings serviceSettings = new ServiceSettings();
+				Setting<Orientation> newUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+
 				Transaction copyTransaction = serviceSettings.new Transaction();
 				copyIfPresent(oldAutoRotate, serviceSettings.autoRotate(), copyTransaction);
-				copyIfPresent(oldUserOrientation, serviceSettings.userOrientation(), copyTransaction);
+				copyIfPresent(oldUserOrientation, newUserOrientation, copyTransaction);
 				copyTransaction.commit();
 
 				Transaction deleteTransaction = applicationSettings.new Transaction();

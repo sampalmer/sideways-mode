@@ -24,7 +24,7 @@ public class OrientationCalculator {
 
 	public void reset() {
 		device = DEFAULT;
-		state.offset.set(DEFAULT);
+		state.offset.set(new Rotation(0));
 
 		reportChange();
 	}
@@ -37,26 +37,26 @@ public class OrientationCalculator {
 		return calculateUser(autoRotate(), offset());
 	}
 
-	private Orientation calculateUser(boolean autoRotate, Orientation offset) {
+	private Orientation calculateUser(boolean autoRotate, Rotation offset) {
 		//TODO: Consolidate this logic with the proposed screen orientation logic
 
-		return (effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device).plus(offset.minus(Orientation.NATURAL));
+		return (effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device).plus(offset);
 	}
 
-	private Orientation calculateOffset(boolean autoRotate, Orientation user) {
+	private Rotation calculateOffset(boolean autoRotate, Orientation user) {
 		//TODO: Consolidate this logic with the proposed screen orientation logic
-		return Orientation.NATURAL.plus(user.minus(effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device));
+		return user.minus(effectivelyAutoRotate(autoRotate) ? Orientation.NATURAL : device);
 	}
 
-	private Orientation offset() {
+	private Rotation offset() {
 		return state.offset.get();
 	}
 
 	public void offsetScreenBy(int clockwiseRotations) {
-		Orientation newValue = offset();
+		Rotation newValue = offset();
 
 		do
-			newValue = newValue.plus(new Rotation(-clockwiseRotations));
+			newValue = new Rotation(newValue.clockwiseCount() - clockwiseRotations);
 		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
 
 		state.offset.set(newValue);
@@ -70,7 +70,7 @@ public class OrientationCalculator {
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
 		//TODO: Consolidate this logic with the proposed screen orientation logic
-		Orientation newOffset = Orientation.NATURAL.plus((effectivelyAutoRotate(newValue) ? device : Orientation.NATURAL).minus(screen.currentRotation()));
+		Rotation newOffset = (effectivelyAutoRotate(newValue) ? device : Orientation.NATURAL).minus(screen.currentRotation());
 
 		Orientation newUser = calculateUser(newValue, newOffset);
 		if (newUser.equals(Orientation.UPSIDE_DOWN))
@@ -110,6 +110,6 @@ public class OrientationCalculator {
 	}
 
 	public Orientation proposedScreenOrientation() {
-		return Orientation.NATURAL.plus((effectivelyAutoRotate(autoRotate()) ? device : Orientation.NATURAL).minus(offset()));
+		return (effectivelyAutoRotate(autoRotate()) ? device : Orientation.NATURAL).minus(offset());
 	}
 }
