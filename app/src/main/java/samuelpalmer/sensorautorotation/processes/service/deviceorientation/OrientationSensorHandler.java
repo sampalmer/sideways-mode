@@ -81,6 +81,7 @@ public class OrientationSensorHandler extends State {
 
 	private int deviceRotationBias() {
 		if (calculator.effectivelyAutoRotate(calculator.autoRotate()))
+			//TODO: This is still bad. Enter auto rotation, user on left side, screen in portrait. Both adjacent orientations are entered at 45 degrees. Seems intermittent. Maybe it's related to whether we use release mode or not?
 			return screen.currentRotation().minus(calculator.user()).clockwiseCount();
 		else
 			return -1;
