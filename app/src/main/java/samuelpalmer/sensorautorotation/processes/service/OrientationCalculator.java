@@ -50,12 +50,15 @@ public class OrientationCalculator {
 	}
 
 	public void offsetScreenBy(int clockwiseRotations) {
+		if (clockwiseRotations % 4 == 0)
+			//Nothing's changing. Don't want to proceed and get stuck in an infinite loop!
+			return;
+
 		Rotation newValue = offset();
 
 		do
 			newValue = new Rotation(newValue.clockwiseCount() + clockwiseRotations);
 		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
-		//TODO: Don't allow the loop to continue infinitely (clockwiseRotations % 4 == 0)
 
 		state.offset.set(newValue);
 		reportChange();

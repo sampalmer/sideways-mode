@@ -77,7 +77,7 @@ public class NotificationParametersFactory {
 	 */
 	private Orientation effectiveUser() {
 		Orientation result = calculator.user();
-		return result.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : result; //TODO: Move this logic inside OrientationCalculator
+		return result.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : result;
 	}
 
 	private NotificationPriority priority() {
