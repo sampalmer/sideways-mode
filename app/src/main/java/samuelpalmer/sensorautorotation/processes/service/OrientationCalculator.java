@@ -49,15 +49,15 @@ public class OrientationCalculator {
 		return state.offset.get();
 	}
 
-	public void offsetScreenBy(int clockwiseRotations) {
-		if (clockwiseRotations % 4 == 0)
+	public void offsetScreenBy(Rotation clockwiseRotations) {
+		if (clockwiseRotations.isRevolution())
 			//Nothing's changing. Don't want to proceed and get stuck in an infinite loop!
 			return;
 
 		Rotation newValue = offset();
 
 		do
-			newValue = new Rotation(newValue.clockwiseCount() + clockwiseRotations);
+			newValue = newValue.plus(clockwiseRotations);
 		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
 
 		state.offset.set(newValue);
@@ -70,7 +70,7 @@ public class OrientationCalculator {
 		 Locking the screen orientation locks the actual orientation rather than the proposed one.
 		 Unlocking the screen orientation (AKA locking the newUser orientation) locks the newUser orientation derived from the screen. */
 
-		Rotation newOffset = new Rotation(-baseScreenOrientation(effectivelyAutoRotate(newValue)).minus(screen.currentRotation()).clockwiseCount());
+		Rotation newOffset = screen.currentRotation().minus(baseScreenOrientation(effectivelyAutoRotate(newValue)));
 		newOffset = preventUpsideDownUser(newValue, newOffset);
 
 		state.set(newValue, newOffset);

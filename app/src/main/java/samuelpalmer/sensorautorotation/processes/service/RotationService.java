@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
+import samuelpalmer.common.Rotation;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.SystemServices;
@@ -104,10 +105,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				toggleRotation();
 				break;
 			case ACTION_ROTATE_LEFT:
-				calculator.offsetScreenBy(-1);
+				calculator.offsetScreenBy(new Rotation(-1));
 				break;
 			case ACTION_ROTATE_RIGHT:
-				calculator.offsetScreenBy(1);
+				calculator.offsetScreenBy(new Rotation(1));
 				break;
 		}
 	}
