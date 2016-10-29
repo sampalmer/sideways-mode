@@ -38,7 +38,7 @@ public class OrientationCalculator {
 	}
 
 	private Orientation calculateUser(boolean autoRotate, Rotation offset) {
-		return Orientation.NATURAL.plus(Orientation.NATURAL.minus(baseScreenOrientation(!effectivelyAutoRotate(autoRotate)).minus(offset)));
+		return offset.minus(baseScreenOrientation(!effectivelyAutoRotate(autoRotate)));
 	}
 
 	private Rotation calculateOffset(boolean autoRotate, Orientation user) {
