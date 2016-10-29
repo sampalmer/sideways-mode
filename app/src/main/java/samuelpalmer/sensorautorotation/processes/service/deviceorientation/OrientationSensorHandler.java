@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
+import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
@@ -81,8 +82,7 @@ public class OrientationSensorHandler extends State {
 
 	private int deviceRotationBias() {
 		if (calculator.effectivelyAutoRotate(calculator.autoRotate()))
-			//TODO: This is still bad. Enter auto rotation, user on left side, screen in portrait. Both adjacent orientations are entered at 45 degrees. Seems intermittent. Maybe it's related to whether we use release mode or not?
-			return screen.currentRotation().minus(calculator.user()).clockwiseCount();
+			return Orientation.NATURAL.plus(screen.currentRotation().minus(calculator.user())).getClockwiseRotationsFromNaturalOrientation();
 		else
 			return -1;
 	}
