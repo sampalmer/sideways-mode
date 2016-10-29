@@ -55,7 +55,19 @@ class Migrations {
 			public void upgradeData() {
 				super.upgradeData();
 
-				//TODO: Remove "user" preference and replace with new "offset" preference. Calculate the new value.
+				ServiceSettings serviceSettings = new ServiceSettings();
+				Setting<Orientation> oldUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+
+				Transaction transaction = serviceSettings.new Transaction();
+
+				oldUserOrientation.remove(transaction);
+
+				if (serviceSettings.autoRotate().hasValue() && oldUserOrientation.hasValue() && serviceSettings.autoRotate().get())
+					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
+					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
+					serviceSettings.screenOrientationOffset().enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
+
+				transaction.commit();
 			}
 		});
 
