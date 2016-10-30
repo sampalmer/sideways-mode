@@ -17,7 +17,7 @@ public class OrientationEnforcementMonitor extends State {
 	private final ScreenOrientationEnforcementManager orientationEnforcer;
 	private final LockScreenMonitor lockScreenDetector;
 	private final Settings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
-
+	private Set<String> orientationEnforcedPackages;
 	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
 		this.activityMonitor = activityMonitor;
 		orientationEnforcer = new ScreenOrientationEnforcementManager(context);
@@ -30,7 +30,9 @@ public class OrientationEnforcementMonitor extends State {
 		orientationEnforcer.ensureStarted();
 		lockScreenDetector.subscribe(enforcementUpdater);
 		activityMonitor.onChange().subscribe(enforcementUpdater);
+		forcedOrientationAppPackagesSetting.subscribe(packagesUpdater);
 
+		updatePackages();
 		updateEnforcement();
 	}
 
@@ -41,6 +43,18 @@ public class OrientationEnforcementMonitor extends State {
 		orientationEnforcer.ensureStopped();
 	}
 
+	private EventHandler packagesUpdater = new EventHandler() {
+		@Override
+		public void update() {
+			updatePackages();
+			updateEnforcement();
+		}
+	};
+
+	private void updatePackages() {
+		orientationEnforcedPackages = forcedOrientationAppPackagesSetting.get();
+	}
+
 	private void updateEnforcement() {
 		boolean shouldEnforce = isEnforced() && !lockScreenDetector.isOnLockScreen();
 		int forcedOrientation = shouldEnforce ? ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
@@ -49,12 +63,7 @@ public class OrientationEnforcementMonitor extends State {
 
 	private boolean isEnforced() {
 		CurrentActivity currentActivity = activityMonitor.currentOrNull();
-		return currentActivity != null && orientationEnforcedPackages().contains(currentActivity.getPackage());
-	}
-
-	private Set<String> orientationEnforcedPackages() {
-		//TODO: Subscribe to the setting and keep a cached version to save RAM and performance impact
-		return forcedOrientationAppPackagesSetting.get();
+		return currentActivity != null && orientationEnforcedPackages.contains(currentActivity.getPackage());
 	}
 
 	private final EventHandler enforcementUpdater = new EventHandler() {
