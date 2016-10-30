@@ -13,14 +13,12 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class OrientationEnforcementMonitor extends State {
 
-	private final Context context;
 	private final ActivityMonitor activityMonitor;
 	private final ScreenOrientationEnforcementManager orientationEnforcer;
 	private final LockScreenMonitor lockScreenDetector;
 	private final Settings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
 
 	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
-		this.context = context;
 		this.activityMonitor = activityMonitor;
 		orientationEnforcer = new ScreenOrientationEnforcementManager(context);
 		this.lockScreenDetector = lockScreenMonitor;
@@ -44,16 +42,14 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private void updateEnforcement() {
-		//TODO: Log something here.
-
-		if (isEnforced() && !lockScreenDetector.isOnLockScreen())
-			orientationEnforcer.setOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		else
-			orientationEnforcer.setOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		boolean shouldEnforce = isEnforced() && !lockScreenDetector.isOnLockScreen();
+		int forcedOrientation = shouldEnforce ? ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+		orientationEnforcer.setOrientation(forcedOrientation);
 	}
 
 	private boolean isEnforced() {
-		return orientationEnforcedPackages().contains(activityMonitor.current().getPackage());
+		CurrentActivity currentActivity = activityMonitor.currentOrNull();
+		return currentActivity != null && orientationEnforcedPackages().contains(currentActivity.getPackage());
 	}
 
 	private Set<String> orientationEnforcedPackages() {

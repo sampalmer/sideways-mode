@@ -8,12 +8,10 @@ import samuelpalmer.sensorautorotation.State;
 
 public class ActivityMonitor extends State {
 
-	private static final String TAG = ActivityMonitor.class.getSimpleName();
-
 	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private CurrentActivity last;
 
-	public CurrentActivity current() {
+	public CurrentActivity currentOrNull() {
 		return last;
 	}
 
@@ -32,7 +30,7 @@ public class ActivityMonitor extends State {
 
 	@Override
 	protected void start() {
-		last = new CurrentActivity();
+		last = null;
 	}
 
 	@Override

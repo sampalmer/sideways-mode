@@ -13,18 +13,6 @@ public class CurrentActivity {
 		componentName = new ComponentName(activity.packageName, activity.name);
 	}
 
-	public CurrentActivity() {
-		this(dummy());
-	}
-
-	private static ActivityInfo dummy() {
-		ActivityInfo result = new ActivityInfo();
-		result.packageName = "";
-		result.name = "";
-		result.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-		return result;
-	}
-
 	public int declaredScreenOrientation() {
 		return activity.screenOrientation;
 	}
