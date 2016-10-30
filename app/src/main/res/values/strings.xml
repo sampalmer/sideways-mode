@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="app_name_full">Auto Rotation for Lying Down</string>
 	<string name="app_name">Rotation</string>
 
 	<string name="action_instructions">Instructions</string>
@@ -21,7 +22,6 @@
 	<string name="uninstall_confirmation_message">Screen rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 
 	<!-- TODO: Improve description -->
-	<!-- TODO: Rename accessibility service to the full app name -->
 	<string name="accessibility_service_description">Detects when you change apps so screen orientation enforcement can be enabled for the apps you have chosen.</string>
 
 	<!-- Notification -->
