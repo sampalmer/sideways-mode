@@ -118,6 +118,7 @@
 			android:process="@string/service_process_name"
 			/>
 
+		<!-- TODO: Come up with a better name for this service. When you stop the accessibility service, Android warns you that (name) will be stopped, so it looks like the entire application will be disabled. -->
 		<service
 			android:label="@string/app_name_full"
 			android:name=".processes.service.WindowChangeDetectingService"
