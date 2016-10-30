@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -9,6 +10,8 @@ import android.view.WindowManager.LayoutParams;
 import samuelpalmer.sensorautorotation.State;
 
 public class ScreenOrientationEnforcementManager extends State {
+
+	private static final String TAG = ScreenOrientationEnforcementManager.class.getSimpleName();
 
 	private final View view;
 	private final WindowManager windows;
@@ -61,6 +64,7 @@ public class ScreenOrientationEnforcementManager extends State {
 		if (layout.screenOrientation != screenOrientation) {
 			layout.screenOrientation = screenOrientation;
 			windows.updateViewLayout(view, layout);
+			Log.i(TAG, "Set enforced screen orientation to " + screenOrientation);
 		}
 	}
 
