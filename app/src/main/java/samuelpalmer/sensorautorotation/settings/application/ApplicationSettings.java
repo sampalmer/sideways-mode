@@ -2,11 +2,15 @@ package samuelpalmer.sensorautorotation.settings.application;
 
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderSharedPreferences;
 import samuelpalmer.common.settings.application.BooleanSetting;
 import samuelpalmer.common.settings.application.EnumSetting;
 import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.common.settings.application.StringSetSetting;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -52,5 +56,8 @@ public class ApplicationSettings extends Settings {
 	public Setting<Boolean> allowUpsideDownScreen() { return new Setting<>(new BooleanSetting(), "allowUpsideDownScreen", true); }
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 	public Setting<Boolean> inferUserWhenLocked() { return new Setting<>(new BooleanSetting(), "inferUserWhenDeviceLocked", false); }
+
+	// TODO: Set some defaults here, such as the YouTube app (since its rotation breaks when watching a video when this app is enabled)
+	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
 
 }

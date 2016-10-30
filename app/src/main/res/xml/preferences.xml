@@ -29,6 +29,13 @@
 			android:icon="@drawable/screen_upside_down"
 			android:dependency="enabled"
 			/>
+		<!-- TODO: Add a checkbox/switch preference to record whether this feature is enabled. The accessibility service's enabled state could be used for this. -->
+		<samuelpalmer.sensorautorotation.orientationenforcement.ui.AppPackagesPreference
+			android:key="forcedOrientationAppPackages"
+			android:title="Forced apps"
+			android:summary="Apps for which orientation should be enforced"
+			android:dependency="enabled"
+			/>
 		<CheckBoxPreference
 			android:key="inferUserWhenDeviceLocked"
 			android:title="@string/preference_infer_user_title"

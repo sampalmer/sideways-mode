@@ -16,6 +16,8 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationParametersFactory;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
+import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -45,6 +47,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
+	private OrientationEnforcementMonitor orientationEnforcementMonitor;
+	ActivityMonitor activityMonitor;
 
 	@Override
 	public void onCreate() {
@@ -79,6 +83,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userOrientationInferrer = new LockScreenUserOrientationInferenceManager(new LockScreenUserOrientationInferrer(lockScreenMonitor, calculator));
 
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
+		activityMonitor = new ActivityMonitor();
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor, lockScreenMonitor);
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
@@ -86,6 +92,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		userOrientationInferrer.ensureStarted();
+		activityMonitor.ensureStarted();
+		orientationEnforcementMonitor.ensureStarted();
 	}
 
 	@Override
@@ -130,6 +138,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onDestroy() {
 		super.onDestroy();
 
+		orientationEnforcementMonitor.ensureStopped();
+		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
