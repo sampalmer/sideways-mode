@@ -38,6 +38,7 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void stop() {
+		forcedOrientationAppPackagesSetting.unsubscribe(packagesUpdater);
 		activityMonitor.onChange().unsubscribe(enforcementUpdater);
 		lockScreenDetector.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
