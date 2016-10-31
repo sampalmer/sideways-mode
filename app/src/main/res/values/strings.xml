@@ -21,8 +21,8 @@
 	<string name="uninstall_title">Uninstall?</string>
 	<string name="uninstall_confirmation_message">Screen rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
 
-	<!-- TODO: Improve description -->
-	<string name="accessibility_service_description">Detects when you change apps so screen orientation enforcement can be enabled for the apps you have chosen.</string>
+	<string name="accessibility_service_name">Rotation Enforcer</string>
+	<string name="accessibility_service_description">Part of the Auto Rotation for Lying Down app. Detects when you switch between apps so that screen orientation enforcement can be enabled for the apps you have chosen.</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
