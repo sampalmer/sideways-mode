@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -63,8 +64,9 @@ public class Email {
 		return emailActivities.size() > 0;
 	}
 
-	private static ComponentName makeComponentName(ActivityInfo activity) {
-		boolean isRelativeClassName = activity.name.length() > 0 && activity.name.startsWith(".");
+	//TODO: Move this somewhere else
+	public static ComponentName makeComponentName(PackageItemInfo activity) {
+		boolean isRelativeClassName = activity.name.startsWith(".");
 		String fullClassName = isRelativeClassName ? activity.packageName + activity.name : activity.name;
 		return new ComponentName(activity.packageName, fullClassName);
 	}

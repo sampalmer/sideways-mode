@@ -151,6 +151,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		applicationState.clear();
 
 		ServiceHolder.stopped();
+
+		//TODO: Disable the accessibility service so it won't waste resources running in the background? Need to ensure that this doesn't result in the user having to manually re-enable it in the system UI again, though.
 	}
 
 	private void toggleRotation() {

@@ -19,7 +19,7 @@
 			android:entries="@array/notification_priorities"
 			android:entryValues="@array/notification_priority_values"
 			android:dialogIcon="@drawable/notification_priority"
-		    android:icon="@drawable/notification_priority"
+			android:icon="@drawable/notification_priority"
 			android:dependency="enabled"
 			/>
 		<CheckBoxPreference
@@ -30,7 +30,9 @@
 			android:dependency="enabled"
 			/>
 		<!-- TODO: Add a checkbox/switch preference to record whether this feature is enabled. The accessibility service's enabled state could be used for this. -->
-		<samuelpalmer.sensorautorotation.orientationenforcement.ui.AppPackagesPreference
+		<!-- TODO: Move text to string resource -->
+		<!-- TODO: Improve descriptions -->
+		<PreferenceScreen
 			android:key="forcedOrientationAppPackages"
 			android:title="Forced apps"
 			android:summary="Apps for which orientation should be enforced"

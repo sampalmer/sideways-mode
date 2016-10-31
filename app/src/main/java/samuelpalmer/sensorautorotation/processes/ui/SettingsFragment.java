@@ -29,7 +29,6 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-//TODO: Prompt user to enable accessibility service here or somewhere else
 public class SettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
@@ -104,6 +103,15 @@ public class SettingsFragment extends PreferenceFragment {
 
 					return true;
 				}
+			}
+		});
+
+		Preference forcedApps = findPreference(ApplicationSettings.remote().forcedOrientationAppPackages().getKey());
+		forcedApps.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				startActivity(new Intent(getActivity(), ForcedAppsActivity.class));
+				return true;
 			}
 		});
 	}
