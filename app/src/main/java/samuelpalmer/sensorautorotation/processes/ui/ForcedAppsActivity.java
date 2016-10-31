@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.view.Menu;
-import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import java.util.List;
@@ -25,17 +25,7 @@ public class ForcedAppsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.forced_apps, menu);
 
 		enabledSwitch = (Switch) menu.findItem(0).getActionView().findViewById(R.id.forced_apps_switch);
-
-		//TODO: Somehow make it a read-only switch
-
-		enabledSwitch.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS); //TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist
-				startActivity(intent);
-			}
-		});
-
+		enabledSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		updateSwitchState();
 
 		return true;
@@ -48,9 +38,22 @@ public class ForcedAppsActivity extends Activity {
 	}
 
 	private void updateSwitchState() {
-		if (enabledSwitch != null)
+		if (enabledSwitch != null) {
+			enabledSwitch.setOnCheckedChangeListener(null);
 			enabledSwitch.setChecked(isEnabled());
+			enabledSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+		}
 	}
+
+	private final CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			buttonView.setChecked(!isChecked); //Change it back; don't want the user to be able to directly change the value
+			//TODO: Instruct the user about what to do before sending them to the accessibility settings
+			Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS); //TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist
+			startActivity(intent);
+		}
+	};
 
 	private boolean isEnabled() {
 		ComponentName expectedName = new ComponentName(this, WindowChangeDetectingService.class);
