@@ -72,7 +72,7 @@
 		<activity
 			android:name=".processes.ui.orientationenforcement.ForcedAppsActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
-			android:configChanges="orientation"
+			android:configChanges="orientation|keyboardHidden|screenSize"
 			tools:ignore="UnusedAttribute"/>
 
 		<!-- Service Process -->
