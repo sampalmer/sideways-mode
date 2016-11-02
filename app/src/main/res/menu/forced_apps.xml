@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 	<item
+		android:id="@+id/forced_apps_switch_menu_item"
 		android:title=""
 		android:showAsAction="always"
 		android:actionLayout="@layout/forced_apps_switch"
