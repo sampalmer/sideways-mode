@@ -5,18 +5,15 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.accessibility.AccessibilityManager;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.R;
@@ -29,51 +26,35 @@ public class ForcedAppsActivity extends Activity {
 
 	private Switch enabledSwitch;
 	private AccessibilityManager accessibilityManager;
-	private PackageManager packageManager;
-	private ArrayAdapter<InstalledApp> adapter;
+	private ProgressListView list;
+	private LoadInstalledAppsTask loader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		accessibilityManager = SystemServices.accessibilityManager();
-		packageManager = SystemServices.packageManager();
-		adapter = new InstalledAppAdapter(this);
 
 		setContentView(R.layout.forced_apps_activity);
 
-		ListView list = (ListView) findViewById(R.id.forced_apps_list);
-		list.setAdapter(adapter);
-		list.setItemsCanFocus(false); //Don't know if this is needed
+		list = new ProgressListView();
+		list.adapter = new InstalledAppAdapter(this);
+		list.list = (ListView) findViewById(R.id.forced_apps_list);
+		list.list.setAdapter(list.adapter);
+		list.list.setItemsCanFocus(false); //Don't know if this is needed
+		list.progressBar = (ProgressBar) findViewById(R.id.forced_apps_progress);
 
 		//TODO: Hook the listview up to the preference
 
-		//TODO: Do this in background and show a loading indicator
-		ArrayList<InstalledApp> installedApps = lookupOptions();
-		adapter.addAll(installedApps);
+		//TODO: Cancel this task if the user leaves the activity
+		loader = new LoadInstalledAppsTask(list);
+		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
-	private ArrayList<InstalledApp> lookupOptions() {
-		List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
-
-		ArrayList<InstalledApp> options = new ArrayList<>();
-		for (PackageInfo installedPackage : installedPackages)
-			if (shouldShow(installedPackage))
-				options.add(new InstalledApp(installedPackage, packageManager));
-
-		Collections.sort(options, new InstalledAppComparator());
-		return options;
-	}
-
-	private boolean shouldShow(PackageInfo installedPackage) {
-		return
-			installedPackage.activities != null
-			&&
-			installedPackage.activities.length > 0
-			&&
-			installedPackage.applicationInfo != null
-			&&
-			installedPackage.applicationInfo.enabled;
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		loader.cancel(true);
 	}
 
 	@Override

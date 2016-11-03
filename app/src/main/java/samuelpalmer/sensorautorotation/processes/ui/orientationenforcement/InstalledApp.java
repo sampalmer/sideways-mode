@@ -13,7 +13,7 @@ class InstalledApp {
 	public InstalledApp(PackageInfo app, PackageManager packageManager) {
 		packageName = app.packageName;
 		label = app.applicationInfo.loadLabel(packageManager);
-		icon = app.applicationInfo.loadIcon(packageManager);
+		icon = app.applicationInfo.loadIcon(packageManager); //TODO: Maybe it's bad for memory to load all the icons into memory at once
 	}
 
 }

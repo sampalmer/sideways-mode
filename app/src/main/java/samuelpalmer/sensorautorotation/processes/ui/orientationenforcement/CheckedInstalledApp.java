@@ -17,6 +17,7 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 	private TextView label;
 	private TextView packageName;
 	private CheckBox checkbox;
+	private InstalledApp currentItem;
 
 	public CheckedInstalledApp(Context context, AttributeSet attrs) {
 		super(context, attrs, 0);
@@ -47,9 +48,12 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 	}
 
 	public void setItem(InstalledApp item) {
-		//TODO: Maybe check if the currently set item is the same
-		icon.setImageDrawable(item.icon);
-		label.setText(item.label);
-		packageName.setText(item.packageName);
+		if (item != currentItem) {
+			icon.setImageDrawable(item.icon);
+			label.setText(item.label);
+			packageName.setText(item.packageName);
+
+			currentItem = item;
+		}
 	}
 }

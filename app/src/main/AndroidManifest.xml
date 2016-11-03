@@ -67,7 +67,7 @@
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
-		<!-- TODO: Fix poor performance when scrolling or changing screen orientation-->
+		<!-- TODO: Fix poor performance when scrolling -->
 
 		<activity
 			android:name=".processes.ui.orientationenforcement.ForcedAppsActivity"
