@@ -44,7 +44,6 @@ public class ForcedAppsActivity extends Activity {
 		list.list.setItemsCanFocus(false); //Don't know if this is needed
 		list.progressBar = (ProgressBar) findViewById(R.id.forced_apps_progress);
 
-		//TODO: Cancel this task if the user leaves the activity
 		loader = new LoadInstalledAppsTask(list);
 		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -86,6 +85,7 @@ public class ForcedAppsActivity extends Activity {
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			buttonView.setChecked(!isChecked); //Change it back; don't want the user to be able to directly change the value
 			//TODO: Instruct the user about what to do before sending them to the accessibility settings
+			//TODO: Also warn the user that they might not be able to enable the accessibility service if a screen dimmer or other screen orientation controlling app is present
 			Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
 			try {
