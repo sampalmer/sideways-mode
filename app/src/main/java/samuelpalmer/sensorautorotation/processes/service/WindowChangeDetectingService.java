@@ -2,11 +2,39 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 public class WindowChangeDetectingService extends AccessibilityService {
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service created");
+	}
+
+	//So far, this only gets called when the user disables the service in the accessibility settings
+	//Stopping the service doesn't trigger this, presumably because something has bound to it
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service destroyed");
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service start command received");
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	@Override
+	protected void onServiceConnected() {
+		super.onServiceConnected();
+		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service connected");
+	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -25,6 +53,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 			);
 
 			//I'm using exceptions for control flow here because I didn't find a faster approach
+			//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
 			try {
 				return getPackageManager().getActivityInfo(componentName, 0);
 			} catch (PackageManager.NameNotFoundException ignored) {}
