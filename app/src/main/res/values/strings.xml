@@ -56,6 +56,10 @@
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
 
+	<!-- TODO: Improve descriptions -->
+	<string name="preference_forced_apps_title">Forced apps</string>
+	<string name="preference_forced_apps_description">Apps for which orientation should be enforced</string>
+
 	<string name="preference_infer_user_title">Detect orientation when locked</string>
 	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
 
