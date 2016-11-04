@@ -86,6 +86,7 @@ public class ForcedAppsActivity extends Activity {
 			buttonView.setChecked(!isChecked); //Change it back; don't want the user to be able to directly change the value
 			//TODO: Instruct the user about what to do before sending them to the accessibility settings
 			//TODO: Also warn the user that they might not be able to enable the accessibility service if a screen dimmer or other screen orientation controlling app is present
+			//Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272)
 			Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
 			try {
