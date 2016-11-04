@@ -18,6 +18,7 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 
 	private ImageView icon;
 	private TextView label;
+	private TextView packageName;
 	private CheckBox checkbox;
 	private InstalledApp currentItem;
 
@@ -30,6 +31,7 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		super.onFinishInflate();
 		icon = (ImageView) findViewById(R.id.forced_apps_item_icon);
 		label = (TextView) findViewById(R.id.forced_apps_item_label);
+		packageName = (TextView) findViewById(R.id.forced_apps_item_package);
 		checkbox = (CheckBox)findViewById(R.id.forced_apps_item_checkbox);
 	}
 
@@ -52,6 +54,8 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		if (item != currentItem) {
 			new ImageLoader(item).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			label.setText(item.label);
+			packageName.setText(item.packageName);
+			packageName.setVisibility(label.getText().equals(packageName.getText()) ? GONE : VISIBLE);
 
 			currentItem = item;
 		}

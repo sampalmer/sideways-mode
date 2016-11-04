@@ -4,7 +4,8 @@
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:layout_width="match_parent"
-              android:layout_height="72dp"
+              android:layout_height="match_parent"
+              android:minHeight="72dp"
 	>
 
 	<ImageView
@@ -15,13 +16,27 @@
 		android:scaleType="centerInside"
 		android:id="@+id/forced_apps_item_icon"/>
 
-	<TextView
+	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-		style="@android:style/TextAppearance.DeviceDefault.SearchResult.Title"
-		android:id="@+id/forced_apps_item_label"
-		android:layout_weight="1"/>
+		android:layout_weight="1"
+	    android:orientation="vertical"
+	>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@android:style/TextAppearance.DeviceDefault.SearchResult.Title"
+			android:id="@+id/forced_apps_item_label"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
+			android:id="@+id/forced_apps_item_package"
+			/>
+	</LinearLayout>
 
 	<CheckBox
 		android:layout_width="wrap_content"
