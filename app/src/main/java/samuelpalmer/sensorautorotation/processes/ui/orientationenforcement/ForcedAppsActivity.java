@@ -44,8 +44,6 @@ public class ForcedAppsActivity extends Activity {
 		list.list.setItemsCanFocus(false); //Don't know if this is needed
 		list.progressBar = (ProgressBar) findViewById(R.id.forced_apps_progress);
 
-		//TODO: Hook the listview up to the preference
-
 		//TODO: Cancel this task if the user leaves the activity
 		loader = new LoadInstalledAppsTask(list);
 		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

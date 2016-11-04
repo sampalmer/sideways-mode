@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 
 class InstalledApp {
 
-	public final CharSequence packageName;
+	public final String packageName;
 	public final CharSequence label;
 	private final ApplicationInfo applicationInfo;
 

@@ -4,15 +4,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Checkable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, Collection<InstalledApp>> {
+public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
 
 	private ProgressListView list;
 
@@ -29,7 +33,7 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, Collection<I
 	}
 
 	@Override
-	protected Collection<InstalledApp> doInBackground(Void... params) {
+	protected ArrayList<InstalledApp> doInBackground(Void... params) {
 		PackageManager packageManager = SystemServices.packageManager();
 
 		if (isCancelled())
@@ -64,16 +68,41 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, Collection<I
 	}
 
 	@Override
-	protected void onPostExecute(Collection<InstalledApp> result) {
+	protected void onPostExecute(final ArrayList<InstalledApp> result) {
 		super.onPostExecute(null);
 
 		list.adapter.addAll(result);
+
+		//TODO: Maybe move all of this setting code somewhere else?
+		final Settings.Setting<Set<String>> setting = ApplicationSettings.remote().forcedOrientationAppPackages();
+		Set<String> forcedAppPackages = setting.get();
+		for (int i = 0; i < result.size(); ++i) {
+			InstalledApp app = result.get(i);
+			if (forcedAppPackages.contains(app.packageName))
+				list.list.setItemChecked(i, true);
+		}
+
+		list.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				boolean checked = ((Checkable)view).isChecked();
+				String packageName = result.get(position).packageName;
+
+				Set<String> forcedAppPackages = setting.get();
+				if (checked)
+					forcedAppPackages.add(packageName);
+				else
+					forcedAppPackages.remove(packageName);
+				setting.set(forcedAppPackages);
+			}
+		});
+
 		list.progressBar.setVisibility(View.GONE);
 		list.list.setVisibility(View.VISIBLE);
 	}
 
 	@Override
-	protected void onCancelled(Collection<InstalledApp> installedApps) {
+	protected void onCancelled(ArrayList<InstalledApp> installedApps) {
 		list.progressBar.setVisibility(View.GONE);
 	}
 }
