@@ -23,6 +23,9 @@
 		android:layout_weight="1"
 	    android:orientation="vertical"
 	>
+
+		<!-- TODO: Get the font styles working on Android 7.1; they're too big and bold. -->
+
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
