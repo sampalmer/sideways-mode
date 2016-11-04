@@ -10,10 +10,12 @@ import android.view.accessibility.AccessibilityEvent;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 
+	private final String TAG = WindowChangeDetectingService.class.getSimpleName();
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service created");
+		Log.i(TAG, "Accessibility service created");
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
@@ -21,25 +23,26 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service destroyed");
+		Log.i(TAG, "Accessibility service destroyed");
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service start command received");
+		Log.i(TAG, "Accessibility service start command received");
 		return super.onStartCommand(intent, flags, startId);
 	}
 
 	@Override
 	protected void onServiceConnected() {
 		super.onServiceConnected();
-		Log.i(WindowChangeDetectingService.class.getSimpleName(), "Accessibility service connected");
+		Log.i(TAG, "Accessibility service connected");
 	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 			ActivityInfo activity = tryGetActivity(event);
+
 			if (activity != null)
 				ServiceHolder.instance().activityMonitor.setCurrentApp(activity);
 		}
