@@ -16,6 +16,9 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	public void onCreate() {
 		super.onCreate();
 		Log.i(TAG, "Accessibility service created");
+
+		//TODO: Warn the user to disable this service if the app isn't enabled
+		//TODO: Unregister for accessibility events if the app isn't enabled (setServiceInfo(new AccessibilityServiceInfo()))
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
