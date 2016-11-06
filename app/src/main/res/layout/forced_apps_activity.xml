@@ -17,6 +17,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerInParent="true"
 		style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-		android:visibility="gone"/>
+		android:visibility="gone"
+		android:indeterminate="true"/>
 
 </RelativeLayout>

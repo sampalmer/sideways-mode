@@ -27,7 +27,6 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		list.progressBar.setIndeterminate(true);
 		list.list.setVisibility(View.GONE);
 		list.progressBar.setVisibility(View.VISIBLE);
 	}

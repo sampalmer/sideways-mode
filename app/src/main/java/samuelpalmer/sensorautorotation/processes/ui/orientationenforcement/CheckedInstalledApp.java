@@ -1,13 +1,16 @@
 package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
@@ -16,20 +19,27 @@ import samuelpalmer.sensorautorotation.SystemServices;
 
 public class CheckedInstalledApp extends LinearLayout implements Checkable {
 
+	private final PackageManager packageManager;
+
 	private ImageView icon;
+	private ProgressBar iconProgress;
 	private TextView label;
 	private TextView packageName;
 	private CheckBox checkbox;
+
 	private InstalledApp currentItem;
+	private ImageLoader currentLoader;
 
 	public CheckedInstalledApp(Context context, AttributeSet attrs) {
 		super(context, attrs, 0);
+		packageManager = SystemServices.packageManager();
 	}
 
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 		icon = (ImageView) findViewById(R.id.forced_apps_item_icon);
+		iconProgress = (ProgressBar) findViewById(R.id.forced_apps_item_icon_progress);
 		label = (TextView) findViewById(R.id.forced_apps_item_label);
 		packageName = (TextView) findViewById(R.id.forced_apps_item_package);
 		checkbox = (CheckBox)findViewById(R.id.forced_apps_item_checkbox);
@@ -52,7 +62,13 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 
 	public void setItem(InstalledApp item) {
 		if (item != currentItem) {
-			new ImageLoader(item).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			if (currentLoader != null)
+				currentLoader.cancel(true);
+
+			//Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
+			currentLoader = new ImageLoader(item);
+			currentLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+
 			label.setText(item.label);
 			packageName.setText(item.packageName);
 			packageName.setVisibility(label.getText().equals(packageName.getText()) ? GONE : VISIBLE);
@@ -75,21 +91,23 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			//TODO: Hide imageview and show progress bar
-			icon.setImageDrawable(null);
+
+			iconProgress.setVisibility(View.VISIBLE);
+			icon.setVisibility(View.GONE);
 		}
 
 		@Override
 		protected Drawable doInBackground(Void... params) {
-			return installedApp.loadIcon(SystemServices.packageManager());
+			return installedApp.loadIcon(packageManager);
 		}
 
 		@Override
 		protected void onPostExecute(Drawable drawable) {
 			super.onPostExecute(drawable);
 			if (installedApp == currentItem) {
-				//TODO: Show imageview and hide progress bar
+				iconProgress.setVisibility(View.GONE);
 				icon.setImageDrawable(drawable);
+				icon.setVisibility(View.VISIBLE);
 			}
 		}
 
