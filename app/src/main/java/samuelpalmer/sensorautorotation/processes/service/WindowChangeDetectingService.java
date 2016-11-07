@@ -11,19 +11,28 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 
-	private final String TAG = WindowChangeDetectingService.class.getSimpleName();
+	private static final String TAG = WindowChangeDetectingService.class.getSimpleName();
+	private Settings.Setting<Boolean> enabled;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		enabled = ApplicationSettings.local().enabled();
+
 		ServiceHolder.onChange.subscribe(mainServiceChanged);
+
+		enabled.subscribe(enabledChanged);
+		disableIfNecessary();
+
 		Log.i(TAG, "Accessibility service created");
 
 		//TODO: Warn the user to disable this service if the app isn't enabled
-		//TODO: Add support for the service disabling itself (API 24+) https://developer.android.com/reference/android/accessibilityservice/AccessibilityService.html#disableSelf()
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
@@ -31,7 +40,12 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
+		enabled.unsubscribe(enabledChanged);
 		ServiceHolder.onChange.unsubscribe(mainServiceChanged);
+
+		enabled = null;
+
 		Log.i(TAG, "Accessibility service destroyed");
 	}
 
@@ -74,6 +88,20 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		setServiceInfo(config);
 
 		Log.i(TAG, "Accessibility service " + ((config.eventTypes == 0) ? "un" : "") + "subscribed for events");
+	}
+
+	private final EventHandler enabledChanged = new EventHandler() {
+		@Override
+		public void update() {
+			disableIfNecessary();
+		}
+	};
+
+	private void disableIfNecessary() {
+		if (Build.VERSION.SDK_INT >= 24 && !enabled.get()) {
+			disableSelf();
+			Log.i(TAG, "Accessibility service disabled since application is disabled");
+		}
 	}
 
 	@Override
