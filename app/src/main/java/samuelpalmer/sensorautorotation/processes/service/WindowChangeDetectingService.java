@@ -1,12 +1,16 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+
+import samuelpalmer.common.eventhandling.EventHandler;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 
@@ -15,10 +19,11 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		ServiceHolder.onChange.subscribe(mainServiceChanged);
 		Log.i(TAG, "Accessibility service created");
 
 		//TODO: Warn the user to disable this service if the app isn't enabled
-		//TODO: Unregister for accessibility events if the app isn't enabled (setServiceInfo(new AccessibilityServiceInfo()))
+		//TODO: Add support for the service disabling itself (API 24+) https://developer.android.com/reference/android/accessibilityservice/AccessibilityService.html#disableSelf()
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
@@ -26,6 +31,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		ServiceHolder.onChange.unsubscribe(mainServiceChanged);
 		Log.i(TAG, "Accessibility service destroyed");
 	}
 
@@ -38,7 +44,36 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	protected void onServiceConnected() {
 		super.onServiceConnected();
+		updateServiceInfo();
 		Log.i(TAG, "Accessibility service connected");
+	}
+
+	private final EventHandler mainServiceChanged = new EventHandler() {
+		@Override
+		public void update() {
+			updateServiceInfo();
+		}
+	};
+
+	/**
+	 * Prevents accessibility events from being received when the main service isn't running.
+	 * This is an attempt to reduce unnecessary performance impact.
+	 */
+	private void updateServiceInfo() {
+		AccessibilityServiceInfo config = new AccessibilityServiceInfo();
+
+		if (ServiceHolder.isRunning()) {
+			config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+			config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
+
+			if (Build.VERSION.SDK_INT >= 16)
+				//Just in case this helps
+				config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
+		}
+
+		setServiceInfo(config);
+
+		Log.i(TAG, "Accessibility service " + ((config.eventTypes == 0) ? "un" : "") + "subscribed for events");
 	}
 
 	@Override
@@ -61,7 +96,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 			//I'm using exceptions for control flow here because I didn't find a faster approach
 			//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
 			try {
-				return getPackageManager().getActivityInfo(componentName, 0);
+				return getPackageManager().getActivityInfo(componentName, 0); //TODO: Optimise this away; only check if it's an activity after first checking its package. This should save an interprocess call.
 			} catch (PackageManager.NameNotFoundException ignored) {}
 		}
 
