@@ -31,8 +31,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		disableIfNecessary();
 
 		Log.i(TAG, "Accessibility service created");
-
-		//TODO: Warn the user to disable this service if the app isn't enabled
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
@@ -102,6 +100,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 			disableSelf();
 			Log.i(TAG, "Accessibility service disabled since application is disabled");
 		}
+
+		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it.
 	}
 
 	@Override

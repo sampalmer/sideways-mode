@@ -54,6 +54,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onCreate() {
 		super.onCreate();
 
+		//TODO: If the accessibility service is supposed to be running and enabled but isn't, issue a warning
+
 		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
 		ServiceHolder.started(this);
 
@@ -151,8 +153,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		applicationState.clear();
 
 		ServiceHolder.stopped();
-
-		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it.
 	}
 
 	private void toggleRotation() {
