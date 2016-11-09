@@ -60,6 +60,12 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		Log.i(TAG, "Accessibility service connected");
 	}
 
+	@Override
+	public boolean onUnbind(Intent intent) {
+		//TODO: Clear the current activity variable so the app doesn't think the user is stuck in one particular activity
+		return super.onUnbind(intent);
+	}
+
 	private final EventHandler mainServiceChanged = new EventHandler() {
 		@Override
 		public void update() {
@@ -101,7 +107,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 			Log.i(TAG, "Accessibility service disabled since application is disabled");
 		}
 
-		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it.
+		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it. The warning to disable the accessibility service should provide an ok button to take the user to the accessibility settings.
 	}
 
 	@Override

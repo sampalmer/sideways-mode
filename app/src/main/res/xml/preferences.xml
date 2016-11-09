@@ -29,6 +29,9 @@
 			android:icon="@drawable/screen_upside_down"
 			android:dependency="enabled"
 			/>
+
+		<!-- TODO: Add an icon -->
+
 		<PreferenceScreen
 			android:key="forcedOrientationAppPackages"
 			android:title="@string/preference_forced_apps_title"
