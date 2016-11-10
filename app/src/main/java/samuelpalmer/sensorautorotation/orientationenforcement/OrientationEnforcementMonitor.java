@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 
@@ -18,6 +19,7 @@ public class OrientationEnforcementMonitor extends State {
 	private final LockScreenMonitor lockScreenDetector;
 	private final Settings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
 	private Set<String> orientationEnforcedPackages;
+
 	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
 		this.activityMonitor = activityMonitor;
 		orientationEnforcer = new ScreenOrientationEnforcementManager(context);
@@ -63,8 +65,12 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private boolean isEnforced() {
-		CurrentActivity currentActivity = activityMonitor.currentOrNull();
-		return currentActivity != null && orientationEnforcedPackages.contains(currentActivity.getPackage());
+		ComponentName currentActivity = activityMonitor.currentOrNull();
+
+		return
+			currentActivity != null
+			&&
+			orientationEnforcedPackages.contains(currentActivity.getPackageName());
 	}
 
 	private final EventHandler enforcementUpdater = new EventHandler() {

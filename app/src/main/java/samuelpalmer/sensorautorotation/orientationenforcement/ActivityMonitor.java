@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
-import android.content.pm.ActivityInfo;
+import android.content.ComponentName;
 
 import samuelpalmer.common.contentprovidersharedpreferences.ObjectExtensions;
 import samuelpalmer.common.eventhandling.EventRegistrar;
@@ -10,17 +10,15 @@ import samuelpalmer.sensorautorotation.State;
 public class ActivityMonitor extends State {
 
 	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
-	private CurrentActivity last;
+	private ComponentName lastActivity;
 
-	public CurrentActivity currentOrNull() {
-		return last;
+	public ComponentName currentOrNull() {
+		return lastActivity;
 	}
 
-	public void setCurrentApp(ActivityInfo activityOrNull) {
-		CurrentActivity newActivity = activityOrNull == null ? null : new CurrentActivity(activityOrNull);
-
-		if (!ObjectExtensions.areEqual(newActivity, last)) {
-			last = newActivity;
+	public void setCurrentActivity(ComponentName activityOrNull) {
+		if (!ObjectExtensions.areEqual(activityOrNull, lastActivity)) {
+			lastActivity = activityOrNull;
 			onChange.report();
 		}
 	}
@@ -31,7 +29,7 @@ public class ActivityMonitor extends State {
 
 	@Override
 	protected void start() {
-		last = null;
+		lastActivity = null;
 	}
 
 	@Override

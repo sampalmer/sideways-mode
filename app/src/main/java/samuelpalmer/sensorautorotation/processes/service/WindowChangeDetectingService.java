@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
@@ -63,7 +62,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (ServiceHolder.isRunning())
-			ServiceHolder.instance().activityMonitor.setCurrentApp(null);
+			ServiceHolder.instance().activityMonitor.setCurrentActivity(null);
 
 		Log.i(TAG, "Accessibility service disconnected");
 		return super.onUnbind(intent);
@@ -116,28 +115,31 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-			ActivityInfo activity = tryGetActivity(event);
-
-			if (activity != null)
-				ServiceHolder.instance().activityMonitor.setCurrentApp(activity);
+			ComponentName componentName = tryMakeComponentName(event);
+			if (componentName != null && isActivity(componentName))
+					ServiceHolder.instance().activityMonitor.setCurrentActivity(componentName);
 		}
 	}
 
-	private ActivityInfo tryGetActivity(AccessibilityEvent event) {
-		if (event.getPackageName() != null && event.getClassName() != null) {
-			ComponentName componentName = new ComponentName(
+	private ComponentName tryMakeComponentName(AccessibilityEvent event) {
+		if (event.getPackageName() != null && event.getClassName() != null)
+			return new ComponentName(
 				event.getPackageName().toString(),
 				event.getClassName().toString()
 			);
 
-			//I'm using exceptions for control flow here because I didn't find a faster approach
-			//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
-			try {
-				return getPackageManager().getActivityInfo(componentName, 0); //TODO: Optimise this away; only check if it's an activity after first checking its package. This should save an interprocess call.
-			} catch (PackageManager.NameNotFoundException ignored) {}
-		}
-
 		return null;
+	}
+
+	private boolean isActivity(ComponentName componentName) {
+		//I'm using exceptions for control flow here because I didn't find a faster approach
+		//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
+		try {
+			getPackageManager().getActivityInfo(componentName, 0); //TODO: Optimise this away; only check if it's an activity after first checking its package. This should save an interprocess call.
+			return true;
+		} catch (PackageManager.NameNotFoundException ignored) {
+			return false;
+		}
 	}
 
 	@Override
