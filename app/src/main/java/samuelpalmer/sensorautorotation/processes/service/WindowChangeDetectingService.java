@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
+import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -114,21 +115,14 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
+		//TODO: DON'T COMMIT THIS
+		Log.i(TAG, event.getClassName().toString());
+
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-			ComponentName componentName = tryMakeComponentName(event);
+			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
 					ServiceHolder.instance().activityMonitor.setCurrentActivity(componentName);
 		}
-	}
-
-	private ComponentName tryMakeComponentName(AccessibilityEvent event) {
-		if (event.getPackageName() != null && event.getClassName() != null)
-			return new ComponentName(
-				event.getPackageName().toString(),
-				event.getClassName().toString()
-			);
-
-		return null;
 	}
 
 	private boolean isActivity(ComponentName componentName) {

@@ -16,10 +16,10 @@ import android.widget.Switch;
 
 import java.util.List;
 
+import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
-import samuelpalmer.sensorautorotation.processes.ui.Email;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
 //TODO: Warn the user that apps aren't guaranteed to work correctly when using this mode
@@ -106,7 +106,7 @@ public class ForcedAppsActivity extends Activity {
 		//TODO: Put this on StackOverflow; it seems simpler and more reliable than the answers already out there
 		List<AccessibilityServiceInfo> enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
 		for (AccessibilityServiceInfo enabledService : enabledServices) {
-			ComponentName serviceName = Email.makeComponentName(enabledService.getResolveInfo().serviceInfo);
+			ComponentName serviceName = ComponentNameExtensions.makeFrom(enabledService.getResolveInfo().serviceInfo);
 			if (serviceName.equals(expectedName))
 				return true;
 		}

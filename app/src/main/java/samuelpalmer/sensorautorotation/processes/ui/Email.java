@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
@@ -50,7 +50,7 @@ public class Email {
 		while (iterator.hasNext()) {
 			ResolveInfo resolveInfo = iterator.next();
 			ActivityInfo firstActivity = resolveInfo.activityInfo;
-			if (makeComponentName(firstActivity).equals(unsupportedAction))
+			if (ComponentNameExtensions.makeFrom(firstActivity).equals(unsupportedAction))
 				iterator.remove();
 		}
 	}
@@ -62,13 +62,6 @@ public class Email {
 
 	private boolean hasEmailApp() {
 		return emailActivities.size() > 0;
-	}
-
-	//TODO: Move this somewhere else
-	public static ComponentName makeComponentName(PackageItemInfo activity) {
-		boolean isRelativeClassName = activity.name.startsWith(".");
-		String fullClassName = isRelativeClassName ? activity.packageName + activity.name : activity.name;
-		return new ComponentName(activity.packageName, fullClassName);
 	}
 
 	private boolean openEmail() {
