@@ -118,7 +118,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
-					ServiceHolder.instance().activityMonitor.setCurrentActivity(componentName);
+				ServiceHolder.instance().activityMonitor.setCurrentActivity(componentName);
 		}
 	}
 
