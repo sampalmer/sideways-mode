@@ -115,9 +115,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		//TODO: DON'T COMMIT THIS
-		Log.i(TAG, event.getClassName().toString());
-
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
