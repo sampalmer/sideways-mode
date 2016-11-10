@@ -54,8 +54,6 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 	}
 
 	private boolean shouldShow(PackageInfo installedPackage) {
-		//TODO: Maybe ignore: disabled, non-exported, finish-on-launch, and others
-
 		return
 			installedPackage.activities != null
 			&&
