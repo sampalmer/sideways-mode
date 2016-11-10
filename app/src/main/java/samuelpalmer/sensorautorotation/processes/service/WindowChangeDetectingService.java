@@ -126,7 +126,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		//I'm using exceptions for control flow here because I didn't find a faster approach
 		//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
 		try {
-			getPackageManager().getActivityInfo(componentName, 0); //TODO: Optimise this away; only check if it's an activity after first checking its package. This should save an interprocess call.
+			//It'd be nice to optimise this away, but the only other option I can think of is caching the results, which could waste RAM...
+			getPackageManager().getActivityInfo(componentName, 0);
 			return true;
 		} catch (PackageManager.NameNotFoundException ignored) {
 			return false;
