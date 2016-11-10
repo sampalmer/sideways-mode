@@ -62,7 +62,10 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		//TODO: Clear the current activity variable so the app doesn't think the user is stuck in one particular activity
+		if (ServiceHolder.isRunning())
+			ServiceHolder.instance().activityMonitor.setCurrentApp(null);
+
+		Log.i(TAG, "Accessibility service disconnected");
 		return super.onUnbind(intent);
 	}
 
