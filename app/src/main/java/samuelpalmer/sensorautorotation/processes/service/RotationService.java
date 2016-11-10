@@ -54,7 +54,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onCreate() {
 		super.onCreate();
 
-		//TODO: If the accessibility service is supposed to be running and enabled but isn't, issue a warning and provide a notification with a button/link to enable it
+		//TODO: If the accessibility service is supposed to be running and enabled but isn't, issue a warning and provide a notification with a button/link to enable it. Need to figure out when to do this.
 
 		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
 		ServiceHolder.started(this);
