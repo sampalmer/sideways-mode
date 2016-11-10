@@ -21,7 +21,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.processes.ui.Email;
 
-//TODO: Keep the list of installed apps up-to-date (the user might install or uninstall apps)
+//TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
 //TODO: Warn the user that apps aren't guaranteed to work correctly when using this mode
 public class ForcedAppsActivity extends Activity {
 
