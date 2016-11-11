@@ -27,11 +27,14 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.AccessibilityServiceEnabledStateChecker;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class SettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
+	private Preference forcedApps;
+	private AccessibilityServiceEnabledStateChecker stateChecker;
 
 	private TwoStatePreference enabledControl() {
 		return (TwoStatePreference) findPreference(ApplicationSettings.remote().enabled().getKey());
@@ -105,6 +108,20 @@ public class SettingsFragment extends PreferenceFragment {
 				}
 			}
 		});
+
+		forcedApps = findPreference(ApplicationSettings.remote().forcedOrientationAppPackages().getKey());
+		stateChecker = new AccessibilityServiceEnabledStateChecker();
+		updateForcedApps();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		updateForcedApps();
+	}
+
+	private void updateForcedApps() {
+		forcedApps.setSummary(stateChecker.isEnabled() ? R.string.on : R.string.off);
 	}
 
 	@TargetApi(VERSION_CODES.M)

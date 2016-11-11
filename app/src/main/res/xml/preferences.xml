@@ -29,13 +29,9 @@
 			android:icon="@drawable/screen_upside_down"
 			android:dependency="enabled"
 			/>
-
-		<!-- TODO: Show whether or not this setting is enabled:-->
-		<!-- TODO: Maybe use the summary value to show whether the accessibility service is running -->
-
 		<Preference
+			android:key="forcedOrientationAppPackages"
 			android:title="@string/preference_forced_apps_title"
-			android:summary="@string/preference_forced_apps_description"
 			android:icon="@drawable/overridden_apps"
 			android:dependency="enabled">
 

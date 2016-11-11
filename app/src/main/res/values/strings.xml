@@ -58,6 +58,8 @@
 
 	<string name="preference_forced_apps_title">Overridden apps</string>
 	<string name="preference_forced_apps_description">"Overrides individual apps' orientations"</string>
+	<string name="on">On</string>
+	<string name="off">Off</string>
 
 	<string name="preference_infer_user_title">Detect orientation when locked</string>
 	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>

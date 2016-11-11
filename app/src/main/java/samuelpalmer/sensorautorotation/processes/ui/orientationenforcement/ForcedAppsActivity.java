@@ -1,40 +1,32 @@
 package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 
-import java.util.List;
-
-import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
 //TODO: Warn the user that apps aren't guaranteed to work correctly when using this mode
 public class ForcedAppsActivity extends Activity {
 
 	private Switch enabledSwitch;
-	private AccessibilityManager accessibilityManager;
 	private ProgressListView list;
 	private LoadInstalledAppsTask loader;
+	private AccessibilityServiceEnabledStateChecker stateChecker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		accessibilityManager = SystemServices.accessibilityManager();
+		stateChecker = new AccessibilityServiceEnabledStateChecker();
 
 		setContentView(R.layout.forced_apps_activity);
 
@@ -76,7 +68,7 @@ public class ForcedAppsActivity extends Activity {
 	private void updateSwitchState() {
 		if (enabledSwitch != null) {
 			enabledSwitch.setOnCheckedChangeListener(null);
-			enabledSwitch.setChecked(isEnabled());
+			enabledSwitch.setChecked(stateChecker.isEnabled());
 			enabledSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
 		}
 	}
@@ -99,18 +91,4 @@ public class ForcedAppsActivity extends Activity {
 			}
 		}
 	};
-
-	private boolean isEnabled() {
-		ComponentName expectedName = new ComponentName(this, WindowChangeDetectingService.class);
-
-		//TODO: Put this on StackOverflow; it seems simpler and more reliable than the answers already out there
-		List<AccessibilityServiceInfo> enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
-		for (AccessibilityServiceInfo enabledService : enabledServices) {
-			ComponentName serviceName = ComponentNameExtensions.makeFrom(enabledService.getResolveInfo().serviceInfo);
-			if (serviceName.equals(expectedName))
-				return true;
-		}
-
-		return false;
-	}
 }
