@@ -27,7 +27,6 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -104,15 +103,6 @@ public class SettingsFragment extends PreferenceFragment {
 
 					return true;
 				}
-			}
-		});
-
-		Preference forcedApps = findPreference(ApplicationSettings.remote().forcedOrientationAppPackages().getKey());
-		forcedApps.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				startActivity(new Intent(getActivity(), ForcedAppsActivity.class));
-				return true;
 			}
 		});
 	}
