@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
@@ -33,8 +34,9 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class SettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
-	private Preference forcedApps;
+	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateChecker stateChecker;
+	private samuelpalmer.common.settings.application.Settings.Setting<Set<String>> forcedApps;
 
 	private TwoStatePreference enabledControl() {
 		return (TwoStatePreference) findPreference(ApplicationSettings.remote().enabled().getKey());
@@ -55,6 +57,7 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	};
 
+	//TODO: See if you can move this logic into an AutoSummaryListPreference
 	private void updateListPreferenceSummaries(PreferenceGroup group) {
 		for (int i = 0; i < group.getPreferenceCount(); ++i) {
 			Preference preference = group.getPreference(i);
@@ -109,7 +112,8 @@ public class SettingsFragment extends PreferenceFragment {
 			}
 		});
 
-		forcedApps = findPreference(ApplicationSettings.remote().forcedOrientationAppPackages().getKey());
+		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
+		forcedAppsPreference = findPreference(forcedApps.getKey());
 		stateChecker = new AccessibilityServiceEnabledStateChecker();
 		updateForcedApps();
 	}
@@ -121,7 +125,13 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	private void updateForcedApps() {
-		forcedApps.setSummary(stateChecker.isEnabled() ? R.string.on : R.string.off);
+		if (stateChecker.isEnabled()) {
+			final int quantity = forcedApps.get().size();
+			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
+			forcedAppsPreference.setSummary(quantityString);
+		}
+		else
+			forcedAppsPreference.setSummary(R.string.preference_forced_apps_summary_disabled);
 	}
 
 	@TargetApi(VERSION_CODES.M)
