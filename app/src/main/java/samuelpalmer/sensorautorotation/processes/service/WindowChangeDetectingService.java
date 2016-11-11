@@ -111,6 +111,13 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		}
 
 		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it. The warning to disable the accessibility service should provide an ok button to take the user to the accessibility settings.
+
+		/**
+		 * This needs rethinking. Disabling the accessibility service or nagging the user to do so could be annoying in these situations:
+		 * - User is temporarily disabling the app for some reason
+		 * - User only occasionally uses the app
+		 * - User is in the middle of uninstalling the app
+		 */
 	}
 
 	@Override
