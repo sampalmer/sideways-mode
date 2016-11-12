@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!--TODO: Show a warning if any apps are selected but the accessibility service is disabled -->
+
+	<Preference
+		android:summary="Stops apps from using their own screen orientation preferences. This requires the accessibility service to be enabled so this app can detect which app you have open."
+		android:persistent="false"
+	    android:selectable="false"
+		/>
+
+	<Preference
+		android:key="forcedOrientationAppPackages"
+		android:persistent="false"
+		android:title="Choose apps"
+		android:icon="@drawable/apps">
+
+		<intent
+			android:targetPackage="samuelpalmer.sensorautorotation"
+			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsChooserActivity" />
+
+	</Preference>
+</PreferenceScreen>

@@ -3,48 +3,24 @@ package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 
 import samuelpalmer.sensorautorotation.R;
 
-//TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
 //TODO: Warn the user that apps aren't guaranteed to work correctly when using this mode
 public class ForcedAppsActivity extends Activity {
 
 	private Switch enabledSwitch;
-	private ProgressListView list;
-	private LoadInstalledAppsTask loader;
 	private AccessibilityServiceEnabledStateChecker stateChecker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		stateChecker = new AccessibilityServiceEnabledStateChecker();
-
 		setContentView(R.layout.forced_apps_activity);
-
-		list = new ProgressListView();
-		list.adapter = new InstalledAppAdapter(this);
-		list.list = (ListView) findViewById(R.id.forced_apps_list);
-		list.list.setAdapter(list.adapter);
-		list.list.setItemsCanFocus(false); //Don't know if this is needed
-		list.progressBar = (ProgressBar) findViewById(R.id.forced_apps_progress);
-
-		loader = new LoadInstalledAppsTask(list);
-		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		loader.cancel(true);
 	}
 
 	@Override

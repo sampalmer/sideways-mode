@@ -29,7 +29,8 @@
 			android:icon="@drawable/screen_upside_down"
 			android:dependency="enabled"
 			/>
-		<Preference
+
+		<PreferenceScreen
 			android:key="forcedOrientationAppPackages"
 			android:persistent="false"
 			android:title="@string/preference_forced_apps_title"
@@ -40,7 +41,7 @@
 				android:targetPackage="samuelpalmer.sensorautorotation"
 				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsActivity" />
 
-		</Preference>
+		</PreferenceScreen>
 
 		<!-- TODO: Move the description onto a separate screen. Update the preference to "On lock screen" -> "Do nothing" / "Detect your orientation" -->
 		<CheckBoxPreference
