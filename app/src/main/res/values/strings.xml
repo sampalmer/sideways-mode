@@ -90,6 +90,9 @@
 
 	<string name="error_no_market_app">Couldn\'t find Google Play Store</string>
 
+	<string name="warning_accessibility_service_disabled_title">Accessibility service disabled</string>
+	<string name="warning_accessibility_service_disabled_content">Touch to fix</string>
+
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
 

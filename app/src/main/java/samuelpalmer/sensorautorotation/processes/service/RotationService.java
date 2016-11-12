@@ -49,12 +49,11 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementMonitor orientationEnforcementMonitor;
 	ActivityMonitor activityMonitor;
+	private AccessibilityServiceManager accessibilityServiceManager;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		//TODO: If the accessibility service is supposed to be running and enabled but isn't, issue a warning notification to take the user to the forced apps activity. Monitor the accessibility service state and forced apps setting state to determine when to do this.
 
 		//Expose this straight away in case it's needed to stop the service due to an initialisation failure
 		ServiceHolder.started(this);
@@ -87,6 +86,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor, lockScreenMonitor);
+		accessibilityServiceManager = new AccessibilityServiceManager();
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
@@ -96,6 +96,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userOrientationInferrer.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementMonitor.ensureStarted();
+		accessibilityServiceManager.ensureStarted();
 	}
 
 	@Override
@@ -140,6 +141,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void onDestroy() {
 		super.onDestroy();
 
+		accessibilityServiceManager.ensureStopped();
 		orientationEnforcementMonitor.ensureStopped();
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();

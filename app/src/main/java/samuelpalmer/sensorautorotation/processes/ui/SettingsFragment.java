@@ -26,9 +26,9 @@ import java.util.Set;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
+import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class SettingsFragment extends PreferenceFragment {

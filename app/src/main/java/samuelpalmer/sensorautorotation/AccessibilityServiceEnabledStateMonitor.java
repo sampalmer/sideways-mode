@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
+package samuelpalmer.sensorautorotation;
 
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
 public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdaptor {
