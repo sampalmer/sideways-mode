@@ -4,9 +4,18 @@
 	<!--TODO: Show a warning if any apps are selected but the accessibility service is disabled -->
 
 	<Preference
-		android:summary="Stops apps from using their own screen orientation preferences. This requires the accessibility service to be enabled so this app can detect which app you have open."
+		android:summary="Stops apps from using their own screen orientation preferences. The accessibility service must be enabled to use this feature."
 		android:persistent="false"
 	    android:selectable="false"
+		/>
+
+	<!-- Maybe don't worry about showing the accessibility service as a control; maybe just show warnings where needed -->
+	<CheckBoxPreference
+		android:key="forcedOrientationAccessibilityService"
+		android:title="Accessibility service"
+		android:summary="Required to use this feature"
+	    android:persistent="false"
+	    android:icon="@drawable/accessibility_service"
 		/>
 
 	<Preference
