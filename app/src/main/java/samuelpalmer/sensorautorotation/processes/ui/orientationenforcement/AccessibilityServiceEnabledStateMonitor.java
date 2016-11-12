@@ -1,28 +1,32 @@
 package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
 
+import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
-public class AccessibilityServiceEnabledStateChecker {
+public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdaptor {
 
 	private final static TextUtils.SimpleStringSplitter sStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 	private final ComponentName expected;
+	private final ContentResolver contentResolver;
 
-	public AccessibilityServiceEnabledStateChecker() {
+	public AccessibilityServiceEnabledStateMonitor() {
 		expected = new ComponentName(Process.context(), WindowChangeDetectingService.class);
+		contentResolver = Process.context().getContentResolver();
 	}
-
-	//TODO: Add support for subscribing to notifications for change of enabled state
 
 	/**
 	 * Implementation mostly copied from the AccessibilityUtils Android class
 	 */
 	public boolean isEnabled() {
-		String enabledServicesSetting = Settings.Secure.getString(Process.context().getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+		String enabledServicesSetting = Settings.Secure.getString(contentResolver,  Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
 		if (enabledServicesSetting == null)
 			return false;
 
@@ -40,5 +44,23 @@ public class AccessibilityServiceEnabledStateChecker {
 		return false;
 	}
 
+
+	@Override
+	protected void subscribeToAdaptee() {
+		contentResolver.registerContentObserver(Settings.Secure.getUriFor(Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES), false, observer);
+	}
+
+	@Override
+	protected void unsubscribeFromAdaptee() {
+		contentResolver.unregisterContentObserver(observer);
+	}
+
+	private final ContentObserver observer = new ContentObserver(new Handler()) {
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			report();
+		}
+	};
 
 }

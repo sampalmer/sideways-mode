@@ -17,21 +17,21 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ForcedAppsFragment extends PreferenceFragment {
 
-	private Settings.Setting<Set<String>> appsSettings;
+	private Settings.Setting<Set<String>> apps;
 	private Preference appsPreference;
 
 	private TwoStatePreference accessibilityServicePreference;
-	private AccessibilityServiceEnabledStateChecker accessibilityServiceChecker;
+	private AccessibilityServiceEnabledStateMonitor accessibilityServiceChecker;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences_overridden_apps);
 
-		appsSettings = ApplicationSettings.remote().forcedOrientationAppPackages();
-		appsPreference = findPreference(appsSettings.getKey());
+		apps = ApplicationSettings.remote().forcedOrientationAppPackages();
+		appsPreference = findPreference(apps.getKey());
 
-		accessibilityServiceChecker = new AccessibilityServiceEnabledStateChecker();
+		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor();
 		accessibilityServicePreference = (TwoStatePreference)findPreference("forcedOrientationAccessibilityService");
 		accessibilityServicePreference.setOnPreferenceChangeListener(onCheckedChangeListener);
 		updateAccessibilityServiceState();
@@ -41,16 +41,18 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	public void onStart() {
 		super.onStart();
 
-		appsSettings.subscribe(appsChanged);
+		apps.subscribe(appsChanged);
 		updateAppsSummary();
 
-		updateAccessibilityServiceState(); //Maybe the accessibility service was enabled or disabled since this activity was last visible.
+		accessibilityServiceChecker.subscribe(serviceChanged);
+		updateAccessibilityServiceState();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		appsSettings.unsubscribe(appsChanged);
+		accessibilityServiceChecker.unsubscribe(serviceChanged);
+		apps.unsubscribe(appsChanged);
 	}
 
 	private final EventHandler appsChanged = new EventHandler() {
@@ -61,7 +63,7 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	};
 
 	private void updateAppsSummary() {
-		final int quantity = appsSettings.get().size();
+		final int quantity = apps.get().size();
 		final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 		appsPreference.setSummary(quantityString);
 	}
@@ -70,6 +72,8 @@ public class ForcedAppsFragment extends PreferenceFragment {
 
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			//TODO: If the user is trying to disable the accessibility service on Android 7 or higher, just programmatically disable it.
+
 			//TODO: Instruct the user about what to do before sending them to the accessibility settings
 			//TODO: Also warn the user that they might not be able to enable the accessibility service if a screen dimmer or other screen orientation controlling app is present
 			//Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272)
@@ -86,6 +90,13 @@ public class ForcedAppsFragment extends PreferenceFragment {
 			return false;
 		}
 
+	};
+
+	private final EventHandler serviceChanged = new EventHandler() {
+		@Override
+		public void update() {
+			updateAccessibilityServiceState();
+		}
 	};
 
 	private void updateAccessibilityServiceState() {

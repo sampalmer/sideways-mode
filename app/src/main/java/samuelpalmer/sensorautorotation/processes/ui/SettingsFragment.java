@@ -28,14 +28,14 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.AccessibilityServiceEnabledStateChecker;
+import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class SettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
 	private Preference forcedAppsPreference;
-	private AccessibilityServiceEnabledStateChecker stateChecker;
+	private AccessibilityServiceEnabledStateMonitor stateChecker;
 	private samuelpalmer.common.settings.application.Settings.Setting<Set<String>> forcedApps;
 
 	private TwoStatePreference enabledControl() {
@@ -89,6 +89,7 @@ public class SettingsFragment extends PreferenceFragment {
 		enabledChanged = ApplicationSettings.remote().enabled();
 		notificationPriorityChanged = ApplicationSettings.remote().notificationPriority();
 
+		//TODO: Move subscription into onStart
 		enabledChanged.subscribe(enabledUpdater);
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
@@ -114,15 +115,38 @@ public class SettingsFragment extends PreferenceFragment {
 
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
-		stateChecker = new AccessibilityServiceEnabledStateChecker();
-		updateForcedApps();
+		stateChecker = new AccessibilityServiceEnabledStateMonitor();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
+		enabledChanged.unsubscribe(enabledUpdater);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+		stateChecker.subscribe(forcedAppsChanged);
+		forcedApps.subscribe(forcedAppsChanged);
 		updateForcedApps();
 	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		forcedApps.unsubscribe(forcedAppsChanged);
+		stateChecker.unsubscribe(forcedAppsChanged);
+	}
+
+	private final EventHandler forcedAppsChanged = new EventHandler() {
+		@Override
+		public void update() {
+			updateForcedApps();
+		}
+	};
 
 	private void updateForcedApps() {
 		final int quantity = forcedApps.get().size();
@@ -180,14 +204,6 @@ public class SettingsFragment extends PreferenceFragment {
 			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
 			notificationPriorityPreference.setEntryValues(Arrays.copyOfRange(notificationPriorityPreference.getEntryValues(), 0, newLength));
 		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
-		enabledChanged.unsubscribe(enabledUpdater);
 	}
 
 }
