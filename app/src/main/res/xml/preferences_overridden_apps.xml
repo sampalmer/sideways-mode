@@ -4,7 +4,7 @@
 	<!--TODO: Show a warning if any apps are selected but the accessibility service is disabled -->
 
 	<Preference
-		android:summary="Stops apps from using their own screen orientation preferences. The accessibility service must be enabled to use this feature."
+		android:summary="Stops apps from using their own screen orientation preferences. Note that this may prevent apps from working correctly."
 		android:persistent="false"
 	    android:selectable="false"
 		/>

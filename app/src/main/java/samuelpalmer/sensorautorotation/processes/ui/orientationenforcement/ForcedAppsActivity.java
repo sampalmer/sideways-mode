@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 
-//TODO: Warn the user that apps aren't guaranteed to work correctly when using this mode
 public class ForcedAppsActivity extends Activity {
 
 	@Override
