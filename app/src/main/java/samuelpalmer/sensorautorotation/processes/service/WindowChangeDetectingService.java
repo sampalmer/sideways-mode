@@ -11,38 +11,27 @@ import android.view.accessibility.AccessibilityEvent;
 
 import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 
 	private static final String TAG = WindowChangeDetectingService.class.getSimpleName();
-	private Settings.Setting<Boolean> enabled;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		enabled = ApplicationSettings.local().enabled();
-
 		ServiceHolder.onChange.subscribe(mainServiceChanged);
-
-		enabled.subscribe(enabledChanged);
-		disableIfNecessary();
 
 		Log.i(TAG, "Accessibility service created");
 	}
 
 	//So far, this only gets called when the user disables the service in the accessibility settings
-	//Stopping the service doesn't trigger this, presumably because something has bound to it
+	//Stopping the service with stopService() doesn't trigger this, presumably because something has bound to it
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		enabled.unsubscribe(enabledChanged);
 		ServiceHolder.onChange.unsubscribe(mainServiceChanged);
-
-		enabled = null;
 
 		Log.i(TAG, "Accessibility service destroyed");
 	}
@@ -97,29 +86,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		Log.i(TAG, "Accessibility service " + ((config.eventTypes == 0) ? "un" : "") + "subscribed for events");
 	}
 
-	private final EventHandler enabledChanged = new EventHandler() {
-		@Override
-		public void update() {
-			disableIfNecessary();
-		}
-	};
-
-	private void disableIfNecessary() {
-		if (Build.VERSION.SDK_INT >= 24 && !enabled.get()) {
-			disableSelf();
-			Log.i(TAG, "Accessibility service disabled since application is disabled");
-		}
-
-		//TODO: Warn the user to disable the accessibility service to avoid RAM waste. Looks like it's impossible to programmatically start and stop it. The warning to disable the accessibility service should provide an ok button to take the user to the accessibility settings.
-
-		/**
-		 * This needs rethinking. Disabling the accessibility service or nagging the user to do so could be annoying in these situations:
-		 * - User is temporarily disabling the app for some reason
-		 * - User only occasionally uses the app
-		 * - User is in the middle of uninstalling the app
-		 */
-	}
-
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -131,7 +97,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	private boolean isActivity(ComponentName componentName) {
 		//I'm using exceptions for control flow here because I didn't find a faster approach
-		//Might be able to improve performance by removing the activity check and just passing the component name straight to the app.
 		try {
 			//It'd be nice to optimise this away, but the only other option I can think of is caching the results, which could waste RAM...
 			getPackageManager().getActivityInfo(componentName, 0);
