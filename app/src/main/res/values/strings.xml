@@ -67,6 +67,11 @@
 	<string name="preference_infer_user_title">Detect orientation when locked</string>
 	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
 
+	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. Note that this may prevent apps from working correctly.</string>
+	<string name="preference_accessibility_service_title">Accessibility service</string>
+	<string name="preference_accessibility_service_summary">Required to use this feature</string>
+	<string name="preference_choose_apps">Choose apps</string>
+
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
 
@@ -114,6 +119,7 @@
 	<string name="instructions_position_changing_heading">Changing Your Position</string>
 	<string name="instructions_position_changing_contents">To change your orientation, either use Locked mode or use the %1$s and %2$s buttons in the notification.</string>
 
+	<!-- TODO: Refer users to the override feature. -->
 	<string name="instructions_overridden_heading">Incompatible Apps</string>
 	<string name="instructions_overridden_contents">%1$s might not work when an app is open that controls the screen orientation. When this happens, the notification icon will show your orientation instead of the current mode.</string>
 
