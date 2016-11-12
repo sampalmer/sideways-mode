@@ -9,6 +9,7 @@
 	    android:selectable="false"
 		/>
 
+	<!-- TODO: Warn the user about the accessibility service wasting RAM if it's enabled unnecessarily. -->
 	<!-- Maybe don't worry about showing the accessibility service as a control; maybe just show warnings where needed -->
 	<CheckBoxPreference
 		android:key="forcedOrientationAccessibilityService"
