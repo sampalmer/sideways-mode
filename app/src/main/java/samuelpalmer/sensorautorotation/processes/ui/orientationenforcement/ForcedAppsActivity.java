@@ -12,7 +12,6 @@ public class ForcedAppsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//TODO: Maybe remove this activity and just use the fragment instead
 		setContentView(R.layout.forced_apps_activity);
 	}
 
