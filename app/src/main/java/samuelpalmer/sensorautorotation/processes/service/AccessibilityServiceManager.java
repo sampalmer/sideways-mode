@@ -19,6 +19,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
+//Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272). Hopefully this notification will be sufficient for handling this.
 public class AccessibilityServiceManager extends State {
 
 	private final NotificationManager notificationManager;

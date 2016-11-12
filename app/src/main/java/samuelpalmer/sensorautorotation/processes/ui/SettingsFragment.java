@@ -172,6 +172,7 @@ public class SettingsFragment extends PreferenceFragment {
 			.setPositiveButton(android.R.string.ok, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
+					//TODO: Handle case where this activity isn't available
 					startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null)), PERMISSION_REQUEST_CODE);
 				}
 			})

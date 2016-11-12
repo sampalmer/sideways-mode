@@ -67,6 +67,7 @@
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
+		<!-- TODO: Somehow this ends up opened twice if you click the "accessibility service disabled" notification. Fix this. -->
 		<activity
 			android:name=".processes.ui.orientationenforcement.ForcedAppsActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
