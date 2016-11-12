@@ -125,13 +125,14 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	private void updateForcedApps() {
-		if (stateChecker.isEnabled()) {
-			final int quantity = forcedApps.get().size();
+		final int quantity = forcedApps.get().size();
+
+		if (!stateChecker.isEnabled() && quantity > 0)
+			forcedAppsPreference.setSummary(R.string.preference_forced_apps_summary_disabled);
+		else {
 			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 			forcedAppsPreference.setSummary(quantityString);
 		}
-		else
-			forcedAppsPreference.setSummary(R.string.preference_forced_apps_summary_disabled);
 	}
 
 	@TargetApi(VERSION_CODES.M)
