@@ -104,7 +104,7 @@
 	<string name="instructions_position_changing_contents">Для того чтобы изменить вашу ориентацию, либо использовать режим блокировки или %1$s и %2$s кнопки в уведомлении.</string>
 
 	<string name="instructions_overridden_heading">Несовместимые приложения</string>
-	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана. Когда это произойдет, значок уведомления покажет ориентацию вместо текущего режима.</string>
+	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана. Когда это произойдет, значок уведомления покажет ориентацию вместо текущего режима. You can prevent apps from doing this by using the \"%2$s\" setting.</string>
 
 	<string name="instructions_uninstalling_heading">Удаление</string>
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране.</string>
