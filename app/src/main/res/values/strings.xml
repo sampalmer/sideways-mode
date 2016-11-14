@@ -136,4 +136,8 @@
 		• If you have any feedback, you can send it from the store listing or the menu in this app.
 	</string>
 
+	<!-- Report problem -->
+	<string name="report_problem_hint">Describe the problem here</string>
+	<string name="report_problem_send">Send by email</string>
+
 </resources>

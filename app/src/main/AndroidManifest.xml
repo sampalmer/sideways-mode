@@ -82,6 +82,11 @@
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute"/>
 
+		<activity
+			android:name=".processes.ui.ReportProblemActivity"
+			android:label="Report problem"
+			/>
+
 		<!-- Service Process -->
 
 		<provider

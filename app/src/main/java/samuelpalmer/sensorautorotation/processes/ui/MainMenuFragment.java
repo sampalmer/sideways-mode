@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
@@ -41,12 +40,12 @@ public class MainMenuFragment extends Fragment {
 			case R.id.action_feedback_email:
 				new Email(
 					getActivity(),
-					emailRecipients(),
+					ReportProblemActivity.emailRecipients(),
 					StringResource.format(R.string.email_feedback_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
 					""
 				).send();
 				break;
-			case R.id.action_feedback_google_play:
+			case R.id.action_feedback_google_play: {
 				Intent intent = new Intent(Intent.ACTION_VIEW)
 					.setData(Uri.parse("market://details?id=" + getActivity().getPackageName()));
 				try {
@@ -57,14 +56,14 @@ public class MainMenuFragment extends Fragment {
 				}
 
 				break;
-			case R.id.action_report:
-				new Email(
-					getActivity(),
-					emailRecipients(),
-					StringResource.format(R.string.email_problem_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
-					String.format("\n\nPlease describe the problem above (or at the bottom of the email)\n\nlogcat:\n%s\n\ndevice info:\n%s\n\nPlease describe the problem below:\n", DiagnosticInfo.logcat(), DiagnosticInfo.deviceInfo())
-				).send();
+			}
+			case R.id.action_report: {
+				Intent intent = ComponentType.create(ReportProblemActivity.class)
+						.intent()
+						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
+				startActivity(intent);
 				break;
+			}
 			case R.id.action_uninstall:
 				confirmUninstall();
 				break;
@@ -73,10 +72,6 @@ public class MainMenuFragment extends Fragment {
 		}
 
 		return true;
-	}
-
-	private String emailRecipients() {
-		return StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
 	}
 
 	private void confirmUninstall() {
