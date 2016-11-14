@@ -24,7 +24,7 @@
 	<string name="accessibility_service_name">Rotation Overrider</string>
 	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
-	<string name="accessibility_service_prompt_instruction">"This feature uses the accessibility service, which you can enable or disable on the following screen by opening %1$s. If the on/off switch doesn't work, this might be caused by another screen brightness or screen orientation app."</string>
+	<string name="accessibility_service_prompt_instruction">"This feature uses an accessibility service. On the following screen, open %1$s and enable/disable it there. (If the on/off switch doesn't work, this might be caused by another screen brightness or screen orientation app.)"</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
