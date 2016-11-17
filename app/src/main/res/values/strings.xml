@@ -24,7 +24,7 @@
 	<string name="accessibility_service_name">Rotation Overrider</string>
 	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
-	<string name="accessibility_service_prompt_instruction">"This feature uses an accessibility service. On the following screen, open %1$s and enable/disable it there. (If the on/off switch doesn't work, this might be caused by another screen brightness or screen orientation app.)"</string>
+	<string name="accessibility_service_prompt_instruction">"On the following screen, open '%1$s' and enable it.\n\n(If the switch doesn't work, try disabling all screen brightness and screen orientation apps.)"</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
@@ -64,14 +64,14 @@
 		<item quantity="one">%d app overridden</item>
 		<item quantity="other">%d apps overridden</item>
 	</plurals>
-	<string name="preference_forced_apps_summary_disabled">Accessibility service disabled</string>
+	<string name="preference_forced_apps_summary_disabled">@string/warning_accessibility_service_disabled_title</string>
 
 	<string name="preference_infer_user_title">Detect orientation when locked</string>
 	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
 
+	<string name="preference_accessibility_service_summary">Accessibility Service</string>
+	<string name="preference_accessibility_service_enable">Enable</string>
 	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and enables home screen rotation. Note that this may prevent apps from working correctly.</string>
-	<string name="preference_accessibility_service_title">Accessibility service</string>
-	<string name="preference_accessibility_service_summary">Required to use this feature</string>
 	<string name="preference_choose_apps">Choose apps</string>
 
 	<!-- Errors -->
@@ -99,6 +99,8 @@
 
 	<string name="warning_accessibility_service_disabled_title">Accessibility service disabled</string>
 	<string name="warning_accessibility_service_disabled_content">Touch to fix</string>
+	<string name="warning_accessibility_service">Some apps are set to be overridden, but the accessibility service is disabled.</string>
+	<string name="accessibility_service_tip">To use this feature, enable the accessibility service.</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>

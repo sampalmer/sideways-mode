@@ -1,15 +1,15 @@
 package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
-public class ForcedAppsChooserActivity extends Activity {
+public class ForcedAppsChooserActivity extends UiActivity {
 
 	private ProgressListView list;
 	private LoadInstalledAppsTask loader;

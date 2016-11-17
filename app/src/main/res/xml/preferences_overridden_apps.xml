@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<!--TODO: Show a warning if any apps are selected but the accessibility service is disabled -->
-
 	<Preference
 		android:summary="@string/preference_forced_apps_details"
 		android:persistent="false"
 	    android:selectable="false"
-		/>
-
-	<!-- Maybe don't worry about showing the accessibility service as a control; maybe just show warnings where needed -->
-	<CheckBoxPreference
-		android:key="forcedOrientationAccessibilityService"
-		android:title="@string/preference_accessibility_service_title"
-		android:summary="@string/preference_accessibility_service_summary"
-	    android:persistent="false"
-	    android:icon="@drawable/accessibility_service"
 		/>
 
 	<Preference
