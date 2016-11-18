@@ -1,0 +1,4 @@
+• Added Overridden Apps feature, which can work around broken YouTube auto-rotation
+• Fixed bug that caused screen orientation to be reset when starting the app while in landscape
+• Fixed duplicate error message on devices without accelerometers
+• Added dedicated 'Report Problem' screen to deter users from submitting blank reports
