@@ -34,7 +34,6 @@
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_vertical|right|end"
 		    android:text="@string/preference_accessibility_service_enable"
-		    style="?android:attr/borderlessButtonStyle"
 		    />
 
     </LinearLayout>
