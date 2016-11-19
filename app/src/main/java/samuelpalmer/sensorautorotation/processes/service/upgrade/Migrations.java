@@ -71,6 +71,17 @@ class Migrations {
 			}
 		});
 
+		migrations.put(47, new Migration(null) {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+
+				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				Setting<Boolean> inferUserWhenDeviceLocked = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "inferUserWhenDeviceLocked", false);
+				inferUserWhenDeviceLocked.remove();
+			}
+		});
+
 		return migrations;
 	}
 }

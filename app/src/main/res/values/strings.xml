@@ -66,9 +66,6 @@
 	</plurals>
 	<string name="preference_forced_apps_summary_disabled">@string/warning_accessibility_service_disabled_title</string>
 
-	<string name="preference_infer_user_title">Detect orientation when locked</string>
-	<string name="preference_infer_user_description">Detect which way you\'re facing when on the lock screen. (Also prevents auto rotation on the lock screen.)</string>
-
 	<string name="preference_accessibility_service_summary">Accessibility Service</string>
 	<string name="preference_accessibility_service_enable">Enable</string>
 	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and enables home screen rotation. Note that this may prevent apps from working correctly.</string>

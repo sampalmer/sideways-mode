@@ -56,9 +56,6 @@
 	<string name="preference_allow_upside_down_screen_title">Разрешить перевернутый экран</string>
 	<string name="preference_allow_upside_down_screen_description">Поддерживать удерживание устройства вверх ногами</string>
 
-	<string name="preference_infer_user_title">Выявлять ориентацию при блокировке</string>
-	<string name="preference_infer_user_description">Выявлять ваше положение на экране блокировки. (Также предотвращает автоповорот на экране блокировки)</string>
-
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 

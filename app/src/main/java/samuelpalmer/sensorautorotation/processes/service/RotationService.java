@@ -45,7 +45,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ServiceRevivalManager serviceRevivalManager;
 	private NotificationParametersFactory notificationParametersFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
-	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementMonitor orientationEnforcementMonitor;
 	ActivityMonitor activityMonitor;
@@ -81,8 +80,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		userOrientationInferrer = new LockScreenUserOrientationInferenceManager(new LockScreenUserOrientationInferrer(lockScreenMonitor, calculator));
-
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor, lockScreenMonitor);
@@ -93,7 +90,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		serviceNotificationManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
-		userOrientationInferrer.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementMonitor.ensureStarted();
 		accessibilityServiceManager.ensureStarted();
@@ -150,7 +146,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		userInteractivityChangeHandler.ensureStopped();
 		serviceNotificationManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
-		userOrientationInferrer.ensureStopped();
 
 		applicationState.clear();
 
