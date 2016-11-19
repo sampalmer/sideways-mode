@@ -1,14 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
 
-import android.content.pm.PackageInfo;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Checkable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,30 +42,39 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 		if (isCancelled())
 			return null;
 
-		List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+		//Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
+		//http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
+		Set<String> installedPackageNames = new HashSet<>();
+		for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
+			if (isCancelled())
+				return null;
+
+			Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+			mainIntent.addCategory(category);
+
+			List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+			for (ResolveInfo resolveInfo : resolveInfos)
+				installedPackageNames.add(resolveInfo.activityInfo.packageName);
+		}
 
 		ArrayList<InstalledApp> options = new ArrayList<>();
-		for (PackageInfo installedPackage : installedPackages)
-			if (shouldShow(installedPackage)) {
-				if (isCancelled())
-					return null;
+		for (String installedPackage : installedPackageNames) {
+			if (isCancelled())
+				return null;
 
-				options.add(new InstalledApp(installedPackage, packageManager));
+			ApplicationInfo applicationInfo;
+			try {
+				applicationInfo = packageManager.getApplicationInfo(installedPackage, 0);
+			} catch (PackageManager.NameNotFoundException e) {
+				Log.w(LoadInstalledAppsTask.class.getSimpleName(), e);
+				continue;
 			}
+
+			options.add(new InstalledApp(applicationInfo, packageManager));
+		}
 
 		Collections.sort(options, new InstalledAppComparator());
 		return options;
-	}
-
-	private boolean shouldShow(PackageInfo installedPackage) {
-		return
-			installedPackage.activities != null
-			&&
-			installedPackage.activities.length > 0
-			&&
-			installedPackage.applicationInfo != null
-			&&
-			installedPackage.applicationInfo.enabled;
 	}
 
 	@Override
