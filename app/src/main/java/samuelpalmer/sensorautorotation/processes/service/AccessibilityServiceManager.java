@@ -25,21 +25,21 @@ public class AccessibilityServiceManager extends State {
 	private final NotificationManager notificationManager;
 	private final Settings.Setting<Boolean> enabled;
 	private final Settings.Setting<Set<String>> forcedApps;
-	private final AccessibilityServiceEnabledStateMonitor serviceMonitor;
+	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
 
 	public AccessibilityServiceManager() {
 		notificationManager = SystemServices.notificationManager();
 
 		enabled = ApplicationSettings.local().enabled();
 		forcedApps = ApplicationSettings.local().forcedOrientationAppPackages();
-		serviceMonitor = new AccessibilityServiceEnabledStateMonitor();
+		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 
 	@Override
 	protected void start() {
 		enabled.subscribe(subscriber);
 		forcedApps.subscribe(subscriber);
-		serviceMonitor.subscribe(subscriber);
+		accessibilityServiceMonitor.subscribe(subscriber);
 
 		check();
 	}
@@ -48,7 +48,7 @@ public class AccessibilityServiceManager extends State {
 	protected void stop() {
 		check();
 
-		serviceMonitor.unsubscribe(subscriber);
+		accessibilityServiceMonitor.unsubscribe(subscriber);
 		forcedApps.unsubscribe(subscriber);
 		enabled.unsubscribe(subscriber);
 	}
@@ -61,8 +61,7 @@ public class AccessibilityServiceManager extends State {
 	};
 
 	private void check() {
-		//TODO: Replace all size() > 0 checks with !isEmpty()
-		if (enabled.get() && forcedApps.get().size() > 0 && !serviceMonitor.isEnabled()) {
+		if (enabled.get() && !forcedApps.get().isEmpty() && !accessibilityServiceMonitor.isEnabled()) {
 			Notification notification = NotificationBuilderFactory
 					.create()
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)

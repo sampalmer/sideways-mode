@@ -61,7 +61,7 @@ public class Email {
 	}
 
 	private boolean hasEmailApp() {
-		return emailActivities.size() > 0;
+		return !emailActivities.isEmpty();
 	}
 
 	private boolean openEmail() {
