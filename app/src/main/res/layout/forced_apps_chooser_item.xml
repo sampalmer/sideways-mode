@@ -41,21 +41,22 @@
 	    android:orientation="vertical"
 	>
 
-		<!-- TODO: Fix up font styles; on Galaxy Note 3 they're white an unreadable, on Android 7.1 they're too big and bold -->
-
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			style="@android:style/TextAppearance.DeviceDefault.SearchResult.Title"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary"
 			android:id="@+id/forced_apps_item_label"
 			/>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
 			android:id="@+id/forced_apps_item_package"
 			/>
+
 	</LinearLayout>
 
 	<CheckBox
