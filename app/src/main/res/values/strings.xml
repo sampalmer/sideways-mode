@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name_full">Auto Rotation for Lying Down</string>
 	<string name="app_name">Rotation</string>
 
 	<string name="action_instructions">Instructions</string>
@@ -59,7 +58,6 @@
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
 
 	<string name="preference_forced_apps_title">Overridden apps</string>
-	<string name="preference_forced_apps_description">"Overrides individual apps' orientations"</string>
 	<plurals name="preference_forced_apps_summary_enabled">
 		<item quantity="one">%d app overridden</item>
 		<item quantity="other">%d apps overridden</item>
