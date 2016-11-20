@@ -5,8 +5,6 @@
 
 <resources>
 
-	<string name="app_name">Rotation</string>
-
 	<string name="action_instructions">Инструкции</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_email">Email</string>
