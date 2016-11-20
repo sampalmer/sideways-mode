@@ -96,7 +96,7 @@
 		    android:exported="false"
 			android:process="@string/service_process_name" />
 
-		<receiver android:name=".processes.service.ServiceStateUpdatingReceiver"
+		<receiver android:name=".processes.service.StartUpReceiver"
 		          android:process="@string/service_process_name">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -105,6 +105,9 @@
 				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
 			</intent-filter>
 		</receiver>
+
+		<receiver android:name=".processes.service.ServiceSyncReceiver"
+		          android:process="@string/service_process_name" />
 
 		<activity
 			android:name=".components.ToggleRotationLockActivity"

@@ -7,7 +7,11 @@ import android.content.Intent;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class ServiceStateUpdatingReceiver extends BroadcastReceiver {
+/**
+ * This is separate from {@link StartUpReceiver} so that {@link StartUpReceiver} can be
+ * exported without being open to broadcasts from other apps.
+ */
+public class ServiceSyncReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
