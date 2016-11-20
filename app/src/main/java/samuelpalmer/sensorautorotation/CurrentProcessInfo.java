@@ -20,8 +20,9 @@ public class CurrentProcessInfo {
 	}
 
 	/**
-	 * Apparently this sometimes fails, such as when running Xposed. However, I couldn't reproduce
-	 * such a problem.
+	 * This performs a little faster than the ActivityManager technique.
+	 * However, apparently this sometimes fails, such as when running Xposed.
+	 * However, I couldn't reproduce such a problem.
 	 *
 	 * See http://stackoverflow.com/a/21389402/238753
 	 */
