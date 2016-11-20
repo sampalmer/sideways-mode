@@ -10,6 +10,9 @@ public class ApplicationState {
 
 	private final ServiceSettings serviceSettings;
 	public final CachedSetting<Boolean> autoRotate;
+
+	// Storing the offset rather than the actual user orientation since this way works
+	// perfectly across app crashes and restarts.
 	public final CachedSetting<Rotation> offset;
 
 	public ApplicationState(SystemSettings systemSettings) {
