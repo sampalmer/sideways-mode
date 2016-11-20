@@ -4,7 +4,7 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 
 public class ServiceRevivalManager extends State {
@@ -16,12 +16,12 @@ public class ServiceRevivalManager extends State {
 
 	@Override
 	protected void start() {
-		Process.context().registerComponentCallbacks(callback);
+		CurrentProcess.context().registerComponentCallbacks(callback);
 	}
 
 	@Override
 	protected void stop() {
-		Process.context().unregisterComponentCallbacks(callback);
+		CurrentProcess.context().unregisterComponentCallbacks(callback);
 		reviver.ensureStopped();
 	}
 

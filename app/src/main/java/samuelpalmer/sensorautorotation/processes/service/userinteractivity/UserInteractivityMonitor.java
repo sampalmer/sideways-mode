@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.SystemServices;
 
@@ -18,14 +18,14 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 
 	@Override
 	protected void startInternal() {
-		Process.context().registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		Process.context().registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		CurrentProcess.context().registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		CurrentProcess.context().registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	@Override
 	protected void stop() {
-		Process.context().unregisterReceiver(screenOffReceiver);
-		Process.context().unregisterReceiver(screenOnReceiver);
+		CurrentProcess.context().unregisterReceiver(screenOffReceiver);
+		CurrentProcess.context().unregisterReceiver(screenOnReceiver);
 	}
 
 	@Override

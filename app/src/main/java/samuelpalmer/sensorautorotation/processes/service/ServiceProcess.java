@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.CurrentProcessInfo;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
@@ -26,7 +26,7 @@ public class ServiceProcess {
 	}
 
 	private static String packageName() {
-		return Process.context().getPackageName();
+		return CurrentProcess.context().getPackageName();
 	}
 
 }

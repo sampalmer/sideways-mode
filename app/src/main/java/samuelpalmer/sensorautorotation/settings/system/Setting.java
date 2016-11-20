@@ -8,8 +8,8 @@ import android.provider.Settings;
 
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
@@ -25,7 +25,7 @@ public class Setting<T> {
 	private final T defaultValue;
 
 	public Setting(String key, TypeConverter<T> converter, T defaultValue) {
-		this.contentResolver = Process.context().getContentResolver();
+		this.contentResolver = CurrentProcess.context().getContentResolver();
 		this.key = key;
 		this.converter = converter;
 		this.defaultValue = defaultValue;
@@ -55,7 +55,7 @@ public class Setting<T> {
 		if (
 			VERSION.SDK_INT >= 23
 			&&
-			!Settings.System.canWrite(Process.context())
+			!Settings.System.canWrite(CurrentProcess.context())
 		) {
 			EnvironmentError.report(R.string.environment_error_permission_needed_summary, R.string.environment_error_system_setting_write_denied_message);
 			return;

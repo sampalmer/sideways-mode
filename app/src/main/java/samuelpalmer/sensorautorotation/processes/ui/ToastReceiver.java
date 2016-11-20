@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
  * Handles requests to show toasts. Displays them using the main process since displaying toasts
@@ -18,7 +18,7 @@ public class ToastReceiver extends BroadcastReceiver {
 	public static void send(CharSequence message) {
 		Intent intent = ComponentType.create(ToastReceiver.class).intent()
 				.putExtra(EXTRA_MESSAGE, message);
-		Process.context().sendBroadcast(intent);
+		CurrentProcess.context().sendBroadcast(intent);
 	}
 
 	@Override

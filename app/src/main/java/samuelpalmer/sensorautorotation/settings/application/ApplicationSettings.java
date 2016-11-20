@@ -11,14 +11,14 @@ import samuelpalmer.common.settings.application.EnumSetting;
 import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.StringSetSetting;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
 public class ApplicationSettings extends Settings {
 
 	public static String sharedPreferencesName() {
-		return Process.context().getPackageName() + "_preferences";
+		return CurrentProcess.context().getPackageName() + "_preferences";
 	}
 
 	private static ApplicationSettings remote;
@@ -28,7 +28,7 @@ public class ApplicationSettings extends Settings {
 	 */
 	public static ApplicationSettings remote() {
 		if (remote == null)
-			remote = new ApplicationSettings(new ContentProviderSharedPreferences(Process.context(), StringResource.get(R.string.content_provider_authority).toString(), sharedPreferencesName()));
+			remote = new ApplicationSettings(new ContentProviderSharedPreferences(CurrentProcess.context(), StringResource.get(R.string.content_provider_authority).toString(), sharedPreferencesName()));
 		return remote;
 	}
 
@@ -39,7 +39,7 @@ public class ApplicationSettings extends Settings {
 	 */
 	public static ApplicationSettings local() {
 		if (local == null)
-			local = new ApplicationSettings(Process.context().getSharedPreferences(sharedPreferencesName(), 0));
+			local = new ApplicationSettings(CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0));
 		return local;
 	}
 

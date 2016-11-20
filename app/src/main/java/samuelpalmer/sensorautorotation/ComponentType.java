@@ -51,7 +51,7 @@ public abstract class ComponentType {
 	public abstract PendingIntent pendingIntent(Intent intent);
 
 	public Intent intent() {
-		return new Intent(Process.context(), clazz);
+		return new Intent(CurrentProcess.context(), clazz);
 	}
 
 	public PendingIntent pendingIntent() {
@@ -62,7 +62,7 @@ public abstract class ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
 			//TODO: Maybe always add FLAG_NEW_TASK, as required according to the getActivity() documentation
-			return PendingIntent.getActivity(Process.context(), requestCode, intent, flags);
+			return PendingIntent.getActivity(CurrentProcess.context(), requestCode, intent, flags);
 		}
 	}
 
@@ -70,7 +70,7 @@ public abstract class ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
 			BroadcastKillFix.apply(intent);
-			return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
+			return PendingIntent.getBroadcast(CurrentProcess.context(), requestCode, intent, flags);
 		}
 
 		@Override
@@ -85,7 +85,7 @@ public abstract class ComponentType {
 	private static class ServiceComponentType extends ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
-			return PendingIntent.getService(Process.context(), requestCode, intent, flags);
+			return PendingIntent.getService(CurrentProcess.context(), requestCode, intent, flags);
 		}
 	}
 }

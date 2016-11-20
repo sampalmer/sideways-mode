@@ -17,8 +17,8 @@ public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdapt
 	private final ContentResolver contentResolver;
 
 	public AccessibilityServiceEnabledStateMonitor() {
-		expected = new ComponentName(Process.context(), WindowChangeDetectingService.class);
-		contentResolver = Process.context().getContentResolver();
+		expected = new ComponentName(CurrentProcess.context(), WindowChangeDetectingService.class);
+		contentResolver = CurrentProcess.context().getContentResolver();
 	}
 
 	/**

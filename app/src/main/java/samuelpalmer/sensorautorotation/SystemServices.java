@@ -54,10 +54,10 @@ public abstract class SystemServices {
 	}
 
 	private static Object get(String name) {
-		return Process.context().getSystemService(name);
+		return CurrentProcess.context().getSystemService(name);
 	}
 
 	public static PackageManager packageManager() {
-		return Process.context().getPackageManager();
+		return CurrentProcess.context().getPackageManager();
 	}
 }

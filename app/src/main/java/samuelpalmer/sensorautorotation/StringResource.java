@@ -2,11 +2,11 @@ package samuelpalmer.sensorautorotation;
 
 public abstract class StringResource {
 	public static CharSequence format(int formatStringResource, Object... formatArguments) {
-		return Process.context().getString(formatStringResource, lookupTextIfNecessary(formatArguments));
+		return CurrentProcess.context().getString(formatStringResource, lookupTextIfNecessary(formatArguments));
 	}
 
 	public static CharSequence get(int id) {
-		return Process.context().getText(id);
+		return CurrentProcess.context().getText(id);
 	}
 
 	private static Object[] lookupTextIfNecessary(Object[] formatArguments) {

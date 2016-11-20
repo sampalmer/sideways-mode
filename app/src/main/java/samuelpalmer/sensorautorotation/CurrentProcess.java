@@ -7,9 +7,9 @@ import android.util.Log;
 import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 
-public class Process extends Application {
+public class CurrentProcess extends Application {
 
-	private static final String TAG = Process.class.getSimpleName();
+	private static final String TAG = CurrentProcess.class.getSimpleName();
 	private static Context context;
 
 	public static Context context() {
