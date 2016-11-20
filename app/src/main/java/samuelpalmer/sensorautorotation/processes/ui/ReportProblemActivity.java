@@ -18,7 +18,7 @@ public class ReportProblemActivity extends Activity {
 	private Button send;
 
 	public static String emailRecipients() {
-		return StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
+		return StringResource.get(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>";
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ReportProblemActivity extends Activity {
 		new Email(
 			ReportProblemActivity.this,
 			emailRecipients(),
-			StringResource.format(R.string.email_problem_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
+			StringResource.format(R.string.email_problem_subject, R.string.app_name_full, VersionInfo.packageInfo().versionName).toString(),
 			String.format("Logcat:\n%s\n\nDevice info:\n%s\n\nProblem:\n%s\n", logcat, DiagnosticInfo.deviceInfo(), description.getText().toString())
 		).send();
 

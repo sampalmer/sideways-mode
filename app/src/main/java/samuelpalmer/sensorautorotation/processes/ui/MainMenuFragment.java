@@ -41,7 +41,7 @@ public class MainMenuFragment extends Fragment {
 				new Email(
 					getActivity(),
 					ReportProblemActivity.emailRecipients(),
-					StringResource.format(R.string.email_feedback_subject, R.string.app_name, VersionInfo.packageInfo().versionName).toString(),
+					StringResource.format(R.string.email_feedback_subject, R.string.app_name_full, VersionInfo.packageInfo().versionName).toString(),
 					""
 				).send();
 				break;
