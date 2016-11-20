@@ -8,30 +8,13 @@
               android:minHeight="72dp"
 	>
 
-	<RelativeLayout
+	<ImageView
 		android:layout_width="48dp"
 		android:layout_height="match_parent"
 		android:layout_marginRight="8dp"
 		android:layout_marginEnd="8dp"
-	>
-
-		<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:scaleType="centerInside"
-			android:id="@+id/forced_apps_item_icon"/>
-
-		<ProgressBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-			android:visibility="gone"
-			android:indeterminate="true"
-			android:id="@+id/forced_apps_item_icon_progress"/>
-
-	</RelativeLayout>
-
+		android:scaleType="centerInside"
+		android:id="@+id/forced_apps_item_icon"/>
 
 	<LinearLayout
 		android:layout_width="wrap_content"
