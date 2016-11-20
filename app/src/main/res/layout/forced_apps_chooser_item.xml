@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.CheckedInstalledApp xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:minHeight="72dp"
+<samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.CheckedInstalledApp
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="horizontal"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minHeight="72dp"
 	>
 
 	<ImageView
@@ -14,7 +16,8 @@
 		android:layout_marginRight="8dp"
 		android:layout_marginEnd="8dp"
 		android:scaleType="centerInside"
-		android:id="@+id/forced_apps_item_icon"/>
+		android:id="@+id/forced_apps_item_icon"
+		tools:ignore="ContentDescription"/>
 
 	<LinearLayout
 		android:layout_width="wrap_content"
