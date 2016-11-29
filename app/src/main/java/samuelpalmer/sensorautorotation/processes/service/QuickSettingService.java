@@ -107,7 +107,7 @@ public class QuickSettingService extends TileService {
 		//TODO: Remove duplication of default tile properties in manifest
 		Tile tile = getQsTile();
 		if (tile == null)
-			throw new RuntimeException("Coludn't get quick setting tile. Maybe the service isn't in listening state?");
+			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 
 		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
 		tile.setState(parameters == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
