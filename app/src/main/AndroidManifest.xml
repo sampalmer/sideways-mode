@@ -78,6 +78,7 @@
 		          android:theme="@style/Theme.Dialog.Headless"
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
+		          android:configChanges="orientation|screenSize"
 			/>
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
