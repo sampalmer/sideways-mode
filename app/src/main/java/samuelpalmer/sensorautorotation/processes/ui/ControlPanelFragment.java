@@ -100,9 +100,6 @@ public class ControlPanelFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		//TODO: Show loading indicator?
-		//TODO: Figure out what to do when the service isn't actually enabled
-
 		if (lastStatus != null)
 			update(lastStatus);
 	}
