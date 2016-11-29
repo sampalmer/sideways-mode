@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityManager;
 
+import static android.content.Context.ACCESSIBILITY_SERVICE;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.KEYGUARD_SERVICE;
@@ -47,11 +49,15 @@ public abstract class SystemServices {
 		return (SensorManager) get(SENSOR_SERVICE);
 	}
 
+	public static AccessibilityManager accessibilityManager() {
+		return (AccessibilityManager) get(ACCESSIBILITY_SERVICE);
+	}
+
 	private static Object get(String name) {
-		return Process.context().getSystemService(name);
+		return CurrentProcess.context().getSystemService(name);
 	}
 
 	public static PackageManager packageManager() {
-		return Process.context().getPackageManager();
+		return CurrentProcess.context().getPackageManager();
 	}
 }

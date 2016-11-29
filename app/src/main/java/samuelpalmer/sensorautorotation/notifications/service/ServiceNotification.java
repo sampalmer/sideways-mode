@@ -9,7 +9,7 @@ import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.common.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
@@ -31,7 +31,7 @@ class ServiceNotification {
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
 
-		NotificationStyles styles = new NotificationStyles(Process.context(), R.drawable.action_rotation, ColourGetterCompat.getColor(Process.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 	}
 
@@ -59,7 +59,7 @@ class ServiceNotification {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
-			Process.context(),
+			CurrentProcess.context(),
 			R.layout.notification,
 			builder.createContentView(),
 			actionButtonColour

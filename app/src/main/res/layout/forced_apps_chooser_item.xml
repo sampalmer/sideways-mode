@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.CheckedInstalledApp
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="horizontal"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minHeight="72dp"
+	>
+
+	<ImageView
+		android:layout_width="48dp"
+		android:layout_height="match_parent"
+		android:layout_marginRight="8dp"
+		android:layout_marginEnd="8dp"
+		android:scaleType="centerInside"
+		android:id="@+id/forced_apps_item_icon"
+		tools:ignore="ContentDescription"/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_weight="1"
+	    android:orientation="vertical"
+	>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary"
+			android:id="@+id/forced_apps_item_label"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
+			android:id="@+id/forced_apps_item_package"
+			/>
+
+	</LinearLayout>
+
+	<CheckBox
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:id="@+id/forced_apps_item_checkbox"
+		android:clickable="false"
+		android:focusable="false"
+		android:focusableInTouchMode="false"
+		/>
+
+</samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.CheckedInstalledApp>

@@ -38,8 +38,10 @@ public class UserOrientation implements Parcelable {
 	public int descriptionId() {
 		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
 			case 0: return R.string.user_rotation_upright;
+			case 1: return R.string.user_rotation_sideways;
 			case 2: return R.string.user_rotation_upside_down;
-			default: return R.string.user_rotation_sideways;
+			case 3: return R.string.user_rotation_sideways;
+			default: throw new RuntimeException("Unknown user rotation: " + user.getClockwiseRotationsFromNaturalOrientation());
 		}
 	}
 

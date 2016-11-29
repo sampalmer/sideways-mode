@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
 
+import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+
 /**
  * I'm using this instead of binding since this is mostly a single-threaded process and this
  * avoids the complexities of binding and inability to determine service running state.
@@ -14,6 +16,7 @@ abstract class ServiceHolder {
 
 	private static final String TAG = ServiceHolder.class.getSimpleName();
 	private static RotationService instance;
+	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 
 	public static boolean isRunning() {
 		return instance != null;
@@ -31,6 +34,7 @@ abstract class ServiceHolder {
 			throw new RuntimeException("Already running");
 
 		ServiceHolder.instance = instance;
+		onChange.report();
 
 		Log.i(TAG, "Service started");
 	}
@@ -40,6 +44,7 @@ abstract class ServiceHolder {
 			throw new RuntimeException("Not running");
 
 		instance = null;
+		onChange.report();
 
 		Log.i(TAG, "Service stopped");
 	}

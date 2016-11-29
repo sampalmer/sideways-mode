@@ -20,7 +20,7 @@ public class EnvironmentError {
 		EnvironmentError instance = new EnvironmentError();
 		instance.summary = StringResource.get(summaryResourceId);
 		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		instance.message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
+		instance.message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name_full);
 
 		//This is useful when checking log output from Cloud Test Lab on Google Play Store.
 		Log.i(EnvironmentError.class.getSimpleName(), instance.summary + ". " + instance.message);

@@ -1,0 +1,6 @@
+• Added Overridden Apps feature, which can work around broken YouTube auto-rotation
+• Removed "Detect orientation when locked" setting since it was problematic
+• Fixed bug that caused screen orientation to be reset when starting the app while in landscape
+• Replaced most "Rotation" references with "Auto Rotation for Lying Down"
+• Fixed duplicate error message on devices without accelerometers
+• Added dedicated 'Report Problem' screen to deter users from submitting blank reports

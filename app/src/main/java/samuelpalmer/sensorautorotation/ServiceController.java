@@ -15,7 +15,7 @@ public abstract class ServiceController {
 	}
 
 	public static void ensureStarted(Intent intent) {
-		ComponentName name = Process.context().startService(intent);
+		ComponentName name = CurrentProcess.context().startService(intent);
 		if (name == null)
 			throw new RuntimeException("Service doesn't exist: " + intent.getComponent());
 	}
@@ -23,7 +23,7 @@ public abstract class ServiceController {
 	private static void ensureStopped() {
 		// It's important that we try to stop the service even if it doesn't look like it's running
 		// since maybe the service has started but hasn't yet been stored in ServiceHolder.
-		Process.context().stopService(intent());
+		CurrentProcess.context().stopService(intent());
 	}
 
 	public static Intent intent() {

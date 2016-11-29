@@ -5,8 +5,6 @@
 
 <resources>
 
-	<string name="app_name">Rotation</string>
-
 	<string name="action_instructions">Инструкции</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_email">Email</string>
@@ -56,9 +54,6 @@
 	<string name="preference_allow_upside_down_screen_title">Разрешить перевернутый экран</string>
 	<string name="preference_allow_upside_down_screen_description">Поддерживать удерживание устройства вверх ногами</string>
 
-	<string name="preference_infer_user_title">Выявлять ориентацию при блокировке</string>
-	<string name="preference_infer_user_description">Выявлять ваше положение на экране блокировки. (Также предотвращает автоповорот на экране блокировки)</string>
-
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 
@@ -104,7 +99,7 @@
 	<string name="instructions_position_changing_contents">Для того чтобы изменить вашу ориентацию, либо использовать режим блокировки или %1$s и %2$s кнопки в уведомлении.</string>
 
 	<string name="instructions_overridden_heading">Несовместимые приложения</string>
-	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана. Когда это произойдет, значок уведомления покажет ориентацию вместо текущего режима.</string>
+	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана, such as YouTube. Когда это произойдет, значок уведомления покажет ориентацию вместо текущего режима. You can prevent apps from doing this by using the \"%2$s\" setting.</string>
 
 	<string name="instructions_uninstalling_heading">Удаление</string>
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране.</string>

@@ -15,7 +15,7 @@
  */
 
 /*
- * Copied from commit 6eabf57 (https://github.com/android/platform_frameworks_base/blob/d59921149bb5948ffbcb9a9e832e9ac1538e05a0/services/core/java/com/android/server/policy/WindowOrientationListener.java)
+ * Copied from commit 8e4591 (https://github.com/android/platform_frameworks_base/blob/8e4591c4f388dfa0c28f83d991cf91316581cfc9/services/core/java/com/android/server/policy/WindowOrientationListener.java)
  *
  * Minor modifications made for this project:
  * -Package changed
@@ -35,7 +35,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -65,6 +64,7 @@ import samuelpalmer.sensorautorotation.R;
 @SuppressLint("all")
 abstract class WindowOrientationListener {
 	private static final String TAG = "WindowOrientationListener";
+	private static final boolean LOG = false;
 
 	private static final boolean USE_GRAVITY_SENSOR = false;
 
@@ -73,7 +73,7 @@ abstract class WindowOrientationListener {
 	private boolean mEnabled;
 	private int mRate;
 	private ArrayList<Sensor> mSensors;
-	private SensorEventListenerImpl mSensorEventListener;
+	private OrientationJudge mOrientationJudge;
 	private int mCurrentRotation = -1;
 
 	private final Object mLock = new Object();
@@ -108,7 +108,7 @@ abstract class WindowOrientationListener {
 	};
 
 	public static void reportSensorError(int message) {
-		EnvironmentError.report(R.string.environment_error_sensor_summary, R.string.environment_error_sensor_message, message, R.string.app_name);
+		EnvironmentError.report(R.string.environment_error_sensor_summary, R.string.environment_error_sensor_message, message, R.string.app_name_full);
 	}
 
 	/**
@@ -134,7 +134,7 @@ abstract class WindowOrientationListener {
 	 * This constructor is private since no one uses it.
 	 */
 	private WindowOrientationListener(Context context, Handler handler, int rate) {
-		mHandler = handler == null ? new Handler(Looper.getMainLooper()) : handler;;
+		mHandler = handler;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 
@@ -150,7 +150,7 @@ abstract class WindowOrientationListener {
 			formattedSensors[i] = stringify(mSensors.get(i));
 		Log.i(WindowOrientationListener.TAG, "Using sensors: [" + TextUtils.join(", ", formattedSensors) + "]");
 
-		mSensorEventListener = new SensorEventListenerImpl(context);
+		mOrientationJudge = new AccelSensorJudge(context);
 	}
 
 	/**
@@ -168,15 +168,22 @@ abstract class WindowOrientationListener {
 	 */
 	public void enable() {
 		synchronized (mLock) {
+			if (mSensors.isEmpty()) {
+				Slog.w(TAG, "Cannot detect sensors. Not enabled");
+				return;
+			}
 			if (mEnabled == false) {
-				mSensorEventListener.resetLocked();
+				if (LOG) {
+					Slog.d(TAG, "WindowOrientationListener enabled");
+				}
+				mOrientationJudge.resetLocked();
 
 				Iterator<Sensor> iterator = mSensors.iterator();
 				while (iterator.hasNext()) {
 					Sensor sensor = iterator.next();
 
 					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-					if (!mSensorManager.registerListener(mSensorEventListener, sensor, sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler)) {
+					if (!mSensorManager.registerListener(mOrientationJudge, sensor, sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler)) {
 						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
 						iterator.remove();
 					}
@@ -205,8 +212,11 @@ abstract class WindowOrientationListener {
 	public void disable() {
 		synchronized (mLock) {
 			if (mEnabled == true) {
+				if (LOG) {
+					Slog.d(TAG, "WindowOrientationListener disabled");
+				}
 				for (Sensor sensor : mSensors)
-					mSensorManager.unregisterListener(mSensorEventListener, sensor);
+					mSensorManager.unregisterListener(mOrientationJudge, sensor);
 				mEnabled = false;
 
 				mHandler.removeCallbacks(checkForSensorEvent);
@@ -216,8 +226,8 @@ abstract class WindowOrientationListener {
 
 	public void onTouchStart() {
 		synchronized (mLock) {
-			if (mSensorEventListener != null) {
-				mSensorEventListener.onTouchStartLocked();
+			if (mOrientationJudge != null) {
+				mOrientationJudge.onTouchStartLocked();
 			}
 		}
 	}
@@ -226,8 +236,8 @@ abstract class WindowOrientationListener {
 		long whenElapsedNanos = SystemClock.elapsedRealtimeNanos();
 
 		synchronized (mLock) {
-			if (mSensorEventListener != null) {
-				mSensorEventListener.onTouchEndLocked(whenElapsedNanos);
+			if (mOrientationJudge != null) {
+				mOrientationJudge.onTouchEndLocked(whenElapsedNanos);
 			}
 		}
 	}
@@ -254,7 +264,7 @@ abstract class WindowOrientationListener {
 	public int getProposedRotation() {
 		synchronized (mLock) {
 			if (mEnabled) {
-				return mSensorEventListener.getProposedRotationLocked();
+				return mOrientationJudge.getProposedRotationLocked();
 			}
 			return -1;
 		}
@@ -276,6 +286,8 @@ abstract class WindowOrientationListener {
 	 * It is called each time the orientation determination transitions from being
 	 * uncertain to being certain again, even if it is the same orientation as before.
 	 *
+	 * This should only be called on the Handler thread.
+	 *
 	 * @param rotation The new orientation of the device, one of the Surface.ROTATION_* constants.
 	 * @see android.view.Surface
 	 */
@@ -287,13 +299,75 @@ abstract class WindowOrientationListener {
 			prefix += "  ";
 			pw.println(prefix + "mEnabled=" + mEnabled);
 			pw.println(prefix + "mCurrentRotation=" + mCurrentRotation);
+			pw.println(prefix + "mSensorType=" + "(ignored)");
 			pw.println(prefix + "mSensors=" + mSensors);
 			pw.println(prefix + "mRate=" + mRate);
 
-			if (mSensorEventListener != null) {
-				mSensorEventListener.dumpLocked(pw, prefix);
+			if (mOrientationJudge != null) {
+				mOrientationJudge.dumpLocked(pw, prefix);
 			}
 		}
+	}
+
+	abstract class OrientationJudge implements SensorEventListener {
+		// Number of nanoseconds per millisecond.
+		protected static final long NANOS_PER_MS = 1000000;
+
+		// Number of milliseconds per nano second.
+		protected static final float MILLIS_PER_NANO = 0.000001f;
+
+		// The minimum amount of time that must have elapsed since the screen was last touched
+		// before the proposed rotation can change.
+		protected static final long PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS =
+				500 * NANOS_PER_MS;
+
+		/**
+		 * Gets the proposed rotation.
+		 *
+		 * This method only returns a rotation if the orientation listener is certain
+		 * of its proposal.  If the rotation is indeterminate, returns -1.
+		 *
+		 * Should only be called when holding WindowOrientationListener lock.
+		 *
+		 * @return The proposed rotation, or -1 if unknown.
+		 */
+		public abstract int getProposedRotationLocked();
+
+		/**
+		 * Notifies the orientation judge that the screen is being touched.
+		 *
+		 * Should only be called when holding WindowOrientationListener lock.
+		 */
+		public abstract void onTouchStartLocked();
+
+		/**
+		 * Notifies the orientation judge that the screen is no longer being touched.
+		 *
+		 * Should only be called when holding WindowOrientationListener lock.
+		 *
+		 * @param whenElapsedNanos Given in the elapsed realtime nanos time base.
+		 */
+		public abstract void onTouchEndLocked(long whenElapsedNanos);
+
+		/**
+		 * Resets the state of the judge.
+		 *
+		 * Should only be called when holding WindowOrientationListener lock.
+		 */
+		public abstract void resetLocked();
+
+		/**
+		 * Dumps internal state of the orientation judge.
+		 *
+		 * Should only be called when holding WindowOrientationListener lock.
+		 */
+		public abstract void dumpLocked(PrintWriter pw, String prefix);
+
+		@Override
+		public abstract void onAccuracyChanged(Sensor sensor, int accuracy);
+
+		@Override
+		public abstract void onSensorChanged(SensorEvent event);
 	}
 
 	/**
@@ -334,12 +408,9 @@ abstract class WindowOrientationListener {
 	 * See http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization for
 	 * signal processing background.
 	 */
-	final class SensorEventListenerImpl implements SensorEventListener {
+	final class AccelSensorJudge extends OrientationJudge {
 		// We work with all angles in degrees in this class.
 		private static final float RADIANS_TO_DEGREES = (float) (180 / Math.PI);
-
-		// Number of nanoseconds per millisecond.
-		private static final long NANOS_PER_MS = 1000000;
 
 		// Indices into SensorEvent.values for the accelerometer sensor.
 		private static final int ACCELEROMETER_DATA_X = 0;
@@ -366,11 +437,6 @@ abstract class WindowOrientationListener {
 		// The minimum amount of time that must have elapsed since the device stopped
 		// undergoing external acceleration before the proposed rotation can change.
 		private static final long PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS =
-			500 * NANOS_PER_MS;
-
-		// The minimum amount of time that must have elapsed since the screen was last touched
-		// before the proposed rotation can change.
-		private static final long PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS =
 			500 * NANOS_PER_MS;
 
 		// If the tilt angle remains greater than the specified angle for a minimum of
@@ -516,26 +582,21 @@ abstract class WindowOrientationListener {
 		private long[] mTiltHistoryTimestampNanos = new long[TILT_HISTORY_SIZE];
 		private int mTiltHistoryIndex;
 
-		public SensorEventListenerImpl(Context context) {
+		public AccelSensorJudge(Context context) {
+
 			// Load tilt tolerance configuration.
-			int[] tiltTolerance = new int[0];
-			if (tiltTolerance.length == 8) {
-				for (int i = 0; i < 4; i++) {
-					int min = tiltTolerance[i * 2];
-					int max = tiltTolerance[i * 2 + 1];
-					if (min >= -90 && min <= max && max <= 90) {
-						mTiltToleranceConfig[i][0] = min;
-						mTiltToleranceConfig[i][1] = max;
-					}
-				}
-			}
+			return; //Don't have access to system config
 		}
 
+		@Override
 		public int getProposedRotationLocked() {
 			return mProposedRotation;
 		}
 
+		@Override
 		public void dumpLocked(PrintWriter pw, String prefix) {
+			pw.println(prefix + "AccelSensorJudge");
+			prefix += "  ";
 			pw.println(prefix + "mProposedRotation=" + mProposedRotation);
 			pw.println(prefix + "mPredictedRotation=" + mPredictedRotation);
 			pw.println(prefix + "mLastFilteredX=" + mLastFilteredX);
@@ -599,7 +660,7 @@ abstract class WindowOrientationListener {
 
 						if (registeredSensorPriority > currentSensorPriority) {
 							Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + stringify(registeredSensor));
-							mSensorManager.unregisterListener(mSensorEventListener, registeredSensor);
+							mSensorManager.unregisterListener(mOrientationJudge, registeredSensor);
 							iterator.remove();
 						}
 					}
@@ -621,6 +682,12 @@ abstract class WindowOrientationListener {
 				float y = event.values[ACCELEROMETER_DATA_Y];
 				float z = event.values[ACCELEROMETER_DATA_Z];
 
+				if (LOG) {
+					Slog.v(TAG, "Raw acceleration vector: "
+							+ "x=" + x + ", y=" + y + ", z=" + z
+							+ ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
+				}
+
 				// Apply a low-pass filter to the acceleration up vector in cartesian space.
 				// Reset the orientation listener state if the samples are too far apart in time
 				// or when we see values of (0, 0, 0) which indicates that we polled the
@@ -632,6 +699,9 @@ abstract class WindowOrientationListener {
 				if (now < then
 					|| now > then + MAX_FILTER_DELTA_TIME_NANOS
 					|| (x == 0 && y == 0 && z == 0)) {
+					if (LOG) {
+						Slog.v(TAG, "Resetting orientation listener.");
+					}
 					resetLocked();
 					skipSample = true;
 				} else {
@@ -640,6 +710,11 @@ abstract class WindowOrientationListener {
 						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
 						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
 						z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+						if (LOG) {
+							Slog.v(TAG, "Filtered acceleration vector: "
+									+ "x=" + x + ", y=" + y + ", z=" + z
+									+ ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
+						}
 					}
 					skipSample = false;
 				}
@@ -657,6 +732,9 @@ abstract class WindowOrientationListener {
 					// Calculate the magnitude of the acceleration vector.
 					final float magnitude = mMeasuringAcceleration ? (float) Math.sqrt(x * x + y * y + z * z) : SensorManager.GRAVITY_EARTH;
 					if (magnitude < NEAR_ZERO_MAGNITUDE) {
+						if (LOG) {
+							Slog.v(TAG, "Ignoring sensor data, magnitude too close to zero.");
+						}
 						clearPredictedRotationLocked();
 					} else {
 						// Determine whether the device appears to be undergoing external
@@ -702,8 +780,16 @@ abstract class WindowOrientationListener {
 							mOverhead = false;
 						}
 						if (mOverhead) {
+							if (LOG) {
+								Slog.v(TAG, "Ignoring sensor data, device is overhead: "
+										+ "tiltAngle=" + tiltAngle);
+							}
 							clearPredictedRotationLocked();
 						} else if (Math.abs(tiltAngle) > MAX_TILT) {
+							if (LOG) {
+								Slog.v(TAG, "Ignoring sensor data, tilt angle too high: "
+										+ "tiltAngle=" + tiltAngle);
+							}
 							clearPredictedRotationLocked();
 						} else {
 							// Calculate the orientation angle.
@@ -726,7 +812,21 @@ abstract class WindowOrientationListener {
 								&& isOrientationAngleAcceptableLocked(nearestRotation,
 								orientationAngle)) {
 								updatePredictedRotationLocked(now, nearestRotation);
+								if (LOG) {
+									Slog.v(TAG, "Predicted: "
+											+ "tiltAngle=" + tiltAngle
+											+ ", orientationAngle=" + orientationAngle
+											+ ", predictedRotation=" + mPredictedRotation
+											+ ", predictedRotationAgeMS="
+											+ ((now - mPredictedRotationTimestampNanos)
+											* 0.000001f));
+								}
 							} else {
+								if (LOG) {
+									Slog.v(TAG, "Ignoring sensor data, no predicted rotation: "
+											+ "tiltAngle=" + tiltAngle
+											+ ", orientationAngle=" + orientationAngle);
+								}
 								clearPredictedRotationLocked();
 							}
 						}
@@ -742,13 +842,67 @@ abstract class WindowOrientationListener {
 					mProposedRotation = mPredictedRotation;
 				}
 				proposedRotation = mProposedRotation;
+
+				// Write final statistics about where we are in the orientation detection process.
+				if (LOG) {
+					Slog.v(TAG, "Result: currentRotation=" + mCurrentRotation
+							+ ", proposedRotation=" + proposedRotation
+							+ ", predictedRotation=" + mPredictedRotation
+							+ ", timeDeltaMS=" + timeDeltaMS
+							+ ", isAccelerating=" + isAccelerating
+							+ ", isFlat=" + isFlat
+							+ ", isSwinging=" + isSwinging
+							+ ", isOverhead=" + mOverhead
+							+ ", isTouched=" + mTouched
+							+ ", timeUntilSettledMS=" + remainingMS(now,
+							mPredictedRotationTimestampNanos + PROPOSAL_SETTLE_TIME_NANOS)
+							+ ", timeUntilAccelerationDelayExpiredMS=" + remainingMS(now,
+							mAccelerationTimestampNanos + PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS)
+							+ ", timeUntilFlatDelayExpiredMS=" + remainingMS(now,
+							mFlatTimestampNanos + PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS)
+							+ ", timeUntilSwingDelayExpiredMS=" + remainingMS(now,
+							mSwingTimestampNanos + PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS)
+							+ ", timeUntilTouchDelayExpiredMS=" + remainingMS(now,
+							mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS));
+				}
 			}
 
 			// Tell the listener.
 			if (proposedRotation != oldProposedRotation && proposedRotation >= 0) {
+				if (LOG) {
+					Slog.v(TAG, "Proposed rotation changed!  proposedRotation=" + proposedRotation
+							+ ", oldProposedRotation=" + oldProposedRotation);
+				}
 				onProposedRotationChanged(proposedRotation);
 			}
 		}
+
+		@Override
+		public void onTouchStartLocked() {
+			mTouched = true;
+		}
+
+		@Override
+		public void onTouchEndLocked(long whenElapsedNanos) {
+			mTouched = false;
+			mTouchEndedTimestampNanos = whenElapsedNanos;
+		}
+
+		@Override
+		public void resetLocked() {
+			mLastFilteredTimestampNanos = Long.MIN_VALUE;
+			mProposedRotation = -1;
+			mFlatTimestampNanos = Long.MIN_VALUE;
+			mFlat = false;
+			mSwingTimestampNanos = Long.MIN_VALUE;
+			mSwinging = false;
+			mAccelerationTimestampNanos = Long.MIN_VALUE;
+			mAccelerating = false;
+			mOverhead = false;
+			clearPredictedRotationLocked();
+			clearTiltHistoryLocked();
+		}
+
 
 		/**
 		 * Returns true if the tilt angle is acceptable for a given predicted rotation.
@@ -848,20 +1002,6 @@ abstract class WindowOrientationListener {
 			return true;
 		}
 
-		private void resetLocked() {
-			mLastFilteredTimestampNanos = Long.MIN_VALUE;
-			mProposedRotation = -1;
-			mFlatTimestampNanos = Long.MIN_VALUE;
-			mFlat = false;
-			mSwingTimestampNanos = Long.MIN_VALUE;
-			mSwinging = false;
-			mAccelerationTimestampNanos = Long.MIN_VALUE;
-			mAccelerating = false;
-			mOverhead = false;
-			clearPredictedRotationLocked();
-			clearTiltHistoryLocked();
-		}
-
 		private void clearPredictedRotationLocked() {
 			mPredictedRotation = -1;
 			mPredictedRotationTimestampNanos = Long.MIN_VALUE;
@@ -930,14 +1070,147 @@ abstract class WindowOrientationListener {
 		private float remainingMS(long now, long until) {
 			return now >= until ? 0 : (until - now) * 0.000001f;
 		}
+	}
 
-		private void onTouchStartLocked() {
-			mTouched = true;
+	final class OrientationSensorJudge extends OrientationJudge {
+		private boolean mTouching;
+		private long mTouchEndedTimestampNanos = Long.MIN_VALUE;
+		private int mProposedRotation = -1;
+		private int mDesiredRotation = -1;
+		private boolean mRotationEvaluationScheduled;
+
+		@Override
+		public int getProposedRotationLocked() {
+			return mProposedRotation;
 		}
 
-		private void onTouchEndLocked(long whenElapsedNanos) {
-			mTouched = false;
+		@Override
+		public void onTouchStartLocked() {
+			mTouching = true;
+		}
+
+		@Override
+		public void onTouchEndLocked(long whenElapsedNanos) {
+			mTouching = false;
 			mTouchEndedTimestampNanos = whenElapsedNanos;
+			if (mDesiredRotation != mProposedRotation) {
+				final long now = SystemClock.elapsedRealtimeNanos();
+				scheduleRotationEvaluationIfNecessaryLocked(now);
+			}
 		}
+
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			int newRotation;
+			synchronized (mLock) {
+				mDesiredRotation = (int) event.values[0];
+				newRotation = evaluateRotationChangeLocked();
+			}
+			if (newRotation >=0) {
+				onProposedRotationChanged(newRotation);
+			}
+		}
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+
+		@Override
+		public void dumpLocked(PrintWriter pw, String prefix) {
+			pw.println(prefix + "OrientationSensorJudge");
+			prefix += "  ";
+			pw.println(prefix + "mDesiredRotation=" + mDesiredRotation);
+			pw.println(prefix + "mProposedRotation=" + mProposedRotation);
+			pw.println(prefix + "mTouching=" + mTouching);
+			pw.println(prefix + "mTouchEndedTimestampNanos=" + mTouchEndedTimestampNanos);
+		}
+
+		@Override
+		public void resetLocked() {
+			mProposedRotation = -1;
+			mDesiredRotation = -1;
+			mTouching = false;
+			mTouchEndedTimestampNanos = Long.MIN_VALUE;
+			unscheduleRotationEvaluationLocked();
+		}
+
+		public int evaluateRotationChangeLocked() {
+			unscheduleRotationEvaluationLocked();
+			if (mDesiredRotation == mProposedRotation) {
+				return -1;
+			}
+			final long now = SystemClock.elapsedRealtimeNanos();
+			if (isDesiredRotationAcceptableLocked(now)) {
+				mProposedRotation = mDesiredRotation;
+				return mProposedRotation;
+			} else {
+				scheduleRotationEvaluationIfNecessaryLocked(now);
+			}
+			return -1;
+		}
+
+		private boolean isDesiredRotationAcceptableLocked(long now) {
+			if (mTouching) {
+				return false;
+			}
+			if (now < mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS) {
+				return false;
+			}
+			return true;
+		}
+
+		private void scheduleRotationEvaluationIfNecessaryLocked(long now) {
+			if (mRotationEvaluationScheduled || mDesiredRotation == mProposedRotation) {
+				if (LOG) {
+					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+							"ignoring, an evaluation is already scheduled or is unnecessary.");
+				}
+				return;
+			}
+			if (mTouching) {
+				if (LOG) {
+					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+							"ignoring, user is still touching the screen.");
+				}
+				return;
+			}
+			long timeOfNextPossibleRotationNanos =
+					mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS;
+			if (now >= timeOfNextPossibleRotationNanos) {
+				if (LOG) {
+					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+							"ignoring, already past the next possible time of rotation.");
+				}
+				return;
+			}
+			// Use a delay instead of an absolute time since handlers are in uptime millis and we
+			// use elapsed realtime.
+			final long delayMs =
+					(long) Math.ceil((timeOfNextPossibleRotationNanos - now) * MILLIS_PER_NANO);
+			mHandler.postDelayed(mRotationEvaluator, delayMs);
+			mRotationEvaluationScheduled = true;
+		}
+
+		private void unscheduleRotationEvaluationLocked() {
+			if (!mRotationEvaluationScheduled) {
+				return;
+			}
+			mHandler.removeCallbacks(mRotationEvaluator);
+			mRotationEvaluationScheduled = false;
+		}
+
+		private Runnable mRotationEvaluator = new Runnable() {
+			@Override
+			public void run() {
+				int newRotation;
+				synchronized (mLock) {
+					mRotationEvaluationScheduled = false;
+					newRotation = evaluateRotationChangeLocked();
+				}
+				if (newRotation >= 0) {
+					onProposedRotationChanged(newRotation);
+				}
+			}
+		};
 	}
 }

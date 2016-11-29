@@ -11,7 +11,7 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 
 public class MessageDialogActivity extends UiActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
@@ -27,7 +27,7 @@ public class MessageDialogActivity extends UiActivity {
 				.putExtra(INTENT_EXTRA_TITLE, title);
 
 		Intent[] intents = {settingsIntent, intent};
-		return PendingIntent.getActivities(Process.context(), 0, intents, PendingIntent.FLAG_CANCEL_CURRENT);
+		return PendingIntent.getActivities(CurrentProcess.context(), 0, intents, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	@Override

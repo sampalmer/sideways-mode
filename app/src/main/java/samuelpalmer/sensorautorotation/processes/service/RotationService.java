@@ -10,11 +10,15 @@ import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
+import samuelpalmer.common.Rotation;
 import samuelpalmer.common.Screen;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.EnvironmentError;
-import samuelpalmer.sensorautorotation.Process;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceNotificationManager;
+import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
+import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
@@ -37,8 +41,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ServiceRevivalManager serviceRevivalManager;
 	ServiceStatusFactory serviceStatusFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
-	private LockScreenUserOrientationInferenceManager userOrientationInferrer;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
+	private OrientationEnforcementMonitor orientationEnforcementMonitor;
+	ActivityMonitor activityMonitor;
+	private AccessibilityServiceManager accessibilityServiceManager;
 
 	@Override
 	public void onCreate() {
@@ -60,7 +66,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(Process.context());
+		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
 		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
 		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationUpdater(this));
@@ -74,16 +80,19 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
-		userOrientationInferrer = new LockScreenUserOrientationInferenceManager(new LockScreenUserOrientationInferrer(lockScreenMonitor, calculator));
-
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
+		activityMonitor = new ActivityMonitor();
+		orientationEnforcementMonitor = new OrientationEnforcementMonitor(this, activityMonitor, lockScreenMonitor);
+		accessibilityServiceManager = new AccessibilityServiceManager();
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
 		serviceStatusDisplayManager.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
-		userOrientationInferrer.ensureStarted();
+		activityMonitor.ensureStarted();
+		orientationEnforcementMonitor.ensureStarted();
+		accessibilityServiceManager.ensureStarted();
 
 		//Don't want anything accessing the service 'til it's finished initialising.
 		ServiceHolder.started(this);
@@ -106,10 +115,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				toggleRotation();
 				break;
 			case ACTION_ROTATE_LEFT:
-				calculator.offsetUser(-1);
+				calculator.offsetScreenBy(new Rotation(-1));
 				break;
 			case ACTION_ROTATE_RIGHT:
-				calculator.offsetUser(1);
+				calculator.offsetScreenBy(new Rotation(1));
 				break;
 		}
 	}
@@ -134,13 +143,15 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		//Don't want anything accessing the service during deinitialisation.
 		ServiceHolder.stopped();
 
+		accessibilityServiceManager.ensureStopped();
+		orientationEnforcementMonitor.ensureStopped();
+		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityChangeHandler.ensureStopped();
 		serviceStatusDisplayManager.ensureStopped();
 		serviceRevivalManager.ensureStopped();
-		userOrientationInferrer.ensureStopped();
 
 		applicationState.clear();
 	}

@@ -4,12 +4,15 @@ android {
 	compileSdkVersion 24
 	buildToolsVersion '23.0.3'
 
+	lintOptions{
+		disable 'MissingTranslation'
+	}
 	defaultConfig {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
 		targetSdkVersion 24
-		versionCode 42
-		versionName "0.9.8"
+		versionCode 47
+		versionName "0.10.0"
 	}
 	buildTypes {
 		release {

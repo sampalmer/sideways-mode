@@ -1,11 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -46,7 +48,7 @@ public class OrientationSensorHandler extends State {
 		windowOrientationListener.disable();
 	}
 
-	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(Process.context(), null) {
+	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(CurrentProcess.context(), new Handler(Looper.getMainLooper())) {
 		@Override
 		public void onProposedRotationChanged(int rotation) {
 			if (!started()) {
@@ -79,8 +81,8 @@ public class OrientationSensorHandler extends State {
 	}
 
 	private int deviceRotationBias() {
-		if (calculator.effectivelyAutoRotate())
-			return calculator.user().plus(screen.currentRotation().minus(Orientation.NATURAL)).getClockwiseRotationsFromNaturalOrientation();
+		if (calculator.autoRotate())
+			return Orientation.NATURAL.plus(screen.currentRotation().minus(calculator.user())).getClockwiseRotationsFromNaturalOrientation();
 		else
 			return -1;
 	}

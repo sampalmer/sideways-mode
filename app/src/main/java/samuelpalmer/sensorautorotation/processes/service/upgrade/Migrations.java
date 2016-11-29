@@ -28,9 +28,11 @@ class Migrations {
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 
 				ServiceSettings serviceSettings = new ServiceSettings();
+				Setting<Orientation> newUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+
 				Transaction copyTransaction = serviceSettings.new Transaction();
 				copyIfPresent(oldAutoRotate, serviceSettings.autoRotate(), copyTransaction);
-				copyIfPresent(oldUserOrientation, serviceSettings.userOrientation(), copyTransaction);
+				copyIfPresent(oldUserOrientation, newUserOrientation, copyTransaction);
 				copyTransaction.commit();
 
 				Transaction deleteTransaction = applicationSettings.new Transaction();
@@ -45,6 +47,38 @@ class Migrations {
 
 				if (value != null)
 					destination.enqueue(value, transaction);
+			}
+		});
+
+		migrations.put(43, new Migration(null) {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+
+				ServiceSettings serviceSettings = new ServiceSettings();
+				Setting<Orientation> oldUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+
+				Transaction transaction = serviceSettings.new Transaction();
+
+				oldUserOrientation.remove(transaction);
+
+				if (serviceSettings.autoRotate().hasValue() && oldUserOrientation.hasValue() && serviceSettings.autoRotate().get())
+					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
+					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
+					serviceSettings.screenOrientationOffset().enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
+
+				transaction.commit();
+			}
+		});
+
+		migrations.put(47, new Migration(null) {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+
+				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				Setting<Boolean> inferUserWhenDeviceLocked = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "inferUserWhenDeviceLocked", false);
+				inferUserWhenDeviceLocked.remove();
 			}
 		});
 

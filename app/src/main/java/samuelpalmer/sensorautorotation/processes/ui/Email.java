@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 
@@ -49,7 +50,7 @@ class Email {
 		while (iterator.hasNext()) {
 			ResolveInfo resolveInfo = iterator.next();
 			ActivityInfo firstActivity = resolveInfo.activityInfo;
-			if (makeComponentName(firstActivity).equals(unsupportedAction))
+			if (ComponentNameExtensions.makeFrom(firstActivity).equals(unsupportedAction))
 				iterator.remove();
 		}
 	}
@@ -60,13 +61,7 @@ class Email {
 	}
 
 	private boolean hasEmailApp() {
-		return emailActivities.size() > 0;
-	}
-
-	private static ComponentName makeComponentName(ActivityInfo activity) {
-		boolean isRelativeClassName = activity.name.length() > 0 && activity.name.startsWith(".");
-		String fullClassName = isRelativeClassName ? activity.packageName + activity.name : activity.name;
-		return new ComponentName(activity.packageName, fullClassName);
+		return !emailActivities.isEmpty();
 	}
 
 	private boolean openEmail() {

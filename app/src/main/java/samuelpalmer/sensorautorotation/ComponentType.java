@@ -12,7 +12,12 @@ import android.content.Intent;
 public abstract class ComponentType {
 
 	private static final int requestCode = 0;
-	private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+
+	// Using FLAG_CANCEL_CURRENT fixes rare issue where pending intent permanently stops working
+	// http://stackoverflow.com/q/21250364/238753
+	// Note that on 2015-07-28 I made a commit to *stop* using this flag saying doing so would fix this same issue.
+	// If it comes back, maybe we should try a different technique such as randomised request codes or calling .cancel() on the pending intent each time before using it.
+	private static final int flags = PendingIntent.FLAG_CANCEL_CURRENT;
 
 	public static ComponentType create(Class<?> clazz) {
 		Class<?> ancestorClass = clazz;
@@ -46,7 +51,7 @@ public abstract class ComponentType {
 	public abstract PendingIntent pendingIntent(Intent intent);
 
 	public Intent intent() {
-		return new Intent(Process.context(), clazz);
+		return new Intent(CurrentProcess.context(), clazz);
 	}
 
 	public PendingIntent pendingIntent() {
@@ -56,7 +61,8 @@ public abstract class ComponentType {
 	private static class ActivityComponentType extends ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
-			return PendingIntent.getActivity(Process.context(), requestCode, intent, flags);
+			//TODO: Maybe always add FLAG_NEW_TASK, as required according to the getActivity() documentation
+			return PendingIntent.getActivity(CurrentProcess.context(), requestCode, intent, flags);
 		}
 	}
 
@@ -64,7 +70,7 @@ public abstract class ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
 			BroadcastKillFix.apply(intent);
-			return PendingIntent.getBroadcast(Process.context(), requestCode, intent, flags);
+			return PendingIntent.getBroadcast(CurrentProcess.context(), requestCode, intent, flags);
 		}
 
 		@Override
@@ -79,7 +85,7 @@ public abstract class ComponentType {
 	private static class ServiceComponentType extends ComponentType {
 		@Override
 		public PendingIntent pendingIntent(Intent intent) {
-			return PendingIntent.getService(Process.context(), requestCode, intent, flags);
+			return PendingIntent.getService(CurrentProcess.context(), requestCode, intent, flags);
 		}
 	}
 }

@@ -6,6 +6,7 @@ class Migration {
 
 	private final Integer message;
 
+	//TODO: Remove the message parameter from the constructor since most upgrades don't seem to use messages
 	public Migration(Integer message) {
 		this.message = message;
 	}
