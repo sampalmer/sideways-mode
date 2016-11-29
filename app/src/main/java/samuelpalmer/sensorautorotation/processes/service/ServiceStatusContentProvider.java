@@ -75,6 +75,9 @@ public class ServiceStatusContentProvider extends ContentProvider {
 		return wrapper.binder;
 	}
 
+	/**
+	 * @return {@code null} if {@code binder} dies
+	 */
 	private ServerListener subscribe(final IBinder binder) {
 		IServiceStatusListener listener = IServiceStatusListener.Stub.asInterface(binder);
 
@@ -90,7 +93,7 @@ public class ServiceStatusContentProvider extends ContentProvider {
 		try {
 			binder.linkToDeath(dr, 0);
 		} catch (RemoteException e) {
-			return null;
+			return null; //Binder process has already died
 		}
 
 		listeners.put(binder, serverListener);
