@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.util.Log;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
@@ -33,6 +34,8 @@ class ServiceNotification {
 
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
+
+		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
 	}
 
 	public Notification build(ServiceStatus serviceStatus) {
