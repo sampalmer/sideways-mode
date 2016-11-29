@@ -25,6 +25,7 @@
 			android:layout_weight="1"
 			style="@android:style/Widget.DeviceDefault.Button.Borderless"
 			android:src="@drawable/action_rotate_left"
+		    android:contentDescription="@string/action_rotate_left"
 			/>
 
 		<ImageButton
@@ -34,7 +35,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			style="@android:style/Widget.DeviceDefault.Button.Borderless"
-			/>
+			tools:ignore="ContentDescription"/>
 
 		<ImageButton
 			android:id="@+id/control_panel_button_rotate_right"
@@ -44,6 +45,7 @@
 			android:layout_weight="1"
 			android:src="@drawable/action_rotate_right"
 			style="@android:style/Widget.DeviceDefault.Button.Borderless"
+			android:contentDescription="@string/action_rotate_left"
 			/>
 
 	</LinearLayout>

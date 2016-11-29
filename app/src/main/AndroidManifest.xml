@@ -79,7 +79,7 @@
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize"
-			/>
+		          tools:ignore="UnusedAttribute"/>
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 

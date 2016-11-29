@@ -13,6 +13,7 @@ import android.widget.TextView;
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
@@ -126,6 +127,7 @@ public class ControlPanelFragment extends Fragment {
 	private void update(ServiceStatus status) {
 		statusText.setText(status.getSummary());
 		toggleButton.setImageResource(status.mode.actionIcon());
+		toggleButton.setContentDescription(StringResource.get(status.mode.toggleToOtherModeResourceId()));
 	}
 
 }
