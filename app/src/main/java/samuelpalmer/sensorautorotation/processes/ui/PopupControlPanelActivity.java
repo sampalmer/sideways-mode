@@ -1,13 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class PopupControlPanelActivity extends Activity {
+public class PopupControlPanelActivity extends UiActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
