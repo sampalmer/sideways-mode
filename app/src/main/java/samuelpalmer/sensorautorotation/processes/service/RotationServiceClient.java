@@ -27,7 +27,7 @@ public abstract class RotationServiceClient {
 				.setAction(action);
 	}
 
-	private static void showDisabledMessage() {
+	public static void showDisabledMessage() {
 		CharSequence message = StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
 		ToastReceiver.send(message);
 	}
