@@ -10,4 +10,42 @@
 		android:id="@+id/control_panel_status"
 		android:text="Placeholder"/>
 
+	<LinearLayout
+		android:layout_height="match_parent"
+	    android:layout_width="match_parent"
+	    android:orientation="horizontal"
+		android:layoutDirection="ltr"
+		tools:ignore="UnusedAttribute">
+
+		<ImageButton
+			android:id="@+id/control_panel_button_rotate_left"
+			android:scaleType="center"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			style="@android:style/Widget.DeviceDefault.Button.Borderless"
+			android:src="@drawable/action_rotate_left"
+			/>
+
+		<ImageButton
+			android:id="@+id/control_panel_button_toggle"
+			android:scaleType="center"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			style="@android:style/Widget.DeviceDefault.Button.Borderless"
+			/>
+
+		<ImageButton
+			android:id="@+id/control_panel_button_rotate_right"
+			android:scaleType="center"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:src="@drawable/action_rotate_right"
+			style="@android:style/Widget.DeviceDefault.Button.Borderless"
+			/>
+
+	</LinearLayout>
+
 </FrameLayout>

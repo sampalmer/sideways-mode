@@ -7,6 +7,7 @@ import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.R;
 
+//TODO: Prevent this from closing on screen orientation change
 public class PopupControlPanelActivity extends Activity {
 
 	@Override

@@ -7,10 +7,15 @@ import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import samuelpalmer.sensorautorotation.ColourGetterCompat;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 
@@ -19,6 +24,8 @@ public class ControlPanelFragment extends Fragment {
 	private ServiceStatusContentProvider.Client serviceClient;
 	private Handler handler;
 	private ServiceStatus lastStatus;
+	private ImageButton toggleButton;
+	private TextView statusText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,49 @@ public class ControlPanelFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_control_panel, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		//TODO: Maybe reuse the code that generates the notification buttons?
+
+		statusText = (TextView) view.findViewById(R.id.control_panel_status);
+		ImageButton rotateLeftButton = (ImageButton) view.findViewById(R.id.control_panel_button_rotate_left);
+		toggleButton = (ImageButton) view.findViewById(R.id.control_panel_button_toggle);
+		ImageButton rotateRightButton = (ImageButton) view.findViewById(R.id.control_panel_button_rotate_right);
+
+		rotateLeftButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				RotationServiceClient.send(RotationService.ACTION_ROTATE_LEFT);
+			}
+		});
+
+		toggleButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				RotationServiceClient.send(RotationService.ACTION_TOGGLE);
+			}
+		});
+
+		rotateRightButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				RotationServiceClient.send(RotationService.ACTION_ROTATE_RIGHT);
+			}
+		});
+
+		for (ImageButton button : new ImageButton[] { rotateLeftButton, toggleButton, rotateRightButton })
+			button.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		toggleButton = null;
+		statusText = null;
 	}
 
 	@Override
@@ -49,6 +99,9 @@ public class ControlPanelFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		//TODO: Show loading indicator?
+		//TODO: Figure out what to do when the service isn't actually enabled
 
 		if (lastStatus != null)
 			update(lastStatus);
@@ -74,8 +127,8 @@ public class ControlPanelFragment extends Fragment {
 	};
 
 	private void update(ServiceStatus status) {
-		//TODO: Properly implement this.
-		Toast.makeText(getActivity(), status.getSummary(), Toast.LENGTH_SHORT).show();
+		statusText.setText(status.getSummary());
+		toggleButton.setImageResource(status.mode.actionIcon());
 	}
 
 }

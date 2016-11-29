@@ -75,7 +75,7 @@
 		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
-		          android:theme="@style/Theme.Dialog"
+		          android:theme="@style/Theme.Dialog.Headless"
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 			/>
