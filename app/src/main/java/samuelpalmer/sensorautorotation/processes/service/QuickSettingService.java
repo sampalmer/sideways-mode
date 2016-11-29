@@ -9,7 +9,7 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.Process;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
@@ -72,8 +72,8 @@ public class QuickSettingService extends TileService {
 	 * Seems to have no effect when the tile isn't actually added.
 	 */
 	private static void requestListeningState() {
-		ComponentName componentName = new ComponentName(Process.context(), QuickSettingService.class);
-		requestListeningState(Process.context(), componentName);
+		ComponentName componentName = new ComponentName(CurrentProcess.context(), QuickSettingService.class);
+		requestListeningState(CurrentProcess.context(), componentName);
 		Log.i(QuickSettingService.class.getSimpleName(), "Requested listening state");
 	}
 
