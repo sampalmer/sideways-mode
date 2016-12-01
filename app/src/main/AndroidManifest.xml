@@ -80,6 +80,7 @@
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize"
 		          tools:ignore="UnusedAttribute"/>
+		<!-- TODO: Override window animation; it looks silly on Android 7.1 (slide out) -->
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 

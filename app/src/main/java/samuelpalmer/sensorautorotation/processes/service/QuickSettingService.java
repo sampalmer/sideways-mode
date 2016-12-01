@@ -27,7 +27,9 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
-		//TODO: Confirm this works OK on the lock screen
+		//TODO: Fix issue where this has massive lag (several seconds before activity is visible)
+
+		//TODO: Looks like the activity gets paused straight away
 		startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class));
 
 //		if (isLocked())

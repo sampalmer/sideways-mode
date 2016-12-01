@@ -52,6 +52,6 @@ public class PopupControlPanelActivity extends UiActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		finish();
+		finish(); //TODO: This actually prevents this from working when launched from the lock screen
 	}
 }
