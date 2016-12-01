@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +17,12 @@ public class ScreenOrientationEnforcementManager extends State {
 	private final View view;
 	private final WindowManager windows;
 	private LayoutParams layout;
+	private boolean isEnforced;
 
 	public ScreenOrientationEnforcementManager(Context context) {
 		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
+		setEnforcedUnconditionally(false);
 		layout = generateLayout();
 	}
 
@@ -33,7 +36,7 @@ public class ScreenOrientationEnforcementManager extends State {
 		windows.removeView(view);
 	}
 
-	private LayoutParams generateLayout() {
+	private static LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams();
 
 		//So it doesn't need a permission or activity
@@ -53,19 +56,33 @@ public class ScreenOrientationEnforcementManager extends State {
 		layoutParams.format = PixelFormat.TRANSPARENT;
 		layoutParams.alpha = 0f;
 
+		//Match the system's "user orientation" (which this app uses to specify screen orientation)
+		layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
+
 		return layoutParams;
 	}
 
 	/**
 	 * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
 	 * slower, and removing and adding the view is even slower again.
+	 *
+	 * There are a few ways of toggling screen orientation enforcement:
+	 * 1. Fastest: Toggle its {@link LayoutParams#screenOrientation} value. This causes the Android 6 "Screen Overlay Detected" problem even when enforcement is disabled.
+	 * 2. Medium: Toggle the view's visibility.
+	 * 3. Slowest: Add/remove the view from the window manager.
+	 *
+	 * Picking the middle option since it's the fastest one that doesn't have undesired side effects.
 	 */
-	public void setOrientation(int screenOrientation) {
-		if (layout.screenOrientation != screenOrientation) {
-			layout.screenOrientation = screenOrientation;
-			windows.updateViewLayout(view, layout);
-			Log.i(TAG, "Set enforced screen orientation to " + screenOrientation);
-		}
+	public void setEnforced(boolean newEnforced) {
+		if (newEnforced != isEnforced)
+			setEnforcedUnconditionally(newEnforced);
+	}
+
+	private void setEnforcedUnconditionally(boolean newEnforced) {
+		isEnforced = newEnforced;
+		int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
+		view.setVisibility(visibility);
+		Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
 	}
 
 }
