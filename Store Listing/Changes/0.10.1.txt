@@ -1,0 +1,1 @@
+• Fixed "Screen Overlay Detected" problem on Android 6 devices introduced in the last update

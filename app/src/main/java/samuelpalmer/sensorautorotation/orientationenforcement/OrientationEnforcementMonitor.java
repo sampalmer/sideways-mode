@@ -61,8 +61,7 @@ public class OrientationEnforcementMonitor extends State {
 	private void updateEnforcement() {
 		//Not allowing lock screen orientation enforcement just in case it breaks the lock screen
 		boolean shouldEnforce = isEnforced() && !lockScreenDetector.isOnLockScreen();
-		int forcedOrientation = shouldEnforce ? ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-		orientationEnforcer.setOrientation(forcedOrientation);
+		orientationEnforcer.setEnforced(shouldEnforce);
 	}
 
 	private boolean isEnforced() {
