@@ -22,6 +22,14 @@
 			android:icon="@drawable/notification_priority"
 			android:dependency="enabled"
 			/>
+
+		<CheckBoxPreference
+			android:key="showNotification"
+			android:title="@string/show_notification"
+			android:summary="@string/show_notification_description"
+			/>
+		<!-- TODO: Disable the priority setting if this is disabled -->
+
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"
 			android:title="@string/preference_allow_upside_down_screen_title"

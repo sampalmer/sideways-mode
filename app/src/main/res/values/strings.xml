@@ -50,6 +50,10 @@
 
 	<string name="preference_settings_title">Settings</string>
 
+	<string name="show_notification">Show notification</string>
+	<string name="show_notification_description">Show this app\'s status in the notification drawer</string>
+	<!-- TODO: Explain that this may increase likelihood of service being killed by OS -->
+
 	<string name="preference_notification_priority_title">Notification priority</string>
 	<string name="preference_notification_priority_high">High</string>
 	<string name="preference_notification_priority_normal">Normal</string>
