@@ -19,7 +19,7 @@ public class PopupControlPanelActivity extends UiActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//TODO: Merge all of this stuff into the fragment/view?
+		//TODO: Instead of doing all this, just make the view enter a visually-disabled state
 		enabledSetting = ApplicationSettings.remote().enabled();
 		if (!enabledSetting.get()) {
 			RotationServiceClient.showDisabledMessage();
