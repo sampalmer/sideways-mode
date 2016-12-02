@@ -1,13 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.Fragment;
-import android.os.Bundle;
+import android.content.Context;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.view.LayoutInflater;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
@@ -20,38 +20,29 @@ import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 
-public class ControlPanelFragment extends Fragment {
+public class ControlPanelView extends LinearLayout {
 
 	private ServiceStatusContentProvider.Client serviceClient;
 	private Handler handler;
 	private ServiceStatus lastStatus;
 	private ImageButton toggleButton;
 	private TextView statusText;
+	private boolean childrenInflated;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		serviceClient = new ServiceStatusContentProvider.Client(getActivity());
+	public ControlPanelView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		serviceClient = new ServiceStatusContentProvider.Client(getContext());
 		handler = new Handler();
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_control_panel, container, false);
-	}
+	protected void onFinishInflate() {
+		super.onFinishInflate();
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		//TODO: Maybe reuse the code that generates the notification buttons?
-
-		statusText = (TextView) view.findViewById(R.id.control_panel_status);
-		ImageButton rotateLeftButton = (ImageButton) view.findViewById(R.id.control_panel_button_rotate_left);
-		toggleButton = (ImageButton) view.findViewById(R.id.control_panel_button_toggle);
-		ImageButton rotateRightButton = (ImageButton) view.findViewById(R.id.control_panel_button_rotate_right);
+		statusText = (TextView) findViewById(R.id.control_panel_status);
+		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_left);
+		toggleButton = (ImageButton) findViewById(R.id.control_panel_button_toggle);
+		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_right);
 
 		rotateLeftButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -76,33 +67,23 @@ public class ControlPanelFragment extends Fragment {
 
 		for (ImageButton button : new ImageButton[] { rotateLeftButton, toggleButton, rotateRightButton })
 			button.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+
+		childrenInflated = true;
+		maybeUpdate();
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		toggleButton = null;
-		statusText = null;
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
 		serviceClient.subscribe(listener);
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
+	protected void onDetachedFromWindow() {
+		Log.i(ControlPanelView.class.getSimpleName(), "onDetachedFromWindow");
+		//TODO: Confirm this is always called; want to ensure the listener is always unsubscribed
+		super.onDetachedFromWindow();
 		serviceClient.unsubscribe(listener);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		if (lastStatus != null)
-			update(lastStatus);
 	}
 
 	private final IServiceStatusListener.Stub listener = new IServiceStatusListener.Stub() {
@@ -114,15 +95,18 @@ public class ControlPanelFragment extends Fragment {
 				@Override
 				public void run() {
 					lastStatus = status;
-
-					if (getActivity() != null)
-						update(status);
+					maybeUpdate();
 				}
 
 			});
 		}
 
 	};
+
+	private void maybeUpdate() {
+		if (childrenInflated && lastStatus != null)
+			update(lastStatus);
+	}
 
 	private void update(ServiceStatus status) {
 		statusText.setText(status.getSummary());

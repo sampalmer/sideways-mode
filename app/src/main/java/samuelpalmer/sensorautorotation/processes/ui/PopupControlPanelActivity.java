@@ -54,8 +54,13 @@ public class PopupControlPanelActivity extends UiActivity {
 	};
 
 	@Override
+	public void setFinishOnTouchOutside(boolean finish) {
+		super.setFinishOnTouchOutside(finish);
+	}
+
+	@Override
 	protected void onPause() {
 		super.onPause();
-		finish(); //TODO: This actually prevents this from working when launched from the lock screen
+		//Not stopping the activity here since opening this on the lock screen seems to cause the activity to stop and start again before becoming visible to the user.
 	}
 }

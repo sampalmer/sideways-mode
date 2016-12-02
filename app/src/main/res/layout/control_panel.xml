@@ -6,10 +6,10 @@
                 tools:context=".processes.ui.PopupControlPanelActivity"
 	>
 
-	<fragment
+	<include
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		class="samuelpalmer.sensorautorotation.processes.ui.ControlPanelFragment"
+		layout="@layout/fragment_control_panel"
 		android:layout_centerHorizontal="true"
 		android:id="@+id/control_panel_fragment"/>
 
