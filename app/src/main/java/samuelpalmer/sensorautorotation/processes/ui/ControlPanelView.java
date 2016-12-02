@@ -80,8 +80,6 @@ public class ControlPanelView extends LinearLayout {
 
 	@Override
 	protected void onDetachedFromWindow() {
-		Log.i(ControlPanelView.class.getSimpleName(), "onDetachedFromWindow");
-		//TODO: Confirm this is always called; want to ensure the listener is always unsubscribed
 		super.onDetachedFromWindow();
 		serviceClient.unsubscribe(listener);
 	}

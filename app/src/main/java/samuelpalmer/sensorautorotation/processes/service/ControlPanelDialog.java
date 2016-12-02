@@ -35,7 +35,7 @@ public class ControlPanelDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedState){
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
-		alertBuilder.setView(R.layout.fragment_control_panel);
+		alertBuilder.setView(R.layout.control_panel);
 		return alertBuilder.create();
 	}
 
