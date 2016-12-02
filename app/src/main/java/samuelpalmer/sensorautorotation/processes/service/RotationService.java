@@ -15,7 +15,7 @@ import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.notifications.service.NotificationUpdater;
+import samuelpalmer.sensorautorotation.notifications.service.NotificationStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
@@ -68,7 +68,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
 		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
-		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationUpdater(this));
+		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationStatusDisplay(this));
 		if (Build.VERSION.SDK_INT >= 24)
 			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
 		serviceStatusDisplayManager.onServiceStatusChanged.add(new ServiceStatusContentProvider.RemoteStatusDisplay());

@@ -6,11 +6,11 @@ import android.os.Build;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 
-public class NotificationUpdater implements ServiceStatusDisplay {
+public class NotificationStatusDisplay implements ServiceStatusDisplay {
 	private final Service service;
 	private final ServiceNotification builder;
 
-	public NotificationUpdater(Service service) {
+	public NotificationStatusDisplay(Service service) {
 		this.service = service;
 		builder = new ServiceNotification();
 	}
