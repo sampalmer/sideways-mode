@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -14,10 +15,12 @@ public class PopupControlPanelActivity extends UiActivity {
 
 	private Settings.Setting<Boolean> enabledSetting;
 
+	//TODO: Maybe also close this when the screen turns off?
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		//TODO: Merge all of this stuff into the fragment/view?
 		enabledSetting = ApplicationSettings.remote().enabled();
 		if (!enabledSetting.get()) {
 			RotationServiceClient.showDisabledMessage();
@@ -29,6 +32,7 @@ public class PopupControlPanelActivity extends UiActivity {
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
 				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+//		window.setWindowAnimations(android.R.anim.);
 
 		setContentView(R.layout.control_panel);
 	}

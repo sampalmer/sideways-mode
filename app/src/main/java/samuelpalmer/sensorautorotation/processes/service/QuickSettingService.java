@@ -1,10 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Bundle;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
@@ -27,15 +29,23 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
-		//TODO: Fix issue where this has massive lag (several seconds before activity is visible)
+		if (isLocked()) {
+			//TODO: Looks like the activity gets paused straight away if we're on the lock screen, causing it to close
+			startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		}
+		else {
+			/* This makes the service process's RAM usage jump up from ~8MB to ~14MB,
+			 * but we can't use an activity because the OS delays activity start
+			 * when the home button is pressed.
+			 *
+			 * https://code.google.com/p/android/issues/detail?id=4536
+			 */
 
-		//TODO: Looks like the activity gets paused straight away
-		startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class));
-
-//		if (isLocked())
-//			startActivity();
-//		else
-//          showDialog();
+			ControlPanelDialog dialog = new ControlPanelDialog.Builder(getApplicationContext()).create();
+			Bundle args = new Bundle();
+			Dialog actualDialog = dialog.onCreateDialog(args);
+			showDialog(actualDialog);
+		}
 
 		//TODO: Use different behaviour if the app isn't enabled.
 	}
