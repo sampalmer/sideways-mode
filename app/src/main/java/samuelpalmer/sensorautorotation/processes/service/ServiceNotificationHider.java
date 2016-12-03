@@ -38,7 +38,7 @@ public class ServiceNotificationHider extends Service {
 	@Override
 	public void onCreate() {
 		activityManager = SystemServices.activityManager();
-		mainServiceName = new ComponentName(this, mainService().getClass());
+		mainServiceName = new ComponentName(this, RotationService.class);
 		showNotificationSetting = ApplicationSettings.local().showNotification();
 		startCommandReceived = false;
 	}
@@ -77,7 +77,7 @@ public class ServiceNotificationHider extends Service {
 			//Start _this_ service's foreground mode but reuse the other's notification
 			this.startForeground(NotificationIds.SERVICE, notification);
 		} catch (Exception ex) {
-			Log.w(TAG, new Exception("Couldn't start " + this.getClass().getSimpleName() + " in foreground. Giving up on running in foreground.", ex));
+			Log.w(TAG, new Exception("Couldn't enter " + this.getClass().getSimpleName() + " in foreground. Giving up on running in foreground.", ex));
 			mainService().stopForeground(true);
 			return;
 		}
@@ -86,7 +86,7 @@ public class ServiceNotificationHider extends Service {
 			//Stop _this_ service's foreground mode, but cancel the other's notification
 			this.stopForeground(true);
 		} catch (Exception ex) {
-			Log.w(TAG, new Exception("Couldn't start " + this.getClass().getSimpleName() + " in foreground. Giving up on running in foreground.", ex));
+			Log.w(TAG, new Exception("Couldn't remove " + this.getClass().getSimpleName() + " from foreground. Giving up on running in foreground.", ex));
 
 			try {
 				mainService().stopForeground(true);
@@ -99,14 +99,20 @@ public class ServiceNotificationHider extends Service {
 			return;
 		}
 
-		if (isForeground()) {
-			Log.i(TAG, "Successfully entered foreground and removed the notification");
-			//TODO: Verify that the notification was indeed hidden. Can check this in API 23 and above.
+		RunningServiceInfo mainServiceInfo = tryFindMainServiceInfo();
+		if (mainServiceInfo == null) {
+			Log.w(TAG, "Couldn't find running service info for " + RotationService.class.getSimpleName() + " after trying to hide its notification. The service is probably being stopped.");
+			return;
 		}
-		else {
-			Log.w(TAG, mainService().getClass().getSimpleName() + " didn't have foreground state after trying to hide the foreground notification.");
-			mainService().stopForeground(true);
+
+		if (!mainServiceInfo.foreground) {
+			Log.w(TAG, RotationService.class.getSimpleName() + " didn't have foreground state after trying to hide the foreground notification.");
+			mainService().stopForeground(true); //TODO: Consider removing this line just in case the above validation only failed due to timing or something
+			return;
 		}
+
+		Log.i(TAG, "Successfully entered foreground and removed the notification");
+		//TODO: Verify that the notification was indeed hidden. Can check this in API 23 and above.
 	}
 
 	private Notification buildNotification() {
@@ -120,17 +126,13 @@ public class ServiceNotificationHider extends Service {
 				.build();
 	}
 
-	private boolean isForeground() {
-		return findMainServiceInfo().foreground;
-	}
-
-	private RunningServiceInfo findMainServiceInfo() {
+	private RunningServiceInfo tryFindMainServiceInfo() {
 		List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 		for (RunningServiceInfo service : services)
 			if (service.service.equals(mainServiceName))
 				return service;
 
-		throw new RuntimeException("Couldn't find info for " + mainServiceName.toShortString());
+		return null;
 	}
 
 	private static RotationService mainService() {
