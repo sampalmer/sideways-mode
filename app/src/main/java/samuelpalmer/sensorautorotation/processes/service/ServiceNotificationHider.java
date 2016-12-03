@@ -41,8 +41,6 @@ public class ServiceNotificationHider extends Service {
 		mainServiceName = new ComponentName(this, mainService().getClass());
 		showNotificationSetting = ApplicationSettings.local().showNotification();
 		startCommandReceived = false;
-
-		stopSelf();
 	}
 
 	@Override
@@ -63,6 +61,8 @@ public class ServiceNotificationHider extends Service {
 			applyHack();
 		else
 			Log.w(TAG, mainServiceName.toShortString() + " isn't running. Skipping notification removal.");
+
+		stopSelf(); //Don't want to leave the service running and waste RAM
 
 		return START_NOT_STICKY;
 	}
