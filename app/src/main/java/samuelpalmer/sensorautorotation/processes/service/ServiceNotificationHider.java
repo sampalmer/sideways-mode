@@ -13,16 +13,18 @@ import java.util.List;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-//TODO: Monitor changes to the "show notification" setting; the user might disable it while the notification is already showing
-//TODO: Come up with a better name for this
+//TODO: This doesn't work on Android 7.1. Decide what to do on that OS. (Maybe direct users to disable the app's notifications.)
 /**
- * Hides the service's foreground state notification while still allowing the service to run
- * in foreground mode.
+ * Puts {@link RotationService} in the foreground but hides its notification.
  */
 public class ServiceNotificationHider extends Service {
 
@@ -66,29 +68,56 @@ public class ServiceNotificationHider extends Service {
 	}
 
 	private void applyHack() {
-		//TODO: Confirm that no further notification properties are required
-		Notification notification = NotificationBuilderCompat.create(this)
-				.setSmallIcon(R.drawable.rotation)
-				.build();
+		Notification notification = buildNotification();
 
 		//Start the main service's foreground mode
 		mainService().startForeground(NotificationIds.SERVICE, notification);
 
-		//Start _this_ service's foreground mode but reuse the other's notification
-		//TODO: Guard against this crashing since it might not be considered valid
-		this.startForeground(NotificationIds.SERVICE, notification);
-
-		//Stop _this_ service's foreground mode, but cancel the other's notification
-		//TODO: Guard against this crashing since it might not be considered valid
-		this.stopForeground(true);
-
-		if (!isForeground()) {
-			Log.w(TAG, mainService().getClass().getSimpleName() + " didn't have foreground state after applying hack.");
-			//TODO: Guard against this crashing since it might not be considered valid
-			mainService().stopForeground(true); //Might as well cleanup properly since it didn't work
+		try {
+			//Start _this_ service's foreground mode but reuse the other's notification
+			this.startForeground(NotificationIds.SERVICE, notification);
+		} catch (Exception ex) {
+			Log.w(TAG, new Exception("Couldn't start " + this.getClass().getSimpleName() + " in foreground. Giving up on running in foreground.", ex));
+			mainService().stopForeground(true);
+			return;
 		}
 
-		//TODO: Verify that the notification was indeed hidden: http://stackoverflow.com/questions/12654820/is-it-possible-to-check-if-a-notification-is-visible-or-canceled
+		try {
+			//Stop _this_ service's foreground mode, but cancel the other's notification
+			this.stopForeground(true);
+		} catch (Exception ex) {
+			Log.w(TAG, new Exception("Couldn't start " + this.getClass().getSimpleName() + " in foreground. Giving up on running in foreground.", ex));
+
+			try {
+				mainService().stopForeground(true);
+				//Maybe it'll work after first taking the main service out of foreground?
+				this.stopForeground(true);
+			} catch (Exception inner) {
+				Log.w(TAG, inner);
+			}
+
+			return;
+		}
+
+		if (isForeground()) {
+			Log.i(TAG, "Successfully entered foreground and removed the notification");
+			//TODO: Verify that the notification was indeed hidden. Can check this in API 23 and above.
+		}
+		else {
+			Log.w(TAG, mainService().getClass().getSimpleName() + " didn't have foreground state after trying to hide the foreground notification.");
+			mainService().stopForeground(true);
+		}
+	}
+
+	private Notification buildNotification() {
+		return NotificationBuilderFactory.create()
+				.setSmallIcon(R.drawable.rotation)
+				.setContentTitle(StringResource.get(R.string.app_name))
+				.setContentText(StringResource.get(R.string.notification_hiding))
+				.setPriority(NotificationBuilderCompat.PRIORITY_MIN)
+				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
+				.setCategory(NotificationBuilderCompat.CATEGORY_SERVICE)
+				.build();
 	}
 
 	private boolean isForeground() {

@@ -35,6 +35,7 @@
 	<string name="user_rotation_upright">Upright</string>
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
+	<string name="notification_hiding">Entering foreground</string> <!-- TODO: Improve this message (maybe explain that entering foreground failed) -->
 
 	<string name="action_enable_auto_rotation">Enable Auto-Rotation</string>
 	<string name="action_disable_auto_rotation">Disable Auto-Rotation</string>

@@ -25,8 +25,10 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
+//TODO: Monitor changes to the "show notification" setting; the user might disable it while the notification is already showing
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	public static final String ACTION_TOGGLE = "toggle";
@@ -68,9 +70,15 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
 		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
-		serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationStatusDisplay(this));
+
+		boolean showingNotification = ApplicationSettings.local().showNotification().get();
+		if (showingNotification)
+			serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationStatusDisplay(this));
+
+		//TODO: Don't add this unless it's actually needed
 		if (Build.VERSION.SDK_INT >= 24)
 			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
+
 		serviceStatusDisplayManager.onServiceStatusChanged.add(new ServiceStatusContentProvider.RemoteStatusDisplay());
 
 		serviceRevivalManager = new ServiceRevivalManager();
@@ -95,6 +103,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		//Don't want anything accessing the service 'til it's finished initialising.
 		ServiceHolder.started(this);
+
+		if (!showingNotification)
+			if (startService(new Intent(this, ServiceNotificationHider.class)) == null)
+				throw new RuntimeException("Couldn't find " + ServiceNotificationHider.class.getSimpleName());
 	}
 
 	@Override
