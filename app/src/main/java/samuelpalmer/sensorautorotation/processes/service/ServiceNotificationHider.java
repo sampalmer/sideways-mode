@@ -30,25 +30,15 @@ public class ServiceNotificationHider extends Service {
 
 	private final static String TAG = ServiceNotificationHider.class.getSimpleName();
 
-	private ActivityManager activityManager;
-	private ComponentName mainServiceName;
-	private Settings.Setting<Boolean> showNotificationSetting;
 	private boolean startCommandReceived;
 
 	@Override
 	public void onCreate() {
-		activityManager = SystemServices.activityManager();
-		mainServiceName = new ComponentName(this, RotationService.class);
-		showNotificationSetting = ApplicationSettings.local().showNotification();
 		startCommandReceived = false;
 	}
 
 	@Override
 	public void onDestroy() {
-		showNotificationSetting = null;
-		mainServiceName = null;
-		activityManager = null;
-
 		if (!startCommandReceived)
 			throw new RuntimeException("No start command was received");
 	}
@@ -57,10 +47,16 @@ public class ServiceNotificationHider extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		startCommandReceived = true;
 
-		if (ServiceHolder.isRunning() && !showNotificationSetting.get())
-			applyHack();
-		else
+		if (!ServiceHolder.isRunning())
 			Log.w(TAG, RotationService.class.getSimpleName() + " isn't running. Skipping notification removal.");
+		else {
+			Settings.Setting<Boolean> showNotificationSetting = ApplicationSettings.local().showNotification();
+
+			if (showNotificationSetting.get())
+				Log.w(TAG, showNotificationSetting.getKey() + " is true. Skipping notification removal.");
+			else
+				applyHack();
+		}
 
 		stopSelf(); //Don't want to leave the service running and waste RAM
 
@@ -112,7 +108,6 @@ public class ServiceNotificationHider extends Service {
 		}
 
 		Log.i(TAG, "Successfully entered foreground and removed the notification");
-		//TODO: Verify that the notification was indeed hidden. Can check this in API 23 and above.
 	}
 
 	private Notification buildNotification() {
@@ -127,6 +122,9 @@ public class ServiceNotificationHider extends Service {
 	}
 
 	private RunningServiceInfo tryFindMainServiceInfo() {
+		ActivityManager activityManager = SystemServices.activityManager();
+		ComponentName mainServiceName = new ComponentName(this, RotationService.class);
+
 		List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 		for (RunningServiceInfo service : services)
 			if (service.service.equals(mainServiceName))
