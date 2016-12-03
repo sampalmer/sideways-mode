@@ -60,7 +60,7 @@ public class ServiceNotificationHider extends Service {
 		if (ServiceHolder.isRunning() && !showNotificationSetting.get())
 			applyHack();
 		else
-			Log.w(TAG, mainServiceName.toShortString() + " isn't running. Skipping notification removal.");
+			Log.w(TAG, RotationService.class.getSimpleName() + " isn't running. Skipping notification removal.");
 
 		stopSelf(); //Don't want to leave the service running and waste RAM
 
@@ -120,7 +120,7 @@ public class ServiceNotificationHider extends Service {
 				.setSmallIcon(R.drawable.rotation)
 				.setContentTitle(StringResource.get(R.string.app_name))
 				.setContentText(StringResource.get(R.string.notification_hiding))
-				.setPriority(NotificationBuilderCompat.PRIORITY_MIN)
+				.setPriority(NotificationBuilderCompat.PRIORITY_MIN) //Just in case the notification is visible for a moment
 				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
 				.setCategory(NotificationBuilderCompat.CATEGORY_SERVICE)
 				.build();
