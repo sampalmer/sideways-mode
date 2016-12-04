@@ -107,12 +107,6 @@ public class ServiceNotificationHider extends Service {
 			return;
 		}
 
-		Boolean notificationPresent = isNotificationPresent(NotificationIds.SERVICE);
-		if (notificationPresent != null && notificationPresent) {
-			Log.w(TAG, "The service notification was still present after trying to hide it. The service is probably being stopped.");
-			return;
-		}
-
 		RunningServiceInfo mainServiceInfo = tryFindMainServiceInfo();
 		if (mainServiceInfo == null) {
 			Log.w(TAG, "Couldn't find running service info for " + RotationService.class.getSimpleName() + " after trying to hide its notification. The service is probably being stopped.");
@@ -125,30 +119,6 @@ public class ServiceNotificationHider extends Service {
 		}
 
 		Log.i(TAG, "Successfully entered foreground and tried to remove the notification.");
-	}
-
-	private Boolean isNotificationPresent(int id) {
-		if (Build.VERSION.SDK_INT < 23)
-			return null;
-
-		NotificationManager notificationManager = SystemServices.notificationManager();
-		StatusBarNotification[] activeNotifications;
-
-		try {
-			activeNotifications = notificationManager.getActiveNotifications();
-		} catch (Exception ex) {
-			//This seems to  be a timing-related bug; it happened when I rapidly enabled and disabled the app on Android 6.0.1.
-			Log.w(TAG, "Couldn't check if the notification was active.", ex);
-			return null;
-		}
-
-		String thisPackageName = getPackageName();
-
-		for (StatusBarNotification activeNotification : activeNotifications)
-			if (activeNotification.getPackageName().equals(thisPackageName) && activeNotification.getId() == id)
-				return true;
-
-		return false;
 	}
 
 	private Notification buildNotification() {
