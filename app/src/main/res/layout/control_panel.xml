@@ -16,6 +16,7 @@
 		android:id="@+id/control_panel_status"
 		android:gravity="center"
 		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="?android:attr/textColorPrimary"
 		/>
 
 	<LinearLayout
@@ -23,6 +24,7 @@
 	    android:layout_width="match_parent"
 	    android:orientation="horizontal"
 		android:layoutDirection="ltr"
+		android:id="@+id/control_panel_controls"
 		tools:ignore="UnusedAttribute">
 
 		<ImageButton
