@@ -2,9 +2,11 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Intent;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.service.ServiceNotificationHider;
 
 public class NotificationStatusDisplay implements ServiceStatusDisplay {
 	private final Service service;
@@ -45,4 +47,10 @@ public class NotificationStatusDisplay implements ServiceStatusDisplay {
 	}
 
 	private Integer lastPriority;
+
+	void enterForegroundWithoutNotification() {
+		Intent intent = new Intent(this.service, ServiceNotificationHider.class);
+		if (this.service.startService(intent) == null)
+			throw new RuntimeException("Couldn't find " + ServiceNotificationHider.class.getSimpleName());
+	}
 }

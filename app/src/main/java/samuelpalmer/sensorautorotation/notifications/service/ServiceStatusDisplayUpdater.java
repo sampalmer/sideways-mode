@@ -1,21 +1,18 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.State;
 
-public class ServiceStatusDisplayManager extends State {
+public class ServiceStatusDisplayUpdater extends State {
 
 	private final ServiceStatusFactory statusGenerator;
+	private final ServiceStatusDisplay display;
 
-	public ServiceStatusDisplayManager(ServiceStatusFactory statusGenerator) {
+	public ServiceStatusDisplayUpdater(ServiceStatusFactory statusGenerator, ServiceStatusDisplay display) {
 		this.statusGenerator = statusGenerator;
+		this.display = display;
 	}
-
-	public final Set<ServiceStatusDisplay> onServiceStatusChanged = new HashSet<>();
 
 	@Override
 	protected void start() {
@@ -30,8 +27,7 @@ public class ServiceStatusDisplayManager extends State {
 		for (EventRegistrar trigger : statusGenerator.updateTriggers())
 			trigger.unsubscribe(updateDisplays);
 
-		for (ServiceStatusDisplay display : onServiceStatusChanged)
-			display.onServiceStopped();
+		display.onServiceStopped();
 	}
 
 	private final EventHandler updateDisplays = new EventHandler() {
@@ -40,9 +36,7 @@ public class ServiceStatusDisplayManager extends State {
 			ServiceStatus serviceStatus = statusGenerator.generate();
 
 			if (lastServiceStatus == null || !serviceStatus.equals(lastServiceStatus)) {
-				for (ServiceStatusDisplay display : onServiceStatusChanged)
-					display.update(serviceStatus);
-
+				display.update(serviceStatus);
 				lastServiceStatus = serviceStatus;
 			}
 		}

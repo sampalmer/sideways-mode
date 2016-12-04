@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.IBinder;
 
 import samuelpalmer.common.LockScreenMonitor;
@@ -15,8 +14,8 @@ import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.notifications.service.NotificationStatusDisplay;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayUpdater;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplays;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementMonitor;
@@ -25,10 +24,8 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-//TODO: Monitor changes to the "show notification" setting; the user might disable it while the notification is already showing
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	public static final String ACTION_TOGGLE = "toggle";
@@ -38,7 +35,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
-	ServiceStatusDisplayManager serviceStatusDisplayManager;
+	ServiceStatusDisplayUpdater serviceStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
 	ServiceStatusFactory serviceStatusFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
@@ -69,17 +66,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
-		serviceStatusDisplayManager = new ServiceStatusDisplayManager(serviceStatusFactory);
-
-		boolean showingNotification = ApplicationSettings.local().showNotification().get();
-		if (showingNotification)
-			serviceStatusDisplayManager.onServiceStatusChanged.add(new NotificationStatusDisplay(this));
-
-		//TODO: Don't add this unless it's actually needed
-		if (Build.VERSION.SDK_INT >= 24)
-			serviceStatusDisplayManager.onServiceStatusChanged.add(new QuickSettingStatusDisplay());
-
-		serviceStatusDisplayManager.onServiceStatusChanged.add(new ServiceStatusContentProvider.RemoteStatusDisplay());
+		serviceStatusDisplayUpdater = new ServiceStatusDisplayUpdater(serviceStatusFactory, new ServiceStatusDisplays(this));
 
 		serviceRevivalManager = new ServiceRevivalManager();
 
@@ -94,7 +81,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
-		serviceStatusDisplayManager.ensureStarted();
+		serviceStatusDisplayUpdater.ensureStarted();
 		userInteractivityChangeHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		activityMonitor.ensureStarted();
@@ -103,10 +90,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		//Don't want anything accessing the service 'til it's finished initialising.
 		ServiceHolder.started(this);
-
-		if (!showingNotification)
-			if (startService(new Intent(this, ServiceNotificationHider.class)) == null)
-				throw new RuntimeException("Couldn't find " + ServiceNotificationHider.class.getSimpleName());
 	}
 
 	@Override
@@ -161,7 +144,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		screenOrientationController.ensureStopped();
 		unregisterReceiver(shutdownReceiver);
 		userInteractivityChangeHandler.ensureStopped();
-		serviceStatusDisplayManager.ensureStopped();
+		serviceStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 
 		applicationState.clear();

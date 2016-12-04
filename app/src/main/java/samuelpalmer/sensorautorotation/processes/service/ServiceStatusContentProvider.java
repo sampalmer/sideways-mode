@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplay;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayManager;
+import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 
 public class ServiceStatusContentProvider extends ContentProvider {
@@ -46,7 +46,7 @@ public class ServiceStatusContentProvider extends ContentProvider {
 						public void run() {
 							if (ServiceHolder.isRunning()) {
 								RotationService service = ServiceHolder.instance();
-								ServiceStatusDisplayManager manager = service.serviceStatusDisplayManager;
+								ServiceStatusDisplayUpdater manager = service.serviceStatusDisplayUpdater;
 								ServiceStatus lastStatus = manager.getLastStatus();
 								if (lastStatus != null)
 									listener.reportUpdate(lastStatus);
@@ -191,7 +191,9 @@ public class ServiceStatusContentProvider extends ContentProvider {
 	public static class RemoteStatusDisplay implements ServiceStatusDisplay {
 
 		@Override
-		public void onServiceStopped() {}
+		public void onServiceStopped() {
+			//TODO: Should probably report this
+		}
 
 		@Override
 		public void update(ServiceStatus serviceStatus) {
