@@ -124,7 +124,7 @@ public class ServiceNotificationHider extends Service {
 			return;
 		}
 
-		Log.i(TAG, "Successfully entered foreground after trying to remove the notification.");
+		Log.i(TAG, "Successfully entered foreground and tried to remove the notification.");
 	}
 
 	private Boolean isNotificationPresent(int id) {
