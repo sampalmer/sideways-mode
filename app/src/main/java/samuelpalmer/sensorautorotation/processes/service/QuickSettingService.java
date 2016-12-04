@@ -30,7 +30,6 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
 		if (isLocked()) {
-			//TODO: Looks like the activity gets paused straight away if we're on the lock screen, causing it to close
 			startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
