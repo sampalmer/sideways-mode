@@ -51,20 +51,28 @@ public class ServiceNotificationHider extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		startCommandReceived = true;
 
-		if (!ServiceHolder.isRunning())
-			Log.w(TAG, RotationService.class.getSimpleName() + " isn't running. Skipping notification removal.");
-		else {
-			Settings.Setting<Boolean> showNotificationSetting = ApplicationSettings.local().showNotification();
-
-			if (showNotificationSetting.get())
-				Log.w(TAG, showNotificationSetting.getKey() + " is true. Skipping notification removal.");
-			else
-				applyHack();
-		}
+		String reasonSkipped = applyHackIfAppropriate();
+		if (reasonSkipped != null)
+			Log.w(TAG, reasonSkipped + " Skipped notification removal.");
 
 		stopSelf(); //Don't want to leave the service running and waste RAM
 
 		return START_NOT_STICKY;
+	}
+
+	/**
+	 * @return The reason the hack was not applied, or {@code null}.
+	 */
+	private String applyHackIfAppropriate() {
+		if (!ServiceHolder.isRunning())
+			return RotationService.class.getSimpleName() + " isn't running.";
+
+		Settings.Setting<Boolean> showNotificationSetting = ApplicationSettings.local().showNotification();
+		if (showNotificationSetting.get())
+			return showNotificationSetting.getKey() + " is true.";
+
+		applyHack();
+		return null;
 	}
 
 	private void applyHack() {
