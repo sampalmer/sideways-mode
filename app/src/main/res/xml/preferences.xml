@@ -27,6 +27,7 @@
 			android:key="showNotification"
 			android:title="@string/show_notification"
 			android:summary="@string/show_notification_description"
+			android:icon="@drawable/show_notification"
 			/>
 		<!-- TODO: Disable the priority setting if this is disabled -->
 		<!-- TODO: Add an icon for this -->

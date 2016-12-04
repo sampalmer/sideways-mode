@@ -32,6 +32,8 @@ public class EnvironmentError {
 	private EnvironmentError(){}
 
 	private void show() {
+		//TODO: If this app's notifications have been blocked by the user, show a long toast instead?
+
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.error)
 			.setContentIntent(MessageDialogActivity.makePendingIntent(summary, message))
