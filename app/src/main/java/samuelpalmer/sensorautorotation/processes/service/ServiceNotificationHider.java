@@ -3,13 +3,11 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.List;
@@ -34,10 +32,17 @@ public class ServiceNotificationHider extends Service {
 
 	private final static String TAG = ServiceNotificationHider.class.getSimpleName();
 
+	public static boolean isSupported() {
+		return Build.VERSION.SDK_INT < 25;
+	}
+
 	private boolean startCommandReceived;
 
 	@Override
 	public void onCreate() {
+		if (!isSupported())
+			throw new RuntimeException("Hiding the foreground service notification is not possible on Android 7.1+.");
+
 		startCommandReceived = false;
 	}
 

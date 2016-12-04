@@ -9,6 +9,7 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.processes.service.QuickSettingStatusDisplay;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.ServiceNotificationHider;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -38,7 +39,7 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 		@Override
 		public void update() {
 			boolean showingNotification = showNotificationSetting.get();
-			if (showingNotification)
+			if (showingNotification || !ServiceNotificationHider.isSupported())
 				add(notification);
 			else
 				notification.enterForegroundWithoutNotification();
