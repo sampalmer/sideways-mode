@@ -30,7 +30,6 @@
 			android:icon="@drawable/show_notification"
 			/>
 		<!-- TODO: Disable the priority setting if this is disabled -->
-		<!-- TODO: Add an icon for this -->
 
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"

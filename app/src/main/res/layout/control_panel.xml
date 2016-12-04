@@ -6,6 +6,10 @@
              tools:context="samuelpalmer.sensorautorotation.processes.ui.ControlPanelView"
 	>
 
+	<!-- TODO: Make this look better on Android 4.3 -->
+	<!-- TODO: Also show user's current orientation -->
+	<!-- TODO: Make the buttons bigger -->
+
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
