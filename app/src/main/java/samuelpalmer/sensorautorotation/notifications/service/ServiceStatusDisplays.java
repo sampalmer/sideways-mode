@@ -41,8 +41,10 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 			boolean showingNotification = showNotificationSetting.get();
 			if (showingNotification || !ServiceNotificationHider.isSupported())
 				add(notification);
-			else
+			else {
+				displays.remove(notification);
 				notification.enterForegroundWithoutNotification();
+			}
 		}
 	};
 
