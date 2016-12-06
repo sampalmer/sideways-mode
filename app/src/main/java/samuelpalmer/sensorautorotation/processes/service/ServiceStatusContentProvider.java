@@ -191,9 +191,7 @@ public class ServiceStatusContentProvider extends ContentProvider {
 	public static class RemoteStatusDisplay implements ServiceStatusDisplay {
 
 		@Override
-		public void onServiceStopped() {
-			//TODO: Should probably report this
-		}
+		public void onServiceStopped() {}
 
 		@Override
 		public void update(ServiceStatus serviceStatus) {
