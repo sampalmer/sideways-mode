@@ -45,8 +45,6 @@ public class QuickSettingService extends TileService {
 			Dialog actualDialog = dialog.onCreateDialog(args);
 			showDialog(actualDialog);
 		}
-
-		//TODO: Use different behaviour if the app isn't enabled.
 	}
 
 	@Override
