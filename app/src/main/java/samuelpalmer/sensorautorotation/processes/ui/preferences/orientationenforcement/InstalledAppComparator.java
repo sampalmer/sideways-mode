@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import java.util.Comparator;
 

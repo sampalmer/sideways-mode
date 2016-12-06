@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -6,21 +6,17 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 import android.preference.TwoStatePreference;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -31,7 +27,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class SettingsFragment extends PreferenceFragment {
+public class MainSettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
 	private Preference forcedAppsPreference;
@@ -50,48 +46,22 @@ public class SettingsFragment extends PreferenceFragment {
 		}
 	};
 
-	private final EventHandler listPreferenceSummaryUpdater = new EventHandler() {
-		@Override
-		public void update() {
-			updateListPreferenceSummaries(getPreferenceScreen());
-		}
-	};
-
-	//TODO: See if you can move this logic into an AutoSummaryListPreference
-	private void updateListPreferenceSummaries(PreferenceGroup group) {
-		for (int i = 0; i < group.getPreferenceCount(); ++i) {
-			Preference preference = group.getPreference(i);
-			if (preference instanceof ListPreference) {
-				ListPreference listPreference = (ListPreference) preference;
-				listPreference.setSummary(listPreference.getEntry());
-			}
-			else if (preference instanceof PreferenceGroup) {
-				updateListPreferenceSummaries((PreferenceGroup) preference);
-			}
-		}
-	}
-
 	private EventRegistrar enabledChanged;
-	private EventRegistrar notificationPriorityChanged;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
+		//TODO: Apply this to the other settings fragments as well
 		new SettingsInitialiser(ApplicationSettings.remote()).ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);
 
-		updateListPreferenceSummaries(getPreferenceScreen());
-		hideUnsupportedOptions();
-
 		enabledChanged = ApplicationSettings.remote().enabled();
-		notificationPriorityChanged = ApplicationSettings.remote().notificationPriority();
 
 		//TODO: Move subscription into onStart
 		enabledChanged.subscribe(enabledUpdater);
-		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 
 		enabledControl().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -116,13 +86,14 @@ public class SettingsFragment extends PreferenceFragment {
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		stateChecker = new AccessibilityServiceEnabledStateMonitor();
+
+		//TODO: Update notifications preference summary to reflect current state (eg "All notifications blocked")
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
 		enabledChanged.unsubscribe(enabledUpdater);
 	}
 
@@ -195,16 +166,6 @@ public class SettingsFragment extends PreferenceFragment {
 			Toast
 				.makeText(getContext(), R.string.warning_permission_not_granted, Toast.LENGTH_LONG)
 				.show();
-	}
-
-	private void hideUnsupportedOptions() {
-		if (Build.VERSION.SDK_INT < 16) {
-			ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.remote().notificationPriority().getKey());
-			CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
-			int newLength = originalEntries.length - 1;
-			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
-			notificationPriorityPreference.setEntryValues(Arrays.copyOfRange(notificationPriorityPreference.getEntryValues(), 0, newLength));
-		}
 	}
 
 }

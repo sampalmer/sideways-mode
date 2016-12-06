@@ -1,16 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.FragmentTransaction;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.RemotePreferencesActivity;
 
-/**
- * UI proxy to settings stored in background process.
- */
-public class MainActivity extends UiActivity {
+public class MainActivity extends RemotePreferencesActivity {
 
 	private static final String TAG_MENU = "menu";
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
@@ -28,15 +24,6 @@ public class MainActivity extends UiActivity {
 			transaction.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT);
 
 		transaction.commit();
-	}
-
-	@Override
-	public SharedPreferences getSharedPreferences(String name, int mode) {
-		//PreferenceFragment calls this for its underlying preference storage
-		if (name.equals(ApplicationSettings.sharedPreferencesName()))
-			return ApplicationSettings.remote().sharedPreferences;
-		else
-			return super.getSharedPreferences(name, mode);
 	}
 
 }

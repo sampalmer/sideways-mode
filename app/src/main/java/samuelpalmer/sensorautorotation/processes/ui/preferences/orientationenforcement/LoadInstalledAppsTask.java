@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;

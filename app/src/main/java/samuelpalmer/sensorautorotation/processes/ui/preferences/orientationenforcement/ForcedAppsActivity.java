@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -16,10 +16,10 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.RemotePreferencesActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class ForcedAppsActivity extends UiActivity {
+public class ForcedAppsActivity extends RemotePreferencesActivity {
 
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceChecker;
 	private View tipView;

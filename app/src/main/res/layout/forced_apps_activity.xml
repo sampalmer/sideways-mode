@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/settings"
-        android:name="samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsFragment"
+        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     />

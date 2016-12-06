@@ -13,23 +13,18 @@
 	<PreferenceCategory
 		android:title="@string/preference_settings_title"
 		android:dependency="enabled">
-		<CheckBoxPreference
-			android:key="showNotification"
-			android:title="@string/show_notification"
-			android:summary="@string/show_notification_description"
-			android:icon="@drawable/show_notification"
-			android:dependency="enabled"
-			/>
 
-		<ListPreference
-			android:key="notificationPriority"
-			android:title="@string/preference_notification_priority_title"
-			android:entries="@array/notification_priorities"
-			android:entryValues="@array/notification_priority_values"
-			android:dialogIcon="@drawable/notification_priority"
-			android:icon="@drawable/notification_priority"
-			android:dependency="showNotification"
-			/>
+		<PreferenceScreen
+			android:persistent="false"
+		    android:title="@string/preference_notifications"
+			android:icon="@drawable/notifications"
+			android:dependency="enabled">
+
+			<intent
+				android:targetPackage="samuelpalmer.sensorautorotation"
+				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsActivity" />
+
+		</PreferenceScreen>
 
 		<CheckBoxPreference
 			android:key="allowUpsideDownScreen"
@@ -48,7 +43,7 @@
 
 			<intent
 				android:targetPackage="samuelpalmer.sensorautorotation"
-				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.orientationenforcement.ForcedAppsActivity" />
+				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
 
 		</PreferenceScreen>
 	</PreferenceCategory>
