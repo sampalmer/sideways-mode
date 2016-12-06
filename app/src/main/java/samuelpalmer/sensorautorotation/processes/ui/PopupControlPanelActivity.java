@@ -8,7 +8,6 @@ import samuelpalmer.sensorautorotation.R;
 
 public class PopupControlPanelActivity extends UiActivity {
 
-	//TODO: Maybe also close this when the screen turns off?
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,4 +25,5 @@ public class PopupControlPanelActivity extends UiActivity {
 		super.onPause();
 		//Not stopping the activity here since opening this on the lock screen seems to cause the activity to stop and start again before becoming visible to the user.
 	}
+
 }
