@@ -35,7 +35,7 @@
 	<string name="user_rotation_upright">Upright</string>
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
-	<string name="notification_hiding">Entering foreground</string> <!-- TODO: Improve this message (maybe explain that entering foreground failed) -->
+	<string name="notification_hiding">Trying to hide the notification</string>
 
 	<string name="action_enable_auto_rotation">Enable Auto-Rotation</string>
 	<string name="action_disable_auto_rotation">Disable Auto-Rotation</string>
@@ -52,8 +52,7 @@
 	<string name="preference_settings_title">Settings</string>
 
 	<string name="show_notification">Show notification</string>
-	<string name="show_notification_description">Show this app\'s status in the notification drawer</string>
-	<!-- TODO: Explain that this may increase likelihood of service being killed by OS -->
+	<string name="show_notification_description">"Show status in the notification drawer"</string>
 
 	<string name="preference_notification_priority_title">Notification priority</string>
 	<string name="preference_notification_priority_high">High</string>
