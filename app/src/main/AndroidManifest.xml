@@ -81,6 +81,7 @@
 		          android:configChanges="orientation|screenSize"
 		          tools:ignore="UnusedAttribute">
 
+			<!-- TODO: Show user how to activate/use this -->
 			<intent-filter>
 				<action android:name="android.intent.action.ASSIST" />
 				<category android:name="android.intent.category.DEFAULT"/>

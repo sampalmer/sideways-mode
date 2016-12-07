@@ -46,6 +46,8 @@ public class ServiceStatusContentProvider extends ContentProvider {
 						public void run() {
 							if (ServiceHolder.isRunning()) {
 								RotationService service = ServiceHolder.instance();
+
+								//TODO: Replace all this with an EventRegistrarAdaptor and ServiceStatusDisplays.add()
 								ServiceStatusDisplayUpdater manager = service.serviceStatusDisplayUpdater;
 								ServiceStatus lastStatus = manager.getLastStatus();
 								if (lastStatus != null)
