@@ -86,6 +86,7 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 
+			<!-- TODO: Confirm the icon looks OK in various situations (OS, UI) -->
 			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
 
 		</activity>
