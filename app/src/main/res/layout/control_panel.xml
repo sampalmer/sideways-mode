@@ -3,15 +3,13 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical"
-             tools:context="samuelpalmer.sensorautorotation.processes.ui.ControlPanelView"
+             android:gravity="center_horizontal"
 	>
 
 	<!-- TODO: Make this look better on Android 4.3 -->
 	<!-- TODO: Also show user's current orientation -->
-	<!-- TODO: Make the buttons bigger -->
 	<!-- TODO: Make this whole dialog have a fixed size so the buttons don't move around when things change -->
 
-	<!-- TODO: Make sure to centre this if you expand the layout size -->
 	<ProgressBar
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -25,6 +23,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:id="@+id/control_panel_contents"
+		android:gravity="center_horizontal"
 		>
 
 		<TextView
@@ -33,8 +32,11 @@
 			android:id="@+id/control_panel_status"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:textColor="?android:attr/textColorPrimary"
+		    android:gravity="center_horizontal"
+
 			/>
 
+		<!-- TODO: Make the buttons bigger. Maybe we'll need to add bigger button icons? -->
 		<LinearLayout
 			android:layout_height="match_parent"
 		    android:layout_width="match_parent"
@@ -54,6 +56,7 @@
 			    android:contentDescription="@string/action_rotate_left"
 				/>
 
+			<!-- TODO: Fix issue where background blinks when this is pressed on Samsung Galaxy S5 (Android 6) due to toast -->
 			<ImageButton
 				android:id="@+id/control_panel_button_toggle"
 				android:scaleType="center"
