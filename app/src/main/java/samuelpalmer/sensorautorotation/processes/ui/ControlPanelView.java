@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -29,12 +30,15 @@ public class ControlPanelView extends LinearLayout {
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
 
+	private ProgressBar progressBar;
+	private ViewGroup contents;
 	private ViewGroup controls;
+	private TextView statusText;
 	private ImageButton toggleModeButton;
 
-	private TextView statusText;
 	private boolean childrenInflated;
 	private ServiceStatus lastStatus;
+	private boolean isEnabled;
 
 	public ControlPanelView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -47,6 +51,8 @@ public class ControlPanelView extends LinearLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
+		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);
+		contents = (ViewGroup) findViewById(R.id.control_panel_contents);
 		controls = (ViewGroup) findViewById(R.id.control_panel_controls);
 
 		statusText = (TextView) findViewById(R.id.control_panel_status);
@@ -80,7 +86,7 @@ public class ControlPanelView extends LinearLayout {
 
 		childrenInflated = true;
 		enabledChanged.update();
-		maybeShowStatus();
+		maybeUpdateUi();
 	}
 
 	@Override
@@ -91,7 +97,7 @@ public class ControlPanelView extends LinearLayout {
 		enabledSetting.subscribe(enabledChanged);
 
 		enabledChanged.update();
-		maybeShowStatus();
+		maybeUpdateUi();
 	}
 
 	@Override
@@ -111,7 +117,7 @@ public class ControlPanelView extends LinearLayout {
 				@Override
 				public void run() {
 					lastStatus = status;
-					maybeShowStatus();
+					maybeUpdateUi();
 				}
 
 			});
@@ -122,24 +128,42 @@ public class ControlPanelView extends LinearLayout {
 	private EventHandler enabledChanged = new EventHandler() {
 		@Override
 		public void update() {
-			if (childrenInflated) {
-				boolean isEnabled = enabledSetting.get();
-				controls.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
-				if (!isEnabled)
-					statusText.setText(RotationServiceClient.disabledMessage());
-			}
+			isEnabled = enabledSetting.get();
+			maybeUpdateUi();
 		}
 	};
 
-	private void maybeShowStatus() {
-		if (childrenInflated && lastStatus != null)
-			showStatus(lastStatus);
+	private void maybeUpdateUi() {
+		if (childrenInflated)
+			showStatus();
 	}
 
-	private void showStatus(ServiceStatus status) {
-		statusText.setText(status.getSummary());
-		toggleModeButton.setImageResource(status.mode.actionIcon());
-		toggleModeButton.setContentDescription(StringResource.get(status.mode.toggleToOtherModeResourceId()));
+	private void showStatus() {
+		boolean isLoading = isEnabled && lastStatus == null;
+		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
+		ensureVisibility(contents, isLoading ? View.GONE : View.VISIBLE);
+
+		ensureVisibility(controls, isEnabled ? View.VISIBLE : View.GONE);
+
+		if (!isEnabled)
+			statusText.setText(RotationServiceClient.disabledMessage());
+		else {
+			if (lastStatus != null) {
+				statusText.setText(lastStatus.getSummary());
+				toggleModeButton.setImageResource(lastStatus.mode.actionIcon());
+				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
+			}
+		}
+	}
+
+	/**
+	 * Only changes the visibility if it's different to the current value.
+	 * This is to minimise lag.
+	 */
+	private static void ensureVisibility(View control, int newVisibility) {
+		int currentVisibility = control.getVisibility();
+		if (currentVisibility != newVisibility)
+			control.setVisibility(newVisibility);
 	}
 
 }

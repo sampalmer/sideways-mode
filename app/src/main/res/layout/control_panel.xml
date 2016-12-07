@@ -9,55 +9,72 @@
 	<!-- TODO: Make this look better on Android 4.3 -->
 	<!-- TODO: Also show user's current orientation -->
 	<!-- TODO: Make the buttons bigger -->
-	<!-- TODO: Show a loading animation until the stuff is ready to show -->
+	<!-- TODO: Make this whole dialog have a fixed size so the buttons don't move around when things change -->
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:id="@+id/control_panel_status"
-		android:gravity="center"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="?android:attr/textColorPrimary"
+	<!-- TODO: Make sure to centre this if you expand the layout size -->
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/control_panel_progress"
+		android:visibility="gone"
+	    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
 		/>
 
 	<LinearLayout
-		android:layout_height="match_parent"
-	    android:layout_width="match_parent"
-	    android:orientation="horizontal"
-		android:layoutDirection="ltr"
-		android:id="@+id/control_panel_controls"
-		tools:ignore="UnusedAttribute">
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:id="@+id/control_panel_contents"
+		>
 
-		<ImageButton
-			android:id="@+id/control_panel_button_rotate_left"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			style="@android:style/Widget.DeviceDefault.Button.Borderless"
-			android:src="@drawable/action_rotate_left"
-		    android:contentDescription="@string/action_rotate_left"
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/control_panel_status"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary"
 			/>
 
-		<ImageButton
-			android:id="@+id/control_panel_button_toggle"
-			android:scaleType="center"
-			android:layout_width="0dp"
+		<LinearLayout
 			android:layout_height="match_parent"
-			android:layout_weight="1"
-			style="@android:style/Widget.DeviceDefault.Button.Borderless"
-			tools:ignore="ContentDescription"/>
+		    android:layout_width="match_parent"
+		    android:orientation="horizontal"
+			android:layoutDirection="ltr"
+			android:id="@+id/control_panel_controls"
+			tools:ignore="UnusedAttribute">
 
-		<ImageButton
-			android:id="@+id/control_panel_button_rotate_right"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:src="@drawable/action_rotate_right"
-			style="@android:style/Widget.DeviceDefault.Button.Borderless"
-			android:contentDescription="@string/action_rotate_left"
-			/>
+			<ImageButton
+				android:id="@+id/control_panel_button_rotate_left"
+				android:scaleType="center"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				style="@android:style/Widget.DeviceDefault.Button.Borderless"
+				android:src="@drawable/action_rotate_left"
+			    android:contentDescription="@string/action_rotate_left"
+				/>
+
+			<ImageButton
+				android:id="@+id/control_panel_button_toggle"
+				android:scaleType="center"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				style="@android:style/Widget.DeviceDefault.Button.Borderless"
+				tools:ignore="ContentDescription"/>
+
+			<ImageButton
+				android:id="@+id/control_panel_button_rotate_right"
+				android:scaleType="center"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:src="@drawable/action_rotate_right"
+				style="@android:style/Widget.DeviceDefault.Button.Borderless"
+				android:contentDescription="@string/action_rotate_left"
+				/>
+
+		</LinearLayout>
 
 	</LinearLayout>
 
