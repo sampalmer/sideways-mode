@@ -79,7 +79,16 @@
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize"
-		          tools:ignore="UnusedAttribute"/>
+		          tools:ignore="UnusedAttribute">
+
+			<intent-filter>
+				<action android:name="android.intent.action.ASSIST" />
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+
+			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
+
+		</activity>
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
 

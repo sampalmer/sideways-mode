@@ -9,6 +9,7 @@
 	<!-- TODO: Make this look better on Android 4.3 -->
 	<!-- TODO: Also show user's current orientation -->
 	<!-- TODO: Make the buttons bigger -->
+	<!-- TODO: Show a loading animation until the stuff is ready to show -->
 
 	<TextView
 		android:layout_width="match_parent"
