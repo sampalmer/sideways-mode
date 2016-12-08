@@ -9,6 +9,7 @@
 	<!-- TODO: Make this look better on Android 4.3 -->
 	<!-- TODO: Also show user's current orientation -->
 	<!-- TODO: Make this whole dialog have a fixed size so the buttons don't move around when things change -->
+	<!-- TODO: Maybe make the background a bit transparent -->
 
 	<ProgressBar
 		android:layout_width="wrap_content"
