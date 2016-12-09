@@ -1,12 +1,14 @@
-<samuelpalmer.sensorautorotation.processes.ui.ControlPanelView xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:gravity="center_horizontal"
+<samuelpalmer.sensorautorotation.processes.ui.ControlPanelView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	android:padding="@dimen/dialog_content_margin"
 	>
 
-	<!-- TODO: Make this look better on Android 4.3 -->
+	<!-- TODO: Make this look better on Android 4.3; maybe use the support library. Also see specs: https://material.google.com/components/dialogs.html#dialogs-specs -->
 	<!-- TODO: Also show user's current orientation -->
 	<!-- TODO: Make this whole dialog have a fixed size so the buttons don't move around when things change -->
 	<!-- TODO: Maybe make the background a bit transparent -->
@@ -33,7 +35,9 @@
 			android:id="@+id/control_panel_status"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:textColor="?android:attr/textColorPrimary"
+			android:textStyle="bold"
 		    android:gravity="center_horizontal"
+		    android:paddingBottom="20dp"
 
 			/>
 
