@@ -87,8 +87,6 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 
-			<!-- TODO: White icon doesn't work on Lollipop; maybe change to something like https://dynamicgandroidapps.svn.cloudforge.com/trunk/HomeButtonLauncher/res/drawable-xhdpi/assist_active.png -->
-			<!-- The circle might need to be 144dp (assist_orb_size) on Android 5+? -->
 			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
 
 		</activity>
