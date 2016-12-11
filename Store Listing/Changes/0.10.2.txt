@@ -1,0 +1,2 @@
+• Fixed crash on devices running MIUI V8, such as Xiaomi devices.
+• The "Overridden apps" feature now needs the "Draw over other apps" permission, so you will need to grant the app this permission if you use this feature. (This change was made to fix the above issue, and hopefully prevent any similar issues in the future.)
