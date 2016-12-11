@@ -1,8 +1,11 @@
 package samuelpalmer.sensorautorotation.orientationenforcement;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -10,42 +13,56 @@ import android.view.WindowManager.LayoutParams;
 
 import samuelpalmer.sensorautorotation.State;
 
-public class ScreenOrientationEnforcementManager extends State {
+/**
+ * Requires the {@link android.Manifest.permission#SYSTEM_ALERT_WINDOW} permission.
+ */
+public class ScreenOrientationEnforcer extends State {
 
-	private static final String TAG = ScreenOrientationEnforcementManager.class.getSimpleName();
+	private static final String TAG = ScreenOrientationEnforcer.class.getSimpleName();
 
 	private final View view;
 	private final WindowManager windows;
 	private LayoutParams layout;
 	private boolean isEnforced;
 
-	public ScreenOrientationEnforcementManager(Context context) {
+	public ScreenOrientationEnforcer(Context context) {
 		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
-		setEnforcedUnconditionally(false);
 		layout = generateLayout();
+	}
+
+	@SuppressLint("NewApi")
+	public static boolean hasPermissionToStart(Context context) {
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
+	}
+
+	@Override
+	public boolean started() {
+		return super.started();
 	}
 
 	@Override
 	protected void start() {
+		setEnforcedUnconditionally(false);
 		windows.addView(view, layout);
+		Log.i(TAG, "Added screen orientation enforcement overlay");
 	}
 
 	@Override
 	protected void stop() {
 		windows.removeView(view);
+		Log.i(TAG, "Removed screen orientation enforcement overlay");
 	}
 
 	private static LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams();
 
-		//So it doesn't need a permission or activity
-		layoutParams.type = LayoutParams.TYPE_TOAST;
+		//This seems like the most relevant window type
+		//Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
+		layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
 
 		//Just in case the window type somehow doesn't enforce this
-		layoutParams.flags =
-				LayoutParams.FLAG_NOT_FOCUSABLE
-						| LayoutParams.FLAG_NOT_TOUCHABLE;
+		layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
 
 		//Prevents breaking apps that detect overlying windows
 		//(eg UBank app, or enabling an accessibility service)
@@ -74,15 +91,18 @@ public class ScreenOrientationEnforcementManager extends State {
 	 * Picking the middle option since it's the fastest one that doesn't have undesired side effects.
 	 */
 	public void setEnforced(boolean newEnforced) {
-		if (newEnforced != isEnforced)
+		verifyStarted();
+
+		if (newEnforced != isEnforced) {
 			setEnforcedUnconditionally(newEnforced);
+			Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
+		}
 	}
 
 	private void setEnforcedUnconditionally(boolean newEnforced) {
 		isEnforced = newEnforced;
 		int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
 		view.setVisibility(visibility);
-		Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
 	}
 
 }
