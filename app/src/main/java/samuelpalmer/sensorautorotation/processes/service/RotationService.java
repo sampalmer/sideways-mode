@@ -84,7 +84,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		serviceRevivalManager.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementManager.ensureStarted();
-		accessibilityServiceManager.ensureStarted();
 
 		//Don't want anything accessing the service 'til it's finished initialising.
 		ServiceHolder.started(this);
@@ -135,7 +134,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		//Don't want anything accessing the service during deinitialisation.
 		ServiceHolder.stopped();
 
-		accessibilityServiceManager.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
