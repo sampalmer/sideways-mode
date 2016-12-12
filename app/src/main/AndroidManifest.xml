@@ -101,7 +101,14 @@
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/preference_notifications"
 			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute"/>
+			tools:ignore="UnusedAttribute">
+
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+			</intent-filter>
+
+		</activity>
 
 		<activity
 			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
