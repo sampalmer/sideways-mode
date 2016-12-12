@@ -25,13 +25,14 @@ import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
 
 	private static final int PERMISSION_REQUEST_CODE = 1;
 	private Preference forcedAppsPreference;
-	private AccessibilityServiceEnabledStateMonitor stateChecker;
+	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private samuelpalmer.common.settings.application.Settings.Setting<Set<String>> forcedApps;
 
 	private TwoStatePreference enabledControl() {
@@ -85,7 +86,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
-		stateChecker = new AccessibilityServiceEnabledStateMonitor();
+		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 
 		//TODO: Update notifications preference summary to reflect current state (eg "All notifications blocked")
 	}
@@ -100,7 +101,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		stateChecker.subscribe(forcedAppsChanged);
+		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
 		forcedApps.subscribe(forcedAppsChanged);
 		updateForcedApps();
 	}
@@ -109,7 +110,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onStop() {
 		super.onStop();
 		forcedApps.unsubscribe(forcedAppsChanged);
-		stateChecker.unsubscribe(forcedAppsChanged);
+		accessibilityServiceEnabledStateMonitor.unsubscribe(forcedAppsChanged);
 	}
 
 	private final EventHandler forcedAppsChanged = new EventHandler() {
@@ -122,7 +123,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private void updateForcedApps() {
 		final int quantity = forcedApps.get().size();
 
-		if (!stateChecker.isEnabled() && quantity > 0)
+		if (quantity > 0 && !(accessibilityServiceEnabledStateMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(getActivity())))
 			forcedAppsPreference.setSummary(R.string.preference_forced_apps_summary_disabled);
 		else {
 			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
@@ -134,7 +135,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private void requestSystemSettingsPermission() {
 		new AlertDialog.Builder(getContext())
 			.setTitle(R.string.environment_error_permission_needed_summary)
-			.setMessage(R.string.environment_error_permission_needed_message)
+			.setMessage(R.string.environment_error_permission_needed_system_settings_message)
 			.setNegativeButton(android.R.string.cancel, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -164,7 +165,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
 		else
 			Toast
-				.makeText(getContext(), R.string.warning_permission_not_granted, Toast.LENGTH_LONG)
+				.makeText(getContext(), R.string.warning_permission_not_granted_system_settings, Toast.LENGTH_LONG)
 				.show();
 	}
 

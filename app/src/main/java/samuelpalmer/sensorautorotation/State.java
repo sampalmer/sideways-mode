@@ -22,6 +22,14 @@ public abstract class State {
 		return started;
 	}
 
+	/**
+	 * Throws an exception if {@link #started()} is {@code false}
+	 */
+	protected void verifyStarted() {
+		if (!started())
+			throw new RuntimeException("Not started");
+	}
+
 	protected abstract void start();
 
 	protected abstract void stop();

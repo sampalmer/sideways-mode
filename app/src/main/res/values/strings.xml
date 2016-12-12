@@ -69,10 +69,11 @@
 		<item quantity="one">%d app overridden</item>
 		<item quantity="other">%d apps overridden</item>
 	</plurals>
-	<string name="preference_forced_apps_summary_disabled">@string/warning_accessibility_service_disabled_title</string>
+	<string name="preference_forced_apps_summary_disabled">@string/warning_permission_required_title</string>
 
-	<string name="preference_accessibility_service_summary">Accessibility Service</string>
-	<string name="preference_accessibility_service_enable">Enable</string>
+	<string name="preference_accessibility_service_summary">Accessibility service</string>
+	<string name="preference_draw_overlays_summary">Draw over other apps</string>
+	<string name="preference_permissions_enable">Enable</string>
 	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and enables home screen rotation. Note that this may prevent apps from working correctly.</string>
 	<string name="preference_choose_apps">Choose apps</string>
 
@@ -94,15 +95,18 @@
 	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, re-enable the app on the following screen.</string>
 
 	<string name="environment_error_permission_needed_summary">Permission needed</string>
-	<string name="environment_error_permission_needed_message">In order to control the screen rotation, this app needs permission to change system settings. Please enable this on the following screen.</string>
-	<string name="warning_permission_not_granted">This app can\'t work without permission to change system settings.</string>
+
+	<!-- TODO: Rename the below since they are actually instructions rather than error messages -->
+	<string name="environment_error_permission_needed_draw_overlays_message">"In order to override other apps' screen orientations, this app needs permission to draw over other apps. Please enable this on the following screen."</string>
+	<string name="environment_error_permission_needed_system_settings_message">In order to control the screen rotation, this app needs permission to change system settings. Please enable this on the following screen.</string>
+	<string name="warning_permission_not_granted_system_settings">This app can\'t work without permission to change system settings.</string>
 
 	<string name="error_no_market_app">Couldn\'t find Google Play Store</string>
 
-	<string name="warning_accessibility_service_disabled_title">Accessibility service disabled</string>
-	<string name="warning_accessibility_service_disabled_content">Touch to fix</string>
-	<string name="warning_accessibility_service">Some apps are set to be overridden, but the accessibility service is disabled.</string>
-	<string name="accessibility_service_tip">To use this feature, enable the accessibility service.</string>
+	<string name="warning_permission_required_title">Permission needed</string>
+	<string name="warning_permission_required_content">Touch to fix</string>
+
+	<string name="permissions_needed_tip">To use this feature, some permissions are needed.</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>

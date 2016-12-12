@@ -33,7 +33,7 @@ public class EnvironmentError {
 
 	private void show() {
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
-			.setSmallIcon(R.drawable.error)
+			.setSmallIcon(R.drawable.error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
 			.setContentIntent(MessageDialogActivity.makePendingIntent(summary, message))
 			.setContentTitle(summary)
 			.setContentText(message)

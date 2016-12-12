@@ -29,11 +29,11 @@
             />
 
 	    <Button
-		    android:id="@+id/forced_apps_accessibility_service_enable"
+		    android:id="@+id/forced_apps_permissions_enable"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_vertical|end"
-		    android:text="@string/preference_accessibility_service_enable"
+		    android:text="@string/preference_permissions_enable"
 		    />
 
     </LinearLayout>
