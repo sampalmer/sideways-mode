@@ -26,6 +26,7 @@ import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsSummary;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
@@ -34,6 +35,8 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private samuelpalmer.common.settings.application.Settings.Setting<Set<String>> forcedApps;
+	private NotificationsSummary notificationsSummary;
+	private Preference notificationsPreference;
 
 	private TwoStatePreference enabledControl() {
 		return (TwoStatePreference) findPreference(ApplicationSettings.remote().enabled().getKey());
@@ -84,11 +87,13 @@ public class MainSettingsFragment extends PreferenceFragment {
 			}
 		});
 
+		//TODO: move all of this summary stuff into its own class
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 
-		//TODO: Update notifications preference summary to reflect current state (eg "All notifications blocked")
+		notificationsPreference = findPreference("notifications");
+		notificationsSummary = new NotificationsSummary();
 	}
 
 	@Override
@@ -101,14 +106,20 @@ public class MainSettingsFragment extends PreferenceFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+
 		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
 		forcedApps.subscribe(forcedAppsChanged);
 		updateForcedApps();
+
+		notificationsSummary.subscribe(notificationsChanged);
+		updateNotifications();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
+
+		notificationsSummary.unsubscribe(notificationsChanged);
 		forcedApps.unsubscribe(forcedAppsChanged);
 		accessibilityServiceEnabledStateMonitor.unsubscribe(forcedAppsChanged);
 	}
@@ -129,6 +140,18 @@ public class MainSettingsFragment extends PreferenceFragment {
 			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 			forcedAppsPreference.setSummary(quantityString);
 		}
+	}
+
+	private EventHandler notificationsChanged = new EventHandler() {
+		@Override
+		public void update() {
+			updateNotifications();
+		}
+	};
+
+	private void updateNotifications() {
+		CharSequence summary = notificationsSummary.getSummary();
+		notificationsPreference.setSummary(summary);
 	}
 
 	@TargetApi(VERSION_CODES.M)

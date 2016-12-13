@@ -16,6 +16,7 @@
 		/>
 
 	<!-- This can't depend on the "Show Notification" preference since it isn't always available -->
+	<!-- TODO: Populate the entries programmatically to keep everything in sync -->
 	<ListPreference
 		android:key="notificationPriority"
 		android:title="@string/preference_notification_priority_title"

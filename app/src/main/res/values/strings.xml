@@ -53,7 +53,7 @@
 
 	<string name="preference_notifications">Notifications</string>
 
-	<string name="preference_show_notification">Show notification</string>
+	<string name="preference_show_notification">Show status</string>
 	<string name="preference_show_notification_description">"Show status in the notification drawer"</string>
 
  	<string name="preference_all_notifications_title">All notifications</string>
@@ -62,10 +62,14 @@
 	<string name="preference_all_notifications_explanation">"On this version of Android, the status notification is needed to stop Android from killing the background service, so you cannot turn it off in this app. Instead, you can tell Android to block this app's notifications in the following screen."</string>
 	<!-- TODO: Refine the above message. -->
 
-	<string name="preference_notification_priority_title">Notification priority</string>
+	<string name="preference_notification_priority_title">Status priority</string>
 	<string name="preference_notification_priority_high">High</string>
 	<string name="preference_notification_priority_normal">Normal</string>
 	<string name="preference_notification_priority_low">Low</string>
+
+	<string name="preference_notification_summary_priority">%1$s priority</string>
+	<string name="preference_notification_summary_hidden">Status not shown</string>
+	<string name="preference_notification_summary_blocked">All blocked</string>
 
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
