@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
@@ -20,6 +21,9 @@ import samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity;
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
+	//This is static just in case Android decides to have multiple instances of the service running at the same time.
+	private static Dialog popupControlPanel;
+
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
 	 */
@@ -33,17 +37,27 @@ public class QuickSettingService extends TileService {
 			startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
+
+			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
+			if (popupControlPanel == null) {
+				ControlPanelDialog dialog = new ControlPanelDialog.Builder(getApplicationContext()).create();
+				Bundle args = new Bundle();
+				popupControlPanel = dialog.onCreateDialog(args);
+				popupControlPanel.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						popupControlPanel = null;
+					}
+				});
+			}
+
 			/* This makes the service process's RAM usage jump up from ~8MB to ~14MB,
 			 * but we can't use an activity because the OS delays activity start
 			 * when the home button is pressed.
 			 *
 			 * https://code.google.com/p/android/issues/detail?id=4536
 			 */
-
-			ControlPanelDialog dialog = new ControlPanelDialog.Builder(getApplicationContext()).create();
-			Bundle args = new Bundle();
-			Dialog actualDialog = dialog.onCreateDialog(args);
-			showDialog(actualDialog);
+			showDialog(popupControlPanel);
 		}
 	}
 
