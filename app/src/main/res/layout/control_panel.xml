@@ -11,12 +11,8 @@
 	<!-- TODO: Maybe use the support library to get the look good and consistent. Also see specs: https://material.google.com/components/dialogs.html#dialogs-specs -->
 	<!-- TODO: Also show user's current orientation -->
 
-
-	<!-- TODO: Make this whole dialog have a fixed size so the buttons don't move around when things change. Looks like it's OK when put in a dialog (from the quick setting), but otherwise not so great. -->
-
-
 	<!-- TODO: Maybe make the background a bit transparent -->
-
+	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 	<ProgressBar
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

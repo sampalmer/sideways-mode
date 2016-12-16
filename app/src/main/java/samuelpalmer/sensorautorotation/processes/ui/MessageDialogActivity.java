@@ -13,7 +13,7 @@ import android.os.Bundle;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
-public class MessageDialogActivity extends UiActivity {
+public class MessageDialogActivity extends DialogActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
 	private static final String INTENT_EXTRA_MESSAGE = "message";
 	private static final String TAG = "dialog";
@@ -40,15 +40,6 @@ public class MessageDialogActivity extends UiActivity {
 
 		if (getFragmentManager().findFragmentByTag(TAG) == null)
 			MessageDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		//Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity} did not call finish() prior to onResume() completing"
-		if (VERSION.SDK_INT >= 23)
-			setVisible(true);
 	}
 
 	public static class MessageDialogFragment extends DialogFragment {

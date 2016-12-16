@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
+import samuelpalmer.sensorautorotation.processes.ui.ControlPanelDialog;
 import samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity;
 
 @TargetApi(Build.VERSION_CODES.N)
