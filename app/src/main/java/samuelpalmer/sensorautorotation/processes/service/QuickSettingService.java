@@ -17,7 +17,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.ui.ControlPanelDialog;
-import samuelpalmer.sensorautorotation.processes.ui.PopupControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.ui.ControlPanelActivity;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -35,7 +35,7 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
 		if (isLocked()) {
-			startActivityAndCollapse(new Intent(this, PopupControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			startActivityAndCollapse(new Intent(this, ControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
 

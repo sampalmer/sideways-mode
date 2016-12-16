@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class PopupControlPanelActivity extends DialogActivity {
+public class ControlPanelActivity extends DialogActivity {
 
 	private static final String TAG = "dialog";
 

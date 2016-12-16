@@ -11,7 +11,7 @@ public class ControlPanelSmallApp extends SmallApplication {
 	@Override
 	protected void onCreate() {
 		super.onCreate();
-		Intent intent = new Intent(this, PopupControlPanelActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
+		Intent intent = new Intent(this, ControlPanelActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 		finish();
 	}

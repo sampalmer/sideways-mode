@@ -74,7 +74,7 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".processes.ui.PopupControlPanelActivity"
+		<activity android:name=".processes.ui.ControlPanelActivity"
 		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
