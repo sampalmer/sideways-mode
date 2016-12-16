@@ -17,6 +17,11 @@ class AutoRotationMode implements Mode {
 	}
 
 	@Override
+	public int controlPanelIcon() {
+		return R.drawable.control_panel_rotation;
+	}
+
+	@Override
 	public int autoRotationStateResourceId() {
 		return R.string.screen_rotation_enabled;
 	}

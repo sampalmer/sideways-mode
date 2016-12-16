@@ -75,7 +75,7 @@ public class NotificationsFragment extends PreferenceFragment {
 						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								openAppNotificationSystemSettings();
+								openAppNotificationSystemSettings(); //TODO: Once the user returns, regenerate the notification in case they've just enabled it.
 							}
 						})
 						.show();

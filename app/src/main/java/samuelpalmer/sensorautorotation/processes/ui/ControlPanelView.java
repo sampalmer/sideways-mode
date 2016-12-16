@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.ColourGetterCompat;
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
@@ -81,9 +79,6 @@ public class ControlPanelView extends LinearLayout {
 			}
 		});
 
-		for (ImageButton button : new ImageButton[] { rotateLeftButton, toggleModeButton, rotateRightButton })
-			button.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
-
 		childrenInflated = true;
 		enabledChanged.update();
 		maybeUpdateUi();
@@ -149,8 +144,8 @@ public class ControlPanelView extends LinearLayout {
 			statusText.setText(RotationServiceClient.disabledMessage());
 		else {
 			if (lastStatus != null) {
-				statusText.setText(lastStatus.getSummary());
-				toggleModeButton.setImageResource(lastStatus.mode.actionIcon());
+				statusText.setText(lastStatus.user.descriptionId());
+				toggleModeButton.setImageResource(lastStatus.mode.controlPanelIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 			}
 		}
