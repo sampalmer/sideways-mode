@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -26,7 +26,7 @@ import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentPro
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class ControlPanelView extends LinearLayout {
+public class ControlPanelView extends RelativeLayout {
 
 	private final ServiceStatusContentProvider.Client serviceClient;
 	private final Handler handler;
@@ -149,7 +149,12 @@ public class ControlPanelView extends LinearLayout {
 
 		ensureVisibility(disabledText, isEnabled ? View.GONE : View.VISIBLE);
 		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
-		ensureVisibility(contents, isLoading || !isEnabled ? View.GONE : View.VISIBLE);
+
+		if (isEnabled)
+			//Don't want the view the view to change size after loading; it should stay the same
+			ensureVisibility(contents, isLoading ? View.INVISIBLE : View.VISIBLE);
+		else
+			ensureVisibility(contents, View.GONE);
 
 		if (!isEnabled)
 			disabledText.setText(RotationServiceClient.disabledMessage());
