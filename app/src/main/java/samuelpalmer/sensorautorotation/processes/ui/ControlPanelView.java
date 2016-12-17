@@ -32,10 +32,10 @@ public class ControlPanelView extends LinearLayout {
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
 
-	private ImageView userIcon;
+	private TextView disabledText;
 	private ProgressBar progressBar;
 	private ViewGroup contents;
-	private ViewGroup controls;
+	private ImageView userIcon;
 	private TextView statusText;
 	private ImageButton toggleModeButton;
 
@@ -55,9 +55,9 @@ public class ControlPanelView extends LinearLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
+		disabledText = (TextView) findViewById(R.id.control_panel_disabled);
 		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);
 		contents = (ViewGroup) findViewById(R.id.control_panel_contents);
-		controls = (ViewGroup) findViewById(R.id.control_panel_controls);
 
 		userIcon = (ImageView) findViewById(R.id.control_panel_user_icon);
 		statusText = (TextView) findViewById(R.id.control_panel_status);
@@ -146,13 +146,13 @@ public class ControlPanelView extends LinearLayout {
 	@SuppressLint("SetTextI18n")
 	private void showStatus() {
 		boolean isLoading = isEnabled && lastStatus == null;
-		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
-		ensureVisibility(contents, isLoading ? View.GONE : View.VISIBLE);
 
-		ensureVisibility(controls, isEnabled ? View.VISIBLE : View.GONE);
+		ensureVisibility(disabledText, isEnabled ? View.GONE : View.VISIBLE);
+		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
+		ensureVisibility(contents, isLoading || !isEnabled ? View.GONE : View.VISIBLE);
 
 		if (!isEnabled)
-			statusText.setText(RotationServiceClient.disabledMessage());
+			disabledText.setText(RotationServiceClient.disabledMessage());
 		else {
 			if (lastStatus != null) {
 				userIcon.setImageResource(lastStatus.user.iconId());
