@@ -9,6 +9,8 @@
 
 	<!-- TODO: Use the support library to make this look consistent across various devices -->
 
+	<!-- TODO: Maybe fade in the progress bar after each button is pressed -->
+
 	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 	<ProgressBar
 		android:layout_width="wrap_content"
