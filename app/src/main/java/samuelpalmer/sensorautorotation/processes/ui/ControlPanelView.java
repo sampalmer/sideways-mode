@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -7,12 +8,15 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.ColourGetterCompat;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
@@ -28,13 +32,14 @@ public class ControlPanelView extends LinearLayout {
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
 
+	private ImageView userIcon;
 	private ProgressBar progressBar;
 	private ViewGroup contents;
 	private ViewGroup controls;
 	private TextView statusText;
 	private ImageButton toggleModeButton;
-	private TextView modeText;
 
+	private TextView modeText;
 	private boolean childrenInflated;
 	private ServiceStatus lastStatus;
 	private boolean isEnabled;
@@ -54,11 +59,14 @@ public class ControlPanelView extends LinearLayout {
 		contents = (ViewGroup) findViewById(R.id.control_panel_contents);
 		controls = (ViewGroup) findViewById(R.id.control_panel_controls);
 
+		userIcon = (ImageView) findViewById(R.id.control_panel_user_icon);
 		statusText = (TextView) findViewById(R.id.control_panel_status);
 		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_left);
 		toggleModeButton = (ImageButton) findViewById(R.id.control_panel_button_toggle);
 		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_right);
 		modeText = (TextView) findViewById(R.id.control_panel_mode);
+
+		userIcon.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
 		rotateLeftButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -135,6 +143,7 @@ public class ControlPanelView extends LinearLayout {
 			showStatus();
 	}
 
+	@SuppressLint("SetTextI18n")
 	private void showStatus() {
 		boolean isLoading = isEnabled && lastStatus == null;
 		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
@@ -146,7 +155,9 @@ public class ControlPanelView extends LinearLayout {
 			statusText.setText(RotationServiceClient.disabledMessage());
 		else {
 			if (lastStatus != null) {
-				statusText.setText(lastStatus.user.descriptionId());
+				userIcon.setImageResource(lastStatus.user.iconId());
+				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+				statusText.setText(" " + StringResource.get(lastStatus.user.descriptionId()));
 				toggleModeButton.setImageResource(lastStatus.mode.controlPanelIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 				modeText.setText(lastStatus.mode.autoRotationStateResourceId());

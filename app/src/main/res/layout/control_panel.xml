@@ -8,9 +8,6 @@
 	android:padding="@dimen/dialog_content_margin"
 	>
 
-	<!-- TODO: Maybe use the support library to get the look good and consistent. Also see specs: https://material.google.com/components/dialogs.html#dialogs-specs -->
-	<!-- TODO: Also show user's current orientation -->
-
 	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 	<ProgressBar
 		android:layout_width="wrap_content"
@@ -28,17 +25,31 @@
 		android:gravity="center_horizontal"
 		>
 
-		<TextView
+		<LinearLayout
+			android:layout_height="match_parent"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/control_panel_status"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="?android:attr/textColorPrimary"
-			android:textStyle="bold"
-		    android:gravity="center_horizontal"
-		    android:paddingBottom="20dp"
+			android:orientation="horizontal"
+			>
 
-			/>
+			<ImageView
+				android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/control_panel_user_icon"
+			    android:scaleType="centerInside"
+				tools:ignore="ContentDescription"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/control_panel_status"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="?android:attr/textColorPrimary"
+				android:textStyle="bold"
+			    android:gravity="center_horizontal"
+			    android:paddingBottom="20dp"
+				/>
+
+		</LinearLayout>
 
 		<LinearLayout
 			android:layout_height="match_parent"
