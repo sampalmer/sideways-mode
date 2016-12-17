@@ -6,9 +6,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.R;
 
@@ -38,7 +41,16 @@ public class ControlPanelDialog extends DialogFragment {
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
 		View customView = LayoutInflater.from(alertBuilder.getContext()).inflate(R.layout.control_panel, null);
 		alertBuilder.setView(customView);
-		return alertBuilder.create();
+		AlertDialog alertDialog = alertBuilder.create();
+
+		Window window = alertDialog.getWindow();
+		window.setFormat(PixelFormat.TRANSLUCENT);
+
+		WindowManager.LayoutParams attributes = window.getAttributes();
+		attributes.alpha = 0.90f;
+		window.setAttributes(attributes);
+
+		return alertDialog;
 	}
 
 	private ControlPanelDialog setContext(Context context){
