@@ -40,7 +40,6 @@
 
 			/>
 
-		<!-- TODO: Make the buttons bigger. Maybe we'll need to add bigger button icons? -->
 		<LinearLayout
 			android:layout_height="match_parent"
 		    android:layout_width="match_parent"
