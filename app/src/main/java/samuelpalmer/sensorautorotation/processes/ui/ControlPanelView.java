@@ -33,6 +33,7 @@ public class ControlPanelView extends LinearLayout {
 	private ViewGroup controls;
 	private TextView statusText;
 	private ImageButton toggleModeButton;
+	private TextView modeText;
 
 	private boolean childrenInflated;
 	private ServiceStatus lastStatus;
@@ -57,6 +58,7 @@ public class ControlPanelView extends LinearLayout {
 		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_left);
 		toggleModeButton = (ImageButton) findViewById(R.id.control_panel_button_toggle);
 		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_right);
+		modeText = (TextView) findViewById(R.id.control_panel_mode);
 
 		rotateLeftButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -147,6 +149,7 @@ public class ControlPanelView extends LinearLayout {
 				statusText.setText(lastStatus.user.descriptionId());
 				toggleModeButton.setImageResource(lastStatus.mode.controlPanelIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
+				modeText.setText(lastStatus.mode.autoRotationStateResourceId());
 			}
 		}
 	}

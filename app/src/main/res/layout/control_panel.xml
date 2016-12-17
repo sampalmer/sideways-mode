@@ -82,6 +82,14 @@
 
 		</LinearLayout>
 
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/control_panel_mode"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
+			/>
+
 	</LinearLayout>
 
 </samuelpalmer.sensorautorotation.processes.ui.ControlPanelView>
