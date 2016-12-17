@@ -7,6 +7,8 @@
 	android:padding="@dimen/dialog_content_margin"
 	>
 
+	<!-- TODO: Use the support library to make this look consistent across various devices -->
+
 	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 	<ProgressBar
 		android:layout_width="wrap_content"
@@ -40,6 +42,7 @@
 			android:layout_height="match_parent"
 			android:layout_width="wrap_content"
 			android:orientation="horizontal"
+			android:paddingBottom="20dp"
 			>
 
 			<ImageView
@@ -57,7 +60,6 @@
 				android:textColor="?android:attr/textColorPrimary"
 				android:textStyle="bold"
 			    android:gravity="center_horizontal"
-			    android:paddingBottom="20dp"
 				/>
 
 		</LinearLayout>
