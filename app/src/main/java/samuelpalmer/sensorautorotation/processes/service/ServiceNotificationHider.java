@@ -23,7 +23,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-//TODO: This doesn't work on Android 7.1. Will need to direct users to disable the app's notifications, since that seems to be the only option for that OS.
 //TODO: On failure, issue an EnvironmentError and advise the user to use the Android 7.1 workaround
 /**
  * Puts {@link RotationService} in the foreground but hides its notification.
