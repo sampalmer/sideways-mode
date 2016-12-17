@@ -36,11 +36,19 @@ public class UserOrientation implements Parcelable {
 	};
 
 	public int descriptionId() {
+		int longDescription = longDescriptionId();
+		if (longDescription == R.string.user_rotation_left_side || longDescription == R.string.user_rotation_right_side)
+			return R.string.user_rotation_sideways;
+
+		return longDescription;
+	}
+
+	public int longDescriptionId() {
 		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
 			case 0: return R.string.user_rotation_upright;
-			case 1: return R.string.user_rotation_sideways;
+			case 1: return R.string.user_rotation_right_side;
 			case 2: return R.string.user_rotation_upside_down;
-			case 3: return R.string.user_rotation_sideways;
+			case 3: return R.string.user_rotation_left_side;
 			default: throw new RuntimeException("Unknown user rotation: " + user.getClockwiseRotationsFromNaturalOrientation());
 		}
 	}

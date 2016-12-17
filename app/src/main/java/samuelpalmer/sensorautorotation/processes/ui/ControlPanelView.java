@@ -157,7 +157,7 @@ public class ControlPanelView extends LinearLayout {
 			if (lastStatus != null) {
 				userIcon.setImageResource(lastStatus.user.iconId());
 				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
-				statusText.setText(" " + StringResource.get(lastStatus.user.descriptionId()));
+				statusText.setText(" " + StringResource.get(lastStatus.user.longDescriptionId()));
 				toggleModeButton.setImageResource(lastStatus.mode.controlPanelIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 				modeText.setText(lastStatus.mode.autoRotationStateResourceId());

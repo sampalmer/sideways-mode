@@ -33,6 +33,8 @@
 
 	<string name="notification_summary">%1$s (User %2$s)</string>
 	<string name="user_rotation_upright">Upright</string>
+	<string name="user_rotation_left_side">Left side</string>
+	<string name="user_rotation_right_side">Right side</string>
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
 	<string name="notification_hiding">Trying to hide the notification</string>
