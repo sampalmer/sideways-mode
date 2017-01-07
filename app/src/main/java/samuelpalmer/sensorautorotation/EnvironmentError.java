@@ -31,6 +31,7 @@ public class EnvironmentError {
 
 	private EnvironmentError(){}
 
+	//TODO: Show the error within the app's main UI in case notifications are disabled
 	private void show() {
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
