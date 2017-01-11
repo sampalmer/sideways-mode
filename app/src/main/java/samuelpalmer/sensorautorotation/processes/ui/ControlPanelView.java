@@ -68,30 +68,29 @@ public class ControlPanelView extends RelativeLayout {
 
 		userIcon.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
-		rotateLeftButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				RotationServiceClient.send(RotationService.ACTION_ROTATE_LEFT);
-			}
-		});
-
-		toggleModeButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				RotationServiceClient.send(RotationService.ACTION_TOGGLE);
-			}
-		});
-
-		rotateRightButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				RotationServiceClient.send(RotationService.ACTION_ROTATE_RIGHT);
-			}
-		});
+		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_ROTATE_LEFT));
+		toggleModeButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_TOGGLE));
+		rotateRightButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_ROTATE_RIGHT));
 
 		childrenInflated = true;
 		enabledChanged.update();
 		maybeUpdateUi();
+	}
+
+	private class RotationServiceClickListener implements View.OnClickListener {
+
+		private final String actionRotateLeft;
+
+		public RotationServiceClickListener(String action) {
+			actionRotateLeft = action;
+		}
+
+		@Override
+		public void onClick(View v) {
+			RotationServiceClient.send(actionRotateLeft);
+			//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
+		}
+
 	}
 
 	@Override

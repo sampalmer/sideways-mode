@@ -10,7 +10,6 @@
 	<!-- TODO: Use the support library to make this look consistent across various devices -->
 	<!-- TODO: Provide a way to get to the app's settings screen from here (maybe by touching the title?) -->
 
-	<!-- TODO: Maybe fade in the progress bar after each button is pressed -->
 	<!-- TODO: Only show the user orientation when the screen orientation is overridden-->
 	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 	<ProgressBar
