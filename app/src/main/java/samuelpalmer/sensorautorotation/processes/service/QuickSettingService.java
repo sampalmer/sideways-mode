@@ -19,6 +19,8 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.ui.ControlPanelDialog;
 import samuelpalmer.sensorautorotation.processes.ui.ControlPanelActivity;
 
+//TODO: It's possible to have both the dialog and activity open simultaneously. (Eg: from quick setting + from assist) Fix this.
+
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
@@ -47,6 +49,14 @@ public class QuickSettingService extends TileService {
 				popupControlPanel.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
+						popupControlPanel = null;
+					}
+				});
+
+				//Once the dialog had gone but the field was still set. Maybe the below will help with that?
+				popupControlPanel.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
 						popupControlPanel = null;
 					}
 				});
