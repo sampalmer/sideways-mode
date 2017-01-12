@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.AttributeSet;
@@ -54,6 +55,15 @@ public class ControlPanelView extends RelativeLayout {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
+
+		ImageButton settingsButton = (ImageButton) findViewById(R.id.control_panel_settings);
+		settingsButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getContext().startActivity(new Intent(getContext(), MainActivity.class)) ;
+			}
+		});
+		//TODO: The above doesn't close the dialog when it was opened through the quick setting
 
 		disabledText = (TextView) findViewById(R.id.control_panel_disabled);
 		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);

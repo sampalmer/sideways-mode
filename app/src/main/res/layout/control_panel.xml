@@ -4,118 +4,141 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:gravity="center_horizontal"
-	android:padding="@dimen/dialog_content_margin"
 	>
 
-	<!-- TODO: Use the support library to make this look consistent across various devices -->
-	<!-- TODO: Provide a way to get to the app's settings screen from here (maybe by touching the title?) -->
-
-	<!-- TODO: Only show the user orientation when the screen orientation is overridden-->
-	<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
-	<ProgressBar
+	<RelativeLayout
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/control_panel_progress"
-		android:visibility="gone"
-	    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-	    android:layout_centerInParent="true"
-		/>
+		android:layout_height="wrap_content">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/control_panel_disabled"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="?android:attr/textColorPrimary"
-		android:textStyle="bold"
-		android:gravity="center_horizontal"
-		android:visibility="gone"
-		/>
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:id="@+id/control_panel_contents"
-		android:gravity="center_horizontal"
-		>
-
-		<LinearLayout
-			android:layout_height="match_parent"
+		<ImageButton
+			android:id="@+id/control_panel_settings"
 			android:layout_width="wrap_content"
-			android:orientation="horizontal"
-			android:paddingBottom="20dp"
-			>
+		    android:layout_height="wrap_content"
+		    android:src="@drawable/settings"
+			android:layout_alignParentTop="true"
+		    android:layout_alignParentStart="true"
+		    android:layout_alignParentLeft="true"
+		    android:contentDescription="@string/preference_settings_title"
+		    android:background="@android:color/transparent"
+			/>
 
-			<ImageView
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/dialog_content_margin">
+
+			<!-- TODO: Use the support library to make this look consistent across various devices -->
+
+			<!-- TODO: Only show the user orientation when the screen orientation is overridden-->
+			<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
+			<ProgressBar
 				android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:id="@+id/control_panel_user_icon"
-			    android:scaleType="centerInside"
-				tools:ignore="ContentDescription"/>
+				android:layout_height="wrap_content"
+				android:id="@+id/control_panel_progress"
+				android:visibility="gone"
+			    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+			    android:layout_centerInParent="true"
+				/>
 
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/control_panel_status"
+				android:id="@+id/control_panel_disabled"
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:textColor="?android:attr/textColorPrimary"
 				android:textStyle="bold"
-			    android:gravity="center_horizontal"
+				android:gravity="center_horizontal"
+				android:visibility="gone"
 				/>
 
-		</LinearLayout>
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:id="@+id/control_panel_contents"
+				android:gravity="center_horizontal"
+				>
 
-		<LinearLayout
-			android:layout_height="match_parent"
-		    android:layout_width="match_parent"
-		    android:orientation="horizontal"
-			android:layoutDirection="ltr"
-			android:id="@+id/control_panel_controls"
-			tools:ignore="UnusedAttribute">
+				<LinearLayout
+					android:layout_height="match_parent"
+					android:layout_width="wrap_content"
+					android:orientation="horizontal"
+					android:paddingBottom="20dp"
+					>
 
-			<ImageButton
-				android:id="@+id/control_panel_button_rotate_left"
-				android:scaleType="center"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="1"
-				style="@android:style/Widget.DeviceDefault.Button.Borderless"
-				android:src="@drawable/control_panel_rotate_left"
-			    android:contentDescription="@string/action_rotate_left"
-				/>
+					<ImageView
+						android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/control_panel_user_icon"
+					    android:scaleType="centerInside"
+						tools:ignore="ContentDescription"/>
 
-			<!-- TODO: Fix issue where background blinks when this is pressed on Samsung Galaxy S5 (Android 6) due to toast -->
-			<ImageButton
-				android:id="@+id/control_panel_button_toggle"
-				android:scaleType="center"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="1"
-				style="@android:style/Widget.DeviceDefault.Button.Borderless"
-				tools:ignore="ContentDescription"/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:id="@+id/control_panel_status"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="?android:attr/textColorPrimary"
+						android:textStyle="bold"
+					    android:gravity="center_horizontal"
+						/>
 
-			<ImageButton
-				android:id="@+id/control_panel_button_rotate_right"
-				android:scaleType="center"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="1"
-				android:src="@drawable/control_panel_rotate_right"
-				style="@android:style/Widget.DeviceDefault.Button.Borderless"
-				android:contentDescription="@string/action_rotate_left"
-				/>
+				</LinearLayout>
 
-		</LinearLayout>
+				<LinearLayout
+					android:layout_height="match_parent"
+				    android:layout_width="match_parent"
+				    android:orientation="horizontal"
+					android:layoutDirection="ltr"
+					android:id="@+id/control_panel_controls"
+					tools:ignore="UnusedAttribute">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/control_panel_mode"
-			android:textAppearance="?android:attr/textAppearanceSmall"
-			android:textColor="?android:attr/textColorSecondary"
-			/>
+					<ImageButton
+						android:id="@+id/control_panel_button_rotate_left"
+						android:scaleType="center"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						style="@android:style/Widget.DeviceDefault.Button.Borderless"
+						android:src="@drawable/control_panel_rotate_left"
+					    android:contentDescription="@string/action_rotate_left"
+						/>
 
-	</LinearLayout>
+					<!-- TODO: Fix issue where background blinks when this is pressed on Samsung Galaxy S5 (Android 6) due to toast -->
+					<ImageButton
+						android:id="@+id/control_panel_button_toggle"
+						android:scaleType="center"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						style="@android:style/Widget.DeviceDefault.Button.Borderless"
+						tools:ignore="ContentDescription"/>
+
+					<ImageButton
+						android:id="@+id/control_panel_button_rotate_right"
+						android:scaleType="center"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:src="@drawable/control_panel_rotate_right"
+						style="@android:style/Widget.DeviceDefault.Button.Borderless"
+						android:contentDescription="@string/action_rotate_left"
+						/>
+
+				</LinearLayout>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/control_panel_mode"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:textColor="?android:attr/textColorSecondary"
+					/>
+
+			</LinearLayout>
+
+		</RelativeLayout>
+
+	</RelativeLayout>
 
 </samuelpalmer.sensorautorotation.processes.ui.ControlPanelView>
