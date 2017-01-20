@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
 
 import android.app.Activity;
 import android.app.AlertDialog;

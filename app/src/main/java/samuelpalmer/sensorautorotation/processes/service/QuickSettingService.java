@@ -16,8 +16,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.ui.ControlPanelDialog;
-import samuelpalmer.sensorautorotation.processes.ui.ControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelDialog;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelActivity;
 
 //TODO: It's possible to have both the dialog and activity open simultaneously. (Eg: from quick setting + from assist) Fix this.
 

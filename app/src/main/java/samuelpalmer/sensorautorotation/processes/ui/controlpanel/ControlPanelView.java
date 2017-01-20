@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,6 +25,7 @@ import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ControlPanelView extends RelativeLayout {

@@ -1,8 +1,10 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
 
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+
+import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 
 public class ControlPanelActivity extends DialogActivity {
 
