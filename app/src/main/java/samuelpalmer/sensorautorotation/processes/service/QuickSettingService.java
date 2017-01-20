@@ -16,16 +16,14 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelDialog;
-import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelCoordinator;
+import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelDialog;
+import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelActivity;
 
 //TODO: It's possible to have both the dialog and activity open simultaneously. (Eg: from quick setting + from assist) Fix this.
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
-
-	//This is static just in case Android decides to have multiple instances of the service running at the same time.
-	private static Dialog popupControlPanel;
 
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
@@ -42,14 +40,14 @@ public class QuickSettingService extends TileService {
 		else {
 
 			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-			if (popupControlPanel == null) {
+			if (!ControlPanelCoordinator.exists()) {
 				ControlPanelDialog dialog = new ControlPanelDialog.Builder(getApplicationContext()).create();
 				Bundle args = new Bundle();
-				popupControlPanel = dialog.onCreateDialog(args);
+				Dialog popupControlPanel = dialog.onCreateDialog(args);
 				popupControlPanel.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						popupControlPanel = null;
+						ControlPanelCoordinator.destroyed();
 					}
 				});
 
@@ -57,18 +55,22 @@ public class QuickSettingService extends TileService {
 				popupControlPanel.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						popupControlPanel = null;
+						ControlPanelCoordinator.destroyed();
 					}
 				});
-			}
 
-			/* This makes the service process's RAM usage jump up from ~8MB to ~14MB,
-			 * but we can't use an activity because the OS delays activity start
-			 * when the home button is pressed.
-			 *
-			 * https://code.google.com/p/android/issues/detail?id=4536
-			 */
-			showDialog(popupControlPanel);
+				/* This makes the service process's RAM usage jump up from ~8MB to ~14MB,
+				 * but we can't use an activity because the OS delays activity start
+				 * when the home button is pressed.
+				 *
+				 * https://code.google.com/p/android/issues/detail?id=4536
+				 */
+				showDialog(popupControlPanel);
+			}
+			else {
+				ControlPanelCoordinator.show();
+				startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
+			}
 		}
 	}
 

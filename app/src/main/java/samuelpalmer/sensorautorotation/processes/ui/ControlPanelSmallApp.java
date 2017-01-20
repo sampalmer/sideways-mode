@@ -1,8 +1,10 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
 
 import com.sony.smallapp.SmallApplication;
+
+import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

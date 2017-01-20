@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.service.controlpanel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -38,7 +39,10 @@ public class ControlPanelDialog extends DialogFragment {
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
 		View customView = LayoutInflater.from(alertBuilder.getContext()).inflate(R.layout.control_panel, null);
 		alertBuilder.setView(customView);
-		return alertBuilder.create();
+
+		AlertDialog alertDialog = alertBuilder.create();
+		ControlPanelCoordinator.created(alertDialog);
+		return alertDialog;
 	}
 
 	private ControlPanelDialog setContext(Context context){
@@ -46,12 +50,28 @@ public class ControlPanelDialog extends DialogFragment {
 		return this;
 	}
 
+
+	//Note that the below callbacks only apply when the dialog is hosted in a fragment
 	@Override
 	public void onDismiss(DialogInterface dialog) {
 		super.onDismiss(dialog);
+
+		dialogIsGoing();
+	}
+
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		super.onCancel(dialog);
+
+		dialogIsGoing();
+	}
+
+	private void dialogIsGoing() {
+		ControlPanelCoordinator.destroyed();
 
 		Activity activity = getActivity();
 		if (activity != null)
 			activity.finish();
 	}
+
 }

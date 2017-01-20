@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.service.controlpanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

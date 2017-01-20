@@ -74,26 +74,6 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".processes.ui.controlpanel.ControlPanelActivity"
-		          android:launchMode="singleInstance"
-		          android:excludeFromRecents="true"
-		          android:taskAffinity=""
-		          android:theme="@style/Theme.NoDisplay"
-		          android:showOnLockScreen="true"
-		          android:noHistory="true"
-		          android:configChanges="orientation|screenSize"
-		          tools:ignore="UnusedAttribute">
-
-			<!-- TODO: Show user how to activate/use this -->
-			<intent-filter>
-				<action android:name="android.intent.action.ASSIST" />
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
-
-			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
-
-		</activity>
-
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
 		<activity
@@ -133,7 +113,7 @@
 
 		<!--suppress AndroidDomInspection -->
 		<service
-			android:name=".processes.ui.controlpanel.ControlPanelSmallApp"
+			android:name=".processes.ui.ControlPanelSmallApp"
 			android:label="@string/app_name"
 			android:exported="true"
 			tools:ignore="ExportedService">
@@ -203,6 +183,7 @@
 			android:stateNotNeeded="true"
 			android:clearTaskOnLaunch="true"
 			android:finishOnTaskLaunch="true"
+			android:taskAffinity=""
 			android:process="@string/service_process_name"
 			/>
 
@@ -235,6 +216,28 @@
 			<meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
 			           android:value="true" />
 		</service>
+
+		<!-- This is in the service process instead of the UI process to simplify coordination between it and the quick setting dialog version -->
+		<activity android:name=".processes.service.controlpanel.ControlPanelActivity"
+		          android:launchMode="singleInstance"
+		          android:excludeFromRecents="true"
+		          android:taskAffinity=""
+		          android:theme="@style/Theme.NoDisplay"
+		          android:showOnLockScreen="true"
+		          android:noHistory="true"
+		          android:configChanges="orientation|screenSize"
+		          android:process="@string/service_process_name"
+		          tools:ignore="UnusedAttribute">
+
+			<!-- TODO: Show user how to activate/use this -->
+			<intent-filter>
+				<action android:name="android.intent.action.ASSIST" />
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+
+			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
+
+		</activity>
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 	</application>
