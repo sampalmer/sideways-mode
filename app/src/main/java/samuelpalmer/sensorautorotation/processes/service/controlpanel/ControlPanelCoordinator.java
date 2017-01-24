@@ -28,10 +28,19 @@ public class ControlPanelCoordinator {
 	 * This is useful in case the dialog is present but hidden
 	 */
 	public static void show() {
-		if (dialog == null)
-			throw new RuntimeException("Don't have a dialog to show");
+		ensureExists();
 
 		dialog.show();
 	}
 
+	public static void dismiss() {
+		ensureExists();
+
+		dialog.dismiss();
+	}
+
+	private static void ensureExists() {
+		if (dialog == null)
+			throw new RuntimeException("Don't have a dialog");
+	}
 }

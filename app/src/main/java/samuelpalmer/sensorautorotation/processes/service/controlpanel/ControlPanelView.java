@@ -61,10 +61,10 @@ public class ControlPanelView extends RelativeLayout {
 		settingsButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getContext().startActivity(new Intent(getContext(), MainActivity.class)) ;
+				getContext().startActivity(new Intent(getContext(), MainActivity.class));
+				ControlPanelCoordinator.dismiss();
 			}
 		});
-		//TODO: The above doesn't close the dialog when it was opened through the quick setting
 
 		disabledText = (TextView) findViewById(R.id.control_panel_disabled);
 		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);
