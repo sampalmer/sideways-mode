@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.processes.service.controlpanel;
 import android.app.Dialog;
 import android.util.Log;
 
+/**
+ * Keeps track of active control panel dialogs. Useful for ensuring only one is visible at a time.
+ */
 public class ControlPanelCoordinator {
 
 	private static Dialog dialog;
