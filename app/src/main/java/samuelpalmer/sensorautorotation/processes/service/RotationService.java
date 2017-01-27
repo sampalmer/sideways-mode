@@ -96,7 +96,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	public void handle(RotationServiceCommand command) {
 		switch (command.action) {
 			case RotationServiceCommand.ACTION_TOGGLE:
-				toggleRotation();
+				calculator.setAutoRotate(!calculator.autoRotate());
 				break;
 			case RotationServiceCommand.ACTION_ROTATE_LEFT:
 				calculator.offsetScreenBy(new Rotation(-1));
