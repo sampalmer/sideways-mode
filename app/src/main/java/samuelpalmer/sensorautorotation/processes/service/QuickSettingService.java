@@ -91,8 +91,6 @@ public class QuickSettingService extends TileService {
 	private static QuickSettingService listeningInstance;
 
 	public static void requestTileUpdate() {
-		Log.i(QuickSettingService.class.getSimpleName(), "Requested tile update");
-
 		if (listeningInstance == null)
 			requestListeningState();
 		else
@@ -108,7 +106,6 @@ public class QuickSettingService extends TileService {
 	private static void requestListeningState() {
 		ComponentName componentName = new ComponentName(CurrentProcess.context(), QuickSettingService.class);
 		requestListeningState(CurrentProcess.context(), componentName);
-		Log.i(QuickSettingService.class.getSimpleName(), "Requested listening state");
 	}
 
 	@Override
@@ -117,7 +114,6 @@ public class QuickSettingService extends TileService {
 
 		listeningInstance = this;
 
-		Log.i(QuickSettingService.class.getSimpleName(), "Started listening");
 		updateTile();
 	}
 
@@ -126,8 +122,6 @@ public class QuickSettingService extends TileService {
 		super.onStopListening();
 
 		listeningInstance = null;
-
-		Log.i(QuickSettingService.class.getSimpleName(), "Stopped listening");
 	}
 
 	private void updateTile() {
@@ -153,8 +147,6 @@ public class QuickSettingService extends TileService {
 		//TODO: Include a "disabled" label (and icon?) for when the service is disabled.
 		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name) : parameters.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
-
-		Log.i(QuickSettingService.class.getSimpleName(), "Updated tile");
 	}
 
 	private ServiceStatus makeServiceStatusIfAvailable() {
