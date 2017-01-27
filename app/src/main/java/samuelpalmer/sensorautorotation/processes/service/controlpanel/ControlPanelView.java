@@ -80,7 +80,10 @@ public class ControlPanelView extends RelativeLayout {
 		userIcon.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
 		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT, false)));
-		toggleModeButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, true)));
+
+		//Not showing the toast when this is pressed since it causes a flickering issue on Samsung Galaxy S5 (Android 6)
+		toggleModeButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, false)));
+
 		rotateRightButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT, false)));
 
 		childrenInflated = true;
