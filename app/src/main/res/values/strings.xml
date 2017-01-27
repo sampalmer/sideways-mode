@@ -63,7 +63,7 @@
 	<string name="preference_all_notifications_summary_blocked">Blocked</string>
 	<string name="preference_all_notifications_explanation">"On this version of Android, the status notification is needed to stop Android from killing the background service, so you cannot turn it off in this app. Instead, you can hide it by telling Android to block this app's notifications in the following screen."</string>
 
-	<string name="preference_notification_priority_title">Status priority</string>
+	<string name="preference_notification_priority_title">Notification priority</string>
 	<string name="preference_notification_priority_high">High</string>
 	<string name="preference_notification_priority_normal">Normal</string>
 	<string name="preference_notification_priority_low">Low</string>
