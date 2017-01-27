@@ -20,8 +20,6 @@ import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPan
 import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelDialog;
 import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelActivity;
 
-//TODO: It's possible to have both the dialog and activity open simultaneously. (Eg: from quick setting + from assist) Fix this.
-
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
