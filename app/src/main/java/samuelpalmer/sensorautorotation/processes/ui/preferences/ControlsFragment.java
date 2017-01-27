@@ -29,12 +29,11 @@ public class ControlsFragment extends PreferenceFragment {
 		notificationsPreference = findPreference("notifications");
 		notificationsSummary = new NotificationsSummary();
 
-		//TODO: Track and show somewhere whether the assist app is already configured
 		assistPreference = findPreference("assist");
 		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				//TODO: Show user how to enable the assist app if it's not enabled. Otherwise explain how to *use* it.
+				//TODO: Also make sure to explain how to use the app once it's configured
 
 				new AlertDialog.Builder(getActivity())
 						.setTitle(R.string.preference_assist)
