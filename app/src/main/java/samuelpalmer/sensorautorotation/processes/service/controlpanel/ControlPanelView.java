@@ -21,8 +21,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
@@ -79,9 +79,9 @@ public class ControlPanelView extends RelativeLayout {
 
 		userIcon.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
-		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_ROTATE_LEFT));
-		toggleModeButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_TOGGLE));
-		rotateRightButton.setOnClickListener(new RotationServiceClickListener(RotationService.ACTION_ROTATE_RIGHT));
+		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT, false)));
+		toggleModeButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, true)));
+		rotateRightButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT, false)));
 
 		childrenInflated = true;
 		enabledChanged.update();
@@ -90,15 +90,15 @@ public class ControlPanelView extends RelativeLayout {
 
 	private class RotationServiceClickListener implements View.OnClickListener {
 
-		private final String actionRotateLeft;
+		private final RotationServiceCommand command;
 
-		public RotationServiceClickListener(String action) {
-			actionRotateLeft = action;
+		public RotationServiceClickListener(RotationServiceCommand command) {
+			this.command = command;
 		}
 
 		@Override
 		public void onClick(View v) {
-			RotationServiceClient.send(actionRotateLeft);
+			RotationServiceClient.send(command);
 			//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
 		}
 

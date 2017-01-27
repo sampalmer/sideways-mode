@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.content.Intent;
-
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
@@ -11,20 +9,13 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class RotationServiceClient {
 
-	public static void send(String action) {
+	public static void send(RotationServiceCommand command) {
 		if (ServiceHolder.isRunning())
-			ServiceHolder.instance().handle(action); //This seems to have less lag than an intent
+			ServiceHolder.instance().handle(command); //This seems to have less lag than an intent
 		else if (new ServiceSynchroniser(ApplicationSettings.local()).serviceEnabled())
-			ServiceController.ensureStarted(makeIntent(action));
+			ServiceController.ensureStarted(command.toIntent());
 		else
 			showDisabledMessage();
-	}
-
-	private static Intent makeIntent(String action) {
-		return
-			ServiceController
-				.intent()
-				.setAction(action);
 	}
 
 	public static void showDisabledMessage() {

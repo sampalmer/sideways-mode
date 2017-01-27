@@ -6,20 +6,27 @@ import android.content.Context;
 import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
  * Provides a way to communicate with RotationService using broadcasts.
  */
 public class RotationServiceReceiver extends BroadcastReceiver {
 
-	public static PendingIntent getPendingIntent(String action) {
+	public static PendingIntent getPendingIntent(RotationServiceCommand command) {
 		ComponentType componentType = ComponentType.create(RotationServiceReceiver.class);
-		return componentType.pendingIntent(componentType.intent().setAction(action));
+		Intent commandIntent = command.toIntent();
+
+		//Want the intent to go to the broadcast receiver rather than the service itself
+		commandIntent.setClass(CurrentProcess.context(), RotationServiceReceiver.class);
+		return componentType.pendingIntent(commandIntent);
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		RotationServiceClient.send(intent.getAction());
+		intent.setClass(context, RotationService.class);
+		RotationServiceCommand command = RotationServiceCommand.fromIntent(intent);
+		RotationServiceClient.send(command);
 	}
 
 }

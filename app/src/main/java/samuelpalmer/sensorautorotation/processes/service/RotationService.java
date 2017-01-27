@@ -28,10 +28,6 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
-	public static final String ACTION_TOGGLE = "toggle";
-	public static final String ACTION_ROTATE_LEFT = "rotate_left";
-	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
-
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
@@ -91,27 +87,29 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent != null) {
-			String action = intent.getAction();
-			if (action != null)
-				handle(action);
-		}
+		if (intent != null && intent.getAction() != null)
+			handle(RotationServiceCommand.fromIntent(intent));
 
 		return Service.START_STICKY;
 	}
 
-	public void handle(String action) {
-		switch (action) {
-			case ACTION_TOGGLE:
+	public void handle(RotationServiceCommand command) {
+		switch (command.action) {
+			case RotationServiceCommand.ACTION_TOGGLE:
 				toggleRotation();
 				break;
-			case ACTION_ROTATE_LEFT:
+			case RotationServiceCommand.ACTION_ROTATE_LEFT:
 				calculator.offsetScreenBy(new Rotation(-1));
 				break;
-			case ACTION_ROTATE_RIGHT:
+			case RotationServiceCommand.ACTION_ROTATE_RIGHT:
 				calculator.offsetScreenBy(new Rotation(1));
 				break;
+			default:
+				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}
+
+		if (command.showToast)
+			showStatusToast();
 	}
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {

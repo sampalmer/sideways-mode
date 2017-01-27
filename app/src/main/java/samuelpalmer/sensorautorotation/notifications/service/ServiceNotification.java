@@ -14,7 +14,7 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
@@ -72,17 +72,17 @@ class ServiceNotification {
 			.configureButton(
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_LEFT),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT, false)),
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
 				serviceStatus.mode.actionIcon(),
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_TOGGLE),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, true)),
 				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
-				RotationServiceReceiver.getPendingIntent(RotationService.ACTION_ROTATE_RIGHT),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT, false)),
 				StringResource.get(R.string.action_rotate_right));
 
 		builder.setCustomContentView(notificationButtons.getContentView());
