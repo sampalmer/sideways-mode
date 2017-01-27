@@ -132,7 +132,6 @@ public class QuickSettingService extends TileService {
 
 		ServiceStatus parameters = makeServiceStatusIfAvailable();
 
-		//TODO: Remove duplication of default tile properties in manifest
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
