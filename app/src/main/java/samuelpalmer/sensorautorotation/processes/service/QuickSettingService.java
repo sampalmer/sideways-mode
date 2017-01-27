@@ -144,8 +144,7 @@ public class QuickSettingService extends TileService {
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.notificationIcon()));
 
-		//TODO: Include a "disabled" label (and icon?) for when the service is disabled.
-		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name) : parameters.getSummary());
+		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name_full) : parameters.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
 
