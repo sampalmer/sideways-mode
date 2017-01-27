@@ -104,7 +104,6 @@
 					    android:contentDescription="@string/action_rotate_left"
 						/>
 
-					<!-- TODO: Fix issue where background blinks when this is pressed on Samsung Galaxy S5 (Android 6) due to toast -->
 					<ImageButton
 						android:id="@+id/control_panel_button_toggle"
 						android:scaleType="center"
