@@ -56,6 +56,9 @@
 	<string name="preference_controls">Controls</string>
 	<string name="preference_controls_description">How to control the screen orientation</string>
 
+	<string name="preference_assist">Assist</string>
+	<string name="preference_assist_description">TODO: Come up with a description!</string>
+
 	<string name="preference_notifications">Notifications</string>
 
 	<string name="preference_show_notification">Show status</string>

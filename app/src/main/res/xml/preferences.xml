@@ -5,7 +5,7 @@
 		android:key="enabled"
 	    android:title="@string/preference_enabled_title"
 	    android:summary="@string/preference_enabled_description"
-	    android:icon="@drawable/power"
+	    android:icon="@drawable/preference_power"
 	/>
 
 	<!-- The "dependency" attribute needs to be specified for all children since setting it on the
@@ -18,7 +18,7 @@
 			android:persistent="false"
 			android:title="@string/preference_controls"
 			android:summary="@string/preference_controls_description"
-			android:icon="@drawable/controls"
+			android:icon="@drawable/preference_controls"
 			android:dependency="enabled">
 
 			<intent
@@ -31,7 +31,7 @@
 			android:key="allowUpsideDownScreen"
 			android:title="@string/preference_allow_upside_down_screen_title"
 			android:summary="@string/preference_allow_upside_down_screen_description"
-			android:icon="@drawable/screen_upside_down"
+			android:icon="@drawable/preference_screen_upside_down"
 			android:dependency="enabled"
 			/>
 
@@ -39,7 +39,7 @@
 			android:key="forcedOrientationAppPackages"
 			android:persistent="false"
 			android:title="@string/preference_forced_apps_title"
-			android:icon="@drawable/overridden_apps"
+			android:icon="@drawable/preference_overridden_apps"
 			android:dependency="enabled">
 
 			<intent

@@ -11,7 +11,7 @@
 		android:key="forcedOrientationAppPackages"
 		android:persistent="false"
 		android:title="@string/preference_choose_apps"
-		android:icon="@drawable/apps">
+		android:icon="@drawable/preference_apps">
 
 		<intent
 			android:targetPackage="samuelpalmer.sensorautorotation"

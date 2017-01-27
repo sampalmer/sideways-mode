@@ -5,14 +5,14 @@
 		android:key="showNotification"
 		android:title="@string/preference_show_notification"
 		android:summary="@string/preference_show_notification_description"
-		android:icon="@drawable/visibility"
+		android:icon="@drawable/preference_visibility"
 		/>
 
 	<Preference
 		android:key="allNotifications"
 		android:persistent="false"
 		android:title="@string/preference_all_notifications_title"
-		android:icon="@drawable/visibility"
+		android:icon="@drawable/preference_visibility"
 		/>
 
 	<!-- This can't depend on the "Show Notification" preference since it isn't always available -->
@@ -22,8 +22,8 @@
 		android:title="@string/preference_notification_priority_title"
 		android:entries="@array/notification_priorities"
 		android:entryValues="@array/notification_priority_values"
-		android:dialogIcon="@drawable/notification_priority"
-		android:icon="@drawable/notification_priority"
+		android:dialogIcon="@drawable/preference_notification_priority"
+		android:icon="@drawable/preference_notification_priority"
 		/>
 
 </PreferenceScreen>

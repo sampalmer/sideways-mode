@@ -6,12 +6,19 @@
 		android:key="notifications"
 		android:persistent="false"
 		android:title="@string/preference_notifications"
-		android:icon="@drawable/notifications">
+		android:icon="@drawable/preference_notifications">
 
 		<intent
 			android:targetPackage="samuelpalmer.sensorautorotation"
 			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsActivity" />
 
 	</Preference>
+
+	<Preference
+		android:key="assist"
+	    android:persistent="false"
+	    android:title="@string/preference_assist"
+	    android:summary="@string/preference_assist_description"
+		android:icon="@drawable/preference_assist" />
 
 </PreferenceScreen>
