@@ -77,8 +77,15 @@
 		<receiver android:name=".processes.ui.ToastReceiver" />
 
 		<activity
-			android:name=".processes.ui.preferences.notifications.NotificationsActivity"
+			android:name=".processes.ui.preferences.ControlsActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
+			android:label="@string/preference_controls"
+			android:launchMode="singleTask"
+			tools:ignore="UnusedAttribute" />
+
+		<activity
+			android:name=".processes.ui.preferences.notifications.NotificationsActivity"
+			android:parentActivityName=".processes.ui.preferences.ControlsActivity"
 			android:label="@string/preference_notifications"
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">

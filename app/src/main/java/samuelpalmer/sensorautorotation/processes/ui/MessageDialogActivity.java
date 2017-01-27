@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.ComponentType;
