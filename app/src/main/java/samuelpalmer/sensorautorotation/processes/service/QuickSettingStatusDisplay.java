@@ -12,13 +12,12 @@ public class QuickSettingStatusDisplay implements ServiceStatusDisplay {
 
 	@Override
 	public void onServiceStopped() {
-		QuickSettingService.requestTileUpdate();
+		QuickSettingService.requestTileUpdate(null);
 	}
 
 	@Override
 	public void update(ServiceStatus serviceStatus) {
-		//TODO: Have the quick setting service hang onto "serviceStatus" to save recreated it unnecessarily.
-		QuickSettingService.requestTileUpdate();
+		QuickSettingService.requestTileUpdate(serviceStatus);
 	}
 
 }

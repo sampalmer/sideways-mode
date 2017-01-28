@@ -23,6 +23,8 @@ import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPan
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
+	private static ServiceStatus currentStatus;
+
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
 	 */
@@ -78,7 +80,7 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Tile added");
 
-		requestTileUpdate();
+		requestTileUpdate(makeServiceStatusIfAvailable());
 	}
 
 	@Override
@@ -90,7 +92,12 @@ public class QuickSettingService extends TileService {
 
 	private static QuickSettingService listeningInstance;
 
-	public static void requestTileUpdate() {
+	/**
+	 * @param status Can be {@code null} if the service isn't enabled.
+	 */
+	public static void requestTileUpdate(ServiceStatus status) {
+		currentStatus = status;
+
 		if (listeningInstance == null)
 			requestListeningState();
 		else
@@ -125,25 +132,21 @@ public class QuickSettingService extends TileService {
 	}
 
 	private void updateTile() {
-		//TODO: Only update when the service running state or serviceStatus have changed.
-
 		if (listeningInstance == null)
 			throw new RuntimeException("Not allowed to update the tile outside of listening state.");
-
-		ServiceStatus parameters = makeServiceStatusIfAvailable();
 
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 
 		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
-		tile.setState(parameters == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
+		tile.setState(currentStatus == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 
 		//TODO: Maybe add a "plus" symbol to the icon to distinguish it from the Android one. Also do this for the app's main logo.
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, parameters == null ? R.drawable.rotation : parameters.mode.notificationIcon()));
+		tile.setIcon(Icon.createWithResource(this, currentStatus == null ? R.drawable.rotation : currentStatus.mode.notificationIcon()));
 
-		tile.setLabel(parameters == null ? StringResource.get(R.string.app_name_full) : parameters.getSummary());
+		tile.setLabel(currentStatus == null ? StringResource.get(R.string.app_name_full) : currentStatus.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
 
