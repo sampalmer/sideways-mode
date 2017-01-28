@@ -23,7 +23,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-//TODO: On failure, issue an EnvironmentError and advise the user to use the Android 7.1 workaround
 /**
  * Puts {@link RotationService} in the foreground but hides its notification.
  */

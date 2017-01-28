@@ -28,7 +28,6 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 		showNotificationSetting.subscribe(showNotificationSettingChanged);
 		showNotificationSettingChanged.update();
 
-		//TODO: Don't add this unless it's actually needed
 		if (Build.VERSION.SDK_INT >= 24)
 			add(new QuickSettingStatusDisplay());
 
