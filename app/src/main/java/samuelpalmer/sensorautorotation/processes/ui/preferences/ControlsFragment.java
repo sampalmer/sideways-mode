@@ -46,6 +46,7 @@ public class ControlsFragment extends PreferenceFragment {
 								@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
+									//TODO: Ensure this doesn't crash; the activity might not exist
 									startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
 								}
 							})
