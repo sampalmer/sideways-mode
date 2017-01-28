@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,22 +34,32 @@ public class ControlsFragment extends PreferenceFragment {
 		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				//TODO: Also make sure to explain how to use the app once it's configured
-
-				new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.preference_assist)
-						.setMessage(R.string.preference_all_notifications_explanation) //TODO: Set an appropriate description
-						.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {}
-						})
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								instructUserToEnableAssist();
-							}
-						})
-						.show();
+				if (Build.VERSION.SDK_INT >= 21)
+					new AlertDialog.Builder(getActivity())
+							.setTitle(R.string.preference_assist)
+							.setMessage(R.string.preference_assist_instructions_lollipop)
+							.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+							})
+							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									//TODO: Check if this works on the Samsung phone as well
+									startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
+								}
+							})
+							.show();
+				else
+					new AlertDialog.Builder(getActivity())
+							.setTitle(R.string.preference_assist)
+							.setMessage(R.string.preference_assist_instructions)
+							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+							})
+							.show();
 
 				return true;
 			}
@@ -68,15 +79,6 @@ public class ControlsFragment extends PreferenceFragment {
 		super.onStop();
 
 		notificationsSummary.unsubscribe(notificationsChanged);
-	}
-
-	private void instructUserToEnableAssist() {
-		if (Build.VERSION.SDK_INT >= 21)
-			//TODO: Check if this works on the Samsung phone as well
-			startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
-		else {
-			//TODO: Instruct user to just swipe up from the home button to configure it
-		}
 	}
 
 	private EventHandler notificationsChanged = new EventHandler() {

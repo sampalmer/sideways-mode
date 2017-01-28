@@ -236,7 +236,6 @@
 		          android:process="@string/service_process_name"
 		          tools:ignore="UnusedAttribute">
 
-			<!-- TODO: Show user how to activate/use this -->
 			<intent-filter>
 				<action android:name="android.intent.action.ASSIST" />
 				<category android:name="android.intent.category.DEFAULT"/>
