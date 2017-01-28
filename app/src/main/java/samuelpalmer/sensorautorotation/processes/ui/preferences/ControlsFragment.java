@@ -46,7 +46,6 @@ public class ControlsFragment extends PreferenceFragment {
 								@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									//TODO: Check if this works on the Samsung phone as well
 									startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
 								}
 							})
