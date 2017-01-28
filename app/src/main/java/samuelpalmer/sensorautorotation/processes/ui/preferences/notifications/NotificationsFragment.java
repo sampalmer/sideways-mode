@@ -1,8 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.notifications;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,11 +24,15 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.service.ServiceNotificationHider;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
 public class NotificationsFragment extends PreferenceFragment {
+
+	private static final int REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED = 1;
 
 	private final EventHandler listPreferenceSummaryUpdater = new EventHandler() {
 		@Override
@@ -75,7 +81,7 @@ public class NotificationsFragment extends PreferenceFragment {
 						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								openAppNotificationSystemSettings(); //TODO: Once the user returns, regenerate the notification in case they've just enabled it.
+								openAppNotificationSystemSettings();
 							}
 						})
 						.show();
@@ -97,7 +103,7 @@ public class NotificationsFragment extends PreferenceFragment {
 			.putExtra("app_uid", CurrentProcess.context().getApplicationInfo().uid);
 
 		try {
-			startActivity(appNotificationSettingsIntent);
+			startActivityForResult(appNotificationSettingsIntent, REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED);
 		} catch (Exception ex) {
 			Log.w(NotificationsFragment.class.getSimpleName(), "Couldn't directly open app notification settings. Opening app settings instead.", ex);
 
@@ -109,6 +115,25 @@ public class NotificationsFragment extends PreferenceFragment {
 		}
 	}
 
+	@SuppressLint("NewApi")
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && notificationManager.areNotificationsEnabled()) {
+			//The user might have just unblocked the app's notifications, so better add the status notification if needed.
+			RotationServiceCommand command = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
+			command.toastIfServiceDisabled = false;
+
+			try {
+				RotationServiceReceiver.getPendingIntent(command).send();
+			} catch (PendingIntent.CanceledException e) {
+				throw new RuntimeException(e); //Don't expect this to actually happen
+			}
+		}
+
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -116,7 +141,7 @@ public class NotificationsFragment extends PreferenceFragment {
 		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
 	}
 
-	@TargetApi(Build.VERSION_CODES.N)
+	@SuppressLint("NewApi")
 	@Override
 	public void onStart() {
 		super.onStart();

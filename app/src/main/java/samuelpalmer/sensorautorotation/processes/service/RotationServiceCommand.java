@@ -12,20 +12,26 @@ public class RotationServiceCommand {
 	public static final String ACTION_TOGGLE = "toggle";
 	public static final String ACTION_ROTATE_LEFT = "rotate_left";
 	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
+	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
+
+	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
+			ACTION_TOGGLE,
+			ACTION_ROTATE_LEFT,
+			ACTION_ROTATE_RIGHT,
+			ACTION_UPDATE_NOTIFICATION
+	));
 
 	private static final String EXTRA_SHOW_TOAST = "show_toast";
 
-	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(ACTION_TOGGLE, ACTION_ROTATE_LEFT, ACTION_ROTATE_RIGHT));
+	final String action;
+	public boolean showToast;
+	public boolean toastIfServiceDisabled = true;
 
-	public final String action;
-	public final boolean showToast;
-
-	public RotationServiceCommand(String action, boolean showToast) {
+	public RotationServiceCommand(String action) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
 
 		this.action = action;
-		this.showToast = showToast;
 	}
 
 	public Intent toIntent() {
@@ -39,7 +45,10 @@ public class RotationServiceCommand {
 		if (!intent.hasExtra(EXTRA_SHOW_TOAST))
 			throw new IllegalArgumentException("Intent didn't have the " + EXTRA_SHOW_TOAST + " extra");
 
-		return new RotationServiceCommand(intent.getAction(), intent.getBooleanExtra(EXTRA_SHOW_TOAST, false));
+		RotationServiceCommand result = new RotationServiceCommand(intent.getAction());
+		result.showToast = intent.getBooleanExtra(EXTRA_SHOW_TOAST, false);
+
+		return result;
 	}
 
 }

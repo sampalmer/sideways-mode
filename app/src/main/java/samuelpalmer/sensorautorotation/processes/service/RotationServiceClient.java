@@ -14,11 +14,11 @@ public abstract class RotationServiceClient {
 			ServiceHolder.instance().handle(command); //This seems to have less lag than an intent
 		else if (new ServiceSynchroniser(ApplicationSettings.local()).serviceEnabled())
 			ServiceController.ensureStarted(command.toIntent());
-		else
+		else if (command.toastIfServiceDisabled)
 			showDisabledMessage();
 	}
 
-	public static void showDisabledMessage() {
+	private static void showDisabledMessage() {
 		CharSequence message = disabledMessage();
 		ToastReceiver.send(message);
 	}

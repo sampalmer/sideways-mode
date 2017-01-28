@@ -16,7 +16,11 @@ public class ToggleRotationLockActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		RotationServiceClient.send(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, true));
+
+		RotationServiceCommand command = new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE);
+		command.showToast = true;
+
+		RotationServiceClient.send(command);
 		finish();
 	}
 

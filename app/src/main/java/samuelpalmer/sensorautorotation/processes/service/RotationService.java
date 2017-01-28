@@ -38,6 +38,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementManager orientationEnforcementManager;
 	ActivityMonitor activityMonitor;
+	private ServiceStatusDisplays display;
 
 	@Override
 	public void onCreate() {
@@ -61,7 +62,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		serviceStatusFactory = new ServiceStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
-		serviceStatusDisplayUpdater = new ServiceStatusDisplayUpdater(serviceStatusFactory, new ServiceStatusDisplays(this));
+		display = new ServiceStatusDisplays(this);
+		serviceStatusDisplayUpdater = new ServiceStatusDisplayUpdater(serviceStatusFactory, display);
 
 		serviceRevivalManager = new ServiceRevivalManager();
 
@@ -103,6 +105,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				break;
 			case RotationServiceCommand.ACTION_ROTATE_RIGHT:
 				calculator.offsetScreenBy(new Rotation(1));
+				break;
+			case RotationServiceCommand.ACTION_UPDATE_NOTIFICATION:
+				display.update(serviceStatusDisplayUpdater.getLastStatus());
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);

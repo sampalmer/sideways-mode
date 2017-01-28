@@ -68,21 +68,24 @@ class ServiceNotification {
 			actionButtonColour
 		);
 
+		RotationServiceCommand toggleCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE);
+		toggleCommand.showToast = true;
+
 		notificationButtons
 			.configureButton(
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT, false)),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT)),
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
 				serviceStatus.mode.actionIcon(),
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE, true)),
+				RotationServiceReceiver.getPendingIntent(toggleCommand),
 				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT, false)),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT)),
 				StringResource.get(R.string.action_rotate_right));
 
 		builder.setCustomContentView(notificationButtons.getContentView());
