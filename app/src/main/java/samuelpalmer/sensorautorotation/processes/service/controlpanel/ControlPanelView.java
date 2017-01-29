@@ -18,6 +18,7 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
@@ -33,6 +34,7 @@ public class ControlPanelView extends RelativeLayout {
 	private final ServiceStatusContentProvider.Client serviceClient;
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
+	private final Settings.Setting<String> lastErrorSetting;
 
 	private TextView disabledText;
 	private ProgressBar progressBar;
@@ -51,6 +53,7 @@ public class ControlPanelView extends RelativeLayout {
 		serviceClient = new ServiceStatusContentProvider.Client(getContext());
 		handler = new Handler();
 		enabledSetting = ApplicationSettings.remote().enabled();
+		lastErrorSetting = EnvironmentError.lastError();
 	}
 
 	@Override
@@ -113,6 +116,7 @@ public class ControlPanelView extends RelativeLayout {
 
 		serviceClient.subscribe(statusChanged);
 		enabledSetting.subscribe(enabledChanged);
+		lastErrorSetting.subscribe(lastErrorChanged);
 
 		enabledChanged.update();
 		maybeUpdateUi();
@@ -124,6 +128,7 @@ public class ControlPanelView extends RelativeLayout {
 
 		serviceClient.unsubscribe(statusChanged);
 		enabledSetting.unsubscribe(enabledChanged);
+		lastErrorSetting.unsubscribe(lastErrorChanged);
 	}
 
 	private final IServiceStatusListener.Stub statusChanged = new IServiceStatusListener.Stub() {
@@ -147,6 +152,13 @@ public class ControlPanelView extends RelativeLayout {
 		@Override
 		public void update() {
 			isEnabled = enabledSetting.get();
+			maybeUpdateUi();
+		}
+	};
+
+	private EventHandler lastErrorChanged = new EventHandler() {
+		@Override
+		public void update() {
 			maybeUpdateUi();
 		}
 	};

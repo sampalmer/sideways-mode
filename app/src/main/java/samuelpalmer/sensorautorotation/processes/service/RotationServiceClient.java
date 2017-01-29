@@ -24,7 +24,8 @@ public abstract class RotationServiceClient {
 	}
 
 	public static CharSequence disabledMessage() {
-		return StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
+		String lastErrorMessage = ApplicationSettings.remote().lastError().tryGet();
+		return lastErrorMessage != null ? lastErrorMessage : StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
 	}
 
 }

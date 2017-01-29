@@ -6,6 +6,7 @@ import android.os.Build.VERSION_CODES;
 import android.util.Log;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
@@ -51,10 +52,16 @@ public class EnvironmentError {
 		Notification notification = builder.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
+		lastError().set(message.toString());
 	}
 
 	public static void clear() {
 		SystemServices.notificationManager().cancel(NotificationIds.ERROR);
+		lastError().remove();
+	}
+
+	public static Settings.Setting<String> lastError() {
+		return ApplicationSettings.remote().lastError();
 	}
 
 }

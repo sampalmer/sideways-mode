@@ -11,6 +11,7 @@ import samuelpalmer.common.settings.application.EnumSetting;
 import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.StringSetSetting;
+import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -57,5 +58,6 @@ public class ApplicationSettings extends Settings {
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 	public Setting<Boolean> showNotification() { return new Setting<>(new BooleanSetting(), "showNotification", true); }
 	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
+	public Setting<String> lastError() { return new Setting<>(new StringSetting(), "lastError", null); }
 
 }
