@@ -30,6 +30,21 @@ public class ControlsFragment extends PreferenceFragment {
 		notificationsPreference = findPreference("notifications");
 		notificationsSummary = new NotificationsSummary();
 
+		Preference quickSettingPreference = findPreference("quick_setting");
+		quickSettingPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				new AlertDialog.Builder(getActivity())
+						.setTitle(R.string.preference_quick_setting)
+						.setMessage(R.string.preference_quick_setting_instructions)
+						.show();
+
+				return true;
+			}
+		});
+		if (Build.VERSION.SDK_INT < 24)
+			getPreferenceScreen().removePreference(quickSettingPreference);
+
 		assistPreference = findPreference("assist");
 		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override

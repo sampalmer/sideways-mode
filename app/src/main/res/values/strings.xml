@@ -54,12 +54,19 @@
 	<string name="preference_settings_title">Settings</string>
 
 	<string name="preference_controls">Controls</string>
-	<string name="preference_controls_description">How to control the screen orientation</string>
+	<string name="preference_controls_description">Controlling the screen orientation</string>
+
+	<string name="preference_quick_setting">Quick setting</string>
+	<string name="preference_quick_setting_instructions">"To use the quick setting, just add this app's tile to your quick settings tray."</string>
 
 	<string name="preference_assist">Assist</string>
 	<string name="preference_assist_description">Control the screen using the home button</string>
 	<string name="preference_assist_instructions">If your device has a soft (not physical) home button, you can swipe up from the home button to control this app.\n\nIf swiping the home button doesn\'t work, your device may not support this feature. If swiping the home button opens a different app, first clear <b>that</b> app\'s defaults in the Android app settings, and then try again."</string>
 	<string name="preference_assist_instructions_lollipop">"You can long-press the home button to control this app. To enable this, you must first set this app as Android's assist app. Do this now?"</string>
+
+	<string name="preference_small_app">Small app</string>
+	<string name="preference_small_app_description">Small app shortcut for Sony phones</string>
+	<string name="preference_small_app_instructions">You may be able to access this from the recents screen. You could also drag the icon from the small app drawer to the bottom of the recents screen for quicker access.</string>
 
 	<string name="preference_notifications">Notifications</string>
 
