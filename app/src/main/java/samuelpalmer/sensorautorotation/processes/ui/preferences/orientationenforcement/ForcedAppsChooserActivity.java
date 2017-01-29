@@ -6,10 +6,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.RemotePreferencesActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
-public class ForcedAppsChooserActivity extends RemotePreferencesActivity {
+public class ForcedAppsChooserActivity extends PreferencesActivity {
 
 	private ProgressListView list;
 	private LoadInstalledAppsTask loader;

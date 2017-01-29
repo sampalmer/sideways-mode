@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class ControlsActivity extends RemotePreferencesActivity {
+public class ControlsActivity extends PreferencesActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

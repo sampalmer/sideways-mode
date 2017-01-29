@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Theme" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
-		<item name="android:actionBarStyle">@style/Theme.ActionBar</item>
 
-		<!-- Makes the action bar menu have a white background for better contrast with the brown menu item icons -->
-		<item name="android:actionBarWidgetTheme">@null</item>
-	</style>
-
-	<style name="Theme.ActionBar" parent="android:Widget.DeviceDefault.ActionBar.Solid">
-		<item name="android:titleTextStyle">@style/Theme.ActionBar.TitleTextStyle</item>
-		<item name="android:background">@color/primary_500</item>
-	</style>
-
-	<style name="Theme.ActionBar.TitleTextStyle" parent="android:TextAppearance.DeviceDefault.Widget.ActionBar.Title">
-		<item name="android:textColor">@android:color/white</item>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/primary_500</item>
+		<item name="colorPrimaryDark">@color/primary_700</item>
+		<item name="colorAccent">@color/accent_700</item>
 	</style>
 
 	<!--
 		The built-in NoDisplay theme doesn't inherit a theme for child dialogs, so this redefines it with the needed inheritance.
 		The built-in theme also results in a normal-looking activity, so not using that.
 	 -->
-	<style name="Theme.NoDisplay" parent="Theme">
+	<style name="Theme.NoDisplay" parent="AppTheme">
 		<item name="android:windowBackground">@android:color/transparent</item>
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowIsTranslucent">true</item>
@@ -32,9 +25,8 @@
 
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">true</item>
+
+		<!--TODO: Prevent the activity name from showing up behind the activity/dialog
 	</style>
 
-	<style name="Theme.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog" />
-
-	<style name="Theme.Dialog.Headless" parent="android:Theme.DeviceDefault.Light.Dialog.NoActionBar" />
 </resources>

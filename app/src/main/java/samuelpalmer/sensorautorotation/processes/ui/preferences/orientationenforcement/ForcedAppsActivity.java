@@ -16,10 +16,10 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.RemotePreferencesActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 
-public class ForcedAppsActivity extends RemotePreferencesActivity {
+public class ForcedAppsActivity extends PreferencesActivity {
 
 	private static final int REQUEST_CODE_ACCESSIBILITY_SERVICE = 1;
 

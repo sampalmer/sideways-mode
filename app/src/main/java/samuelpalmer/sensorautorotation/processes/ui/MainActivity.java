@@ -4,9 +4,9 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.RemotePreferencesActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
-public class MainActivity extends RemotePreferencesActivity {
+public class MainActivity extends PreferencesActivity {
 
 	private static final String TAG_MENU = "menu";
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
