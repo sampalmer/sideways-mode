@@ -112,11 +112,13 @@
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute"/>
 
+		<!-- TODO: Make use of the meta element to add support for Android 4.0 -->
 		<activity
 			android:name=".processes.ui.ReportProblemActivity"
+			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="Report problem"
 		    android:windowSoftInputMode="stateVisible"
-			/>
+			tools:ignore="UnusedAttribute"/>
 
 		<!--suppress AndroidDomInspection -->
 		<service

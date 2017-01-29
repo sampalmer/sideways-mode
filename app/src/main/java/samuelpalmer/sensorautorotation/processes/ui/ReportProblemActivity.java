@@ -11,7 +11,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
 
-public class ReportProblemActivity extends Activity {
+public class ReportProblemActivity extends UiActivity {
 	private final static String logcatKey = "logcat";
 	private String logcat;
 	private EditText description;
