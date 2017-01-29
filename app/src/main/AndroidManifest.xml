@@ -227,6 +227,7 @@
 		</service>
 
 		<!-- This is in the service process instead of the UI process to simplify coordination between it and the quick setting dialog version -->
+		<!-- TODO: See if you can make this work out in the UI process. Having in the service process is adding ~7MB of RAM. -->
 		<activity android:name=".processes.service.controlpanel.ControlPanelActivity"
 		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"

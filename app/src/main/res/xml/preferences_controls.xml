@@ -14,11 +14,15 @@
 
 	</Preference>
 
+	<!-- TODO: Add a quick setting one here -->
+
 	<Preference
 		android:key="assist"
 	    android:persistent="false"
 	    android:title="@string/preference_assist"
 	    android:summary="@string/preference_assist_description"
 		android:icon="@drawable/preference_assist" />
+
+	<!-- TODO: Add a Sony small app one here -->
 
 </PreferenceScreen>
