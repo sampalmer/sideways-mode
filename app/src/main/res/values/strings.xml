@@ -134,6 +134,8 @@
 	<string name="instructions_introduction_heading">Welcome</string>
 	<string name="instructions_introduction_contents">Welcome to %1$s! This replaces Android\'s screen rotation, so don\'t use the normal Android screen rotation settings.</string>
 
+	<!-- TODO: Update instructions to reflect the different ways of controlling the app -->
+
 	<string name="instructions_modes_heading">Modes</string>
 	<string name="instructions_modes_contents">There are two modes: %1$s and Locked. To see which mode you\'re using, look at the notification icon in the notification drawer.</string>
 
