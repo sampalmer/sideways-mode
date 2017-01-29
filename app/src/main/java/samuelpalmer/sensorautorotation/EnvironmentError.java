@@ -1,10 +1,15 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
@@ -14,28 +19,65 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class EnvironmentError {
 
-	private CharSequence summary;
-	private CharSequence message;
+	private static final String JSON_KEY_SUMMARY = "summary";
+	private static final String JSON_KEY_MESSAGE = "message";
 
-	public static void report(int summaryResourceId, int messageResourceId, Object... messageArguments) {
-		EnvironmentError instance = new EnvironmentError();
-		instance.summary = StringResource.get(summaryResourceId);
+	private static final Settings.Setting<String> lastErrorSetting = ApplicationSettings.remote().lastErrorJson();
+	public static final EventRegistrar onChange = lastErrorSetting;
+
+	public static EnvironmentError lastError() {
+		String serialised = lastErrorSetting.tryGet();
+		if (serialised == null)
+			return null;
+
+		try {
+			return new EnvironmentError(serialised);
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public final CharSequence summary;
+	public final CharSequence message;
+
+	public EnvironmentError(int summaryResourceId, int messageResourceId, Object... messageArguments) {
+		summary = StringResource.get(summaryResourceId);
 		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		instance.message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name_full);
+		message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name_full);
+	}
 
+	private EnvironmentError(String json) throws JSONException {
+		JSONObject parsed = new JSONObject(json);
+		summary = parsed.getString(JSON_KEY_SUMMARY);
+		message = parsed.getString(JSON_KEY_MESSAGE);
+	}
+
+	private JSONObject serialise() {
+		try {
+			return new JSONObject()
+					.put(JSON_KEY_SUMMARY, summary.toString())
+					.put(JSON_KEY_MESSAGE, message.toString());
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void report() {
 		//This is useful when checking log output from Cloud Test Lab on Google Play Store.
-		Log.i(EnvironmentError.class.getSimpleName(), instance.summary + ". " + instance.message);
+		Log.i(EnvironmentError.class.getSimpleName(), summary + ". " + message);
 
-		instance.show();
+		postNotification();
+
+		JSONObject json = serialise();
+		lastErrorSetting.set(json.toString());
+
 		new ServiceSynchroniser(ApplicationSettings.remote()).disableService();
 	}
 
-	private EnvironmentError(){}
-
-	private void show() {
+	private void postNotification() {
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
-			.setContentIntent(MessageDialogActivity.makePendingIntent(summary, message))
+			.setContentIntent(showDialogIntent())
 			.setContentTitle(summary)
 			.setContentText(message)
 			.setAutoCancel(true)
@@ -51,16 +93,15 @@ public class EnvironmentError {
 		Notification notification = builder.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
-		lastError().set(message.toString());
+	}
+
+	public PendingIntent showDialogIntent() {
+		return MessageDialogActivity.makePendingIntent(summary, message);
 	}
 
 	public static void clear() {
 		SystemServices.notificationManager().cancel(NotificationIds.ERROR);
-		lastError().remove();
-	}
-
-	public static Settings.Setting<String> lastError() {
-		return ApplicationSettings.remote().lastError();
+		lastErrorSetting.remove();
 	}
 
 }

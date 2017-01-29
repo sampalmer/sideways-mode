@@ -1,14 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
+import android.app.PendingIntent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -18,21 +16,13 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
  */
 public class PreferencesActivity extends UiActivity {
 
-	private Settings.Setting<String> lastError;
 	private Snackbar snackbar;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		lastError = EnvironmentError.lastError();
-	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		lastError.subscribe(lastErrorChanged);
+		EnvironmentError.onChange.subscribe(lastErrorChanged);
 		lastErrorChanged.update();
 	}
 
@@ -40,26 +30,43 @@ public class PreferencesActivity extends UiActivity {
 	protected void onStop() {
 		super.onStop();
 
-		lastError.unsubscribe(lastErrorChanged);
+		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
 	}
 
 	private final EventHandler lastErrorChanged = new EventHandler() {
 		@Override
 		public void update() {
-			String lastErrorMessage = lastError.tryGet();
+			final EnvironmentError lastError = EnvironmentError.lastError();
 
 			if (snackbar == null) {
 				//http://stackoverflow.com/a/5069354/238753
 				View contentView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 				snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_INDEFINITE);
-				//TODO: Get the snackbar to show the full message rather than truncating it.
-				//TODO: Prevent the snackbar from blocking UI elements underneath it.
+				snackbar.setCallback(new Snackbar.Callback() {
+					@Override
+					public void onDismissed(Snackbar snackbar, int event) {
+						super.onDismissed(snackbar, event);
+						EnvironmentError.clear();
+					}
+				});
+
+				//TODO: Make dismissing the snackbar work
 			}
 
-			if (lastErrorMessage == null)
+			if (lastError == null)
 				snackbar.dismiss();
 			else {
-				snackbar.setText(lastErrorMessage);
+				snackbar.setText(lastError.message);
+				snackbar.setAction("More", new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							lastError.showDialogIntent().send();
+						} catch (PendingIntent.CanceledException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				});
 				snackbar.show();
 			}
 		}

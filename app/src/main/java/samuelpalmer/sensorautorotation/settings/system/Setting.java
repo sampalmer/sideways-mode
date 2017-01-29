@@ -57,14 +57,14 @@ public class Setting<T> {
 			&&
 			!Settings.System.canWrite(CurrentProcess.context())
 		) {
-			EnvironmentError.report(R.string.environment_error_permission_needed_summary, R.string.environment_error_system_setting_write_denied_message);
+			new EnvironmentError(R.string.environment_error_permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
 			return;
 		}
 
 		boolean writeErrors = !putString(contentResolver, key, value);
 		if (writeErrors) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			EnvironmentError.report(R.string.environment_error_system_setting_write_failure_summary, R.string.environment_error_system_setting_write_failure_message, key, value);
+			new EnvironmentError(R.string.environment_error_system_setting_write_failure_summary, R.string.environment_error_system_setting_write_failure_message, key, value).report();
 		}
 	}
 

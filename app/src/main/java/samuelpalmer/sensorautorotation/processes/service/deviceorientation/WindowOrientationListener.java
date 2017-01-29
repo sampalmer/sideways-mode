@@ -108,7 +108,7 @@ abstract class WindowOrientationListener {
 	};
 
 	public static void reportSensorError(int message) {
-		EnvironmentError.report(R.string.environment_error_sensor_summary, R.string.environment_error_sensor_message, message, R.string.app_name_full);
+		new EnvironmentError(R.string.environment_error_sensor_summary, R.string.environment_error_sensor_message, message, R.string.app_name_full).report();
 	}
 
 	/**

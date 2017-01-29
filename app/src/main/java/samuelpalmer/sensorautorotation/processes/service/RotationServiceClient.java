@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
@@ -24,8 +25,8 @@ public abstract class RotationServiceClient {
 	}
 
 	public static CharSequence disabledMessage() {
-		String lastErrorMessage = ApplicationSettings.remote().lastError().tryGet();
-		return lastErrorMessage != null ? lastErrorMessage : StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
+		EnvironmentError lastError = EnvironmentError.lastError();
+		return lastError != null ? lastError.message : StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
 	}
 
 }
