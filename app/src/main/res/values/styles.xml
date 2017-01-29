@@ -26,7 +26,12 @@
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:windowTranslucentNavigation">true</item>
 
-		<!--TODO: Prevent the activity name from showing up behind the activity/dialog
+		<item name="android:windowActionBar">false</item>
+		<item name="android:actionBarStyle">@null</item>
+
+		<!-- Support library compatibility -->
+		<item name="windowNoTitle">true</item>
+		<item name="windowActionBar">false</item>
 	</style>
 
 </resources>
