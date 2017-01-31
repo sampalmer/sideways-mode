@@ -79,6 +79,31 @@ public class ControlsFragment extends PreferenceFragment {
 				return true;
 			}
 		});
+
+		Preference smallAppPreference = findPreference("small_app");
+		smallAppPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				new AlertDialog.Builder(getActivity())
+						.setTitle(R.string.preference_small_app)
+						.setMessage(R.string.preference_small_app_instructions)
+						.show();
+
+				return true;
+			}
+		});
+		if (!supportsSmallApp())
+			getPreferenceScreen().removePreference(smallAppPreference);
+	}
+
+	private static boolean supportsSmallApp() {
+		try {
+			Class.forName("com.sony.smallapp.SmallApplication");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
