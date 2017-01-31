@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import com.sony.smallapp.SmallApplication;
 
-import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

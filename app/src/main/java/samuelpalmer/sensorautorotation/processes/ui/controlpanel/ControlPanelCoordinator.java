@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
 
 import android.app.Dialog;
 import android.util.Log;

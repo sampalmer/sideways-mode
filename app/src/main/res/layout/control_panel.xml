@@ -1,4 +1,4 @@
-<samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelView
+<samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
@@ -140,4 +140,4 @@
 
 	</RelativeLayout>
 
-</samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelView>
+</samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelView>

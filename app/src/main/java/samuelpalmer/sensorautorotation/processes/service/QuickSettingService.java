@@ -2,28 +2,32 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelCoordinator;
-import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelDialog;
-import samuelpalmer.sensorautorotation.processes.service.controlpanel.ControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelActivity;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelCoordinator;
+import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelDialog;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
-	private static ServiceStatus currentStatus;
+	private ServiceStatusContentProvider.Client statusClient;
+	private Settings.Setting<Boolean> enabledSetting;
 
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
@@ -79,8 +83,6 @@ public class QuickSettingService extends TileService {
 		super.onTileAdded();
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Tile added");
-
-		requestTileUpdate(makeServiceStatusIfAvailable());
 	}
 
 	@Override
@@ -90,73 +92,60 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Tile removed");
 	}
 
-	private static QuickSettingService listeningInstance;
-
-	/**
-	 * @param status Can be {@code null} if the service isn't enabled.
-	 */
-	public static void requestTileUpdate(ServiceStatus status) {
-		currentStatus = status;
-
-		if (listeningInstance == null)
-			requestListeningState();
-		else
-			listeningInstance.updateTile();
-	}
-
-	/**
-	 * Note that this seems to provide listening state for _one_ tile update. Then listening state
-	 * is lost and must be re-requested.
-	 *
-	 * Seems to have no effect when the tile isn't actually added.
-	 */
-	private static void requestListeningState() {
-		ComponentName componentName = new ComponentName(CurrentProcess.context(), QuickSettingService.class);
-		requestListeningState(CurrentProcess.context(), componentName);
-	}
-
 	@Override
 	public void onStartListening() {
 		super.onStartListening();
 
-		listeningInstance = this;
+		statusClient = new ServiceStatusContentProvider.Client(this);
+		statusClient.subscribe(statusListener);
 
-		updateTile();
+		enabledSetting = ApplicationSettings.remote().enabled();
+		enabledSetting.subscribe(enabledSettingListener);
+
+		enabledSettingListener.update();
 	}
 
 	@Override
 	public void onStopListening() {
 		super.onStopListening();
 
-		listeningInstance = null;
+		enabledSetting.unsubscribe(enabledSettingListener);
+		enabledSetting = null;
+
+		statusClient.unsubscribe(statusListener);
+		statusClient = null;
 	}
 
-	private void updateTile() {
-		if (listeningInstance == null)
-			throw new RuntimeException("Not allowed to update the tile outside of listening state.");
+	private final IServiceStatusListener.Stub statusListener = new IServiceStatusListener.Stub() {
+		@Override
+		public void onChange(ServiceStatus status) throws RemoteException {
+			if (statusClient != null) //Just in case we've lost listening state
+				updateTile(status);
+		}
+	};
 
+	private final EventHandler enabledSettingListener = new EventHandler() {
+		@Override
+		public void update() {
+			if (!enabledSetting.get())
+				updateTile(null);
+		}
+	};
+
+	private void updateTile(ServiceStatus status) {
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 
 		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
-		tile.setState(currentStatus == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
+		tile.setState(status == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 
 		//TODO: Maybe add a "plus" symbol to the icon to distinguish it from the Android one. Also do this for the app's main logo.
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, currentStatus == null ? R.drawable.rotation : currentStatus.mode.notificationIcon()));
+		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.rotation : status.mode.notificationIcon()));
 
-		tile.setLabel(currentStatus == null ? StringResource.get(R.string.app_name_full) : currentStatus.getSummary());
+		tile.setLabel(status == null ? StringResource.get(R.string.app_name_full) : status.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
-	}
-
-	private ServiceStatus makeServiceStatusIfAvailable() {
-		if (ServiceHolder.isRunning()) {
-			RotationService service = ServiceHolder.instance();
-			return service.serviceStatusFactory.generate();
-		}
-
-		return null;
 	}
 
 }

@@ -132,6 +132,41 @@
 			</intent-filter>
 		</service>
 
+		<!--
+			This is in the UI process since its popup dialog uses a fair bit of RAM, and we can't use
+			the activity as an alternative since Android blocks activity launches for 5 seconds after
+			the last home button press.
+		 -->
+		<service
+			android:name=".processes.service.QuickSettingService"
+			android:label="@string/app_name_full"
+			android:icon="@drawable/rotation"
+			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+			>
+			<intent-filter>
+				<action android:name="android.service.quicksettings.action.QS_TILE" />
+			</intent-filter>
+		</service>
+
+		<activity android:name=".processes.ui.controlpanel.ControlPanelActivity"
+		          android:launchMode="singleInstance"
+		          android:excludeFromRecents="true"
+		          android:taskAffinity=""
+		          android:theme="@style/Theme.NoDisplay"
+		          android:showOnLockScreen="true"
+		          android:noHistory="true"
+		          android:configChanges="orientation|screenSize"
+		          tools:ignore="UnusedAttribute">
+
+			<intent-filter>
+				<action android:name="android.intent.action.ASSIST" />
+				<category android:name="android.intent.category.DEFAULT"/>
+			</intent-filter>
+
+			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
+
+		</activity>
+
 		<!-- Service Process -->
 
 		<provider
@@ -208,45 +243,6 @@
 				android:name="android.accessibilityservice"
 				android:resource="@xml/accessibilityservice"/>
 		</service>
-
-		<service
-			android:name=".processes.service.QuickSettingService"
-			android:label="@string/app_name_full"
-			android:icon="@drawable/rotation"
-			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-			android:process="@string/service_process_name"
-		>
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE" />
-			</intent-filter>
-
-			<!-- Non-active tiles only seem to update after the notification drawer has been
-			 pulled down, resulting in a noticeable lag in tile updates _while_ pulling the drawer down. -->
-			<meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
-			           android:value="true" />
-		</service>
-
-		<!-- This is in the service process instead of the UI process to simplify coordination between it and the quick setting dialog version -->
-		<!-- TODO: See if you can make this work out in the UI process. Having in the service process is adding ~7MB of RAM. -->
-		<activity android:name=".processes.service.controlpanel.ControlPanelActivity"
-		          android:launchMode="singleInstance"
-		          android:excludeFromRecents="true"
-		          android:taskAffinity=""
-		          android:theme="@style/Theme.NoDisplay"
-		          android:showOnLockScreen="true"
-		          android:noHistory="true"
-		          android:configChanges="orientation|screenSize"
-		          android:process="@string/service_process_name"
-		          tools:ignore="UnusedAttribute">
-
-			<intent-filter>
-				<action android:name="android.intent.action.ASSIST" />
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
-
-			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
-
-		</activity>
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 	</application>

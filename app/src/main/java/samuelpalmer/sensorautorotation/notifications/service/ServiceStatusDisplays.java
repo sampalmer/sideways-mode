@@ -1,13 +1,10 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
-import android.os.Build;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.processes.service.QuickSettingStatusDisplay;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.ServiceNotificationHider;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
@@ -27,9 +24,6 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 		showNotificationSetting = ApplicationSettings.local().showNotification();
 		showNotificationSetting.subscribe(showNotificationSettingChanged);
 		showNotificationSettingChanged.update();
-
-		if (Build.VERSION.SDK_INT >= 24)
-			add(new QuickSettingStatusDisplay());
 
 		add(new ServiceStatusContentProvider.RemoteStatusDisplay());
 	}
