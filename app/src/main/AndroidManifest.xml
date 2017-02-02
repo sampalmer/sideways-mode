@@ -44,7 +44,14 @@
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:label="@string/instructions_heading"
 			android:parentActivityName=".processes.ui.MainActivity"
-			tools:ignore="UnusedAttribute" />
+			tools:ignore="UnusedAttribute">
+
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.MainActivity" />
+
+		</activity>
 
 		<activity
 			android:name=".processes.ui.MainActivity"
@@ -81,7 +88,14 @@
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/preference_controls"
 			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute" />
+			tools:ignore="UnusedAttribute">
+
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.MainActivity" />
+
+		</activity>
 
 		<activity
 			android:name=".processes.ui.preferences.notifications.NotificationsActivity"
@@ -95,6 +109,11 @@
 				<category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
 			</intent-filter>
 
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.preferences.ControlsActivity" />
+
 		</activity>
 
 		<activity
@@ -102,7 +121,14 @@
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/preference_forced_apps_title"
 			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute"/>
+			tools:ignore="UnusedAttribute">
+
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.MainActivity" />
+
+		</activity>
 
 		<activity
 			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsChooserActivity"
@@ -110,15 +136,28 @@
 			android:configChanges="orientation|keyboardHidden|screenSize"
 			android:label="@string/preference_forced_apps_title"
 			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute"/>
+			tools:ignore="UnusedAttribute">
 
-		<!-- TODO: Make use of the meta element to add support for Android 4.0 -->
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
+
+		</activity>
+
 		<activity
 			android:name=".processes.ui.ReportProblemActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="Report problem"
 		    android:windowSoftInputMode="stateVisible"
-			tools:ignore="UnusedAttribute"/>
+			tools:ignore="UnusedAttribute">
+
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.MainActivity" />
+
+		</activity>
 
 		<!--suppress AndroidDomInspection -->
 		<service
