@@ -1,0 +1,3 @@
+• Added quick setting for Android N and above
+• Added option to hide notification
+• Fixed issue where notification buttons didn't work
