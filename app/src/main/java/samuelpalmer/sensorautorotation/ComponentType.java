@@ -11,13 +11,8 @@ import android.content.Intent;
  */
 public abstract class ComponentType {
 
-	private static final int requestCode = 0;
-
-	// Using FLAG_CANCEL_CURRENT fixes rare issue where pending intent permanently stops working
-	// http://stackoverflow.com/q/21250364/238753
-	// Note that on 2015-07-28 I made a commit to *stop* using this flag saying doing so would fix this same issue.
-	// If it comes back, maybe we should try a different technique such as randomised request codes or calling .cancel() on the pending intent each time before using it.
-	private static final int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+	// Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
+	public static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_CANCEL_CURRENT;
 
 	public static ComponentType create(Class<?> clazz) {
 		Class<?> ancestorClass = clazz;
@@ -48,29 +43,29 @@ public abstract class ComponentType {
 
 	private Class<?> clazz;
 
-	public abstract PendingIntent pendingIntent(Intent intent);
+	public abstract PendingIntent pendingIntent(Intent intent, int requestCode);
 
 	public Intent intent() {
 		return new Intent(CurrentProcess.context(), clazz);
 	}
 
-	public PendingIntent pendingIntent() {
-		return pendingIntent(intent());
+	public PendingIntent pendingIntent(int requestCode) {
+		return pendingIntent(intent(), requestCode);
 	}
 
 	private static class ActivityComponentType extends ComponentType {
 		@Override
-		public PendingIntent pendingIntent(Intent intent) {
+		public PendingIntent pendingIntent(Intent intent, int requestCode) {
 			//TODO: Maybe always add FLAG_NEW_TASK, as required according to the getActivity() documentation
-			return PendingIntent.getActivity(CurrentProcess.context(), requestCode, intent, flags);
+			return PendingIntent.getActivity(CurrentProcess.context(), requestCode, intent, PENDING_INTENT_FLAGS);
 		}
 	}
 
 	private static class BroadcastReceiverComponentType extends ComponentType {
 		@Override
-		public PendingIntent pendingIntent(Intent intent) {
+		public PendingIntent pendingIntent(Intent intent, int requestCode) {
 			BroadcastKillFix.apply(intent);
-			return PendingIntent.getBroadcast(CurrentProcess.context(), requestCode, intent, flags);
+			return PendingIntent.getBroadcast(CurrentProcess.context(), requestCode, intent, PENDING_INTENT_FLAGS);
 		}
 
 		@Override
@@ -84,8 +79,8 @@ public abstract class ComponentType {
 
 	private static class ServiceComponentType extends ComponentType {
 		@Override
-		public PendingIntent pendingIntent(Intent intent) {
-			return PendingIntent.getService(CurrentProcess.context(), requestCode, intent, flags);
+		public PendingIntent pendingIntent(Intent intent, int requestCode) {
+			return PendingIntent.getService(CurrentProcess.context(), requestCode, intent, PENDING_INTENT_FLAGS);
 		}
 	}
 }

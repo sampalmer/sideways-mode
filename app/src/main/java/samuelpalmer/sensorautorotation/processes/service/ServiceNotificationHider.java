@@ -15,6 +15,7 @@ import java.util.List;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
@@ -130,7 +131,7 @@ public class ServiceNotificationHider extends Service {
 				.setContentTitle(StringResource.get(R.string.app_name))
 				.setContentText(StringResource.get(R.string.notification_hiding))
 				.setPriority(NotificationBuilderCompat.PRIORITY_MIN) //Just in case the notification is visible for a moment
-				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
+				.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.NOTIFICATION_HIDER_CLICK))
 				.setCategory(NotificationBuilderCompat.CATEGORY_SERVICE)
 				.build();
 	}

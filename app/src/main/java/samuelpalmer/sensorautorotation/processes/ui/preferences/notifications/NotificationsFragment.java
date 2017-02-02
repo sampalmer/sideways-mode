@@ -22,6 +22,7 @@ import java.util.Arrays;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
@@ -122,11 +123,11 @@ public class NotificationsFragment extends PreferenceFragment {
 
 		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && notificationManager.areNotificationsEnabled()) {
 			//The user might have just unblocked the app's notifications, so better add the status notification if needed.
-			RotationServiceCommand command = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
-			command.toastIfServiceDisabled = false;
+			RotationServiceCommand updateNotificationCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
+			updateNotificationCommand.toastIfServiceDisabled = false;
 
 			try {
-				RotationServiceReceiver.getPendingIntent(command).send();
+				RotationServiceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
 			} catch (PendingIntent.CanceledException e) {
 				throw new RuntimeException(e); //Don't expect this to actually happen
 			}

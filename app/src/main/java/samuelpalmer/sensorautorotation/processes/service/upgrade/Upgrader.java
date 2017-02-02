@@ -6,6 +6,7 @@ import android.util.Log;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
@@ -67,7 +68,7 @@ public class Upgrader {
 	}
 
 	private PendingIntent makeDialogIntent(String message) {
-		return MessageDialogActivity.makePendingIntent(messageTitle(), message);
+		return MessageDialogActivity.makePendingIntent(messageTitle(), message, PendingIntentIds.UPGRADE_MESSAGE);
 	}
 
 	private CharSequence messageTitle() {

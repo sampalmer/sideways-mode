@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.os.SystemClock;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
 
@@ -32,7 +33,7 @@ public class ServiceReviver extends State {
 
 	private PendingIntent intent() {
 		ComponentType componentType = ComponentType.create(ServiceSyncReceiver.class);
-		return componentType.pendingIntent();
+		return componentType.pendingIntent(PendingIntentIds.SERVICE_REVIVER);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ public class EnvironmentError {
 	}
 
 	public PendingIntent showDialogIntent() {
-		return MessageDialogActivity.makePendingIntent(summary, message);
+		return MessageDialogActivity.makePendingIntent(summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
 	}
 
 	public static void clear() {

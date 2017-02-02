@@ -13,13 +13,13 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
  */
 public class RotationServiceReceiver extends BroadcastReceiver {
 
-	public static PendingIntent getPendingIntent(RotationServiceCommand command) {
+	public static PendingIntent getPendingIntent(RotationServiceCommand command, int requestCode) {
 		ComponentType componentType = ComponentType.create(RotationServiceReceiver.class);
 		Intent commandIntent = command.toIntent();
 
 		//Want the intent to go to the broadcast receiver rather than the service itself
 		commandIntent.setClass(CurrentProcess.context(), RotationServiceReceiver.class);
-		return componentType.pendingIntent(commandIntent);
+		return componentType.pendingIntent(commandIntent, requestCode);
 	}
 
 	@Override

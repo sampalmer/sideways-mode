@@ -11,6 +11,7 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -67,7 +68,7 @@ public class PermissionNotificationManager extends State {
 			Notification notification = NotificationBuilderFactory
 					.create()
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
-					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent())
+					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent(PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION))
 					.setContentTitle(StringResource.get(R.string.warning_permission_required_title))
 					.setContentText(StringResource.get(R.string.warning_permission_required_content))
 					.setSmallIcon(R.drawable.error)

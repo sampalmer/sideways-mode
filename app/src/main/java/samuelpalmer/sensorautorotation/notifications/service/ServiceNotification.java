@@ -11,6 +11,7 @@ import samuelpalmer.common.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
@@ -27,7 +28,7 @@ class ServiceNotification {
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
-			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent())
+			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
@@ -75,17 +76,17 @@ class ServiceNotification {
 			.configureButton(
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT)),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
 				serviceStatus.mode.actionIcon(),
-				RotationServiceReceiver.getPendingIntent(toggleCommand),
+				RotationServiceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
 				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT)),
+				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
 				StringResource.get(R.string.action_rotate_right));
 
 		builder.setCustomContentView(notificationButtons.getContentView());
