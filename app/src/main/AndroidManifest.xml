@@ -44,6 +44,7 @@
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:label="@string/instructions_heading"
 			android:parentActivityName=".processes.ui.MainActivity"
+			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->
