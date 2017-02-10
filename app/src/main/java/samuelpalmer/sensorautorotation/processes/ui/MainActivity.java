@@ -1,25 +1,103 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsScreenFragment;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsFragment;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
 public class MainActivity extends PreferencesActivity {
 
-	private static final String TAG_MENU = "menu";
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
+
+	private DrawerLayout drawerLayout;
+	private NavigationView navigation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		//Drawer stuff
+		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+		navigation = (NavigationView)findViewById(R.id.navigation);
+
+		navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+			@Override
+			public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+				drawerLayout.closeDrawers();
+
+				switch (item.getItemId()) {
+					case R.id.action_settings:
+						getFragmentManager().beginTransaction()
+								.replace(R.id.coordinator_layout, new MainSettingsFragment())
+								.commit();
+
+						setTitle(R.string.preference_settings_title);
+
+						return true;
+					case R.id.action_instructions:
+						getFragmentManager().beginTransaction()
+								.replace(R.id.coordinator_layout, new InstructionsScreenFragment())
+								.commit();
+
+						setTitle(R.string.instructions_heading);
+
+						return true; //TODO: Figure out why it isn't showing as selected inside the drawer
+					case R.id.action_feedback_email:
+						new Email(
+								MainActivity.this,
+								ReportProblemActivity.emailRecipients(),
+								StringResource.format(R.string.email_feedback_subject, R.string.app_name_full, VersionInfo.packageInfo().versionName).toString(),
+								""
+						).send();
+
+						return false;
+					case R.id.action_feedback_google_play: {
+						Intent intent = new Intent(Intent.ACTION_VIEW)
+								.setData(Uri.parse("market://details?id=" + MainActivity.this.getPackageName()));
+						try {
+							startActivity(intent);
+						}
+						catch (ActivityNotFoundException ex) {
+							Toast.makeText(MainActivity.this, R.string.error_no_market_app, Toast.LENGTH_LONG).show();
+						}
+
+						return false;
+					}
+					case R.id.action_report: {
+						Intent intent = ComponentType.create(ReportProblemActivity.class)
+								.intent()
+								.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
+						startActivity(intent);
+						return true;
+					}
+					case R.id.action_uninstall:
+						final Uninstaller uninstaller = new Uninstaller(MainActivity.this);
+						uninstaller.uninstallOrPrompt();
+						return false;
+					default:
+						throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
+				}
+			}
+		});
+
+		//Other stuff
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-		if (getFragmentManager().findFragmentByTag(TAG_MENU) == null)
-			transaction.add(new MainMenuFragment(), TAG_MENU);
 		if (getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT) == null)
 			transaction.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT);
 
