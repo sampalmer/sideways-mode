@@ -10,6 +10,8 @@
 	<string name="action_feedback_google_play">Google Play Store</string>
 	<string name="action_report">Report problem</string>
 	<string name="action_uninstall">Uninstall</string>
+	<string name="action_open_drawer">Open drawer</string>
+	<string name="action_close_drawer">Close drawer</string>
 
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
