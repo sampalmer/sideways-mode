@@ -55,6 +55,7 @@ public class MainActivity extends PreferencesActivity {
 				setTitle(R.string.instructions_heading);
 
 				//TODO: Fix crash when this user opens this item while it's already open
+				//TODO: Add back navigation to go back to the main screen
 
 				return true;
 			case R.id.action_feedback_email:
@@ -122,8 +123,6 @@ public class MainActivity extends PreferencesActivity {
 		if (savedInstanceState == null)
 			if (selectItem(R.id.action_settings));
 				navigation.setCheckedItem(R.id.action_settings);
-
-		//TODO: The back button should close the navigation drawer
 	}
 
 	@Override
@@ -144,6 +143,14 @@ public class MainActivity extends PreferencesActivity {
 			return true;
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (drawerLayout.isDrawerVisible(navigation))
+			drawerLayout.closeDrawers();
+		else
+			super.onBackPressed();
 	}
 
 }
