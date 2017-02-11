@@ -56,7 +56,7 @@ public class MainActivity extends PreferencesActivity {
 
 				//TODO: Fix crash when this user opens this item while it's already open
 
-				return true; //TODO: Figure out why it isn't showing as selected inside the drawer
+				return true;
 			case R.id.action_feedback_email:
 				new Email(
 						MainActivity.this,
@@ -120,7 +120,8 @@ public class MainActivity extends PreferencesActivity {
 		transaction.commit();
 
 		if (savedInstanceState == null)
-			selectItem(R.id.action_settings); //TODO: Also highlight this item in the menu
+			if (selectItem(R.id.action_settings));
+				navigation.setCheckedItem(R.id.action_settings);
 
 		//TODO: The back button should close the navigation drawer
 	}
