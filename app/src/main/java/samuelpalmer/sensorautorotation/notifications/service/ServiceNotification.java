@@ -3,12 +3,12 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.common.notifications.NotificationStyles;
-import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -33,7 +33,7 @@ class ServiceNotification {
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
 
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
