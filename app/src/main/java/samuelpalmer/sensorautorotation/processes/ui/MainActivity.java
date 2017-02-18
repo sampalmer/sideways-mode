@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -38,26 +40,20 @@ public class MainActivity extends PreferencesActivity {
 	};
 
 	private boolean selectItem(int menuItemId) {
+		Fragment newFragment = null;
+		int newTitle = 0;
+
 		switch (menuItemId) {
 			case R.id.action_settings:
-				getFragmentManager().beginTransaction()
-						.replace(R.id.coordinator_layout, new MainSettingsFragment())
-						.commit();
-
-				setTitle(R.string.preference_settings_title);
-
-				return true;
+				newFragment = new MainSettingsFragment();
+				newTitle = R.string.preference_settings_title;
+				break;
 			case R.id.action_instructions:
-				getFragmentManager().beginTransaction()
-						.replace(R.id.coordinator_layout, new InstructionsScreenFragment())
-						.commit();
+				newFragment = new InstructionsScreenFragment();
+				newTitle = R.string.instructions_heading;
 
-				setTitle(R.string.instructions_heading);
-
-				//TODO: Fix crash when this user opens this item while it's already open
 				//TODO: Add back navigation to go back to the main screen
-
-				return true;
+				break;
 			case R.id.action_feedback_email:
 				new Email(
 						MainActivity.this,
@@ -66,7 +62,7 @@ public class MainActivity extends PreferencesActivity {
 						""
 				).send();
 
-				return false;
+				break;
 			case R.id.action_feedback_google_play: {
 				Intent intent = new Intent(Intent.ACTION_VIEW)
 						.setData(Uri.parse("market://details?id=" + MainActivity.this.getPackageName()));
@@ -76,22 +72,36 @@ public class MainActivity extends PreferencesActivity {
 					Toast.makeText(MainActivity.this, R.string.error_no_market_app, Toast.LENGTH_LONG).show();
 				}
 
-				return false;
+				break;
 			}
 			case R.id.action_report: {
 				Intent intent = ComponentType.create(ReportProblemActivity.class)
 						.intent()
 						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 				startActivity(intent);
-				return true;
+
+				break;
 			}
 			case R.id.action_uninstall:
 				final Uninstaller uninstaller = new Uninstaller(MainActivity.this);
 				uninstaller.uninstallOrPrompt();
-				return false;
+
+				break;
 			default:
 				throw new RuntimeException("Unknown navigation menu item: " + menuItemId);
 		}
+
+		if (newFragment != null) {
+			getFragmentManager().beginTransaction()
+						.replace(R.id.coordinator_layout, newFragment)
+						.commit();
+
+			setTitle(newTitle);
+
+			return true;
+		}
+		else
+			return false;
 	}
 
 	@Override
