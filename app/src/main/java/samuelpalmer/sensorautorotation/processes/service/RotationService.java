@@ -149,11 +149,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		applicationState.clear();
 	}
 
-	private void toggleRotation() {
-		calculator.setAutoRotate(!calculator.autoRotate());
-		showStatusToast();
-	}
-
 	private void showStatusToast() {
 		CharSequence message = serviceStatusFactory.generate().getSummary();
 		ToastReceiver.send(message);
