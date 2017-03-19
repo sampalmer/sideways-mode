@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,13 +37,16 @@ public class ControlPanelView extends RelativeLayout {
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
 
+	private ViewGroup disabledSection;
 	private TextView disabledText;
+	private Button disabledViewError;
+
 	private ProgressBar progressBar;
 	private ViewGroup contents;
 	private ImageView userIcon;
 	private TextView statusText;
-	private ImageButton toggleModeButton;
 
+	private ImageButton toggleModeButton;
 	private TextView modeText;
 	private boolean childrenInflated;
 	private ServiceStatus lastStatus;
@@ -67,7 +72,10 @@ public class ControlPanelView extends RelativeLayout {
 			}
 		});
 
-		disabledText = (TextView) findViewById(R.id.control_panel_disabled);
+		disabledSection = (ViewGroup) findViewById(R.id.control_panel_disabled);
+		disabledText = (TextView) findViewById(R.id.control_panel_disabled_text);
+		disabledViewError = (Button) findViewById(R.id.control_panel_disabled_view_error);
+
 		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);
 		contents = (ViewGroup) findViewById(R.id.control_panel_contents);
 
@@ -170,7 +178,7 @@ public class ControlPanelView extends RelativeLayout {
 	private void showStatus() {
 		boolean isLoading = isEnabled && lastStatus == null;
 
-		ensureVisibility(disabledText, isEnabled ? View.GONE : View.VISIBLE);
+		ensureVisibility(disabledSection, isEnabled ? View.GONE : View.VISIBLE);
 		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
 
 		if (isEnabled)
@@ -180,9 +188,30 @@ public class ControlPanelView extends RelativeLayout {
 			ensureVisibility(contents, View.GONE);
 
 		if (!isEnabled) {
+			final EnvironmentError lastError = EnvironmentError.lastError();
+
 			//Not showing any error details so the user has to view the full error info and actions to reduce chance of user blaming developer and sending useless error reports.
-			disabledText.setText(StringResource.format(R.string.app_disabled_because_of_error, R.string.app_name_full));
-			//TODO: Add a button here to go straight to the error screen
+			disabledText.setText(StringResource.format(lastError == null ? R.string.app_disabled_message : R.string.app_disabled_because_of_error, R.string.app_name_full));
+
+			if (lastError == null) {
+				disabledViewError.setVisibility(View.GONE);
+				disabledViewError.setOnClickListener(null);
+			}
+			else {
+				disabledViewError.setVisibility(View.VISIBLE);
+				disabledViewError.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							lastError.showDialogIntent().send();
+						} catch (PendingIntent.CanceledException e) {
+							throw new RuntimeException(e);
+						}
+
+						ControlPanelCoordinator.dismiss();
+					}
+				});
+			}
 		}
 		else {
 			if (lastStatus != null) {

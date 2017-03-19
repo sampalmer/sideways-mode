@@ -38,16 +38,36 @@
 			    android:layout_centerInParent="true"
 				/>
 
-			<TextView
+			<LinearLayout
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/control_panel_disabled"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="?android:attr/textColorPrimary"
-				android:textStyle="bold"
-				android:gravity="center_horizontal"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/control_panel_disabled"
 				android:visibility="gone"
-				/>
+			    android:orientation="vertical"
+				>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/control_panel_disabled_text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="?android:attr/textColorPrimary"
+					android:textStyle="bold"
+					android:gravity="center_horizontal"
+					/>
+
+				<!-- TODO: Get the horizontal centring working -->
+				<!-- TODO: Make sure the button is styled correctly -->
+
+				<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/control_panel_disabled_view_error"
+					android:gravity="center_horizontal"
+					android:text="@string/app_disabled_view_error"
+					/>
+
+			</LinearLayout>
 
 			<LinearLayout
 				android:layout_width="match_parent"
