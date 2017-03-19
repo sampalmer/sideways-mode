@@ -46,6 +46,8 @@
 	<string name="action_toggle_rotation_lock">Toggle Auto-Rotation</string>
 
 	<string name="app_disabled_message">%1$s is not enabled</string>
+	<string name="app_disabled_because_of_error">%1$s was disabled because of an error.</string>
+	<string name="app_disabled_view_error_instruction">To see the error, open the app.</string>
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Enabled</string>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.NaturalOrientationDetector;
@@ -151,7 +152,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 	private void showStatusToast() {
 		CharSequence message = serviceStatusFactory.generate().getSummary();
-		ToastReceiver.send(message);
+		ToastReceiver.send(message, Toast.LENGTH_SHORT);
 	}
 
 }

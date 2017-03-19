@@ -174,13 +174,16 @@ public class ControlPanelView extends RelativeLayout {
 		ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
 
 		if (isEnabled)
-			//Don't want the view the view to change size after loading; it should stay the same
+			//Don't want the view to change size after loading; it should stay the same
 			ensureVisibility(contents, isLoading ? View.INVISIBLE : View.VISIBLE);
 		else
 			ensureVisibility(contents, View.GONE);
 
-		if (!isEnabled)
-			disabledText.setText(RotationServiceClient.disabledMessage());
+		if (!isEnabled) {
+			//Not showing any error details so the user has to view the full error info and actions to reduce chance of user blaming developer and sending useless error reports.
+			disabledText.setText(StringResource.format(R.string.app_disabled_because_of_error, R.string.app_name_full));
+			//TODO: Add a button here to go straight to the error screen
+		}
 		else {
 			if (lastStatus != null) {
 				userIcon.setImageResource(lastStatus.user.iconId());

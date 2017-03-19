@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.widget.Toast;
+
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
@@ -21,12 +23,19 @@ public abstract class RotationServiceClient {
 
 	private static void showDisabledMessage() {
 		CharSequence message = disabledMessage();
-		ToastReceiver.send(message);
+		ToastReceiver.send(message, Toast.LENGTH_LONG);
 	}
 
-	public static CharSequence disabledMessage() {
+	private static CharSequence disabledMessage() {
 		EnvironmentError lastError = EnvironmentError.lastError();
-		return lastError != null ? lastError.message : StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
+
+		if (lastError != null)
+			/*
+				Not showing the user any error details here because it's important that they see *all* error information and actions so that the user will be less likely to blame the developer and send useless error reports, which has been an ongoing problem.
+			 */
+			return StringResource.format(R.string.app_disabled_because_of_error, R.string.app_name_full) + " " + StringResource.get(R.string.app_disabled_view_error_instruction);
+		else
+			return StringResource.format(R.string.app_disabled_message, R.string.app_name_full);
 	}
 
 }

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ class Email {
 
 	public void send() {
 		if (!hasEmailApp() || !openEmail())
-			Toaster.show(StringResource.get(R.string.email_error_no_email_app));
+			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
 	}
 
 	private boolean hasEmailApp() {

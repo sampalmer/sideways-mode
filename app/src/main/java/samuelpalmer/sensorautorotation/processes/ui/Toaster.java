@@ -8,11 +8,13 @@ abstract class Toaster {
 
 	private static Toast statusToast;
 
-	public static void show(CharSequence text) {
-		if (statusToast != null)
+	public static void show(CharSequence text, int duration) {
+		if (statusToast != null) {
 			statusToast.setText(text);
+			statusToast.setDuration(duration);
+		}
 		else
-			statusToast = Toast.makeText(CurrentProcess.context(), text, Toast.LENGTH_SHORT);
+			statusToast = Toast.makeText(CurrentProcess.context(), text, duration);
 
 		statusToast.show();
 	}
