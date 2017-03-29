@@ -178,20 +178,19 @@ abstract class WindowOrientationListener {
 				}
 				mOrientationJudge.resetLocked();
 
-				Iterator<Sensor> iterator = mSensors.iterator();
-				while (iterator.hasNext()) {
-					Sensor sensor = iterator.next();
-
+				for (Sensor sensor : mSensors) {
 					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-					if (!mSensorManager.registerListener(mOrientationJudge, sensor, sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate, mHandler)) {
-						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
-						iterator.remove();
-					}
-				}
+					int samplingPeriodUs = sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate;
 
-				if (mSensors.isEmpty()) {
-					reportSensorError(R.string.environment_error_sensor_registration_failed_message);
-					return;
+					if (!mSensorManager.registerListener(mOrientationJudge, sensor, samplingPeriodUs, mHandler)) {
+						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
+						/*
+						 * Even though registration failed, we're not giving up on the sensor just yet because:
+						 * 1. It's possible for registration to fail but without any further problems: http://stackoverflow.com/questions/18602261/unexpected-false-return-value-from-android-hardware-sensormanager-registerlisten
+						 * 2. The official Android WindowOrientationListener implementation ignores the return value
+						 * 3. Seven users have submitted error reports when sensor registration failed, so maybe they were onto something
+						 */
+					}
 				}
 
 				mEnabled = true;

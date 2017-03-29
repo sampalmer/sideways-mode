@@ -115,7 +115,6 @@
 
 	<string name="environment_error_sensor_missing_message">Couldn\'t find an accelerometer.</string>
 	<string name="environment_error_sensor_no_data_message">The sensor didn\'t produce any data.</string>
-	<string name="environment_error_sensor_registration_failed_message">Couldn\'t access accelerometer.</string>
 
 	<string name="environment_error_system_rotation_enabled_summary">System rotation enabled</string>
 	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was enabled.</string>
