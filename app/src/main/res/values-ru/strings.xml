@@ -62,7 +62,6 @@
 
 	<string name="environment_error_sensor_missing_message">Не удалось найти акселерометр.</string>
 	<string name="environment_error_sensor_no_data_message">Датчик не предоставляет каких-либо данных.</string>
-	<string name="environment_error_sensor_registration_failed_message">Не удалось получить доступ к акселерометру.</string>
 
 	<string name="environment_error_system_rotation_enabled_summary">Вращение системы включено</string>
 	<string name="environment_error_system_rotation_enabled_message">В устройстве был включен встроенный автоповорот экрана.</string>
