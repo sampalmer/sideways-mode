@@ -46,7 +46,7 @@ public class MainActivity extends PreferencesActivity {
 			case R.id.action_settings:
 				newFragment = new MainSettingsFragment();
 				break;
-			case R.id.action_instructions:
+			case R.id.action_help:
 				newFragment = new InstructionsScreenFragment();
 				break;
 			case R.id.action_feedback_email:
