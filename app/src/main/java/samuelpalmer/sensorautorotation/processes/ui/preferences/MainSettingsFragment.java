@@ -15,6 +15,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.TwoStatePreference;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import java.util.Set;
@@ -88,6 +89,12 @@ public class MainSettingsFragment extends PreferenceFragment {
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
+	}
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.preference_settings_title);
 	}
 
 	@Override

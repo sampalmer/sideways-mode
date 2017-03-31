@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -41,18 +40,13 @@ public class MainActivity extends PreferencesActivity {
 
 	private boolean selectItem(int menuItemId) {
 		Fragment newFragment = null;
-		int newTitle = 0;
 
 		switch (menuItemId) {
 			case R.id.action_settings:
 				newFragment = new MainSettingsFragment();
-				newTitle = R.string.preference_settings_title;
 				break;
 			case R.id.action_instructions:
 				newFragment = new InstructionsScreenFragment();
-				newTitle = R.string.instructions_heading;
-
-				//TODO: Add back navigation to go back to the main screen
 				break;
 			case R.id.action_feedback_email:
 				new Email(
@@ -96,8 +90,6 @@ public class MainActivity extends PreferencesActivity {
 						.replace(R.id.coordinator_layout, newFragment)
 						.commit();
 
-			setTitle(newTitle);
-
 			return true;
 		}
 		else
@@ -130,9 +122,8 @@ public class MainActivity extends PreferencesActivity {
 
 		transaction.commit();
 
-		//TODO: If there is a saved instance state, use it to set the correct title
 		if (savedInstanceState == null)
-			if (selectItem(R.id.action_settings));
+			if (selectItem(R.id.action_settings))
 				navigation.setCheckedItem(R.id.action_settings);
 
 		//TODO: Swiping the snack bar at the bottom is broken. Probably due to the layout being changed. Fix this.

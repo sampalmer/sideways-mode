@@ -42,4 +42,10 @@ public class InstructionsScreenFragment extends Fragment {
 		ft.add(R.id.instructions_screen, newFragment, TAG);
 		ft.commit();
 	}
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle(R.string.instructions_heading);
+	}
 }
