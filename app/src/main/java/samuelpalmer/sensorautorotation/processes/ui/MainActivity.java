@@ -130,9 +130,12 @@ public class MainActivity extends PreferencesActivity {
 
 		transaction.commit();
 
+		//TODO: If there is a saved instance state, use it to set the correct title
 		if (savedInstanceState == null)
 			if (selectItem(R.id.action_settings));
 				navigation.setCheckedItem(R.id.action_settings);
+
+		//TODO: Swiping the snack bar at the bottom is broken. Probably due to the layout being changed. Fix this.
 	}
 
 	@Override
