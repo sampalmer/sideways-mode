@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Putting this one first since it sends the developer the most useful info (logs, device info) -->
+	<item android:id="@+id/action_report"
+	      android:title="@string/action_report"
+	      android:icon="@drawable/report" />
+
+	<item
+		android:id="@+id/action_feedback_email"
+		android:title="@string/action_feedback_email"
+		android:icon="@drawable/feedback_email"
+		/>
+
+	<!-- Placing this one last since users should contact the developer about problems before leaving bad reviews on Google Play Store. -->
+	<item
+		android:id="@+id/action_feedback_google_play"
+		android:title="@string/action_feedback_google_play"
+		android:icon="@drawable/feedback_google_play"
+		/>
+</menu>

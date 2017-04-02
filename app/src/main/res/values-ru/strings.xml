@@ -5,7 +5,7 @@
 
 <resources>
 
-	<string name="action_instructions">Инструкции</string>
+	<string name="action_help">Справка</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_email">Email</string>
 	<string name="action_feedback_google_play">Google Play Маркет</string>

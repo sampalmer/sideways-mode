@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.ColourGetterCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
@@ -86,7 +86,7 @@ public class ControlPanelView extends RelativeLayout {
 		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_right);
 		modeText = (TextView) findViewById(R.id.control_panel_mode);
 
-		userIcon.setColorFilter(ColourGetterCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
 		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT)));
 

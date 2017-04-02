@@ -1,31 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".SettingsActivity">
-	<item android:id="@+id/action_instructions"
-	      android:title="@string/action_instructions"
-		  android:icon="@drawable/help"
-		/>
-	<item
-		  android:title="@string/action_feedback"
-	      android:icon="@drawable/feedback"
+      tools:context=".SettingsActivity"
 	>
-		<menu>
-			<item
-				android:id="@+id/action_feedback_email"
-				android:title="@string/action_feedback_email"
-				android:icon="@drawable/feedback_email"
-				/>
-			<item
-				android:id="@+id/action_feedback_google_play"
-				android:title="@string/action_feedback_google_play"
-				android:icon="@drawable/feedback_google_play"
-				/>
-		</menu>
-	</item>
-	<item android:id="@+id/action_report"
-	      android:title="@string/action_report"
-	      android:icon="@drawable/report" />
-	<item android:id="@+id/action_uninstall"
-	      android:title="@string/action_uninstall"
-          android:icon="@drawable/delete"/>
+	<group android:checkableBehavior="single">
+		<item
+			android:id="@+id/action_settings"
+		    android:title="@string/preference_settings_title"
+		    android:icon="@drawable/settings"
+			/>
+		<item
+			android:id="@+id/action_feedback"
+			android:title="@string/action_feedback"
+			android:icon="@drawable/feedback"
+			/>
+		<item android:id="@+id/action_help"
+		      android:title="@string/action_help"
+		      android:icon="@drawable/help"
+			/>
+		<item android:id="@+id/action_uninstall"
+		      android:title="@string/action_uninstall"
+		      android:icon="@drawable/delete"/>
+	</group>
 </menu>

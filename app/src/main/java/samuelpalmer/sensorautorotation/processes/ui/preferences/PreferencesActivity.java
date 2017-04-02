@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 /**
  * UI proxy to settings stored in background process.
+ * Also supports showing an error message at the bottom of the activity.
  */
 public class PreferencesActivity extends UiActivity {
 
@@ -42,7 +43,10 @@ public class PreferencesActivity extends UiActivity {
 
 			if (snackbar == null) {
 				//http://stackoverflow.com/a/5069354/238753
-				View contentView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+				View contentView = findViewById(R.id.coordinator_layout);
+				if (contentView == null)
+					throw new RuntimeException("Didn't find any elements with the coordinator layout id");
+
 				if (!(contentView instanceof CoordinatorLayout))
 					throw new RuntimeException("Content layout should be a " + CoordinatorLayout.class.getSimpleName() + " so the environment error snackbar can be dismissed. Instead found a " + contentView.getClass().getName() + ".");
 

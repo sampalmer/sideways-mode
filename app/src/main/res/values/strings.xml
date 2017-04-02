@@ -4,12 +4,14 @@
 	<string name="app_name_full">Auto Rotation for Lying Down</string>
 	<string name="app_name">Rotation</string>
 
-	<string name="action_instructions">Instructions</string>
+	<string name="action_help">Help</string>
 	<string name="action_feedback">Send feedback</string>
 	<string name="action_feedback_email">Email</string>
 	<string name="action_feedback_google_play">Google Play Store</string>
 	<string name="action_report">Report problem</string>
 	<string name="action_uninstall">Uninstall</string>
+	<string name="action_open_drawer">Open drawer</string>
+	<string name="action_close_drawer">Close drawer</string>
 
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
