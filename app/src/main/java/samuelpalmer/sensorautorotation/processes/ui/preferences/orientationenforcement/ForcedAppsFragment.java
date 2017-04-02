@@ -14,6 +14,8 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ForcedAppsFragment extends PreferenceFragment {
 
+	private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
+
 	private Settings.Setting<Set<String>> apps;
 	private Preference appsPreference;
 
@@ -24,6 +26,18 @@ public class ForcedAppsFragment extends PreferenceFragment {
 
 		apps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		appsPreference = findPreference(apps.getKey());
+
+		ForcedAppsPermissionFragment permissionFragment = (ForcedAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
+		if (permissionFragment == null) {
+		    permissionFragment = new ForcedAppsPermissionFragment();
+
+			getFragmentManager()
+					.beginTransaction()
+					.add(permissionFragment, TAG_PERMISSIONS_FRAGMENT)
+					.commit();
+		}
+
+		permissionFragment.configure(getPreferenceScreen());
 	}
 
 	@Override
