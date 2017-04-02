@@ -41,6 +41,20 @@
 		<activity android:name=".processes.ui.FirstRunActivity" />
 
 		<activity
+			android:name=".processes.ui.instructions.InstructionsActivity"
+			android:label="@string/instructions_heading"
+			android:parentActivityName=".processes.ui.MainActivity"
+			android:launchMode="singleTask"
+			tools:ignore="UnusedAttribute">
+
+			<!-- Parent activity meta-data to support 4.0 and lower -->
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".processes.ui.MainActivity" />
+
+		</activity>
+
+		<activity
 			android:name=".processes.ui.MainActivity"
 			android:label="@string/app_name"
 		    android:launchMode="singleTask"

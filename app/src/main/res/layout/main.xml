@@ -11,7 +11,16 @@
         android:id="@id/coordinator_layout"
 		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+		android:layout_height="match_parent">
+
+	    <fragment
+		    android:id="@+id/settings"
+		    android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsFragment"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    />
+
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"

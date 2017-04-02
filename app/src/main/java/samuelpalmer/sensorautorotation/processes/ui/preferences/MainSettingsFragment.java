@@ -92,12 +92,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 	}
 
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getActivity().setTitle(R.string.preference_settings_title);
-	}
-
-	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
