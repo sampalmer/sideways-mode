@@ -37,7 +37,7 @@ public class ForcedAppsFragment extends PreferenceFragment {
 					.commit();
 		}
 
-		permissionFragment.configure(getPreferenceScreen());
+		permissionFragment.initialise(getPreferenceScreen());
 	}
 
 	@Override
