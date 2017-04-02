@@ -28,11 +28,7 @@ public class FirstRunLauncherFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == REQUEST_CODE_INSTRUCT_USER && resultCode == Activity.RESULT_OK)
-			recordUserInstructedIfNecessary();
-	}
-
-	private void recordUserInstructedIfNecessary() {
-		instructedVersionPreference().set(VersionInfo.installedVersionCode());
+			instructedVersionPreference().set(VersionInfo.installedVersionCode());
 	}
 
 	private ApplicationSettings.Setting<Integer> instructedVersionPreference() {
