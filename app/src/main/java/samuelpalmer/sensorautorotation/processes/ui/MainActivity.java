@@ -49,32 +49,9 @@ public class MainActivity extends PreferencesActivity {
 			case R.id.action_help:
 				newFragment = new InstructionsScreenFragment();
 				break;
-			case R.id.action_feedback_email:
-				new Email(
-						MainActivity.this,
-						ReportProblemActivity.emailRecipients(),
-						StringResource.format(R.string.email_feedback_subject, R.string.app_name_full, VersionInfo.packageInfo().versionName).toString(),
-						""
-				).send();
-
-				break;
-			case R.id.action_feedback_google_play: {
-				Intent intent = new Intent(Intent.ACTION_VIEW)
-						.setData(Uri.parse("market://details?id=" + MainActivity.this.getPackageName()));
-				try {
-					startActivity(intent);
-				} catch (ActivityNotFoundException ex) {
-					Toast.makeText(MainActivity.this, R.string.error_no_market_app, Toast.LENGTH_LONG).show();
-				}
-
-				break;
-			}
-			case R.id.action_report: {
-				Intent intent = ComponentType.create(ReportProblemActivity.class)
-						.intent()
-						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
+			case R.id.action_feedback: {
+				Intent intent = ComponentType.create(SendFeedbackActivity.class).intent();
 				startActivity(intent);
-
 				break;
 			}
 			case R.id.action_uninstall:

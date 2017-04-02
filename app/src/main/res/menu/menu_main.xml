@@ -9,31 +9,10 @@
 		    android:icon="@drawable/settings"
 			/>
 		<item
+			android:id="@+id/action_feedback"
 			android:title="@string/action_feedback"
 			android:icon="@drawable/feedback"
-			>
-
-			<!-- TODO: Make the sub-items be on their own screen -->
-			<menu>
-				<!-- Putting this one first since it sends the developer the most useful info (logs, device info) -->
-				<item android:id="@+id/action_report"
-				      android:title="@string/action_report"
-				      android:icon="@drawable/report" />
-
-				<item
-					android:id="@+id/action_feedback_email"
-					android:title="@string/action_feedback_email"
-					android:icon="@drawable/feedback_email"
-					/>
-
-				<!-- Placing this one last since users should contact the developer about problems before leaving bad reviews on Google Play Store. -->
-				<item
-					android:id="@+id/action_feedback_google_play"
-					android:title="@string/action_feedback_google_play"
-					android:icon="@drawable/feedback_google_play"
-					/>
-			</menu>
-		</item>
+			/>
 		<item android:id="@+id/action_help"
 		      android:title="@string/action_help"
 		      android:icon="@drawable/help"
