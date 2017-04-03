@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
@@ -28,6 +29,8 @@ public class CurrentProcess extends Application {
 
 		if (ServiceProcess.isServiceProcess())
 			new Upgrader().upgradeIfNecessary();
+		else
+			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 	}
 
 	@Override

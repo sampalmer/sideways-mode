@@ -1,5 +1,6 @@
 <samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelView
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -13,13 +14,13 @@
 		<ImageButton
 			android:id="@+id/control_panel_settings"
 			android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:src="@drawable/settings"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/settings"
 			android:layout_alignParentTop="true"
-		    android:layout_alignParentStart="true"
-		    android:layout_alignParentLeft="true"
-		    android:contentDescription="@string/preference_settings_title"
-		    android:background="@android:color/transparent"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentLeft="true"
+			android:contentDescription="@string/preference_settings_title"
+			android:background="@android:color/transparent"
 			/>
 
 		<RelativeLayout
@@ -117,8 +118,8 @@
 						android:layout_height="match_parent"
 						android:layout_weight="1"
 						style="@style/Widget.AppCompat.Button.Borderless"
-						android:src="@drawable/control_panel_rotate_left"
-					    android:contentDescription="@string/action_rotate_left"
+						app:srcCompat="@drawable/control_panel_rotate_left"
+						android:contentDescription="@string/action_rotate_left"
 						/>
 
 					<ImageButton
@@ -136,7 +137,7 @@
 						android:layout_width="0dp"
 						android:layout_height="match_parent"
 						android:layout_weight="1"
-						android:src="@drawable/control_panel_rotate_right"
+						app:srcCompat="@drawable/control_panel_rotate_right"
 						style="@style/Widget.AppCompat.Button.Borderless"
 						android:contentDescription="@string/action_rotate_left"
 						/>
