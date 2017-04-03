@@ -95,6 +95,15 @@ public class ControlPanelView extends RelativeLayout {
 
 		rotateRightButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT)));
 
+		/*
+			All image drawables must be set in app code to avoid crashes since:
+			1. We're using the vector compat stuff
+			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
+		 */
+		settingsButton.setImageResource(R.drawable.settings);
+		rotateLeftButton.setImageResource(R.drawable.control_panel_rotate_left);
+		rotateRightButton.setImageResource(R.drawable.control_panel_rotate_right);
+
 		childrenInflated = true;
 		enabledChanged.update();
 		maybeUpdateUi();
