@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +12,7 @@ import android.view.View;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class ControlPanelDialog extends DialogFragment {
+public class DashboardDialog extends DialogFragment {
 
 	private Context context;
 
@@ -27,8 +27,8 @@ public class ControlPanelDialog extends DialogFragment {
 			this.context = context;
 		}
 
-		public ControlPanelDialog create() {
-			return new ControlPanelDialog().setContext(this.context);
+		public DashboardDialog create() {
+			return new DashboardDialog().setContext(this.context);
 		}
 
 	}
@@ -36,15 +36,15 @@ public class ControlPanelDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedState){
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
-		View customView = LayoutInflater.from(alertBuilder.getContext()).inflate(R.layout.control_panel, null);
+		View customView = LayoutInflater.from(alertBuilder.getContext()).inflate(R.layout.dashboard, null);
 		alertBuilder.setView(customView);
 
 		AlertDialog alertDialog = alertBuilder.create();
-		ControlPanelCoordinator.created(alertDialog);
+		DashboardCoordinator.created(alertDialog);
 		return alertDialog;
 	}
 
-	private ControlPanelDialog setContext(Context context){
+	private DashboardDialog setContext(Context context){
 		this.context = context;
 		return this;
 	}
@@ -66,7 +66,7 @@ public class ControlPanelDialog extends DialogFragment {
 	}
 
 	private void dialogIsGoing() {
-		ControlPanelCoordinator.destroyed();
+		DashboardCoordinator.destroyed();
 
 		Activity activity = getActivity();
 		if (activity != null)

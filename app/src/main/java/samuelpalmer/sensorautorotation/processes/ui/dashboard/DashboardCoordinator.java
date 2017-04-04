@@ -1,26 +1,26 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.Dialog;
 import android.util.Log;
 
 /**
- * Keeps track of active control panel dialogs. Useful for ensuring only one is visible at a time.
+ * Keeps track of active dashboard dialogs. Useful for ensuring only one is visible at a time.
  */
-public class ControlPanelCoordinator {
+public class DashboardCoordinator {
 
 	private static Dialog dialog;
 
 	public static void created(Dialog dialog) {
-		if (ControlPanelCoordinator.dialog != null)
+		if (DashboardCoordinator.dialog != null)
 			throw new RuntimeException("Already have a dialog");
 
-		ControlPanelCoordinator.dialog = dialog;
-		Log.i(ControlPanelDialog.class.getSimpleName(), "Created dialog");
+		DashboardCoordinator.dialog = dialog;
+		Log.i(DashboardDialog.class.getSimpleName(), "Created dialog");
 	}
 
 	public static void destroyed() {
-		ControlPanelCoordinator.dialog = null;
-		Log.i(ControlPanelCoordinator.class.getSimpleName(), "Finished up dialog");
+		DashboardCoordinator.dialog = null;
+		Log.i(DashboardCoordinator.class.getSimpleName(), "Finished up dialog");
 	}
 
 	public static boolean exists() {

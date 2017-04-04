@@ -29,8 +29,8 @@ class LockedMode implements Mode {
 	}
 
 	@Override
-	public int controlPanelIcon() {
-		return portrait ? R.drawable.control_panel_portrait_lock : R.drawable.control_panel_landscape_lock;
+	public int dashboardIcon() {
+		return portrait ? R.drawable.dashboard_portrait_lock : R.drawable.dashboard_landscape_lock;
 	}
 
 	@Override

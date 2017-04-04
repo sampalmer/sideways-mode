@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
@@ -31,7 +31,7 @@ import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServic
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class ControlPanelView extends RelativeLayout {
+public class DashboardView extends RelativeLayout {
 
 	private final ServiceStatusContentProvider.Client serviceClient;
 	private final Handler handler;
@@ -52,7 +52,7 @@ public class ControlPanelView extends RelativeLayout {
 	private ServiceStatus lastStatus;
 	private boolean isEnabled;
 
-	public ControlPanelView(Context context, AttributeSet attrs) {
+	public DashboardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		serviceClient = new ServiceStatusContentProvider.Client(getContext());
 		handler = new Handler();
@@ -63,28 +63,28 @@ public class ControlPanelView extends RelativeLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		ImageButton settingsButton = (ImageButton) findViewById(R.id.control_panel_settings);
+		ImageButton settingsButton = (ImageButton) findViewById(R.id.dashboard_settings);
 		settingsButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getContext().startActivity(new Intent(getContext(), MainActivity.class));
-				ControlPanelCoordinator.dismiss();
+				DashboardCoordinator.dismiss();
 			}
 		});
 
-		disabledSection = (ViewGroup) findViewById(R.id.control_panel_disabled);
-		disabledText = (TextView) findViewById(R.id.control_panel_disabled_text);
-		disabledViewError = (Button) findViewById(R.id.control_panel_disabled_view_error);
+		disabledSection = (ViewGroup) findViewById(R.id.dashboard_disabled);
+		disabledText = (TextView) findViewById(R.id.dashboard_disabled_text);
+		disabledViewError = (Button) findViewById(R.id.dashboard_disabled_view_error);
 
-		progressBar = (ProgressBar) findViewById(R.id.control_panel_progress);
-		contents = (ViewGroup) findViewById(R.id.control_panel_contents);
+		progressBar = (ProgressBar) findViewById(R.id.dashboard_progress);
+		contents = (ViewGroup) findViewById(R.id.dashboard_contents);
 
-		userIcon = (ImageView) findViewById(R.id.control_panel_user_icon);
-		statusText = (TextView) findViewById(R.id.control_panel_status);
-		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_left);
-		toggleModeButton = (ImageButton) findViewById(R.id.control_panel_button_toggle);
-		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.control_panel_button_rotate_right);
-		modeText = (TextView) findViewById(R.id.control_panel_mode);
+		userIcon = (ImageView) findViewById(R.id.dashboard_user_icon);
+		statusText = (TextView) findViewById(R.id.dashboard_status);
+		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
+		toggleModeButton = (ImageButton) findViewById(R.id.dashboard_button_toggle);
+		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_right);
+		modeText = (TextView) findViewById(R.id.dashboard_mode);
 
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 
@@ -101,8 +101,8 @@ public class ControlPanelView extends RelativeLayout {
 			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
 		 */
 		settingsButton.setImageResource(R.drawable.settings);
-		rotateLeftButton.setImageResource(R.drawable.control_panel_rotate_left);
-		rotateRightButton.setImageResource(R.drawable.control_panel_rotate_right);
+		rotateLeftButton.setImageResource(R.drawable.dashboard_rotate_left);
+		rotateRightButton.setImageResource(R.drawable.dashboard_rotate_right);
 
 		childrenInflated = true;
 		enabledChanged.update();
@@ -217,7 +217,7 @@ public class ControlPanelView extends RelativeLayout {
 							throw new RuntimeException(e);
 						}
 
-						ControlPanelCoordinator.dismiss();
+						DashboardCoordinator.dismiss();
 					}
 				});
 			}
@@ -227,7 +227,7 @@ public class ControlPanelView extends RelativeLayout {
 				userIcon.setImageResource(lastStatus.user.iconId());
 				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
 				statusText.setText(" " + StringResource.get(lastStatus.user.longDescriptionId()));
-				toggleModeButton.setImageResource(lastStatus.mode.controlPanelIcon());
+				toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 				modeText.setText(lastStatus.mode.autoRotationStateResourceId());
 			}

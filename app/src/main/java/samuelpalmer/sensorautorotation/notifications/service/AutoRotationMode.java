@@ -17,8 +17,8 @@ class AutoRotationMode implements Mode {
 	}
 
 	@Override
-	public int controlPanelIcon() {
-		return R.drawable.control_panel_rotation;
+	public int dashboardIcon() {
+		return R.drawable.dashboard_rotation;
 	}
 
 	@Override

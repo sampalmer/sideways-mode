@@ -18,9 +18,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
-import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelActivity;
-import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelCoordinator;
-import samuelpalmer.sensorautorotation.processes.ui.controlpanel.ControlPanelDialog;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardCoordinator;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialog;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -39,27 +39,27 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
 		if (isLocked()) {
-			startActivityAndCollapse(new Intent(this, ControlPanelActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
 
 			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-			if (!ControlPanelCoordinator.exists()) {
-				ControlPanelDialog dialog = new ControlPanelDialog.Builder(getApplicationContext()).create();
+			if (!DashboardCoordinator.exists()) {
+				DashboardDialog dialog = new DashboardDialog.Builder(getApplicationContext()).create();
 				Bundle args = new Bundle();
-				Dialog popupControlPanel = dialog.onCreateDialog(args);
-				popupControlPanel.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				Dialog dashboard = dialog.onCreateDialog(args);
+				dashboard.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						ControlPanelCoordinator.destroyed();
+						DashboardCoordinator.destroyed();
 					}
 				});
 
 				//Once the dialog had gone but the field was still set. Maybe the below will help with that?
-				popupControlPanel.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				dashboard.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						ControlPanelCoordinator.destroyed();
+						DashboardCoordinator.destroyed();
 					}
 				});
 
@@ -69,10 +69,10 @@ public class QuickSettingService extends TileService {
 				 *
 				 * https://code.google.com/p/android/issues/detail?id=4536
 				 */
-				showDialog(popupControlPanel);
+				showDialog(dashboard);
 			}
 			else {
-				ControlPanelCoordinator.show();
+				DashboardCoordinator.show();
 				startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
 			}
 		}

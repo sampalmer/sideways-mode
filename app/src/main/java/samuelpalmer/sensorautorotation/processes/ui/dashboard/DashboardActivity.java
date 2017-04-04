@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.controlpanel;
+package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.os.Bundle;
 import android.view.Window;
@@ -6,7 +6,7 @@ import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 
-public class ControlPanelActivity extends DialogActivity {
+public class DashboardActivity extends DialogActivity {
 
 	private static final String TAG = "dialog";
 
@@ -14,9 +14,9 @@ public class ControlPanelActivity extends DialogActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (ControlPanelCoordinator.exists()) {
+		if (DashboardCoordinator.exists()) {
 			finish();
-			ControlPanelCoordinator.show();
+			DashboardCoordinator.show();
 			return;
 		}
 
@@ -25,7 +25,7 @@ public class ControlPanelActivity extends DialogActivity {
 				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
 		if (getFragmentManager().findFragmentByTag(TAG) == null) {
-			ControlPanelDialog dialog = new ControlPanelDialog.Builder(this).create();
+			DashboardDialog dialog = new DashboardDialog.Builder(this).create();
 			dialog.show(getFragmentManager(), TAG);
 		}
 	}
