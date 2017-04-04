@@ -62,9 +62,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 
 		enabledChanged = ApplicationSettings.remote().enabled();
 
-		//TODO: Move subscription into onStart
-		enabledChanged.subscribe(enabledUpdater);
-
 		enabledControl().setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -85,22 +82,18 @@ public class MainSettingsFragment extends PreferenceFragment {
 			}
 		});
 
-		//TODO: move all of this summary stuff into its own class
+		//TODO: move all of this preference summary updating stuff into its own class
 		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		enabledChanged.unsubscribe(enabledUpdater);
-	}
-
-	@Override
 	public void onStart() {
 		super.onStart();
+
+		enabledChanged.subscribe(enabledUpdater);
+		enabledUpdater.update(); //In case it changed while the activity was in the background
 
 		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
 		forcedApps.subscribe(forcedAppsChanged);
@@ -113,6 +106,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 
 		forcedApps.unsubscribe(forcedAppsChanged);
 		accessibilityServiceEnabledStateMonitor.unsubscribe(forcedAppsChanged);
+		enabledChanged.unsubscribe(enabledUpdater);
 	}
 
 	private final EventHandler forcedAppsChanged = new EventHandler() {
