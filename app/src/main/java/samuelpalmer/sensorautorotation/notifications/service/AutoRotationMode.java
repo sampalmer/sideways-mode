@@ -8,7 +8,7 @@ class AutoRotationMode implements Mode {
 
 	@Override
 	public int notificationIcon() {
-		return R.drawable.rotation;
+		return R.drawable.notification_rotation;
 	}
 
 	@Override

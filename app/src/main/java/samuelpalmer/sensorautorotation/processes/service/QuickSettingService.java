@@ -142,7 +142,7 @@ public class QuickSettingService extends TileService {
 
 		//TODO: Maybe add a "plus" symbol to the icon to distinguish it from the Android one. Also do this for the app's main logo.
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.rotation : status.mode.notificationIcon()));
+		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.notification_rotation : status.mode.notificationIcon()));
 
 		tile.setLabel(status == null ? StringResource.get(R.string.app_name_full) : status.getSummary());
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.

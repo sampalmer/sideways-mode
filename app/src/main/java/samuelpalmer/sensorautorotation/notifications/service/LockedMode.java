@@ -20,7 +20,7 @@ class LockedMode implements Mode {
 
 	@Override
 	public int notificationIcon() {
-		return portrait ? R.drawable.portrait_lock : R.drawable.landscape_lock;
+		return portrait ? R.drawable.notification_portrait_lock : R.drawable.notification_landscape_lock;
 	}
 
 	@Override

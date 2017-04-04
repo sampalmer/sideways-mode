@@ -71,7 +71,7 @@ public class PermissionNotificationManager extends State {
 					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent(PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION))
 					.setContentTitle(StringResource.get(R.string.warning_permission_required_title))
 					.setContentText(StringResource.get(R.string.warning_permission_required_content))
-					.setSmallIcon(R.drawable.error)
+					.setSmallIcon(R.drawable.notification_error)
 					.build();
 
 			notificationManager.notify(NotificationIds.PERMISSION, notification);

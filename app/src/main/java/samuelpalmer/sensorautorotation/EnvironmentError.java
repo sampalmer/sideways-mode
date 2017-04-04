@@ -76,7 +76,7 @@ public class EnvironmentError {
 
 	private void postNotification() {
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
-			.setSmallIcon(R.drawable.error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
+			.setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
 			.setContentIntent(showDialogIntent())
 			.setContentTitle(summary)
 			.setContentText(message)

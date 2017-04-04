@@ -127,7 +127,7 @@ public class ServiceNotificationHider extends Service {
 
 	private Notification buildNotification() {
 		return NotificationBuilderFactory.create()
-				.setSmallIcon(R.drawable.rotation)
+				.setSmallIcon(R.drawable.notification_rotation)
 				.setContentTitle(StringResource.get(R.string.app_name))
 				.setContentText(StringResource.get(R.string.notification_hiding))
 				.setPriority(NotificationBuilderCompat.PRIORITY_MIN) //Just in case the notification is visible for a moment
