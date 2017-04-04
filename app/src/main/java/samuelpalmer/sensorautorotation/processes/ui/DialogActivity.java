@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Build;
 
-public class DialogActivity extends UiActivity {
+public abstract class DialogActivity extends UiActivity {
 
 	@Override
 	protected void onStart() {
