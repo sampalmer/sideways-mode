@@ -3,15 +3,12 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenfo
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -82,13 +79,8 @@ public class ForcedAppsPermissionFragment extends Fragment {
 						public void onClick(DialogInterface dialog, int which) {
 							Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
-							try {
-								startActivityForResult(intent, REQUEST_CODE_ACCESSIBILITY_SERVICE);
-							}
-							catch (ActivityNotFoundException ex) {
-								//TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist. Decide what to do here.
-								throw ex;
-							}
+							//TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist. Decide what to do here.
+							startActivityForResult(intent, REQUEST_CODE_ACCESSIBILITY_SERVICE);
 						}
 					})
 					.show();
@@ -119,12 +111,8 @@ public class ForcedAppsPermissionFragment extends Fragment {
 						public void onClick(DialogInterface dialog, int which) {
 							Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
 
-							try {
-								startActivity(intent);
-							} catch (ActivityNotFoundException ex) {
-								//TODO: Apparently the activity isn't guaranteed to actually exist. Decide what to do here.
-								throw ex;
-							}
+							//TODO: Apparently the activity isn't guaranteed to actually exist. Decide what to do here.
+							startActivity(intent);
 						}
 					})
 					.show();

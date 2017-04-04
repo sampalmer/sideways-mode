@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.notifications;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

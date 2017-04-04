@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,7 +34,7 @@ public class ServiceStatusContentProvider extends ContentProvider {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Bundle call(String method, String unused, Bundle extras) {
+	public Bundle call(@NonNull String method, String unused, Bundle extras) {
 		switch (method)
 		{
 			case METHOD_SUBSCRIBE: {
@@ -106,32 +107,32 @@ public class ServiceStatusContentProvider extends ContentProvider {
 	private void unsubscribe(IBinder binder) {
 		ServerListener removed = listeners.remove(binder);
 
-		if (binder != null)
+		if (removed != null)
 			binder.unlinkToDeath(removed.deathRecipient, 0);
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		throw notSupported();
 	}
 
 	@Override
-	public String getType(Uri uri) {
+	public String getType(@NonNull Uri uri) {
 		return null;
 	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	public Uri insert(@NonNull Uri uri, ContentValues values) {
 		throw notSupported();
 	}
 
 	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+	public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		throw notSupported();
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		throw notSupported();
 	}
 

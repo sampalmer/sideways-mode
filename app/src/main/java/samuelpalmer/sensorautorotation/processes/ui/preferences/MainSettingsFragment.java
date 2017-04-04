@@ -15,7 +15,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.TwoStatePreference;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import java.util.Set;

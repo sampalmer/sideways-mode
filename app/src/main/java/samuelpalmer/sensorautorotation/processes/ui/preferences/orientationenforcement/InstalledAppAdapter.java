@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,9 @@ class InstalledAppAdapter extends ArrayAdapter<InstalledApp> {
 		layoutInflater = LayoutInflater.from(context);
 	}
 
+	@NonNull
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 		CheckedInstalledApp result = (CheckedInstalledApp) convertView;
 		if (result == null)
 			result = (CheckedInstalledApp) layoutInflater.inflate(R.layout.forced_apps_chooser_item, parent, false);
