@@ -4,11 +4,11 @@ import samuelpalmer.sensorautorotation.StringResource;
 
 class Migration {
 
-	private final Integer message;
+	private Integer message;
 
-	//TODO: Remove the message parameter from the constructor since most upgrades don't seem to use messages
-	public Migration(Integer message) {
+	public Migration setMessage(int message) {
 		this.message = message;
+		return this;
 	}
 
 	public void upgradeData() {}

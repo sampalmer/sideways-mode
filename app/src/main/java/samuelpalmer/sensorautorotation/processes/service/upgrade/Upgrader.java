@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service.upgrade;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.util.Log;
+import android.util.SparseArray;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
@@ -39,9 +40,11 @@ public class Upgrader {
 	private void upgrade() {
 		StringBuilder upgradeMessage = new StringBuilder();
 
+		SparseArray<Migration> migrations = Migrations.buildMap();
 		for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
-			Migration migration = Migrations.map().get(version);
+			Migration migration = migrations.get(version);
 			if (migration != null) {
+				Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
 				upgradeMessage.append(migration.message());
 				migration.upgradeData();
 			}

@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.util.SparseArray;
 
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.settings.application.BooleanSetting;
@@ -14,12 +13,12 @@ import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 class Migrations {
-	static Map<Integer, Migration> map() {
-		Map<Integer, Migration> migrations = new HashMap<>();
+	static SparseArray<Migration> buildMap() {
+		SparseArray<Migration> migrations = new SparseArray<>();
 
-		migrations.put(18, new Migration(R.string.upgrade_v18));
+		migrations.put(18, new Migration().setMessage(R.string.upgrade_v18));
 
-		migrations.put(25, new Migration(null) {
+		migrations.put(25, new Migration() {
 			@Override
 			public void upgradeData() {
 				ApplicationSettings applicationSettings = ApplicationSettings.local();
@@ -50,7 +49,7 @@ class Migrations {
 			}
 		});
 
-		migrations.put(43, new Migration(null) {
+		migrations.put(43, new Migration() {
 			@Override
 			public void upgradeData() {
 				super.upgradeData();
@@ -71,7 +70,7 @@ class Migrations {
 			}
 		});
 
-		migrations.put(47, new Migration(null) {
+		migrations.put(47, new Migration() {
 			@Override
 			public void upgradeData() {
 				super.upgradeData();
