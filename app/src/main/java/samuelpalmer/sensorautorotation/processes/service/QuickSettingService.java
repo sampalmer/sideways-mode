@@ -140,7 +140,6 @@ public class QuickSettingService extends TileService {
 		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
 		tile.setState(status == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 
-		//TODO: Maybe add a "plus" symbol to the icon to distinguish it from the Android one. Also do this for the app's main logo.
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.notification_rotation : status.mode.notificationIcon()));
 
