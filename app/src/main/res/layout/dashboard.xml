@@ -27,8 +27,6 @@
 			android:layout_height="wrap_content"
 			android:padding="@dimen/dialog_content_margin">
 
-			<!-- TODO: Only show the user orientation when the screen orientation is overridden-->
-			<!-- TODO: Maybe make the progress bar fade in and out to reduce flicker -->
 			<ProgressBar
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
