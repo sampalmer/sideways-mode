@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
  * UI proxy to settings stored in background process.
  * Also supports showing an error message at the bottom of the activity.
  */
+//TODO: Improve the name of this, or reorganise it.
 public abstract class PreferencesActivity extends UiActivity {
 
 	private Snackbar snackbar;
