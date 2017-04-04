@@ -22,7 +22,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
 
-	private ProgressListView list;
+	private final ProgressListView list;
 
 	public LoadInstalledAppsTask(ProgressListView v) {
 		this.list = v;

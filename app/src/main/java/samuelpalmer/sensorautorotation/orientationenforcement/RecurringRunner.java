@@ -6,9 +6,9 @@ import samuelpalmer.sensorautorotation.State;
 
 public class RecurringRunner extends State {
 
-	private Handler handler;
-	private Runnable runnable;
-	private int periodInMilliseconds;
+	private final Handler handler;
+	private final Runnable runnable;
+	private final int periodInMilliseconds;
 
 	public RecurringRunner(Runnable runnable, int periodInMilliseconds) {
 		this.handler = new Handler();
@@ -16,7 +16,7 @@ public class RecurringRunner extends State {
 		this.periodInMilliseconds = periodInMilliseconds;
 	}
 
-	private Runnable runAndEnqueue = new Runnable() {
+	private final Runnable runAndEnqueue = new Runnable() {
 		@Override
 		public void run() {
 			runnable.run();

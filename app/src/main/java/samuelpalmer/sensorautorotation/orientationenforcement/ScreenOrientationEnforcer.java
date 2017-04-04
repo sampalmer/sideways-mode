@@ -22,7 +22,7 @@ public class ScreenOrientationEnforcer extends State {
 
 	private final View view;
 	private final WindowManager windows;
-	private LayoutParams layout;
+	private final LayoutParams layout;
 	private boolean isEnforced;
 
 	public ScreenOrientationEnforcer(Context context) {

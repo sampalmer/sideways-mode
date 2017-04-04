@@ -21,7 +21,7 @@ public class DashboardDialog extends DialogFragment {
 	 */
 	public static class Builder {
 
-		private Context context;
+		private final Context context;
 
 		public Builder(Context context){
 			this.context = context;

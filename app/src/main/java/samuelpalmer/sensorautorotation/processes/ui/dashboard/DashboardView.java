@@ -163,7 +163,7 @@ public class DashboardView extends RelativeLayout {
 
 	};
 
-	private EventHandler enabledChanged = new EventHandler() {
+	private final EventHandler enabledChanged = new EventHandler() {
 		@Override
 		public void update() {
 			isEnabled = enabledSetting.get();
@@ -171,7 +171,7 @@ public class DashboardView extends RelativeLayout {
 		}
 	};
 
-	private EventHandler lastErrorChanged = new EventHandler() {
+	private final EventHandler lastErrorChanged = new EventHandler() {
 		@Override
 		public void update() {
 			maybeUpdateUi();

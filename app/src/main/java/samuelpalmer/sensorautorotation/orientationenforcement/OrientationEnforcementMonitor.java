@@ -54,7 +54,7 @@ public class OrientationEnforcementMonitor extends State {
 		orientationEnforcer.ensureStopped();
 	}
 
-	private EventHandler forcedAppsChanged = new EventHandler() {
+	private final EventHandler forcedAppsChanged = new EventHandler() {
 		@Override
 		public void update() {
 			updatePackages();

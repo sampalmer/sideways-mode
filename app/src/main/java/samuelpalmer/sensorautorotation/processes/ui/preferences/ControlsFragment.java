@@ -121,7 +121,7 @@ public class ControlsFragment extends PreferenceFragment {
 		notificationsSummary.unsubscribe(notificationsChanged);
 	}
 
-	private EventHandler notificationsChanged = new EventHandler() {
+	private final EventHandler notificationsChanged = new EventHandler() {
 		@Override
 		public void update() {
 			updateNotifications();
