@@ -86,7 +86,7 @@ abstract class WindowOrientationListener {
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
 	private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
 
-	private List<Integer> prioritisedSensorTypes = Arrays.asList(
+	private static final List<Integer> prioritisedSensorTypes = Arrays.asList(
 		Sensor.TYPE_GAME_ROTATION_VECTOR,
 		Sensor.TYPE_ROTATION_VECTOR,
 		Sensor.TYPE_GRAVITY,
@@ -109,6 +109,18 @@ abstract class WindowOrientationListener {
 
 	public static void reportSensorError(int message) {
 		new EnvironmentError(R.string.environment_error_sensor_summary, R.string.environment_error_sensor_message, message, R.string.app_name_full).report();
+	}
+
+	public static ArrayList<Sensor> getSupportedSensors(SensorManager sensorManager) {
+		ArrayList<Sensor> result = new ArrayList<>();
+
+		for (int type : prioritisedSensorTypes) {
+			Sensor sensor = sensorManager.getDefaultSensor(type);
+			if (sensor != null)
+				result.add(sensor);
+		}
+
+		return result;
 	}
 
 	/**
@@ -138,12 +150,7 @@ abstract class WindowOrientationListener {
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 
-		mSensors = new ArrayList<>();
-		for (int type : prioritisedSensorTypes) {
-			Sensor sensor = mSensorManager.getDefaultSensor(type);
-			if (sensor != null)
-				mSensors.add(sensor);
-		}
+		mSensors = getSupportedSensors(mSensorManager);
 
 		String[] formattedSensors = new String[mSensors.size()];
 		for (int i = 0; i < mSensors.size(); ++i)

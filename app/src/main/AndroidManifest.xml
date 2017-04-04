@@ -220,6 +220,11 @@
 
 		</activity>
 
+		<activity
+			android:name=".processes.ui.DeviceUnsupportedActivity"
+			android:label="@string/device_problem" />
+
+
 		<!-- Service Process -->
 
 		<provider

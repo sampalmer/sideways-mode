@@ -8,10 +8,12 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
@@ -89,6 +91,19 @@ public class MainActivity extends PreferencesActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		actionBarDrawerToggle.syncState();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		//Checking this after the activity starts in case the user wants to go out and back in again to retry the check in case the problem is intermittent
+		if (!OrientationSensorHandler.canDetectOrientation()) {
+			//Not letting the user go any further since they shouldn't have installed the app
+			Log.w(MainActivity.class.getSimpleName(), "Didn't find any supported sensors. Advising user the device is unsupported.");
+			startActivity(new Intent(this, DeviceUnsupportedActivity.class));
+			finish();
+		}
 	}
 
 	@Override

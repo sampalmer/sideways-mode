@@ -181,4 +181,9 @@
 	<string name="report_problem_hint">Describe the problem here</string>
 	<string name="report_problem_send">Send by email</string>
 
+	<!-- Device problem -->
+	<string name="device_problem">Device problem</string>
+	<string name="device_problem_explanation">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
+	<string name="request_uninstall">"Please uninstall this app."</string>
+
 </resources>
