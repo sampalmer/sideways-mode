@@ -15,7 +15,7 @@ public class InstructionsFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View result = inflater.inflate(R.layout.instructions, container, false);
+		View result = inflater.inflate(R.layout.fragment_instructions, container, false);
 
 		LinearLayout pageContainer = (LinearLayout) result.findViewById(R.id.container);
 
