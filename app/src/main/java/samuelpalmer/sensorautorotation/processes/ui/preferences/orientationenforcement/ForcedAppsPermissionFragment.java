@@ -65,17 +65,13 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	}
 
 	private void grantPermissions() {
-		//TODO: If the user is trying to disable the accessibility service on Android 7 or higher, just programmatically disable it.
-
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.preference_accessibility_service_summary)
 					.setMessage(StringResource.format(R.string.accessibility_service_prompt_instruction, R.string.accessibility_service_name))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
-						public void onCancel(DialogInterface dialog) {
-							updateTip(); //TODO: This looks redundant; consider removing it
-						}
+						public void onCancel(DialogInterface dialog) {}
 					})
 					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 						@Override
