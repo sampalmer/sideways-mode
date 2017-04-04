@@ -51,7 +51,7 @@ public abstract class PreferencesActivity extends UiActivity {
 					throw new RuntimeException("Content layout should be a " + CoordinatorLayout.class.getSimpleName() + " so the environment error snackbar can be dismissed. Instead found a " + contentView.getClass().getName() + ".");
 
 				snackbar = Snackbar.make(contentView, "", Snackbar.LENGTH_INDEFINITE);
-				snackbar.setCallback(new Snackbar.Callback() {
+				snackbar.addCallback(new Snackbar.Callback() {
 					@Override
 					public void onDismissed(Snackbar snackbar, int event) {
 						super.onDismissed(snackbar, event);
