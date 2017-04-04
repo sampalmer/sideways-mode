@@ -18,14 +18,14 @@ public class MessageDialogActivity extends DialogActivity {
 	private static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message, int requestCode) {
-		Intent settingsIntent = ComponentType.create(MainActivity.class).intent();
+		Intent mainActivityIntent = ComponentType.create(MainActivity.class).intent();
 
 		ComponentType componentType = ComponentType.create(MessageDialogActivity.class);
 		Intent intent = componentType.intent()
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title);
 
-		Intent[] intents = {settingsIntent, intent};
+		Intent[] intents = {mainActivityIntent, intent};
 		return PendingIntent.getActivities(CurrentProcess.context(), requestCode, intents, ComponentType.PENDING_INTENT_FLAGS);
 	}
 
