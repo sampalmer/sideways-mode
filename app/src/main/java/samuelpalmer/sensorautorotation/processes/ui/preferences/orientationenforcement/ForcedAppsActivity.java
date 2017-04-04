@@ -12,7 +12,7 @@ public class ForcedAppsActivity extends PreferencesActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.forced_apps_activity);
+		setContentView(R.layout.activity_forced_apps);
 	}
 
 }

@@ -59,7 +59,7 @@ public class MainActivity extends PreferencesActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_main);
 
 		//Drawer stuff
 		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);

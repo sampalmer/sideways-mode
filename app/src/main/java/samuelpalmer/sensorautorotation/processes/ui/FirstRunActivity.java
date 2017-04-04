@@ -11,7 +11,7 @@ public class FirstRunActivity extends UiActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.first_run);
+		setContentView(R.layout.activity_first_run);
 
 		Button ok = (Button) findViewById(R.id.ok_button);
 		ok.setOnClickListener(new View.OnClickListener() {

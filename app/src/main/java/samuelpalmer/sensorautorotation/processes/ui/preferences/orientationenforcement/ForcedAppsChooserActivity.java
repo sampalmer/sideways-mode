@@ -17,7 +17,7 @@ public class ForcedAppsChooserActivity extends PreferencesActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.forced_apps_chooser_activity);
+		setContentView(R.layout.activity_forced_apps_chooser);
 
 		list = new ProgressListView();
 		list.adapter = new InstalledAppAdapter(this);

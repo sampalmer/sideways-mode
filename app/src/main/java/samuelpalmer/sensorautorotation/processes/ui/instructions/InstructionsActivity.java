@@ -10,7 +10,7 @@ public class InstructionsActivity extends UiActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.instructions_activity);
+		setContentView(R.layout.activity_instructions);
 	}
 
 }
