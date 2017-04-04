@@ -73,7 +73,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
-		activityMonitor = new ActivityMonitor(); //TODO: Move this inside one of the orientation enforcement classes?
+		activityMonitor = new ActivityMonitor();
 		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor, lockScreenMonitor);
 
 		systemAutoRotationMonitor.ensureStarted();
