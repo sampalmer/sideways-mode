@@ -25,7 +25,7 @@ class Uninstaller {
 		if (serviceSynchroniser.serviceEnabled())
 			new AlertDialog.Builder(parent)
 				.setTitle(R.string.uninstall_title)
-				.setIcon(R.drawable.delete)
+				.setIcon(R.drawable.menu_delete)
 				.setMessage(R.string.uninstall_confirmation_message)
 				.setPositiveButton(android.R.string.yes, onClickListener)
 				.setNegativeButton(android.R.string.no, null)

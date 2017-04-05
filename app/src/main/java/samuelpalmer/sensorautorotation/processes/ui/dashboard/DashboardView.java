@@ -103,7 +103,7 @@ public class DashboardView extends RelativeLayout {
 			1. We're using the vector compat stuff
 			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
 		 */
-		settingsButton.setImageResource(R.drawable.settings);
+		settingsButton.setImageResource(R.drawable.menu_settings);
 		rotateLeftButton.setImageResource(R.drawable.dashboard_rotate_left);
 		rotateRightButton.setImageResource(R.drawable.dashboard_rotate_right);
 
