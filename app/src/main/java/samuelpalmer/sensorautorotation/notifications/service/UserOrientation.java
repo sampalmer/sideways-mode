@@ -55,10 +55,10 @@ public class UserOrientation implements Parcelable {
 
 	public int iconId() {
 		switch (rotations) {
-			case 0: return R.drawable.user_upright;
-			case 1: return R.drawable.user_left_side;
-			case 2: return R.drawable.user_upside_down;
-			case 3: return R.drawable.user_right_side;
+			case 0: return R.drawable.notification_user_upright;
+			case 1: return R.drawable.notification_user_left_side;
+			case 2: return R.drawable.notification_user_upside_down;
+			case 3: return R.drawable.notification_user_right_side;
 			default: throw new RuntimeException("Unknown user rotation: " + rotations);
 		}
 	}
