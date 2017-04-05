@@ -10,6 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Checkable;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
@@ -31,8 +34,13 @@ public class MainActivity extends PreferencesActivity {
 			drawerLayout.closeDrawers();
 
 			switch (item.getItemId()) {
-				case R.id.action_settings:
+				case R.id.action_home:
 					break;
+				case R.id.action_settings: {
+					Intent intent = ComponentType.create(SettingsActivity.class).intent();
+					startActivity(intent);
+					break;
+				}
 				case R.id.action_help: {
 					Intent intent = ComponentType.create(InstructionsActivity.class).intent();
 					startActivity(intent);
@@ -61,6 +69,14 @@ public class MainActivity extends PreferencesActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		CompoundButton enabledControl = (CompoundButton) findViewById(R.id.preference_enabled);
+		enabledControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+			}
+		});
+
 		//Drawer stuff
 		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		navigation = (NavigationView)findViewById(R.id.navigation);
@@ -84,7 +100,7 @@ public class MainActivity extends PreferencesActivity {
 					.commit();
 		}
 
-		navigation.setCheckedItem(R.id.action_settings);
+		navigation.setCheckedItem(R.id.action_home);
 	}
 
 	@Override

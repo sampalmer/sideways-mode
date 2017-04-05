@@ -40,7 +40,7 @@ public class DashboardDialog extends DialogFragment {
 		alertBuilder.setView(customView);
 
 		AlertDialog alertDialog = alertBuilder.create();
-		DashboardCoordinator.created(alertDialog);
+		DashboardDialogCoordinator.created(alertDialog);
 		return alertDialog;
 	}
 
@@ -66,7 +66,7 @@ public class DashboardDialog extends DialogFragment {
 	}
 
 	private void dialogIsGoing() {
-		DashboardCoordinator.destroyed();
+		DashboardDialogCoordinator.destroyed();
 
 		Activity activity = getActivity();
 		if (activity != null)

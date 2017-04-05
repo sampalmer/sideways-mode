@@ -14,9 +14,9 @@ public class DashboardActivity extends DialogActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (DashboardCoordinator.exists()) {
+		if (DashboardDialogCoordinator.dialogExists()) {
 			finish();
-			DashboardCoordinator.show();
+			DashboardDialogCoordinator.showDialog();
 			return;
 		}
 

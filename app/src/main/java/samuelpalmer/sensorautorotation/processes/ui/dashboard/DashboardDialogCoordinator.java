@@ -6,37 +6,37 @@ import android.util.Log;
 /**
  * Keeps track of active dashboard dialogs. Useful for ensuring only one is visible at a time.
  */
-public class DashboardCoordinator {
+public class DashboardDialogCoordinator {
 
 	private static Dialog dialog;
 
 	public static void created(Dialog dialog) {
-		if (DashboardCoordinator.dialog != null)
+		if (DashboardDialogCoordinator.dialog != null)
 			throw new RuntimeException("Already have a dialog");
 
-		DashboardCoordinator.dialog = dialog;
+		DashboardDialogCoordinator.dialog = dialog;
 		Log.i(DashboardDialog.class.getSimpleName(), "Created dialog");
 	}
 
 	public static void destroyed() {
-		DashboardCoordinator.dialog = null;
-		Log.i(DashboardCoordinator.class.getSimpleName(), "Finished up dialog");
+		DashboardDialogCoordinator.dialog = null;
+		Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Finished up dialog");
 	}
 
-	public static boolean exists() {
+	public static boolean dialogExists() {
 		return dialog != null;
 	}
 
 	/**
 	 * This is useful in case the dialog is present but hidden
 	 */
-	public static void show() {
+	public static void showDialog() {
 		ensureExists();
 
 		dialog.show();
 	}
 
-	public static void dismiss() {
+	public static void dismissDialog() {
 		ensureExists();
 
 		dialog.dismiss();

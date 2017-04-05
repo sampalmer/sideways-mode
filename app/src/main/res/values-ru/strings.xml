@@ -22,6 +22,8 @@
 	<string name="uninstall_title">Удалить?</string>
 	<string name="uninstall_confirmation_message">С помощью этого приложения будет отключен экран управления вращением. (Вы можете повторно включить его в настройках экрана этого приложения.) Отключить и удалить это приложение?</string>
 
+	<string name="settings">Настройки</string>
+
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Автоповорот</string>
 	<string name="screen_rotation_disabled_portrait">Портретный</string>
@@ -42,9 +44,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Включение</string>
-	<string name="preference_enabled_description">Использовать это приложение для управления вращением экрана</string>
-
-	<string name="preference_settings_title">Настройки</string>
 
 	<string name="preference_notification_priority_title">Приоритет уведомления</string>
 	<string name="preference_notification_priority_high">Высокий</string>

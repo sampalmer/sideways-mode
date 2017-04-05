@@ -2,5 +2,6 @@
 <resources>
 	
 	<item name="coordinator_layout" type="id" />
-	
+	<item name="fragment_enabled_container" type="id" />
+
 </resources>

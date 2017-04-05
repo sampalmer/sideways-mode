@@ -4,6 +4,7 @@
 	<string name="app_name_full">Auto Rotation for Lying Down</string>
 	<string name="app_name">Rotation</string>
 
+	<string name="action_home">Home</string>
 	<string name="action_help">Help</string>
 	<string name="action_feedback">Send feedback</string>
 	<string name="action_feedback_email">Email</string>
@@ -27,6 +28,8 @@
 	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
 	<string name="accessibility_service_prompt_instruction">"On the following screen, open '%1$s' and enable it.\n\n(If the switch doesn't work, try disabling all screen brightness and screen orientation apps.)"</string>
+
+	<string name="settings">Settings</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
@@ -54,9 +57,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Enabled</string>
-	<string name="preference_enabled_description">Use this app to control screen rotation</string>
-
-	<string name="preference_settings_title">Settings</string>
 
 	<string name="preference_controls">Controls</string>
 	<string name="preference_controls_description">Controlling the screen orientation</string>

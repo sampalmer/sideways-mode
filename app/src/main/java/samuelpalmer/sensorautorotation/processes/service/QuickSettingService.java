@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardCoordinator;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialog;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -44,14 +44,14 @@ public class QuickSettingService extends TileService {
 		else {
 
 			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-			if (!DashboardCoordinator.exists()) {
+			if (!DashboardDialogCoordinator.dialogExists()) {
 				DashboardDialog dialog = new DashboardDialog.Builder(getApplicationContext()).create();
 				Bundle args = new Bundle();
 				Dialog dashboard = dialog.onCreateDialog(args);
 				dashboard.setOnDismissListener(new DialogInterface.OnDismissListener() {
 					@Override
 					public void onDismiss(DialogInterface dialog) {
-						DashboardCoordinator.destroyed();
+						DashboardDialogCoordinator.destroyed();
 					}
 				});
 
@@ -59,7 +59,7 @@ public class QuickSettingService extends TileService {
 				dashboard.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface dialog) {
-						DashboardCoordinator.destroyed();
+						DashboardDialogCoordinator.destroyed();
 					}
 				});
 
@@ -72,7 +72,7 @@ public class QuickSettingService extends TileService {
 				showDialog(dashboard);
 			}
 			else {
-				DashboardCoordinator.show();
+				DashboardDialogCoordinator.showDialog();
 				startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
 			}
 		}

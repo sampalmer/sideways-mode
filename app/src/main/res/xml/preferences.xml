@@ -1,51 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<Preference
+		android:persistent="false"
+		android:title="@string/preference_controls"
+		android:summary="@string/preference_controls_description"
+		android:icon="@drawable/preference_controls"
+		>
+
+		<intent
+			android:targetPackage="samuelpalmer.sensorautorotation"
+			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.ControlsActivity" />
+
+	</Preference>
+
 	<CheckBoxPreference
-		android:key="enabled"
-	    android:title="@string/preference_enabled_title"
-	    android:summary="@string/preference_enabled_description"
-	    android:icon="@drawable/preference_power"
-	/>
+		android:key="allowUpsideDownScreen"
+		android:title="@string/preference_allow_upside_down_screen_title"
+		android:summary="@string/preference_allow_upside_down_screen_description"
+		android:icon="@drawable/preference_screen_upside_down"
+		/>
 
-	<!-- The "dependency" attribute needs to be specified for all children since setting it on the
-	 PreferenceCategory alone doesn't work in the API 14 emulator -->
-	<PreferenceCategory
-		android:title="@string/preference_settings_title"
-		android:dependency="enabled">
+	<PreferenceScreen
+		android:key="forcedOrientationAppPackages"
+		android:persistent="false"
+		android:title="@string/preference_forced_apps_title"
+		android:icon="@drawable/preference_overridden_apps"
+		>
 
-		<Preference
-			android:persistent="false"
-			android:title="@string/preference_controls"
-			android:summary="@string/preference_controls_description"
-			android:icon="@drawable/preference_controls"
-			android:dependency="enabled">
+		<intent
+			android:targetPackage="samuelpalmer.sensorautorotation"
+			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
 
-			<intent
-				android:targetPackage="samuelpalmer.sensorautorotation"
-				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.ControlsActivity" />
+	</PreferenceScreen>
 
-		</Preference>
-
-		<CheckBoxPreference
-			android:key="allowUpsideDownScreen"
-			android:title="@string/preference_allow_upside_down_screen_title"
-			android:summary="@string/preference_allow_upside_down_screen_description"
-			android:icon="@drawable/preference_screen_upside_down"
-			android:dependency="enabled"
-			/>
-
-		<PreferenceScreen
-			android:key="forcedOrientationAppPackages"
-			android:persistent="false"
-			android:title="@string/preference_forced_apps_title"
-			android:icon="@drawable/preference_overridden_apps"
-			android:dependency="enabled">
-
-			<intent
-				android:targetPackage="samuelpalmer.sensorautorotation"
-				android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
-
-		</PreferenceScreen>
-	</PreferenceCategory>
 </PreferenceScreen>

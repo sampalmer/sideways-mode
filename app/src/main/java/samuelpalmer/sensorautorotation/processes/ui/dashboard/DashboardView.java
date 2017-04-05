@@ -64,13 +64,16 @@ public class DashboardView extends RelativeLayout {
 		super.onFinishInflate();
 
 		ImageButton settingsButton = (ImageButton) findViewById(R.id.dashboard_settings);
-		settingsButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getContext().startActivity(new Intent(getContext(), MainActivity.class));
-				DashboardCoordinator.dismiss();
-			}
-		});
+		if (DashboardDialogCoordinator.dialogExists())
+			settingsButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getContext().startActivity(new Intent(getContext(), MainActivity.class));
+					DashboardDialogCoordinator.dismissDialog();
+				}
+			});
+		else
+			settingsButton.setVisibility(View.GONE);
 
 		disabledSection = (ViewGroup) findViewById(R.id.dashboard_disabled);
 		disabledText = (TextView) findViewById(R.id.dashboard_disabled_text);
@@ -217,7 +220,7 @@ public class DashboardView extends RelativeLayout {
 							throw new RuntimeException(e);
 						}
 
-						DashboardCoordinator.dismiss();
+						DashboardDialogCoordinator.dismissDialog();
 					}
 				});
 			}
