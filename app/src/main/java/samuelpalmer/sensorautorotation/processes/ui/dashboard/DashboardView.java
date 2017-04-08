@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
@@ -11,10 +12,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -31,11 +32,13 @@ import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServic
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class DashboardView extends RelativeLayout {
+public class DashboardView extends FrameLayout {
 
 	private final ServiceStatusContentProvider.Client serviceClient;
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
+
+	private final boolean showSettings;
 
 	private ViewGroup disabledSection;
 	private TextView disabledText;
@@ -54,17 +57,27 @@ public class DashboardView extends RelativeLayout {
 
 	public DashboardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		TypedArray a = context.getTheme().obtainStyledAttributes(
+				attrs,
+				R.styleable.DashboardView,
+				0, 0);
+
+		try {
+			showSettings = a.getBoolean(R.styleable.DashboardView_showSettings, true);
+		} finally {
+			a.recycle();
+		}
+
 		serviceClient = new ServiceStatusContentProvider.Client(getContext());
 		handler = new Handler();
 		enabledSetting = ApplicationSettings.remote().enabled();
-	}
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
+		View view = inflate(getContext(), R.layout.dashboard_contents, null);
+		addView(view);
 
 		ImageButton settingsButton = (ImageButton) findViewById(R.id.dashboard_settings);
-		if (DashboardDialogCoordinator.dialogExists())
+		if (showSettings)
 			settingsButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

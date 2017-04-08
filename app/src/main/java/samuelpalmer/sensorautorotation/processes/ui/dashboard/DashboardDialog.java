@@ -36,7 +36,7 @@ public class DashboardDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedState){
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
-		View customView = LayoutInflater.from(alertBuilder.getContext()).inflate(R.layout.fragment_dashboard, null);
+		View customView = new DashboardView(this.context, null);
 		alertBuilder.setView(customView);
 
 		AlertDialog alertDialog = alertBuilder.create();
