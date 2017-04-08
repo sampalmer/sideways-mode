@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
+	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
 	<samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.PermissionTipViewPreference
 		android:key="forcedOrientationPermission"
 		android:summary="@string/permissions_needed_tip"
