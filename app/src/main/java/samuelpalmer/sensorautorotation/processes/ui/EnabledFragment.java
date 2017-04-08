@@ -34,7 +34,7 @@ public class EnabledFragment extends Fragment {
 		}
 	};
 
-	private CompoundButton.OnCheckedChangeListener enabledSettingUpdater = new CompoundButton.OnCheckedChangeListener() {
+	private final CompoundButton.OnCheckedChangeListener enabledSettingUpdater = new CompoundButton.OnCheckedChangeListener() {
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			if (Build.VERSION.SDK_INT >= 23 && isChecked && !Settings.System.canWrite(getContext())) {
