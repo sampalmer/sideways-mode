@@ -39,6 +39,7 @@ public class QuickSettingService extends TileService {
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 
 		if (isLocked()) {
+			//Not using the dialog here since dialogs don't show on the lock screen.
 			startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
@@ -63,18 +64,13 @@ public class QuickSettingService extends TileService {
 					}
 				});
 
-				/* This makes the service process's RAM usage jump up from ~8MB to ~14MB,
-				 * but we can't use an activity because the OS delays activity start
-				 * when the home button is pressed.
-				 *
-				 * https://code.google.com/p/android/issues/detail?id=4536
-				 */
 				showDialog(dashboard);
 			}
 			else {
 				DashboardDialogCoordinator.showDialog();
 				startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
 			}
+
 		}
 	}
 
