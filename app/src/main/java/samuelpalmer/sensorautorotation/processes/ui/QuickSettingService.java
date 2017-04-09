@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -17,6 +17,8 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
+import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
+import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
