@@ -12,6 +12,7 @@ public class OrientationCalculator {
 	private final ApplicationState state;
 
 	private Orientation device = DEFAULT;
+	private boolean waitingForSensor = true;
 
 	public final UpdatingEventRegistrar onAnythingChanged;
 
@@ -23,6 +24,7 @@ public class OrientationCalculator {
 
 	public void reset() {
 		device = DEFAULT;
+		waitingForSensor = true;
 		state.offset.set(new Rotation(0));
 
 		reportChange();
@@ -89,7 +91,11 @@ public class OrientationCalculator {
 	}
 
 	public void setDevice(Orientation newDevice) {
-		device = newDevice;
+		waitingForSensor = false;
+
+		if (newDevice != null)
+			device = newDevice;
+
 		reportChange();
 	}
 
@@ -108,5 +114,9 @@ public class OrientationCalculator {
 	 */
 	private Orientation baseScreenOrientation(boolean autoRotate) {
 		return autoRotate ? device : Orientation.NATURAL;
+	}
+
+	public boolean isWaitingForSensor() {
+		return waitingForSensor;
 	}
 }

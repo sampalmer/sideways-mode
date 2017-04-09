@@ -42,13 +42,15 @@ class ServiceNotification {
 	public Notification build(ServiceStatus serviceStatus) {
 		builder.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon());
 
+		CharSequence statusText = StringResource.get(serviceStatus.waitingForSensor ? R.string.status_waiting_sensor : serviceStatus.user.descriptionId());
+
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
-			builder.setContentTitle(StringResource.get(serviceStatus.user.descriptionId()));
+			builder.setContentTitle(statusText);
 		}
 		else {
 			builder.setContentTitle(StringResource.get(R.string.app_name));
-			builder.setContentText(StringResource.get(serviceStatus.user.descriptionId()));
+			builder.setContentText(statusText);
 		}
 
 		serviceStatus.priority.apply(builder);

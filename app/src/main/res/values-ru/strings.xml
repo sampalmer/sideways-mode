@@ -29,7 +29,9 @@
 	<string name="screen_rotation_disabled_portrait">Портретный</string>
 	<string name="screen_rotation_disabled_landscape">Ландшафтный</string>
 
-	<string name="notification_summary">%1$s (Пользователь %2$s)</string>
+	<string name="notification_summary">%1$s (%2$s)</string>
+	<string name="status_user_phrase">Пользователь %1$s</string>
+
 	<string name="user_rotation_upright">Вертикально</string>
 	<string name="user_rotation_sideways">Боком</string>
 	<string name="user_rotation_upside_down">Вверх ногами</string>

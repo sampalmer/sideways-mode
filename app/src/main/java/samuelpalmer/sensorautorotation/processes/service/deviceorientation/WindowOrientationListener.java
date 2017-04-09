@@ -554,7 +554,7 @@ abstract class WindowOrientationListener {
 		private long mLastFilteredTimestampNanos;
 		private float mLastFilteredX, mLastFilteredY, mLastFilteredZ;
 
-		// The last proposed rotation, -1 if unknown.
+		// The last proposed rotation, -2 if never proposed, -1 if unknown.
 		private int mProposedRotation;
 
 		// Value of the current predicted rotation, -1 if unknown.
@@ -874,7 +874,7 @@ abstract class WindowOrientationListener {
 			}
 
 			// Tell the listener.
-			if (proposedRotation != oldProposedRotation && proposedRotation >= 0) {
+			if (proposedRotation != oldProposedRotation) {
 				if (LOG) {
 					Slog.v(TAG, "Proposed rotation changed!  proposedRotation=" + proposedRotation
 							+ ", oldProposedRotation=" + oldProposedRotation);
@@ -897,7 +897,7 @@ abstract class WindowOrientationListener {
 		@Override
 		public void resetLocked() {
 			mLastFilteredTimestampNanos = Long.MIN_VALUE;
-			mProposedRotation = -1;
+			mProposedRotation = -2;
 			mFlatTimestampNanos = Long.MIN_VALUE;
 			mFlat = false;
 			mSwingTimestampNanos = Long.MIN_VALUE;
@@ -1113,9 +1113,8 @@ abstract class WindowOrientationListener {
 				mDesiredRotation = (int) event.values[0];
 				newRotation = evaluateRotationChangeLocked();
 			}
-			if (newRotation >=0) {
-				onProposedRotationChanged(newRotation);
-			}
+
+			onProposedRotationChanged(newRotation);
 		}
 
 		@Override
@@ -1213,9 +1212,8 @@ abstract class WindowOrientationListener {
 					mRotationEvaluationScheduled = false;
 					newRotation = evaluateRotationChangeLocked();
 				}
-				if (newRotation >= 0) {
-					onProposedRotationChanged(newRotation);
-				}
+
+				onProposedRotationChanged(newRotation);
 			}
 		};
 	}

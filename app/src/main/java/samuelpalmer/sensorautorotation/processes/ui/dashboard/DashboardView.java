@@ -240,9 +240,18 @@ public class DashboardView extends FrameLayout {
 		}
 		else {
 			if (lastStatus != null) {
-				userIcon.setImageResource(lastStatus.user.iconId());
-				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
-				statusText.setText(" " + StringResource.get(lastStatus.user.longDescriptionId()));
+				if (lastStatus.waitingForSensor) {
+					ensureVisibility(userIcon, View.GONE);
+					statusText.setText(R.string.status_waiting_sensor);
+				}
+				else {
+					userIcon.setImageResource(lastStatus.user.iconId());
+					userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+					ensureVisibility(userIcon, View.VISIBLE);
+
+					statusText.setText(" " + StringResource.get(lastStatus.user.longDescriptionId()));
+				}
+
 				toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
 				toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 				modeText.setText(lastStatus.mode.autoRotationStateResourceId());

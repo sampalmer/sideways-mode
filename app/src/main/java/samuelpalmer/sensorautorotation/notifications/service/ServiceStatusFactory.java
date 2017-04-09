@@ -40,7 +40,7 @@ public class ServiceStatusFactory {
 			Arrays.<EventRegistrar>asList(
 				priority, //To change notification priority
 				screenRotationMonitor, //For "overridden" detection
-				calculator.onAnythingChanged //For "overridden" detection, user orientation changes, auto rotation mode changes
+				calculator.onAnythingChanged //For "overridden" detection, user orientation changes, auto rotation mode changes, waiting on sensor changes
 			)
 		);
 
@@ -55,7 +55,8 @@ public class ServiceStatusFactory {
 			mode(),
 			overridden(),
 			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
-			priority()
+			priority(),
+			calculator.isWaitingForSensor()
 		);
 	}
 

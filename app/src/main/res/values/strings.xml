@@ -36,7 +36,9 @@
 	<string name="screen_rotation_disabled_portrait">Portrait</string>
 	<string name="screen_rotation_disabled_landscape">Landscape</string>
 
-	<string name="notification_summary">%1$s (User %2$s)</string>
+	<string name="notification_summary">%1$s (%2$s)</string>
+	<string name="status_user_phrase">User %1$s</string>
+
 	<string name="user_rotation_upright">Upright</string>
 	<string name="user_rotation_left_side">Left side</string>
 	<string name="user_rotation_right_side">Right side</string>
@@ -54,6 +56,8 @@
 	<string name="app_disabled_because_of_error">%1$s was disabled because of an error.</string>
 	<string name="app_disabled_view_error_instruction">To see the error, open the app.</string>
 	<string name="app_disabled_view_error">View error</string>
+
+	<string name="status_waiting_sensor">Waiting for sensor</string>
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Enabled</string>
