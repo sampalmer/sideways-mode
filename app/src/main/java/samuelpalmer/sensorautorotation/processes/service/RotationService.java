@@ -34,7 +34,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	private OrientationCalculator calculator;
 	ServiceStatusDisplayUpdater serviceStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
-	ServiceStatusFactory serviceStatusFactory;
+	private ServiceStatusFactory serviceStatusFactory;
 	private UserInteractivityChangeHandler userInteractivityChangeHandler;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementManager orientationEnforcementManager;
