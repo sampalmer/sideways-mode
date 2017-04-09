@@ -183,6 +183,9 @@ public class DashboardView extends FrameLayout {
 		@Override
 		public void update() {
 			isEnabled = enabledSetting.get();
+			if (!isEnabled)
+				lastStatus = null; //So we don't accidentally reuse the last status next time the app is enabled
+
 			maybeUpdateUi();
 		}
 	};
