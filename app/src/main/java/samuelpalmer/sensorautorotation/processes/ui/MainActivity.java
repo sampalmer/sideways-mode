@@ -128,6 +128,7 @@ public class MainActivity extends PreferencesActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		//noinspection SimplifiableIfStatement
 		if (actionBarDrawerToggle.onOptionsItemSelected(item))
 			return true;
 
