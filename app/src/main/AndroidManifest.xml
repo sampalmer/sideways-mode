@@ -221,7 +221,7 @@
 		          android:theme="@style/Theme.NoDisplay"
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
-		          android:configChanges="orientation|screenSize"
+		          android:configChanges="orientation|screenSize|screenLayout"
 		          tools:ignore="UnusedAttribute">
 
 			<intent-filter>
