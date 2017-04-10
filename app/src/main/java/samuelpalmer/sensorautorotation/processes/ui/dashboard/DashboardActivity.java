@@ -37,7 +37,7 @@ public class DashboardActivity extends DialogActivity {
 		dialog.show();
 	}
 
-	//TODO: See if this is needed now
+	//TODO: See if this is needed now that DashboardDialog does its own deinit in onStop
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
