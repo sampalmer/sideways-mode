@@ -1,6 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
 /**
@@ -10,17 +13,35 @@ public class DashboardDialogCoordinator {
 
 	private static Dialog dialog;
 
-	public static void created(Dialog dialog) {
-		if (DashboardDialogCoordinator.dialog != null)
-			throw new RuntimeException("Already have a dialog");
+	public static Dialog createDialog(Context context, final Runnable onStopped) {
+		DashboardDialog.Listener onStart = new DashboardDialog.Listener() {
+			@Override
+			public void onChange(Dialog dialog) {
+				if (DashboardDialogCoordinator.dialog != null)
+					throw new RuntimeException("Already have a dialog");
 
-		DashboardDialogCoordinator.dialog = dialog;
-		Log.i(DashboardDialog.class.getSimpleName(), "Created dialog");
-	}
+				DashboardDialogCoordinator.dialog = dialog;
+				Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog started");
+			}
+		};
 
-	public static void destroyed() {
-		DashboardDialogCoordinator.dialog = null;
-		Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Finished up dialog");
+		DashboardDialog.Listener onStop = new DashboardDialog.Listener() {
+			@Override
+			public void onChange(Dialog dialog) {
+				if (DashboardDialogCoordinator.dialog == null)
+					throw new RuntimeException("Don't have a dialog");
+				if (DashboardDialogCoordinator.dialog != dialog)
+					throw new RuntimeException("Unrecognised dialog");
+
+				DashboardDialogCoordinator.dialog = null;
+				Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog stopped");
+				onStopped.run();
+			}
+		};
+
+		Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Created dialog");
+
+		return new DashboardDialog(context, onStart, onStop);
 	}
 
 	public static boolean dialogExists() {
@@ -46,4 +67,5 @@ public class DashboardDialogCoordinator {
 		if (dialog == null)
 			throw new RuntimeException("Don't have a dialog");
 	}
+
 }

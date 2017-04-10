@@ -1,73 +1,36 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.View;
 
-public class DashboardDialog extends DialogFragment {
 
-	private Context context;
+public class DashboardDialog extends AlertDialog {
 
-	/**
-	 * An inner class used to pass context into the dialog.
-	 */
-	public static class Builder {
+	private final Listener onStart;
+	private final Listener onStop;
 
-		private final Context context;
-
-		public Builder(Context context){
-			this.context = context;
-		}
-
-		public DashboardDialog create() {
-			return new DashboardDialog().setContext(this.context);
-		}
-
+	public DashboardDialog(Context context, Listener onStart, Listener onStop) {
+		super(context);
+		this.onStart = onStart;
+		this.onStop = onStop;
+		setView(new DashboardView(context, null));
 	}
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedState){
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this.context);
-		View customView = new DashboardView(this.context, null);
-		alertBuilder.setView(customView);
-
-		AlertDialog alertDialog = alertBuilder.create();
-		DashboardDialogCoordinator.created(alertDialog);
-		return alertDialog;
-	}
-
-	private DashboardDialog setContext(Context context){
-		this.context = context;
-		return this;
-	}
-
-
-	//Note that the below callbacks only apply when the dialog is hosted in a fragment
-	@Override
-	public void onDismiss(DialogInterface dialog) {
-		super.onDismiss(dialog);
-
-		dialogIsGoing();
+	protected void onStart() {
+		super.onStart();
+		onStart.onChange(this);
 	}
 
 	@Override
-	public void onCancel(DialogInterface dialog) {
-		super.onCancel(dialog);
-
-		dialogIsGoing();
+	protected void onStop() {
+		super.onStop();
+		onStop.onChange(this);
 	}
 
-	private void dialogIsGoing() {
-		DashboardDialogCoordinator.destroyed();
-
-		Activity activity = getActivity();
-		if (activity != null)
-			activity.finish();
+	public interface Listener {
+		void onChange(Dialog dialog);
 	}
 
 }

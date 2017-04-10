@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -8,13 +10,14 @@ import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 
 public class DashboardActivity extends DialogActivity {
 
-	private static final String TAG = "dialog";
+	private Dialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		if (DashboardDialogCoordinator.dialogExists()) {
+			Log.i(DialogActivity.class.getSimpleName(), "Dialog already exists. Aborting.");
 			finish();
 			DashboardDialogCoordinator.showDialog();
 			return;
@@ -24,9 +27,26 @@ public class DashboardActivity extends DialogActivity {
 		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
 				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-		if (getFragmentManager().findFragmentByTag(TAG) == null) {
-			DashboardDialog dialog = new DashboardDialog.Builder(this).create();
-			dialog.show(getFragmentManager(), TAG);
+		dialog = DashboardDialogCoordinator.createDialog(this, new Runnable() {
+			@Override
+			public void run() {
+				finish();
+			}
+		});
+
+		dialog.show();
+	}
+
+	//TODO: See if this is needed now
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		Log.i(DialogActivity.class.getSimpleName(), "Destroying");
+
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
 		}
 	}
 

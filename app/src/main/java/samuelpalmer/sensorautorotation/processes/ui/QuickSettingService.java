@@ -2,11 +2,9 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.RemoteException;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
@@ -22,7 +20,6 @@ import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentPro
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialog;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -48,24 +45,10 @@ public class QuickSettingService extends TileService {
 
 			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
 			if (!DashboardDialogCoordinator.dialogExists()) {
-				DashboardDialog dialog = new DashboardDialog.Builder(getApplicationContext()).create();
-				Bundle args = new Bundle();
-				Dialog dashboard = dialog.onCreateDialog(args);
-				dashboard.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
 					@Override
-					public void onDismiss(DialogInterface dialog) {
-						DashboardDialogCoordinator.destroyed();
-					}
+					public void run() {}
 				});
-
-				//Once the dialog had gone but the field was still set. Maybe the below will help with that?
-				dashboard.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						DashboardDialogCoordinator.destroyed();
-					}
-				});
-
 				showDialog(dashboard);
 			}
 			else {
