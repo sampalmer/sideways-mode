@@ -5,7 +5,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context="samuelpalmer.sensorautorotation.processes.ui.ReportProblemActivity">
+	tools:context="samuelpalmer.sensorautorotation.processes.ui.feedback.EnterFeedbackActivity">
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -16,20 +16,19 @@
 		android:paddingTop="@dimen/activity_vertical_margin">
 
 		<EditText
-			android:id="@+id/problem_description"
+			android:id="@+id/feedback_description"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			android:hint="@string/report_problem_hint"
 			/>
 
 		<Button
-			android:text="@string/report_problem_send"
+			android:text="@string/enter_feedback_send"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@+id/problem_description"
+			android:layout_below="@+id/feedback_description"
 			android:layout_centerHorizontal="true"
-			android:id="@+id/problem_send"/>
+			android:id="@+id/feedback_send"/>
 
 	</RelativeLayout>
 

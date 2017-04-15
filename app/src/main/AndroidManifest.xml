@@ -160,7 +160,7 @@
 		</activity>
 
 		<activity
-			android:name=".processes.ui.SendFeedbackActivity"
+			android:name=".processes.ui.feedback.SendFeedbackActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/action_feedback"
 			tools:ignore="UnusedAttribute">
@@ -173,16 +173,15 @@
 		</activity>
 
 		<activity
-			android:name=".processes.ui.ReportProblemActivity"
-			android:parentActivityName=".processes.ui.SendFeedbackActivity"
-			android:label="@string/action_report"
+			android:name=".processes.ui.feedback.EnterFeedbackActivity"
+			android:parentActivityName=".processes.ui.feedback.SendFeedbackActivity"
 		    android:windowSoftInputMode="stateVisible"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.SendFeedbackActivity" />
+				android:value=".processes.ui.feedback.SendFeedbackActivity" />
 
 		</activity>
 

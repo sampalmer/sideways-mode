@@ -4,7 +4,7 @@ import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
-abstract class Toaster {
+public abstract class Toaster {
 
 	private static Toast statusToast;
 

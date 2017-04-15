@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -18,6 +18,7 @@ import java.util.List;
 import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 
 class Email {
 

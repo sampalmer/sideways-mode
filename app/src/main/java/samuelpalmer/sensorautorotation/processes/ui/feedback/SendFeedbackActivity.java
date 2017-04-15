@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class SendFeedbackActivity extends UiActivity {
 
@@ -20,15 +21,15 @@ public class SendFeedbackActivity extends UiActivity {
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
-				case R.id.action_feedback_email:
-					new Email(
-							SendFeedbackActivity.this,
-							ReportProblemActivity.emailRecipients(),
-							StringResource.format(R.string.email_feedback_subject, R.string.app_name_full, VersionInfo.packageInfo().versionName).toString(),
-							""
-					).send();
+				case R.id.action_feedback_email: {
+					Intent intent = ComponentType.create(EnterFeedbackActivity.class)
+							.intent()
+							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_FEEDBACK)
+							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the feedback screen when a different activity starts
+					startActivity(intent);
 
 					break;
+				}
 				case R.id.action_feedback_google_play: {
 					Intent intent = new Intent(Intent.ACTION_VIEW)
 							.setData(Uri.parse("market://details?id=" + SendFeedbackActivity.this.getPackageName()));
@@ -41,8 +42,9 @@ public class SendFeedbackActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_report: {
-					Intent intent = ComponentType.create(ReportProblemActivity.class)
+					Intent intent = ComponentType.create(EnterFeedbackActivity.class)
 							.intent()
+							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_PROBLEM)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 					startActivity(intent);
 

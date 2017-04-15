@@ -181,9 +181,10 @@
 		• If you have any feedback, you can send it from the store listing or the menu in this app.
 	</string>
 
-	<!-- Report problem -->
+	<!-- Enter feedback -->
 	<string name="report_problem_hint">Describe the problem here</string>
-	<string name="report_problem_send">Send by email</string>
+	<string name="enter_feedback_hint">Enter feedback here</string>
+	<string name="enter_feedback_send">Send by email</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>
