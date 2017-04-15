@@ -81,7 +81,17 @@ public class EnterFeedbackActivity extends UiActivity {
 	}
 
 	private void sendEmail() {
-		//No validation at this point, we'll see if users continue sending blank problem reports.
+		String descriptionText = description.getText().toString();
+
+		/*
+		 * Problem reports don't require descriptions at this stage since sometimes the problem can be inferred from the logs anyway.
+		 * Feedback reports do require descriptions since they're useless without them.
+		 */
+		description.setError(null);
+		if (!isProblemReport && descriptionText.isEmpty()) {
+			description.setError(StringResource.get(R.string.enter_feedback_nofeedback));
+			return;
+		}
 
 		String subject = StringResource.format(
 			isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject,
@@ -89,7 +99,6 @@ public class EnterFeedbackActivity extends UiActivity {
 			VersionInfo.packageInfo().versionName
 		).toString();
 
-		String descriptionText = description.getText().toString();
 		String body =
 			isProblemReport
 			?

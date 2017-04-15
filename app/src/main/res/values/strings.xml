@@ -185,6 +185,7 @@
 	<string name="report_problem_hint">Describe the problem here</string>
 	<string name="enter_feedback_hint">Enter feedback here</string>
 	<string name="enter_feedback_send">Send by email</string>
+	<string name="enter_feedback_nofeedback">"You haven't entered any feedback"</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>
