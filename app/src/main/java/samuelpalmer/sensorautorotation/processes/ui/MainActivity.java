@@ -17,9 +17,8 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
-public class MainActivity extends PreferencesActivity {
+public class MainActivity extends UiActivity {
 
 	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
 
