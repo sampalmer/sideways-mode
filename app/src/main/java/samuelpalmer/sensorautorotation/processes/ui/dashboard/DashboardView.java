@@ -82,7 +82,9 @@ public class DashboardView extends FrameLayout {
 				@Override
 				public void onClick(View v) {
 					getContext().startActivity(new Intent(getContext(), MainActivity.class));
-					DashboardDialogCoordinator.dismissDialog();
+
+					if (DashboardDialogCoordinator.dialogExists())
+						DashboardDialogCoordinator.dismissDialog();
 				}
 			});
 		else
@@ -236,7 +238,8 @@ public class DashboardView extends FrameLayout {
 							throw new RuntimeException(e);
 						}
 
-						DashboardDialogCoordinator.dismissDialog();
+						if (DashboardDialogCoordinator.dialogExists())
+							DashboardDialogCoordinator.dismissDialog();
 					}
 				});
 			}
