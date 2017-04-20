@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 25
-	buildToolsVersion '25.0.2'
+	compileSdkVersion 'android-O'
+	buildToolsVersion '26.0.0-rc1'
 
 	lintOptions{
 		disable 'MissingTranslation'
@@ -10,7 +10,7 @@ android {
 	defaultConfig {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
-		targetSdkVersion 25
+		targetSdkVersion 'O'
 		versionCode 50
 		versionName "1.0.0"
 		resConfigs "en", "ru" //Strips out languages added through the support library
@@ -36,7 +36,7 @@ dependencies {
 	compile project(':common')
 	provided project(':com.sony.smallapp')
 
-	compile 'com.android.support:appcompat-v7:25.3.1'
-	compile 'com.android.support:design:25.3.1'
-	compile 'com.android.support:cardview-v7:25.3.1'
+	compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+	compile 'com.android.support:design:26.0.0-alpha1'
+	compile 'com.android.support:cardview-v7:26.0.0-alpha1'
 }
