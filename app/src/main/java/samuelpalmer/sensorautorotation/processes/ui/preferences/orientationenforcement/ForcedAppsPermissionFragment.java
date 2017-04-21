@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
-import android.view.View;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
@@ -33,10 +33,11 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor();
 
 		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("forcedOrientationPermission");
-		tipView.setOnGrantPermissionClickListener(new View.OnClickListener() {
+		tipView.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
-			public void onClick(View v) {
+			public boolean onPreferenceClick(Preference preference) {
 				grantPermissions();
+				return true;
 			}
 		});
 
