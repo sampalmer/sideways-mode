@@ -13,6 +13,7 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -83,7 +84,8 @@ public class EnvironmentError {
 			.setAutoCancel(true)
 			.setTicker(message)
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR);
+			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
+			.setChannel(NotificationChannels.ID_ERRORS);
 
 		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP)
 			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be

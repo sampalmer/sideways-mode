@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
@@ -31,6 +32,7 @@ class ServiceNotification {
 			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
+			.setChannel(NotificationChannels.ID_DASHBOARD)
 		;
 
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));

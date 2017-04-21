@@ -13,6 +13,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -65,6 +66,7 @@ public class Upgrader {
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+				.setChannel(NotificationChannels.ID_UPGRADES)
 				.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.UPGRADE, notification);

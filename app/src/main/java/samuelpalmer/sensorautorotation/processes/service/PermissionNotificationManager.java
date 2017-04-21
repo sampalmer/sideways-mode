@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
@@ -72,6 +73,7 @@ public class PermissionNotificationManager extends State {
 					.setContentTitle(StringResource.get(R.string.warning_permission_required_title))
 					.setContentText(StringResource.get(R.string.warning_permission_required_content))
 					.setSmallIcon(R.drawable.notification_error)
+					.setChannel(NotificationChannels.ID_PERMISSIONS)
 					.build();
 
 			notificationManager.notify(NotificationIds.PERMISSION, notification);
