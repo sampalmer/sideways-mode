@@ -5,16 +5,15 @@ import android.content.Context;
 import android.os.Build;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 
 
 public class PermissionTipViewPreference extends Preference {
-
-	private Button grantPermissionsButton;
-	private View.OnClickListener onClickListener;
 
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	public PermissionTipViewPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -38,20 +37,23 @@ public class PermissionTipViewPreference extends Preference {
 	}
 
 	private void setLayout() {
-		super.setLayoutResource(R.layout.forced_apps_permission);
+		setWidgetLayoutResource(R.layout.forced_apps_permission_button);
 	}
 
 	@Override
-	protected void onBindView(View view) {
-		super.onBindView(view);
-		grantPermissionsButton = (Button) view.findViewById(R.id.forced_apps_permissions_enable);
-		grantPermissionsButton.setOnClickListener(onClickListener);
-	}
+	protected View onCreateView(ViewGroup parent) {
+		LayoutInflater layoutInflater =	(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.forced_apps_permission, parent, false);
+		View contents = super.onCreateView(container);
+		container.addView(contents);
 
-	public void setOnGrantPermissionClickListener(View.OnClickListener onClickListener) {
-		this.onClickListener = onClickListener;
-		if (grantPermissionsButton != null)
-			grantPermissionsButton.setOnClickListener(onClickListener);
+		TextView title = contents.findViewById(android.R.id.title);
+		if (title != null) {
+			title.setSingleLine(false);
+			title.setMaxLines(Integer.MAX_VALUE);
+		}
+
+		return container;
 	}
 
 }

@@ -5,9 +5,8 @@
 	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
 	<samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.PermissionTipViewPreference
 		android:key="forcedOrientationPermission"
-		android:summary="@string/permissions_needed_tip"
+		android:title="@string/permissions_needed_tip"
 		android:persistent="false"
-		android:selectable="false"
 		android:order="0"
 	/>
 
