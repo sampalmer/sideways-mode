@@ -120,18 +120,20 @@ public class NotificationsFragment extends PreferenceFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && notificationManager.areNotificationsEnabled()) {
-			//The user might have just unblocked the app's notifications, so better add the status notification if needed.
-			RotationServiceCommand updateNotificationCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
-			updateNotificationCommand.toastIfServiceDisabled = false;
+		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && notificationManager.areNotificationsEnabled())
+			updateServiceNotification();
+	}
 
-			try {
-				RotationServiceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
-			} catch (PendingIntent.CanceledException e) {
-				throw new RuntimeException(e); //Don't expect this to actually happen
-			}
+	public static void updateServiceNotification() {
+		//The user might have just unblocked the app's notifications, so better add the status notification if needed.
+		RotationServiceCommand updateNotificationCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
+		updateNotificationCommand.toastIfServiceDisabled = false;
+
+		try {
+			RotationServiceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
+		} catch (PendingIntent.CanceledException e) {
+			throw new RuntimeException(e); //Don't expect this to actually happen
 		}
-
 	}
 
 	@Override
