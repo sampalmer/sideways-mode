@@ -59,7 +59,7 @@ public class ScreenOrientationEnforcer extends State {
 
 		//This seems like the most relevant window type
 		//Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
-		layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
+		layoutParams.type = (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) ? LayoutParams.TYPE_APPLICATION_OVERLAY : LayoutParams.TYPE_SYSTEM_OVERLAY;
 
 		//Just in case the window type somehow doesn't enforce this
 		layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
