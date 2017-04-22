@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -29,6 +30,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		return instance;
 	}
 
+	private final Object[] typedWatchRotationArguments;
 	private final Handler callerHandler = new Handler(Looper.getMainLooper());
 	private final Object windowManagerService;
 	private final Method watchRotation;
@@ -36,13 +38,24 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	private boolean subscribed;
 
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
+		Class<?>[] watchRotationParameterTypes;
+
+		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class, int.class /* Cannot be Integer.class; that's different */};
+			typedWatchRotationArguments = new Object[]{screenRotationChanged, 0}; //TODO: Figure out th meaning of the second parameter. Maybe it's the display id?
+		}
+		else {
+			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class};
+			typedWatchRotationArguments = new Object[]{screenRotationChanged};
+		}
+
 		//noinspection TryWithIdenticalCatches
 		try {
 			Class<?> serviceManager = Class.forName("android.os.ServiceManager");
 			IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
 			Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
 			windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
-			watchRotation = windowManagerService.getClass().getMethod("watchRotation", IRotationWatcher.class);
+			watchRotation = windowManagerService.getClass().getMethod("watchRotation", watchRotationParameterTypes);
 			removeRotationWatcher = tryFindRemoveMethod();
 		} catch (ClassNotFoundException e) {
 			throw new RotationWatcherNotSupportedException(e);
@@ -65,6 +78,9 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			return windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
 		}
 		catch (NoSuchMethodException ignored) {
+			if (Build.VERSION.SDK_INT >= 18)
+				Log.w(RotationWatcherRegistrar.class.getSimpleName(), ignored);
+
 			return null;
 		}
 	}
@@ -74,7 +90,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		if (!subscribed) { //Might already be subscribed since unsubscription is impossible on older Android versions
 			//noinspection TryWithIdenticalCatches
 			try {
-				currentRotation = wrap((int) watchRotation.invoke(windowManagerService, screenRotationChanged));
+				currentRotation = wrap((int) watchRotation.invoke(windowManagerService, typedWatchRotationArguments));
 			} catch (IllegalAccessException e) {
 				throw new RotationWatcherNotSupportedException(e);
 			} catch (InvocationTargetException e) {
@@ -103,7 +119,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		}
 	}
 
-	private final IRotationWatcher.Stub screenRotationChanged = new IRotationWatcher.Stub() {
+	private final IRotationWatcher screenRotationChanged = new IRotationWatcher.Stub() {
 		@Override
 		public void onRotationChanged(final int rotation) throws RemoteException {
 			if (BuildConfig.DEBUG)
