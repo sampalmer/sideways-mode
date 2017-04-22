@@ -1,4 +1,4 @@
 [submodule "common"]
 	path = common
 	url = https://github.com/sampalmer/android-common
-	branch = android-n
+	branch = master
