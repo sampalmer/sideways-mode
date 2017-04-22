@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class EnvironmentError {
 			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 			.setChannel(NotificationChannels.ID_ERRORS);
 
-		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP)
+		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && !(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1))
 			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
 			// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
 			builder.setVibrate(new long[]{});
