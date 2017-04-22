@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
@@ -35,6 +36,7 @@ public abstract class NotificationChannels {
 				 */
 				NotificationManager.IMPORTANCE_LOW
 		);
+		dashboard.setLockscreenVisibility(Notification.VISIBILITY_SECRET); //Since this notification isn't really relevant on a typical lock screen
 
 		NotificationChannel upgrades = new NotificationChannel(
 				ID_UPGRADES,
@@ -42,6 +44,7 @@ public abstract class NotificationChannels {
 				//Don't want to interrupt the user for release notes; they're not important.
 				NotificationManager.IMPORTANCE_LOW
 		);
+		upgrades.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
 		NotificationChannel errors = new NotificationChannel(
 				ID_ERRORS,
@@ -49,6 +52,7 @@ public abstract class NotificationChannels {
 				//Since the user will probably want to know why auto rotation suddenly stopped working!
 				NotificationManager.IMPORTANCE_HIGH
 		);
+		errors.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
 		NotificationChannel permission = new NotificationChannel(
 				ID_PERMISSIONS,
@@ -56,6 +60,7 @@ public abstract class NotificationChannels {
 				//Since these only need to be addressed for the overridden apps function to work
 				NotificationManager.IMPORTANCE_DEFAULT
 		);
+		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
 		List<NotificationChannel> channels = Arrays.asList(dashboard, upgrades, errors, permission);
 		SystemServices.notificationManager().createNotificationChannels(channels);
