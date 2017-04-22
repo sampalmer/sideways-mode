@@ -18,6 +18,7 @@ import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 public class SendFeedbackActivity extends UiActivity {
 
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
+		@SuppressWarnings("SameReturnValue")
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
@@ -54,7 +55,7 @@ public class SendFeedbackActivity extends UiActivity {
 					throw new RuntimeException("Unknown menu item id: " + item.getItemId());
 			}
 
-			return false;
+			return false; //Never want to mark the item as selected since each menu item launches its own activity rather than updating this activity.
 		}
 	};
 

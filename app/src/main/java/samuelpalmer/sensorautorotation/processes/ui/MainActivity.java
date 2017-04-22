@@ -27,6 +27,7 @@ public class MainActivity extends UiActivity {
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
+		@SuppressWarnings("SameReturnValue")
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			drawerLayout.closeDrawers();
@@ -58,7 +59,7 @@ public class MainActivity extends UiActivity {
 					throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
 			}
 
-			return false;
+			return false; //Never want to mark the item as selected since none of the menu items result in a different UI within this activity.
 		}
 	};
 

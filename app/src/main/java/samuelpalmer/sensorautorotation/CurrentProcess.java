@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
@@ -11,6 +12,8 @@ import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 public class CurrentProcess extends Application {
 
 	private static final String TAG = CurrentProcess.class.getSimpleName();
+
+	@SuppressLint("StaticFieldLeak") //Don't think this is much of a problem since it's the application context.
 	private static Context context;
 
 	public static Context context() {
