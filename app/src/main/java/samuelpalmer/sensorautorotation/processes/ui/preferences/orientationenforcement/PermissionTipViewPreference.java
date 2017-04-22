@@ -47,7 +47,7 @@ public class PermissionTipViewPreference extends Preference {
 		View contents = super.onCreateView(container);
 		container.addView(contents);
 
-		TextView title = contents.findViewById(android.R.id.title);
+		TextView title = (TextView) contents.findViewById(android.R.id.title);
 		if (title != null) {
 			title.setSingleLine(false);
 			title.setMaxLines(Integer.MAX_VALUE);
