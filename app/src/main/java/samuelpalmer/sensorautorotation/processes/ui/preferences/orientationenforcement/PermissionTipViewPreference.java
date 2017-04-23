@@ -5,9 +5,9 @@ import android.content.Context;
 import android.os.Build;
 import android.preference.Preference;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
@@ -42,8 +42,11 @@ public class PermissionTipViewPreference extends Preference {
 
 	@Override
 	protected View onCreateView(ViewGroup parent) {
-		LayoutInflater layoutInflater =	(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.forced_apps_permission, parent, false);
+		//Wrapping the preference in a container with grey background
+		ViewGroup container = new FrameLayout(getContext());
+		container.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		container.setBackgroundColor(0xffe5e5e5);
+		
 		View contents = super.onCreateView(container);
 		container.addView(contents);
 
