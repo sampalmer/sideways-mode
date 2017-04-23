@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class SendFeedbackActivity extends UiActivity {

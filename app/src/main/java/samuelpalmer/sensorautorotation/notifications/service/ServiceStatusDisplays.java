@@ -49,6 +49,7 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 			display.update(lastServiceStatus);
 	}
 
+	@SuppressWarnings("unused")
 	public void remove(ServiceStatusDisplay display) {
 		displays.remove(display);
 	}
