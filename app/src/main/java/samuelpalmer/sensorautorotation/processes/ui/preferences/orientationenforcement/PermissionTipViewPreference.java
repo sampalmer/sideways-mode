@@ -42,21 +42,16 @@ public class PermissionTipViewPreference extends Preference {
 
 	@Override
 	protected View onCreateView(ViewGroup parent) {
-		//Wrapping the preference in a container with grey background
-		ViewGroup container = new FrameLayout(getContext());
-		container.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-		container.setBackgroundColor(0xffe5e5e5);
+		View layout = super.onCreateView(parent);
+		layout.setBackgroundColor(0xffe5e5e5);
 		
-		View contents = super.onCreateView(container);
-		container.addView(contents);
-
-		TextView title = (TextView) contents.findViewById(android.R.id.title);
+		TextView title = (TextView) layout.findViewById(android.R.id.title);
 		if (title != null) {
 			title.setSingleLine(false);
 			title.setMaxLines(Integer.MAX_VALUE);
 		}
-
-		return container;
+		
+		return layout;
 	}
 
 }
