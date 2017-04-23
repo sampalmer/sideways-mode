@@ -1,5 +1,5 @@
-• Increased responsiveness of screen orientation changes for devices with gyroscopes
-• Removed support for the user being upside-down
-• Fixed minor issue for Samsung devices when in locked orientation mode
-• Fixed menu icon display issue for Android 4
-• Added Google Play store link to menu
+â€¢ Increased responsiveness of screen orientation changes for devices with gyroscopes
+â€¢ Removed support for the user being upside-down
+â€¢ Fixed minor issue for Samsung devices when in locked orientation mode
+â€¢ Fixed menu icon display issue for Android 4
+â€¢ Added Google Play store link to menu
