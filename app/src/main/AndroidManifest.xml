@@ -85,7 +85,7 @@
 		</activity>
 
 		<activity android:name=".processes.ui.MessageDialogActivity"
-			android:theme="@style/Theme.NoDisplay"/>
+			android:theme="@style/AppTheme.Dialog"/>
 
 		<activity
 			android:name=".processes.ui.ShortcutActivity"
@@ -220,7 +220,7 @@
 		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
-		          android:theme="@style/Theme.NoDisplay"
+		          android:theme="@style/AppTheme.Dialog"
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize|screenLayout"
