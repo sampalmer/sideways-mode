@@ -14,7 +14,7 @@ class LockedMode implements Mode {
 		portrait = inNaturalOrientation == deviceIsNaturallyPortrait;
 	}
 
-	public LockedMode(Parcel in) {
+	private LockedMode(Parcel in) {
 		portrait = in.readByte() != 0;
 	}
 

@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
+@SuppressWarnings("WeakerAccess")
 public class EnvironmentError {
 
 	private static final String JSON_KEY_SUMMARY = "summary";

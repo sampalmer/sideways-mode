@@ -29,7 +29,7 @@ public class ServiceStatus implements Parcelable {
 		this.waitingForSensor = waitingForSensor;
 	}
 
-	protected ServiceStatus(Parcel in) {
+	private ServiceStatus(Parcel in) {
 		mode = in.readParcelable(this.getClass().getClassLoader());
 		overridden = in.readByte() != 0;
 		user = in.readParcelable(this.getClass().getClassLoader());

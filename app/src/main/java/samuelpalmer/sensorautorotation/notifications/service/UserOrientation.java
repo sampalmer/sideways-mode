@@ -18,7 +18,7 @@ public class UserOrientation implements Parcelable {
 		rotations = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
-	protected UserOrientation(Parcel in) {
+	private UserOrientation(Parcel in) {
 		user = in.readParcelable(this.getClass().getClassLoader());
 		rotations = in.readInt();
 	}

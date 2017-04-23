@@ -41,6 +41,7 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 		}
 	};
 
+	@SuppressWarnings("WeakerAccess")
 	public void add(ServiceStatusDisplay display) {
 		displays.add(display);
 
