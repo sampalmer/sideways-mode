@@ -8,7 +8,6 @@
 	<string name="action_help">Справка</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_email">Email</string>
-	<string name="action_feedback_google_play">Google Play Маркет</string>
 	<string name="action_report">Отчет о проблемах</string>
 	<string name="action_uninstall">Удаление</string>
 
@@ -74,8 +73,6 @@
 	<string name="environment_error_permission_needed_summary">Нужно разрешение</string>
 	<string name="environment_error_permission_needed_system_settings_message">Для того чтобы управлять вращением экрана, это приложение требует доступ на изменение системных настроек. Пожалуйста, включите это на следующем экране.</string>
 	<string name="warning_permission_not_granted_system_settings">Это приложение не может работать без разрешения на изменение системных настроек</string>
-
-	<string name="error_no_market_app">Не удалось найти Google Play Маркет приложение</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Инструкции</string>

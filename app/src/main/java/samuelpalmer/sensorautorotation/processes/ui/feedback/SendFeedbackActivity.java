@@ -34,8 +34,8 @@ public class SendFeedbackActivity extends UiActivity {
 
 					break;
 				}
-				case R.id.action_feedback_google_play: {
-					Intent intent = googlePlayIntent();
+				case R.id.action_review: {
+					Intent intent = appMarketIntent();
 					
 					try {
 						startActivity(intent);
@@ -70,21 +70,21 @@ public class SendFeedbackActivity extends UiActivity {
 		navigation = (NavigationView) findViewById(R.id.feedback_navigation);
 		navigation.setNavigationItemSelectedListener(itemSelectedListener);
 		
-		updateGooglePlayItemVisibility();
+		updateReviewItemVisibility();
 	}
 	
-	private void updateGooglePlayItemVisibility() {
+	private void updateReviewItemVisibility() {
 		Menu menu = navigation.getMenu();
-		MenuItem googlePlayMenuItem = menu.findItem(R.id.action_feedback_google_play);
-		if (googlePlayMenuItem == null)
-			throw new RuntimeException("Couldn't find Google Play menu item.");
+		MenuItem reviewMenuItem = menu.findItem(R.id.action_review);
+		if (reviewMenuItem == null)
+			throw new RuntimeException("Couldn't find Review menu item.");
 		
-		ComponentName googlePlayStore = googlePlayIntent().resolveActivity(getPackageManager());
-		if (googlePlayStore == null || googlePlayStore.equals(ComponentNameExtensions.unsupportedAction))
-			menu.removeItem(googlePlayMenuItem.getItemId());
+		ComponentName appMarket = appMarketIntent().resolveActivity(getPackageManager());
+		if (appMarket == null || appMarket.equals(ComponentNameExtensions.unsupportedAction))
+			menu.removeItem(reviewMenuItem.getItemId());
 	}
 	
-	private Intent googlePlayIntent() {
+	private Intent appMarketIntent() {
 		return new Intent(Intent.ACTION_VIEW)
 			.setData(Uri.parse("market://details?id=" + SendFeedbackActivity.this.getPackageName()));
 	}
