@@ -82,6 +82,11 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".processes.ui.MainActivity" />
 
+			<intent-filter>
+				<action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
 		</activity>
 
 		<activity android:name=".processes.ui.MessageDialogActivity"
