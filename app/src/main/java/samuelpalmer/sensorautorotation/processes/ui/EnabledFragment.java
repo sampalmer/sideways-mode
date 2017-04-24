@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -34,9 +34,10 @@ public class EnabledFragment extends Fragment {
 		}
 	};
 
-	private final CompoundButton.OnCheckedChangeListener enabledSettingUpdater = new CompoundButton.OnCheckedChangeListener() {
+	private final SwitchBar.OnSwitchChangeListener enabledSettingUpdater = new SwitchBar.OnSwitchChangeListener() {
+
 		@Override
-		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		public void onSwitchChanged(Switch switchView, boolean isChecked) {
 			if (Build.VERSION.SDK_INT >= 23 && isChecked && !Settings.System.canWrite(getContext())) {
 				requestSystemSettingsPermission();
 				setControlCheckedStateWithoutTriggeringListener(false);
@@ -45,16 +46,15 @@ public class EnabledFragment extends Fragment {
 				new ServiceSynchroniser(ApplicationSettings.remote()).updateFromSettings();
 			}
 		}
+
 	};
 
 	private void setControlCheckedStateWithoutTriggeringListener(Boolean isEnabled) {
-		enabledControl.setOnCheckedChangeListener(null);
 		enabledControl.setChecked(isEnabled);
-		enabledControl.setOnCheckedChangeListener(enabledSettingUpdater);
 	}
 
 	private samuelpalmer.common.settings.application.Settings.Setting<Boolean> enabledSetting;
-	private CompoundButton enabledControl;
+	private SwitchBar enabledControl;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,15 +66,15 @@ public class EnabledFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_enabled, container);
+		return inflater.inflate(R.layout.fragment_enabled, container, true);
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		enabledControl = (CompoundButton) view.findViewById(R.id.preference_enabled);
-		enabledControl.setOnCheckedChangeListener(enabledSettingUpdater);
+		enabledControl = (SwitchBar) view.findViewById(R.id.switch_bar);
+ 		enabledControl.addOnSwitchChangeListener(enabledSettingUpdater);
 	}
 
 	@Override

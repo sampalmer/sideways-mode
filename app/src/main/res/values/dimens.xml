@@ -6,4 +6,13 @@
 
 	<dimen name="dialog_content_margin">24dp</dimen>
 
+
+	<!-- SwitchBar margin start / end -->
+	<dimen name="switchbar_margin_start">16dp</dimen>
+	<dimen name="switchbar_margin_end">16dp</dimen>
+
+	<!-- SwitchBar sub settings margin start / end -->
+	<dimen name="switchbar_subsettings_margin_start">72dp</dimen> <!-- TODO: Calculate this instead of hard-coding it. -->
+	<dimen name="switchbar_subsettings_margin_end">16dp</dimen>
+
 </resources>

@@ -67,15 +67,7 @@ public class MainActivity extends UiActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		CompoundButton enabledControl = (CompoundButton) findViewById(R.id.preference_enabled);
-		enabledControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-			}
-		});
-
+		
 		//Drawer stuff
 		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		navigation = (NavigationView)findViewById(R.id.navigation);

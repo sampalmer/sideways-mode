@@ -3,4 +3,8 @@
 	<declare-styleable name="DashboardView">
 		<attr name="showSettings" format="boolean" />
 	</declare-styleable>
+
+	<attr name="switchBarMarginStart" format="dimension" />
+	<attr name="switchBarMarginEnd" format="dimension" />
+	<attr name="switchBarBackgroundColor" format="color" />
 </resources>

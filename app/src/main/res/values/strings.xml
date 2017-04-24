@@ -31,6 +31,10 @@
 
 	<string name="settings">Settings</string>
 
+	<!-- SwitchBar -->
+	<string name="switchbar_on">On</string>
+	<string name="switchbar_off">Off</string>
+
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
 	<string name="screen_rotation_disabled_portrait">Portrait</string>
