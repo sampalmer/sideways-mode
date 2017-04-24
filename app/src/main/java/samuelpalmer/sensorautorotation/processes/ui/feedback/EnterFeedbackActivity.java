@@ -105,9 +105,11 @@ public class EnterFeedbackActivity extends UiActivity {
 			String.format("Logcat:\n%s\n\nDevice info:\n%s\n\nProblem:\n%s\n", problemLogs, DiagnosticInfo.deviceInfo(), descriptionText)
 			:
 			descriptionText;
-
-		new Email(EnterFeedbackActivity.this, emailRecipients(), subject,body).send();
-
-		finish();
+		
+		boolean openedEmail = new Email(EnterFeedbackActivity.this, emailRecipients(), subject, body).send();
+		
+		if (openedEmail)
+			//Only want to throw away the input if the user successfully got to the email client
+			finish();
 	}
 }

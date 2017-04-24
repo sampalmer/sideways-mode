@@ -54,9 +54,12 @@ class Email {
 		}
 	}
 
-	public void send() {
-		if (!hasEmailApp() || !openEmail())
+	public boolean send() {
+		boolean succeeded = hasEmailApp() && openEmail();
+		if (!succeeded)
 			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
+		
+		return succeeded;
 	}
 
 	private boolean hasEmailApp() {
