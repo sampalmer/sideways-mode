@@ -323,26 +323,6 @@
 		</service>
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
-
-		<!-- Direct boot process -->
-
-		<receiver
-			android:name=".processes.directboot.DirectBootReceiver"
-			android:directBootAware="true"
-			android:process="@string/directboot_process_name"
-			tools:targetApi="n">
-
-			<intent-filter>
-				<action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-			</intent-filter>
-
-		</receiver>
-
-		<service
-			android:name=".processes.directboot.DirectBootService"
-			android:directBootAware="true"
-			android:process="@string/directboot_process_name" />
-
 	</application>
 
 </manifest>
