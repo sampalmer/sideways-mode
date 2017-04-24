@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 
 public class CurrentProcess extends Application {
@@ -22,18 +21,24 @@ public class CurrentProcess extends Application {
 
 		return context;
 	}
-
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		Log.i(TAG, "Process created");
 		context = this;
-
-		if (ServiceProcess.isServiceProcess())
+		
+		String currentProcessName = CurrentProcessInfo.currentProcessName();
+		if (currentProcessName.equals(serviceProcess()))
 			new Upgrader().upgradeIfNecessary();
-		else
+		else if (currentProcessName.equals(uiProcess()))
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+		else if (currentProcessName.equals(directBootProcess())) {
+			//asfd
+		}
+		else
+			throw new RuntimeException("Current process has unrecognised name: " + currentProcessName);
 	}
 
 	@Override
@@ -42,5 +47,17 @@ public class CurrentProcess extends Application {
 
 		Log.i(TAG, "Process terminated");
 	}
-
+	
+	private String uiProcess() {
+		return getPackageName();
+	}
+	
+	private CharSequence serviceProcess() {
+		return getPackageName() + StringResource.get(R.string.service_process_name);
+	}
+	
+	private CharSequence directBootProcess() {
+		return getPackageName() + StringResource.get(R.string.directboot_process_name);
+	}
+	
 }
