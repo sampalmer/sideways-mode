@@ -1,20 +1,25 @@
 package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class SendFeedbackActivity extends UiActivity {
-
+	
+	private NavigationView navigation;
+	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 		@SuppressWarnings("SameReturnValue")
 		@Override
@@ -30,8 +35,8 @@ public class SendFeedbackActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_feedback_google_play: {
-					Intent intent = new Intent(Intent.ACTION_VIEW)
-							.setData(Uri.parse("market://details?id=" + SendFeedbackActivity.this.getPackageName()));
+					Intent intent = googlePlayIntent();
+					
 					try {
 						startActivity(intent);
 					} catch (ActivityNotFoundException ex) {
@@ -56,14 +61,32 @@ public class SendFeedbackActivity extends UiActivity {
 			return false; //Never want to mark the item as selected since each menu item launches its own activity rather than updating this activity.
 		}
 	};
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_feedback);
 
-		NavigationView navigation = (NavigationView) findViewById(R.id.feedback_navigation);
+		navigation = (NavigationView) findViewById(R.id.feedback_navigation);
 		navigation.setNavigationItemSelectedListener(itemSelectedListener);
+		
+		updateGooglePlayItemVisibility();
+	}
+	
+	private void updateGooglePlayItemVisibility() {
+		Menu menu = navigation.getMenu();
+		MenuItem googlePlayMenuItem = menu.findItem(R.id.action_feedback_google_play);
+		if (googlePlayMenuItem == null)
+			throw new RuntimeException("Couldn't find Google Play menu item.");
+		
+		ComponentName googlePlayStore = googlePlayIntent().resolveActivity(getPackageManager());
+		if (googlePlayStore == null || googlePlayStore.equals(ComponentNameExtensions.unsupportedAction))
+			menu.removeItem(googlePlayMenuItem.getItemId());
+	}
+	
+	private Intent googlePlayIntent() {
+		return new Intent(Intent.ACTION_VIEW)
+			.setData(Uri.parse("market://details?id=" + SendFeedbackActivity.this.getPackageName()));
 	}
 
 }

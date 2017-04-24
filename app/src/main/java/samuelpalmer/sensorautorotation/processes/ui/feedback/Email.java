@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -21,9 +20,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 
 class Email {
-
-	//The intent resolves to this when run on the official Android emulators if it doesn't match anything.
-	private static final ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
+	
 	private final Activity activity;
 	private final Intent sendIntent;
 	private final List<ResolveInfo> emailActivities;
@@ -52,7 +49,7 @@ class Email {
 		while (iterator.hasNext()) {
 			ResolveInfo resolveInfo = iterator.next();
 			ActivityInfo firstActivity = resolveInfo.activityInfo;
-			if (ComponentNameExtensions.makeFrom(firstActivity).equals(unsupportedAction))
+			if (ComponentNameExtensions.makeFrom(firstActivity).equals(ComponentNameExtensions.unsupportedAction))
 				iterator.remove();
 		}
 	}
