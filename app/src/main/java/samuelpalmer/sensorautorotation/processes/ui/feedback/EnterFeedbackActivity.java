@@ -20,7 +20,7 @@ public class EnterFeedbackActivity extends UiActivity {
 	public static final String TYPE_FEEDBACK = "feedback";
 	public static final String TYPE_PROBLEM = "problem";
 
-	private final static String problemLogsKey = "logcat";
+	private final static String PROBLEM_LOGS_KEY = "logcat";
 	private boolean isProblemReport;
 	private String problemLogs;
 	private EditText description;
@@ -65,7 +65,7 @@ public class EnterFeedbackActivity extends UiActivity {
 			if (savedInstanceState == null)
 				problemLogs = DiagnosticInfo.logcat();
 			else
-				problemLogs = savedInstanceState.getString(problemLogsKey);
+				problemLogs = savedInstanceState.getString(PROBLEM_LOGS_KEY);
 
 			description.setHint(R.string.report_problem_hint);
 			setTitle(R.string.action_report);
@@ -81,7 +81,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		super.onSaveInstanceState(outState);
 
 		if (isProblemReport)
-			outState.putString(problemLogsKey, problemLogs);
+			outState.putString(PROBLEM_LOGS_KEY, problemLogs);
 	}
 
 	private void sendEmail() {
@@ -111,18 +111,19 @@ public class EnterFeedbackActivity extends UiActivity {
 			descriptionText;
 		
 		Intent emailIntent = new Email(EnterFeedbackActivity.this, emailRecipients(), subject, body).getIntent();
-		boolean openedEmail = false;
+		boolean intentStarted = false;
 		
 		if (emailIntent != null)
 			try {
 				startActivity(emailIntent);
-				openedEmail = true;
+				intentStarted = true;
 			}
 			catch (ActivityNotFoundException ignored) {}
 		
-		if (openedEmail)
-			//Only want to throw away the input if the user successfully got to the email client
+		if (intentStarted) {
+			//Only want to throw away the input if the user successfully got to the email client, but we can't know for sure.
 			finish();
+		}
 		else
 			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
 	}
