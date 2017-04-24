@@ -53,40 +53,23 @@ class Email {
 				iterator.remove();
 		}
 	}
-
-	public boolean send() {
-		boolean succeeded = hasEmailApp() && openEmail();
-		if (!succeeded)
-			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
+	
+	public Intent getIntent() {
+		if (emailActivities.isEmpty())
+			return null;
 		
-		return succeeded;
-	}
-
-	private boolean hasEmailApp() {
-		return !emailActivities.isEmpty();
-	}
-
-	private boolean openEmail() {
-
 		List<Intent> emailAppIntents = new ArrayList<>(emailActivities.size());
 		for (int i = 0; i < emailActivities.size(); ++i)
 			emailAppIntents.add(
 				new Intent(sendIntent)
 					.setPackage(emailActivities.get(i).activityInfo.packageName)
 			);
-
-		try {
-			// Needed to customise the chooser dialog title since it might default to "Share with"
-			// Note that the chooser will still be skipped if only one app is matched
-			Intent chooser = Intent.createChooser(emailAppIntents.remove(0), StringResource.get(R.string.email_app_chooser_title))
-				.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[emailAppIntents.size()]))
-			;
-			activity.startActivity(chooser);
-			return true;
-		}
-		catch (ActivityNotFoundException ignored) {
-			return false;
-		}
+		
+		// Needed to customise the chooser dialog title since it might default to "Share with"
+		// Note that the chooser will still be skipped if only one app is matched
+		return Intent.createChooser(emailAppIntents.remove(0), StringResource.get(R.string.email_app_chooser_title))
+			.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[emailAppIntents.size()]))
+		;
 	}
 
 }

@@ -1,14 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class EnterFeedbackActivity extends UiActivity {
@@ -106,10 +110,20 @@ public class EnterFeedbackActivity extends UiActivity {
 			:
 			descriptionText;
 		
-		boolean openedEmail = new Email(EnterFeedbackActivity.this, emailRecipients(), subject, body).send();
+		Intent emailIntent = new Email(EnterFeedbackActivity.this, emailRecipients(), subject, body).getIntent();
+		boolean openedEmail = false;
+		
+		if (emailIntent != null)
+			try {
+				startActivity(emailIntent);
+				openedEmail = true;
+			}
+			catch (ActivityNotFoundException ignored) {}
 		
 		if (openedEmail)
 			//Only want to throw away the input if the user successfully got to the email client
 			finish();
+		else
+			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
 	}
 }
