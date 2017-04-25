@@ -32,7 +32,7 @@ class ServiceNotification {
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 		;
-
+		
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
@@ -40,7 +40,10 @@ class ServiceNotification {
 	}
 
 	public Notification build(ServiceStatus serviceStatus) {
-		builder.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon());
+		builder
+			.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon())
+			.setProgress(0, 0, serviceStatus.waitingForSensor)
+		;
 
 		CharSequence statusText = StringResource.get(serviceStatus.waitingForSensor ? R.string.status_waiting_sensor : serviceStatus.user.descriptionId());
 
