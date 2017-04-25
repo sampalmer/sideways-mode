@@ -17,6 +17,19 @@
 			android:scaleType="centerInside"
 			tools:ignore="ContentDescription"/>
 
+		<ProgressBar
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/dashboard_sensor_progress"
+			android:layout_gravity="center_vertical"
+			android:visibility="gone"
+			style="@android:style/Widget.DeviceDefault.ProgressBar.Small"
+			/>
+
+		<View
+			android:layout_width="6dp"
+			android:layout_height="match_parent" />
+
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -25,7 +38,7 @@
 			android:textColor="?android:attr/textColorPrimary"
 			android:textStyle="bold"
 			android:gravity="center_horizontal"
-			/>
+		    />
 
 	</LinearLayout>
 

@@ -46,6 +46,7 @@ public class DashboardEnabledContents extends LinearLayout {
 	}
 	
 	private ImageView userIcon;
+	private View sensorProgress;
 	private TextView statusText;
 	private ImageButton toggleModeButton;
 	private TextView modeText;
@@ -57,6 +58,8 @@ public class DashboardEnabledContents extends LinearLayout {
 		setGravity(Gravity.CENTER_HORIZONTAL);
 		
 		userIcon = (ImageView) findViewById(R.id.dashboard_user_icon);
+		sensorProgress = findViewById(R.id.dashboard_sensor_progress);
+		
 		statusText = (TextView) findViewById(R.id.dashboard_status);
 		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
 		toggleModeButton = (ImageButton) findViewById(R.id.dashboard_button_toggle);
@@ -98,16 +101,17 @@ public class DashboardEnabledContents extends LinearLayout {
 	public void setStatus(ServiceStatus lastStatus) {
 		if (lastStatus.waitingForSensor) {
 			ViewHelpers.ensureVisibility(userIcon, View.GONE);
+			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
+			
 			statusText.setText(R.string.status_waiting_sensor);
 		}
 		else {
 			userIcon.setImageResource(lastStatus.user.iconId());
 			userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
 			ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
+			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 			
-			//Using String.format to avoid an internationalisation warning.
-			String statusTextContents = String.format(" %s", StringResource.get(lastStatus.user.longDescriptionId()));
-			statusText.setText(statusTextContents);
+			statusText.setText(lastStatus.user.longDescriptionId());
 		}
 		
 		toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
