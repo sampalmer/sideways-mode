@@ -24,7 +24,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -35,7 +35,7 @@ import samuelpalmer.sensorautorotation.R;
 /**
  * Copied and adjusted from the Android 7.1 settings app.
  */
-public class SwitchBar extends LinearLayout implements CompoundButton.OnCheckedChangeListener,
+public class SwitchBar extends RelativeLayout implements CompoundButton.OnCheckedChangeListener,
         View.OnClickListener {
 
     public interface OnSwitchChangeListener {

@@ -21,26 +21,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
+    <View android:id="@+id/switch_centre_placeholder"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_centerHorizontal="true"
+	    />
+
     <TextView android:id="@+id/switch_text"
               android:layout_height="wrap_content"
-              android:layout_width="0dp"
-              android:layout_weight="1"
-              android:layout_gravity="center_vertical|start"
-              android:maxLines="2"
+              android:layout_width="wrap_content"
+              android:layout_centerVertical="true"
               android:ellipsize="end"
               android:textAppearance="@style/TextAppearance.AppCompat.Title"
               android:textColor="?android:attr/textColorPrimary"
-              android:textAlignment="viewStart"
-              android:layout_marginStart="?attr/switchBarMarginStart"
-              android:layout_marginLeft="?attr/switchBarMarginStart" />
+              android:layout_toStartOf="@id/switch_centre_placeholder"
+              android:layout_toLeftOf="@id/switch_centre_placeholder"
+              android:layout_marginEnd="?attr/switchBarMarginEnd"
+              android:layout_marginRight="?attr/switchBarMarginEnd"
+	    />
 
     <Switch android:id="@+id/switch_widget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:background="@null"
-            android:layout_marginEnd="?attr/switchBarMarginEnd"
-            android:layout_marginRight="?attr/switchBarMarginEnd"/>
+            android:layout_toEndOf="@id/switch_centre_placeholder"
+            android:layout_toRightOf="@id/switch_centre_placeholder"
+            android:layout_marginStart="?attr/switchBarMarginEnd"
+            android:layout_marginLeft="?attr/switchBarMarginEnd"
+	    />
 
 </merge>
 
