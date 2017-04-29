@@ -1,11 +1,13 @@
 package samuelpalmer.sensorautorotation;
 
+import android.support.annotation.StringRes;
+
 public abstract class StringResource {
-	public static CharSequence format(int formatStringResource, Object... formatArguments) {
+	public static CharSequence format(@StringRes int formatStringResource, Object... formatArguments) {
 		return CurrentProcess.context().getString(formatStringResource, lookupTextIfNecessary(formatArguments));
 	}
 
-	public static CharSequence get(int id) {
+	public static CharSequence get(@StringRes int id) {
 		return CurrentProcess.context().getText(id);
 	}
 

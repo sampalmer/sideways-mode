@@ -105,28 +105,24 @@ public class DashboardEnabledContents extends LinearLayout {
 			case WAITING_FOR_SENSOR:
 				ViewHelpers.ensureVisibility(userIcon, View.GONE);
 				ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
-				
-				statusText.setText(R.string.status_waiting_sensor);
 				break;
 			case WAITING_FOR_ORIENTATION:
 				userIcon.setImageResource(lastStatus.user.iconId());
 				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
 				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
 				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-				
-				statusText.setText(R.string.status_waiting_orientation);
 				break;
 			case OK:
 				userIcon.setImageResource(lastStatus.user.iconId());
 				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
 				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
 				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-				
-				statusText.setText(lastStatus.user.longDescriptionId());
 				break;
 			default:
 				throw new RuntimeException("Unsupported device status: " + lastStatus.deviceStatus);
 		}
+		
+		statusText.setText(lastStatus.deviceStatus.stringResource != 0 ? lastStatus.deviceStatus.stringResource : lastStatus.user.longDescriptionId());
 		
 		rotateLeftButton.setEnabled(lastStatus.canChangeUserOrientation());
 		rotateLeftButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f);

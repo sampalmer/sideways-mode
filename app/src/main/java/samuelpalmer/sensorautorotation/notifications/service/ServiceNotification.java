@@ -45,13 +45,13 @@ class ServiceNotification {
 			.setProgress(0, 0, serviceStatus.deviceStatus == DeviceStatus.WAITING_FOR_SENSOR)
 		;
 
-		int statusTextResource;
-		switch (serviceStatus.deviceStatus) {
-			case WAITING_FOR_SENSOR: statusTextResource = R.string.status_waiting_sensor; break;
-			case WAITING_FOR_ORIENTATION: statusTextResource = R.string.status_waiting_orientation; break;
-			case OK: statusTextResource = serviceStatus.user.descriptionId(); break;
-			default: throw new RuntimeException("Unsupported device status: " + serviceStatus.deviceStatus);
-		}
+		int statusTextResource =
+			serviceStatus.deviceStatus.stringResource != 0
+			?
+			serviceStatus.deviceStatus.stringResource
+			:
+			serviceStatus.user.descriptionId();
+		
 		CharSequence statusText = StringResource.get(statusTextResource);
 
 		if (VERSION.SDK_INT >= 24) {

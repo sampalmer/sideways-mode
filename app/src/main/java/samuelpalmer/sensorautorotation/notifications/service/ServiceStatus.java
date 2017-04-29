@@ -50,13 +50,12 @@ public class ServiceStatus implements Parcelable {
 	}
 
 	public CharSequence getSummary() {
-		CharSequence status;
-		switch (deviceStatus) {
-			case WAITING_FOR_SENSOR: status = StringResource.get(R.string.status_waiting_sensor); break;
-			case WAITING_FOR_ORIENTATION: status = StringResource.get(R.string.status_waiting_orientation); break;
-			case OK: status = StringResource.format(R.string.status_user_phrase, user.descriptionId()); break;
-			default: throw new RuntimeException("Unsupported device status: " + deviceStatus);
-		}
+		CharSequence status =
+			deviceStatus.stringResource != 0
+			?
+			StringResource.get(deviceStatus.stringResource)
+			:
+			StringResource.format(R.string.status_user_phrase, user.descriptionId());
 		
 		return StringResource.format(R.string.notification_summary, mode.autoRotationStateResourceId(), status);
 	}
