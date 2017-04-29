@@ -129,13 +129,13 @@ public class DashboardEnabledContents extends LinearLayout {
 		}
 		
 		rotateLeftButton.setEnabled(lastStatus.canChangeUserOrientation());
-		rotateLeftButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f); //TODO: Replace this with an XML state list for the drawable. http://stackoverflow.com/a/41714547/238753
+		rotateLeftButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f);
 		
 		toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
 		toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 		modeText.setText(lastStatus.mode.autoRotationStateResourceId());
 		
 		rotateRightButton.setEnabled(lastStatus.canChangeUserOrientation());
-		rotateRightButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f); //TODO: Replace this with an XML state list for the drawable. http://stackoverflow.com/a/41714547/238753
+		rotateRightButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f);
 	}
 }
