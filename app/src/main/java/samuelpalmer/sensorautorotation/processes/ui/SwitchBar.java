@@ -99,7 +99,7 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
 	    setOnClickListener(this);
     }
     
-    public void setTextViewLabel(boolean isChecked) {
+    private void setTextViewLabel(boolean isChecked) {
         mTextView.setText(isChecked ? R.string.switchbar_on : R.string.switchbar_off);
     }
     
@@ -118,7 +118,7 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
         setChecked(isChecked);
     }
 
-    public void propagateChecked(boolean isChecked) {
+    private void propagateChecked(boolean isChecked) {
         for (OnSwitchChangeListener listener : mSwitchChangeListeners)
             listener.onSwitchChanged(mSwitch, isChecked);
     }
