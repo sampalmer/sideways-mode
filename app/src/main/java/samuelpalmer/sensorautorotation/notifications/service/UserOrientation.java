@@ -14,16 +14,16 @@ public class UserOrientation implements Parcelable {
 	
 	@Nullable
 	private final Orientation user;
-	private final int rotations;
+	private final int rotationsRelativeToScreen;
 
 	public UserOrientation(@Nullable Orientation user, ScreenRotationMonitor screenRotationMonitor, @Nullable Orientation proposed) {
 		this.user = user;
-		rotations = proposed == null ? -1 : IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
+		rotationsRelativeToScreen = proposed == null ? -1 : IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	private UserOrientation(Parcel in) {
 		user = in.readParcelable(this.getClass().getClassLoader());
-		rotations = in.readInt();
+		rotationsRelativeToScreen = in.readInt();
 	}
 
 	public static final Creator<UserOrientation> CREATOR = new Creator<UserOrientation>() {
@@ -61,13 +61,13 @@ public class UserOrientation implements Parcelable {
 
 	@DrawableRes
 	public int iconId() {
-		switch (rotations) {
+		switch (rotationsRelativeToScreen) {
 			case -1: return 0;
 			case 0: return R.drawable.notification_user_upright;
 			case 1: return R.drawable.notification_user_left_side;
 			case 2: return R.drawable.notification_user_upside_down;
 			case 3: return R.drawable.notification_user_right_side;
-			default: throw new RuntimeException("Unknown user rotation: " + rotations);
+			default: throw new RuntimeException("Unknown user rotation: " + rotationsRelativeToScreen);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class UserOrientation implements Parcelable {
 		return
 			(user == other.user || user != null && user.equals(other.user))
 			&&
-			rotations == other.rotations;
+			rotationsRelativeToScreen == other.rotationsRelativeToScreen;
 	}
 
 	@Override
@@ -86,6 +86,6 @@ public class UserOrientation implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeParcelable(user, 0);
-		dest.writeInt(rotations);
+		dest.writeInt(rotationsRelativeToScreen);
 	}
 }
