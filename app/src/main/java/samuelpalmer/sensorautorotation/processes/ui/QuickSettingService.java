@@ -122,9 +122,9 @@ public class QuickSettingService extends TileService {
 		tile.setState(status == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.notification_rotation : status.mode.notificationIcon()));
+		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.notification_rotation : status.getIcon()));
 
-		tile.setLabel(status == null ? StringResource.get(R.string.app_name_full) : status.getSummary());
+		tile.setLabel(StringResource.get(status == null ? R.string.app_name : status.user.descriptionId()));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
 

@@ -2,11 +2,13 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
+@SuppressWarnings("WeakerAccess")
 public class ServiceStatus implements Parcelable {
 	
 	public final Mode mode;
@@ -67,6 +69,11 @@ public class ServiceStatus implements Parcelable {
 		return deviceStatus == DeviceStatus.OK;
 	}
 	
+	@DrawableRes
+	public int getIcon() {
+		return overridden ? user.iconId() : mode.notificationIcon();
+	}
+	
 	public boolean equals(ServiceStatus other) {
 		return
 			mode.equals(other.mode)
@@ -79,7 +86,7 @@ public class ServiceStatus implements Parcelable {
 			&&
 			deviceStatus == other.deviceStatus;
 	}
-
+	
 	public static final Creator<ServiceStatus> CREATOR = new Creator<ServiceStatus>() {
 		@Override
 		public ServiceStatus createFromParcel(Parcel in) {
@@ -91,7 +98,7 @@ public class ServiceStatus implements Parcelable {
 			return new ServiceStatus[size];
 		}
 	};
-
+	
 	@Override
 	public int describeContents() {
 		return 0;

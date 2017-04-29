@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 
 import samuelpalmer.common.IntegerUtilities;
@@ -59,6 +59,7 @@ public class UserOrientation implements Parcelable {
 		}
 	}
 
+	@DrawableRes
 	public int iconId() {
 		switch (rotations) {
 			case -1: return 0;

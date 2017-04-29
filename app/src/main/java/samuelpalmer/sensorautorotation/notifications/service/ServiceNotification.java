@@ -41,7 +41,7 @@ class ServiceNotification {
 
 	public Notification build(ServiceStatus serviceStatus) {
 		builder
-			.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon())
+			.setSmallIcon(serviceStatus.getIcon())
 			.setProgress(0, 0, serviceStatus.deviceStatus == DeviceStatus.WAITING_FOR_SENSOR)
 		;
 
@@ -70,7 +70,7 @@ class ServiceNotification {
 
 		return builder.build();
 	}
-
+	
 	private void applyButtons(ServiceStatus serviceStatus) {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
