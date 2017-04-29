@@ -19,7 +19,6 @@ public class ControlsFragment extends PreferenceFragment {
 
 	private NotificationsSummary notificationsSummary;
 	private Preference notificationsPreference;
-	private Preference assistPreference;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,8 @@ public class ControlsFragment extends PreferenceFragment {
 		});
 		if (Build.VERSION.SDK_INT < 24)
 			getPreferenceScreen().removePreference(quickSettingPreference);
-
-		assistPreference = findPreference("assist");
+		
+		Preference assistPreference = findPreference("assist");
 		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -79,7 +78,9 @@ public class ControlsFragment extends PreferenceFragment {
 				return true;
 			}
 		});
-
+		if (Build.VERSION.SDK_INT < 16)
+			getPreferenceScreen().removePreference(assistPreference);
+		
 		Preference smallAppPreference = findPreference("small_app");
 		smallAppPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
