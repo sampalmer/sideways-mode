@@ -63,7 +63,7 @@
 	<string name="app_disabled_view_error">View error</string>
 
 	<string name="status_waiting_sensor">Waiting for sensor</string>
-	<string name="status_waiting_orientation">Waiting for device</string> <!-- TODO: Come up with a better description of this -->
+	<string name="status_waiting_orientation">Waiting for device rotation</string>
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Enabled</string>
