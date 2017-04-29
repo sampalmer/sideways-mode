@@ -42,10 +42,17 @@ class ServiceNotification {
 	public Notification build(ServiceStatus serviceStatus) {
 		builder
 			.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon())
-			.setProgress(0, 0, serviceStatus.waitingForSensor)
+			.setProgress(0, 0, serviceStatus.deviceStatus == DeviceStatus.WAITING_FOR_SENSOR)
 		;
 
-		CharSequence statusText = StringResource.get(serviceStatus.waitingForSensor ? R.string.status_waiting_sensor : serviceStatus.user.descriptionId());
+		int statusTextResource;
+		switch (serviceStatus.deviceStatus) {
+			case WAITING_FOR_SENSOR: statusTextResource = R.string.status_waiting_sensor; break;
+			case WAITING_FOR_ORIENTATION: statusTextResource = R.string.status_waiting_orientation; break;
+			case OK: statusTextResource = serviceStatus.user.descriptionId(); break;
+			default: throw new RuntimeException("Unsupported device status: " + serviceStatus.deviceStatus);
+		}
+		CharSequence statusText = StringResource.get(statusTextResource);
 
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
@@ -82,17 +89,20 @@ class ServiceNotification {
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
 				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
-				StringResource.get(R.string.action_rotate_left))
+				StringResource.get(R.string.action_rotate_left),
+				serviceStatus.canChangeUserOrientation())
 			.configureButton(
 				R.id.toggle_mode_button,
 				serviceStatus.mode.actionIcon(),
 				RotationServiceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
-				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
+				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()),
+				true)
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
 				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
-				StringResource.get(R.string.action_rotate_right));
+				StringResource.get(R.string.action_rotate_right),
+				serviceStatus.canChangeUserOrientation());
 
 		builder.setCustomContentView(notificationButtons.getContentView());
 	}

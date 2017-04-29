@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import samuelpalmer.common.IntegerUtilities;
 import samuelpalmer.common.Orientation;
@@ -9,13 +11,14 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class UserOrientation implements Parcelable {
-
+	
+	@Nullable
 	private final Orientation user;
 	private final int rotations;
 
-	public UserOrientation(Orientation user, ScreenRotationMonitor screenRotationMonitor, Orientation proposed) {
+	public UserOrientation(@Nullable Orientation user, ScreenRotationMonitor screenRotationMonitor, @Nullable Orientation proposed) {
 		this.user = user;
-		rotations = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
+		rotations = proposed == null ? -1 : IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	private UserOrientation(Parcel in) {
@@ -44,6 +47,9 @@ public class UserOrientation implements Parcelable {
 	}
 
 	public int longDescriptionId() {
+		if (user == null)
+			return R.string.user_rotation_unknown;
+			
 		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
 			case 0: return R.string.user_rotation_upright;
 			case 1: return R.string.user_rotation_right_side;
@@ -55,6 +61,7 @@ public class UserOrientation implements Parcelable {
 
 	public int iconId() {
 		switch (rotations) {
+			case -1: return 0;
 			case 0: return R.drawable.notification_user_upright;
 			case 1: return R.drawable.notification_user_left_side;
 			case 2: return R.drawable.notification_user_upside_down;
@@ -65,7 +72,7 @@ public class UserOrientation implements Parcelable {
 
 	public boolean equals(UserOrientation other) {
 		return
-			user.equals(other.user)
+			(user == other.user || user != null && user.equals(other.user))
 			&&
 			rotations == other.rotations;
 	}

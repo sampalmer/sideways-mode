@@ -43,6 +43,7 @@
 	<string name="notification_summary">%1$s (%2$s)</string>
 	<string name="status_user_phrase">User %1$s</string>
 
+	<string name="user_rotation_unknown">Unknown</string>
 	<string name="user_rotation_upright">Upright</string>
 	<string name="user_rotation_left_side">Left side</string>
 	<string name="user_rotation_right_side">Right side</string>
@@ -62,6 +63,7 @@
 	<string name="app_disabled_view_error">View error</string>
 
 	<string name="status_waiting_sensor">Waiting for sensor</string>
+	<string name="status_waiting_orientation">Waiting for device</string> <!-- TODO: Come up with a better description of this -->
 
 	<!-- Preferences -->
 	<string name="preference_enabled_title">Enabled</string>

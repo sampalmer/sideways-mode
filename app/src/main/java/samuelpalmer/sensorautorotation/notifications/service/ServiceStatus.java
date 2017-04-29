@@ -8,25 +8,25 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 public class ServiceStatus implements Parcelable {
-
+	
 	public final Mode mode;
 	public final boolean overridden;
 	public final UserOrientation user;
 	public final NotificationPriority priority;
-	public final boolean waitingForSensor;
+	public final DeviceStatus deviceStatus;
 
 	public ServiceStatus(
 		Mode mode,
 		boolean overridden,
 		UserOrientation user,
 		NotificationPriority priority,
-	    boolean waitingForSensor
+	    DeviceStatus deviceStatus
 	) {
 		this.mode = mode;
 		this.overridden = overridden;
 		this.user = user;
 		this.priority = priority;
-		this.waitingForSensor = waitingForSensor;
+		this.deviceStatus = deviceStatus;
 	}
 
 	private ServiceStatus(Parcel in) {
@@ -34,8 +34,8 @@ public class ServiceStatus implements Parcelable {
 		overridden = in.readByte() != 0;
 		user = in.readParcelable(this.getClass().getClassLoader());
 		priority = NotificationPriority.valueOf(in.readString());
-		waitingForSensor = in.readByte() != 0;
-
+		deviceStatus = DeviceStatus.valueOf(in.readString());
+		
 		if (in.dataAvail() != 0)
 			throw new RuntimeException("Found more data in parcel than expected");
 	}
@@ -46,20 +46,28 @@ public class ServiceStatus implements Parcelable {
 		dest.writeByte((byte) (overridden ? 1 : 0));
 		dest.writeParcelable(user, 0);
 		dest.writeString(priority.name());
-		dest.writeByte((byte) (waitingForSensor ? 1 : 0));
+		dest.writeString(deviceStatus.name());
 	}
 
 	public CharSequence getSummary() {
-		CharSequence status =
-			waitingForSensor
-			?
-			StringResource.get(R.string.status_waiting_sensor)
-			:
-			StringResource.format(R.string.status_user_phrase, user.descriptionId());
-
+		CharSequence status;
+		switch (deviceStatus) {
+			case WAITING_FOR_SENSOR: status = StringResource.get(R.string.status_waiting_sensor); break;
+			case WAITING_FOR_ORIENTATION: status = StringResource.get(R.string.status_waiting_orientation); break;
+			case OK: status = StringResource.format(R.string.status_user_phrase, user.descriptionId()); break;
+			default: throw new RuntimeException("Unsupported device status: " + deviceStatus);
+		}
+		
 		return StringResource.format(R.string.notification_summary, mode.autoRotationStateResourceId(), status);
 	}
-
+	
+	/**
+	 * This is to prevent users from changing the user orientation when the app doesn't know what the current screen orientation should be.
+	 */
+	public boolean canChangeUserOrientation() {
+		return deviceStatus == DeviceStatus.OK;
+	}
+	
 	public boolean equals(ServiceStatus other) {
 		return
 			mode.equals(other.mode)
@@ -70,7 +78,7 @@ public class ServiceStatus implements Parcelable {
 			&&
 			priority.equals(other.priority)
 			&&
-			waitingForSensor == other.waitingForSensor;
+			deviceStatus == other.deviceStatus;
 	}
 
 	public static final Creator<ServiceStatus> CREATOR = new Creator<ServiceStatus>() {

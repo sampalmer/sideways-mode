@@ -48,7 +48,9 @@ public class DashboardEnabledContents extends LinearLayout {
 	private ImageView userIcon;
 	private View sensorProgress;
 	private TextView statusText;
+	private ImageButton rotateLeftButton;
 	private ImageButton toggleModeButton;
+	private ImageButton rotateRightButton;
 	private TextView modeText;
 	
 	private void init() {
@@ -61,9 +63,9 @@ public class DashboardEnabledContents extends LinearLayout {
 		sensorProgress = findViewById(R.id.dashboard_sensor_progress);
 		
 		statusText = (TextView) findViewById(R.id.dashboard_status);
-		ImageButton rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
+		rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
 		toggleModeButton = (ImageButton) findViewById(R.id.dashboard_button_toggle);
-		ImageButton rotateRightButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_right);
+		rotateRightButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_right);
 		modeText = (TextView) findViewById(R.id.dashboard_mode);
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
@@ -99,23 +101,41 @@ public class DashboardEnabledContents extends LinearLayout {
 	}
 	
 	public void setStatus(ServiceStatus lastStatus) {
-		if (lastStatus.waitingForSensor) {
-			ViewHelpers.ensureVisibility(userIcon, View.GONE);
-			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
-			
-			statusText.setText(R.string.status_waiting_sensor);
+		switch (lastStatus.deviceStatus) {
+			case WAITING_FOR_SENSOR:
+				ViewHelpers.ensureVisibility(userIcon, View.GONE);
+				ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
+				
+				statusText.setText(R.string.status_waiting_sensor);
+				break;
+			case WAITING_FOR_ORIENTATION:
+				userIcon.setImageResource(lastStatus.user.iconId());
+				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
+				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
+				
+				statusText.setText(R.string.status_waiting_orientation);
+				break;
+			case OK:
+				userIcon.setImageResource(lastStatus.user.iconId());
+				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
+				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
+				
+				statusText.setText(lastStatus.user.longDescriptionId());
+				break;
+			default:
+				throw new RuntimeException("Unsupported device status: " + lastStatus.deviceStatus);
 		}
-		else {
-			userIcon.setImageResource(lastStatus.user.iconId());
-			userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
-			ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
-			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-			
-			statusText.setText(lastStatus.user.longDescriptionId());
-		}
+		
+		rotateLeftButton.setEnabled(lastStatus.canChangeUserOrientation());
+		rotateLeftButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f); //TODO: Replace this with an XML state list for the drawable. http://stackoverflow.com/a/41714547/238753
 		
 		toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
 		toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 		modeText.setText(lastStatus.mode.autoRotationStateResourceId());
+		
+		rotateRightButton.setEnabled(lastStatus.canChangeUserOrientation());
+		rotateRightButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f); //TODO: Replace this with an XML state list for the drawable. http://stackoverflow.com/a/41714547/238753
 	}
 }
