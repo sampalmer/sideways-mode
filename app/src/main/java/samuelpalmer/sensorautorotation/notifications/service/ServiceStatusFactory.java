@@ -73,9 +73,9 @@ public class ServiceStatusFactory {
 	}
 
 	/**
-	 * Even if the user is technically upside-down, we swap them to upright
-	 * once they go into auto-rotate mode, so from their perspective, they
-	 * weren't actually upside-down.
+	 * If the app thinks the user is upside-down, it's more likely that they're upright but
+	 * using the phone slightly tilted away from them. So we present being upside-down as being
+	 * upright.
 	 */
 	private @Nullable Orientation effectiveUser() {
 		Orientation result = calculator.user();
