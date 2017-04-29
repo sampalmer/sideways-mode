@@ -2,11 +2,11 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 

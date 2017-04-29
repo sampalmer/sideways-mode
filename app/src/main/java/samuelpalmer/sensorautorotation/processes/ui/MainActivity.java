@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,10 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
@@ -108,7 +109,11 @@ public class MainActivity extends UiActivity {
 		if (!OrientationSensorHandler.canDetectOrientation()) {
 			//Not letting the user go any further since they shouldn't have installed the app
 			Log.w(MainActivity.class.getSimpleName(), "Didn't find any supported sensors. Advising user the device is unsupported.");
-			startActivity(new Intent(this, DeviceUnsupportedActivity.class));
+			try {
+				new SensorError(SensorError.Type.NOT_FOUND).showError().send();
+			} catch (PendingIntent.CanceledException e) {
+				throw new RuntimeException(e);
+			}
 			finish();
 		}
 	}

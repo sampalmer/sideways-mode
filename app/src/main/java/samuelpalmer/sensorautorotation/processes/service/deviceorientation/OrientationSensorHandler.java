@@ -12,9 +12,9 @@ import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
@@ -38,7 +38,7 @@ public class OrientationSensorHandler extends State {
 		this.screen = screen;
 
 		if (!windowOrientationListener.canDetectOrientation())
-			WindowOrientationListener.reportSensorError(R.string.environment_error_sensor_missing_message);
+			new SensorError(SensorError.Type.NOT_FOUND).report();
 	}
 
 	@Override

@@ -18,9 +18,9 @@ import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
@@ -185,7 +185,7 @@ public class DashboardView extends FrameLayout {
 					@Override
 					public void onClick(View v) {
 						try {
-							lastError.showDialogIntent().send();
+							lastError.showError().send();
 						} catch (PendingIntent.CanceledException e) {
 							throw new RuntimeException(e);
 						}

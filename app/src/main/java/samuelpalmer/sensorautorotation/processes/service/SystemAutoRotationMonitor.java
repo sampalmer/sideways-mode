@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class SystemAutoRotationMonitor extends State {
@@ -38,7 +38,7 @@ public class SystemAutoRotationMonitor extends State {
 		if (accelerometerRotation) {
 			//So when the service is stopped, the new auto rotation setting will be reapplied to the system. (Otherwise the user's change to system auto rotation could be reverted.)
 			calculator.setAutoRotate(true);
-			new EnvironmentError(R.string.environment_error_system_rotation_enabled_summary, R.string.environment_error_system_rotation_enabled_message).report();
+			new GenericError(R.string.environment_error_system_rotation_enabled_summary, R.string.environment_error_system_rotation_enabled_message).report();
 		}
 	}
 
