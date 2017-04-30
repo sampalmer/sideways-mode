@@ -50,7 +50,12 @@ public class ApplicationSettings extends Settings {
 		super(sharedPreferences);
 		this.sharedPreferences = sharedPreferences;
 	}
-
+	
+	/**
+	 * Serves 2 purposes:
+	 * - Version of stored settings
+	 * - Whether the user has viewed the startup instructions screen
+	 */
 	public Setting<Integer> lastVersionUserInstructedAbout() { return new Setting<>(new IntegerSetting(), "lastVersionUserInstructedAbout", null); }
 
 	public Setting<Boolean> enabled() { return new Setting<>(new BooleanSetting(), "enabled", false); }
