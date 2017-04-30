@@ -63,6 +63,13 @@ public class ApplicationSettings extends Settings {
 	public Setting<NotificationPriority> notificationPriority() { return new Setting<>(new EnumSetting<>(NotificationPriority.class), "notificationPriority", NotificationPriority.NORMAL); }
 	public Setting<Boolean> showNotification() { return new Setting<>(new BooleanSetting(), "showNotification", true); }
 	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
+	
+	/**
+	 * Not sure if this really belongs here, but having it here allows us to listen for changes to
+	 * the error.
+	 *
+	 * Maybe this could be moved to a file in the app's cache directory?
+	 */
 	public Setting<String> lastErrorJson() { return new Setting<>(new StringSetting(), "lastError", null); }
 
 }
