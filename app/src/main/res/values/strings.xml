@@ -179,6 +179,11 @@
 		• If you have any feedback, you can send it from the store listing or the menu in this app.
 	</string>
 
+	<string name="back">Back</string>
+	<string name="next">Next</string>
+	<string name="skip">Skip</string>
+	<string name="finish">Finish</string>
+
 	<!-- Enter feedback -->
 	<string name="report_problem_hint">Describe the problem here</string>
 	<string name="enter_feedback_hint">Enter feedback here</string>

@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.instructions;
 import samuelpalmer.sensorautorotation.R;
 
 class InstructionsPages {
-	public final InstructionsPage[] PAGES = new InstructionsPage[] {
+	public static final InstructionsPage[] PAGES = new InstructionsPage[] {
 			new InstructionsPage(R.string.instructions_introduction_heading, R.string.instructions_introduction_contents, R.string.app_name_full),
 			new InstructionsPage(R.string.instructions_modes_heading, R.string.instructions_modes_contents, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait),
 			new InstructionsPage(R.string.instructions_toggling_heading, R.string.instructions_toggling_contents),

@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class FirstRunLauncherFragment extends Fragment {
@@ -20,7 +21,7 @@ public class FirstRunLauncherFragment extends Fragment {
 
 	private void instructUserIfNecessary() {
 		if (!instructedVersionPreference().hasValue())
-			startActivityForResult(ComponentType.create(FirstRunActivity.class).intent(), REQUEST_CODE_INSTRUCT_USER);
+			startActivityForResult(ComponentType.create(InstructionsActivity.class).intent(), REQUEST_CODE_INSTRUCT_USER);
 	}
 
 	@Override
