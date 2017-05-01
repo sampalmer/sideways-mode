@@ -51,6 +51,8 @@ public class ApplicationSettings extends Settings {
 		this.sharedPreferences = sharedPreferences;
 	}
 	
+	//NOTE: If you add/remove/change preference config, add a migration to the "Migrations" class
+	
 	/**
 	 * Serves 2 purposes:
 	 * - Version of stored settings
