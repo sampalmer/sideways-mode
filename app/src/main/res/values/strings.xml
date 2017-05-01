@@ -120,12 +120,6 @@
 	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
 	<string name="environment_error_more">More</string>
 
-	<string name="environment_error_sensor_summary">Sensor problem</string>
-	<string name="environment_error_sensor_message">%1$s %2$s needs a working accelerometer to run. If the device has one, try using the device\'s built-in \"Auto-rotate screen\" option. If that doesn\'t work, the accelerometer might be broken.</string>
-
-	<string name="environment_error_sensor_missing_message">Couldn\'t find an accelerometer.</string>
-	<string name="environment_error_sensor_no_data_message">The sensor didn\'t produce any data.</string>
-
 	<string name="environment_error_system_rotation_enabled_summary">System rotation enabled</string>
 	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was enabled.</string>
 

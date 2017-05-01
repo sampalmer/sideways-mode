@@ -55,12 +55,6 @@
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 
-	<string name="environment_error_sensor_summary">Проблема датчика</string>
-	<string name="environment_error_sensor_message">%1$s %2$s нужен работающий акселерометр для работы. Если устройство имеет его, попробуйте использовать встроенную опцию "Автоповорот экрана". Если это не сработает, акселерометр может быть сломан.</string>
-
-	<string name="environment_error_sensor_missing_message">Не удалось найти акселерометр.</string>
-	<string name="environment_error_sensor_no_data_message">Датчик не предоставляет каких-либо данных.</string>
-
 	<string name="environment_error_system_rotation_enabled_summary">Вращение системы включено</string>
 	<string name="environment_error_system_rotation_enabled_message">В устройстве был включен встроенный автоповорот экрана.</string>
 
