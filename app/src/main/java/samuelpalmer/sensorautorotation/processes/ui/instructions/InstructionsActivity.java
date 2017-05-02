@@ -96,7 +96,7 @@ public class InstructionsActivity extends UiActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_instructions, menu);
+		inflater.inflate(R.menu.instructions, menu);
 		return true;
 	}
 	

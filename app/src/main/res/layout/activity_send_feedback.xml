@@ -30,7 +30,7 @@
 			android:layout_height="wrap_content"
 			card_view:itemIconTint="@color/primary_500"
 			android:background="?attr/android:colorBackground"
-			app:menu="@menu/menu_feedback" />
+			app:menu="@menu/feedback" />
 
 	</android.support.v7.widget.CardView>
 
