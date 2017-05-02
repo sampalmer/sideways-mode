@@ -1,9 +1,11 @@
 package samuelpalmer.sensorautorotation.processes.ui.instructions;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -49,6 +51,7 @@ public class InstructionsActivity extends UiActivity {
 			public void onPageScrollStateChanged(int state) {}
 		});
 		
+		copyTextColourToDrawables(mNextButton);
 		mNextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -56,6 +59,7 @@ public class InstructionsActivity extends UiActivity {
 			}
 		});
 		
+		copyTextColourToDrawables(mPrevButton);
 		mPrevButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -63,6 +67,7 @@ public class InstructionsActivity extends UiActivity {
 			}
 		});
 		
+		copyTextColourToDrawables(mFinishButton);
 		mFinishButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -73,6 +78,19 @@ public class InstructionsActivity extends UiActivity {
 		updateBottomBar();
 		
 		setResult(RESULT_OK);
+	}
+	
+	private static void copyTextColourToDrawables(Button button) {
+		Drawable[] drawables = button.getCompoundDrawables();
+		for (int i = 0; i < drawables.length; ++i) {
+			Drawable original = drawables[i];
+			if (original != null) {
+				Drawable wrapped = DrawableCompat.wrap(original);
+				DrawableCompat.setTintList(wrapped, button.getTextColors());
+				drawables[i] = wrapped;
+			}
+		}
+		button.setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
 	}
 	
 	@Override
