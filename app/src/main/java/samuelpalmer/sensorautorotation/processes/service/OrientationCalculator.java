@@ -114,8 +114,12 @@ public class OrientationCalculator {
 	public void setDevice(@Nullable Orientation newDevice) {
 		waitingForSensor = false;
 		
-		if (newDevice != null)
-			device = newDevice;
+		/*
+		 * Even if the new device orientation is unknown, we will act on it.
+		 * This should prevent situations where users use the "rotate left/right" buttons
+		 * while in auto rotate mode but get unexpected results.
+		 */
+		device = newDevice;
 		
 		reportChange();
 	}
