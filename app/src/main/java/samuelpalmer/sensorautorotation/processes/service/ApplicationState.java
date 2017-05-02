@@ -6,7 +6,7 @@ import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.sensorautorotation.settings.CachedSetting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
-class ApplicationState {
+public class ApplicationState {
 
 	private final ServiceSettings serviceSettings;
 	public final CachedSetting<Boolean> autoRotate;

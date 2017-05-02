@@ -5,19 +5,19 @@ import android.util.Log;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationState;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
 
 	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
-	private final OrientationCalculator calculator;
-
-	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, OrientationCalculator calculator) {
+	private final ApplicationState state;
+	
+	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, ApplicationState state) {
 		this.settings = settings;
 		this.screen = screen;
-		this.calculator = calculator;
+		this.state = state;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void stop() {
-		settings.accelerometerRotation.set(calculator.autoRotate());
+		settings.accelerometerRotation.set(state.autoRotate.get());
 		propose(Orientation.NATURAL);
 	}
 
