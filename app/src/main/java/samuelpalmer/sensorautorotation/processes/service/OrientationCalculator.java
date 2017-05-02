@@ -14,8 +14,22 @@ public class OrientationCalculator {
 	private final ScreenRotationMonitor screen;
 	private final ApplicationState state;
 	
+	/**
+	 * This is initially <c>null</c> to prevent the following situation:
+	 * - App is off
+	 * - Device is in auto rotate mode
+	 * - Screen is in landscape
+	 * - Device is lying flat
+	 * - User turns app on
+	 * - App thinks user is upright
+	 * - User presses the rotate left or right button
+	 * - App thinks user is sideways
+	 * - User lifts up device
+	 * - Screen rotates to face sideways
+	 */
 	@Nullable
 	private Orientation device;
+	
 	private boolean waitingForSensor = true;
 
 	public final UpdatingEventRegistrar onAnythingChanged;
