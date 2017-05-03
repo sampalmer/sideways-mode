@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import samuelpalmer.common.IntegerUtilities;
 import samuelpalmer.common.Orientation;
@@ -12,13 +12,13 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 
 public class UserOrientation implements Parcelable {
 	
-	@Nullable
+	@NonNull
 	private final Orientation user;
 	private final int rotationsRelativeToScreen;
 
-	public UserOrientation(@Nullable Orientation user, ScreenRotationMonitor screenRotationMonitor, @Nullable Orientation proposed) {
+	public UserOrientation(@NonNull Orientation user, ScreenRotationMonitor screenRotationMonitor, @NonNull Orientation proposed) {
 		this.user = user;
-		rotationsRelativeToScreen = proposed == null ? -1 : IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
+		rotationsRelativeToScreen = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	private UserOrientation(Parcel in) {
@@ -47,9 +47,6 @@ public class UserOrientation implements Parcelable {
 	}
 
 	public int longDescriptionId() {
-		if (user == null)
-			return R.string.user_rotation_unknown;
-			
 		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
 			case 0: return R.string.user_rotation_upright;
 			case 1: return R.string.user_rotation_right_side;
@@ -62,7 +59,6 @@ public class UserOrientation implements Parcelable {
 	@DrawableRes
 	public int iconId() {
 		switch (rotationsRelativeToScreen) {
-			case -1: return 0;
 			case 0: return R.drawable.notification_user_upright;
 			case 1: return R.drawable.notification_user_left_side;
 			case 2: return R.drawable.notification_user_upside_down;
@@ -73,7 +69,7 @@ public class UserOrientation implements Parcelable {
 
 	public boolean equals(UserOrientation other) {
 		return
-			(user == other.user || user != null && user.equals(other.user))
+			user.equals(other.user)
 			&&
 			rotationsRelativeToScreen == other.rotationsRelativeToScreen;
 	}

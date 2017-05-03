@@ -101,37 +101,21 @@ public class DashboardEnabledContents extends LinearLayout {
 	}
 	
 	public void setStatus(ServiceStatus lastStatus) {
-		switch (lastStatus.deviceStatus) {
-			case WAITING_FOR_SENSOR:
-				ViewHelpers.ensureVisibility(userIcon, View.GONE);
-				ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
-				break;
-			case WAITING_FOR_ORIENTATION:
-				userIcon.setImageResource(lastStatus.user.iconId());
-				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
-				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
-				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-				break;
-			case OK:
-				userIcon.setImageResource(lastStatus.user.iconId());
-				userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
-				ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
-				ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-				break;
-			default:
-				throw new RuntimeException("Unsupported device status: " + lastStatus.deviceStatus);
+		if (lastStatus.waitingForSensor) {
+			ViewHelpers.ensureVisibility(userIcon, View.GONE);
+			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
+		}
+		else {
+			userIcon.setImageResource(lastStatus.user.iconId());
+			userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+			ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
+			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 		}
 		
-		statusText.setText(lastStatus.deviceStatus.stringResource != 0 ? lastStatus.deviceStatus.stringResource : lastStatus.user.longDescriptionId());
-		
-		rotateLeftButton.setEnabled(lastStatus.canChangeUserOrientation());
-		rotateLeftButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f);
+		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.longDescriptionId());
 		
 		toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
 		toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
 		modeText.setText(lastStatus.mode.autoRotationStateResourceId());
-		
-		rotateRightButton.setEnabled(lastStatus.canChangeUserOrientation());
-		rotateRightButton.setAlpha(lastStatus.canChangeUserOrientation() ? 1f : .5f);
 	}
 }

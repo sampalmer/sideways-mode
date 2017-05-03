@@ -12,10 +12,7 @@ class LockedMode implements Mode {
 
 	public LockedMode(OrientationCalculator calculator, boolean deviceIsNaturallyPortrait) {
 		Orientation screenOrientation = calculator.proposedScreenOrientation();
-		
-		//The screen orientation shouldn't be null, but if it is, guessing should be sufficient since this isn't very important.
-		boolean inNaturalOrientation = screenOrientation == null || screenOrientation.isNaturalOrUpsideDown();
-		
+		boolean inNaturalOrientation = screenOrientation.isNaturalOrUpsideDown();
 		portrait = inNaturalOrientation == deviceIsNaturallyPortrait;
 	}
 

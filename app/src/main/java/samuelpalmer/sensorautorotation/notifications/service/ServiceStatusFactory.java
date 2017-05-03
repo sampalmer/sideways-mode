@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Build;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,7 +57,7 @@ public class ServiceStatusFactory {
 			overridden(),
 			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority(),
-			calculator.deviceStatus()
+			calculator.isWaitingForSensor()
 		);
 	}
 
@@ -77,9 +77,9 @@ public class ServiceStatusFactory {
 	 * using the phone slightly tilted away from them. So we present being upside-down as being
 	 * upright.
 	 */
-	private @Nullable Orientation effectiveUser() {
-		Orientation result = calculator.user();
-		return Orientation.UPSIDE_DOWN.equals(result) ? Orientation.NATURAL : result;
+	private @NonNull Orientation effectiveUser() {
+		Orientation actualUser = calculator.user();
+		return actualUser.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : actualUser;
 	}
 
 	private NotificationPriority priority() {

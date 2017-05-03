@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.notifications.service.DeviceStatus;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class OrientationCalculator {
@@ -14,20 +13,7 @@ public class OrientationCalculator {
 	private final ScreenRotationMonitor screen;
 	private final ApplicationState state;
 	
-	/**
-	 * This is initially <c>null</c> to prevent the following situation:
-	 * - App is off
-	 * - Device is in auto rotate mode
-	 * - Screen is in landscape
-	 * - Device is lying flat
-	 * - User turns app on
-	 * - App thinks user is upright
-	 * - User presses the rotate left or right button
-	 * - App thinks user is sideways
-	 * - User lifts up device
-	 * - Screen rotates to face sideways
-	 */
-	@Nullable
+	@NonNull
 	private Orientation device;
 	
 	private boolean waitingForSensor = true;
@@ -37,6 +23,11 @@ public class OrientationCalculator {
 	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
 		this.screen = screen;
 		this.state = state;
+		
+		// This infers the device orientation from the screen orientation so we have something to start with.
+		// It might be better to infer it from USER_ROTATION if system auto rotation was off.
+		device = screen.currentRotation().minus(autoRotate() ? offset() : new Rotation(0));
+		
 		onAnythingChanged = new UpdatingEventRegistrar();
 	}
 
@@ -52,18 +43,18 @@ public class OrientationCalculator {
 		return state.autoRotate.get();
 	}
 
-	public @Nullable Orientation user() {
+	public @NonNull Orientation user() {
 		return calculateUser(autoRotate(), offset());
 	}
 
-	private @Nullable Orientation calculateUser(boolean autoRotate, @NonNull Rotation offset) {
+	private @NonNull Orientation calculateUser(boolean autoRotate, @NonNull Rotation offset) {
 		Orientation base = baseScreenOrientation(!autoRotate);
-		return base == null ? null : offset.minus(base);
+		return offset.minus(base);
 	}
 
 	private @NonNull Rotation calculateOffset(boolean autoRotate, @NonNull Orientation user) {
 		Orientation base = baseScreenOrientation(!autoRotate);
-		return base == null ? new Rotation(0) : user.minus(base);
+		return user.minus(base);
 	}
 
 	private @NonNull Rotation offset() {
@@ -79,7 +70,7 @@ public class OrientationCalculator {
 		
 		do
 			newValue = newValue.plus(clockwiseRotations);
-		while (Orientation.UPSIDE_DOWN.equals(calculateUser(autoRotate(), newValue)));
+		while (calculateUser(autoRotate(), newValue).equals(Orientation.UPSIDE_DOWN));
 		
 		state.offset.set(newValue);
 		reportChange();
@@ -95,7 +86,7 @@ public class OrientationCalculator {
 		  */
 		
 		Orientation base = baseScreenOrientation(newValue);
-		Rotation newOffset = base == null ? new Rotation(0) : screen.currentRotation().minus(base);
+		Rotation newOffset = screen.currentRotation().minus(base);
 		newOffset = preventUpsideDownUser(newValue, newOffset);
 
 		state.set(newValue, newOffset);
@@ -105,7 +96,7 @@ public class OrientationCalculator {
 	private @NonNull Rotation preventUpsideDownUser(boolean autoRotate, @NonNull Rotation proposedOffset) {
 		Orientation newUser = calculateUser(autoRotate, proposedOffset);
 
-		if (Orientation.UPSIDE_DOWN.equals(newUser))
+		if (newUser.equals(Orientation.UPSIDE_DOWN))
 			return calculateOffset(autoRotate, Orientation.NATURAL);
 		else
 			return proposedOffset;
@@ -114,12 +105,8 @@ public class OrientationCalculator {
 	public void setDevice(@Nullable Orientation newDevice) {
 		waitingForSensor = false;
 		
-		/*
-		 * Even if the new device orientation is unknown, we will act on it.
-		 * This should prevent situations where users use the "rotate left/right" buttons
-		 * while in auto rotate mode but get unexpected results.
-		 */
-		device = newDevice;
+		if (newDevice != null)
+			device = newDevice;
 		
 		reportChange();
 	}
@@ -128,9 +115,9 @@ public class OrientationCalculator {
 		onAnythingChanged.report();
 	}
 
-	public @Nullable Orientation proposedScreenOrientation() {
+	public @NonNull Orientation proposedScreenOrientation() {
 		Orientation base = baseScreenOrientation(autoRotate());
-		return base == null ? null : base.plus(offset());
+		return base.plus(offset());
 	}
 
 	/**
@@ -138,16 +125,11 @@ public class OrientationCalculator {
 	 * This seems to be a common factor in various calculations, but it was hard to come up with
 	 * a good name for it.
 	 */
-	private @Nullable Orientation baseScreenOrientation(boolean autoRotate) {
+	private @NonNull Orientation baseScreenOrientation(boolean autoRotate) {
 		return autoRotate ? device : Orientation.NATURAL;
 	}
 
-	public DeviceStatus deviceStatus() {
-		if (waitingForSensor)
-			return DeviceStatus.WAITING_FOR_SENSOR;
-		else if (proposedScreenOrientation() == null)
-			return DeviceStatus.WAITING_FOR_ORIENTATION;
-		else
-			return DeviceStatus.OK;
+	public boolean isWaitingForSensor() {
+		return waitingForSensor;
 	}
 }

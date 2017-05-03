@@ -15,20 +15,20 @@ public class ServiceStatus implements Parcelable {
 	public final boolean overridden;
 	public final UserOrientation user;
 	public final NotificationPriority priority;
-	public final DeviceStatus deviceStatus;
+	public final boolean waitingForSensor;
 
 	public ServiceStatus(
 		Mode mode,
 		boolean overridden,
 		UserOrientation user,
 		NotificationPriority priority,
-	    DeviceStatus deviceStatus
+	    boolean waitingForSensor
 	) {
 		this.mode = mode;
 		this.overridden = overridden;
 		this.user = user;
 		this.priority = priority;
-		this.deviceStatus = deviceStatus;
+		this.waitingForSensor = waitingForSensor;
 	}
 
 	private ServiceStatus(Parcel in) {
@@ -36,7 +36,7 @@ public class ServiceStatus implements Parcelable {
 		overridden = in.readByte() != 0;
 		user = in.readParcelable(this.getClass().getClassLoader());
 		priority = NotificationPriority.valueOf(in.readString());
-		deviceStatus = DeviceStatus.valueOf(in.readString());
+		waitingForSensor = in.readByte() != 0;
 		
 		if (in.dataAvail() != 0)
 			throw new RuntimeException("Found more data in parcel than expected");
@@ -48,25 +48,18 @@ public class ServiceStatus implements Parcelable {
 		dest.writeByte((byte) (overridden ? 1 : 0));
 		dest.writeParcelable(user, 0);
 		dest.writeString(priority.name());
-		dest.writeString(deviceStatus.name());
+		dest.writeByte((byte) (waitingForSensor ? 1 : 0));
 	}
 
 	public CharSequence getSummary() {
 		CharSequence status =
-			deviceStatus.stringResource != 0
+			waitingForSensor
 			?
-			StringResource.get(deviceStatus.stringResource)
+			StringResource.get(R.string.status_waiting_sensor)
 			:
 			StringResource.format(R.string.status_user_phrase, user.descriptionId());
 		
 		return StringResource.format(R.string.notification_summary, mode.autoRotationStateResourceId(), status);
-	}
-	
-	/**
-	 * This is to prevent users from changing the user orientation when the app doesn't know what the current screen orientation should be.
-	 */
-	public boolean canChangeUserOrientation() {
-		return deviceStatus == DeviceStatus.OK;
 	}
 	
 	@DrawableRes
@@ -84,7 +77,7 @@ public class ServiceStatus implements Parcelable {
 			&&
 			priority.equals(other.priority)
 			&&
-			deviceStatus == other.deviceStatus;
+			waitingForSensor == other.waitingForSensor;
 	}
 	
 	public static final Creator<ServiceStatus> CREATOR = new Creator<ServiceStatus>() {

@@ -42,13 +42,13 @@ class ServiceNotification {
 	public Notification build(ServiceStatus serviceStatus) {
 		builder
 			.setSmallIcon(serviceStatus.getIcon())
-			.setProgress(0, 0, serviceStatus.deviceStatus == DeviceStatus.WAITING_FOR_SENSOR)
+			.setProgress(0, 0, serviceStatus.waitingForSensor)
 		;
 
 		int statusTextResource =
-			serviceStatus.deviceStatus.stringResource != 0
+			serviceStatus.waitingForSensor
 			?
-			serviceStatus.deviceStatus.stringResource
+			R.string.status_waiting_sensor
 			:
 			serviceStatus.user.descriptionId();
 		
@@ -89,20 +89,17 @@ class ServiceNotification {
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
 				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
-				StringResource.get(R.string.action_rotate_left),
-				serviceStatus.canChangeUserOrientation())
+				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
 				serviceStatus.mode.actionIcon(),
 				RotationServiceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
-				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()),
-				true)
+				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
 				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
-				StringResource.get(R.string.action_rotate_right),
-				serviceStatus.canChangeUserOrientation());
+				StringResource.get(R.string.action_rotate_right));
 
 		builder.setCustomContentView(notificationButtons.getContentView());
 	}
