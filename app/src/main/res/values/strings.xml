@@ -22,12 +22,12 @@
 	<string name="email_app_chooser_title">Send feedback with</string>
 
 	<string name="uninstall_title">Uninstall?</string>
-	<string name="uninstall_confirmation_message">Screen rotation control by this app will be disabled. (You can re-enable it in this app\'s settings screen.) Disable and uninstall this app?</string>
+	<string name="uninstall_confirmation_message">Turn off and uninstall this app?</string>
 
 	<string name="accessibility_service_name">Rotation Overrider</string>
 	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
-	<string name="accessibility_service_prompt_instruction">"On the following screen, open '%1$s' and enable it.\n\n(If the switch doesn't work, try disabling all screen brightness and screen orientation apps.)"</string>
+	<string name="accessibility_service_prompt_instruction">"On the next screen, turn on '%1$s'.\n\n(If the switch doesn't work, try turning off all screen brightness and screen orientation apps.)"</string>
 
 	<string name="settings">Settings</string>
 
@@ -50,14 +50,14 @@
 	<string name="user_rotation_upside_down">Upside-down</string>
 	<string name="notification_hiding">Trying to hide the notification</string>
 
-	<string name="action_enable_auto_rotation">Enable Auto-Rotation</string>
-	<string name="action_disable_auto_rotation">Disable Auto-Rotation</string>
+	<string name="action_enable_auto_rotation">Use Auto-Rotation</string>
+	<string name="action_disable_auto_rotation">"Don't use Auto-Rotation"</string>
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
 	<string name="action_toggle_rotation_lock">Toggle Auto-Rotation</string>
 
-	<string name="app_disabled_message">%1$s is not enabled</string>
-	<string name="app_disabled_because_of_error">%1$s was disabled because of an error.</string>
+	<string name="app_disabled_message">%1$s is off</string>
+	<string name="app_disabled_because_of_error">%1$s was turned off because of an error.</string>
 	<string name="app_disabled_view_error_instruction">To see the error, open the app.</string>
 	<string name="app_disabled_view_error">View error</string>
 
@@ -72,22 +72,22 @@
 
 	<string name="preference_assist">Assist</string>
 	<string name="preference_assist_description">Control the screen using the home button</string>
-	<string name="preference_assist_instructions">If your device has a soft (not physical) home button, you can swipe up from the home button to control this app.\n\nIf swiping the home button doesn\'t work, your device may not support this feature. If swiping the home button opens a different app, first clear <b>that</b> app\'s defaults in the Android app settings, and then try again."</string>
-	<string name="preference_assist_instructions_lollipop">"You can long-press the home button to control this app. However, if your device uses the home button to take screenshots, you won't be able to take screenshots anymore.\n\nTo enable this, you must first set this app as Android's assist app. Do this now?"</string>
+	<string name="preference_assist_instructions">If your device has a soft (not physical) home button, you can swipe up from the home button to control this app.\n\nIf swiping the home button doesn\'t work, your device may not support this feature. If swiping the home button opens a different app, first clear <b>that</b> app\'s defaults in the Android app settings, and then try again.</string>
+	<string name="preference_assist_instructions_lollipop">"You can long-press the home button to control this app. However, if your device uses the home button to take screenshots, you won't be able to take screenshots anymore.\n\nTo use this, set this app as Android's assist app. Do this now?"</string>
 
 	<string name="preference_small_app">Small app</string>
 	<string name="preference_small_app_description">Small app shortcut for Sony phones</string>
-	<string name="preference_small_app_instructions">You may be able to access this from the recents screen. You could also drag the icon from the small app drawer to the bottom of the recents screen for quicker access.</string>
+	<string name="preference_small_app_instructions">You might be able to use this from the recents screen. You can also drag the icon from the small app drawer to the bottom of the recents screen to find it more quickly.</string>
 
-	<string name="preference_notifications">Notifications</string>
+	<string name="preference_notifications">Notification</string>
 
-	<string name="preference_show_notification">Show status</string>
-	<string name="preference_show_notification_description">"Show status in the notification drawer"</string>
+	<string name="preference_show_notification">Show</string>
+	<string name="preference_show_notification_description">"Show notification in the notification drawer"</string>
 
  	<string name="preference_all_notifications_title">All notifications</string>
-	<string name="preference_all_notifications_summary_allowed">Allowed</string>
-	<string name="preference_all_notifications_summary_blocked">Blocked</string>
-	<string name="preference_all_notifications_explanation">"On this version of Android, the status notification is needed to stop Android from killing the background service, so you cannot turn it off in this app. Instead, you can hide it by telling Android to block this app's notifications in the following screen."</string>
+	<string name="preference_all_notifications_summary_allowed">On</string>
+	<string name="preference_all_notifications_summary_blocked">Off</string>
+	<string name="preference_all_notifications_explanation">"The notification stops Android from killing the background service. To hide it, block this app's notifications in the next screen."</string>
 
 	<string name="preference_notification_priority_title">Notification priority</string>
 	<string name="preference_notification_priority_high">High</string>
@@ -95,8 +95,8 @@
 	<string name="preference_notification_priority_low">Low</string>
 
 	<string name="preference_notification_summary_priority">%1$s priority</string>
-	<string name="preference_notification_summary_hidden">Status not shown</string>
-	<string name="preference_notification_summary_blocked">All blocked</string>
+	<string name="preference_notification_summary_hidden">Off</string>
+	<string name="preference_notification_summary_blocked">All off</string>
 
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
@@ -106,33 +106,33 @@
 		<item quantity="one">%d app overridden</item>
 		<item quantity="other">%d apps overridden</item>
 	</plurals>
-	<string name="preference_forced_apps_summary_disabled">@string/warning_permission_required_title</string>
+	<string name="preference_forced_apps_summary_disabled" translatable="false">@string/warning_permission_required_title</string>
 
 	<string name="preference_accessibility_service_summary">Accessibility service</string>
 	<string name="preference_draw_overlays_summary">Draw over other apps</string>
-	<string name="preference_permissions_enable">Enable</string>
-	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and enables home screen rotation. Note that this may prevent apps from working correctly.</string>
+	<string name="preference_permissions_enable">Turn on</string>
+	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and lets you use home screen rotation. This might stop some apps from working correctly.</string>
 	<string name="preference_choose_apps">Choose apps</string>
 
 	<!-- Errors -->
-	<string name="environment_error_message">%1$s %2$s has been disabled.</string>
+	<string name="environment_error_message">%1$s %2$s has been turned off.</string>
 	<string name="environment_error_more">More</string>
 
-	<string name="environment_error_system_rotation_enabled_summary">System rotation enabled</string>
-	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was enabled.</string>
+	<string name="environment_error_system_rotation_enabled_summary">System rotation turned on</string>
+	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was turned on.</string>
 
 	<string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
-	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, re-enable the app on the following screen.</string>
+	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, turn this app back on in the next screen.</string>
 
 	<string name="environment_error_permission_needed_summary">Permission needed</string>
 
 	<!-- TODO: Rename the below since they are actually instructions rather than error messages -->
-	<string name="environment_error_permission_needed_draw_overlays_message">"In order to override other apps' screen orientations, this app needs permission to draw over other apps. Please enable this on the following screen."</string>
-	<string name="environment_error_permission_needed_system_settings_message">In order to control the screen rotation, this app needs permission to change system settings. Please enable this on the following screen.</string>
-	<string name="warning_permission_not_granted_system_settings">This app can\'t work without permission to change system settings.</string>
+	<string name="environment_error_permission_needed_draw_overlays_message">"To override other apps' screen orientations, this app needs permission to draw over other apps. Please give this app permission on the next screen."</string>
+	<string name="environment_error_permission_needed_system_settings_message">To control the screen rotation, this app needs permission to change system settings. Please give this app permission on the next screen.</string>
+	<string name="warning_permission_not_granted_system_settings">"This app can't work without permission to change system settings."</string>
 
-	<string name="error_no_market_app">Couldn\'t find App Market</string>
+	<string name="error_no_market_app">"Couldn't find App Market"</string>
 
 	<string name="warning_permission_required_title">Permission needed</string>
 	<string name="warning_permission_required_content">Touch to fix</string>

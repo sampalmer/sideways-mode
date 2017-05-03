@@ -19,7 +19,7 @@
 	<string name="email_app_chooser_title">Отправить отзыв</string>
 
 	<string name="uninstall_title">Удалить?</string>
-	<string name="uninstall_confirmation_message">С помощью этого приложения будет отключен экран управления вращением. (Вы можете повторно включить его в настройках экрана этого приложения.) Отключить и удалить это приложение?</string>
+	<string name="uninstall_confirmation_message">Отключить и удалить это приложение?</string>
 
 	<string name="settings">Настройки</string>
 
