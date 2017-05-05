@@ -40,8 +40,6 @@
 
 		<!-- Main Process -->
 
-		<activity android:name=".processes.ui.FirstRunActivity" />
-
 		<activity
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:label="@string/instructions_heading"
