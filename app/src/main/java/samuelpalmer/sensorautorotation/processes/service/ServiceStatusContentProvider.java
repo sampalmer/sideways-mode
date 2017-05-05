@@ -17,11 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import samuelpalmer.common.ParcelableBinder;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceStatusContentProvider extends ContentProvider {
 
@@ -41,13 +43,13 @@ public class ServiceStatusContentProvider extends ContentProvider {
 				final IBinder binder = getBinder(extras);
 				final ServerListener listener = subscribe(binder);
 
-				if (listener != null)
+				if (listener != null) {
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {
 							if (ServiceHolder.isRunning()) {
 								RotationService service = ServiceHolder.instance();
-
+								
 								//TODO: Replace all this with an EventRegistrarAdaptor and ServiceStatusDisplays.add()
 								ServiceStatusDisplayUpdater manager = service.serviceStatusDisplayUpdater;
 								ServiceStatus lastStatus = manager.getLastStatus();
@@ -56,6 +58,14 @@ public class ServiceStatusContentProvider extends ContentProvider {
 							}
 						}
 					});
+					
+					/*
+					 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
+					 * we want to make sure it's running. Otherwise the client will have to wait
+					 * a long time (or forever) to get the first service status update.
+					 */
+					new ServiceSynchroniser(ApplicationSettings.local()).updateFromSettings();
+				}
 
 				break;
 			}
