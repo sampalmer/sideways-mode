@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.instructions;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +21,8 @@ import android.widget.Button;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class InstructionsActivity extends UiActivity {
 	
@@ -143,8 +142,11 @@ public class InstructionsActivity extends UiActivity {
 	 */
 	private void completeInstructions() {
 		if (isFirstRun()) {
-			ApplicationSettings.remote().lastVersionUserInstructedAbout().set(VersionInfo.installedVersionCode());
-			startActivity(ComponentType.create(MainActivity.class).intent());
+			Intent intent = ComponentType.create(MainActivity.class)
+				.intent()
+				.putExtra(MainActivity.EXTRA_TUTORIAL_COMPLETE, true);
+			
+			startActivity(intent);
 		}
 		
 		finish();

@@ -12,17 +12,20 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends UiActivity {
 
-	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
-
+	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
+	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -63,7 +66,7 @@ public class MainActivity extends UiActivity {
 			return false; //Never want to mark the item as selected since none of the menu items result in a different UI within this activity.
 		}
 	};
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,15 +86,7 @@ public class MainActivity extends UiActivity {
 		assert supportActionBar != null;
 		supportActionBar.setDisplayHomeAsUpEnabled(true);
 		supportActionBar.setHomeButtonEnabled(true);
-
-		//Other stuff
-		if (getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT) == null) {
-			getFragmentManager()
-					.beginTransaction()
-					.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT)
-					.commit();
-		}
-
+		
 		navigation.setCheckedItem(R.id.action_home);
 	}
 
@@ -114,7 +109,26 @@ public class MainActivity extends UiActivity {
 			} catch (PendingIntent.CanceledException e) {
 				throw new RuntimeException(e);
 			}
+			
 			finish();
+			return;
+		}
+		
+		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.remote().lastVersionUserInstructedAbout();
+		if (!lastVersionUserInstructedAbout.hasValue()) {
+			boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
+			
+			if (!tutorialComplete) {
+				Intent intent = ComponentType.create(InstructionsActivity.class)
+					.intent()
+					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
+				startActivity(intent);
+				
+				finish();
+			}
+			else {
+				lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
+			}
 		}
 	}
 
