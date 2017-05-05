@@ -18,8 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class InstructionsActivity extends UiActivity {
 	
@@ -77,13 +81,11 @@ public class InstructionsActivity extends UiActivity {
 		mFinishButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				completeInstructions();
 			}
 		});
 		
 		updateBottomBar();
-		
-		setResult(RESULT_OK);
 	}
 	
 	private void setButtonDrawables(Button button, @DrawableRes int start, @DrawableRes int end) {
@@ -116,7 +118,7 @@ public class InstructionsActivity extends UiActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.instructions, menu);
 		
-		boolean isFirstRun = getIntent().getBooleanExtra(EXTRA_FIRST_RUN, false);
+		boolean isFirstRun = isFirstRun();
 		if (isFirstRun) {
 			ActionBar supportActionBar = getSupportActionBar();
 			assert supportActionBar != null;
@@ -129,11 +131,27 @@ public class InstructionsActivity extends UiActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.skip) {
-			finish();
+			completeInstructions();
 			return true;
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * Indicates that the user has finished working through the instructions.
+	 */
+	private void completeInstructions() {
+		if (isFirstRun()) {
+			ApplicationSettings.remote().lastVersionUserInstructedAbout().set(VersionInfo.installedVersionCode());
+			startActivity(ComponentType.create(MainActivity.class).intent());
+		}
+		
+		finish();
+	}
+	
+	private boolean isFirstRun() {
+		return getIntent().getBooleanExtra(EXTRA_FIRST_RUN, false);
 	}
 	
 	@Override
