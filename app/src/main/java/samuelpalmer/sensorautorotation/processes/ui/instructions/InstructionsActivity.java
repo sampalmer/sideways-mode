@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,8 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class InstructionsActivity extends UiActivity {
+	
+	public static final String EXTRA_FIRST_RUN = "first_run";
 	
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
@@ -97,6 +100,15 @@ public class InstructionsActivity extends UiActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.instructions, menu);
+		
+		boolean isFirstRun = getIntent().getBooleanExtra(EXTRA_FIRST_RUN, false);
+		if (isFirstRun) {
+			ActionBar supportActionBar = getSupportActionBar();
+			supportActionBar.setHomeButtonEnabled(false); // disable the button
+			supportActionBar.setDisplayHomeAsUpEnabled(false); // remove the left caret
+			supportActionBar.setDisplayShowHomeEnabled(false); // remove the icon
+		}
+		
 		return true;
 	}
 	
