@@ -29,7 +29,8 @@ public class MainActivity extends UiActivity {
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
-
+	private EnabledFragment enabledFragment;
+	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 		@SuppressWarnings("SameReturnValue")
 		@Override
@@ -88,6 +89,8 @@ public class MainActivity extends UiActivity {
 		supportActionBar.setHomeButtonEnabled(true);
 		
 		navigation.setCheckedItem(R.id.action_home);
+		
+		enabledFragment = (EnabledFragment) getFragmentManager().findFragmentById(R.id.fragment_enabled);
 	}
 
 	@Override
@@ -128,6 +131,15 @@ public class MainActivity extends UiActivity {
 			}
 			else {
 				lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
+				
+				/*
+				 * I received a number of error reports from users saying the app didn't work.
+				 * When I looked at their logs, it appeared they hadn't actually turned the app on.
+				 * (This is probably because they don't speak English.)
+				 *
+				 * So we'll enable the app automatically.
+				 */
+				enabledFragment.setEnabled();
 			}
 		}
 	}

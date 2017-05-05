@@ -128,5 +128,8 @@ public class EnabledFragment extends Fragment {
 				.makeText(getContext(), R.string.warning_permission_not_granted_system_settings, Toast.LENGTH_LONG)
 				.show();
 	}
-
+	
+	public void setEnabled() {
+		enabledControl.setChecked(true);
+	}
 }
