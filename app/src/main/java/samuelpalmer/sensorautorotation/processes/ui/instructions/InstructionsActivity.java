@@ -119,9 +119,8 @@ public class InstructionsActivity extends UiActivity {
 		boolean isFirstRun = getIntent().getBooleanExtra(EXTRA_FIRST_RUN, false);
 		if (isFirstRun) {
 			ActionBar supportActionBar = getSupportActionBar();
-			supportActionBar.setHomeButtonEnabled(false); // disable the button
-			supportActionBar.setDisplayHomeAsUpEnabled(false); // remove the left caret
-			supportActionBar.setDisplayShowHomeEnabled(false); // remove the icon
+			assert supportActionBar != null;
+			supportActionBar.setDisplayHomeAsUpEnabled(false); //Remove "back" button from action bar
 		}
 		
 		return true;
