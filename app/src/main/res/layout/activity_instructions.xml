@@ -28,9 +28,7 @@
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:text="@string/back"
-			android:drawableStart="@drawable/navigation_previous"
-			android:drawableLeft="@drawable/navigation_previous" />
+			android:text="@string/back" />
 
 		<RelativeLayout
 			android:layout_width="0dp"
@@ -43,9 +41,7 @@
 				android:id="@+id/next_button"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="@string/next"
-				android:drawableEnd="@drawable/navigation_next"
-				android:drawableRight="@drawable/navigation_next" />
+				android:text="@string/next" />
 
 			<Button
 				style="?android:attr/buttonBarButtonStyle"
@@ -55,8 +51,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="@string/finish"
-				android:drawableEnd="@drawable/navigation_finish"
-				android:drawableRight="@drawable/navigation_finish"
 				android:visibility="invisible"
 				/>
 

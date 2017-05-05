@@ -1,10 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.ui.instructions;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -54,7 +57,7 @@ public class InstructionsActivity extends UiActivity {
 			public void onPageScrollStateChanged(int state) {}
 		});
 		
-		copyTextColourToDrawables(mNextButton);
+		setButtonDrawables(mNextButton, 0, R.drawable.navigation_next);
 		mNextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -62,7 +65,7 @@ public class InstructionsActivity extends UiActivity {
 			}
 		});
 		
-		copyTextColourToDrawables(mPrevButton);
+		setButtonDrawables(mPrevButton, R.drawable.navigation_previous, 0);
 		mPrevButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -70,7 +73,7 @@ public class InstructionsActivity extends UiActivity {
 			}
 		});
 		
-		copyTextColourToDrawables(mFinishButton);
+		setButtonDrawables(mFinishButton, 0, R.drawable.navigation_finish);
 		mFinishButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -83,17 +86,29 @@ public class InstructionsActivity extends UiActivity {
 		setResult(RESULT_OK);
 	}
 	
-	private static void copyTextColourToDrawables(Button button) {
-		Drawable[] drawables = button.getCompoundDrawables();
-		for (int i = 0; i < drawables.length; ++i) {
-			Drawable original = drawables[i];
-			if (original != null) {
-				Drawable wrapped = DrawableCompat.wrap(original);
-				DrawableCompat.setTintList(wrapped, button.getTextColors());
-				drawables[i] = wrapped;
-			}
-		}
-		button.setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
+	private void setButtonDrawables(Button button, @DrawableRes int start, @DrawableRes int end) {
+		Drawable
+			startDrawable = makeButtonDrawable(button, start),
+			endDrawable = makeButtonDrawable(button, end);
+		
+		//The drawables must be set in code so the vector drawables work in old Android versions
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+			button.setCompoundDrawablesRelativeWithIntrinsicBounds(startDrawable, null, endDrawable, null);
+		else
+			button.setCompoundDrawablesWithIntrinsicBounds(startDrawable, null, endDrawable, null);
+	}
+	
+	/**
+	 * Makes a drawable whose colour matches the button's text colour.
+	 */
+	private Drawable makeButtonDrawable(Button button, int drawableId) {
+		if (drawableId == 0)
+			return null;
+		
+		Drawable original = ContextCompat.getDrawable(this, drawableId);
+		Drawable wrapped = DrawableCompat.wrap(original);
+		DrawableCompat.setTintList(wrapped, button.getTextColors());
+		return wrapped;
 	}
 	
 	@Override
