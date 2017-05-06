@@ -30,10 +30,6 @@
 		<item name="android:textStyle">normal</item>
 	</style>
 
-	<style name="ThemeOverlay.SwitchBar.SubSettings" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-		<item name="switchBarMarginStart">@dimen/switchbar_subsettings_margin_start</item>
-		<item name="switchBarMarginEnd">@dimen/switchbar_subsettings_margin_end</item>
-		<item name="switchBarBackgroundColor">@color/secondary_400</item>
-	</style>
+	<style name="ThemeOverlay.SwitchBar.SubSettings" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 </resources>

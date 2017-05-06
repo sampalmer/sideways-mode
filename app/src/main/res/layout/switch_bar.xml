@@ -22,7 +22,7 @@
     >
 
     <View android:id="@+id/switch_centre_placeholder"
-          android:layout_width="0dp"
+          android:layout_width="32dp"
           android:layout_height="match_parent"
           android:layout_centerHorizontal="true"
 	    />
@@ -36,8 +36,6 @@
               android:textColor="?android:attr/textColorPrimary"
               android:layout_toStartOf="@id/switch_centre_placeholder"
               android:layout_toLeftOf="@id/switch_centre_placeholder"
-              android:layout_marginEnd="?attr/switchBarMarginEnd"
-              android:layout_marginRight="?attr/switchBarMarginEnd"
 	    />
 
     <Switch android:id="@+id/switch_widget"
@@ -47,8 +45,6 @@
             android:background="@null"
             android:layout_toEndOf="@id/switch_centre_placeholder"
             android:layout_toRightOf="@id/switch_centre_placeholder"
-            android:layout_marginStart="?attr/switchBarMarginEnd"
-            android:layout_marginLeft="?attr/switchBarMarginEnd"
 	    />
 
 </merge>

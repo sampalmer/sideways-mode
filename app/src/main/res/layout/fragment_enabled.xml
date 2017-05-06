@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
 	>
 
-	<samuelpalmer.sensorautorotation.processes.ui.SwitchBar android:id="@+id/switch_bar"
-	                                       android:layout_height="?android:attr/actionBarSize"
-	                                       android:layout_width="match_parent"
-                                            android:theme="@style/ThemeOverlay.SwitchBar.SubSettings"
+	<samuelpalmer.sensorautorotation.processes.ui.SwitchBar
+		android:id="@+id/switch_bar"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+		android:theme="@style/ThemeOverlay.SwitchBar.SubSettings"
 		/>
-
 
 </RelativeLayout>

@@ -17,9 +17,9 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +53,6 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
     
     private ArrayList<OnSwitchChangeListener> mSwitchChangeListeners = new ArrayList<>();
 	
-	private static int[] XML_ATTRIBUTES = {R.attr.switchBarBackgroundColor};
-	
     public SwitchBar(Context context) {
         this(context, null);
     }
@@ -65,25 +63,23 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
 
     public SwitchBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-	    init(context, attrs);
+	    init(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public SwitchBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(context);
     }
 	
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context) {
 	    LayoutInflater.from(context).inflate(R.layout.switch_bar, this);
-	
-	    final TypedArray a = context.obtainStyledAttributes(attrs, XML_ATTRIBUTES);
-	    int switchBarBackgroundColor = a.getColor(0, 0);
-	    a.recycle();
 	
 	    mTextView = (TextView) findViewById(R.id.switch_text);
 	
 	    mSwitch = (Switch) findViewById(R.id.switch_widget);
+	
+	    int switchBarBackgroundColor = ContextCompat.getColor(context, R.color.secondary_400);
 	    setBackgroundColor(switchBarBackgroundColor);
 	    mSwitch.setBackgroundColor(switchBarBackgroundColor);
 	
