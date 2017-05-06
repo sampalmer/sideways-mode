@@ -69,8 +69,8 @@ public class PermissionNotificationManager extends State {
 					.create()
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent(PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION))
-					.setContentTitle(StringResource.get(R.string.warning_permission_required_title))
-					.setContentText(StringResource.get(R.string.warning_permission_required_content))
+					.setContentTitle(StringResource.get(R.string.permission_needed_summary))
+					.setContentText(StringResource.get(R.string.permission_touch_to_fix))
 					.setSmallIcon(R.drawable.notification_error)
 					.build();
 

@@ -57,7 +57,7 @@ public class Setting<T> {
 			&&
 			!Settings.System.canWrite(CurrentProcess.context())
 		) {
-			new GenericError(R.string.environment_error_permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
+			new GenericError(R.string.permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
 			return;
 		}
 

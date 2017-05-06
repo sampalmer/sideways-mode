@@ -95,8 +95,8 @@ public class EnabledFragment extends Fragment {
 	@TargetApi(Build.VERSION_CODES.M)
 	private void requestSystemSettingsPermission() {
 		new AlertDialog.Builder(getContext())
-				.setTitle(R.string.environment_error_permission_needed_summary)
-				.setMessage(R.string.environment_error_permission_needed_system_settings_message)
+				.setTitle(R.string.permission_needed_summary)
+				.setMessage(R.string.permission_needed_system_settings)
 				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {}
@@ -125,7 +125,7 @@ public class EnabledFragment extends Fragment {
 			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
 		else
 			Toast
-				.makeText(getContext(), R.string.warning_permission_not_granted_system_settings, Toast.LENGTH_LONG)
+				.makeText(getContext(), R.string.permission_warning_system_settings, Toast.LENGTH_LONG)
 				.show();
 	}
 	

@@ -65,8 +65,8 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	private void grantPermissions() {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
-					.setTitle(R.string.preference_accessibility_service_summary)
-					.setMessage(StringResource.format(R.string.accessibility_service_prompt_instruction, R.string.accessibility_service_name))
+					.setTitle(R.string.permission_needed_accessibility_service_summary)
+					.setMessage(StringResource.format(R.string.permission_needed_accessibility_service_description, R.string.accessibility_service_name))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {}
@@ -100,8 +100,8 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	private void grantOverlayPermission() {
 		if (!ScreenOrientationEnforcer.hasPermissionToStart(context)) {
 			new AlertDialog.Builder(context)
-					.setTitle(R.string.preference_draw_overlays_summary)
-					.setMessage(R.string.environment_error_permission_needed_draw_overlays_message)
+					.setTitle(R.string.permission_needed_overlays_summary)
+					.setMessage(R.string.permission_needed_overlays_description)
 					.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {}

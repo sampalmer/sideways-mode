@@ -64,7 +64,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		final int quantity = forcedApps.get().size();
 
 		if (quantity > 0 && !(accessibilityServiceEnabledStateMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(getActivity())))
-			forcedAppsPreference.setSummary(R.string.preference_forced_apps_summary_disabled);
+			forcedAppsPreference.setSummary(R.string.permission_needed_summary);
 		else {
 			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 			forcedAppsPreference.setSummary(quantityString);

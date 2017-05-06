@@ -3,4 +3,4 @@
           android:layout_height="wrap_content"
           android:focusable="false"
           android:clickable="false"
-          android:text="@string/preference_permissions_enable" />
+          android:text="@string/permission_needed_fix" />
