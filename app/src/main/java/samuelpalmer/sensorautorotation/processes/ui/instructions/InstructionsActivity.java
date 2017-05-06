@@ -178,30 +178,18 @@ public class InstructionsActivity extends UiActivity {
 	
 	private static class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 		
-		private static final InstructionsPageFragment[] PAGES = new InstructionsPageFragment[] {
-			InstructionsPageFragment.newInstance(R.string.instructions_introduction_heading, R.string.instructions_introduction_contents, R.string.app_name_full),
-			InstructionsPageFragment.newInstance(R.string.instructions_modes_heading, R.string.instructions_modes_contents, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait),
-			InstructionsPageFragment.newInstance(R.string.instructions_toggling_heading, R.string.instructions_toggling_contents),
-			InstructionsPageFragment.newInstance(R.string.instructions_auto_rotation_heading, R.string.instructions_auto_rotation_contents, R.string.screen_rotation_enabled, R.string.app_name_full),
-			InstructionsPageFragment.newInstance(R.string.instructions_position_heading, R.string.instructions_position_contents),
-			InstructionsPageFragment.newInstance(R.string.instructions_position_changing_heading, R.string.instructions_position_changing_contents, R.string.action_rotate_left, R.string.action_rotate_right),
-			InstructionsPageFragment.newInstance(R.string.instructions_overridden_heading, R.string.instructions_overridden_contents, R.string.app_name_full, R.string.preference_forced_apps_title),
-			InstructionsPageFragment.newInstance(R.string.instructions_uninstalling_heading, R.string.instructions_uninstalling_contents, R.string.action_uninstall, R.string.app_name_full),
-			InstructionsPageFragment.newInstance(R.string.instructions_help_heading, R.string.instructions_help_contents, R.string.action_rotate_left, R.string.action_rotate_right)
-		};
-		
 		public ScreenSlidePagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
 		
 		@Override
 		public Fragment getItem(int position) {
-			return PAGES[position];
+			return InstructionsPages.PAGES[position].makePage();
 		}
 		
 		@Override
 		public int getCount() {
-			return PAGES.length;
+			return InstructionsPages.PAGES.length;
 		}
 		
 	}
