@@ -28,33 +28,12 @@
 		    android:layout_centerInParent="true"
 			/>
 
-		<LinearLayout
+		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDisabledContents
+			android:id="@+id/dashboard_disabled"
 			android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/dashboard_disabled"
+			android:layout_height="wrap_content"
 			android:visibility="gone"
-		    android:orientation="vertical"
-			android:gravity="center_horizontal"
-			>
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/dashboard_disabled_text"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="?android:attr/textColorPrimary"
-				android:textStyle="bold"
-				android:gravity="center_horizontal"
-				/>
-
-			<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/dashboard_disabled_view_error"
-				android:text="@string/app_disabled_view_error"
-				/>
-
-		</LinearLayout>
+			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardEnabledContents
 			android:id="@+id/dashboard_enabled_contents"
