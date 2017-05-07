@@ -1,0 +1,5 @@
+• Added dashboard screen
+• Tried to fix issue where the app shows sensor errors on devices with working sensors
+• Made sensor errors easier to understand
+• Tells users to uninstall the app if their rotation sensors are broken
+• Other fixes and improvements
