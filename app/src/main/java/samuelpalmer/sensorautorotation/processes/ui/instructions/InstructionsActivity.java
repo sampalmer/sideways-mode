@@ -60,7 +60,9 @@ public class InstructionsActivity extends UiActivity {
 			public void onPageScrollStateChanged(int state) {}
 		});
 		
-		setButtonDrawables(mNextButton, 0, R.drawable.navigation_next);
+		boolean isLtr = Build.VERSION.SDK_INT < 17 || getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_LTR;
+		
+		setButtonDrawables(mNextButton, 0, isLtr ? R.drawable.navigation_right : R.drawable.navigation_left);
 		mNextButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -68,7 +70,7 @@ public class InstructionsActivity extends UiActivity {
 			}
 		});
 		
-		setButtonDrawables(mPrevButton, R.drawable.navigation_previous, 0);
+		setButtonDrawables(mPrevButton, isLtr ? R.drawable.navigation_left : R.drawable.navigation_right, 0);
 		mPrevButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
