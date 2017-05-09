@@ -17,7 +17,7 @@
 	    <fragment
 		    android:id="@+id/fragment_enabled"
 		    android:name="samuelpalmer.sensorautorotation.processes.ui.EnabledFragment"
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    />
 
