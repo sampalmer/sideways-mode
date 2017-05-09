@@ -4,6 +4,9 @@
           package="samuelpalmer.sensorautorotation"
 		android:installLocation="internalOnly">
 
+	<!-- For some reason, RtlViewPager requires API 15, but it still seems to work OK on 14 (from my brief testing) -->
+	<uses-sdk tools:overrideLibrary="com.booking.widget.rtlviewpager" />
+
 	<!-- To disable system rotation, set user rotation -->
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
