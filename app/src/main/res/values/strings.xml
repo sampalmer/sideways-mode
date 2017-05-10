@@ -24,8 +24,7 @@
 	<string name="uninstall_title">Uninstall?</string>
 	<string name="uninstall_confirmation_message">Turn off and uninstall this app?</string>
 
-	<string name="accessibility_service_name">Rotation Overrider</string>
-	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
+	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
 	<string name="settings">Settings</string>
 
