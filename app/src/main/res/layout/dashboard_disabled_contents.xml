@@ -8,7 +8,7 @@
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="?android:attr/textColorPrimary"
 		android:textStyle="bold"
-		android:gravity="center_horizontal"
+		android:text="@string/app_disabled_message"
 		/>
 
 	<Button
