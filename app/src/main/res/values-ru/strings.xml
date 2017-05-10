@@ -53,8 +53,6 @@
 
 	<string name="notification_hiding">Попытаться скрыть уведомление</string>
 
-	<string name="action_enable_auto_rotation">Включить автоповорот</string>
-	<string name="action_disable_auto_rotation">Отключить автоповорот</string>
 	<string name="action_rotate_left">Повернуть влево</string>
 	<string name="action_rotate_right">Повернуть вправо</string>
 	<string name="action_toggle_rotation_lock">Переключить автоповорот</string>

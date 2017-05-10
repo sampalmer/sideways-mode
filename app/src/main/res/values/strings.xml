@@ -51,8 +51,6 @@
 	<string name="user_rotation_upside_down">Upside-down</string>
 	<string name="notification_hiding">Trying to hide the notification</string>
 
-	<string name="action_enable_auto_rotation">Use Auto-Rotation</string>
-	<string name="action_disable_auto_rotation">"Don't use Auto-Rotation"</string>
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
 	<string name="action_toggle_rotation_lock">Toggle Auto-Rotation</string>
