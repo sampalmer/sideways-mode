@@ -32,7 +32,7 @@ public class NotificationsSummary extends EventRegistrarAdaptor {
 			if (showNotificationSetting.get())
 				return getNotificationPriority();
 			else
-				return StringResource.get(R.string.preference_notification_summary_hidden);
+				return StringResource.get(R.string.off);
 		}
 		else {
 			if (notificationManager.areNotificationsEnabled())

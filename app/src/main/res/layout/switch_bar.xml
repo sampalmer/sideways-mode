@@ -34,7 +34,7 @@
 	              android:ellipsize="end"
 	              android:textAppearance="@style/TextAppearance.AppCompat.Title"
 	              android:textColor="?android:attr/textColorPrimary"
-	              android:text="@string/switchbar_off"
+	              android:text="@string/off"
 		    />
 
 		<View android:id="@+id/switch_centre_placeholder"

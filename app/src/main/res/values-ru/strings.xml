@@ -29,9 +29,13 @@
 
 	<string name="settings">Настройки</string>
 
-	<!-- SwitchBar -->
-	<string name="switchbar_on">Включить</string>
-	<string name="switchbar_off">Выключить</string>
+	<!-- Common -->
+	<string name="on">Включить</string>
+	<string name="off">Выключить</string>
+	<string name="back">Назад</string>
+	<string name="next">Далее</string>
+	<string name="skip">Пропустить</string>
+	<string name="finish">Заверишть</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Автоповорот</string>
@@ -73,8 +77,6 @@
 	<string name="preference_show_notification">Показать</string>
 
 	<string name="preference_all_notifications_title">Все заметки</string>
-	<string name="preference_all_notifications_summary_allowed">Включить</string>
-	<string name="preference_all_notifications_summary_blocked">Выключить</string>
 
 	<string name="preference_notification_priority_title">Приоритет уведомления</string>
 	<string name="preference_notification_priority_high">Высокий</string>
@@ -82,7 +84,6 @@
 	<string name="preference_notification_priority_low">Низкий</string>
 
 	<string name="preference_notification_summary_priority">%1$s приоритет</string>
-	<string name="preference_notification_summary_hidden">Выключить</string>
 	<string name="preference_notification_summary_blocked">Все выключить</string>
 
 	<string name="preference_allow_upside_down_screen_title">Разрешить перевернутый экран</string>
@@ -145,11 +146,6 @@
 	<string name="instructions_help_contents">
 		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте %1$s и %2$s кнопки в уведомлении, чтобы исправить это.\n\nЕсли происходят сбои, пожалуйста, нажмите кнопку "Отчет", так я смогу решить пробоему.\n\nЕсли у вас есть какие-либо замечания, вы можете их отправить из магазина или меню этого приложения.
 	</string>
-
-	<string name="back">Назад</string>
-	<string name="next">Далее</string>
-	<string name="skip">Пропустить</string>
-	<string name="finish">Заверишть</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Проблемы устройства</string>

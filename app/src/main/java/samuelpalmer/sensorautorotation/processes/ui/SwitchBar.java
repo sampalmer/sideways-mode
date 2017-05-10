@@ -96,7 +96,7 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
     }
     
     private void setTextViewLabel(boolean isChecked) {
-        mTextView.setText(isChecked ? R.string.switchbar_on : R.string.switchbar_off);
+        mTextView.setText(isChecked ? R.string.on : R.string.off);
     }
     
     public void setChecked(boolean checked) {
