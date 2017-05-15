@@ -86,7 +86,7 @@ abstract class WindowOrientationListener {
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
 	private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
 	
-	private static final List<Integer> makePrioritisedSensorTypes() {
+	static {
 		ArrayList<Integer> result = new ArrayList<>();
 		
 		// Got a couple of crashes related to "gesture" sensor events.
@@ -101,10 +101,10 @@ abstract class WindowOrientationListener {
 			Sensor.TYPE_ACCELEROMETER
 		));
 		
-		return result;
+		prioritisedSensorTypes = result;
 	}
 	
-	private static final List<Integer> prioritisedSensorTypes = makePrioritisedSensorTypes();
+	private static final List<Integer> prioritisedSensorTypes;
 	private boolean mMeasuringAcceleration;
 	private int mLastSensorType;
 
