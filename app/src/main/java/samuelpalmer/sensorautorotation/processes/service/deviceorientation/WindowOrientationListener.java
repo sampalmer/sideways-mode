@@ -34,6 +34,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -84,13 +85,26 @@ abstract class WindowOrientationListener {
 	// * Moto X (2nd Gen) (victara)
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
 	private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
-
-	private static final List<Integer> prioritisedSensorTypes = Arrays.asList(
-		Sensor.TYPE_GAME_ROTATION_VECTOR,
-		Sensor.TYPE_ROTATION_VECTOR,
-		Sensor.TYPE_GRAVITY,
-		Sensor.TYPE_ACCELEROMETER
-	);
+	
+	private static final List<Integer> makePrioritisedSensorTypes() {
+		ArrayList<Integer> result = new ArrayList<>();
+		
+		// Got a couple of crashes related to "gesture" sensor events.
+		// Maybe it was because TYPE_GAME_ROTATION_VECTOR's value had a different meaning on those devices?
+		// So only supporting this sensor type on devices after it was introduced.
+		if (Build.VERSION.SDK_INT >= 18)
+			result.add(Sensor.TYPE_GAME_ROTATION_VECTOR);
+		
+		result.addAll(Arrays.asList(
+			Sensor.TYPE_ROTATION_VECTOR,
+			Sensor.TYPE_GRAVITY,
+			Sensor.TYPE_ACCELEROMETER
+		));
+		
+		return result;
+	}
+	
+	private static final List<Integer> prioritisedSensorTypes = makePrioritisedSensorTypes();
 	private boolean mMeasuringAcceleration;
 	private int mLastSensorType;
 
