@@ -634,13 +634,37 @@ abstract class WindowOrientationListener {
 		final float[] mRotationMatrixFromVector = new float[9];
 		final float[] mRotationMatrix = new float[9];
 		final float[] orientationVals = new float[3];
-
+		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			if (!mEnabled)
 				return;
-
-			//This method should be called a lot, so we only want to do this stuff when necessary.
+			
+			// Somehow a couple of devices have crashed due to either event or event.sensor being null.
+			// The below error handling code will hopefully provide enough information to fix the crashes.
+			if (event == null)
+				throw new RuntimeException("Sensor event is null");
+			if (event.sensor == null) {
+				StringBuilder error = new StringBuilder("Event didn't specify which sensor it was for.\n");
+				
+				error.append("timestamp = ");
+				error.append(event.timestamp);
+				error.append("\n");
+				
+				error.append("values = ");
+				if (event.values == null)
+					error.append("null");
+				else
+					for (int i = 0; i < event.values.length; ++i) {
+						error.append(event.values[i]);
+						if (i != event.values.length - 1)
+							error.append(", ");
+					}
+				
+				throw new RuntimeException(error.toString());
+			}
+			
+			//This method will be called a lot, so we only want to do this stuff when necessary.
 			if (event.sensor.getType() != mLastSensorType) {
 				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
 
