@@ -106,7 +106,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		String body =
 			isProblemReport
 			?
-			String.format("Logcat:\n%s\n\nDevice info:\n%s\n\nProblem:\n%s\n", problemLogs, DiagnosticInfo.deviceInfo(), descriptionText)
+			String.format("Problem:\n%s\n\nDevice info:\n%s\n\nLogs:\n%s\n\n", descriptionText, DiagnosticInfo.deviceInfo(), problemLogs)
 			:
 			descriptionText;
 		
