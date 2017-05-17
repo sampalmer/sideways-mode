@@ -2,11 +2,14 @@ package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
@@ -60,7 +63,8 @@ public class EnterFeedbackActivity extends UiActivity {
 				throw new RuntimeException("Unknown feedback type: " + type);
 		}
 
-
+		// This activity saves the logs as soon as it's created.
+		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
 		if (isProblemReport) {
 			if (savedInstanceState == null)
 				problemLogs = DiagnosticInfo.logcat();
@@ -96,17 +100,19 @@ public class EnterFeedbackActivity extends UiActivity {
 			description.setError(StringResource.get(R.string.enter_feedback_nofeedback));
 			return;
 		}
-
+		
+		PackageInfo appInfo = VersionInfo.packageInfo();
 		String subject = StringResource.format(
 			isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject,
 			R.string.app_name_full,
-			VersionInfo.packageInfo().versionName
+			appInfo.versionName
 		).toString();
-
+		
+		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body =
 			isProblemReport
 			?
-			String.format("Problem:\n%s\n\nDevice info:\n%s\n\nLogs:\n%s\n\n", descriptionText, DiagnosticInfo.deviceInfo(), problemLogs)
+			String.format("Problem:\n%s\n\nDevice info:\n%s\n\nApp version:\n%s\n\nLogs:\n%s\n\n", descriptionText, DiagnosticInfo.deviceInfo(), fullAppVersion, problemLogs)
 			:
 			descriptionText;
 		
