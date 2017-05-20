@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -9,17 +8,13 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
 import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
@@ -35,9 +30,7 @@ public class DashboardView extends FrameLayout {
 
 	private final boolean showSettings;
 
-	private ViewGroup disabledSection;
-	private TextView disabledText;
-	private Button disabledViewError;
+	private DashboardDisabledContents disabledSection;
 
 	private ProgressBar progressBar;
 	private DashboardEnabledContents contents;
@@ -80,9 +73,7 @@ public class DashboardView extends FrameLayout {
 		else
 			settingsButton.setVisibility(View.GONE);
 
-		disabledSection = (ViewGroup) findViewById(R.id.dashboard_disabled);
-		disabledText = (TextView) findViewById(R.id.dashboard_disabled_text);
-		disabledViewError = (Button) findViewById(R.id.dashboard_disabled_view_error);
+		disabledSection = (DashboardDisabledContents) findViewById(R.id.dashboard_disabled);
 
 		progressBar = (ProgressBar) findViewById(R.id.dashboard_progress);
 		contents = (DashboardEnabledContents) findViewById(R.id.dashboard_enabled_contents);
@@ -169,32 +160,8 @@ public class DashboardView extends FrameLayout {
 
 		if (!isEnabled) {
 			ViewHelpers.ensureVisibility(contents, View.GONE);
-			
-			final EnvironmentError lastError = EnvironmentError.lastError();
-
-			//Not showing any error details so the user has to view the full error info and actions to reduce chance of user blaming developer and sending useless error reports.
-			disabledText.setText(StringResource.format(lastError == null ? R.string.app_disabled_message : R.string.app_disabled_because_of_error, R.string.app_name_full));
-
-			if (lastError == null) {
-				disabledViewError.setVisibility(View.GONE);
-				disabledViewError.setOnClickListener(null);
-			}
-			else {
-				disabledViewError.setVisibility(View.VISIBLE);
-				disabledViewError.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						try {
-							lastError.showError().send();
-						} catch (PendingIntent.CanceledException e) {
-							throw new RuntimeException(e);
-						}
-
-						if (DashboardDialogCoordinator.dialogExists())
-							DashboardDialogCoordinator.dismissDialog();
-					}
-				});
-			}
+			EnvironmentError lastError = EnvironmentError.lastError();
+			disabledSection.setLastError(lastError);
 		}
 		else {
 			//Don't want the view to change size after loading; it should stay the same

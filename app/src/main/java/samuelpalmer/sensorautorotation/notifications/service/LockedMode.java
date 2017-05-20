@@ -42,7 +42,7 @@ class LockedMode implements Mode {
 
 	@Override
 	public int toggleToOtherModeResourceId() {
-		return R.string.action_enable_auto_rotation;
+		return R.string.action_toggle_rotation_lock;
 	}
 
 	@Override

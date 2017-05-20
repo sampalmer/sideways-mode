@@ -1,0 +1,7 @@
+• Added dashboard screen
+• Tried to fix issue where the app shows sensor errors on devices with working sensors
+• Updated Russian translation
+• Made sensor errors easier to understand
+• Tells users to uninstall the app if their rotation sensors are broken
+• Tried to fix fix crash on some old devices that have gesture sensors
+• Other fixes and improvements

@@ -1,8 +1,14 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.util.Log;
 
+import java.util.List;
+
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.SystemServices;
 
 /**
  * I'm using this instead of binding since this is mostly a single-threaded process and this
@@ -31,8 +37,8 @@ abstract class ServiceHolder {
 
 	public static void started(RotationService instance) {
 		if (isRunning())
-			throw new RuntimeException("Already running");
-
+			throw makeServiceAlreadyRunningError(instance);
+		
 		ServiceHolder.instance = instance;
 		onChange.report();
 
@@ -48,5 +54,35 @@ abstract class ServiceHolder {
 
 		Log.i(TAG, "Service stopped");
 	}
-
+	
+	/**
+	 * One user has actually run into this situation several times. This method captures
+	 * some extra info to help the next time it happens.
+	 */
+	private static RuntimeException makeServiceAlreadyRunningError(RotationService instance) {
+		ComponentName rotationServiceComponent = new ComponentName(CurrentProcess.context(), RotationService.class);
+		
+		List<ActivityManager.RunningServiceInfo> runningServices = SystemServices.activityManager().getRunningServices(Integer.MAX_VALUE);
+		int serviceCount = 0;
+		StringBuilder runningServiceDescription = new StringBuilder("Running instances:\n");
+		
+		for (ActivityManager.RunningServiceInfo runningService : runningServices) {
+			if (rotationServiceComponent.equals(runningService.service)) {
+				++serviceCount;
+				
+				runningServiceDescription.append(serviceCount).append(".activeSince = ").append(runningService.activeSince).append('\n');
+				runningServiceDescription.append(serviceCount).append(".crashCount = ").append(runningService.crashCount).append('\n');
+				runningServiceDescription.append(serviceCount).append(".foreground = ").append(runningService.foreground).append('\n');
+				runningServiceDescription.append(serviceCount).append(".lastActivityTime = ").append(runningService.lastActivityTime).append('\n');
+				runningServiceDescription.append(serviceCount).append(".restarting = ").append(runningService.restarting).append('\n');
+				runningServiceDescription.append(serviceCount).append(".flags = ").append(runningService.flags).append('\n');
+				runningServiceDescription.append(serviceCount).append(".started = ").append(runningService.started).append('\n');
+			}
+		}
+		
+		if (ServiceHolder.instance == instance)
+			return new RuntimeException("This instance of the service is already running.\n" + runningServiceDescription);
+		else
+			return new RuntimeException("Another instance of this service is running.\n" + runningServiceDescription);
+	}
 }

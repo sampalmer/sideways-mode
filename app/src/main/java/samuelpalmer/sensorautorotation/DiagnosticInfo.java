@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.LocaleList;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -13,12 +15,31 @@ import java.util.Locale;
 public class DiagnosticInfo {
 
 	public static String deviceInfo() {
-		return String.format(Locale.US, "%s %s (%s/%s/%s)\nAndroid %s %s (%s) (SDK %d)",
+		return String.format(Locale.US, "Device: %s %s (%s/%s/%s)\nOS: Android %s %s (%s) (SDK %d)\nLanguage: %s",
 			Build.BRAND, Build.MODEL, Build.DEVICE, Build.PRODUCT, Build.HARDWARE,
-			VERSION.RELEASE, VERSION.CODENAME, VERSION.INCREMENTAL, VERSION.SDK_INT
+			VERSION.RELEASE, VERSION.CODENAME, VERSION.INCREMENTAL, VERSION.SDK_INT,
+			getPrimaryLanguageName() // This is so I can reply to the user in their own language
 		);
 	}
-
+	
+	private static String getPrimaryLanguageName() {
+		Configuration configuration = CurrentProcess.context().getResources().getConfiguration();
+		
+		Locale locale;
+		if (Build.VERSION.SDK_INT >= 24) {
+			LocaleList locales = configuration.getLocales();
+			locale = locales.size() <= 0 ? null : locales.get(0);
+		}
+		else
+			//noinspection deprecation
+			locale = configuration.locale;
+		
+		if (locale == null)
+			return "Unknown";
+		else
+			return locale.getDisplayName(Locale.ENGLISH);
+	}
+	
 	/**
 	 * Best effort
 	 *

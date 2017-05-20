@@ -34,6 +34,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -84,13 +85,26 @@ abstract class WindowOrientationListener {
 	// * Moto X (2nd Gen) (victara)
 	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
 	private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
-
-	private static final List<Integer> prioritisedSensorTypes = Arrays.asList(
-		Sensor.TYPE_GAME_ROTATION_VECTOR,
-		Sensor.TYPE_ROTATION_VECTOR,
-		Sensor.TYPE_GRAVITY,
-		Sensor.TYPE_ACCELEROMETER
-	);
+	
+	static {
+		ArrayList<Integer> result = new ArrayList<>();
+		
+		// Got a couple of crashes related to "gesture" sensor events.
+		// Maybe it was because TYPE_GAME_ROTATION_VECTOR's value had a different meaning on those devices?
+		// So only supporting this sensor type on devices after it was introduced.
+		if (Build.VERSION.SDK_INT >= 18)
+			result.add(Sensor.TYPE_GAME_ROTATION_VECTOR);
+		
+		result.addAll(Arrays.asList(
+			Sensor.TYPE_ROTATION_VECTOR,
+			Sensor.TYPE_GRAVITY,
+			Sensor.TYPE_ACCELEROMETER
+		));
+		
+		prioritisedSensorTypes = result;
+	}
+	
+	private static final List<Integer> prioritisedSensorTypes;
 	private boolean mMeasuringAcceleration;
 	private int mLastSensorType;
 
@@ -634,13 +648,37 @@ abstract class WindowOrientationListener {
 		final float[] mRotationMatrixFromVector = new float[9];
 		final float[] mRotationMatrix = new float[9];
 		final float[] orientationVals = new float[3];
-
+		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			if (!mEnabled)
 				return;
-
-			//This method should be called a lot, so we only want to do this stuff when necessary.
+			
+			// Somehow a couple of devices have crashed due to either event or event.sensor being null.
+			// The below error handling code will hopefully provide enough information to fix the crashes.
+			if (event == null)
+				throw new RuntimeException("Sensor event is null");
+			if (event.sensor == null) {
+				StringBuilder error = new StringBuilder("Event didn't specify which sensor it was for.\n");
+				
+				error.append("timestamp = ");
+				error.append(event.timestamp);
+				error.append("\n");
+				
+				error.append("values = ");
+				if (event.values == null)
+					error.append("null");
+				else
+					for (int i = 0; i < event.values.length; ++i) {
+						error.append(event.values[i]);
+						if (i != event.values.length - 1)
+							error.append(", ");
+					}
+				
+				throw new RuntimeException(error.toString());
+			}
+			
+			//This method will be called a lot, so we only want to do this stuff when necessary.
 			if (event.sensor.getType() != mLastSensorType) {
 				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
 

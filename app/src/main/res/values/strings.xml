@@ -24,14 +24,17 @@
 	<string name="uninstall_title">Uninstall?</string>
 	<string name="uninstall_confirmation_message">Turn off and uninstall this app?</string>
 
-	<string name="accessibility_service_name">Rotation Overrider</string>
-	<string name="accessibility_service_description">"Part of Auto Rotation for Lying Down. Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
+	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
 	<string name="settings">Settings</string>
 
-	<!-- SwitchBar -->
-	<string name="switchbar_on">On</string>
-	<string name="switchbar_off">Off</string>
+	<!-- Common -->
+	<string name="on">On</string>
+	<string name="off">Off</string>
+	<string name="back">Back</string>
+	<string name="next">Next</string>
+	<string name="skip">Skip</string>
+	<string name="finish">Finish</string>
 
 	<!-- Notification -->
 	<string name="screen_rotation_enabled">Auto-Rotate</string>
@@ -48,8 +51,6 @@
 	<string name="user_rotation_upside_down">Upside-down</string>
 	<string name="notification_hiding">Trying to hide the notification</string>
 
-	<string name="action_enable_auto_rotation">Use Auto-Rotation</string>
-	<string name="action_disable_auto_rotation">"Don't use Auto-Rotation"</string>
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
 	<string name="action_toggle_rotation_lock">Toggle Auto-Rotation</string>
@@ -83,8 +84,6 @@
 	<string name="preference_show_notification_description">"Show notification in the notification drawer"</string>
 
  	<string name="preference_all_notifications_title">All notifications</string>
-	<string name="preference_all_notifications_summary_allowed">On</string>
-	<string name="preference_all_notifications_summary_blocked">Off</string>
 	<string name="preference_all_notifications_explanation">"The notification stops Android from killing the background service. To hide it, block this app's notifications in the next screen."</string>
 
 	<string name="preference_notification_priority_title">Notification priority</string>
@@ -93,7 +92,6 @@
 	<string name="preference_notification_priority_low">Low</string>
 
 	<string name="preference_notification_summary_priority">%1$s priority</string>
-	<string name="preference_notification_summary_hidden">Off</string>
 	<string name="preference_notification_summary_blocked">All off</string>
 
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
@@ -169,11 +167,6 @@
 	<string name="instructions_help_contents">
 		If the screen faces the wrong way:\n1. Ensure the app you\'re using isn\'t controlling the screen.\n2. Use the %1$s and %2$s buttons in the notification to correct it.\n\nIf this app crashes, please press the "Report" button so I can fix the problem.\n\nIf you have any feedback, you can send it from the store listing or the menu in this app.
 	</string>
-
-	<string name="back">Back</string>
-	<string name="next">Next</string>
-	<string name="skip">Skip</string>
-	<string name="finish">Finish</string>
 
 	<!-- Enter feedback -->
 	<string name="report_problem_hint">Describe the problem here</string>

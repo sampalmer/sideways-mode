@@ -28,7 +28,7 @@ class AutoRotationMode implements Mode {
 
 	@Override
 	public int toggleToOtherModeResourceId() {
-		return R.string.action_disable_auto_rotation;
+		return R.string.action_toggle_rotation_lock;
 	}
 
 	@Override

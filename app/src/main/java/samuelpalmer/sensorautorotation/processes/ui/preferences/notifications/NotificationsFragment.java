@@ -150,7 +150,7 @@ public class NotificationsFragment extends PreferenceFragment {
 
 		if (!ServiceNotificationHider.isSupported()) {
 			boolean notificationsAllowed = notificationManager.areNotificationsEnabled();
-			allNotificationsPreference.setSummary(notificationsAllowed ? R.string.preference_all_notifications_summary_allowed : R.string.preference_all_notifications_summary_blocked);
+			allNotificationsPreference.setSummary(notificationsAllowed ? R.string.on : R.string.off);
 		}
 	}
 

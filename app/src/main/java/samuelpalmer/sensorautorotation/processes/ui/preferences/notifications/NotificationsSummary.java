@@ -31,11 +31,11 @@ public class NotificationsSummary extends EventRegistrarAdaptor {
 		if (allNotificationsBlocked())
 			return StringResource.get(R.string.preference_notification_summary_blocked);
 		else if (dashboardNotificationHidden())
-			return StringResource.get(R.string.preference_notification_summary_hidden);
+			return StringResource.get(R.string.off);
 		else if (notificationPrioritySupported())
 			return StringResource.format(R.string.preference_notification_summary_priority, notificationPrioritySetting.get().stringResourceId);
 		else
-			return StringResource.get(R.string.switchbar_on);
+			return StringResource.get(R.string.on);
 	}
 
 	private boolean allNotificationsBlocked() {
