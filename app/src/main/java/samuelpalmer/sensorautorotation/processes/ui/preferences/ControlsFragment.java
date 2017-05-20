@@ -48,7 +48,7 @@ public class ControlsFragment extends PreferenceFragment {
 		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (Build.VERSION.SDK_INT >= 21)
+				if (Build.VERSION.SDK_INT >= 23)
 					new AlertDialog.Builder(getActivity())
 							.setTitle(R.string.preference_assist)
 							.setMessage(R.string.preference_assist_instructions_lollipop)
