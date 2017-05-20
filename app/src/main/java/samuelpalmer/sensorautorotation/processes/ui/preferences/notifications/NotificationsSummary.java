@@ -35,7 +35,7 @@ public class NotificationsSummary extends EventRegistrarAdaptor {
 		else if (notificationPrioritySupported())
 			return StringResource.format(R.string.preference_notification_summary_priority, notificationPrioritySetting.get().stringResourceId);
 		else
-			return StringResource.get(R.string.preference_notification_summary_shown);
+			return StringResource.get(R.string.switchbar_on);
 	}
 
 	private boolean allNotificationsBlocked() {
