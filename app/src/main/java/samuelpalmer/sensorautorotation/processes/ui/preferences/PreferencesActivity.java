@@ -7,8 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -68,12 +68,12 @@ public abstract class PreferencesActivity extends UiActivity {
 			if (lastError == null)
 				snackbar.dismiss();
 			else {
-				snackbar.setText(lastError.message);
+				snackbar.setText(lastError.getSummary());
 				snackbar.setAction(R.string.environment_error_more, new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						try {
-							lastError.showDialogIntent().send();
+							lastError.showError().send();
 						} catch (PendingIntent.CanceledException e) {
 							throw new RuntimeException(e);
 						}

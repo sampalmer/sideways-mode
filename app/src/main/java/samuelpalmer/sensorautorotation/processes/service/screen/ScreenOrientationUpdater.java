@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.support.annotation.Nullable;
+
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
@@ -38,25 +40,23 @@ public class ScreenOrientationUpdater extends State {
 	};
 
 	private void propose() {
-		if (lastProposed == null || !proposedOrientation().equals(lastProposed)) {
-			lastProposed = proposedOrientation();
-			screen.propose(proposedOrientation());
+		Orientation orientation = proposedOrientation();
+		
+		if (orientation != null && (lastProposed == null || !orientation.equals(lastProposed))) {
+			lastProposed = orientation;
+			screen.propose(orientation);
 		}
 	}
 
-	public Orientation proposedOrientation() {
-		if (!upsideDown() || allowUpsideDownScreen.get())
-			return calculator.proposedScreenOrientation();
-		else if (lastProposed != null)
-			return lastProposed;
+	public @Nullable Orientation proposedOrientation() {
+		Orientation proposed = calculator.proposedScreenOrientation();
+		if (!proposed.equals(Orientation.UPSIDE_DOWN) || allowUpsideDownScreen.get())
+			return proposed;
 		else
-			return Orientation.NATURAL;
+			return lastProposed;
 	}
-
+	
+	@Nullable
 	private Orientation lastProposed;
-
-	private boolean upsideDown() {
-		return calculator.proposedScreenOrientation().equals(Orientation.UPSIDE_DOWN);
-	}
-
+	
 }

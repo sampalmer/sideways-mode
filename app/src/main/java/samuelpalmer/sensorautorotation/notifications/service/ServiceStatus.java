@@ -2,13 +2,15 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
+@SuppressWarnings("WeakerAccess")
 public class ServiceStatus implements Parcelable {
-
+	
 	public final Mode mode;
 	public final boolean overridden;
 	public final UserOrientation user;
@@ -29,13 +31,13 @@ public class ServiceStatus implements Parcelable {
 		this.waitingForSensor = waitingForSensor;
 	}
 
-	protected ServiceStatus(Parcel in) {
+	private ServiceStatus(Parcel in) {
 		mode = in.readParcelable(this.getClass().getClassLoader());
 		overridden = in.readByte() != 0;
 		user = in.readParcelable(this.getClass().getClassLoader());
 		priority = NotificationPriority.valueOf(in.readString());
 		waitingForSensor = in.readByte() != 0;
-
+		
 		if (in.dataAvail() != 0)
 			throw new RuntimeException("Found more data in parcel than expected");
 	}
@@ -56,10 +58,15 @@ public class ServiceStatus implements Parcelable {
 			StringResource.get(R.string.status_waiting_sensor)
 			:
 			StringResource.format(R.string.status_user_phrase, user.descriptionId());
-
+		
 		return StringResource.format(R.string.notification_summary, mode.autoRotationStateResourceId(), status);
 	}
-
+	
+	@DrawableRes
+	public int getIcon() {
+		return overridden ? user.iconId() : mode.notificationIcon();
+	}
+	
 	public boolean equals(ServiceStatus other) {
 		return
 			mode.equals(other.mode)
@@ -72,7 +79,7 @@ public class ServiceStatus implements Parcelable {
 			&&
 			waitingForSensor == other.waitingForSensor;
 	}
-
+	
 	public static final Creator<ServiceStatus> CREATOR = new Creator<ServiceStatus>() {
 		@Override
 		public ServiceStatus createFromParcel(Parcel in) {
@@ -84,7 +91,7 @@ public class ServiceStatus implements Parcelable {
 			return new ServiceStatus[size];
 		}
 	};
-
+	
 	@Override
 	public int describeContents() {
 		return 0;

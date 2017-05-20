@@ -32,7 +32,7 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 	}
 
 	@Override
-	public Orientation currentRotation() {
+	public Orientation currentRotation() throws RotationWatcherNotSupportedException {
 		if (watcher.lastRotationOrNull() != null)
 			return watcher.lastRotationOrNull();
 		else

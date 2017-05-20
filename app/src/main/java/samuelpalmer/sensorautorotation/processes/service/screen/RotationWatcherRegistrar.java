@@ -88,9 +88,10 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	@Override
 	protected void subscribeToAdaptee() throws RotationWatcherNotSupportedException {
 		if (!subscribed) { //Might already be subscribed since unsubscription is impossible on older Android versions
+			Object watchResult;
 			//noinspection TryWithIdenticalCatches
 			try {
-				currentRotation = wrap((int) watchRotation.invoke(windowManagerService, typedWatchRotationArguments));
+				watchResult = wrap((int) watchRotation.invoke(windowManagerService, typedWatchRotationArguments));
 			} catch (IllegalAccessException e) {
 				throw new RotationWatcherNotSupportedException(e);
 			} catch (InvocationTargetException e) {
@@ -98,6 +99,30 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			}
 
 			subscribed = true;
+
+			try {
+				int currentRotationOffset;
+				try {
+					currentRotationOffset = (int) watchResult;
+				} catch (ClassCastException e) {
+					throw new RotationWatcherNotSupportedException(e);
+				}
+
+				try {
+					currentRotation = wrap(currentRotationOffset);
+				} catch (IllegalArgumentException e) {
+					throw new RotationWatcherNotSupportedException(e);
+				}
+			}
+			catch (Exception e) {
+				try {
+					unsubscribeFromAdaptee();
+				} catch (Exception unsubscribeError) {
+					Log.w(RotationWatcherRegistrar.class.getSimpleName(), unsubscribeError);
+				}
+
+				throw e; //Must preserve e rather than wrapping it since it might contain an exception that will be caught higher up.
+			}
 		}
 	}
 
@@ -129,20 +154,32 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			callerHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					currentRotation = wrap(rotation);
-					report();
+					//It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
+					if (subscribed) {
+						try {
+							currentRotation = wrap(rotation);
+						} catch (IllegalArgumentException e) {
+							badRotationReceivedError = e;
+						}
+
+						report();
+					}
 				}
 			});
 		}
 	};
 
 	private Orientation currentRotation;
+	private Exception badRotationReceivedError;
 
-	public Orientation lastRotationOrNull() {
+	public Orientation lastRotationOrNull() throws RotationWatcherNotSupportedException {
+		if (badRotationReceivedError != null)
+			throw new RotationWatcherNotSupportedException(badRotationReceivedError);
+
 		return currentRotation;
 	}
 
-	private static Orientation wrap(int rotation) {
+	private static Orientation wrap(int rotation) throws IllegalArgumentException {
 		return new AndroidSurfaceRotation(rotation).orientation();
 	}
 

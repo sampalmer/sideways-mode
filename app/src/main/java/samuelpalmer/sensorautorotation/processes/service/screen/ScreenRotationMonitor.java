@@ -23,7 +23,24 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	}
 
 	public Orientation currentRotation() {
-		return changeDetector.currentRotation();
+		try {
+			return changeDetector.currentRotation();
+		} catch (RotationWatcherNotSupportedException e) {
+			if (!noSubscriptions()) {
+				try {
+					changeDetector.stop();
+				} catch (RotationWatcherNotSupportedException ignored) {
+					//All good; we're already handling this
+				}
+			}
+
+			fallback(e);
+
+			if (!noSubscriptions())
+				subscribeToAdaptee();
+
+			return currentRotation();
+		}
 	}
 
 	@Override

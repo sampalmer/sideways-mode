@@ -9,8 +9,8 @@ import android.provider.Settings;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
 import static android.provider.Settings.System.getString;
@@ -57,14 +57,14 @@ public class Setting<T> {
 			&&
 			!Settings.System.canWrite(CurrentProcess.context())
 		) {
-			new EnvironmentError(R.string.environment_error_permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
+			new GenericError(R.string.permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
 			return;
 		}
 
 		boolean writeErrors = !putString(contentResolver, key, value);
 		if (writeErrors) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			new EnvironmentError(R.string.environment_error_system_setting_write_failure_summary, R.string.environment_error_system_setting_write_failure_message, key, value).report();
+			new GenericError(R.string.environment_error_system_setting_write_failure_summary, R.string.environment_error_system_setting_write_failure_message, key, value).report();
 		}
 	}
 

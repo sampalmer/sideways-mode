@@ -4,7 +4,7 @@ public abstract class StateMonitor<T> extends State {
 
 	private final Listener<T> listener;
 
-	public StateMonitor(Listener<T> listener) {
+	protected StateMonitor(Listener<T> listener) {
 		this.listener = listener;
 	}
 

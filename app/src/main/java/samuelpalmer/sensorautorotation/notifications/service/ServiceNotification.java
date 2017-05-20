@@ -34,7 +34,7 @@ class ServiceNotification {
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannel(NotificationChannels.ID_DASHBOARD)
 		;
-
+		
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
@@ -42,9 +42,19 @@ class ServiceNotification {
 	}
 
 	public Notification build(ServiceStatus serviceStatus) {
-		builder.setSmallIcon(serviceStatus.overridden ? serviceStatus.user.iconId() : serviceStatus.mode.notificationIcon());
+		builder
+			.setSmallIcon(serviceStatus.getIcon())
+			.setProgress(0, 0, serviceStatus.waitingForSensor)
+		;
 
-		CharSequence statusText = StringResource.get(serviceStatus.waitingForSensor ? R.string.status_waiting_sensor : serviceStatus.user.descriptionId());
+		int statusTextResource =
+			serviceStatus.waitingForSensor
+			?
+			R.string.status_waiting_sensor
+			:
+			serviceStatus.user.descriptionId();
+		
+		CharSequence statusText = StringResource.get(statusTextResource);
 
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
@@ -62,7 +72,7 @@ class ServiceNotification {
 
 		return builder.build();
 	}
-
+	
 	private void applyButtons(ServiceStatus serviceStatus) {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 

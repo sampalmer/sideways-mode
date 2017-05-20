@@ -8,7 +8,6 @@
 	<string name="action_help">Справка</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_email">Email</string>
-	<string name="action_feedback_google_play">Google Play Маркет</string>
 	<string name="action_report">Отчет о проблемах</string>
 	<string name="action_uninstall">Удаление</string>
 
@@ -20,7 +19,7 @@
 	<string name="email_app_chooser_title">Отправить отзыв</string>
 
 	<string name="uninstall_title">Удалить?</string>
-	<string name="uninstall_confirmation_message">С помощью этого приложения будет отключен экран управления вращением. (Вы можете повторно включить его в настройках экрана этого приложения.) Отключить и удалить это приложение?</string>
+	<string name="uninstall_confirmation_message">Отключить и удалить это приложение?</string>
 
 	<string name="settings">Настройки</string>
 
@@ -45,8 +44,6 @@
 	<string name="app_disabled_message">%1$s не включено</string>
 
 	<!-- Preferences -->
-	<string name="preference_enabled_title">Включение</string>
-
 	<string name="preference_notification_priority_title">Приоритет уведомления</string>
 	<string name="preference_notification_priority_high">Высокий</string>
 	<string name="preference_notification_priority_normal">Обычный</string>
@@ -58,12 +55,6 @@
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 
-	<string name="environment_error_sensor_summary">Проблема датчика</string>
-	<string name="environment_error_sensor_message">%1$s %2$s нужен работающий акселерометр для работы. Если устройство имеет его, попробуйте использовать встроенную опцию "Автоповорот экрана". Если это не сработает, акселерометр может быть сломан.</string>
-
-	<string name="environment_error_sensor_missing_message">Не удалось найти акселерометр.</string>
-	<string name="environment_error_sensor_no_data_message">Датчик не предоставляет каких-либо данных.</string>
-
 	<string name="environment_error_system_rotation_enabled_summary">Вращение системы включено</string>
 	<string name="environment_error_system_rotation_enabled_message">В устройстве был включен встроенный автоповорот экрана.</string>
 
@@ -71,11 +62,9 @@
 	<string name="environment_error_system_setting_write_failure_message">Не удалось задать настройки \'%1$s\' для \'%2$s\'.</string>
 	<string name="environment_error_system_setting_write_denied_message">Это приложение не имеет разрешения на изменение настроек системы. Чтобы это исправить, повторно включите приложение на следующем экране.</string>
 
-	<string name="environment_error_permission_needed_summary">Нужно разрешение</string>
-	<string name="environment_error_permission_needed_system_settings_message">Для того чтобы управлять вращением экрана, это приложение требует доступ на изменение системных настроек. Пожалуйста, включите это на следующем экране.</string>
-	<string name="warning_permission_not_granted_system_settings">Это приложение не может работать без разрешения на изменение системных настроек</string>
-
-	<string name="error_no_market_app">Не удалось найти Google Play Маркет приложение</string>
+	<string name="permission_needed_summary">Нужно разрешение</string>
+	<string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, это приложение требует доступ на изменение системных настроек. Пожалуйста, включите это на следующем экране.</string>
+	<string name="permission_warning_system_settings">Это приложение не может работать без разрешения на изменение системных настроек</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Инструкции</string>
@@ -106,11 +95,7 @@
 
 	<string name="instructions_help_heading">Исправление проблем</string>
 	<string name="instructions_help_contents">
-		• Если экран направлен в неправильную сторону:\n
-		\t1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n
-		\t2. Используйте %1$s и %2$s кнопки в уведомлении, чтобы исправить это.\n
-		• Если происходят сбои, пожалуйста, нажмите кнопку "Отчет", так я смогу решить пробоему.\n
-		• Если у вас есть какие-либо замечания, вы можете их отправить из магазина или меню этого приложения.
+		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте %1$s и %2$s кнопки в уведомлении, чтобы исправить это.\n\nЕсли происходят сбои, пожалуйста, нажмите кнопку "Отчет", так я смогу решить пробоему.\n\nЕсли у вас есть какие-либо замечания, вы можете их отправить из магазина или меню этого приложения.
 	</string>
 
 </resources>

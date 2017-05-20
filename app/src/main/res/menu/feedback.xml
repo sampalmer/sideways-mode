@@ -13,8 +13,8 @@
 
 	<!-- Placing this one last since users should contact the developer about problems before leaving bad reviews on Google Play Store. -->
 	<item
-		android:id="@+id/action_feedback_google_play"
-		android:title="@string/action_feedback_google_play"
-		android:icon="@drawable/menu_google_play"
+		android:id="@+id/action_review"
+		android:title="@string/action_feedback_review"
+		android:icon="@drawable/menu_review"
 		/>
 </menu>

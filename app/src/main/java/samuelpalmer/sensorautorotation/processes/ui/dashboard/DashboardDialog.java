@@ -5,7 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 
 
-public class DashboardDialog extends AlertDialog {
+class DashboardDialog extends AlertDialog {
 
 	private final Listener onStart;
 	private final Listener onStop;

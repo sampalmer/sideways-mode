@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Parcel;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 
@@ -10,11 +11,12 @@ class LockedMode implements Mode {
 	private final boolean portrait;
 
 	public LockedMode(OrientationCalculator calculator, boolean deviceIsNaturallyPortrait) {
-		boolean inNaturalOrientation = calculator.proposedScreenOrientation().isNaturalOrUpsideDown();
+		Orientation screenOrientation = calculator.proposedScreenOrientation();
+		boolean inNaturalOrientation = screenOrientation.isNaturalOrUpsideDown();
 		portrait = inNaturalOrientation == deviceIsNaturallyPortrait;
 	}
 
-	public LockedMode(Parcel in) {
+	private LockedMode(Parcel in) {
 		portrait = in.readByte() != 0;
 	}
 

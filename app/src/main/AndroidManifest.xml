@@ -34,13 +34,12 @@
 		android:label="@string/app_name_full"
 		android:theme="@style/AppTheme"
 		android:fullBackupContent="@xml/backupscheme"
+		android:supportsRtl="true"
 		android:appCategory="productivity"
 		tools:ignore="GoogleAppIndexingWarning"
 		tools:targetApi="o">
 
 		<!-- Main Process -->
-
-		<activity android:name=".processes.ui.FirstRunActivity" />
 
 		<activity
 			android:name=".processes.ui.instructions.InstructionsActivity"
@@ -82,10 +81,15 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".processes.ui.MainActivity" />
 
+			<intent-filter>
+				<action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
 		</activity>
 
 		<activity android:name=".processes.ui.MessageDialogActivity"
-			android:theme="@style/Theme.NoDisplay"/>
+			android:theme="@style/AppTheme.Dialog"/>
 
 		<activity
 			android:name=".processes.ui.ShortcutActivity"
@@ -165,6 +169,7 @@
 			android:name=".processes.ui.feedback.SendFeedbackActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/action_feedback"
+			android:theme="@style/AppTheme.Navigation"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->
@@ -206,7 +211,7 @@
 		 -->
 		<service
 			android:name=".processes.ui.QuickSettingService"
-			android:label="@string/app_name_full"
+			android:label="@string/app_name"
 			android:icon="@drawable/notification_rotation"
 			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
 			>
@@ -219,7 +224,7 @@
 		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
-		          android:theme="@style/Theme.NoDisplay"
+		          android:theme="@style/AppTheme.Dialog"
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize|screenLayout"

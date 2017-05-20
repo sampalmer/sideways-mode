@@ -13,7 +13,14 @@ android {
 		targetSdkVersion 'O'
 		versionCode 50
 		versionName "1.0.0"
-		resConfigs "en", "ru" //Strips out languages added through the support library
+
+		/*
+		 * Strips out languages added through the support library so that:
+		 * - The resulting APK is smaller
+		 * - Google Play doesn't think the app supports all languages
+		 * - Users with unsupported languages don't see English text in RTL layouts
+		 */
+		resConfigs "en", "ru"
 		vectorDrawables.useSupportLibrary = true
 	}
 	buildTypes {

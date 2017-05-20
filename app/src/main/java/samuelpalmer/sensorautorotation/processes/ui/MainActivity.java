@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,23 +11,28 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends UiActivity {
 
-	private static final String TAG_FIRST_RUN_FRAGMENT = "first run";
-
+	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
+	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
-
+	private EnabledFragment enabledFragment;
+	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
+		@SuppressWarnings("SameReturnValue")
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			drawerLayout.closeDrawers();
@@ -58,23 +64,15 @@ public class MainActivity extends UiActivity {
 					throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
 			}
 
-			return false;
+			return false; //Never want to mark the item as selected since none of the menu items result in a different UI within this activity.
 		}
 	};
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		CompoundButton enabledControl = (CompoundButton) findViewById(R.id.preference_enabled);
-		enabledControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-			}
-		});
-
+		
 		//Drawer stuff
 		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		navigation = (NavigationView)findViewById(R.id.navigation);
@@ -89,16 +87,10 @@ public class MainActivity extends UiActivity {
 		assert supportActionBar != null;
 		supportActionBar.setDisplayHomeAsUpEnabled(true);
 		supportActionBar.setHomeButtonEnabled(true);
-
-		//Other stuff
-		if (getFragmentManager().findFragmentByTag(TAG_FIRST_RUN_FRAGMENT) == null) {
-			getFragmentManager()
-					.beginTransaction()
-					.add(new FirstRunLauncherFragment(), TAG_FIRST_RUN_FRAGMENT)
-					.commit();
-		}
-
+		
 		navigation.setCheckedItem(R.id.action_home);
+		
+		enabledFragment = (EnabledFragment) getFragmentManager().findFragmentById(R.id.fragment_enabled);
 	}
 
 	@Override
@@ -115,8 +107,40 @@ public class MainActivity extends UiActivity {
 		if (!OrientationSensorHandler.canDetectOrientation()) {
 			//Not letting the user go any further since they shouldn't have installed the app
 			Log.w(MainActivity.class.getSimpleName(), "Didn't find any supported sensors. Advising user the device is unsupported.");
-			startActivity(new Intent(this, DeviceUnsupportedActivity.class));
+			try {
+				new SensorError(SensorError.Type.NOT_FOUND).showError().send();
+			} catch (PendingIntent.CanceledException e) {
+				throw new RuntimeException(e);
+			}
+			
 			finish();
+			return;
+		}
+		
+		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.remote().lastVersionUserInstructedAbout();
+		if (!lastVersionUserInstructedAbout.hasValue()) {
+			boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
+			
+			if (!tutorialComplete) {
+				Intent intent = ComponentType.create(InstructionsActivity.class)
+					.intent()
+					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
+				startActivity(intent);
+				
+				finish();
+			}
+			else {
+				lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
+				
+				/*
+				 * I received a number of error reports from users saying the app didn't work.
+				 * When I looked at their logs, it appeared they hadn't actually turned the app on.
+				 * (This is probably because they don't speak English.)
+				 *
+				 * So we'll enable the app automatically.
+				 */
+				enabledFragment.setEnabled();
+			}
 		}
 	}
 

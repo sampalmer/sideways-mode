@@ -5,14 +5,20 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/grey_300"
 	tools:context="samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity">
 
+	<!--
+        Unfortunately, this has 1 or 2 px of unwanted margin on Android 4.1.2,
+        but I didn't find a neat way to fix it. No big deal since it isn't very noticeable.
+    -->
 	<android.support.v7.widget.CardView
 		xmlns:card_view="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/feedback_card"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		>
+		card_view:cardPreventCornerOverlap="false"
+		app:cardCornerRadius="0dp"
+	>
 
 		<!--
 	        Need to remove scrolling shade thing when trying to scroll inside the menu.
@@ -23,7 +29,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			card_view:itemIconTint="@color/primary_500"
-			app:menu="@menu/menu_feedback" />
+			android:background="?attr/android:colorBackground"
+			app:menu="@menu/feedback" />
 
 	</android.support.v7.widget.CardView>
 

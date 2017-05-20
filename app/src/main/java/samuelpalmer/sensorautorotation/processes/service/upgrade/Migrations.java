@@ -80,7 +80,19 @@ class Migrations {
 				inferUserWhenDeviceLocked.remove();
 			}
 		});
-
+		
+		migrations.put(51, new Migration() {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+				
+				//The format of this setting has changed.
+				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				Setting<String> lastErrorJson = applicationSettings.new Setting<String>(new StringSetting(), "lastError", null);
+				lastErrorJson.remove();
+			}
+		});
+		
 		return migrations;
 	}
 }

@@ -1,14 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class EnterFeedbackActivity extends UiActivity {
@@ -16,7 +20,7 @@ public class EnterFeedbackActivity extends UiActivity {
 	public static final String TYPE_FEEDBACK = "feedback";
 	public static final String TYPE_PROBLEM = "problem";
 
-	private final static String problemLogsKey = "logcat";
+	private final static String PROBLEM_LOGS_KEY = "logcat";
 	private boolean isProblemReport;
 	private String problemLogs;
 	private EditText description;
@@ -61,7 +65,7 @@ public class EnterFeedbackActivity extends UiActivity {
 			if (savedInstanceState == null)
 				problemLogs = DiagnosticInfo.logcat();
 			else
-				problemLogs = savedInstanceState.getString(problemLogsKey);
+				problemLogs = savedInstanceState.getString(PROBLEM_LOGS_KEY);
 
 			description.setHint(R.string.report_problem_hint);
 			setTitle(R.string.action_report);
@@ -77,7 +81,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		super.onSaveInstanceState(outState);
 
 		if (isProblemReport)
-			outState.putString(problemLogsKey, problemLogs);
+			outState.putString(PROBLEM_LOGS_KEY, problemLogs);
 	}
 
 	private void sendEmail() {
@@ -105,9 +109,22 @@ public class EnterFeedbackActivity extends UiActivity {
 			String.format("Logcat:\n%s\n\nDevice info:\n%s\n\nProblem:\n%s\n", problemLogs, DiagnosticInfo.deviceInfo(), descriptionText)
 			:
 			descriptionText;
-
-		new Email(EnterFeedbackActivity.this, emailRecipients(), subject,body).send();
-
-		finish();
+		
+		Intent emailIntent = new Email(EnterFeedbackActivity.this, emailRecipients(), subject, body).getIntent();
+		boolean intentStarted = false;
+		
+		if (emailIntent != null)
+			try {
+				startActivity(emailIntent);
+				intentStarted = true;
+			}
+			catch (ActivityNotFoundException ignored) {}
+		
+		if (intentStarted) {
+			//Only want to throw away the input if the user successfully got to the email client, but we can't know for sure.
+			finish();
+		}
+		else
+			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
 	}
 }

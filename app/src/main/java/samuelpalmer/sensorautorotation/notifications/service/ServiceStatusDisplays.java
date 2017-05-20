@@ -41,6 +41,7 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 		}
 	};
 
+	@SuppressWarnings("WeakerAccess")
 	public void add(ServiceStatusDisplay display) {
 		displays.add(display);
 
@@ -48,6 +49,7 @@ public class ServiceStatusDisplays implements ServiceStatusDisplay {
 			display.update(lastServiceStatus);
 	}
 
+	@SuppressWarnings("unused")
 	public void remove(ServiceStatusDisplay display) {
 		displays.remove(display);
 	}

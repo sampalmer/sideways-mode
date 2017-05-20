@@ -13,8 +13,8 @@ import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.EnvironmentError;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplays;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
@@ -58,7 +58,7 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 
 		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, calculator);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, applicationState);
 
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
