@@ -91,7 +91,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			Object watchResult;
 			//noinspection TryWithIdenticalCatches
 			try {
-				watchResult = wrap((int) watchRotation.invoke(windowManagerService, typedWatchRotationArguments));
+				watchResult = watchRotation.invoke(windowManagerService, typedWatchRotationArguments);
 			} catch (IllegalAccessException e) {
 				throw new RotationWatcherNotSupportedException(e);
 			} catch (InvocationTargetException e) {
