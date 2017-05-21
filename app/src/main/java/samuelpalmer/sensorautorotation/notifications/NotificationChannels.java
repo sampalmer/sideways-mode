@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
 
 public abstract class NotificationChannels {
 
-	public static final String ID_DASHBOARD = "dashboard";
+	public static final String ID_CONTROLS = "controls";
 	public static final String ID_UPGRADES = "upgrades";
 	public static final String ID_ERRORS = "errors";
 	public static final String ID_PERMISSIONS = "permissions";
@@ -25,9 +25,9 @@ public abstract class NotificationChannels {
 	public static void setup() {
 		Log.i(NotificationChannels.class.getSimpleName(), "Configuring notification channels");
 
-		NotificationChannel dashboard = new NotificationChannel(
-				ID_DASHBOARD,
-				StringResource.get(R.string.notification_channel_dashboard),
+		NotificationChannel controls = new NotificationChannel(
+				ID_CONTROLS,
+				StringResource.get(R.string.notification_channel_controls),
 
 				/*
 				 * Deemphasising this notification since it is permanent and shouldn't get in the way of "real" notifications.
@@ -36,7 +36,7 @@ public abstract class NotificationChannels {
 				 */
 				NotificationManager.IMPORTANCE_LOW
 		);
-		dashboard.setLockscreenVisibility(Notification.VISIBILITY_SECRET); //Since this notification isn't really relevant on a typical lock screen
+		controls.setLockscreenVisibility(Notification.VISIBILITY_SECRET); //Since this notification isn't really relevant on a typical lock screen
 
 		NotificationChannel upgrades = new NotificationChannel(
 				ID_UPGRADES,
@@ -62,7 +62,7 @@ public abstract class NotificationChannels {
 		);
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-		List<NotificationChannel> channels = Arrays.asList(dashboard, upgrades, errors, permission);
+		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
 		SystemServices.notificationManager().createNotificationChannels(channels);
 	}
 

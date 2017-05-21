@@ -49,7 +49,7 @@ public class NotificationsSummary extends EventRegistrarAdaptor {
 				(
 					(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1)
 					&&
-					notificationManager.getNotificationChannel(NotificationChannels.ID_DASHBOARD).getImportance() == NotificationManager.IMPORTANCE_NONE
+					notificationManager.getNotificationChannel(NotificationChannels.ID_CONTROLS).getImportance() == NotificationManager.IMPORTANCE_NONE
 				);
 	}
 

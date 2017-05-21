@@ -180,7 +180,7 @@
 	<string name="request_uninstall">"Please uninstall this app."</string>
 
 	<!-- Notification channels -->
-	<string name="notification_channel_dashboard">Dashboard</string>
+	<string name="notification_channel_controls">Rotation controls</string>
 	<string name="notification_channel_upgrades">Upgrade messages</string>
 	<string name="notification_channel_errors">Error messages</string>
 	<string name="notification_channel_permissions">Permission requests</string>

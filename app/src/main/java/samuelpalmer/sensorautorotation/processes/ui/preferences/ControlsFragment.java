@@ -139,7 +139,7 @@ public class ControlsFragment extends PreferenceFragment {
 				if (SystemServices.notificationManager().areNotificationsEnabled())
 					//Guide the user to block just the dashboard notification
 					intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-							.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_DASHBOARD);
+							.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
 				else
 					//Guide the user to unblock the app's notifications and toasts
 					intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
