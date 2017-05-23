@@ -30,8 +30,11 @@ public class Upgrader {
 	}
 
 	public void upgradeIfNecessary() {
-		//We only need to instruct the user about changes if he/she has actually run the app before.
-		if (lastAppVersion != null) {
+		if (
+			lastAppVersion != null // We only need to instruct the user about changes if he/she has actually run the app before.
+			&&
+			lastAppVersion != newAppVersion
+		) {
 			Log.i(Upgrader.class.getSimpleName(), "Upgrading from " + lastAppVersion + " to " + newAppVersion);
 			upgrade();
 		}
