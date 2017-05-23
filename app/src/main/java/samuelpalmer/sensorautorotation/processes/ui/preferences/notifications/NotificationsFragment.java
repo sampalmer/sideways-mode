@@ -70,21 +70,24 @@ public class NotificationsFragment extends PreferenceFragment {
 		allNotificationsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.preference_all_notifications_title)
-						.setMessage(R.string.preference_all_notifications_explanation)
-						.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {}
-						})
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								openAppNotificationSystemSettings();
-							}
-						})
-						.show();
-
+				if (areNotificationsEnabled(getActivity()) == Boolean.FALSE)
+					openAppNotificationSystemSettings();
+				else
+					new AlertDialog.Builder(getActivity())
+							.setTitle(R.string.preference_all_notifications_title)
+							.setMessage(R.string.preference_all_notifications_explanation)
+							.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+							})
+							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									openAppNotificationSystemSettings();
+								}
+							})
+							.show();
+				
 				return true;
 			}
 		});
