@@ -19,7 +19,9 @@ abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 	 * https://code.google.com/p/android/issues/detail?id=178057
 	 */
 	private void clearImmediateDeath() {
-		Intent intent = ComponentType.create(ServiceSyncReceiver.class).intent();
+		// Some users got ANRs when the broadcast receiver actually did work,
+		// so now we just use a receiver that doesn't do anything.
+		Intent intent = ComponentType.create(DummyReceiver.class).intent();
 
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
 		for (int i = 0; i < 50; ++i)

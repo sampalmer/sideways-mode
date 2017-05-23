@@ -273,6 +273,9 @@
 		<receiver android:name=".processes.service.ServiceSyncReceiver"
 		          android:process="@string/service_process_name" />
 
+		<receiver android:name=".processes.service.DummyReceiver"
+		          android:process="@string/service_process_name" />
+
 		<activity
 			android:name=".components.ToggleRotationLockActivity"
 			android:exported="true"
