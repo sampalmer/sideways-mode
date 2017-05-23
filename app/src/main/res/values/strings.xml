@@ -91,7 +91,6 @@
 	<string name="preference_notification_priority_low">Low</string>
 
 	<string name="preference_notification_summary_priority">%1$s priority</string>
-	<string name="preference_notification_summary_blocked">All off</string>
 
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>

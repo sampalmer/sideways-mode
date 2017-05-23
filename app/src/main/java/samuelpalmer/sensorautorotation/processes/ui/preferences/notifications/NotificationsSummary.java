@@ -20,7 +20,7 @@ public class NotificationsSummary extends EventRegistrarAdaptor {
 
 	public CharSequence getSummary() {
 		if (NotificationsFragment.areNotificationsEnabled(CurrentProcess.context()) == Boolean.FALSE)
-			return StringResource.get(R.string.preference_notification_summary_blocked);
+			return StringResource.get(R.string.off);
 		else
 			return getNotificationPriority();
 	}
