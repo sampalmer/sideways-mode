@@ -45,7 +45,12 @@ public class Upgrader {
 			Migration migration = migrations.get(version);
 			if (migration != null) {
 				Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
-				upgradeMessage.append(migration.message());
+				
+				// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
+				CharSequence message = migration.getMessage();
+				if (message != null)
+					upgradeMessage.append(message);
+				
 				migration.upgradeData();
 			}
 		}

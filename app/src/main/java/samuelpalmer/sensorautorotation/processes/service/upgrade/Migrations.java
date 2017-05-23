@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
+import android.os.Build;
 import android.util.SparseArray;
 
 import samuelpalmer.common.Orientation;
@@ -9,6 +10,7 @@ import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -16,7 +18,12 @@ class Migrations {
 	static SparseArray<Migration> buildMap() {
 		SparseArray<Migration> migrations = new SparseArray<>();
 
-		migrations.put(18, new Migration().setMessage(R.string.upgrade_v18));
+		migrations.put(18, new Migration() {
+			@Override
+			public CharSequence getMessage() {
+				return StringResource.get(R.string.upgrade_v18);
+			}
+		});
 
 		migrations.put(25, new Migration() {
 			@Override
@@ -90,6 +97,42 @@ class Migrations {
 				ApplicationSettings applicationSettings = ApplicationSettings.local();
 				Setting<String> lastErrorJson = applicationSettings.new Setting<String>(new StringSetting(), "lastError", null);
 				lastErrorJson.remove();
+			}
+		});
+		
+		migrations.put(54, new Migration() {
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+				
+				// This setting was removed since it exploited an Android OS bug, which might be considered a violation of Google Play terms regarding malicious behaviour.
+				// See https://play.google.com/about/privacy-security/malicious-behavior/
+				showNotificationSetting().remove();
+			}
+			
+			@Override
+			public CharSequence getMessage() {
+				boolean notificationWasHidden = !showNotificationSetting().get() && Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */;
+				
+				if (notificationWasHidden) {
+					StringBuilder message = new StringBuilder(StringResource.get(R.string.upgrade_v54));
+					
+					if (Build.VERSION.SDK_INT >= 16) {
+						// Here we can instruct the user to block the notification.
+						message.append(' ');
+						message.append(StringResource.get(R.string.upgrade_v54_workaround));
+					}
+					
+					return message;
+				}
+				else
+					// No need to bother the user about this if they weren't using the feature.
+					return null;
+			}
+			
+			private Setting<Boolean> showNotificationSetting() {
+				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				return applicationSettings.new Setting<Boolean>(new BooleanSetting(), "showNotification", true);
 			}
 		});
 		

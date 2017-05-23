@@ -51,8 +51,6 @@
 	<string name="user_rotation_sideways">Ландшафтный</string>
 	<string name="user_rotation_upside_down">Вверх ногами</string>
 
-	<string name="notification_hiding">Попытаться скрыть уведомление</string>
-
 	<string name="action_rotate_left">Повернуть влево</string>
 	<string name="action_rotate_right">Повернуть вправо</string>
 	<string name="action_toggle_rotation_lock">Переключить автоповорот</string>
@@ -71,8 +69,6 @@
 	<string name="preference_small_app">Маленькое приложение</string>
 
 	<string name="preference_notifications">Заметки</string>
-
-	<string name="preference_show_notification">Показать</string>
 
 	<string name="preference_all_notifications_title">Все заметки</string>
 

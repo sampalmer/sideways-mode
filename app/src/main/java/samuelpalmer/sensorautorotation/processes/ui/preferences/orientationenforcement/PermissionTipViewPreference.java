@@ -7,7 +7,6 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;

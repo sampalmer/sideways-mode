@@ -292,9 +292,6 @@
 			android:exported="false"
 			android:process="@string/service_process_name" />
 
-		<service android:name=".processes.service.ServiceNotificationHider"
-		         android:process="@string/service_process_name" />
-
 		<activity
 			android:name=".processes.service.DummyActivity"
 			android:theme="@android:style/Theme.NoDisplay"
