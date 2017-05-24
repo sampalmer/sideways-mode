@@ -24,9 +24,6 @@
 	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 	<string name="email_app_chooser_title">Отправить отзыв</string>
 
-	<string name="uninstall_title">Удалить?</string>
-	<string name="uninstall_confirmation_message">Отключить и удалить это приложение?</string>
-
 	<string name="settings">Настройки</string>
 
 	<!-- Common -->

@@ -16,6 +16,10 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 	 */
 	public static final String EXTRA_EXPLANATION = "explanation";
 	
+	private static final String TAG_UNINSTALLER = "uninstaller";
+	
+	private UninstallerFragment uninstaller;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,10 +35,19 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 		uninstallButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Uninstaller uninstaller = new Uninstaller(DeviceUnsupportedActivity.this);
-				uninstaller.uninstallOrPrompt();
+				uninstaller.uninstall();
 			}
 		});
+		
+		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
+		if (uninstaller == null) {
+			uninstaller = new UninstallerFragment();
+			
+			getSupportFragmentManager()
+				.beginTransaction()
+				.add(uninstaller, TAG_UNINSTALLER)
+				.commit();
+		}
 	}
 	
 }

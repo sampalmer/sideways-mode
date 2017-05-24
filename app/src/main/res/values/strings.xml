@@ -23,9 +23,6 @@
 	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
 
-	<string name="uninstall_title">Uninstall?</string>
-	<string name="uninstall_confirmation_message">Turn off and uninstall this app?</string>
-
 	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
 	<string name="settings">Settings</string>

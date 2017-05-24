@@ -23,11 +23,13 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class MainActivity extends UiActivity {
 
 	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
+	private static final String TAG_UNINSTALLER = "uninstaller";
 	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private EnabledFragment enabledFragment;
+	private UninstallerFragment uninstaller;
 	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 		@SuppressWarnings("SameReturnValue")
@@ -54,9 +56,7 @@ public class MainActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_uninstall:
-					final Uninstaller uninstaller = new Uninstaller(MainActivity.this);
-					uninstaller.uninstallOrPrompt();
-
+					uninstaller.uninstall();
 					break;
 				default:
 					throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
@@ -89,6 +89,15 @@ public class MainActivity extends UiActivity {
 		navigation.setCheckedItem(R.id.action_home);
 		
 		enabledFragment = (EnabledFragment) getFragmentManager().findFragmentById(R.id.fragment_enabled);
+		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
+		
+		if (uninstaller == null) {
+			uninstaller = new UninstallerFragment();
+			getSupportFragmentManager()
+				.beginTransaction()
+				.add(uninstaller, TAG_UNINSTALLER)
+				.commit();
+		}
 	}
 
 	@Override
