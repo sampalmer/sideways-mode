@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.errors;
 
 import android.app.PendingIntent;
+import android.content.Intent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,7 +58,13 @@ public class SensorError extends EnvironmentError {
 	
 	@Override
 	public PendingIntent showError() {
-		return ComponentType.create(DeviceUnsupportedActivity.class).pendingIntent(PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
+		ComponentType componentType = ComponentType.create(DeviceUnsupportedActivity.class);
+		
+		Intent intent = componentType
+			.intent()
+			.putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, R.string.device_problem_explanation_sensor);
+		
+		return componentType.pendingIntent(intent, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
 	}
 	
 }

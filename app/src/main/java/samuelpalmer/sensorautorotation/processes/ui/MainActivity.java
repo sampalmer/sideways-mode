@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,9 +14,8 @@ import android.view.MenuItem;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
-import samuelpalmer.sensorautorotation.errors.SensorError;
-import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -104,14 +102,11 @@ public class MainActivity extends UiActivity {
 		super.onStart();
 
 		//Checking this after the activity starts in case the user wants to go out and back in again to retry the check in case the problem is intermittent
-		if (!OrientationSensorHandler.canDetectOrientation()) {
+		int startupErrorString = StartUpCheck.check();
+		if (startupErrorString != 0) {
 			//Not letting the user go any further since they shouldn't have installed the app
-			Log.w(MainActivity.class.getSimpleName(), "Didn't find any supported sensors. Advising user the device is unsupported.");
-			try {
-				new SensorError(SensorError.Type.NOT_FOUND).showError().send();
-			} catch (PendingIntent.CanceledException e) {
-				throw new RuntimeException(e);
-			}
+			Log.w(MainActivity.class.getSimpleName(), StringResource.get(startupErrorString).toString());
+			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
 			
 			finish();
 			return;
