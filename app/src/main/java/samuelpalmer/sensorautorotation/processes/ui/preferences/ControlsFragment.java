@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -10,8 +11,10 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
 
+import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsSummary;
 
 
@@ -45,11 +48,16 @@ public class ControlsFragment extends PreferenceFragment {
 			getPreferenceScreen().removePreference(quickSettingPreference);
 		
 		Preference assistPreference = findPreference("assist");
-		assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (Build.VERSION.SDK_INT >= 23)
-					new AlertDialog.Builder(getActivity())
+		if (Build.VERSION.SDK_INT >= 23) {
+			final Intent assistSettingsIntent = new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS);
+			
+			if (IntentExtensions.activityDoesntExist(assistSettingsIntent, SystemServices.packageManager()))
+				getPreferenceScreen().removePreference(assistPreference);
+			else
+				assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						new AlertDialog.Builder(getActivity())
 							.setTitle(R.string.preference_assist)
 							.setMessage(R.string.preference_assist_instructions_lollipop)
 							.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -60,25 +68,37 @@ public class ControlsFragment extends PreferenceFragment {
 								@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									//TODO: Ensure this doesn't crash; the activity might not exist
-									startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
+									try {
+										startActivity(assistSettingsIntent);
+									}
+									catch (ActivityNotFoundException e) {
+										throw new RuntimeException("Couldn't find assist settings activity. The user shouldn't have been able to get this far.");
+									}
 								}
 							})
 							.show();
-				else
+						
+						return true;
+					}
+			});
+		}
+		else if (Build.VERSION.SDK_INT >= 16)
+			assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
 					new AlertDialog.Builder(getActivity())
-							.setTitle(R.string.preference_assist)
-							.setMessage(R.string.preference_assist_instructions)
-							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {}
-							})
-							.show();
-
-				return true;
-			}
-		});
-		if (Build.VERSION.SDK_INT < 16)
+						.setTitle(R.string.preference_assist)
+						.setMessage(R.string.preference_assist_instructions)
+						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {}
+						})
+						.show();
+					
+					return true;
+				}
+			});
+		else
 			getPreferenceScreen().removePreference(assistPreference);
 		
 		Preference smallAppPreference = findPreference("small_app");
