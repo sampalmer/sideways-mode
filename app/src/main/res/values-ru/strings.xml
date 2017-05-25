@@ -57,7 +57,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_controls">Управление</string>
-	<string name="preference_controls_description">Управление ориентацией экрана</string>
 
 	<string name="preference_quick_setting">Быстрые настройки</string>
 

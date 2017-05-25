@@ -62,7 +62,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_controls">Controls</string>
-	<string name="preference_controls_description">Controlling the screen orientation</string>
 
 	<string name="preference_quick_setting">Quick setting</string>
 	<string name="preference_quick_setting_instructions">"To use the quick setting, just add this app's tile to your quick settings tray."</string>
