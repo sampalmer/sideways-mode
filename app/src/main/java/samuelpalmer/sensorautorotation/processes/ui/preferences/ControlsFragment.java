@@ -7,9 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
+import android.util.Log;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
@@ -83,21 +88,24 @@ public class ControlsFragment extends PreferenceFragment {
 			});
 		}
 		else if (Build.VERSION.SDK_INT >= 16)
-			assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.preference_assist)
-						.setMessage(R.string.preference_assist_instructions)
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {}
-						})
-						.show();
-					
-					return true;
-				}
-			});
+			if (hasNavigationBar() == Boolean.FALSE)
+				getPreferenceScreen().removePreference(assistPreference);
+			else
+				assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+						new AlertDialog.Builder(getActivity())
+							.setTitle(R.string.preference_assist)
+							.setMessage(R.string.preference_assist_instructions)
+							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+							})
+							.show();
+						
+						return true;
+					}
+				});
 		else
 			getPreferenceScreen().removePreference(assistPreference);
 		
@@ -152,6 +160,24 @@ public class ControlsFragment extends PreferenceFragment {
 	private void updateNotifications() {
 		CharSequence summary = notificationsSummary.getSummary();
 		notificationsPreference.setSummary(summary);
+	}
+	
+	/**
+	 * Returns {@code null} if this couldn't be determined.
+	 */
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	private static Boolean hasNavigationBar() {
+		try {
+			Class<?> serviceManager = Class.forName("android.os.ServiceManager");
+			IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
+			Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
+			Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
+			Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
+			return (boolean)hasNavigationBar.invoke(windowManagerService);
+		} catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Log.w(ControlsFragment.class.getSimpleName(), "Couldn't determine whether the device has a navigation bar", e);
+			return null;
+		}
 	}
 
 }
