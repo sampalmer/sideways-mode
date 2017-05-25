@@ -73,7 +73,7 @@
 		</activity>
 
 		<activity
-			android:name=".processes.ui.SettingsActivity"
+			android:name=".processes.ui.preferences.SettingsActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/settings"
 			tools:ignore="UnusedAttribute">
@@ -107,7 +107,7 @@
 
 		<activity
 			android:name=".processes.ui.preferences.notifications.NotificationsActivity"
-			android:parentActivityName=".processes.ui.SettingsActivity"
+			android:parentActivityName=".processes.ui.preferences.SettingsActivity"
 			android:label="@string/preference_notifications"
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">
@@ -120,7 +120,7 @@
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.SettingsActivity" />
+				android:value=".processes.ui.preferences.SettingsActivity" />
 
 		</activity>
 
