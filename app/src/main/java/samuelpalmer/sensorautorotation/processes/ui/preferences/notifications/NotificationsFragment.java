@@ -15,7 +15,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.provider.Settings;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +26,7 @@ import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
 import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -147,10 +147,11 @@ public class NotificationsFragment extends PreferenceFragment {
 	 * Returns null if unknown
 	 */
 	public static Boolean areNotificationsEnabled(Context context) {
-		if (Build.VERSION.SDK_INT >= 19)
-			return NotificationManagerCompat.from(context).areNotificationsEnabled();
+		if (Build.VERSION.SDK_INT >= 24)
+			return SystemServices.notificationManager().areNotificationsEnabled();
 		else if (Build.VERSION.SDK_INT >= 18) {
 			// Before KitKat, NotificationManagerCompat.areNotificationsEnabled() is hard-coded to return true.
+			// It also returns true on error.
 			// However, the below code still worked on the Android 4.3 emulator.
 			
 			AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
