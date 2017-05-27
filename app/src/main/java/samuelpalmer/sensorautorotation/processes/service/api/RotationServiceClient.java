@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.processes.service.api;
 
 import android.widget.Toast;
 
@@ -7,6 +7,7 @@ import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
+import samuelpalmer.sensorautorotation.processes.service.ServiceHolder;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 

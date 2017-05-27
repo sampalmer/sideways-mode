@@ -272,7 +272,7 @@
 			android:excludeFromRecents="true"
 			android:process="@string/service_process_name" />
 
-		<receiver android:name=".processes.service.RotationServiceReceiver"
+		<receiver android:name=".processes.service.api.RotationServiceReceiver"
 		          android:process="@string/service_process_name" />
 
 		<service

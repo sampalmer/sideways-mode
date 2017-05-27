@@ -18,8 +18,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceClient;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
 
 
 public class DashboardEnabledContents extends LinearLayout {

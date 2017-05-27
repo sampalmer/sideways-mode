@@ -15,8 +15,8 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 class ServiceNotification {

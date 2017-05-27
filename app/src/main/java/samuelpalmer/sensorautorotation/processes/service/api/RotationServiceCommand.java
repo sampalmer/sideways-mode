@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.processes.service.api;
 
 import android.content.Intent;
 
@@ -23,7 +23,7 @@ public class RotationServiceCommand {
 
 	private static final String EXTRA_SHOW_TOAST = "show_toast";
 
-	final String action;
+	public final String action;
 	public boolean showToast;
 	public boolean toastIfServiceDisabled = true;
 

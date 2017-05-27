@@ -20,6 +20,7 @@ import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDispla
 import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusFactory;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementManager;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;

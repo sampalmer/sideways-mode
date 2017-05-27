@@ -27,8 +27,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 

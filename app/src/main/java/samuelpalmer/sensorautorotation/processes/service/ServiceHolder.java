@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
  * the OS due to low memory or something like that, I believe the whole process is killed, which
  * should cause this value to be reset anyway.
  */
-abstract class ServiceHolder {
+public abstract class ServiceHolder {
 
 	private static final String TAG = ServiceHolder.class.getSimpleName();
 	private static RotationService instance;
