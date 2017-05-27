@@ -114,8 +114,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}
 
-		if (command.showToast)
-			showStatusToast();
+		if (command.showToast) {
+			CharSequence status = serviceStatusFactory.generate().getSummary();
+			ToastReceiver.send(status, Toast.LENGTH_SHORT);
+		}
 	}
 
 	private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
@@ -149,10 +151,5 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
 		applicationState.clear();
 	}
-
-	private void showStatusToast() {
-		CharSequence message = serviceStatusFactory.generate().getSummary();
-		ToastReceiver.send(message, Toast.LENGTH_SHORT);
-	}
-
+	
 }
