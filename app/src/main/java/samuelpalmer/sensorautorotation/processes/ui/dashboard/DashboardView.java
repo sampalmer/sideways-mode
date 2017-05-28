@@ -16,15 +16,15 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
-import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
+import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class DashboardView extends FrameLayout {
 
-	private final ServiceStatusContentProvider.Client serviceClient;
+	private final ApplicationStatusContentProvider.Client serviceClient;
 	private final Handler handler;
 	private final Settings.Setting<Boolean> enabledSetting;
 
@@ -35,7 +35,7 @@ public class DashboardView extends FrameLayout {
 	private ProgressBar progressBar;
 	private DashboardEnabledContents contents;
 	private boolean childrenInflated;
-	private ServiceStatus lastStatus;
+	private ApplicationStatus lastStatus;
 	private boolean isEnabled;
 
 	public DashboardView(Context context, AttributeSet attrs) {
@@ -52,7 +52,7 @@ public class DashboardView extends FrameLayout {
 			a.recycle();
 		}
 
-		serviceClient = new ServiceStatusContentProvider.Client(getContext());
+		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
 		handler = new Handler();
 		enabledSetting = ApplicationSettings.remote().enabled();
 
@@ -111,10 +111,10 @@ public class DashboardView extends FrameLayout {
 		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
 	}
 
-	private final IServiceStatusListener.Stub statusChanged = new IServiceStatusListener.Stub() {
+	private final IApplicationStatusListener.Stub statusChanged = new IApplicationStatusListener.Stub() {
 
 		@Override
-		public void onChange(final ServiceStatus status) throws RemoteException {
+		public void onChange(final ApplicationStatus status) throws RemoteException {
 			handler.post(new Runnable() {
 
 				@Override

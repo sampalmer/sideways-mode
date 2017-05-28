@@ -4,62 +4,69 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.SystemServices;
 
 /**
- * I'm using this instead of binding since this is mostly a single-threaded process and this
- * avoids the complexities of binding and inability to determine service running state.
+ * Keeps track of all running instances of {@link RotationService}.
+ * This shouldn't be needed, but in rare circumstances Android has multiple
+ * instances of the service running.
  *
  * It should be reliable because the service maintains this value. If the service is killed by
  * the OS due to low memory or something like that, I believe the whole process is killed, which
  * should cause this value to be reset anyway.
  */
-public abstract class ServiceHolder {
-
-	private static final String TAG = ServiceHolder.class.getSimpleName();
-	private static RotationService instance;
-	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
-
-	public static boolean isRunning() {
-		return instance != null;
+public class ServiceRegistrar extends UpdatingEventRegistrar {
+	
+	public static final ServiceRegistrar instance = new ServiceRegistrar();
+	
+	private static final String TAG = ServiceRegistrar.class.getSimpleName();
+	private final Set<RotationService> serviceInstances;
+	private final Set<RotationService> readonlyServiceInstances;
+	
+	private ServiceRegistrar() {
+		serviceInstances = new HashSet<>();
+		readonlyServiceInstances = Collections.unmodifiableSet(serviceInstances);
 	}
-
-	public static RotationService instance() {
-		if (!isRunning())
-			throw new RuntimeException("Service not running");
-
-		return instance;
+	
+	public Set<RotationService> getServiceInstances() {
+		return readonlyServiceInstances;
 	}
-
-	public static void started(RotationService instance) {
-		if (isRunning())
-			throw makeServiceAlreadyRunningError(instance);
+	
+	public void serviceStarted(RotationService service) {
+		if (!serviceInstances.isEmpty()) {
+			// This should never happen, but it actually did happen occasionally on Production devices, presumably due to Android OS bugs.
+			// So the app tries to tolerate this.
+			Log.w(TAG, makeServiceAlreadyRunningError(service));
+		}
 		
-		ServiceHolder.instance = instance;
-		onChange.report();
-
-		Log.i(TAG, "Service started");
+		serviceInstances.add(service);
+		report();
+		
+		Log.i(TAG, "Service started: " + service);
 	}
-
-	public static void stopped() {
-		if (!isRunning())
-			throw new RuntimeException("Not running");
-
-		instance = null;
-		onChange.report();
-
-		Log.i(TAG, "Service stopped");
+	
+	public void serviceStopped(RotationService service) {
+		boolean wasInSet = serviceInstances.remove(service);
+		if (!wasInSet)
+			throw new RuntimeException("Unknown service stopped: " + service);
+		
+		report();
+		
+		Log.i(TAG, "Service stopped: " + service);
 	}
 	
 	/**
-	 * One user has actually run into this situation several times. This method captures
+	 * Several users have actually run into this situation multiple times. This method captures
 	 * some extra info to help the next time it happens.
 	 */
-	private static RuntimeException makeServiceAlreadyRunningError(RotationService instance) {
+	private String makeServiceAlreadyRunningError(RotationService service) {
 		ComponentName rotationServiceComponent = new ComponentName(CurrentProcess.context(), RotationService.class);
 		
 		List<ActivityManager.RunningServiceInfo> runningServices = SystemServices.activityManager().getRunningServices(Integer.MAX_VALUE);
@@ -80,9 +87,10 @@ public abstract class ServiceHolder {
 			}
 		}
 		
-		if (ServiceHolder.instance == instance)
-			return new RuntimeException("This instance of the service is already running.\n" + runningServiceDescription);
+		if (serviceInstances.contains(service))
+			return "This instance of the service is already running.\n" + runningServiceDescription;
 		else
-			return new RuntimeException("Another instance of this service is running.\n" + runningServiceDescription);
+			return "Another instance of this service is running.\n" + runningServiceDescription;
 	}
+	
 }

@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 import samuelpalmer.sensorautorotation.ServiceController;
 
-public class RotationServiceCommand {
+public class ApplicationInstanceCommand {
 
 	public static final String ACTION_TOGGLE = "toggle";
 	public static final String ACTION_ROTATE_LEFT = "rotate_left";
@@ -27,7 +27,7 @@ public class RotationServiceCommand {
 	public boolean showToast;
 	public boolean toastIfServiceDisabled = true;
 
-	public RotationServiceCommand(String action) {
+	public ApplicationInstanceCommand(String action) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
 
@@ -41,11 +41,11 @@ public class RotationServiceCommand {
 				.putExtra(EXTRA_SHOW_TOAST, showToast);
 	}
 
-	public static RotationServiceCommand fromIntent(Intent intent) {
+	public static ApplicationInstanceCommand fromIntent(Intent intent) {
 		if (!intent.hasExtra(EXTRA_SHOW_TOAST))
 			throw new IllegalArgumentException("Intent didn't have the " + EXTRA_SHOW_TOAST + " extra");
 
-		RotationServiceCommand result = new RotationServiceCommand(intent.getAction());
+		ApplicationInstanceCommand result = new ApplicationInstanceCommand(intent.getAction());
 		result.showToast = intent.getBooleanExtra(EXTRA_SHOW_TOAST, false);
 
 		return result;

@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
-public class ServiceStatusFactory {
+public class ApplicationStatusFactory {
 
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screenRotationMonitor;
@@ -27,7 +27,7 @@ public class ServiceStatusFactory {
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
-	public ServiceStatusFactory(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
+	public ApplicationStatusFactory(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
 		this.calculator = calculator;
 		this.screenRotationMonitor = screenRotationMonitor;
 		this.naturalOrientationDetector = naturalOrientationDetector;
@@ -51,8 +51,8 @@ public class ServiceStatusFactory {
 		return result;
 	}
 
-	public ServiceStatus generate() {
-		return new ServiceStatus(
+	public ApplicationStatus generate() {
+		return new ApplicationStatus(
 			mode(),
 			overridden(),
 			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),

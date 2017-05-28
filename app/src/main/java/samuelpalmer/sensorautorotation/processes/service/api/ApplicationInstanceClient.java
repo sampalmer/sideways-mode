@@ -4,19 +4,18 @@ import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceController;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
-import samuelpalmer.sensorautorotation.processes.service.ServiceHolder;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public abstract class RotationServiceClient {
+public abstract class ApplicationInstanceClient {
 
-	public static void send(RotationServiceCommand command) {
-		if (ServiceHolder.isRunning())
-			ServiceHolder.instance().handle(command); //This seems to have less lag than an intent
-		else if (new ServiceSynchroniser(ApplicationSettings.local()).serviceEnabled())
+	public static void send(ApplicationInstanceCommand command) {
+		if (ApplicationInstanceManager.isApplicationRunning())
+			ApplicationInstanceManager.applicationInstance().handle(command); //This seems to have less lag than an intent
+		else if (ApplicationSettings.local().enabled().get())
 			ServiceController.ensureStarted(command.toIntent());
 		else if (command.toastIfServiceDisabled)
 			showDisabledMessage();

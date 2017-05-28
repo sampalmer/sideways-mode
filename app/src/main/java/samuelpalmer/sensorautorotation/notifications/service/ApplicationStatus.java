@@ -9,7 +9,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.settings.application.NotificationPriority;
 
 @SuppressWarnings("WeakerAccess")
-public class ServiceStatus implements Parcelable {
+public class ApplicationStatus implements Parcelable {
 	
 	public final Mode mode;
 	public final boolean overridden;
@@ -17,7 +17,7 @@ public class ServiceStatus implements Parcelable {
 	public final NotificationPriority priority;
 	public final boolean waitingForSensor;
 
-	public ServiceStatus(
+	public ApplicationStatus(
 		Mode mode,
 		boolean overridden,
 		UserOrientation user,
@@ -31,7 +31,7 @@ public class ServiceStatus implements Parcelable {
 		this.waitingForSensor = waitingForSensor;
 	}
 
-	private ServiceStatus(Parcel in) {
+	private ApplicationStatus(Parcel in) {
 		mode = in.readParcelable(this.getClass().getClassLoader());
 		overridden = in.readByte() != 0;
 		user = in.readParcelable(this.getClass().getClassLoader());
@@ -67,7 +67,7 @@ public class ServiceStatus implements Parcelable {
 		return overridden ? user.iconId() : mode.notificationIcon();
 	}
 	
-	public boolean equals(ServiceStatus other) {
+	public boolean equals(ApplicationStatus other) {
 		return
 			mode.equals(other.mode)
 			&&
@@ -80,15 +80,15 @@ public class ServiceStatus implements Parcelable {
 			waitingForSensor == other.waitingForSensor;
 	}
 	
-	public static final Creator<ServiceStatus> CREATOR = new Creator<ServiceStatus>() {
+	public static final Creator<ApplicationStatus> CREATOR = new Creator<ApplicationStatus>() {
 		@Override
-		public ServiceStatus createFromParcel(Parcel in) {
-			return new ServiceStatus(in);
+		public ApplicationStatus createFromParcel(Parcel in) {
+			return new ApplicationStatus(in);
 		}
 
 		@Override
-		public ServiceStatus[] newArray(int size) {
-			return new ServiceStatus[size];
+		public ApplicationStatus[] newArray(int size) {
+			return new ApplicationStatus[size];
 		}
 	};
 	

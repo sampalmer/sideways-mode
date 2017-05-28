@@ -10,24 +10,24 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 
 /**
- * Provides a way to communicate with RotationService using broadcasts.
+ * Provides a way to communicate with {@link samuelpalmer.sensorautorotation.processes.service.ApplicationInstance} using broadcasts.
  */
-public class RotationServiceReceiver extends BroadcastReceiver {
+public class ApplicationInstanceReceiver extends BroadcastReceiver {
 
-	public static PendingIntent getPendingIntent(RotationServiceCommand command, int requestCode) {
-		ComponentType componentType = ComponentType.create(RotationServiceReceiver.class);
+	public static PendingIntent getPendingIntent(ApplicationInstanceCommand command, int requestCode) {
+		ComponentType componentType = ComponentType.create(ApplicationInstanceReceiver.class);
 		Intent commandIntent = command.toIntent();
 
 		//Want the intent to go to the broadcast receiver rather than the service itself
-		commandIntent.setClass(CurrentProcess.context(), RotationServiceReceiver.class);
+		commandIntent.setClass(CurrentProcess.context(), ApplicationInstanceReceiver.class);
 		return componentType.pendingIntent(commandIntent, requestCode);
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		intent.setClass(context, RotationService.class);
-		RotationServiceCommand command = RotationServiceCommand.fromIntent(intent);
-		RotationServiceClient.send(command);
+		ApplicationInstanceCommand command = ApplicationInstanceCommand.fromIntent(intent);
+		ApplicationInstanceClient.send(command);
 	}
 
 }

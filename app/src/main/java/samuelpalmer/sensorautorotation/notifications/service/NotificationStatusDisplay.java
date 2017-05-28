@@ -6,7 +6,7 @@ import android.os.Build;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 
-public class NotificationStatusDisplay implements ServiceStatusDisplay {
+public class NotificationStatusDisplay implements ApplicationStatusDisplay {
 	private final Service service;
 	private final ServiceNotification builder;
 
@@ -16,10 +16,10 @@ public class NotificationStatusDisplay implements ServiceStatusDisplay {
 	}
 
 	@Override
-	public void onServiceStopped() {}
+	public void onApplicationStopped() {}
 
-	public void update(ServiceStatus serviceStatus) {
-		Notification notification = builder.build(serviceStatus);
+	public void update(ApplicationStatus applicationStatus) {
+		Notification notification = builder.build(applicationStatus);
 
 		cancelIfNecessary(notification);
 

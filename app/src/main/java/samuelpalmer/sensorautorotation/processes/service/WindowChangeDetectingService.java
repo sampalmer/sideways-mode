@@ -20,7 +20,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	public void onCreate() {
 		super.onCreate();
 
-		ServiceHolder.onChange.subscribe(mainServiceChanged);
+		ApplicationInstanceManager.onChange.subscribe(applicationChanged);
 
 		Log.i(TAG, "Accessibility service created");
 	}
@@ -31,7 +31,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	public void onDestroy() {
 		super.onDestroy();
 
-		ServiceHolder.onChange.unsubscribe(mainServiceChanged);
+		ApplicationInstanceManager.onChange.unsubscribe(applicationChanged);
 
 		Log.i(TAG, "Accessibility service destroyed");
 	}
@@ -51,14 +51,14 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		if (ServiceHolder.isRunning())
-			ServiceHolder.instance().activityMonitor.setCurrentActivity(null);
+		if (ApplicationInstanceManager.isApplicationRunning())
+			ApplicationInstanceManager.applicationInstance().activityMonitor.setCurrentActivity(null);
 
 		Log.i(TAG, "Accessibility service disconnected");
 		return super.onUnbind(intent);
 	}
 
-	private final EventHandler mainServiceChanged = new EventHandler() {
+	private final EventHandler applicationChanged = new EventHandler() {
 		@Override
 		public void update() {
 			updateServiceInfo();
@@ -66,13 +66,13 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	};
 
 	/**
-	 * Prevents accessibility events from being received when the main service isn't running.
+	 * Prevents accessibility events from being received when the application isn't running.
 	 * This is an attempt to reduce unnecessary performance impact.
 	 */
 	private void updateServiceInfo() {
 		AccessibilityServiceInfo config = new AccessibilityServiceInfo();
 
-		if (ServiceHolder.isRunning()) {
+		if (ApplicationInstanceManager.isApplicationRunning()) {
 			config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 			config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 
@@ -88,10 +88,10 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		if (ServiceHolder.isRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+		if (ApplicationInstanceManager.isApplicationRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
-				ServiceHolder.instance().activityMonitor.setCurrentActivity(componentName);
+				ApplicationInstanceManager.applicationInstance().activityMonitor.setCurrentActivity(componentName);
 		}
 	}
 

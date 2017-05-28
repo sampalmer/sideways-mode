@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 
@@ -30,8 +31,10 @@ public class CurrentProcess extends Application {
 		Log.i(TAG, "Process created");
 		context = this;
 
-		if (ServiceProcess.isServiceProcess())
+		if (ServiceProcess.isServiceProcess()) {
 			new Upgrader().upgradeIfNecessary();
+			ApplicationInstanceManager.init();
+		}
 		else
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 	}

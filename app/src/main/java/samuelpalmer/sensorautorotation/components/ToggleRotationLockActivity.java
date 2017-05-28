@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.components;
 import android.app.Activity;
 import android.os.Bundle;
 
-import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceClient;
-import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceClient;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
 /**
  * This MUST be in the "samuelpalmer.sensorautorotation.components" package for backwards
@@ -17,10 +17,10 @@ public class ToggleRotationLockActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		RotationServiceCommand command = new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE);
+		ApplicationInstanceCommand command = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TOGGLE);
 		command.showToast = true;
 
-		RotationServiceClient.send(command);
+		ApplicationInstanceClient.send(command);
 		finish();
 	}
 

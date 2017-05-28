@@ -27,8 +27,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceCommand;
-import samuelpalmer.sensorautorotation.processes.service.api.RotationServiceReceiver;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
@@ -131,11 +131,11 @@ public class NotificationsFragment extends PreferenceFragment {
 
 		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && areNotificationsEnabled(getActivity()) != Boolean.FALSE) {
 			//The user might have just unblocked the app's notifications, so better add the status notification if needed.
-			RotationServiceCommand updateNotificationCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_UPDATE_NOTIFICATION);
+			ApplicationInstanceCommand updateNotificationCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION);
 			updateNotificationCommand.toastIfServiceDisabled = false;
 
 			try {
-				RotationServiceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
+				ApplicationInstanceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
 			} catch (PendingIntent.CanceledException e) {
 				throw new RuntimeException(e); //Don't expect this to actually happen
 			}

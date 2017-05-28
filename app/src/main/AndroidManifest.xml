@@ -242,7 +242,7 @@
 
 		<provider
 			android:authorities="@string/status_provider_authority"
-			android:name=".processes.service.ServiceStatusContentProvider"
+			android:name=".processes.service.ApplicationStatusContentProvider"
 			android:exported="false"
 			android:process="@string/service_process_name" />
 
@@ -272,7 +272,7 @@
 			android:excludeFromRecents="true"
 			android:process="@string/service_process_name" />
 
-		<receiver android:name=".processes.service.api.RotationServiceReceiver"
+		<receiver android:name=".processes.service.api.ApplicationInstanceReceiver"
 		          android:process="@string/service_process_name" />
 
 		<service

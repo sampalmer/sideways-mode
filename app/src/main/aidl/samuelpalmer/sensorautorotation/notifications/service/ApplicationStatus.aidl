@@ -1,4 +1,4 @@
-// ServiceStatus.aidl
+// ApplicationStatus.aidl
 package samuelpalmer.sensorautorotation.notifications.service;
 
-parcelable ServiceStatus;
+parcelable ApplicationStatus;
