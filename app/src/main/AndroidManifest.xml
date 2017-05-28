@@ -88,6 +88,11 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+			</intent-filter>
+
 		</activity>
 
 		<activity android:name=".processes.ui.MessageDialogActivity"
@@ -104,25 +109,6 @@
 		</activity>
 
 		<receiver android:name=".processes.ui.ToastReceiver" />
-
-		<activity
-			android:name=".processes.ui.preferences.notifications.NotificationsActivity"
-			android:parentActivityName=".processes.ui.preferences.SettingsActivity"
-			android:label="@string/preference_notifications"
-			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute">
-
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
-			</intent-filter>
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.SettingsActivity" />
-
-		</activity>
 
 		<activity
 			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
