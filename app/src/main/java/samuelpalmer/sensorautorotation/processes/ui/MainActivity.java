@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,21 +14,23 @@ import android.view.MenuItem;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
-import samuelpalmer.sensorautorotation.errors.SensorError;
-import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends UiActivity {
 
 	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
+	private static final String TAG_UNINSTALLER = "uninstaller";
 	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private EnabledFragment enabledFragment;
+	private UninstallerFragment uninstaller;
 	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 		@SuppressWarnings("SameReturnValue")
@@ -56,9 +57,7 @@ public class MainActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_uninstall:
-					final Uninstaller uninstaller = new Uninstaller(MainActivity.this);
-					uninstaller.uninstallOrPrompt();
-
+					uninstaller.uninstall();
 					break;
 				default:
 					throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
@@ -91,6 +90,15 @@ public class MainActivity extends UiActivity {
 		navigation.setCheckedItem(R.id.action_home);
 		
 		enabledFragment = (EnabledFragment) getFragmentManager().findFragmentById(R.id.fragment_enabled);
+		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
+		
+		if (uninstaller == null) {
+			uninstaller = new UninstallerFragment();
+			getSupportFragmentManager()
+				.beginTransaction()
+				.add(uninstaller, TAG_UNINSTALLER)
+				.commit();
+		}
 	}
 
 	@Override
@@ -104,14 +112,11 @@ public class MainActivity extends UiActivity {
 		super.onStart();
 
 		//Checking this after the activity starts in case the user wants to go out and back in again to retry the check in case the problem is intermittent
-		if (!OrientationSensorHandler.canDetectOrientation()) {
+		int startupErrorString = StartUpCheck.check();
+		if (startupErrorString != 0) {
 			//Not letting the user go any further since they shouldn't have installed the app
-			Log.w(MainActivity.class.getSimpleName(), "Didn't find any supported sensors. Advising user the device is unsupported.");
-			try {
-				new SensorError(SensorError.Type.NOT_FOUND).showError().send();
-			} catch (PendingIntent.CanceledException e) {
-				throw new RuntimeException(e);
-			}
+			Log.w(MainActivity.class.getSimpleName(), StringResource.get(startupErrorString).toString());
+			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
 			
 			finish();
 			return;

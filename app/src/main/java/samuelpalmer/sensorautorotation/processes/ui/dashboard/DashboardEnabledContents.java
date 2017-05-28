@@ -17,9 +17,9 @@ import android.widget.TextView;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceClient;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceClient;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
 
 public class DashboardEnabledContents extends LinearLayout {
@@ -70,10 +70,10 @@ public class DashboardEnabledContents extends LinearLayout {
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		
-		rotateLeftButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT)));
+		rotateLeftButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT)));
 		//Not showing the toast when this is pressed since it causes a flickering issue on Samsung Galaxy S5 (Android 6)
-		toggleModeButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE)));
-		rotateRightButton.setOnClickListener(new RotationServiceClickListener(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT)));
+		toggleModeButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TOGGLE)));
+		rotateRightButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_RIGHT)));
 		
 		/*
 			All image drawables must be set in app code to avoid crashes since:
@@ -84,23 +84,23 @@ public class DashboardEnabledContents extends LinearLayout {
 		rotateRightButton.setImageResource(R.drawable.dashboard_rotate_right);
 	}
 	
-	private static class RotationServiceClickListener implements View.OnClickListener {
+	private static class ApplicationInstanceClickReceiver implements View.OnClickListener {
 		
-		private final RotationServiceCommand command;
+		private final ApplicationInstanceCommand command;
 		
-		public RotationServiceClickListener(RotationServiceCommand command) {
+		public ApplicationInstanceClickReceiver(ApplicationInstanceCommand command) {
 			this.command = command;
 		}
 		
 		@Override
 		public void onClick(View v) {
-			RotationServiceClient.send(command);
+			ApplicationInstanceClient.send(command);
 			//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
 		}
 		
 	}
 	
-	public void setStatus(ServiceStatus lastStatus) {
+	public void setStatus(ApplicationStatus lastStatus) {
 		if (lastStatus.waitingForSensor) {
 			ViewHelpers.ensureVisibility(userIcon, View.GONE);
 			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);

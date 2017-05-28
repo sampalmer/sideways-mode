@@ -4,12 +4,12 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.State;
 
-public class ServiceStatusDisplayUpdater extends State {
+public class ApplicationStatusDisplayUpdater extends State {
 
-	private final ServiceStatusFactory statusGenerator;
-	private final ServiceStatusDisplay display;
+	private final ApplicationStatusFactory statusGenerator;
+	private final ApplicationStatusDisplay display;
 
-	public ServiceStatusDisplayUpdater(ServiceStatusFactory statusGenerator, ServiceStatusDisplay display) {
+	public ApplicationStatusDisplayUpdater(ApplicationStatusFactory statusGenerator, ApplicationStatusDisplay display) {
 		this.statusGenerator = statusGenerator;
 		this.display = display;
 	}
@@ -27,24 +27,24 @@ public class ServiceStatusDisplayUpdater extends State {
 		for (EventRegistrar trigger : statusGenerator.updateTriggers())
 			trigger.unsubscribe(updateDisplays);
 
-		display.onServiceStopped();
+		display.onApplicationStopped();
 	}
 
 	private final EventHandler updateDisplays = new EventHandler() {
 		@Override
 		public void update() {
-			ServiceStatus serviceStatus = statusGenerator.generate();
+			ApplicationStatus applicationStatus = statusGenerator.generate();
 
-			if (lastServiceStatus == null || !serviceStatus.equals(lastServiceStatus)) {
-				display.update(serviceStatus);
-				lastServiceStatus = serviceStatus;
+			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
+				display.update(applicationStatus);
+				lastApplicationStatus = applicationStatus;
 			}
 		}
 	};
 
-	public ServiceStatus getLastStatus() {
-		return lastServiceStatus;
+	public ApplicationStatus getLastStatus() {
+		return lastApplicationStatus;
 	}
 
-	private ServiceStatus lastServiceStatus;
+	private ApplicationStatus lastApplicationStatus;
 }

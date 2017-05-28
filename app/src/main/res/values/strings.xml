@@ -17,12 +17,11 @@
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
 	<string name="upgrade_v18">Locking the screen rotation is now supported. The user orientation screen has been removed since locking the screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
+	<string name="upgrade_v54">The option to hide the notification has been removed.</string>
+	<string name="upgrade_v54_workaround">Instead, please open the app and turn off the app\'s notifications.</string>
 
 	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="email_app_chooser_title">Send feedback with</string>
-
-	<string name="uninstall_title">Uninstall?</string>
-	<string name="uninstall_confirmation_message">Turn off and uninstall this app?</string>
 
 	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' orientations can be overridden."</string>
 
@@ -49,7 +48,6 @@
 	<string name="user_rotation_right_side">Right side</string>
 	<string name="user_rotation_sideways">Sideways</string>
 	<string name="user_rotation_upside_down">Upside-down</string>
-	<string name="notification_hiding">Trying to hide the notification</string>
 
 	<string name="action_rotate_left">Rotate Left</string>
 	<string name="action_rotate_right">Rotate Right</string>
@@ -64,7 +62,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_controls">Controls</string>
-	<string name="preference_controls_description">Controlling the screen orientation</string>
 
 	<string name="preference_quick_setting">Quick setting</string>
 	<string name="preference_quick_setting_instructions">"To use the quick setting, just add this app's tile to your quick settings tray."</string>
@@ -80,10 +77,8 @@
 
 	<string name="preference_notifications">Notification</string>
 
-	<string name="preference_show_notification">Show</string>
-	<string name="preference_show_notification_description">"Show notification in the notification drawer"</string>
-
  	<string name="preference_all_notifications_title">All notifications</string>
+	<string name="preference_all_notifications_summary">Turn notifications off or on</string>
 	<string name="preference_all_notifications_explanation">"The notification stops Android from killing the background service. To hide it, block this app's notifications in the next screen."</string>
 
 	<string name="preference_notification_priority_title">Notification priority</string>
@@ -92,7 +87,6 @@
 	<string name="preference_notification_priority_low">Low</string>
 
 	<string name="preference_notification_summary_priority">%1$s priority</string>
-	<string name="preference_notification_summary_blocked">All off</string>
 
 	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
 	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
@@ -176,7 +170,8 @@
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>
-	<string name="device_problem_explanation">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
+	<string name="device_problem_explanation_sensor">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
+	<string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
 	<string name="request_uninstall">"Please uninstall this app."</string>
 
 	<!-- Notification channels -->

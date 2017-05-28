@@ -16,8 +16,8 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceCommand;
-import samuelpalmer.sensorautorotation.processes.service.RotationServiceReceiver;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 class ServiceNotification {
@@ -41,18 +41,18 @@ class ServiceNotification {
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
 	}
 
-	public Notification build(ServiceStatus serviceStatus) {
+	public Notification build(ApplicationStatus applicationStatus) {
 		builder
-			.setSmallIcon(serviceStatus.getIcon())
-			.setProgress(0, 0, serviceStatus.waitingForSensor)
+			.setSmallIcon(applicationStatus.getIcon())
+			.setProgress(0, 0, applicationStatus.waitingForSensor)
 		;
 
 		int statusTextResource =
-			serviceStatus.waitingForSensor
+			applicationStatus.waitingForSensor
 			?
 			R.string.status_waiting_sensor
 			:
-			serviceStatus.user.descriptionId();
+			applicationStatus.user.descriptionId();
 		
 		CharSequence statusText = StringResource.get(statusTextResource);
 
@@ -65,15 +65,15 @@ class ServiceNotification {
 			builder.setContentText(statusText);
 		}
 
-		serviceStatus.priority.apply(builder);
+		applicationStatus.priority.apply(builder);
 		hideTimestamp();
 
-		applyButtons(serviceStatus);
+		applyButtons(applicationStatus);
 
 		return builder.build();
 	}
 	
-	private void applyButtons(ServiceStatus serviceStatus) {
+	private void applyButtons(ApplicationStatus applicationStatus) {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
@@ -83,24 +83,24 @@ class ServiceNotification {
 			actionButtonColour
 		);
 
-		RotationServiceCommand toggleCommand = new RotationServiceCommand(RotationServiceCommand.ACTION_TOGGLE);
+		ApplicationInstanceCommand toggleCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TOGGLE);
 		toggleCommand.showToast = true;
 
 		notificationButtons
 			.configureButton(
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
+				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
 				StringResource.get(R.string.action_rotate_left))
 			.configureButton(
 				R.id.toggle_mode_button,
-				serviceStatus.mode.actionIcon(),
-				RotationServiceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
-				StringResource.get(serviceStatus.mode.toggleToOtherModeResourceId()))
+				applicationStatus.mode.actionIcon(),
+				ApplicationInstanceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
+				StringResource.get(applicationStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
-				RotationServiceReceiver.getPendingIntent(new RotationServiceCommand(RotationServiceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
+				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
 				StringResource.get(R.string.action_rotate_right));
 
 		builder.setCustomContentView(notificationButtons.getContentView());

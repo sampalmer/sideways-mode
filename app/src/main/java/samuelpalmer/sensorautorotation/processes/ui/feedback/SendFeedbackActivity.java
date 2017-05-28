@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import samuelpalmer.common.ComponentNameExtensions;
+import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
@@ -79,8 +78,7 @@ public class SendFeedbackActivity extends UiActivity {
 		if (reviewMenuItem == null)
 			throw new RuntimeException("Couldn't find Review menu item.");
 		
-		ComponentName appMarket = appMarketIntent().resolveActivity(getPackageManager());
-		if (appMarket == null || appMarket.equals(ComponentNameExtensions.unsupportedAction))
+		if (IntentExtensions.activityDoesntExist(appMarketIntent(), getPackageManager()))
 			menu.removeItem(reviewMenuItem.getItemId());
 	}
 	

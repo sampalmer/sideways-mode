@@ -14,10 +14,10 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
-import samuelpalmer.sensorautorotation.processes.service.ServiceStatusContentProvider;
-import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
@@ -25,7 +25,7 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
-	private ServiceStatusContentProvider.Client statusClient;
+	private ApplicationStatusContentProvider.Client statusClient;
 	private Settings.Setting<Boolean> enabledSetting;
 
 	/**
@@ -77,7 +77,7 @@ public class QuickSettingService extends TileService {
 	public void onStartListening() {
 		super.onStartListening();
 
-		statusClient = new ServiceStatusContentProvider.Client(this);
+		statusClient = new ApplicationStatusContentProvider.Client(this);
 		statusClient.subscribe(statusListener);
 
 		enabledSetting = ApplicationSettings.remote().enabled();
@@ -97,9 +97,9 @@ public class QuickSettingService extends TileService {
 		statusClient = null;
 	}
 
-	private final IServiceStatusListener.Stub statusListener = new IServiceStatusListener.Stub() {
+	private final IApplicationStatusListener.Stub statusListener = new IApplicationStatusListener.Stub() {
 		@Override
-		public void onChange(ServiceStatus status) throws RemoteException {
+		public void onChange(ApplicationStatus status) throws RemoteException {
 			if (statusClient != null) //Just in case we've lost listening state
 				updateTile(status);
 		}
@@ -113,7 +113,7 @@ public class QuickSettingService extends TileService {
 		}
 	};
 
-	private void updateTile(ServiceStatus status) {
+	private void updateTile(ApplicationStatus status) {
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");

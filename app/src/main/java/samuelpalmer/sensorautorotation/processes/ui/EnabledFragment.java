@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,13 +107,22 @@ public class EnabledFragment extends Fragment {
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						//TODO: Handle case where this activity isn't available
-						startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null)), PERMISSION_REQUEST_CODE);
+						try {
+							startActivityForResult(getModifySystemSettingsIntent(getContext()), PERMISSION_REQUEST_CODE);
+						}
+						catch (ActivityNotFoundException e) {
+							throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
+						}
 					}
 				})
 				.show();
 	}
-
+	
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public static Intent getModifySystemSettingsIntent(Context context) {
+		return new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.fromParts("package", context.getPackageName(), null));
+	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

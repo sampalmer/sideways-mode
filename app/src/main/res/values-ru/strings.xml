@@ -24,9 +24,6 @@
 	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 	<string name="email_app_chooser_title">Отправить отзыв</string>
 
-	<string name="uninstall_title">Удалить?</string>
-	<string name="uninstall_confirmation_message">Отключить и удалить это приложение?</string>
-
 	<string name="settings">Настройки</string>
 
 	<!-- Common -->
@@ -51,8 +48,6 @@
 	<string name="user_rotation_sideways">Ландшафтный</string>
 	<string name="user_rotation_upside_down">Вверх ногами</string>
 
-	<string name="notification_hiding">Попытаться скрыть уведомление</string>
-
 	<string name="action_rotate_left">Повернуть влево</string>
 	<string name="action_rotate_right">Повернуть вправо</string>
 	<string name="action_toggle_rotation_lock">Переключить автоповорот</string>
@@ -62,7 +57,6 @@
 
 	<!-- Preferences -->
 	<string name="preference_controls">Управление</string>
-	<string name="preference_controls_description">Управление ориентацией экрана</string>
 
 	<string name="preference_quick_setting">Быстрые настройки</string>
 
@@ -72,8 +66,6 @@
 
 	<string name="preference_notifications">Заметки</string>
 
-	<string name="preference_show_notification">Показать</string>
-
 	<string name="preference_all_notifications_title">Все заметки</string>
 
 	<string name="preference_notification_priority_title">Приоритет уведомления</string>
@@ -82,7 +74,6 @@
 	<string name="preference_notification_priority_low">Низкий</string>
 
 	<string name="preference_notification_summary_priority">%1$s приоритет</string>
-	<string name="preference_notification_summary_blocked">Все выключить</string>
 
 	<string name="preference_allow_upside_down_screen_title">Разрешить перевернутый экран</string>
 	<string name="preference_allow_upside_down_screen_description">Поддерживать удерживание устройства вверх ногами</string>

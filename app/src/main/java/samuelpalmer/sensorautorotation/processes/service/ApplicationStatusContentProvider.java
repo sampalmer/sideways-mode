@@ -19,13 +19,13 @@ import samuelpalmer.common.ParcelableBinder;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatus;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplay;
-import samuelpalmer.sensorautorotation.notifications.service.ServiceStatusDisplayUpdater;
-import samuelpalmer.sensorautorotation.processes.service.statusinterface.IServiceStatusListener;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
+import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
-public class ServiceStatusContentProvider extends ContentProvider {
+public class ApplicationStatusContentProvider extends ContentProvider {
 
 	private static final ConcurrentHashMap<IBinder, ServerListener> listeners = new ConcurrentHashMap<>();
 	private static final String METHOD_SUBSCRIBE = "subscribe";
@@ -47,12 +47,12 @@ public class ServiceStatusContentProvider extends ContentProvider {
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {
-							if (ServiceHolder.isRunning()) {
-								RotationService service = ServiceHolder.instance();
+							if (ApplicationInstanceManager.isApplicationRunning()) {
+								ApplicationInstance application = ApplicationInstanceManager.applicationInstance();
 								
-								//TODO: Replace all this with an EventRegistrarAdaptor and ServiceStatusDisplays.add()
-								ServiceStatusDisplayUpdater manager = service.serviceStatusDisplayUpdater;
-								ServiceStatus lastStatus = manager.getLastStatus();
+								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
+								ApplicationStatusDisplayUpdater manager = application.applicationStatusDisplayUpdater;
+								ApplicationStatus lastStatus = manager.getLastStatus();
 								if (lastStatus != null)
 									listener.reportUpdate(lastStatus);
 							}
@@ -92,7 +92,7 @@ public class ServiceStatusContentProvider extends ContentProvider {
 	 * @return {@code null} if {@code binder} dies
 	 */
 	private ServerListener subscribe(final IBinder binder) {
-		IServiceStatusListener listener = IServiceStatusListener.Stub.asInterface(binder);
+		IApplicationStatusListener listener = IApplicationStatusListener.Stub.asInterface(binder);
 
 		IBinder.DeathRecipient dr = new IBinder.DeathRecipient() {
 			@Override
@@ -152,15 +152,15 @@ public class ServiceStatusContentProvider extends ContentProvider {
 
 	private static class ServerListener
 	{
-		private final IServiceStatusListener listener;
+		private final IApplicationStatusListener listener;
 		private final IBinder.DeathRecipient deathRecipient;
 
-		public ServerListener(IServiceStatusListener listener, IBinder.DeathRecipient deathRecipient) {
+		public ServerListener(IApplicationStatusListener listener, IBinder.DeathRecipient deathRecipient) {
 			this.listener = listener;
 			this.deathRecipient = deathRecipient;
 		}
 
-		public void reportUpdate(ServiceStatus status) {
+		public void reportUpdate(ApplicationStatus status) {
 			try {
 				listener.onChange(status);
 			} catch (RemoteException ignored) {}
@@ -175,15 +175,15 @@ public class ServiceStatusContentProvider extends ContentProvider {
 			contentResolver = context.getContentResolver();
 		}
 
-		public void subscribe(IServiceStatusListener listener) {
+		public void subscribe(IApplicationStatusListener listener) {
 			call(METHOD_SUBSCRIBE, listener);
 		}
 
-		public void unsubscribe(IServiceStatusListener listener) {
+		public void unsubscribe(IApplicationStatusListener listener) {
 			call(METHOD_UNSUBSCRIBE, listener);
 		}
 
-		private void call(String method, IServiceStatusListener listener) {
+		private void call(String method, IApplicationStatusListener listener) {
 			Bundle args = new Bundle();
 			args.putParcelable(null, new ParcelableBinder(listener.asBinder()));
 
@@ -201,15 +201,15 @@ public class ServiceStatusContentProvider extends ContentProvider {
 
 	}
 
-	public static class RemoteStatusDisplay implements ServiceStatusDisplay {
+	public static class RemoteStatusDisplay implements ApplicationStatusDisplay {
 
 		@Override
-		public void onServiceStopped() {}
+		public void onApplicationStopped() {}
 
 		@Override
-		public void update(ServiceStatus serviceStatus) {
+		public void update(ApplicationStatus applicationStatus) {
 			for (ServerListener listener : listeners.values())
-				listener.reportUpdate(serviceStatus);
+				listener.reportUpdate(applicationStatus);
 		}
 
 	}

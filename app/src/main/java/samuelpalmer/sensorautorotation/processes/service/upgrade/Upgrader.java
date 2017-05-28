@@ -31,8 +31,11 @@ public class Upgrader {
 	}
 
 	public void upgradeIfNecessary() {
-		//We only need to instruct the user about changes if he/she has actually run the app before.
-		if (lastAppVersion != null) {
+		if (
+			lastAppVersion != null // We only need to instruct the user about changes if he/she has actually run the app before.
+			&&
+			lastAppVersion != newAppVersion
+		) {
 			Log.i(Upgrader.class.getSimpleName(), "Upgrading from " + lastAppVersion + " to " + newAppVersion);
 			upgrade();
 		}
@@ -46,7 +49,12 @@ public class Upgrader {
 			Migration migration = migrations.get(version);
 			if (migration != null) {
 				Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
-				upgradeMessage.append(migration.message());
+				
+				// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
+				CharSequence message = migration.getMessage();
+				if (message != null)
+					upgradeMessage.append(message);
+				
 				migration.upgradeData();
 			}
 		}

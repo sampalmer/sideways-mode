@@ -2,20 +2,14 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenfo
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import samuelpalmer.sensorautorotation.R;
-
 class InstalledAppAdapter extends ArrayAdapter<InstalledApp> {
 
-	private final LayoutInflater layoutInflater;
-
 	public InstalledAppAdapter(Context context) {
-		super(context, R.layout.forced_apps_chooser_item);
-		layoutInflater = LayoutInflater.from(context);
+		super(context, 0);
 	}
 
 	@NonNull
@@ -23,8 +17,8 @@ class InstalledAppAdapter extends ArrayAdapter<InstalledApp> {
 	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 		CheckedInstalledApp result = (CheckedInstalledApp) convertView;
 		if (result == null)
-			result = (CheckedInstalledApp) layoutInflater.inflate(R.layout.forced_apps_chooser_item, parent, false);
-
+			result = new CheckedInstalledApp(getContext());
+		
 		InstalledApp item = getItem(position);
 		result.setItem(item);
 

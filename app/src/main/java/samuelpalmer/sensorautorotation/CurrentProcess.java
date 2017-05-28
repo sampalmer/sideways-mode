@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
@@ -43,9 +44,11 @@ public class CurrentProcess extends Application {
 			NotificationChannels.setup();
 			disableNotificationsActivity();
 		}
-
-		if (ServiceProcess.isServiceProcess())
+		
+		if (ServiceProcess.isServiceProcess()) {
 			new Upgrader().upgradeIfNecessary();
+			ApplicationInstanceManager.init();
+		}
 		else
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 	}
