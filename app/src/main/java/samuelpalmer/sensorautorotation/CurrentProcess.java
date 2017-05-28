@@ -9,8 +9,8 @@ import android.os.Build;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceProcess;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsActivity;

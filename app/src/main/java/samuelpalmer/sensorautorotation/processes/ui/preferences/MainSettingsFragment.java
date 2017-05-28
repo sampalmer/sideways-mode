@@ -25,10 +25,14 @@ import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsFragment;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsSummary;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
+	
+	private static final int REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS = 1;
 	
 	private NotificationsSummary notificationsSummary;
 	private Preference notificationsPreference;
@@ -48,6 +52,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		addPreferencesFromResource(R.xml.preferences);
 		
 		notificationsPreference = findPreference("notifications");
+		notificationsPreference.setOnPreferenceClickListener(notificationsClicked);
 		notificationsSummary = new NotificationsSummary();
 		
 		Preference quickSettingPreference = findPreference("quick_setting");
@@ -202,7 +207,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		super.onStart();
 		
 		notificationsSummary.subscribe(notificationsChanged);
-		updateNotifications();
+		updateNotificationsSummary();
 		
 		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
 		forcedApps.subscribe(forcedAppsChanged);
@@ -219,14 +224,47 @@ public class MainSettingsFragment extends PreferenceFragment {
 		notificationsSummary.unsubscribe(notificationsChanged);
 	}
 	
-	private final EventHandler notificationsChanged = new EventHandler() {
+	private final Preference.OnPreferenceClickListener notificationsClicked = new Preference.OnPreferenceClickListener() {
 		@Override
-		public void update() {
-			updateNotifications();
+		public boolean onPreferenceClick(Preference preference) {
+			//Notification configuration is built into Android O, so we'll just send the user to the relevant OS settings screen.
+			if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+				Intent intent;
+				
+				if (SystemServices.notificationManager().areNotificationsEnabled())
+					//Guide the user to block just the dashboard notification
+					intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+						.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
+				else
+					//Guide the user to unblock the app's notifications and toasts
+					intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+				
+				intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+				
+				startActivityForResult(intent, REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS);
+			} else
+				startActivity(new Intent(getActivity(), NotificationsActivity.class));
+			
+			return true;
 		}
 	};
 	
-	private void updateNotifications() {
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (requestCode == REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS)
+			NotificationsFragment.updateServiceNotification();
+	}
+	
+	private final EventHandler notificationsChanged = new EventHandler() {
+		@Override
+		public void update() {
+			updateNotificationsSummary();
+		}
+	};
+	
+	private void updateNotificationsSummary() {
 		CharSequence summary = notificationsSummary.getSummary();
 		notificationsPreference.setSummary(summary);
 	}
