@@ -11,6 +11,23 @@
 			android:icon="@drawable/preference_notifications" />
 
 		<Preference
+			android:key="allNotifications"
+			android:persistent="false"
+			android:title="@string/preference_all_notifications_title"
+			android:icon="@drawable/preference_visibility"
+			/>
+	"
+		<!-- TODO: Populate the entries programmatically to keep everything in sync -->
+		<!-- Not specifying a dialog icon since this causes crashes on Android 4.1.2 due to vector backwards compatibility -->
+		<ListPreference
+			android:key="notificationPriority"
+			android:title="@string/preference_notification_priority_title"
+			android:entries="@array/notification_priorities"
+			android:entryValues="@array/notification_priority_values"
+			android:icon="@drawable/preference_notification_priority"
+			/>
+
+		<Preference
 			android:key="quick_setting"
 			android:persistent="false"
 			android:title="@string/preference_quick_setting"
