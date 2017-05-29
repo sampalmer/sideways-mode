@@ -37,14 +37,11 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.notifications.NotificationsFragment;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
 	
 	private static final int REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED = 1;
-	private static final int REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS = 2;
 	
 	private Preference notificationsPreference;
 	
@@ -89,6 +86,8 @@ public class MainSettingsFragment extends PreferenceFragment {
 		
 		notificationsPreference = findPreference("notifications");
 		notificationsPreference.setOnPreferenceClickListener(notificationsClicked);
+		if (!(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1))
+			removePreference(notificationsPreference);
 		
 		Preference quickSettingPreference = findPreference("quick_setting");
 		quickSettingPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -238,18 +237,20 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && areNotificationsEnabled(getActivity()) != Boolean.FALSE) {
-			//The user might have just unblocked the app's notifications, so better add the status notification if needed.
-			ApplicationInstanceCommand updateNotificationCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION);
-			updateNotificationCommand.toastIfServiceDisabled = false;
-			
-			try {
-				ApplicationInstanceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
-			} catch (PendingIntent.CanceledException e) {
-				throw new RuntimeException(e); //Don't expect this to actually happen
-			}
-		}
+		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && areNotificationsEnabled(getActivity()) != Boolean.FALSE)
+			updateServiceNotification();
+	}
+	
+	public void updateServiceNotification() {
+		//The user might have just unblocked the app's notifications, so better add the status notification if needed.
+		ApplicationInstanceCommand updateNotificationCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION);
+		updateNotificationCommand.toastIfServiceDisabled = false;
 		
+		try {
+			ApplicationInstanceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
+		} catch (PendingIntent.CanceledException e) {
+			throw new RuntimeException(e); //Don't expect this to actually happen
+		}
 	}
 	
 	@Override
@@ -384,38 +385,37 @@ public class MainSettingsFragment extends PreferenceFragment {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			//Notification configuration is built into Android O, so we'll just send the user to the relevant OS settings screen.
-			if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
-				Intent intent;
-				
-				if (SystemServices.notificationManager().areNotificationsEnabled())
-					//Guide the user to block just the dashboard notification
-					intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-						.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
-				else
-					//Guide the user to unblock the app's notifications and toasts
-					intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-				
-				intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-				
-				startActivityForResult(intent, REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS);
-			} else
-				startActivity(new Intent(getActivity(), NotificationsActivity.class));
+			Intent intent;
+			
+			if (SystemServices.notificationManager().areNotificationsEnabled())
+				//Guide the user to block just the dashboard notification
+				intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+					.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
+			else
+				//Guide the user to unblock the app's notifications and toasts
+				intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+			
+			intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+			
+			startActivityForResult(intent, REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED);
 			
 			return true;
 		}
 	};
 	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == REQUEST_CODE_CHANGE_NOTIFICATION_SETTINGS)
-			NotificationsFragment.updateServiceNotification();
+	private void updateNotificationsSummary() {
+		if (areNotificationsEnabled(CurrentProcess.context()) == Boolean.FALSE || dashboardNotificationHidden())
+			notificationsPreference.setSummary(R.string.off);
+		else
+			notificationsPreference.setSummary(R.string.on);
 	}
 	
-	private void updateNotificationsSummary() {
-		CharSequence summary = notificationsSummary.getSummary();
-		notificationsPreference.setSummary(summary);
+	private boolean dashboardNotificationHidden() {
+		return
+			(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+				&&
+				notificationManager.getNotificationChannel(NotificationChannels.ID_CONTROLS).getImportance() == NotificationManager.IMPORTANCE_NONE
+			;
 	}
 	
 	private final EventHandler forcedAppsChanged = new EventHandler() {
@@ -437,14 +437,19 @@ public class MainSettingsFragment extends PreferenceFragment {
 	}
 	
 	private void hideUnsupportedOptions() {
-		if (Build.VERSION.SDK_INT < 16) {
-			ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.remote().notificationPriority().getKey());
+		ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.remote().notificationPriority().getKey());
+		
+		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+			removePreference(notificationPriorityPreference);
+			removePreference(allNotificationsPreference);
+		}
+		else if (Build.VERSION.SDK_INT < 16) {
 			CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
 			int newLength = originalEntries.length - 1;
 			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
 			notificationPriorityPreference.setEntryValues(Arrays.copyOfRange(notificationPriorityPreference.getEntryValues(), 0, newLength));
 			
-			getPreferenceScreen().removePreference(allNotificationsPreference);
+			removePreference(allNotificationsPreference);
 		}
 	}
 	
