@@ -73,7 +73,7 @@
 		</activity>
 
 		<activity
-			android:name=".processes.ui.preferences.SettingsActivity"
+			android:name=".processes.ui.preferences.MainSettingsActivity"
 			android:parentActivityName=".processes.ui.MainActivity"
 			android:label="@string/settings"
 			tools:ignore="UnusedAttribute">

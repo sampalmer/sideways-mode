@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends UiActivity {
@@ -42,7 +42,7 @@ public class MainActivity extends UiActivity {
 				case R.id.action_home:
 					break;
 				case R.id.action_settings: {
-					Intent intent = ComponentType.create(SettingsActivity.class).intent();
+					Intent intent = ComponentType.create(MainSettingsActivity.class).intent();
 					startActivity(intent);
 					break;
 				}

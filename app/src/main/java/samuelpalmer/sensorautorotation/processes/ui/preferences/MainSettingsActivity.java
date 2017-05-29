@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import samuelpalmer.sensorautorotation.R;
 
 
-public class SettingsActivity extends PreferencesActivity {
+public class MainSettingsActivity extends PreferencesActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
