@@ -26,11 +26,12 @@ import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplic
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ApplicationStatusContentProvider extends ContentProvider {
-
+	
 	private static final ConcurrentHashMap<IBinder, ServerListener> listeners = new ConcurrentHashMap<>();
 	private static final String METHOD_SUBSCRIBE = "subscribe";
 	private static final String METHOD_UNSUBSCRIBE = "unsubscribe";
-
+	private static final String KEY_SUCCESS = "success";
+	
 	@Override
 	public boolean onCreate() { return true; }
 
@@ -77,8 +78,10 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 			default:
 				throw notSupported();
 		}
-
-		return new Bundle(); //Confirms to the caller that the method succeeded
+		
+		Bundle result = new Bundle();
+		result.putBoolean(KEY_SUCCESS, true); //Confirms to the caller that the method didn't crash
+		return result;
 	}
 
 	private IBinder getBinder(Bundle extras) {
@@ -194,9 +197,10 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 					.build(),
 					method, null, args
 			);
-
-			if (result == null)
-				throw new RuntimeException("Got back null. The content provider probably crashed.");
+			
+			// If the content provider crashes, it can return null or an empty bundle.
+			if (result == null || !result.getBoolean(KEY_SUCCESS, false))
+				throw new RuntimeException("Didn't get a result. The content provider probably crashed.");
 		}
 
 	}
