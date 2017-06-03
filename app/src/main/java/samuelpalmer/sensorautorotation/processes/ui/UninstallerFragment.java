@@ -19,7 +19,7 @@ public class UninstallerFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		serviceSynchroniser = new ServiceSynchroniser(ApplicationSettings.remote());
+		serviceSynchroniser = new ServiceSynchroniser(ApplicationSettings.instance());
 		
 		if (savedInstanceState != null)
 			appWasEnabled = savedInstanceState.getBoolean(null);

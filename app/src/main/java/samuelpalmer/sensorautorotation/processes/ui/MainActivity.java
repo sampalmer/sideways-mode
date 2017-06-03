@@ -122,7 +122,7 @@ public class MainActivity extends UiActivity {
 			return;
 		}
 		
-		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.remote().lastVersionUserInstructedAbout();
+		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
 		if (!lastVersionUserInstructedAbout.hasValue()) {
 			boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
 			

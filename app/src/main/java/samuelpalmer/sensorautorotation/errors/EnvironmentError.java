@@ -27,7 +27,7 @@ public abstract class EnvironmentError {
 	private static final String JSON_KEY_TYPE = "type";
 	private static final String JSON_KEY_DETAILS = "details";
 	
-	private static final Settings.Setting<String> lastErrorSetting = ApplicationSettings.remote().lastErrorJson();
+	private static final Settings.Setting<String> lastErrorSetting = ApplicationSettings.instance().lastErrorJson();
 	public static final EventRegistrar onChange = lastErrorSetting;
 	
 	public static EnvironmentError lastError() {
@@ -74,8 +74,8 @@ public abstract class EnvironmentError {
 
 		JSONObject json = serialise();
 		lastErrorSetting.set(json.toString());
-
-		new ServiceSynchroniser(ApplicationSettings.remote()).disableService();
+		
+		new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 	}
 	
 	abstract JSONObject serialiseDetails() throws JSONException;

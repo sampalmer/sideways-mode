@@ -65,7 +65,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 					 * we want to make sure it's running. Otherwise the client will have to wait
 					 * a long time (or forever) to get the first service status update.
 					 */
-					new ServiceSynchroniser(ApplicationSettings.local()).updateFromSettings();
+					new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 				}
 
 				break;

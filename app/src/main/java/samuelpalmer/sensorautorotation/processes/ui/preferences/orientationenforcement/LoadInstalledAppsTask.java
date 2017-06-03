@@ -84,7 +84,7 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		list.adapter.addAll(result);
 
 		//TODO: Maybe move all of this setting code somewhere else?
-		final Settings.Setting<Set<String>> setting = ApplicationSettings.remote().forcedOrientationAppPackages();
+		final Settings.Setting<Set<String>> setting = ApplicationSettings.instance().forcedOrientationAppPackages();
 		Set<String> forcedAppPackages = setting.get();
 		for (int i = 0; i < result.size(); ++i) {
 			InstalledApp app = result.get(i);

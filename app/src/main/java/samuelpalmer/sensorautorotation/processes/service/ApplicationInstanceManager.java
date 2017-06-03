@@ -22,7 +22,7 @@ public abstract class ApplicationInstanceManager {
 			throw new RuntimeException("Already initialised");
 		
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
-		ApplicationSettings.local().enabled().subscribe(updateApplicationState);
+		ApplicationSettings.instance().enabled().subscribe(updateApplicationState);
 		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		
 		initialised = true;
@@ -74,7 +74,7 @@ public abstract class ApplicationInstanceManager {
 		return
 			!ServiceRegistrar.instance.getServiceInstances().isEmpty() // No point running the application if there are no services to keep it alive
 			&&
-			ApplicationSettings.local().enabled().get() // It shouldn't be running if it's turned off!
+			ApplicationSettings.instance().enabled().get() // It shouldn't be running if it's turned off!
 			&&
 			!deviceIsShuttingDown // So system auto-rotation gets re-enabled until the application next starts
 		;

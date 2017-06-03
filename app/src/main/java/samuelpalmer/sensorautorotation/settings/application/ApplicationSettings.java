@@ -22,28 +22,25 @@ public class ApplicationSettings extends Settings {
 		return CurrentProcess.context().getPackageName() + "_preferences";
 	}
 
-	private static ApplicationSettings remote;
-
-	/**
-	 * For use outside the service process.
-	 */
-	public static ApplicationSettings remote() {
-		if (remote == null)
-			remote = new ApplicationSettings(new ContentProviderSharedPreferences(CurrentProcess.context(), StringResource.get(R.string.preferences_provider_authority).toString(), sharedPreferencesName()));
-		return remote;
+	private static ApplicationSettings instance;
+	
+	public static ApplicationSettings instance() {
+		if (instance == null) {
+			SharedPreferences sharedPreferences;
+			
+			if (CurrentProcess.isServiceProcess())
+				// For use in the service process for improved performance.
+				sharedPreferences = CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0);
+			else
+				// For use outside the service process for concurrency safety.
+				sharedPreferences = new ContentProviderSharedPreferences(CurrentProcess.context(), StringResource.get(R.string.preferences_provider_authority).toString(), sharedPreferencesName());
+			
+			instance = new ApplicationSettings(sharedPreferences);
+		}
+		
+		return instance;
 	}
-
-	private static ApplicationSettings local;
-
-	/**
-	 * For use in the service process for improved performance.
-	 */
-	public static ApplicationSettings local() {
-		if (local == null)
-			local = new ApplicationSettings(CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0));
-		return local;
-	}
-
+	
 	public final SharedPreferences sharedPreferences;
 
 	private ApplicationSettings(SharedPreferences sharedPreferences) {

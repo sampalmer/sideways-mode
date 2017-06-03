@@ -16,14 +16,19 @@ public class CurrentProcess extends Application {
 
 	@SuppressLint("StaticFieldLeak") //Don't think this is much of a problem since it's the application context.
 	private static Context context;
-
+	private static boolean isServiceProcess;
+	
 	public static Context context() {
 		if (context == null)
 			throw new RuntimeException("Haven't got a context yet");
 
 		return context;
 	}
-
+	
+	public static boolean isServiceProcess() {
+		return isServiceProcess;
+	}
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -32,8 +37,9 @@ public class CurrentProcess extends Application {
 		
 		Log.i(TAG, "Process created");
 		context = this;
-
-		if (ServiceProcess.isServiceProcess()) {
+		
+		isServiceProcess = ServiceProcess.isServiceProcess();
+		if (isServiceProcess) {
 			new Upgrader().upgradeIfNecessary();
 			ApplicationInstanceManager.init();
 		}

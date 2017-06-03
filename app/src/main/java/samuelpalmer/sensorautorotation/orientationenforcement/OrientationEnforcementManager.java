@@ -25,7 +25,7 @@ public class OrientationEnforcementManager extends State {
 	public OrientationEnforcementManager(ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
 		permissionNotificationManager = new PermissionNotificationManager();
 		monitor = new OrientationEnforcementMonitor(activityMonitor, lockScreenMonitor, permissionNotificationManager);
-		forcedApps = ApplicationSettings.local().forcedOrientationAppPackages();
+		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 	}
 
 	@Override

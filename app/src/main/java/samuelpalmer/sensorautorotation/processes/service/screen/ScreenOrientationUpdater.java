@@ -17,7 +17,7 @@ public class ScreenOrientationUpdater extends State {
 	public ScreenOrientationUpdater(OrientationCalculator calculator, ScreenOrientationController screen) {
 		this.calculator = calculator;
 		this.screen = screen;
-		allowUpsideDownScreen = ApplicationSettings.local().allowUpsideDownScreen();
+		allowUpsideDownScreen = ApplicationSettings.instance().allowUpsideDownScreen();
 	}
 
 	@Override
