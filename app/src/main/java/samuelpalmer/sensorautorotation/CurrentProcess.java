@@ -29,7 +29,7 @@ public class CurrentProcess extends Application {
 	
 	public static boolean isServiceProcess() {
 		if (isServiceProcess == null) {
-			String currentProcessName = CurrentProcessInfo.currentProcessName();
+			String currentProcessName = CurrentProcessNameDetector.currentProcessName();
 			String packageName = context().getPackageName();
 			
 			if (currentProcessName.equals(packageName + StringResource.get(R.string.service_process_name)))

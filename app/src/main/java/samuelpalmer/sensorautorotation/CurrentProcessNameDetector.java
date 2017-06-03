@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class CurrentProcessInfo {
+class CurrentProcessNameDetector {
 	public static String currentProcessName() {
 		try {
 			return getNameFromCommandLine();
@@ -60,7 +60,7 @@ public class CurrentProcessInfo {
 	}
 
 	private static void log(Exception ex) {
-		Log.w(CurrentProcessInfo.class.getSimpleName(), ex);
+		Log.w(CurrentProcessNameDetector.class.getSimpleName(), ex);
 	}
 
 	private static String getNameFromActivityManager() {
