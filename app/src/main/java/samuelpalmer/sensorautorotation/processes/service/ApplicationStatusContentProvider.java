@@ -31,6 +31,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	private static final String METHOD_SUBSCRIBE = "subscribe";
 	private static final String METHOD_UNSUBSCRIBE = "unsubscribe";
 	private static final String KEY_SUCCESS = "success";
+	private static final String KEY_ERROR = "error";
 	
 	@Override
 	public boolean onCreate() { return true; }
@@ -38,49 +39,56 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Bundle call(@NonNull String method, String unused, Bundle extras) {
-		switch (method)
-		{
-			case METHOD_SUBSCRIBE: {
-				final IBinder binder = getBinder(extras);
-				final ServerListener listener = subscribe(binder);
+		Bundle result = new Bundle();
+		
+		try {
+			switch (method) {
+				case METHOD_SUBSCRIBE: {
+					final IBinder binder = getBinder(extras);
+					final ServerListener listener = subscribe(binder);
 
-				if (listener != null) {
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-						@Override
-						public void run() {
-							if (ApplicationInstanceManager.isApplicationRunning()) {
-								ApplicationInstance application = ApplicationInstanceManager.applicationInstance();
-								
-								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
-								ApplicationStatusDisplayUpdater manager = application.applicationStatusDisplayUpdater;
-								ApplicationStatus lastStatus = manager.getLastStatus();
-								if (lastStatus != null)
-									listener.reportUpdate(lastStatus);
+					if (listener != null) {
+						new Handler(Looper.getMainLooper()).post(new Runnable() {
+							@Override
+							public void run() {
+								if (ApplicationInstanceManager.isApplicationRunning()) {
+									ApplicationInstance application = ApplicationInstanceManager.applicationInstance();
+
+									//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
+									ApplicationStatusDisplayUpdater manager = application.applicationStatusDisplayUpdater;
+									ApplicationStatus lastStatus = manager.getLastStatus();
+									if (lastStatus != null)
+										listener.reportUpdate(lastStatus);
+								}
 							}
-						}
-					});
-					
+						});
+
 					/*
 					 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
 					 * we want to make sure it's running. Otherwise the client will have to wait
 					 * a long time (or forever) to get the first service status update.
 					 */
-					new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
-				}
+						new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+					}
 
-				break;
+					break;
+				}
+				case METHOD_UNSUBSCRIBE: {
+					final IBinder binder = getBinder(extras);
+					unsubscribe(binder);
+					break;
+				}
+				default:
+					throw notSupported();
 			}
-			case METHOD_UNSUBSCRIBE: {
-				final IBinder binder = getBinder(extras);
-				unsubscribe(binder);
-				break;
-			}
-			default:
-				throw notSupported();
+
+			result.putBoolean(KEY_SUCCESS, true); //Confirms to the caller that the method didn't crash
+		}
+		catch (Throwable error) {
+			//Sometimes the OS doesn't propagate the error, so we're doing it manually
+			result.putSerializable(KEY_ERROR, error);
 		}
 		
-		Bundle result = new Bundle();
-		result.putBoolean(KEY_SUCCESS, true); //Confirms to the caller that the method didn't crash
 		return result;
 	}
 
@@ -198,9 +206,21 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 					method, null, args
 			);
 			
-			// If the content provider crashes, it can return null or an empty bundle.
-			if (result == null || !result.getBoolean(KEY_SUCCESS, false))
-				throw new RuntimeException("Didn't get a result. The content provider probably crashed.");
+			// If the content provider crashes, it can return null
+			if (result != null) {
+				Throwable error = (Throwable) result.getSerializable(KEY_ERROR);
+				if (error != null)
+					if (error instanceof RuntimeException)
+						throw (RuntimeException)error;
+					else
+						throw new RuntimeException("Error occurred in content provider", error);
+				
+				// If the content provider crashes, it can return an empty result
+				if (result.getBoolean(KEY_SUCCESS, false))
+					return;
+			}
+			
+			throw new RuntimeException("Didn't get a result. The content provider probably crashed.");
 		}
 
 	}
