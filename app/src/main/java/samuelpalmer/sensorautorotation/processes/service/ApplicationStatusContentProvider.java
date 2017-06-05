@@ -47,7 +47,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 					final IBinder binder = getBinder(extras);
 					final ServerListener listener = subscribe(binder);
 
-					if (listener != null) {
+					if (listener != null) // Client process is still alive
 						new Handler(Looper.getMainLooper()).post(new Runnable() {
 							@Override
 							public void run() {
@@ -60,16 +60,15 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 									if (lastStatus != null)
 										listener.reportUpdate(lastStatus);
 								}
+								else
+									/*
+									 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
+									 * we want to make sure it's running. Otherwise the client will have to wait
+									 * a long time (or forever) to get the first service status update.
+									 */
+									new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 							}
 						});
-
-					/*
-					 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
-					 * we want to make sure it's running. Otherwise the client will have to wait
-					 * a long time (or forever) to get the first service status update.
-					 */
-						new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
-					}
 
 					break;
 				}
