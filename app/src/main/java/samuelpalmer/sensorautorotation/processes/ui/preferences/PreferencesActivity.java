@@ -88,7 +88,7 @@ public abstract class PreferencesActivity extends UiActivity {
 	public SharedPreferences getSharedPreferences(String name, int mode) {
 		//PreferenceFragment calls this for its underlying preference storage
 		if (name.equals(ApplicationSettings.sharedPreferencesName()))
-			return ApplicationSettings.remote().sharedPreferences;
+			return ApplicationSettings.instance().sharedPreferences;
 		else
 			return super.getSharedPreferences(name, mode);
 	}

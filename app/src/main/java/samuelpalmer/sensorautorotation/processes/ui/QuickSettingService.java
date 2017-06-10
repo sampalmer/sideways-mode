@@ -79,8 +79,8 @@ public class QuickSettingService extends TileService {
 
 		statusClient = new ApplicationStatusContentProvider.Client(this);
 		statusClient.subscribe(statusListener);
-
-		enabledSetting = ApplicationSettings.remote().enabled();
+		
+		enabledSetting = ApplicationSettings.instance().enabled();
 		enabledSetting.subscribe(enabledSettingListener);
 
 		enabledSettingListener.update();

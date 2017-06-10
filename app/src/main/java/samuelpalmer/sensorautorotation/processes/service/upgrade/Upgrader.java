@@ -26,7 +26,7 @@ public class Upgrader {
 
 	public Upgrader() {
 		newAppVersion = VersionInfo.installedVersionCode();
-		lastVersionUserInstructedAbout = ApplicationSettings.local().lastVersionUserInstructedAbout();
+		lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
 		lastAppVersion = lastVersionUserInstructedAbout.tryGet();
 	}
 

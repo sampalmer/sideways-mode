@@ -15,7 +15,7 @@ public class ServiceSyncReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new ServiceSynchroniser(ApplicationSettings.local()).updateFromSettings();
+		new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 	}
 
 }

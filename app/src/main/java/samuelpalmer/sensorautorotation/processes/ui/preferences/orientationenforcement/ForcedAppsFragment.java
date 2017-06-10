@@ -23,8 +23,8 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences_overridden_apps);
-
-		apps = ApplicationSettings.remote().forcedOrientationAppPackages();
+		
+		apps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		appsPreference = findPreference(apps.getKey());
 
 		ForcedAppsPermissionFragment permissionFragment = (ForcedAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);

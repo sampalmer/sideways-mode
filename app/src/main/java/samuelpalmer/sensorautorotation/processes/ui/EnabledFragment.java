@@ -46,7 +46,7 @@ public class EnabledFragment extends Fragment {
 				setControlCheckedStateWithoutTriggeringListener(false);
 			} else {
 				enabledSetting.set(isChecked);
-				new ServiceSynchroniser(ApplicationSettings.remote()).updateFromSettings();
+				new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 			}
 		}
 
@@ -62,8 +62,8 @@ public class EnabledFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		enabledSetting = ApplicationSettings.remote().enabled();
+		
+		enabledSetting = ApplicationSettings.instance().enabled();
 	}
 
 	@Nullable
@@ -134,7 +134,7 @@ public class EnabledFragment extends Fragment {
 	@TargetApi(Build.VERSION_CODES.M)
 	private void handleSystemSettingsRequestResult() {
 		if (Settings.System.canWrite(getContext()))
-			new ServiceSynchroniser(ApplicationSettings.remote()).enableService();
+			new ServiceSynchroniser(ApplicationSettings.instance()).enableService();
 		else
 			Toast
 				.makeText(getContext(), R.string.permission_warning_system_settings, Toast.LENGTH_LONG)

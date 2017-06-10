@@ -28,7 +28,7 @@ class Migrations {
 		migrations.put(25, new Migration() {
 			@Override
 			public void upgradeData() {
-				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> oldAutoRotate = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Setting<Orientation> oldUserOrientation = applicationSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
@@ -81,8 +81,8 @@ class Migrations {
 			@Override
 			public void upgradeData() {
 				super.upgradeData();
-
-				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				
+				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> inferUserWhenDeviceLocked = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "inferUserWhenDeviceLocked", false);
 				inferUserWhenDeviceLocked.remove();
 			}
@@ -94,7 +94,7 @@ class Migrations {
 				super.upgradeData();
 				
 				//The format of this setting has changed.
-				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<String> lastErrorJson = applicationSettings.new Setting<String>(new StringSetting(), "lastError", null);
 				lastErrorJson.remove();
 			}
@@ -131,7 +131,7 @@ class Migrations {
 			}
 			
 			private Setting<Boolean> showNotificationSetting() {
-				ApplicationSettings applicationSettings = ApplicationSettings.local();
+				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				return applicationSettings.new Setting<Boolean>(new BooleanSetting(), "showNotification", true);
 			}
 		});

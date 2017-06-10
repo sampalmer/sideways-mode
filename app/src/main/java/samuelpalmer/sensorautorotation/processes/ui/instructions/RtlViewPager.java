@@ -45,7 +45,7 @@ public class RtlViewPager extends com.booking.rtlviewpager.RtlViewPager {
 		}
 		
 		protected SavedState(Parcel source) {
-			super(source);
+			super(source, SavedState.class.getClassLoader());
 			currentItem = source.readInt();
 		}
 		

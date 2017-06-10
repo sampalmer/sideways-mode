@@ -11,8 +11,8 @@ android {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
 		targetSdkVersion 'O'
-		versionCode 53
-		versionName "1.1.0"
+		versionCode 54
+		versionName "1.2.0"
 
 		/*
 		 * Strips out languages added through the support library so that:

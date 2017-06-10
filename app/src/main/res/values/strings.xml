@@ -167,6 +167,7 @@
 	<string name="enter_feedback_hint">Enter feedback here</string>
 	<string name="enter_feedback_send">Send by email</string>
 	<string name="enter_feedback_nofeedback">"You haven't entered any feedback"</string>
+	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>

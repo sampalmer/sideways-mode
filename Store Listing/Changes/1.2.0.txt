@@ -1,0 +1,2 @@
+• Removed option to hide the notification since it exploited an Android bug, and Google might not be OK with that
+• Bug fixes and minor improvements

@@ -33,7 +33,7 @@ public class ApplicationStatusFactory {
 		this.naturalOrientationDetector = naturalOrientationDetector;
 		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.lockScreenMonitor = lockScreenMonitor;
-		priority = ApplicationSettings.local().notificationPriority();
+		priority = ApplicationSettings.instance().notificationPriority();
 	}
 
 	public Set<EventRegistrar> updateTriggers() {

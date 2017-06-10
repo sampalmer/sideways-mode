@@ -19,7 +19,7 @@ public class StartUpReceiver extends BroadcastReceiver {
 			||
 			Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())
 		)
-			new ServiceSynchroniser(ApplicationSettings.local()).updateFromSettings();
+			new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 		else
 			Log.w(StartUpReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
 	}

@@ -15,7 +15,7 @@ public abstract class ApplicationInstanceClient {
 	public static void send(ApplicationInstanceCommand command) {
 		if (ApplicationInstanceManager.isApplicationRunning())
 			ApplicationInstanceManager.applicationInstance().handle(command); //This seems to have less lag than an intent
-		else if (ApplicationSettings.local().enabled().get())
+		else if (ApplicationSettings.instance().enabled().get())
 			ServiceController.ensureStarted(command.toIntent());
 		else if (command.toastIfServiceDisabled)
 			showDisabledMessage();

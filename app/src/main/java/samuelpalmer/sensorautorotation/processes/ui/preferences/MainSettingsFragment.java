@@ -80,7 +80,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		//TODO: Apply this to the other settings fragments as well
-		new SettingsInitialiser(ApplicationSettings.remote()).ensureInitialised();
+		new SettingsInitialiser(ApplicationSettings.instance()).ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);
 		
@@ -177,7 +177,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 			removePreference(smallAppPreference);
 		
 		//TODO: move all of this preference summary updating stuff into its own class
-		forcedApps = ApplicationSettings.remote().forcedOrientationAppPackages();
+		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 		
@@ -210,7 +210,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		updateListPreferenceSummaries(getPreferenceScreen());
 		hideUnsupportedOptions();
 		
-		notificationPriorityChanged = ApplicationSettings.remote().notificationPriority();
+		notificationPriorityChanged = ApplicationSettings.instance().notificationPriority();
 		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 	}
 	
@@ -437,7 +437,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	}
 	
 	private void hideUnsupportedOptions() {
-		ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.remote().notificationPriority().getKey());
+		ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.instance().notificationPriority().getKey());
 		
 		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
 			removePreference(notificationPriorityPreference);

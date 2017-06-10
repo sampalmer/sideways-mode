@@ -54,7 +54,7 @@ public class DashboardView extends FrameLayout {
 
 		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
 		handler = new Handler();
-		enabledSetting = ApplicationSettings.remote().enabled();
+		enabledSetting = ApplicationSettings.instance().enabled();
 
 		View view = inflate(getContext(), R.layout.dashboard, null);
 		addView(view);

@@ -33,9 +33,9 @@ public class PermissionNotificationManager extends State {
 
 	public PermissionNotificationManager() {
 		notificationManager = SystemServices.notificationManager();
-
-		enabled = ApplicationSettings.local().enabled();
-		forcedApps = ApplicationSettings.local().forcedOrientationAppPackages();
+		
+		enabled = ApplicationSettings.instance().enabled();
+		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 

@@ -77,6 +77,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		else {
 			description.setHint(R.string.enter_feedback_hint);
 			setTitle(R.string.action_feedback);
+			findViewById(R.id.feedback_disclosure).setVisibility(View.GONE);
 		}
 	}
 
