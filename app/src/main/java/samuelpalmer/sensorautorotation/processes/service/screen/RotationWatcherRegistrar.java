@@ -40,7 +40,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
 		Class<?>[] watchRotationParameterTypes;
 
-		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+		if (Build.VERSION.SDK_INT >= 26) {
 			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class, int.class /* Cannot be Integer.class; that's different */};
 			typedWatchRotationArguments = new Object[]{screenRotationChanged, 0}; //TODO: Figure out th meaning of the second parameter. Maybe it's the display id?
 		}

@@ -73,7 +73,7 @@ public class PermissionNotificationManager extends State {
 					.setContentTitle(StringResource.get(R.string.permission_needed_summary))
 					.setContentText(StringResource.get(R.string.permission_touch_to_fix))
 					.setSmallIcon(R.drawable.notification_error)
-					.setChannel(NotificationChannels.ID_PERMISSIONS)
+					.setChannelId(NotificationChannels.ID_PERMISSIONS)
 					.build();
 
 			notificationManager.notify(NotificationIds.PERMISSION, notification);

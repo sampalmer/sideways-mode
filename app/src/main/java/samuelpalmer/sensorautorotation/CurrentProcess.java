@@ -58,7 +58,7 @@ public class CurrentProcess extends Application {
 		 * Must setup notification channels before doing anything else so channels will exist when notifications are posted.
 		 * Doing this regardless of which process we're in since notifications can (technically) be posted from either process.
 		 */
-		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+		if (Build.VERSION.SDK_INT >= 26)
 			NotificationChannels.setup();
 		
 		if (isServiceProcess()) {

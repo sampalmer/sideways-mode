@@ -96,9 +96,9 @@ public abstract class EnvironmentError {
 			.setTicker(summary) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
-			.setChannel(NotificationChannels.ID_ERRORS);
+			.setChannelId(NotificationChannels.ID_ERRORS);
 
-		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && !(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1))
+		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
 			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
 			// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
 			builder.setVibrate(new long[]{});

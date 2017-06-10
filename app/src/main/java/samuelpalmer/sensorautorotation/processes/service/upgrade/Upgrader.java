@@ -74,7 +74,7 @@ public class Upgrader {
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-				.setChannel(NotificationChannels.ID_UPGRADES)
+				.setChannelId(NotificationChannels.ID_UPGRADES)
 				.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.UPGRADE, notification);

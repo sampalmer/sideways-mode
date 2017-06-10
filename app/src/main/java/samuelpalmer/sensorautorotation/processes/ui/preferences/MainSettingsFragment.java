@@ -93,7 +93,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		
 		notificationsPreference = findPreference("notifications");
 		notificationsPreference.setOnPreferenceClickListener(notificationsClicked);
-		if (!(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1))
+		if (Build.VERSION.SDK_INT < 26)
 			removePreference(notificationsPreference);
 		
 		Preference quickSettingPreference = findPreference("quick_setting");
@@ -420,7 +420,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	
 	private boolean dashboardNotificationHidden() {
 		return
-			(Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+				Build.VERSION.SDK_INT >= 26
 				&&
 				notificationManager.getNotificationChannel(NotificationChannels.ID_CONTROLS).getImportance() == NotificationManager.IMPORTANCE_NONE
 			;
@@ -447,7 +447,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private void hideUnsupportedOptions() {
 		ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.instance().notificationPriority().getKey());
 		
-		if (Build.VERSION.SDK_INT >= 26 || Build.VERSION.SDK_INT == 25 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+		if (Build.VERSION.SDK_INT >= 26) {
 			removePreference(notificationPriorityPreference);
 			removePreference(allNotificationsPreference);
 		}
