@@ -18,6 +18,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -388,6 +389,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	}
 	
 	private final Preference.OnPreferenceClickListener notificationsClicked = new Preference.OnPreferenceClickListener() {
+		@RequiresApi(api = Build.VERSION_CODES.O)
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			//Notification configuration is built into Android O, so we'll just send the user to the relevant OS settings screen.
@@ -395,13 +397,13 @@ public class MainSettingsFragment extends PreferenceFragment {
 			
 			if (SystemServices.notificationManager().areNotificationsEnabled())
 				//Guide the user to block just the dashboard notification
-				intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-					.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
+				intent = new Intent(android.provider.Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+					.putExtra(android.provider.Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
 			else
 				//Guide the user to unblock the app's notifications and toasts
-				intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+				intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
 			
-			intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+			intent.putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
 			
 			startActivityForResult(intent, REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED);
 			
