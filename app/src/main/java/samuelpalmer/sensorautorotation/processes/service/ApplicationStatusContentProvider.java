@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,6 +14,7 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import samuelpalmer.common.ParcelableBinder;
@@ -30,8 +32,9 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	private static final ConcurrentHashMap<IBinder, ServerListener> listeners = new ConcurrentHashMap<>();
 	private static final String METHOD_SUBSCRIBE = "subscribe";
 	private static final String METHOD_UNSUBSCRIBE = "unsubscribe";
-	private static final String KEY_SUCCESS = "success";
+	private static final String KEY_RESULT = "result";
 	private static final String KEY_ERROR = "error";
+	private static final String KEY_BINDER = "binder";
 	
 	@Override
 	public boolean onCreate() { return true; }
@@ -39,28 +42,28 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Bundle call(@NonNull String method, String unused, Bundle extras) {
+		Bundle resultWrapper = new Bundle();
 		Bundle result = new Bundle();
 		
 		try {
 			switch (method) {
 				case METHOD_SUBSCRIBE: {
-					final IBinder binder = getBinder(extras);
-					final ServerListener listener = subscribe(binder);
+					final IBinder clientBinder = getBinder(extras);
+					final ServerListener listener = subscribe(clientBinder);
 
-					if (listener != null) // Client process is still alive
+					if (listener != null) { // Client process is still alive
 						new Handler(Looper.getMainLooper()).post(new Runnable() {
 							@Override
 							public void run() {
 								if (ApplicationInstanceManager.isApplicationRunning()) {
 									ApplicationInstance application = ApplicationInstanceManager.applicationInstance();
-
+									
 									//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
 									ApplicationStatusDisplayUpdater manager = application.applicationStatusDisplayUpdater;
 									ApplicationStatus lastStatus = manager.getLastStatus();
 									if (lastStatus != null)
 										listener.reportUpdate(lastStatus);
-								}
-								else
+								} else
 									/*
 									 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
 									 * we want to make sure it's running. Otherwise the client will have to wait
@@ -69,6 +72,11 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 									new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 							}
 						});
+						
+					}
+					
+					// Sending back a binder so the client can detect when this process dies
+					result.putParcelable(KEY_BINDER, new ParcelableBinder(new Binder()));
 
 					break;
 				}
@@ -80,15 +88,15 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 				default:
 					throw notSupported();
 			}
-
-			result.putBoolean(KEY_SUCCESS, true); //Confirms to the caller that the method didn't crash
+			
+			resultWrapper.putBundle(KEY_RESULT, result);
 		}
 		catch (Throwable error) {
 			//Sometimes the OS doesn't propagate the error, so we're doing it manually
-			result.putSerializable(KEY_ERROR, error);
+			resultWrapper.putSerializable(KEY_ERROR, error);
 		}
 		
-		return result;
+		return resultWrapper;
 	}
 
 	private IBinder getBinder(Bundle extras) {
@@ -160,8 +168,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 		return new RuntimeException("Not supported");
 	}
 
-	private static class ServerListener
-	{
+	private static class ServerListener {
 		private final IApplicationStatusListener listener;
 		private final IBinder.DeathRecipient deathRecipient;
 
@@ -179,25 +186,59 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 
 	public static class Client {
 
+		private final static HashMap<IApplicationStatusListener, Subscription> subscriptions = new HashMap<>();
 		private final ContentResolver contentResolver;
 
 		public Client(Context context) {
 			contentResolver = context.getContentResolver();
 		}
 
-		public void subscribe(IApplicationStatusListener listener) {
-			call(METHOD_SUBSCRIBE, listener);
+		public void subscribe(final IApplicationStatusListener listener) {
+			synchronized(subscriptions) {
+				subscribeLocked(listener);
+			}
 		}
-
+		
+		private void subscribeLocked(final IApplicationStatusListener listener) {
+			Bundle result = call(METHOD_SUBSCRIBE, listener);
+			
+			result.setClassLoader(ParcelableBinder.class.getClassLoader());
+			ParcelableBinder binderWrapper = result.getParcelable(KEY_BINDER);
+			assert binderWrapper != null;
+			IBinder serverBinder = binderWrapper.binder;
+			
+			IBinder.DeathRecipient deathRecipient = new IBinder.DeathRecipient() {
+				@Override
+				public void binderDied() {
+					subscribe(listener);
+				}
+			};
+			
+			try {
+				serverBinder.linkToDeath(deathRecipient, 0);
+			} catch (RemoteException e) {
+				subscribeLocked(listener);
+				return;
+			}
+			
+			subscriptions.put(listener, new Subscription(serverBinder, deathRecipient));
+		}
+		
 		public void unsubscribe(IApplicationStatusListener listener) {
-			call(METHOD_UNSUBSCRIBE, listener);
+			synchronized (subscriptions) {
+				Subscription subscription = subscriptions.remove(listener);
+				if (subscription != null) {
+					subscription.serverBinder.unlinkToDeath(subscription.deathRecipient, 0);
+					call(METHOD_UNSUBSCRIBE, listener);
+				}
+			}
 		}
 
-		private void call(String method, IApplicationStatusListener listener) {
+		private Bundle call(String method, IApplicationStatusListener listener) {
 			Bundle args = new Bundle();
 			args.putParcelable(null, new ParcelableBinder(listener.asBinder()));
 
-			Bundle result = contentResolver.call(
+			Bundle resultWrapper = contentResolver.call(
 				new Uri.Builder()
 					.scheme("content")
 					.authority(StringResource.get(R.string.status_provider_authority).toString())
@@ -206,22 +247,36 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 			);
 			
 			// If the content provider crashes, it can return null
-			if (result != null) {
-				Throwable error = (Throwable) result.getSerializable(KEY_ERROR);
+			if (resultWrapper != null) {
+				Throwable error = (Throwable) resultWrapper.getSerializable(KEY_ERROR);
 				if (error != null)
 					if (error instanceof RuntimeException)
 						throw (RuntimeException)error;
 					else
 						throw new RuntimeException("Error occurred in content provider", error);
 				
-				// If the content provider crashes, it can return an empty result
-				if (result.getBoolean(KEY_SUCCESS, false))
-					return;
+				Bundle result = resultWrapper.getBundle(KEY_RESULT);
+				
+				// If the content provider crashes, it can return an empty bundle
+				if (result != null)
+					return result;
 			}
 			
 			throw new RuntimeException("Didn't get a result. The content provider probably crashed.");
 		}
-
+		
+		private static class Subscription {
+			
+			public final IBinder serverBinder;
+			public final IBinder.DeathRecipient deathRecipient;
+			
+			public Subscription(IBinder serverBinder, IBinder.DeathRecipient deathRecipient) {
+				this.serverBinder = serverBinder;
+				this.deathRecipient = deathRecipient;
+			}
+			
+		}
+		
 	}
 
 	public static class RemoteStatusDisplay implements ApplicationStatusDisplay {
