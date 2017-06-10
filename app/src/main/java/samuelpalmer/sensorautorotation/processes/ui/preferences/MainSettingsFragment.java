@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -34,6 +35,7 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
@@ -42,6 +44,8 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class MainSettingsFragment extends PreferenceFragment {
 	
 	private static final int REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED = 1;
+	
+	private NotificationManager notificationManager;
 	
 	private Preference notificationsPreference;
 	
@@ -77,7 +81,9 @@ public class MainSettingsFragment extends PreferenceFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		notificationManager = SystemServices.notificationManager();
+		
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		//TODO: Apply this to the other settings fragments as well
 		new SettingsInitialiser(ApplicationSettings.instance()).ensureInitialised();
