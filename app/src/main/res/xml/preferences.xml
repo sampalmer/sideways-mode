@@ -16,7 +16,7 @@
 			android:title="@string/preference_all_notifications_title"
 			android:icon="@drawable/preference_visibility"
 			/>
-	"
+
 		<!-- TODO: Populate the entries programmatically to keep everything in sync -->
 		<!-- Not specifying a dialog icon since this causes crashes on Android 4.1.2 due to vector backwards compatibility -->
 		<ListPreference
