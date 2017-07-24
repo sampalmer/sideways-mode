@@ -43,9 +43,9 @@ dependencies {
 	compile project(':common')
 	provided project(':com.sony.smallapp')
 
-	compile 'com.android.support:appcompat-v7:26.0.0-beta2'
-	compile 'com.android.support:design:26.0.0-beta2'
-	compile 'com.android.support:cardview-v7:26.0.0-beta2'
+	compile 'com.android.support:appcompat-v7:26.0.0'
+	compile 'com.android.support:design:26.0.0'
+	compile 'com.android.support:cardview-v7:26.0.0'
 	compile 'com.booking:rtlviewpager:1.0.1'
 }
 
