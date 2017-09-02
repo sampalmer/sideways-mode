@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.Display;
 import android.view.IRotationWatcher;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,8 +42,9 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		Class<?>[] watchRotationParameterTypes;
 
 		if (Build.VERSION.SDK_INT >= 26) {
+			// Android O introduces the second parameter, "displayId"
 			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class, int.class /* Cannot be Integer.class; that's different */};
-			typedWatchRotationArguments = new Object[]{screenRotationChanged, 0}; //TODO: Figure out th meaning of the second parameter. Maybe it's the display id?
+			typedWatchRotationArguments = new Object[]{screenRotationChanged, Display.DEFAULT_DISPLAY};
 		}
 		else {
 			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class};
