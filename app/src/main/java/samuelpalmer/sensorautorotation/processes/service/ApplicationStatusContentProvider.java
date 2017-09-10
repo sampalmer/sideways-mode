@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -96,7 +97,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 			resultWrapper.putSerializable(KEY_ERROR, error);
 		}
 		
-		return resultWrapper;
+			return resultWrapper;
 	}
 
 	private IBinder getBinder(Bundle extras) {
@@ -185,7 +186,9 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	}
 
 	public static class Client {
-
+		
+		private static final int MAX_RETRIES = 3;
+		
 		private final static HashMap<IApplicationStatusListener, Subscription> subscriptions = new HashMap<>();
 		private final ContentResolver contentResolver;
 
@@ -237,32 +240,38 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 		private Bundle call(String method, IApplicationStatusListener listener) {
 			Bundle args = new Bundle();
 			args.putParcelable(null, new ParcelableBinder(listener.asBinder()));
-
-			Bundle resultWrapper = contentResolver.call(
-				new Uri.Builder()
-					.scheme("content")
-					.authority(StringResource.get(R.string.status_provider_authority).toString())
-					.build(),
-					method, null, args
-			);
 			
-			// If the content provider crashes, it can return null
-			if (resultWrapper != null) {
-				Throwable error = (Throwable) resultWrapper.getSerializable(KEY_ERROR);
-				if (error != null)
-					if (error instanceof RuntimeException)
-						throw (RuntimeException)error;
-					else
-						throw new RuntimeException("Error occurred in content provider", error);
+			for (int i = 0; i < MAX_RETRIES; ++i) {
+				Bundle resultWrapper = contentResolver.call(
+					new Uri.Builder()
+						.scheme("content")
+						.authority(StringResource.get(R.string.status_provider_authority).toString())
+						.build(),
+					method, null, args
+				);
 				
-				Bundle result = resultWrapper.getBundle(KEY_RESULT);
+				// If the content provider crashes, it can return null
+				if (resultWrapper != null) {
+					Throwable error = (Throwable) resultWrapper.getSerializable(KEY_ERROR);
+					if (error != null)
+						if (error instanceof RuntimeException)
+							throw (RuntimeException) error;
+						else
+							throw new RuntimeException("Error occurred in content provider", error);
+					
+					Bundle result = resultWrapper.getBundle(KEY_RESULT);
+					
+					// If the content provider crashes, it can return an empty bundle
+					if (result != null)
+						return result;
+				}
 				
-				// If the content provider crashes, it can return an empty bundle
-				if (result != null)
-					return result;
+				// This situation happens occasionally in Production, and I don't know exactly why.
+				// Retrying multiple times just in case it's an intermittent thing.
+				Log.w(this.getClass().getSimpleName(), "Didn't get a result when remotely calling " + method + "(). The content provider probably crashed.");
 			}
 			
-			throw new RuntimeException("Didn't get a result. The content provider probably crashed.");
+			throw new RuntimeException("Didn't get a result when remotely calling " + method + "() after " + MAX_RETRIES + " retries. Giving up.");
 		}
 		
 		private static class Subscription {
