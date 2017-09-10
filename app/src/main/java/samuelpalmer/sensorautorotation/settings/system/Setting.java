@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.os.Build.VERSION;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 
 import samuelpalmer.common.eventhandling.EventRegistrar;
@@ -71,7 +72,7 @@ public class Setting<T> {
 	//Mostly copied from ApplicationSettings.Setting
 	private class ChangeRegistrar extends EventRegistrarAdaptor {
 
-		private final ContentObserver listener = new ContentObserver(new Handler() /* Otherwise the callback is called in a different thread */ ) {
+		private final ContentObserver listener = new ContentObserver(new Handler(Looper.getMainLooper()) /* Otherwise the callback is called in a different thread */ ) {
 			@Override
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);

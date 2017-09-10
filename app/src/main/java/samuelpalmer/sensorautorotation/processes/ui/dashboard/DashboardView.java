@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.view.View;
@@ -53,7 +54,7 @@ public class DashboardView extends FrameLayout {
 		}
 
 		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
-		handler = new Handler();
+		handler = new Handler(Looper.getMainLooper());
 		enabledSetting = ApplicationSettings.instance().enabled();
 
 		View view = inflate(getContext(), R.layout.dashboard, null);

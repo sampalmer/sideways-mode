@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 
@@ -54,7 +55,7 @@ public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdapt
 		contentResolver.unregisterContentObserver(observer);
 	}
 
-	private final ContentObserver observer = new ContentObserver(new Handler()) {
+	private final ContentObserver observer = new ContentObserver(new Handler(Looper.getMainLooper())) {
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
