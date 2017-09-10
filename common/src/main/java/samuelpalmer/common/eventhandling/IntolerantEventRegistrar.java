@@ -27,7 +27,11 @@ public abstract class IntolerantEventRegistrar implements EventRegistrar {
 	}
 
 	protected void report() {
-		for (EventHandler subscriber : subscriptions)
+		// If a subscriber adds or removes a subscription, we'll get a ConcurrentModificationException.
+		// Making a clone of the subscriptions should prevent that.
+		HashSet<EventHandler> subscriptionsClone = new HashSet<>(subscriptions);
+		
+		for (EventHandler subscriber : subscriptionsClone)
 			subscriber.update();
 	}
 
