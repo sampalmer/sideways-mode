@@ -50,7 +50,8 @@ public class QuickSettingService extends TileService {
 					@Override
 					public void run() {}
 				});
-				showDialog(dashboard);
+				
+				tryShowDialog(dashboard);
 			}
 			else {
 				DashboardDialogCoordinator.showDialog();
@@ -59,7 +60,27 @@ public class QuickSettingService extends TileService {
 
 		}
 	}
-
+	
+	private void tryShowDialog(Dialog dashboard) {
+		for (int i = 0; i < 3; ++i)
+			try {
+				showDialog(dashboard);
+				return;
+			}
+			catch (RuntimeException ex) {
+				// There's an Android bug that causes showDialog() to crash sometimes: https://issuetracker.google.com/issues/37105965
+				// Retrying just in case it's an intermittent issue.
+				if (ex.getClass().getName().equals("android.view.WindowManager$BadTokenException")) {
+					if (i >= 2)
+						throw ex;
+					else
+						Log.w(QuickSettingService.class.getSimpleName(), "Encountered OS bug when showing quick setting dialog. Retrying...", ex);
+				}
+				else
+					throw ex;
+			}
+	}
+	
 	@Override
 	public void onTileAdded() {
 		super.onTileAdded();
