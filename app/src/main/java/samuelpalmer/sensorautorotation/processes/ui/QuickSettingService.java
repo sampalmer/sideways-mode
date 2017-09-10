@@ -42,7 +42,8 @@ public class QuickSettingService extends TileService {
 			startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 		else {
-
+			//We can't use an activity because the OS delays activity start when the home button is pressed.
+			
 			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
 			if (!DashboardDialogCoordinator.dialogExists()) {
 				Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
