@@ -210,12 +210,14 @@ abstract class WindowOrientationListener {
 			mOrientationJudge.resetLocked(clearCurrentRotation);
 
 			for (Sensor sensor : mSensors) {
+				//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
+				int samplingPeriodUs = sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate;
+				
 				boolean registered;
-				if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-					registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
+				if (Build.VERSION.SDK_INT >= 19 && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+					registered = mSensorManager.registerListener(mOrientationJudge, sensor, samplingPeriodUs, DEFAULT_BATCH_LATENCY, mHandler);
 				} else {
-					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-					registered = mSensorManager.registerListener(mOrientationJudge, sensor, 54999, mHandler);
+					registered = mSensorManager.registerListener(mOrientationJudge, sensor, samplingPeriodUs, mHandler);
 				}
 				
 				if (!registered) {
