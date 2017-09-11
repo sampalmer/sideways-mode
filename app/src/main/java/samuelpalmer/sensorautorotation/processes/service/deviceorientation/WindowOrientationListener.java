@@ -15,7 +15,7 @@
  */
 
 /*
- * Copied from commit d49b1e (https://github.com/android/platform_frameworks_base/blob/d49b1ee0de1eeb2f7370bf2839e7c707fe008b37/services/core/java/com/android/server/policy/WindowOrientationListener.java)
+ * Copied from commit bfa81a (https://github.com/android/platform_frameworks_base/blob/bfa81adfbe1819d55737dbbb2fb9157e50dbe022/services/core/java/com/android/server/policy/WindowOrientationListener.java)
  *
  * Minor modifications made for this project:
  * -Package changed
@@ -184,46 +184,59 @@ abstract class WindowOrientationListener {
 	 * {@link #onProposedRotationChanged(int)} when the device orientation changes.
 	 */
 	public void enable() {
+		enable(true /* clearCurrentRotation */);
+	}
+	
+	/**
+     * Enables the WindowOrientationListener so it will monitor the sensor and call
+     * {@link #onProposedRotationChanged(int)} when the device orientation changes.
+     *
+     * @param clearCurrentRotation True if the current proposed sensor rotation should be cleared as
+     *                             part of the reset.
+     */
+	public void enable(boolean clearCurrentRotation) {
 		synchronized (mLock) {
 			if (mSensors.isEmpty()) {
 				Slog.w(TAG, "Cannot detect sensors. Not enabled");
 				return;
 			}
-			if (mEnabled == false) {
-				if (LOG) {
-					Slog.d(TAG, "WindowOrientationListener enabled");
-				}
-				mOrientationJudge.resetLocked();
-
-				for (Sensor sensor : mSensors) {
-					boolean registered;
-					if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-						registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
-					} else {
-						//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-						registered = mSensorManager.registerListener(mOrientationJudge, sensor, 54999, mHandler);
-					}
-					
-					if (!registered) {
-						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
-						/*
-						 * Even though registration failed, we're not giving up on the sensor just yet because:
-						 * 1. It's possible for registration to fail but without any further problems: http://stackoverflow.com/questions/18602261/unexpected-false-return-value-from-android-hardware-sensormanager-registerlisten
-						 * 2. The official Android WindowOrientationListener implementation ignores the return value
-						 * 3. Seven users have submitted error reports when sensor registration failed, so maybe they were onto something
-						 */
-					}
-				}
-
-				mEnabled = true;
-
-				// Apparently it's possible to successfully register for gravity events but not receive any:
-				// http://stackoverflow.com/a/10447302/238753
-				mGotSensorEvent = false;
-				mHandler.postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
-
-				mLastSensorType = Sensor.TYPE_ALL;
+			if (mEnabled) {
+				return;
 			}
+			if (LOG) {
+				Slog.d(TAG, "WindowOrientationListener enabled clearCurrentRotation="
+				        + clearCurrentRotation);
+			}
+			mOrientationJudge.resetLocked(clearCurrentRotation);
+
+			for (Sensor sensor : mSensors) {
+				boolean registered;
+				if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+					registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
+				} else {
+					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
+					registered = mSensorManager.registerListener(mOrientationJudge, sensor, 54999, mHandler);
+				}
+				
+				if (!registered) {
+					Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
+					/*
+					 * Even though registration failed, we're not giving up on the sensor just yet because:
+					 * 1. It's possible for registration to fail but without any further problems: http://stackoverflow.com/questions/18602261/unexpected-false-return-value-from-android-hardware-sensormanager-registerlisten
+					 * 2. The official Android WindowOrientationListener implementation ignores the return value
+					 * 3. Seven users have submitted error reports when sensor registration failed, so maybe they were onto something
+					 */
+				}
+			}
+
+			mEnabled = true;
+
+			// Apparently it's possible to successfully register for gravity events but not receive any:
+			// http://stackoverflow.com/a/10447302/238753
+			mGotSensorEvent = false;
+			mHandler.postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
+
+			mLastSensorType = Sensor.TYPE_ALL;
 		}
 	}
 
@@ -374,8 +387,11 @@ abstract class WindowOrientationListener {
 		 * Resets the state of the judge.
 		 *
 		 * Should only be called when holding WindowOrientationListener lock.
+         *
+         * @param clearCurrentRotation True if the current proposed sensor rotation should be
+         *                             cleared as part of the reset.
 		 */
-		public abstract void resetLocked();
+		public abstract void resetLocked(boolean clearCurrentRotation);
 
 		/**
 		 * Dumps internal state of the orientation judge.
@@ -747,7 +763,7 @@ abstract class WindowOrientationListener {
 					if (LOG) {
 						Slog.v(TAG, "Resetting orientation listener.");
 					}
-					resetLocked();
+					resetLocked(true /* clearCurrentRotation */);
 					skipSample = true;
 				} else {
 					if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -934,9 +950,11 @@ abstract class WindowOrientationListener {
 		}
 
 		@Override
-		public void resetLocked() {
+		public void resetLocked(boolean clearCurrentRotation) {
 			mLastFilteredTimestampNanos = Long.MIN_VALUE;
-			mProposedRotation = -2;
+			if (clearCurrentRotation) {
+				mProposedRotation = -2;
+			}
 			mFlatTimestampNanos = Long.MIN_VALUE;
 			mFlat = false;
 			mSwingTimestampNanos = Long.MIN_VALUE;
@@ -1170,9 +1188,11 @@ abstract class WindowOrientationListener {
 		}
 
 		@Override
-		public void resetLocked() {
-			mProposedRotation = -1;
-			mDesiredRotation = -1;
+		public void resetLocked(boolean clearCurrentRotation) {
+			if (clearCurrentRotation) {
+				mProposedRotation = -1;
+				mDesiredRotation = -1;
+			}
 			mTouching = false;
 			mTouchEndedTimestampNanos = Long.MIN_VALUE;
 			unscheduleRotationEvaluationLocked();
