@@ -15,7 +15,7 @@
  */
 
 /*
- * Copied from commit 8e4591 (https://github.com/android/platform_frameworks_base/blob/8e4591c4f388dfa0c28f83d991cf91316581cfc9/services/core/java/com/android/server/policy/WindowOrientationListener.java)
+ * Copied from commit d49b1e (https://github.com/android/platform_frameworks_base/blob/d49b1ee0de1eeb2f7370bf2839e7c707fe008b37/services/core/java/com/android/server/policy/WindowOrientationListener.java)
  *
  * Minor modifications made for this project:
  * -Package changed
@@ -67,7 +67,8 @@ abstract class WindowOrientationListener {
 	private static final boolean LOG = false;
 
 	private static final boolean USE_GRAVITY_SENSOR = false;
-
+	private static final int DEFAULT_BATCH_LATENCY = 100000;
+	
 	private Handler mHandler;
 	private SensorManager mSensorManager;
 	private boolean mEnabled;
@@ -195,10 +196,15 @@ abstract class WindowOrientationListener {
 				mOrientationJudge.resetLocked();
 
 				for (Sensor sensor : mSensors) {
-					//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
-					int samplingPeriodUs = sensor.getType() != Sensor.TYPE_ACCELEROMETER ? 54999 : mRate;
-
-					if (!mSensorManager.registerListener(mOrientationJudge, sensor, samplingPeriodUs, mHandler)) {
+					boolean registered;
+					if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+						registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
+					} else {
+						//For gravity and rotation sensors, delays of 55000 or higher cause the sensor values to go bad when the device is swung on my Samsung Galaxy S5. Don't know about other devices.
+						registered = mSensorManager.registerListener(mOrientationJudge, sensor, 54999, mHandler);
+					}
+					
+					if (!registered) {
 						Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
 						/*
 						 * Even though registration failed, we're not giving up on the sensor just yet because:
