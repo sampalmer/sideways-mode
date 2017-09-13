@@ -50,20 +50,12 @@ public class ApplicationStatusFactory {
 
 	public ApplicationStatus generate() {
 		return new ApplicationStatus(
-			overridden(),
 			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority(),
 			calculator.isWaitingForSensor()
 		);
 	}
 	
-	private boolean overridden() {
-		Orientation requested = screenOrientationUpdater.proposedOrientation();
-		Orientation actual = screenRotationMonitor.currentRotation();
-
-		return !requested.equals(actual);
-	}
-
 	/**
 	 * If the app thinks the user is upside-down, it's more likely that they're upright but
 	 * using the phone slightly tilted away from them. So we present being upside-down as being
