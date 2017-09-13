@@ -1,0 +1,2 @@
+• Tried to fix a few rare crashes
+• Updated to latest Android code for detecting device orientation
