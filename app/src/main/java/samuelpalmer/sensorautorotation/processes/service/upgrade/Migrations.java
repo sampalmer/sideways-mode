@@ -136,6 +136,18 @@ class Migrations {
 			}
 		});
 		
+		migrations.put(57, new Migration() {
+			
+			@Override
+			public void upgradeData() {
+				super.upgradeData();
+				
+				ApplicationSettings applicationSettings = ApplicationSettings.instance();
+				Setting<Boolean> allowUpsideDownScreen = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "allowUpsideDownScreen", true);
+				allowUpsideDownScreen.remove();
+			}
+		});
+		
 		return migrations;
 	}
 }

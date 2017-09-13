@@ -75,9 +75,6 @@
 
 	<string name="preference_notification_summary_priority">%1$s приоритет</string>
 
-	<string name="preference_allow_upside_down_screen_title">Разрешить перевернутый экран</string>
-	<string name="preference_allow_upside_down_screen_description">Поддерживать удерживание устройства вверх ногами</string>
-
 	<string name="preference_forced_apps_title">Переопределить приложение</string>
 
 	<string name="preference_choose_apps">Выберите приложение</string>

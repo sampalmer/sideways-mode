@@ -69,7 +69,7 @@ public class ApplicationStatusFactory {
 		Orientation requested = screenOrientationUpdater.proposedOrientation();
 		Orientation actual = screenRotationMonitor.currentRotation();
 
-		return requested != null && !requested.equals(actual);
+		return !requested.equals(actual);
 	}
 
 	/**

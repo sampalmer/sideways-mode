@@ -88,9 +88,6 @@
 
 	<string name="preference_notification_summary_priority">%1$s priority</string>
 
-	<string name="preference_allow_upside_down_screen_title">Allow reverse screen</string>
-	<string name="preference_allow_upside_down_screen_description">Support holding the device upside-down</string>
-
 	<string name="preference_forced_apps_title">Overridden apps</string>
 	<plurals name="preference_forced_apps_summary_enabled">
 		<item quantity="one">%d app overridden</item>
