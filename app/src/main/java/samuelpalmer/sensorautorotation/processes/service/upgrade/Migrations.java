@@ -156,6 +156,12 @@ class Migrations {
 				if (autoRotateWasOn)
 					applicationSettings.enabled().set(false);
 			}
+			
+			@Override
+			public CharSequence getMessage() {
+				return StringResource.format(R.string.upgrade_v57, R.string.app_name_full);
+			}
+			
 		});
 		
 		return migrations;

@@ -1,4 +1,4 @@
-# Auto Rotation for Lying Down
+# Sideways Mode
 
 Get it at the Google Play Store: https://play.google.com/store/apps/details?id=samuelpalmer.sensorautorotation
 
