@@ -49,9 +49,7 @@ public class DashboardEnabledContents extends LinearLayout {
 	private View sensorProgress;
 	private TextView statusText;
 	private ImageButton rotateLeftButton;
-	private ImageButton toggleModeButton;
 	private ImageButton rotateRightButton;
-	private TextView modeText;
 	
 	private void init() {
 		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_enabled_contents, this, true);
@@ -64,15 +62,12 @@ public class DashboardEnabledContents extends LinearLayout {
 		
 		statusText = (TextView) findViewById(R.id.dashboard_status);
 		rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
-		toggleModeButton = (ImageButton) findViewById(R.id.dashboard_button_toggle);
 		rotateRightButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_right);
-		modeText = (TextView) findViewById(R.id.dashboard_mode);
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		
 		rotateLeftButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT)));
 		//Not showing the toast when this is pressed since it causes a flickering issue on Samsung Galaxy S5 (Android 6)
-		toggleModeButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TOGGLE)));
 		rotateRightButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_RIGHT)));
 		
 		/*
@@ -113,9 +108,5 @@ public class DashboardEnabledContents extends LinearLayout {
 		}
 		
 		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.longDescriptionId());
-		
-		toggleModeButton.setImageResource(lastStatus.mode.dashboardIcon());
-		toggleModeButton.setContentDescription(StringResource.get(lastStatus.mode.toggleToOtherModeResourceId()));
-		modeText.setText(lastStatus.mode.autoRotationStateResourceId());
 	}
 }

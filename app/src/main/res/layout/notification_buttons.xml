@@ -9,7 +9,6 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<include layout="@layout/notification_button" android:id="@+id/rotate_left_button" />
-	<include layout="@layout/notification_button" android:id="@+id/toggle_mode_button" />
 	<include layout="@layout/notification_button" android:id="@+id/rotate_right_button" />
 
 </LinearLayout>

@@ -18,27 +18,6 @@ class InstructionsPages {
 		new PageFactory() {
 			@Override
 			public Fragment makePage() {
-				return InstructionsPageFragment.newInstance(R.string.instructions_modes_heading, R.string.instructions_modes_contents, R.string.screen_rotation_enabled, R.string.screen_rotation_disabled_portrait);
-			}
-		},
-		
-		new PageFactory() {
-			@Override
-			public Fragment makePage() {
-				return InstructionsPageFragment.newInstance(R.string.instructions_toggling_heading, R.string.instructions_toggling_contents);
-			}
-		},
-		
-		new PageFactory() {
-			@Override
-			public Fragment makePage() {
-				return InstructionsPageFragment.newInstance(R.string.instructions_auto_rotation_heading, R.string.instructions_auto_rotation_contents, R.string.screen_rotation_enabled, R.string.app_name_full);
-			}
-		},
-		
-		new PageFactory() {
-			@Override
-			public Fragment makePage() {
 				return InstructionsPageFragment.newInstance(R.string.instructions_position_heading, R.string.instructions_position_contents);
 			}
 		},

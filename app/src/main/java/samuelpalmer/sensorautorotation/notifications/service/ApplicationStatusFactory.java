@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.Settings.Setting;
@@ -22,15 +21,13 @@ public class ApplicationStatusFactory {
 
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screenRotationMonitor;
-	private final NaturalOrientationDetector naturalOrientationDetector;
 	private final ScreenOrientationUpdater screenOrientationUpdater;
 	private final LockScreenMonitor lockScreenMonitor;
 	private final Setting<NotificationPriority> priority;
 
-	public ApplicationStatusFactory(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, NaturalOrientationDetector naturalOrientationDetector, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
+	public ApplicationStatusFactory(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor, ScreenOrientationUpdater screenOrientationUpdater, LockScreenMonitor lockScreenMonitor) {
 		this.calculator = calculator;
 		this.screenRotationMonitor = screenRotationMonitor;
-		this.naturalOrientationDetector = naturalOrientationDetector;
 		this.screenOrientationUpdater = screenOrientationUpdater;
 		this.lockScreenMonitor = lockScreenMonitor;
 		priority = ApplicationSettings.instance().notificationPriority();
@@ -53,18 +50,13 @@ public class ApplicationStatusFactory {
 
 	public ApplicationStatus generate() {
 		return new ApplicationStatus(
-			mode(),
 			overridden(),
 			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority(),
 			calculator.isWaitingForSensor()
 		);
 	}
-
-	private Mode mode() {
-		return calculator.autoRotate() ? new AutoRotationMode() : new LockedMode(calculator, naturalOrientationDetector.deviceIsNaturallyPortrait());
-	}
-
+	
 	private boolean overridden() {
 		Orientation requested = screenOrientationUpdater.proposedOrientation();
 		Orientation actual = screenRotationMonitor.currentRotation();

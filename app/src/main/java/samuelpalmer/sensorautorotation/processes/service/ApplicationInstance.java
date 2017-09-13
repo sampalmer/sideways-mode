@@ -1,9 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.widget.Toast;
-
 import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.NaturalOrientationDetector;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -20,7 +17,6 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
-import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -52,7 +48,7 @@ public class ApplicationInstance extends State {
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen(SystemServices.windowManager());
 		
-		applicationState = new ApplicationState(systemSettings);
+		applicationState = new ApplicationState();
 		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		
@@ -61,7 +57,7 @@ public class ApplicationInstance extends State {
 		
 		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
-		applicationStatusFactory = new ApplicationStatusFactory(calculator, screenRotationMonitor, new NaturalOrientationDetector(screen), screenUpdater, lockScreenMonitor);
+		applicationStatusFactory = new ApplicationStatusFactory(calculator, screenRotationMonitor, screenUpdater, lockScreenMonitor);
 		display = new ApplicationStatusDisplays();
 		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory, display);
 		
@@ -97,9 +93,6 @@ public class ApplicationInstance extends State {
 	
 	public void handle(ApplicationInstanceCommand command) {
 		switch (command.action) {
-			case ApplicationInstanceCommand.ACTION_TOGGLE:
-				calculator.setAutoRotate(!calculator.autoRotate());
-				break;
 			case ApplicationInstanceCommand.ACTION_ROTATE_LEFT:
 				calculator.offsetScreenBy(new Rotation(-1));
 				break;
@@ -111,11 +104,6 @@ public class ApplicationInstance extends State {
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
-		}
-		
-		if (command.showToast) {
-			CharSequence status = applicationStatusFactory.generate().getSummary();
-			ToastReceiver.send(status, Toast.LENGTH_SHORT);
 		}
 	}
 	

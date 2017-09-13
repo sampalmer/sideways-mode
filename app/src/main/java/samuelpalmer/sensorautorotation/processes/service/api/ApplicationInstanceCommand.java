@@ -9,22 +9,17 @@ import samuelpalmer.sensorautorotation.ServiceController;
 
 public class ApplicationInstanceCommand {
 
-	public static final String ACTION_TOGGLE = "toggle";
 	public static final String ACTION_ROTATE_LEFT = "rotate_left";
 	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
 	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
 
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
-			ACTION_TOGGLE,
 			ACTION_ROTATE_LEFT,
 			ACTION_ROTATE_RIGHT,
 			ACTION_UPDATE_NOTIFICATION
 	));
 
-	private static final String EXTRA_SHOW_TOAST = "show_toast";
-
 	public final String action;
-	public boolean showToast;
 	public boolean toastIfServiceDisabled = true;
 
 	public ApplicationInstanceCommand(String action) {
@@ -37,18 +32,11 @@ public class ApplicationInstanceCommand {
 	public Intent toIntent() {
 		return ServiceController
 				.intent()
-				.setAction(action)
-				.putExtra(EXTRA_SHOW_TOAST, showToast);
+				.setAction(action);
 	}
 
 	public static ApplicationInstanceCommand fromIntent(Intent intent) {
-		if (!intent.hasExtra(EXTRA_SHOW_TOAST))
-			throw new IllegalArgumentException("Intent didn't have the " + EXTRA_SHOW_TOAST + " extra");
-
-		ApplicationInstanceCommand result = new ApplicationInstanceCommand(intent.getAction());
-		result.showToast = intent.getBooleanExtra(EXTRA_SHOW_TOAST, false);
-
-		return result;
+		return new ApplicationInstanceCommand(intent.getAction());
 	}
 
 }

@@ -35,9 +35,10 @@ class Migrations {
 
 				ServiceSettings serviceSettings = new ServiceSettings();
 				Setting<Orientation> newUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
-
+				Setting<Boolean> newAutoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
+				
 				Transaction copyTransaction = serviceSettings.new Transaction();
-				copyIfPresent(oldAutoRotate, serviceSettings.autoRotate(), copyTransaction);
+				copyIfPresent(oldAutoRotate, newAutoRotate, copyTransaction);
 				copyIfPresent(oldUserOrientation, newUserOrientation, copyTransaction);
 				copyTransaction.commit();
 
@@ -63,12 +64,13 @@ class Migrations {
 
 				ServiceSettings serviceSettings = new ServiceSettings();
 				Setting<Orientation> oldUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
-
+				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
+				
 				Transaction transaction = serviceSettings.new Transaction();
 
 				oldUserOrientation.remove(transaction);
 
-				if (serviceSettings.autoRotate().hasValue() && oldUserOrientation.hasValue() && serviceSettings.autoRotate().get())
+				if (autoRotate.hasValue() && oldUserOrientation.hasValue() && autoRotate.get())
 					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
 					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
 					serviceSettings.screenOrientationOffset().enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
@@ -145,6 +147,14 @@ class Migrations {
 				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> allowUpsideDownScreen = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "allowUpsideDownScreen", true);
 				allowUpsideDownScreen.remove();
+				
+				ServiceSettings serviceSettings = new ServiceSettings();
+				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
+				boolean autoRotateWasOn = autoRotate.get();
+				autoRotate.remove();
+				
+				if (autoRotateWasOn)
+					applicationSettings.enabled().set(false);
 			}
 		});
 		

@@ -35,12 +35,6 @@
 	<string name="finish">Заверишть</string>
 
 	<!-- Notification -->
-	<string name="screen_rotation_enabled">Автоповорот</string>
-	<string name="screen_rotation_disabled_portrait">Портретный</string>
-	<string name="screen_rotation_disabled_landscape">Ландшафтный</string>
-
-	<string name="notification_summary">%1$s (%2$s)</string>
-	<string name="status_user_phrase">Пользователь %1$s</string>
 
 	<string name="user_rotation_upright">Портретный</string>
 	<string name="user_rotation_left_side">Левая сторона</string>
@@ -50,7 +44,6 @@
 
 	<string name="action_rotate_left">Повернуть влево</string>
 	<string name="action_rotate_right">Повернуть вправо</string>
-	<string name="action_toggle_rotation_lock">Переключить автоповорот</string>
 
 	<string name="app_disabled_message">%1$s не включено</string>
 	<string name="app_disabled_view_error">Ошибка</string>
@@ -107,20 +100,11 @@
 	<string name="instructions_introduction_heading">Добро пожаловать</string>
 	<string name="instructions_introduction_contents">Добро пожаловать в %1$s! Это заменяет вращение экрана Android, поэтому не используйте обычные настройки вращения экрана Android.</string>
 
-	<string name="instructions_modes_heading">Режимы</string>
-	<string name="instructions_modes_contents">Есть два режима: %1$s и блокировка. Чтобы увидеть в каком режиме вы, обратите внимание на значок уведомлений в шторке уведомлений.</string>
-
-	<string name="instructions_toggling_heading">Изменение режима</string>
-	<string name="instructions_toggling_contents">Для изменения режима, нажмите кнопку уведомлений. Вы также можете установить ярлык на домашнем экране, чтобы сделать это.</string>
-
-	<string name="instructions_auto_rotation_heading">Режим автоповорота</string>
-	<string name="instructions_auto_rotation_contents">%1$s такой же режим вращения экрана Android, но если %2$s думает, что вы на боку, экран будет на бок.</string>
-
 	<string name="instructions_position_heading">Положение</string>
 	<string name="instructions_position_contents">Ваша ориентация (будь вы лежа или вертикально) также отслеживается и отображается в уведомлениях.</string>
 
 	<string name="instructions_position_changing_heading">Изменение положения</string>
-	<string name="instructions_position_changing_contents">Для того чтобы изменить вашу ориентацию, либо использовать режим блокировки или %1$s и %2$s кнопки в уведомлении.</string>
+	<string name="instructions_position_changing_contents">Для того чтобы изменить вашу ориентацию, использовать %1$s и %2$s кнопки в уведомлении.</string>
 
 	<string name="instructions_overridden_heading">Несовместимые приложения</string>
 	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана, such as YouTube. Когда это произойдет, значок уведомления покажет ориентацию вместо текущего режима. You can prevent apps from doing this by using the \"%2$s\" setting.</string>

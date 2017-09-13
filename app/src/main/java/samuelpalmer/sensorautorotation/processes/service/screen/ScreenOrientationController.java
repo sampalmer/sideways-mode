@@ -33,7 +33,7 @@ public class ScreenOrientationController extends State {
 
 	@Override
 	protected void stop() {
-		settings.accelerometerRotation.set(state.autoRotate.get());
+		settings.accelerometerRotation.set(true);
 		propose(Orientation.NATURAL);
 	}
 

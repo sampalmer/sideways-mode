@@ -35,7 +35,7 @@ class ServiceNotification {
 			.setChannelId(NotificationChannels.ID_CONTROLS)
 		;
 		
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotation, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotate_left, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
@@ -68,12 +68,12 @@ class ServiceNotification {
 		applicationStatus.priority.apply(builder);
 		hideTimestamp();
 
-		applyButtons(applicationStatus);
+		applyButtons();
 
 		return builder.build();
 	}
 	
-	private void applyButtons(ApplicationStatus applicationStatus) {
+	private void applyButtons() {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
@@ -83,20 +83,12 @@ class ServiceNotification {
 			actionButtonColour
 		);
 
-		ApplicationInstanceCommand toggleCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TOGGLE);
-		toggleCommand.showToast = true;
-
 		notificationButtons
 			.configureButton(
 				R.id.rotate_left_button,
 				R.drawable.action_rotate_left,
 				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
 				StringResource.get(R.string.action_rotate_left))
-			.configureButton(
-				R.id.toggle_mode_button,
-				applicationStatus.mode.actionIcon(),
-				ApplicationInstanceReceiver.getPendingIntent(toggleCommand, PendingIntentIds.MAIN_NOTIFICATION_TOGGLE),
-				StringResource.get(applicationStatus.mode.toggleToOtherModeResourceId()))
 			.configureButton(
 				R.id.rotate_right_button,
 				R.drawable.action_rotate_right,
