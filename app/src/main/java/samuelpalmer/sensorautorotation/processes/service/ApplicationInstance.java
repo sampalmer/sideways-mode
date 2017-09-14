@@ -1,11 +1,11 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.Rotation;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplays;
@@ -13,10 +13,10 @@ import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFa
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementManager;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
+import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityChangeHandler;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -26,17 +26,25 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
  */
 public class ApplicationInstance extends State {
 	
+	private final UserSide initialUserSide;
+	
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
 	ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
 	private ApplicationStatusFactory applicationStatusFactory;
-	private UserInteractivityChangeHandler userInteractivityChangeHandler;
+	private OrientationSensorHandler orientationSensorHandler;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementManager orientationEnforcementManager;
 	ActivityMonitor activityMonitor;
 	private ApplicationStatusDisplays display;
+	private ScreenOrientationUpdater screenUpdater;
+	
+	public ApplicationInstance(UserSide initialUserSide) {
+		super();
+		this.initialUserSide = initialUserSide;
+	}
 	
 	@Override
 	protected void start() {
@@ -48,14 +56,14 @@ public class ApplicationInstance extends State {
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen(SystemServices.windowManager());
 		
-		applicationState = new ApplicationState();
+		applicationState = new ApplicationState(initialUserSide);
 		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		
 		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, applicationState);
 		
-		ScreenOrientationUpdater screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
+		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		applicationStatusFactory = new ApplicationStatusFactory(calculator, screenRotationMonitor, screenUpdater, lockScreenMonitor);
 		display = new ApplicationStatusDisplays();
@@ -63,7 +71,7 @@ public class ApplicationInstance extends State {
 		
 		serviceRevivalManager = new ServiceRevivalManager();
 		
-		userInteractivityChangeHandler = new UserInteractivityChangeHandler(calculator, screenUpdater, screenRotationMonitor);
+		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
 		
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
 		activityMonitor = new ActivityMonitor();
@@ -72,7 +80,8 @@ public class ApplicationInstance extends State {
 		systemAutoRotationMonitor.ensureStarted();
 		screenOrientationController.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
-		userInteractivityChangeHandler.ensureStarted();
+		screenUpdater.ensureStarted();
+		orientationSensorHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementManager.ensureStarted();
@@ -84,7 +93,8 @@ public class ApplicationInstance extends State {
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
-		userInteractivityChangeHandler.ensureStopped();
+		orientationSensorHandler.ensureStopped();
+		screenUpdater.ensureStopped();
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 		
@@ -93,11 +103,8 @@ public class ApplicationInstance extends State {
 	
 	public void handle(ApplicationInstanceCommand command) {
 		switch (command.action) {
-			case ApplicationInstanceCommand.ACTION_ROTATE_LEFT:
-				calculator.offsetScreenBy(new Rotation(-1));
-				break;
-			case ApplicationInstanceCommand.ACTION_ROTATE_RIGHT:
-				calculator.offsetScreenBy(new Rotation(1));
+			case ApplicationInstanceCommand.ACTION_CHANGE_SIDE:
+				calculator.changeSide();
 				break;
 			case ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION:
 				display.update(applicationStatusDisplayUpdater.getLastStatus());

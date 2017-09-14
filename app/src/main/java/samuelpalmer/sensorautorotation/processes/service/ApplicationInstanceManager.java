@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.StateMonitor;
+import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivity;
+import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class ApplicationInstanceManager {
@@ -16,6 +19,7 @@ public abstract class ApplicationInstanceManager {
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
 	private static boolean deviceIsShuttingDown = false;
+	private static UserInteractivity userInteractivity;
 	
 	public static void init() {
 		if (initialised)
@@ -24,9 +28,18 @@ public abstract class ApplicationInstanceManager {
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
 		ApplicationSettings.instance().enabled().subscribe(updateApplicationState);
 		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		new UserInteractivityMonitor(userInteractivityListener).ensureStarted();
 		
 		initialised = true;
 	}
+	
+	private static final StateMonitor.Listener<UserInteractivity> userInteractivityListener = new StateMonitor.Listener<UserInteractivity>() {
+		@Override
+		public void stateChanged(UserInteractivity state) {
+			userInteractivity = state;
+			updateApplicationState.update();
+		}
+	};
 	
 	private static final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 		
@@ -46,7 +59,7 @@ public abstract class ApplicationInstanceManager {
 			
 			if (shouldBeRunning != isRunning) {
 				if (shouldBeRunning) {
-					applicationInstance = new ApplicationInstance();
+					applicationInstance = new ApplicationInstance(ServiceRegistrar.instance.getInitialUserSide());
 					applicationInstance.ensureStarted();
 				}
 				else {
@@ -77,6 +90,8 @@ public abstract class ApplicationInstanceManager {
 			ApplicationSettings.instance().enabled().get() // It shouldn't be running if it's turned off!
 			&&
 			!deviceIsShuttingDown // So system auto-rotation gets re-enabled until the application next starts
+			&&
+			userInteractivity.active() // So turning the screen off shuts down this app
 		;
 	}
 }

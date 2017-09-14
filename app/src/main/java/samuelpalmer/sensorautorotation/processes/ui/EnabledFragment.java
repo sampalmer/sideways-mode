@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.UserSide;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
@@ -46,7 +49,14 @@ public class EnabledFragment extends Fragment {
 				setControlCheckedStateWithoutTriggeringListener(false);
 			} else {
 				enabledSetting.set(isChecked);
-				new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+				
+				if (isChecked) {
+					Intent startIntent = ServiceController.intent();
+					startIntent.putExtra(RotationService.EXTRA_INITIAL_USER_SIDE, UserSide.LEFT.name());
+					ServiceController.ensureStarted(startIntent);
+				}
+				else
+					new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
 			}
 		}
 
@@ -76,7 +86,7 @@ public class EnabledFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		enabledControl = (SwitchBar) view.findViewById(R.id.switch_bar);
+		enabledControl = view.findViewById(R.id.switch_bar);
  		enabledControl.addOnSwitchChangeListener(enabledSettingUpdater);
 	}
 

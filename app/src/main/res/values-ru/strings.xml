@@ -34,14 +34,8 @@
 
 	<!-- Notification -->
 
-	<string name="user_rotation_upright">Портретный</string>
 	<string name="user_rotation_left_side">Левая сторона</string>
 	<string name="user_rotation_right_side">Правая сторона</string>
-	<string name="user_rotation_sideways">Ландшафтный</string>
-	<string name="user_rotation_upside_down">Вверх ногами</string>
-
-	<string name="action_rotate_left">Повернуть влево</string>
-	<string name="action_rotate_right">Повернуть вправо</string>
 
 	<string name="app_disabled_message">%1$s не включено</string>
 	<string name="app_disabled_view_error">Ошибка</string>
@@ -98,18 +92,12 @@
 	<string name="instructions_introduction_heading">Добро пожаловать</string>
 	<string name="instructions_introduction_contents">Добро пожаловать в %1$s! Это заменяет вращение экрана Android, поэтому не используйте обычные настройки вращения экрана Android.</string>
 
-	<string name="instructions_position_heading">Положение</string>
-	<string name="instructions_position_contents">Ваша ориентация (будь вы лежа или вертикально) также отслеживается и отображается в уведомлениях.</string>
-
-	<string name="instructions_position_changing_heading">Изменение положения</string>
-	<string name="instructions_position_changing_contents">Для того чтобы изменить вашу ориентацию, использовать %1$s и %2$s кнопки в уведомлении.</string>
-
 	<string name="instructions_uninstalling_heading">Удаление</string>
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране.</string>
 
 	<string name="instructions_help_heading">Исправление проблем</string>
 	<string name="instructions_help_contents">
-		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте %1$s и %2$s кнопки в уведомлении, чтобы исправить это.\n\nЕсли происходят сбои, пожалуйста, нажмите кнопку "Отчет", так я смогу решить пробоему.\n\nЕсли у вас есть какие-либо замечания, вы можете их отправить из магазина или меню этого приложения.
+		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте %1$s кнопка в уведомлении, чтобы исправить это.\n\nЕсли происходят сбои, пожалуйста, нажмите кнопку "Отчет", так я смогу решить пробоему.\n\nЕсли у вас есть какие-либо замечания, вы можете их отправить из магазина или меню этого приложения.
 	</string>
 
 	<!-- Device problem -->

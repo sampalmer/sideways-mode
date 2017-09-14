@@ -4,25 +4,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
 import samuelpalmer.common.IntegerUtilities;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class UserOrientation implements Parcelable {
 	
 	@NonNull
-	private final Orientation user;
+	private final UserSide side;
 	private final int rotationsRelativeToScreen;
 
-	public UserOrientation(@NonNull Orientation user, ScreenRotationMonitor screenRotationMonitor, @NonNull Orientation proposed) {
-		this.user = user;
+	public UserOrientation(@NonNull UserSide side, ScreenRotationMonitor screenRotationMonitor, @NonNull Orientation proposed) {
+		this.side = side;
 		rotationsRelativeToScreen = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	private UserOrientation(Parcel in) {
-		user = in.readParcelable(this.getClass().getClassLoader());
+		side = UserSide.valueOf(in.readString());
 		rotationsRelativeToScreen = in.readInt();
 	}
 
@@ -38,22 +40,9 @@ public class UserOrientation implements Parcelable {
 		}
 	};
 
+	@StringRes
 	public int descriptionId() {
-		int longDescription = longDescriptionId();
-		if (longDescription == R.string.user_rotation_left_side || longDescription == R.string.user_rotation_right_side)
-			return R.string.user_rotation_sideways;
-
-		return longDescription;
-	}
-
-	public int longDescriptionId() {
-		switch (user.getClockwiseRotationsFromNaturalOrientation()) {
-			case 0: return R.string.user_rotation_upright;
-			case 1: return R.string.user_rotation_right_side;
-			case 2: return R.string.user_rotation_upside_down;
-			case 3: return R.string.user_rotation_left_side;
-			default: throw new RuntimeException("Unknown user rotation: " + user.getClockwiseRotationsFromNaturalOrientation());
-		}
+		return side.descriptionId();
 	}
 
 	@DrawableRes
@@ -69,7 +58,7 @@ public class UserOrientation implements Parcelable {
 
 	public boolean equals(UserOrientation other) {
 		return
-			user.equals(other.user)
+			side.equals(other.side)
 			&&
 			rotationsRelativeToScreen == other.rotationsRelativeToScreen;
 	}
@@ -81,7 +70,7 @@ public class UserOrientation implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeParcelable(user, 0);
+		dest.writeString(side.name());
 		dest.writeInt(rotationsRelativeToScreen);
 	}
 }

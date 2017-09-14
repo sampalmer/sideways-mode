@@ -42,33 +42,13 @@
 
 	</LinearLayout>
 
-	<LinearLayout
-		android:layout_height="match_parent"
+	<ImageButton
+		android:id="@+id/dashboard_button_change_side"
+		android:scaleType="center"
 		android:layout_width="match_parent"
-		android:orientation="horizontal"
-		android:layoutDirection="ltr"
-		tools:ignore="UnusedAttribute">
-
-		<ImageButton
-			android:id="@+id/dashboard_button_rotate_left"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			style="@style/Widget.AppCompat.Button.Borderless"
-			android:contentDescription="@string/action_rotate_left"
-			/>
-
-		<ImageButton
-			android:id="@+id/dashboard_button_rotate_right"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			style="@style/Widget.AppCompat.Button.Borderless"
-			android:contentDescription="@string/action_rotate_left"
-			/>
-
-	</LinearLayout>
+		android:layout_height="match_parent"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:contentDescription="@string/action_change_side"
+		/>
 
 </merge>

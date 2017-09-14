@@ -36,7 +36,7 @@ class ServiceNotification {
 			.setChannelId(NotificationChannels.ID_CONTROLS)
 		;
 		
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_rotate_left, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_change_side, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
@@ -83,15 +83,10 @@ class ServiceNotification {
 
 		notificationButtons
 			.configureButton(
-				R.id.rotate_left_button,
-				R.drawable.action_rotate_left,
-				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_LEFT),
-				StringResource.get(R.string.action_rotate_left))
-			.configureButton(
-				R.id.rotate_right_button,
-				R.drawable.action_rotate_right,
-				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_RIGHT), PendingIntentIds.MAIN_NOTIFICATION_ROTATE_RIGHT),
-				StringResource.get(R.string.action_rotate_right));
+				R.id.change_side_button,
+				R.drawable.action_change_side,
+				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
+				StringResource.get(R.string.action_change_side));
 
 		builder.setCustomContentView(notificationButtons.getContentView());
 	}

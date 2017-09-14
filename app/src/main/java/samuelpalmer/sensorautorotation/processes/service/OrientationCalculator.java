@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class OrientationCalculator {
@@ -28,40 +29,31 @@ public class OrientationCalculator {
 		
 		onAnythingChanged = new UpdatingEventRegistrar();
 	}
-
-	public void reset() {
-		device = Orientation.NATURAL;
-		waitingForSensor = true;
-		state.offset.set(new Rotation(0));
-
-		reportChange();
-	}
 	
 	public @NonNull Orientation user() {
-		return calculateUser(offset());
-	}
-
-	private @NonNull Orientation calculateUser( @NonNull Rotation offset) {
-		Orientation base = baseScreenOrientation(false);
-		return offset.minus(base);
+		return offset().minus(Orientation.NATURAL);
 	}
 	
 	private @NonNull Rotation offset() {
-		return state.offset.get();
+		return state.userSide.get().offset();
 	}
 
-	public void offsetScreenBy(Rotation clockwiseRotations) {
-		if (clockwiseRotations.isRevolution())
-			//Nothing's changing. Don't want to proceed and get stuck in an infinite loop!
-			return;
+	public void changeSide() {
+		UserSide newSide;
 		
-		Rotation newValue = offset();
+		UserSide currentSide = state.userSide.get();
+		switch (currentSide) {
+			case LEFT:
+				newSide = UserSide.RIGHT;
+				break;
+			case RIGHT:
+				newSide = UserSide.LEFT;
+				break;
+			default:
+				throw new RuntimeException("Can't determine opposite side of user side '" + currentSide.toString() + "'.");
+		}
 		
-		do
-			newValue = newValue.plus(clockwiseRotations);
-		while (calculateUser(newValue).equals(Orientation.UPSIDE_DOWN));
-		
-		state.offset.set(newValue);
+		state.userSide.set(newSide);
 		reportChange();
 	}
 	
@@ -79,20 +71,14 @@ public class OrientationCalculator {
 	}
 
 	public @NonNull Orientation proposedScreenOrientation() {
-		Orientation base = baseScreenOrientation(true);
-		return base.plus(offset());
+		return device.plus(offset());
 	}
-
-	/**
-	 * The screen orientation before applying an offset.
-	 * This seems to be a common factor in various calculations, but it was hard to come up with
-	 * a good name for it.
-	 */
-	private @NonNull Orientation baseScreenOrientation(boolean autoRotate) {
-		return autoRotate ? device : Orientation.NATURAL;
-	}
-
+	
 	public boolean isWaitingForSensor() {
 		return waitingForSensor;
+	}
+	
+	public UserSide side() {
+		return state.userSide.get();
 	}
 }

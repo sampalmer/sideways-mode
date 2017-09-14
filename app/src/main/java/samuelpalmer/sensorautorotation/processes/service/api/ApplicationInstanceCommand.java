@@ -9,13 +9,11 @@ import samuelpalmer.sensorautorotation.ServiceController;
 
 public class ApplicationInstanceCommand {
 
-	public static final String ACTION_ROTATE_LEFT = "rotate_left";
-	public static final String ACTION_ROTATE_RIGHT = "rotate_right";
+	public static final String ACTION_CHANGE_SIDE = "change_side";
 	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
 
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
-			ACTION_ROTATE_LEFT,
-			ACTION_ROTATE_RIGHT,
+			ACTION_CHANGE_SIDE,
 			ACTION_UPDATE_NOTIFICATION
 	));
 

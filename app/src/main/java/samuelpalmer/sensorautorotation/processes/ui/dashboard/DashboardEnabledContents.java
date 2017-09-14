@@ -48,8 +48,7 @@ public class DashboardEnabledContents extends LinearLayout {
 	private ImageView userIcon;
 	private View sensorProgress;
 	private TextView statusText;
-	private ImageButton rotateLeftButton;
-	private ImageButton rotateRightButton;
+	private ImageButton changeSideButton;
 	
 	private void init() {
 		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_enabled_contents, this, true);
@@ -57,42 +56,30 @@ public class DashboardEnabledContents extends LinearLayout {
 		setOrientation(VERTICAL);
 		setGravity(Gravity.CENTER_HORIZONTAL);
 		
-		userIcon = (ImageView) findViewById(R.id.dashboard_user_icon);
+		userIcon = findViewById(R.id.dashboard_user_icon);
 		sensorProgress = findViewById(R.id.dashboard_sensor_progress);
 		
-		statusText = (TextView) findViewById(R.id.dashboard_status);
-		rotateLeftButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_left);
-		rotateRightButton = (ImageButton) findViewById(R.id.dashboard_button_rotate_right);
+		statusText = findViewById(R.id.dashboard_status);
+		changeSideButton = findViewById(R.id.dashboard_button_change_side);
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		
-		rotateLeftButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_LEFT)));
-		//Not showing the toast when this is pressed since it causes a flickering issue on Samsung Galaxy S5 (Android 6)
-		rotateRightButton.setOnClickListener(new ApplicationInstanceClickReceiver(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_ROTATE_RIGHT)));
+		changeSideButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ApplicationInstanceClient.send(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE));
+				//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
+			}
+			
+		});
 		
 		/*
 			All image drawables must be set in app code to avoid crashes since:
 			1. We're using the vector compat stuff
 			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
 		 */
-		rotateLeftButton.setImageResource(R.drawable.dashboard_rotate_left);
-		rotateRightButton.setImageResource(R.drawable.dashboard_rotate_right);
-	}
-	
-	private static class ApplicationInstanceClickReceiver implements View.OnClickListener {
-		
-		private final ApplicationInstanceCommand command;
-		
-		public ApplicationInstanceClickReceiver(ApplicationInstanceCommand command) {
-			this.command = command;
-		}
-		
-		@Override
-		public void onClick(View v) {
-			ApplicationInstanceClient.send(command);
-			//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
-		}
-		
+		changeSideButton.setImageResource(R.drawable.dashboard_change_side);
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {
@@ -107,6 +94,6 @@ public class DashboardEnabledContents extends LinearLayout {
 			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 		}
 		
-		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.longDescriptionId());
+		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.descriptionId());
 	}
 }

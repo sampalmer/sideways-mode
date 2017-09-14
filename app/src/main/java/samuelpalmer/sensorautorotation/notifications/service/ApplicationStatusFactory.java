@@ -1,14 +1,12 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -50,22 +48,12 @@ public class ApplicationStatusFactory {
 
 	public ApplicationStatus generate() {
 		return new ApplicationStatus(
-			new UserOrientation(effectiveUser(), screenRotationMonitor, calculator.proposedScreenOrientation()),
+			new UserOrientation(calculator.side(), screenRotationMonitor, calculator.proposedScreenOrientation()),
 			priority(),
 			calculator.isWaitingForSensor()
 		);
 	}
 	
-	/**
-	 * If the app thinks the user is upside-down, it's more likely that they're upright but
-	 * using the phone slightly tilted away from them. So we present being upside-down as being
-	 * upright.
-	 */
-	private @NonNull Orientation effectiveUser() {
-		Orientation actualUser = calculator.user();
-		return actualUser.equals(Orientation.UPSIDE_DOWN) ? Orientation.NATURAL : actualUser;
-	}
-
 	private NotificationPriority priority() {
 		return lockScreenMonitor.isOnLockScreen() && hideFromLockScreen() ? NotificationPriority.LOW : priority.get();
 	}

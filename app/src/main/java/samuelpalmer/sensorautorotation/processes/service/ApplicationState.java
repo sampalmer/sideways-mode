@@ -1,27 +1,28 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.common.Rotation;
+import android.support.annotation.Nullable;
+
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.settings.CachedSetting;
 
 public class ApplicationState {
 
 	private final ServiceSettings serviceSettings;
-	
-	// Storing the offset rather than the actual user orientation since this way works
-	// perfectly across app crashes and restarts.
-	public final CachedSetting<Rotation> offset;
+	public final CachedSetting<UserSide> userSide;
 
-	public ApplicationState() {
+	public ApplicationState(@Nullable UserSide requestedUserSide) {
 		serviceSettings = new ServiceSettings();
-		offset = new CachedSetting<>(serviceSettings.screenOrientationOffset());
+		userSide = new CachedSetting<>(serviceSettings.userSide());
 		
-		if (!serviceSettings.screenOrientationOffset().hasValue()) //TODO: Replace with !offset.hasValue()?
-			offset.set(new Rotation(0));
+		if (requestedUserSide != null)
+			userSide.set(requestedUserSide);
+		else if (!serviceSettings.userSide().hasValue())
+			throw new RuntimeException("Don't know which side the user is on, and the requested user side is null.");
 	}
 	
 	public void clear() {
-		serviceSettings.screenOrientationOffset().remove();
-		this.offset.updateCache(null);
+		serviceSettings.userSide().remove();
+		this.userSide.updateCache(null);
 	}
 
 }

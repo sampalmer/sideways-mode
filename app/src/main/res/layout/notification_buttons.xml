@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Forcing LTR direction so the "rotate left" button is always on the left. -->
 <LinearLayout
 	style="@style/notification_buttons"
-	android:layoutDirection="ltr"
 	tools:ignore="UnusedAttribute"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools">
 
-	<include layout="@layout/notification_button" android:id="@+id/rotate_left_button" />
-	<include layout="@layout/notification_button" android:id="@+id/rotate_right_button" />
+	<include layout="@layout/notification_button" android:id="@+id/change_side_button" />
 
 </LinearLayout>

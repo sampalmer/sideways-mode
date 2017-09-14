@@ -4,13 +4,16 @@ import android.os.Build;
 import android.util.SparseArray;
 
 import samuelpalmer.common.Orientation;
+import samuelpalmer.common.Rotation;
 import samuelpalmer.common.settings.application.BooleanSetting;
 import samuelpalmer.common.settings.application.OrientationSetting;
+import samuelpalmer.common.settings.application.RotationSetting;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -65,6 +68,7 @@ class Migrations {
 				ServiceSettings serviceSettings = new ServiceSettings();
 				Setting<Orientation> oldUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
+				Setting<Rotation> screenOrientationOffset = serviceSettings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);
 				
 				Transaction transaction = serviceSettings.new Transaction();
 
@@ -73,7 +77,7 @@ class Migrations {
 				if (autoRotate.hasValue() && oldUserOrientation.hasValue() && autoRotate.get())
 					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
 					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
-					serviceSettings.screenOrientationOffset().enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
+					screenOrientationOffset.enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
 
 				transaction.commit();
 			}
@@ -149,12 +153,25 @@ class Migrations {
 				allowUpsideDownScreen.remove();
 				
 				ServiceSettings serviceSettings = new ServiceSettings();
+				
 				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
-				boolean autoRotateWasOn = autoRotate.get();
+				Boolean autoRotateValue = autoRotate.tryGet();
 				autoRotate.remove();
 				
-				if (autoRotateWasOn)
+				Setting<Rotation> screenOrientationOffset = serviceSettings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);
+				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? Orientation.NATURAL.plus(screenOrientationOffset.get()) : null;
+				screenOrientationOffset.remove();
+				
+				if (
+					(autoRotateValue != null && !autoRotateValue)
+					||
+					(screenOrientationOffsetValue != null && screenOrientationOffsetValue.isNaturalOrUpsideDown())
+				)
 					applicationSettings.enabled().set(false);
+				else if (screenOrientationOffsetValue != null) {
+					UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
+					serviceSettings.userSide().set(newUserSide);
+				}
 			}
 			
 			@Override
