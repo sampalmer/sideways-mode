@@ -13,5 +13,6 @@ public abstract class PendingIntentIds {
 	public static final int ENVIRONMENT_ERROR_MESSAGE = 9;
 	public static final int UPGRADE_MESSAGE = 10;
 	public static final int MAIN_NOTIFICATION_CHANGE_SIDE = 11;
+	public static final int MAIN_NOTIFICATION_TURN_OFF = 12;
 
 }

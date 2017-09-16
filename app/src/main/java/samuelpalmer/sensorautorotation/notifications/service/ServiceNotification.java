@@ -34,6 +34,11 @@ class ServiceNotification {
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)
+			.addAction(
+				R.drawable.action_turn_off,
+				StringResource.get(R.string.action_turn_off),
+				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF)
+			)
 		;
 		
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_change_side, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));

@@ -11,10 +11,12 @@ public class ApplicationInstanceCommand {
 
 	public static final String ACTION_CHANGE_SIDE = "change_side";
 	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
-
+	public static final String ACTION_TURN_OFF = "turn_off";
+	
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_CHANGE_SIDE,
-			ACTION_UPDATE_NOTIFICATION
+			ACTION_UPDATE_NOTIFICATION,
+			ACTION_TURN_OFF
 	));
 
 	public final String action;

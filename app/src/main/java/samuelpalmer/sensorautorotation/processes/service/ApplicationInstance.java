@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.processes.service.deviceorientation.Orien
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -108,6 +109,9 @@ public class ApplicationInstance extends State {
 				break;
 			case ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION:
 				display.update(applicationStatusDisplayUpdater.getLastStatus());
+				break;
+			case ApplicationInstanceCommand.ACTION_TURN_OFF:
+				ApplicationSettings.instance().enabled().set(false);
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
