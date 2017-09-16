@@ -10,11 +10,17 @@ public class EnumSetting<T extends Enum<T>> extends WrapperSetting<T, String> {
 
 	@Override
 	protected String convertToUnderlying(T value) {
-		return value.name();
+		if (value == null)
+			return null;
+		else
+			return value.name();
 	}
 
 	@Override
 	protected T convertFromUnderlying(String underlying) {
-		return Enum.valueOf(clazz, underlying);
+		if (underlying == null)
+			return null;
+		else
+			return Enum.valueOf(clazz, underlying);
 	}
 }
