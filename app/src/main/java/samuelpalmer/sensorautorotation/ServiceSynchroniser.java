@@ -1,5 +1,8 @@
 package samuelpalmer.sensorautorotation;
 
+import android.content.Intent;
+
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ServiceSynchroniser {
@@ -14,17 +17,19 @@ public class ServiceSynchroniser {
 		ServiceController.updateServiceState(serviceEnabled());
 	}
 
-	public void enableService() {
-		setEnabled(true);
+	public void enableService(UserSide userSide) {
+		applicationSettings.enabled().set(true);
+		
+		Intent intent = ServiceController
+			.intent()
+			.putExtra(RotationService.EXTRA_INITIAL_USER_SIDE, userSide.name());
+		
+		ServiceController.ensureStarted(intent);
 	}
 
 	public void disableService() {
-		setEnabled(false);
-	}
-
-	private void setEnabled(boolean value) {
-		applicationSettings.enabled().set(value);
-		ServiceController.updateServiceState(value);
+		applicationSettings.enabled().set(false);
+		ServiceController.updateServiceState(false);
 	}
 
 	public boolean serviceEnabled() {

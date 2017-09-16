@@ -1,0 +1,69 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="?android:attr/textColorPrimary"
+		android:textStyle="bold"
+		android:text="@string/choose_side"
+		/>
+
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		tools:ignore="RtlHardcoded"
+		>
+
+		<ImageButton
+			android:id="@+id/choose_side_left"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/upright"
+			android:rotation="270"
+			android:contentDescription="@string/user_rotation_left_side"
+		    android:layout_alignParentLeft="true"
+			/>
+
+		<samuelpalmer.sensorautorotation.processes.ui.VerticalTextView
+			android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearance"
+			android:text="@string/user_rotation_left_side"
+			android:gravity="center"
+			app:direction="downtoup"
+		    android:layout_toRightOf="@id/choose_side_left"
+		    />
+
+		<ImageButton
+			android:id="@+id/choose_side_right"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/upright"
+			android:rotation="90"
+			android:contentDescription="@string/user_rotation_right_side"
+		    android:layout_alignParentRight="true"
+			/>
+
+		<samuelpalmer.sensorautorotation.processes.ui.VerticalTextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearance"
+			android:text="@string/user_rotation_right_side"
+			android:gravity="center"
+			app:direction="uptodown"
+			android:layout_toLeftOf="@id/choose_side_right"
+			/>
+
+	</RelativeLayout>
+
+</LinearLayout>

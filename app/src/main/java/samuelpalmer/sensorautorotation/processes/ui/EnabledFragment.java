@@ -21,10 +21,7 @@ import android.widget.Toast;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceController;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
@@ -36,7 +33,7 @@ public class EnabledFragment extends Fragment {
 		@Override
 		public void update() {
 			Boolean isEnabled = enabledSetting.get();
-			setControlCheckedStateWithoutTriggeringListener(isEnabled);
+			enabledControl.setChecked(isEnabled, false);
 		}
 	};
 
@@ -46,26 +43,20 @@ public class EnabledFragment extends Fragment {
 		public void onSwitchChanged(Switch switchView, boolean isChecked) {
 			if (Build.VERSION.SDK_INT >= 23 && isChecked && !Settings.System.canWrite(getContext())) {
 				requestSystemSettingsPermission();
-				setControlCheckedStateWithoutTriggeringListener(false);
+				enabledControl.setChecked(false, false);
 			} else {
-				enabledSetting.set(isChecked);
-				
 				if (isChecked) {
-					Intent startIntent = ServiceController.intent();
-					startIntent.putExtra(RotationService.EXTRA_INITIAL_USER_SIDE, UserSide.LEFT.name());
-					ServiceController.ensureStarted(startIntent);
+					startActivity(new Intent(getActivity(), ChooseSideActivity.class));
+					enabledControl.setChecked(false, false);
 				}
-				else
-					new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+				else {
+					new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+				}
 			}
 		}
 
 	};
-
-	private void setControlCheckedStateWithoutTriggeringListener(Boolean isEnabled) {
-		enabledControl.setChecked(isEnabled);
-	}
-
+	
 	private samuelpalmer.common.settings.application.Settings.Setting<Boolean> enabledSetting;
 	private SwitchBar enabledControl;
 
@@ -144,7 +135,7 @@ public class EnabledFragment extends Fragment {
 	@TargetApi(Build.VERSION_CODES.M)
 	private void handleSystemSettingsRequestResult() {
 		if (Settings.System.canWrite(getContext()))
-			new ServiceSynchroniser(ApplicationSettings.instance()).enableService();
+			startActivity(new Intent(getActivity(), ChooseSideActivity.class));
 		else
 			Toast
 				.makeText(getContext(), R.string.permission_warning_system_settings, Toast.LENGTH_LONG)
@@ -152,6 +143,6 @@ public class EnabledFragment extends Fragment {
 	}
 	
 	public void setEnabled() {
-		enabledControl.setChecked(true);
+		enabledControl.setChecked(true, true);
 	}
 }

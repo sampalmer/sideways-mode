@@ -28,6 +28,8 @@
 
 	<string name="settings">Settings</string>
 
+	<string name="choose_side">Which side are you on?</string>
+
 	<!-- Common -->
 	<string name="on">On</string>
 	<string name="off">Off</string>

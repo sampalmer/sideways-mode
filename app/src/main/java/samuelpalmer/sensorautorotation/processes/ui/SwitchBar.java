@@ -23,7 +23,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -35,8 +34,7 @@ import samuelpalmer.sensorautorotation.R;
 /**
  * Copied and adjusted from the Android 7.1 settings app.
  */
-public class SwitchBar extends RelativeLayout implements CompoundButton.OnCheckedChangeListener,
-        View.OnClickListener {
+public class SwitchBar extends RelativeLayout {
 
     public interface OnSwitchChangeListener {
         /**
@@ -75,16 +73,21 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
     private void init(Context context) {
 	    LayoutInflater.from(context).inflate(R.layout.switch_bar, this);
 	
-	    mTextView = (TextView) findViewById(R.id.switch_text);
+	    mTextView = findViewById(R.id.switch_text);
 	
-	    mSwitch = (Switch) findViewById(R.id.switch_widget);
+	    mSwitch = findViewById(R.id.switch_widget);
 	
 	    int switchBarBackgroundColor = ContextCompat.getColor(context, R.color.secondary_400);
 	    setBackgroundColor(switchBarBackgroundColor);
 	    mSwitch.setBackgroundColor(switchBarBackgroundColor);
 	
-	    mSwitch.setOnCheckedChangeListener(this);
-	
+	    mSwitch.setOnClickListener(new OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    propagateChecked(isChecked());
+		    }
+	    });
+	    
 	    addOnSwitchChangeListener(new OnSwitchChangeListener() {
 		    @Override
 		    public void onSwitchChanged(Switch switchView, boolean isChecked) {
@@ -92,38 +95,36 @@ public class SwitchBar extends RelativeLayout implements CompoundButton.OnChecke
 		    }
 	    });
 	
-	    setOnClickListener(this);
+	    setOnClickListener(new OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    final boolean isChecked = !mSwitch.isChecked();
+			    setChecked(isChecked, true);
+		    }
+	    });
     }
     
     private void setTextViewLabel(boolean isChecked) {
         mTextView.setText(isChecked ? R.string.on : R.string.off);
     }
     
-    public void setChecked(boolean checked) {
+    public void setChecked(boolean checked, boolean notifyListeners) {
         setTextViewLabel(checked);
         mSwitch.setChecked(checked);
+	    
+	    if (notifyListeners)
+	    	propagateChecked(isChecked());
     }
 
     public boolean isChecked() {
         return mSwitch.isChecked();
     }
     
-    @Override
-    public void onClick(View v) {
-        final boolean isChecked = !mSwitch.isChecked();
-        setChecked(isChecked);
-    }
-
     private void propagateChecked(boolean isChecked) {
         for (OnSwitchChangeListener listener : mSwitchChangeListeners)
             listener.onSwitchChanged(mSwitch, isChecked);
     }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        propagateChecked(isChecked);
-    }
-
+	
     public void addOnSwitchChangeListener(OnSwitchChangeListener listener) {
         if (mSwitchChangeListeners.contains(listener)) {
             throw new IllegalStateException("Cannot add twice the same OnSwitchChangeListener");
