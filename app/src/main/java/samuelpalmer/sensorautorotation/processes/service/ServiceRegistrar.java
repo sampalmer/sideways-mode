@@ -45,6 +45,10 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 		return initialUserSide;
 	}
 	
+	public void clearInitialUserSide() {
+		initialUserSide = null;
+	}
+	
 	public void serviceStarted(RotationService service, UserSide initialUserSide) {
 		this.initialUserSide = initialUserSide;
 		
@@ -100,5 +104,4 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 		else
 			return "Another instance of this service is running.\n" + runningServiceDescription;
 	}
-	
 }

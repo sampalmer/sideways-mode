@@ -61,6 +61,7 @@ public abstract class ApplicationInstanceManager {
 				if (shouldBeRunning) {
 					applicationInstance = new ApplicationInstance(ServiceRegistrar.instance.getInitialUserSide());
 					applicationInstance.ensureStarted();
+					ServiceRegistrar.instance.clearInitialUserSide();
 				}
 				else {
 					applicationInstance.ensureStopped();
