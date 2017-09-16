@@ -39,22 +39,9 @@ public class OrientationCalculator {
 	}
 
 	public void changeSide() {
-		UserSide newSide;
-		
 		UserSide currentSide = state.userSide.get();
-		switch (currentSide) {
-			case LEFT:
-				newSide = UserSide.RIGHT;
-				break;
-			case RIGHT:
-				newSide = UserSide.LEFT;
-				break;
-			default:
-				throw new RuntimeException("Can't determine opposite side of user side '" + currentSide.toString() + "'.");
-		}
-		
-		state.userSide.set(newSide);
-		reportChange();
+		UserSide newSide = currentSide.oppositeSide();
+		setSide(newSide);
 	}
 	
 	public void setDevice(@Nullable Orientation newDevice) {
@@ -80,5 +67,10 @@ public class OrientationCalculator {
 	
 	public UserSide side() {
 		return state.userSide.get();
+	}
+	
+	public void setSide(UserSide userSide) {
+		state.userSide.set(userSide);
+		reportChange();
 	}
 }

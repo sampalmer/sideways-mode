@@ -113,6 +113,12 @@ public class ApplicationInstance extends State {
 			case ApplicationInstanceCommand.ACTION_TURN_OFF:
 				ApplicationSettings.instance().enabled().set(false);
 				break;
+			case ApplicationInstanceCommand.ACTION_SET_LEFT_SIDE:
+				calculator.setSide(UserSide.LEFT);
+				break;
+			case ApplicationInstanceCommand.ACTION_SET_RIGHT_SIDE:
+				calculator.setSide(UserSide.RIGHT);
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}

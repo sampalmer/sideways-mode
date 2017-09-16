@@ -12,13 +12,17 @@ public class ApplicationInstanceCommand {
 	public static final String ACTION_CHANGE_SIDE = "change_side";
 	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
 	public static final String ACTION_TURN_OFF = "turn_off";
+	public static final String ACTION_SET_LEFT_SIDE = "set_left_side";
+	public static final String ACTION_SET_RIGHT_SIDE = "set_right_side";
 	
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_CHANGE_SIDE,
 			ACTION_UPDATE_NOTIFICATION,
-			ACTION_TURN_OFF
+			ACTION_TURN_OFF,
+			ACTION_SET_LEFT_SIDE,
+			ACTION_SET_RIGHT_SIDE
 	));
-
+	
 	public final String action;
 	public boolean toastIfServiceDisabled = true;
 
