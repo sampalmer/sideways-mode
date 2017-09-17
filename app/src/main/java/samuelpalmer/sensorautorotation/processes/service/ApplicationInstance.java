@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.UserSide;
@@ -111,7 +112,7 @@ public class ApplicationInstance extends State {
 				display.update(applicationStatusDisplayUpdater.getLastStatus());
 				break;
 			case ApplicationInstanceCommand.ACTION_TURN_OFF:
-				ApplicationSettings.instance().enabled().set(false);
+				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 				break;
 			case ApplicationInstanceCommand.ACTION_SET_LEFT_SIDE:
 				calculator.setSide(UserSide.LEFT);

@@ -16,10 +16,12 @@ import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceClient;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
 public class DashboardEnabledContents extends LinearLayout {
@@ -80,7 +82,7 @@ public class DashboardEnabledContents extends LinearLayout {
 			
 			@Override
 			public void onClick(View v) {
-				ApplicationInstanceClient.send(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF));
+				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 				
 				if (DashboardDialogCoordinator.dialogExists())
 					DashboardDialogCoordinator.dismissDialog();
