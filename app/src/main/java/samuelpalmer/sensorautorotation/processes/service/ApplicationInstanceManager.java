@@ -18,7 +18,6 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
-	private static UserInteractivity userInteractivity;
 	
 	public static void init() {
 		if (initialised)
@@ -35,7 +34,7 @@ public abstract class ApplicationInstanceManager {
 	private static final StateMonitor.Listener<UserInteractivity> userInteractivityListener = new StateMonitor.Listener<UserInteractivity>() {
 		@Override
 		public void stateChanged(UserInteractivity state) {
-			userInteractivity = state;
+			ApplicationSettings.instance().enabled().set(false);
 			updateApplicationState.update();
 		}
 	};
@@ -88,8 +87,6 @@ public abstract class ApplicationInstanceManager {
 			!ServiceRegistrar.instance.getServiceInstances().isEmpty() // No point running the application if there are no services to keep it alive
 			&&
 			ApplicationSettings.instance().enabled().get() // It shouldn't be running if it's turned off!
-			&&
-			userInteractivity.active() // So turning the screen off shuts down this app
 		;
 	}
 }
