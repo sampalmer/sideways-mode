@@ -26,16 +26,15 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ChooseSideActivity extends DialogActivity {
-
+	
 	private Dialog dialog;
 	private View chooseLeftSideButton;
 	private VerticalTextView chooseLeftSideCaption;
 	private VerticalTextView chooseRightSideCaption;
 	private View chooseRightSideButton;
-	
 	private WindowOrientationListener deviceListener;
-	private ScreenRotationMonitor screenRotationMonitor;
 	
+	private ScreenRotationMonitor screenRotationMonitor;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,16 +88,37 @@ public class ChooseSideActivity extends DialogActivity {
 		//TODO: Add support for checking whether the sensors are working
 		
 		screenRotationMonitor = new ScreenRotationMonitor(new Screen(SystemServices.windowManager()));
-		screenRotationMonitor.subscribe(new EventHandler() {
-			@Override
-			public void update() {
-				somethingChanged();
-			}
-		});
+		screenRotationMonitor.subscribe(screenRotationChanged);
 		
 		deviceListener.enable();
 		somethingChanged();
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		screenRotationMonitor.unsubscribe(screenRotationChanged);
+		screenRotationMonitor = null;
+		
+		deviceListener.disable();
+		deviceListener = null;
+		
+		Log.i(ChooseSideActivity.class.getSimpleName(), "Destroying");
+		
+		//Prevents a window leak error
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
+		}
+	}
+	
+	private final EventHandler screenRotationChanged = new EventHandler() {
+		@Override
+		public void update() {
+			somethingChanged();
+		}
+	};
 	
 	private void somethingChanged() {
 		int device = deviceListener.getProposedRotation();
@@ -201,19 +221,6 @@ public class ChooseSideActivity extends DialogActivity {
 		chooseLeftSideButtonLayout.addRule(verb);
 		
 		button.setLayoutParams(chooseLeftSideButtonLayout);
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		Log.i(DialogActivity.class.getSimpleName(), "Destroying");
-		
-		//Prevents a window leak error
-		if (dialog != null) {
-			dialog.dismiss();
-			dialog = null;
-		}
 	}
 	
 	
