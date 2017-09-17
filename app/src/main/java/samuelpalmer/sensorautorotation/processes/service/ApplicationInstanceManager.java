@@ -18,7 +18,6 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
-	private static boolean deviceIsShuttingDown = false;
 	private static UserInteractivity userInteractivity;
 	
 	public static void init() {
@@ -45,7 +44,7 @@ public abstract class ApplicationInstanceManager {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			deviceIsShuttingDown = true;
+			ApplicationSettings.instance().enabled().set(false);
 			updateApplicationState.update();
 		}
 		
@@ -89,8 +88,6 @@ public abstract class ApplicationInstanceManager {
 			!ServiceRegistrar.instance.getServiceInstances().isEmpty() // No point running the application if there are no services to keep it alive
 			&&
 			ApplicationSettings.instance().enabled().get() // It shouldn't be running if it's turned off!
-			&&
-			!deviceIsShuttingDown // So system auto-rotation gets re-enabled until the application next starts
 			&&
 			userInteractivity.active() // So turning the screen off shuts down this app
 		;
