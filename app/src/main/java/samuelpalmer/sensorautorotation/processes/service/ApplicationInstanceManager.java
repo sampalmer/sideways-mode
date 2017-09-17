@@ -34,8 +34,10 @@ public abstract class ApplicationInstanceManager {
 	private static final StateMonitor.Listener<UserInteractivity> userInteractivityListener = new StateMonitor.Listener<UserInteractivity>() {
 		@Override
 		public void stateChanged(UserInteractivity state) {
-			ApplicationSettings.instance().enabled().set(false);
-			updateApplicationState.update();
+			if (!state.active()) {
+				ApplicationSettings.instance().enabled().set(false);
+				updateApplicationState.update();
+			}
 		}
 	};
 	
