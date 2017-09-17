@@ -49,6 +49,7 @@ public class DashboardEnabledContents extends LinearLayout {
 	private View sensorProgress;
 	private TextView statusText;
 	private ImageButton changeSideButton;
+	private ImageButton turnOffButton;
 	
 	private void init() {
 		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_enabled_contents, this, true);
@@ -61,6 +62,7 @@ public class DashboardEnabledContents extends LinearLayout {
 		
 		statusText = findViewById(R.id.dashboard_status);
 		changeSideButton = findViewById(R.id.dashboard_button_change_side);
+		turnOffButton = findViewById(R.id.dashboard_button_turn_off);
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		
@@ -74,12 +76,22 @@ public class DashboardEnabledContents extends LinearLayout {
 			
 		});
 		
+		turnOffButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ApplicationInstanceClient.send(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF));
+			}
+			
+		});
+		
 		/*
 			All image drawables must be set in app code to avoid crashes since:
 			1. We're using the vector compat stuff
 			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
 		 */
 		changeSideButton.setImageResource(R.drawable.dashboard_change_side);
+		turnOffButton.setImageResource(R.drawable.dashboard_turn_off);
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {

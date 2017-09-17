@@ -51,4 +51,13 @@
 		android:contentDescription="@string/action_change_side"
 		/>
 
+	<ImageButton
+		android:id="@+id/dashboard_button_turn_off"
+		android:scaleType="center"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:contentDescription="@string/action_turn_off"
+		/>
+
 </merge>
