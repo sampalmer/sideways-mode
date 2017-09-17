@@ -81,6 +81,9 @@ public class DashboardEnabledContents extends LinearLayout {
 			@Override
 			public void onClick(View v) {
 				ApplicationInstanceClient.send(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF));
+				
+				if (DashboardDialogCoordinator.dialogExists())
+					DashboardDialogCoordinator.dismissDialog();
 			}
 			
 		});
