@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivity;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
@@ -35,8 +36,7 @@ public abstract class ApplicationInstanceManager {
 		@Override
 		public void stateChanged(UserInteractivity state) {
 			if (!state.active()) {
-				ApplicationSettings.instance().enabled().set(false);
-				updateApplicationState.update();
+				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 			}
 		}
 	};
@@ -45,8 +45,7 @@ public abstract class ApplicationInstanceManager {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ApplicationSettings.instance().enabled().set(false);
-			updateApplicationState.update();
+			new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 		}
 		
 	};
