@@ -13,6 +13,7 @@ import android.util.Log;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
@@ -36,28 +37,31 @@ public class QuickSettingService extends TileService {
 		super.onClick();
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
-
-		if (isLocked()) {
-			//Not using the dialog here since dialogs don't show on the lock screen.
-			startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-		}
+		
+		if (enabledSetting.get())
+			new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
 		else {
-			//We can't use an activity because the OS delays activity start when the home button is pressed.
-			
-			//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-			if (!DashboardDialogCoordinator.dialogExists()) {
-				Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
-					@Override
-					public void run() {}
-				});
+			if (isLocked()) {
+				//Not using the dialog here since dialogs don't show on the lock screen.
+				startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			} else {
+				//We can't use an activity because the OS delays activity start when the home button is pressed.
 				
-				tryShowDialog(dashboard);
+				//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
+				if (!DashboardDialogCoordinator.dialogExists()) {
+					Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
+						@Override
+						public void run() {
+						}
+					});
+					
+					tryShowDialog(dashboard);
+				} else {
+					DashboardDialogCoordinator.showDialog();
+					startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
+				}
+				
 			}
-			else {
-				DashboardDialogCoordinator.showDialog();
-				startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
-			}
-
 		}
 	}
 	
