@@ -22,6 +22,7 @@ import android.widget.Toast;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
@@ -46,7 +47,7 @@ public class EnabledFragment extends Fragment {
 				enabledControl.setChecked(false, false);
 			} else {
 				if (isChecked) {
-					startActivity(new Intent(getActivity(), ChooseSideActivity.class));
+					startActivity(new Intent(getActivity(), DashboardActivity.class));
 					enabledControl.setChecked(false, false);
 				}
 				else {
@@ -135,7 +136,7 @@ public class EnabledFragment extends Fragment {
 	@TargetApi(Build.VERSION_CODES.M)
 	private void handleSystemSettingsRequestResult() {
 		if (Settings.System.canWrite(getContext()))
-			startActivity(new Intent(getActivity(), ChooseSideActivity.class));
+			startActivity(new Intent(getActivity(), DashboardActivity.class));
 		else
 			Toast
 				.makeText(getContext(), R.string.permission_warning_system_settings, Toast.LENGTH_LONG)

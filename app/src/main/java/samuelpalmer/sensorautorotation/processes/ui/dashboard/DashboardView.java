@@ -60,7 +60,7 @@ public class DashboardView extends FrameLayout {
 		View view = inflate(getContext(), R.layout.dashboard, null);
 		addView(view);
 
-		ImageButton settingsButton = (ImageButton) findViewById(R.id.dashboard_settings);
+		ImageButton settingsButton = findViewById(R.id.dashboard_settings);
 		if (showSettings)
 			settingsButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -74,10 +74,10 @@ public class DashboardView extends FrameLayout {
 		else
 			settingsButton.setVisibility(View.GONE);
 
-		disabledSection = (DashboardDisabledContents) findViewById(R.id.dashboard_disabled);
+		disabledSection = findViewById(R.id.dashboard_disabled);
 
-		progressBar = (ProgressBar) findViewById(R.id.dashboard_progress);
-		contents = (DashboardEnabledContents) findViewById(R.id.dashboard_enabled_contents);
+		progressBar = findViewById(R.id.dashboard_progress);
+		contents = findViewById(R.id.dashboard_enabled_contents);
 
 		/*
 			All image drawables must be set in app code to avoid crashes since:
@@ -161,8 +161,6 @@ public class DashboardView extends FrameLayout {
 
 		if (!isEnabled) {
 			ViewHelpers.ensureVisibility(contents, View.GONE);
-			EnvironmentError lastError = EnvironmentError.lastError();
-			disabledSection.setLastError(lastError);
 		}
 		else {
 			//Don't want the view to change size after loading; it should stay the same

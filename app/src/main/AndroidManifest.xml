@@ -204,16 +204,6 @@
 
 		</activity>
 
-		<activity android:name=".processes.ui.ChooseSideActivity"
-		          android:launchMode="singleInstance"
-		          android:excludeFromRecents="true"
-		          android:taskAffinity=""
-		          android:theme="@style/AppTheme.Dialog"
-		          android:showOnLockScreen="true"
-		          android:noHistory="true"
-		          android:configChanges="orientation|screenSize|screenLayout"
-		          tools:ignore="UnusedAttribute" />
-
 		<activity
 			android:name=".processes.ui.DeviceUnsupportedActivity"
 			android:label="@string/device_problem" />
