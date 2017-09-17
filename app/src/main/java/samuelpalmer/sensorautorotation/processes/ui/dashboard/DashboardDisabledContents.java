@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -29,10 +30,10 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class DashboardDisabledContents extends LinearLayout {
 	
-	private View chooseLeftSideButton;
+	private ImageButton chooseLeftSideButton;
 	private VerticalTextView chooseLeftSideCaption;
 	private VerticalTextView chooseRightSideCaption;
-	private View chooseRightSideButton;
+	private ImageButton chooseRightSideButton;
 	
 	private WindowOrientationListener deviceListener;
 	private ScreenRotationMonitor screenRotationMonitor;
@@ -95,6 +96,14 @@ public class DashboardDisabledContents extends LinearLayout {
 		//TODO: Add support for checking whether the sensors are working
 		
 		screenRotationMonitor = new ScreenRotationMonitor(new Screen(SystemServices.windowManager()));
+		
+		/*
+			All image drawables must be set in app code to avoid crashes since:
+			1. We're using the vector compat stuff
+			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
+		 */
+		chooseLeftSideButton.setImageResource(R.drawable.upright);
+		chooseRightSideButton.setImageResource(R.drawable.upright);
 		
 		updateRunningState();
 	}
