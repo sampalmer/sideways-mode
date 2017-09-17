@@ -212,7 +212,6 @@
 		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize|screenLayout"
-		          android:screenOrientation="fullSensor"
 		          tools:ignore="UnusedAttribute" />
 
 		<activity

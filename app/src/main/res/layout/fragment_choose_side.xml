@@ -1,11 +1,12 @@
 <LinearLayout
+	android:id="@+id/choose_side_container"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
-	android:gravity="center_horizontal"
+	android:gravity="center"
 	>
 
 	<TextView
@@ -20,7 +21,7 @@
 	<RelativeLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
+		android:gravity="center"
 		tools:ignore="RtlHardcoded"
 		>
 
@@ -31,18 +32,19 @@
 			app:srcCompat="@drawable/upright"
 			android:rotation="270"
 			android:contentDescription="@string/user_rotation_left_side"
-		    android:layout_alignParentLeft="true"
+			android:layout_alignParentLeft="true"
 			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.VerticalTextView
+			android:id="@+id/choose_side_left_caption"
 			android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
+			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearance"
 			android:text="@string/user_rotation_left_side"
 			android:gravity="center"
 			app:direction="downtoup"
-		    android:layout_toRightOf="@id/choose_side_left"
-		    />
+			android:layout_toRightOf="@id/choose_side_left"
+			/>
 
 		<ImageButton
 			android:id="@+id/choose_side_right"
@@ -51,10 +53,11 @@
 			app:srcCompat="@drawable/upright"
 			android:rotation="90"
 			android:contentDescription="@string/user_rotation_right_side"
-		    android:layout_alignParentRight="true"
+			android:layout_alignParentRight="true"
 			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.VerticalTextView
+			android:id="@+id/choose_side_right_caption"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearance"

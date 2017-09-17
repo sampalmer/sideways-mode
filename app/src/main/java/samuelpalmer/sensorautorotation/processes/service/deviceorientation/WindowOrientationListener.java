@@ -62,7 +62,7 @@ import samuelpalmer.sensorautorotation.errors.SensorError;
  */
 @SuppressWarnings("ALL")
 @SuppressLint("all")
-abstract class WindowOrientationListener {
+public abstract class WindowOrientationListener {
 	private static final String TAG = "WindowOrientationListener";
 	private static final boolean LOG = false;
 
