@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	              android:orientation="vertical"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:gravity="center_horizontal"
+		>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary"
+			android:textStyle="bold"
+			android:text="@string/permission_needed_summary"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/permission_needed_system_settings"
+		    android:gravity="center_horizontal"
+			/>
+
+		<Button
+			android:id="@+id/dashboard_permission_fix"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/permission_needed_fix"
+			style="?android:attr/buttonBarButtonStyle"
+			/>
+
+	</LinearLayout>
+
+</merge>

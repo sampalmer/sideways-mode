@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,11 +32,11 @@ public class DashboardView extends FrameLayout {
 	private final Settings.Setting<Boolean> enabledSetting;
 
 	private final boolean showSettings;
-
+	
+	private final DashboardPermissionContents permissionSection;
 	private DashboardDisabledContents disabledSection;
-
 	private ProgressBar progressBar;
-	private DashboardEnabledContents contents;
+	private DashboardEnabledContents enabledSection;
 	private boolean childrenInflated;
 	private ApplicationStatus lastStatus;
 	private boolean isEnabled;
@@ -74,10 +76,10 @@ public class DashboardView extends FrameLayout {
 		else
 			settingsButton.setVisibility(View.GONE);
 
-		disabledSection = findViewById(R.id.dashboard_disabled);
-
+		permissionSection = findViewById(R.id.dashboard_permission);
+		disabledSection = findViewById(R.id.dashboard_disabled_contents);
 		progressBar = findViewById(R.id.dashboard_progress);
-		contents = findViewById(R.id.dashboard_enabled_contents);
+		enabledSection = findViewById(R.id.dashboard_enabled_contents);
 
 		/*
 			All image drawables must be set in app code to avoid crashes since:
@@ -111,7 +113,15 @@ public class DashboardView extends FrameLayout {
 		enabledSetting.unsubscribe(enabledChanged);
 		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
 	}
-
+	
+	@Override
+	protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+		super.onVisibilityChanged(changedView, visibility);
+		
+		// This is needed so we can re-check if the "modify system settings" permission has been granted
+		maybeUpdateUi();
+	}
+	
 	private final IApplicationStatusListener.Stub statusChanged = new IApplicationStatusListener.Stub() {
 
 		@Override
@@ -155,19 +165,25 @@ public class DashboardView extends FrameLayout {
 	@SuppressLint("SetTextI18n")
 	private void showStatus() {
 		boolean isLoading = isEnabled && lastStatus == null;
-
-		ViewHelpers.ensureVisibility(disabledSection, isEnabled ? View.GONE : View.VISIBLE);
+		
 		ViewHelpers.ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
-
+		
 		if (!isEnabled) {
-			ViewHelpers.ensureVisibility(contents, View.GONE);
+			ViewHelpers.ensureVisibility(enabledSection, View.GONE);
+			
+			boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(getContext());
+			ViewHelpers.ensureVisibility(disabledSection, hasPermission ? View.VISIBLE : View.GONE);
+			ViewHelpers.ensureVisibility(permissionSection, hasPermission ? View.GONE : View.VISIBLE);
 		}
 		else {
 			//Don't want the view to change size after loading; it should stay the same
-			ViewHelpers.ensureVisibility(contents, isLoading ? View.INVISIBLE : View.VISIBLE);
-			
+			ViewHelpers.ensureVisibility(enabledSection, isLoading ? View.INVISIBLE : View.VISIBLE);
+		
 			if (lastStatus != null)
-				contents.setStatus(lastStatus);
+				enabledSection.setStatus(lastStatus);
+			
+			ViewHelpers.ensureVisibility(disabledSection, View.GONE);
+			ViewHelpers.ensureVisibility(permissionSection, View.GONE);
 		}
 	}
 	

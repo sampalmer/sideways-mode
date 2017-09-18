@@ -25,11 +25,18 @@
 			android:id="@+id/dashboard_progress"
 			android:visibility="gone"
 		    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-		    android:layout_centerInParent="true"
+			android:layout_centerInParent="true"
+			/>
+
+		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionContents
+			android:id="@+id/dashboard_permission"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
 			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDisabledContents
-			android:id="@+id/dashboard_disabled"
+			android:id="@+id/dashboard_disabled_contents"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
