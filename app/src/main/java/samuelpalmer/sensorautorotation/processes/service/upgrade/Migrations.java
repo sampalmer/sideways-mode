@@ -176,7 +176,7 @@ class Migrations {
 			
 			@Override
 			public CharSequence getMessage() {
-				return StringResource.format(R.string.upgrade_v57, R.string.app_name_full);
+				return StringResource.format(R.string.upgrade_v57, R.string.app_name);
 			}
 			
 		});

@@ -30,7 +30,7 @@ public class EnterFeedbackActivity extends UiActivity {
 	private Button send;
 
 	private static String emailRecipients() {
-		return StringResource.get(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>";
+		return StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class EnterFeedbackActivity extends UiActivity {
 
 		setContentView(R.layout.activity_enter_feedback);
 
-		description = (EditText) findViewById(R.id.feedback_description);
-		send = (Button) findViewById(R.id.feedback_send);
+		description = findViewById(R.id.feedback_description);
+		send = findViewById(R.id.feedback_send);
 		send.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -105,7 +105,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		PackageInfo appInfo = VersionInfo.packageInfo();
 		String subject = StringResource.format(
 			isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject,
-			R.string.app_name_full,
+			R.string.app_name,
 			appInfo.versionName
 		).toString();
 		

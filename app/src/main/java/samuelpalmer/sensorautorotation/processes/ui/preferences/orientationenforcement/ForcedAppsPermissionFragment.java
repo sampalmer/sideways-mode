@@ -66,7 +66,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_accessibility_service_summary)
-					.setMessage(StringResource.format(R.string.permission_needed_accessibility_service_description, R.string.app_name_full))
+					.setMessage(StringResource.format(R.string.permission_needed_accessibility_service_description, R.string.app_name))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {}

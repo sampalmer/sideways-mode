@@ -34,7 +34,7 @@
 		android:name=".CurrentProcess"
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name_full"
+		android:label="@string/app_name"
 		android:theme="@style/AppTheme"
 		android:fullBackupContent="@xml/backupscheme"
 		android:supportsRtl="true"
@@ -60,7 +60,6 @@
 
 		<activity
 			android:name=".processes.ui.MainActivity"
-			android:label="@string/app_name"
 			android:launchMode="singleTask"
 			>
 			<intent-filter>
@@ -160,7 +159,6 @@
 		<!--suppress AndroidDomInspection -->
 		<service
 			android:name=".processes.ui.DashboardSmallApp"
-			android:label="@string/app_name"
 			android:exported="true"
 			tools:ignore="ExportedService">
 			<intent-filter>
@@ -176,7 +174,6 @@
 		 -->
 		<service
 			android:name=".processes.ui.QuickSettingService"
-			android:label="@string/app_name"
 			android:icon="@drawable/notification_rotation"
 			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
 			>
@@ -264,7 +261,6 @@
 			/>
 
 		<service
-			android:label="@string/app_name_full"
 			android:name=".processes.service.WindowChangeDetectingService"
 			android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
 			android:process="@string/service_process_name">

@@ -19,7 +19,7 @@ public class GenericError extends EnvironmentError {
 	public GenericError(int summaryResourceId, int messageResourceId, Object... messageArguments) {
 		summary = StringResource.get(summaryResourceId);
 		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name_full);
+		message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
 	}
 	
 	GenericError() {}
