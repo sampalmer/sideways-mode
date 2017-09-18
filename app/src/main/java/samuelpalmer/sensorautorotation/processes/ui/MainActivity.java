@@ -29,7 +29,6 @@ public class MainActivity extends UiActivity {
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
-	private EnabledFragment enabledFragment;
 	private UninstallerFragment uninstaller;
 	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -73,8 +72,8 @@ public class MainActivity extends UiActivity {
 		setContentView(R.layout.activity_main);
 		
 		//Drawer stuff
-		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-		navigation = (NavigationView)findViewById(R.id.navigation);
+		drawerLayout = findViewById(R.id.drawer_layout);
+		navigation = findViewById(R.id.navigation);
 		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.action_open_drawer, R.string.action_close_drawer);
 
 		navigation.setNavigationItemSelectedListener(itemSelectedListener);
@@ -89,7 +88,6 @@ public class MainActivity extends UiActivity {
 		
 		navigation.setCheckedItem(R.id.action_home);
 		
-		enabledFragment = (EnabledFragment) getFragmentManager().findFragmentById(R.id.fragment_enabled);
 		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
 		
 		if (uninstaller == null) {
@@ -134,18 +132,8 @@ public class MainActivity extends UiActivity {
 				
 				finish();
 			}
-			else {
+			else
 				lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
-				
-				/*
-				 * I received a number of error reports from users saying the app didn't work.
-				 * When I looked at their logs, it appeared they hadn't actually turned the app on.
-				 * (This is probably because they don't speak English.)
-				 *
-				 * So we'll enable the app automatically.
-				 */
-				enabledFragment.setEnabled();
-			}
 		}
 	}
 

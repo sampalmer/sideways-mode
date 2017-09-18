@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
@@ -14,8 +13,7 @@ public class UninstallerFragment extends Fragment {
 		if (serviceSynchroniser.serviceEnabled())
 			serviceSynchroniser.disableService();
 		
-		Uri packageUri = Uri.fromParts("package", getActivity().getPackageName(), null);
-		Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+		Intent uninstallIntent = new SystemIntents(getActivity()).uninstall();
 		startActivity(uninstallIntent);
 	}
 	

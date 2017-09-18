@@ -2,7 +2,6 @@
 <resources>
 	<color name="primary_500">#795548</color>
 	<color name="primary_700">#5D4037</color>
-	<color name="secondary_400">#8D6E63</color>
 	<color name="accent_700">#0091EA</color>
 	<color name="grey_300">#e0e0e0</color>
 </resources>

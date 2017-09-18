@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.EnabledFragment;
+import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 
 public class DashboardPermissionContents extends LinearLayout {
 	
@@ -49,7 +49,7 @@ public class DashboardPermissionContents extends LinearLayout {
 			@Override
 			public void onClick(View view) {
 				try {
-					getContext().startActivity(EnabledFragment.getModifySystemSettingsIntent(getContext()));
+					getContext().startActivity(new SystemIntents(getContext()).modifySystemSettings());
 				}
 				catch (ActivityNotFoundException e) {
 					throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);

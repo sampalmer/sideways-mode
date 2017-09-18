@@ -30,6 +30,4 @@
 		<item name="android:textStyle">normal</item>
 	</style>
 
-	<style name="ThemeOverlay.SwitchBar.SubSettings" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
 </resources>
