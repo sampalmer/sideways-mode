@@ -88,9 +88,6 @@
 	<!-- Instructions -->
 	<string name="instructions_heading">Инструкции</string>
 
-	<string name="instructions_introduction_heading">Добро пожаловать</string>
-	<string name="instructions_introduction_contents">Добро пожаловать в %1$s! Это заменяет вращение экрана Android, поэтому не используйте обычные настройки вращения экрана Android.</string>
-
 	<string name="instructions_uninstalling_heading">Удаление</string>
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране.</string>
 

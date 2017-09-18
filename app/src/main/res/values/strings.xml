@@ -121,9 +121,6 @@
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
 
-	<string name="instructions_introduction_heading">Welcome</string>
-	<string name="instructions_introduction_contents">Welcome to %1$s! This replaces Android\'s screen rotation, so don\'t use the normal Android screen rotation settings.</string>
-
 	<!-- TODO: Update instructions to reflect the different ways of controlling the app -->
 
 	<string name="instructions_uninstalling_heading">Uninstalling</string>

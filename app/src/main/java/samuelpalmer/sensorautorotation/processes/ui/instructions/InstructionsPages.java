@@ -11,13 +11,6 @@ class InstructionsPages {
 		new PageFactory() {
 			@Override
 			public Fragment makePage() {
-				return InstructionsPageFragment.newInstance(R.string.instructions_introduction_heading, R.string.instructions_introduction_contents, R.string.app_name_full);
-			}
-		},
-		
-		new PageFactory() {
-			@Override
-			public Fragment makePage() {
 				return InstructionsPageFragment.newInstance(R.string.instructions_uninstalling_heading, R.string.instructions_uninstalling_contents, R.string.action_uninstall, R.string.app_name_full);
 			}
 		},
