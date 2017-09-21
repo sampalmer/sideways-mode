@@ -8,7 +8,7 @@ import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 /**
- * This is separate from {@link StartUpReceiver} so that {@link StartUpReceiver} can be
+ * This is separate from {@link UpgradeReceiver} so that {@link UpgradeReceiver} can be
  * exported without being open to broadcasts from other apps.
  */
 public class ServiceSyncReceiver extends BroadcastReceiver {
