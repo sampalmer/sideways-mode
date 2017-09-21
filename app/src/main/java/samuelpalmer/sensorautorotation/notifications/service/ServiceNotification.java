@@ -3,14 +3,9 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
-import samuelpalmer.common.notifications.NotificationButtons;
-import samuelpalmer.common.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.ComponentType;
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -23,7 +18,6 @@ import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 class ServiceNotification {
 
 	private final NotificationBuilderCompat builder;
-	private final int actionButtonColour; //Cached for RAM & CPU efficiency
 
 	public ServiceNotification() {
 		//Caching and re-using the builder prevents the notification from disappearing and
@@ -36,6 +30,11 @@ class ServiceNotification {
 			.setChannelId(NotificationChannels.ID_CONTROLS)
 			.setPriority(NotificationBuilderCompat.PRIORITY_LOW)
 			.addAction(
+				R.drawable.action_change_side,
+				StringResource.get(R.string.action_change_side),
+				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE)
+			)
+			.addAction(
 				R.drawable.action_turn_off,
 				StringResource.get(R.string.action_turn_off),
 				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF)
@@ -43,11 +42,6 @@ class ServiceNotification {
 		;
 		
 		hideTimestamp();
-		
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_change_side, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
-		actionButtonColour = styles.getActionButtonColour();
-
-		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
 	}
 
 	public Notification build(ApplicationStatus applicationStatus) {
@@ -71,31 +65,9 @@ class ServiceNotification {
 			builder.setContentText(statusText);
 		}
 		
-		applyButtons();
-
 		return builder.build();
 	}
 	
-	private void applyButtons() {
-		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
-
-		NotificationButtons notificationButtons = new NotificationButtons(
-			CurrentProcess.context(),
-			R.layout.notification,
-			builder.createContentView(),
-			actionButtonColour
-		);
-
-		notificationButtons
-			.configureButton(
-				R.id.change_side_button,
-				R.drawable.action_change_side,
-				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
-				StringResource.get(R.string.action_change_side));
-
-		builder.setCustomContentView(notificationButtons.getContentView());
-	}
-
 	private void hideTimestamp() {
 		if (Build.VERSION.SDK_INT >= 17)
 			builder.setShowWhen(false);
