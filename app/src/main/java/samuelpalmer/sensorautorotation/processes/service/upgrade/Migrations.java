@@ -150,7 +150,10 @@ class Migrations {
 				
 				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> allowUpsideDownScreen = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "allowUpsideDownScreen", true);
+				Setting<String> notificationPriority = applicationSettings.new Setting<String>(new StringSetting(), "notificationPriority", "NORMAL");
 				allowUpsideDownScreen.remove();
+				notificationPriority.remove();
+				
 				
 				ServiceSettings serviceSettings = new ServiceSettings();
 				

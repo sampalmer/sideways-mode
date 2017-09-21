@@ -53,13 +53,6 @@
 
 	<string name="preference_all_notifications_title">Все заметки</string>
 
-	<string name="preference_notification_priority_title">Приоритет уведомления</string>
-	<string name="preference_notification_priority_high">Высокий</string>
-	<string name="preference_notification_priority_normal">Обычный</string>
-	<string name="preference_notification_priority_low">Низкий</string>
-
-	<string name="preference_notification_summary_priority">%1$s приоритет</string>
-
 	<string name="preference_forced_apps_title">Переопределить приложение</string>
 
 	<string name="preference_choose_apps">Выберите приложение</string>

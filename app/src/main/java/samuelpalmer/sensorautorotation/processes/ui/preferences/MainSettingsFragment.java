@@ -23,12 +23,10 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Set;
 
 import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
@@ -54,13 +52,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private Settings.Setting<Set<String>> forcedApps;
 	
-	private final EventHandler listPreferenceSummaryUpdater = new EventHandler() {
-		@Override
-		public void update() {
-			updateListPreferenceSummaries(getPreferenceScreen());
-		}
-	};
-	
 	private Preference allNotificationsPreference;
 	
 	//TODO: See if you can move this logic into an AutoSummaryListPreference
@@ -76,8 +67,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 			}
 		}
 	}
-	
-	private EventRegistrar notificationPriorityChanged;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -216,9 +205,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 		
 		updateListPreferenceSummaries(getPreferenceScreen());
 		hideUnsupportedOptions();
-		
-		notificationPriorityChanged = ApplicationSettings.instance().notificationPriority();
-		notificationPriorityChanged.subscribe(listPreferenceSummaryUpdater);
 	}
 	
 	private void openAppNotificationSystemSettings() {
@@ -258,13 +244,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 		} catch (PendingIntent.CanceledException e) {
 			throw new RuntimeException(e); //Don't expect this to actually happen
 		}
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
-		notificationPriorityChanged.unsubscribe(listPreferenceSummaryUpdater);
 	}
 	
 	/**
@@ -445,20 +424,10 @@ public class MainSettingsFragment extends PreferenceFragment {
 	}
 	
 	private void hideUnsupportedOptions() {
-		ListPreference notificationPriorityPreference = (ListPreference) findPreference(ApplicationSettings.instance().notificationPriority().getKey());
-		
-		if (Build.VERSION.SDK_INT >= 26) {
-			removePreference(notificationPriorityPreference);
+		if (Build.VERSION.SDK_INT >= 26)
 			removePreference(allNotificationsPreference);
-		}
-		else if (Build.VERSION.SDK_INT < 16) {
-			CharSequence[] originalEntries = notificationPriorityPreference.getEntries();
-			int newLength = originalEntries.length - 1;
-			notificationPriorityPreference.setEntries(Arrays.copyOfRange(originalEntries, 0, newLength));
-			notificationPriorityPreference.setEntryValues(Arrays.copyOfRange(notificationPriorityPreference.getEntryValues(), 0, newLength));
-			
+		else if (Build.VERSION.SDK_INT < 16)
 			removePreference(allNotificationsPreference);
-		}
 	}
 	
 }

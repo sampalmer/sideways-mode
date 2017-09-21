@@ -74,13 +74,6 @@
 	<string name="preference_all_notifications_summary">Turn notifications off or on</string>
 	<string name="preference_all_notifications_explanation">"The notification stops Android from killing the background service. To hide it, block this app's notifications in the next screen."</string>
 
-	<string name="preference_notification_priority_title">Notification priority</string>
-	<string name="preference_notification_priority_high">High</string>
-	<string name="preference_notification_priority_normal">Normal</string>
-	<string name="preference_notification_priority_low">Low</string>
-
-	<string name="preference_notification_summary_priority">%1$s priority</string>
-
 	<string name="preference_forced_apps_title">Overridden apps</string>
 	<plurals name="preference_forced_apps_summary_enabled">
 		<item quantity="one">%d app overridden</item>

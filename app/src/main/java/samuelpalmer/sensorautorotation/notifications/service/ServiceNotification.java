@@ -34,12 +34,15 @@ class ServiceNotification {
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)
+			.setPriority(NotificationBuilderCompat.PRIORITY_LOW)
 			.addAction(
 				R.drawable.action_turn_off,
 				StringResource.get(R.string.action_turn_off),
 				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF)
 			)
 		;
+		
+		hideTimestamp();
 		
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_change_side, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
@@ -67,10 +70,7 @@ class ServiceNotification {
 			builder.setContentTitle(StringResource.get(R.string.app_name));
 			builder.setContentText(statusText);
 		}
-
-		applicationStatus.priority.apply(builder);
-		hideTimestamp();
-
+		
 		applyButtons();
 
 		return builder.build();
