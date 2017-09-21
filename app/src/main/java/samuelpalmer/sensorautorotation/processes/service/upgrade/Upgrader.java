@@ -2,10 +2,10 @@ package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -66,15 +66,14 @@ public class Upgrader {
 	}
 
 	private void notify(String upgradeMessage) {
-		Notification notification = NotificationBuilderFactory.create()
+		Notification notification = NotificationBuilderFactory.create(NotificationChannels.ID_UPGRADES)
 				.setSmallIcon(R.drawable.notification_update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
 				.setContentText(StringResource.get(R.string.upgrade_notification_content))
 				.setAutoCancel(true)
-				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-				.setChannelId(NotificationChannels.ID_UPGRADES)
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setCategory(NotificationCompat.CATEGORY_STATUS)
 				.build();
 
 		SystemServices.notificationManager().notify(NotificationIds.UPGRADE, notification);

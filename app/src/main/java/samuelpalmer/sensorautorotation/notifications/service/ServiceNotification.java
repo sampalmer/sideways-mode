@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.notifications.service;
 import android.app.Notification;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.support.v4.app.NotificationCompat;
 
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -17,18 +17,16 @@ import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 class ServiceNotification {
 
-	private final NotificationBuilderCompat builder;
+	private final NotificationCompat.Builder builder;
 
 	public ServiceNotification() {
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
-		builder = NotificationBuilderFactory.create()
+		builder = NotificationBuilderFactory.create(NotificationChannels.ID_CONTROLS)
 			.setSmallIcon(R.drawable.notification_app)
 			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
- 			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
-			.setChannelId(NotificationChannels.ID_CONTROLS)
-			.setPriority(NotificationBuilderCompat.PRIORITY_LOW)
+ 			.setCategory(NotificationCompat.CATEGORY_STATUS)
+			.setPriority(NotificationCompat.PRIORITY_LOW)
 			.addAction(
 				R.drawable.action_change_side,
 				StringResource.get(R.string.action_change_side),
@@ -69,7 +67,8 @@ class ServiceNotification {
 	}
 	
 	private void hideTimestamp() {
-		if (Build.VERSION.SDK_INT >= 17)
+		// "setShowWhen" is supported on API 17+, but NotificationCompat only supports it on API 19+
+		if (Build.VERSION.SDK_INT >= 19)
 			builder.setShowWhen(false);
 		else
 			builder.setWhen(0);
