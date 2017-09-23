@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:cc="http://creativecommons.org/ns#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns="http://www.w3.org/2000/svg"
-	xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-	xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-	fill="#000000"
-	height="24"
-	viewBox="0 0 24 24"
-	width="24"
-	id="svg2"
-	version="1.1"
-	inkscape:version="0.91 r13725"
-	sodipodi:docname="ic_perm_identity_black_24px.svg"
-	inkscape:export-filename="C:\Users\Sam\Desktop\Auto Rotate\Icon Sketches\Front on\notification_app.png"
-	inkscape:export-xdpi="135"
-	inkscape:export-ydpi="135">
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   fill="#000000"
+   height="24"
+   viewBox="0 0 24 24"
+   width="24"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="notification_logo.svg"
+   inkscape:export-filename="C:\Users\Sam\Desktop\Auto Rotate\Icon Sketches\Front on\notification_app.png"
+   inkscape:export-xdpi="135"
+   inkscape:export-ydpi="135">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -25,7 +26,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -56,9 +57,9 @@
      inkscape:bbox-paths="true"
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:zoom="39.333334"
-     inkscape:cx="6.0579982"
-     inkscape:cy="9.2550713"
+     inkscape:zoom="13.906434"
+     inkscape:cx="11.874326"
+     inkscape:cy="10.20889"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -71,15 +72,9 @@
        id="grid4140" />
   </sodipodi:namedview>
   <path
-     d="m 2,4 0,14 7.515625,0 C 10.49754,16.206211 11,13.619819 11,12 11,9.33 9.66,4 7,4 L 2,4 Z m 14,4 c -2.21,0 -4,1.79 -4,4 0,2.210002 1.79,4 4,4 2.21,0 4,-1.789999 4,-4 0,-2.21 -1.79,-4 -4,-4 z"
-     id="path4"
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.77952766;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 0,0 V 20.000013 H 8.777344 C 9.92004,17.410281 10,14.139553 10,12 10,7.994986 8.489972,0 4.5,0 Z m 18,6.0000001 c -3.314986,0 -6,2.6850139 -6,5.9999999 0,3.314986 2.685014,6 6,6 3.314986,0 6,-2.685014 6,-6 C 24,8.685014 21.314986,6.0000001 18,6.0000001 Z M 0,21.999988 V 24 h 24 v -2.000012 z"
+     id="rect4138"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1" />
-  <rect
-     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     id="rect4142"
-     width="20"
-     height="2"
-     x="2"
-     y="20" />
+     sodipodi:nodetypes="cccsscsssssccccc" />
 </svg>
