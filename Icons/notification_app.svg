@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="notification_logo.svg"
+   sodipodi:docname="notification_app.svg"
    inkscape:export-filename="C:\Users\Sam\Desktop\Auto Rotate\Icon Sketches\Front on\notification_app.png"
    inkscape:export-xdpi="135"
    inkscape:export-ydpi="135">
@@ -57,9 +57,9 @@
      inkscape:bbox-paths="true"
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:zoom="13.906434"
-     inkscape:cx="11.874326"
-     inkscape:cy="10.20889"
+     inkscape:zoom="19.666668"
+     inkscape:cx="1.6856639"
+     inkscape:cy="8.8615884"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -72,8 +72,8 @@
        id="grid4140" />
   </sodipodi:namedview>
   <path
-     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.77952766;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 0,0 V 20.000013 H 8.777344 C 9.92004,17.410281 10,14.139553 10,12 10,7.994986 8.489972,0 4.5,0 Z m 18,6.0000001 c -3.314986,0 -6,2.6850139 -6,5.9999999 0,3.314986 2.685014,6 6,6 3.314986,0 6,-2.685014 6,-6 C 24,8.685014 21.314986,6.0000001 18,6.0000001 Z M 0,21.999988 V 24 h 24 v -2.000012 z"
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.77952743;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 2,2 V 18.666677 H 9.3144533 C 10.2667,16.508567 10.333333,13.782961 10.333333,12 10.333333,8.662488 9.0749766,2 5.75,2 Z m 15,5.0000001 c -2.762488,0 -5,2.2375119 -5,4.9999999 0,2.762488 2.237512,5 5,5 2.762488,0 5,-2.237512 5,-5 C 22,9.237512 19.762488,7.0000001 17,7.0000001 Z M 2,20.333323 V 22 h 20 v -1.666677 z"
      id="rect4138"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cccsscsssssccccc" />
