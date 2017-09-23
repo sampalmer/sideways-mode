@@ -3,9 +3,5 @@
         android:height="48dp"
         android:viewportWidth="24.0"
         android:viewportHeight="24.0">
-    <path android:fillAlpha="1" android:fillColor="#FF795548" android:pathData="m2,4 l0,14 7.516,0C10.498,16.206 11,13.62 11,12 11,9.33 9.66,4 7,4L2,4ZM16,8c-2.21,0 -4,1.79 -4,4 0,2.21 1.79,4 4,4 2.21,0 4,-1.79 4,-4 0,-2.21 -1.79,-4 -4,-4z"/>
-    <path android:fillAlpha="1" android:fillColor="#FF795548"
-        android:pathData="M2,20h20v2h-20z" android:strokeAlpha="1"
-        android:strokeColor="#00000000" android:strokeLineCap="butt"
-        android:strokeLineJoin="round" android:strokeWidth="1"/>
+    <path android:fillColor="#FF795548" android:pathData="m0 0v20h8.7773c1.1427-2.5897 1.2227-5.8605 1.2227-8 0-4.005-1.51-12-5.5-12zm18 6c-3.315 0-6 2.685-6 6s2.685 6 6 6 6-2.685 6-6-2.685-6-6-6zm-18 16v2h24v-2z"/>
 </vector>
