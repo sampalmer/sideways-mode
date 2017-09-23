@@ -2,20 +2,20 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:cc="http://creativecommons.org/ns#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns="http://www.w3.org/2000/svg"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-	xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-	width="48"
-	height="48"
-	viewBox="0 0 12.7 12.7"
-	version="1.1"
-	id="svg4513"
-	inkscape:version="0.91 r13725"
-	sodipodi:docname="launcher.svg">
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    width="48"
+    height="48"
+    viewBox="0 0 12.7 12.7"
+    version="1.1"
+    id="svg4513"
+    inkscape:version="0.91 r13725"
+    sodipodi:docname="launcher.svg">
   <defs
      id="defs4507">
     <linearGradient
@@ -81,7 +81,8 @@
        y1="286.41666"
        x2="10.583333"
        y2="294.88333"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(2.3371573e-8,-5.3166285e-6)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -90,9 +91,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.999999"
-     inkscape:cx="0.32774759"
-     inkscape:cy="21.118834"
+     inkscape:zoom="11.313708"
+     inkscape:cx="6.6758771"
+     inkscape:cy="27.918557"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -174,12 +175,10 @@
        id="rect4138"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccsscsssssccccc" />
-    <rect
+    <path
        style="opacity:0.15;fill:url(#linearGradient8079);fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 6.3499996,284.82915 a 5.8208333,5.8208333 0 0 0 -5.82083318,5.82084 5.8208333,5.8208333 0 0 0 5.82083318,5.82083 5.8208333,5.8208333 0 0 0 5.8208334,-5.82083 5.8208333,5.8208333 0 0 0 -5.8208334,-5.82084 z"
        id="rect8071"
-       width="12.7"
-       height="12.7"
-       x="0"
-       y="284.29999" />
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
