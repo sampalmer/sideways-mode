@@ -5,13 +5,13 @@ import android.app.PendingIntent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import samuelpalmer.common.eventhandling.EventRegistrar;
+import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
@@ -87,15 +87,16 @@ public abstract class EnvironmentError {
 	abstract EnvironmentError newInstance();
 	
 	private void postNotification() {
-		NotificationCompat.Builder builder = NotificationBuilderFactory.create(NotificationChannels.ID_ERRORS)
+		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
 			.setContentIntent(showError())
 			.setContentTitle(summary)
 			.setContentText(StringResource.get(R.string.app_disabled_view_error))
 			.setAutoCancel(true)
 			.setTicker(summary) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
-			.setPriority(NotificationCompat.PRIORITY_HIGH)
-			.setCategory(NotificationCompat.CATEGORY_ERROR);
+			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
+			.setChannelId(NotificationChannels.ID_ERRORS);
 
 		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
 			// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be

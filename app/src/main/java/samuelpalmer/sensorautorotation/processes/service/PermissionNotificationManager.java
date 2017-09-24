@@ -2,11 +2,11 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.support.v4.app.NotificationCompat;
 
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.ComponentType;
@@ -66,11 +66,14 @@ public class PermissionNotificationManager extends State {
 
 	public void check() {
 		if (enabled.get() && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
-			Notification notification = NotificationBuilderFactory.create(NotificationChannels.ID_PERMISSIONS)
-					.setCategory(NotificationCompat.CATEGORY_ERROR)
+			Notification notification = NotificationBuilderFactory
+					.create()
+					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent(PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION))
 					.setContentTitle(StringResource.get(R.string.permission_needed_summary))
 					.setContentText(StringResource.get(R.string.permission_touch_to_fix))
+					.setSmallIcon(R.drawable.notification_error)
+					.setChannelId(NotificationChannels.ID_PERMISSIONS)
 					.build();
 
 			notificationManager.notify(NotificationIds.PERMISSION, notification);
