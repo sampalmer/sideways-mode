@@ -6,7 +6,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-import samuelpalmer.common.IntegerUtilities;
+import samuelpalmer.common.NumberUtilities;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
@@ -20,7 +20,7 @@ public class UserOrientation implements Parcelable {
 
 	public UserOrientation(@NonNull UserSide side, ScreenRotationMonitor screenRotationMonitor, @NonNull Orientation proposed) {
 		this.side = side;
-		rotationsRelativeToScreen = IntegerUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
+		rotationsRelativeToScreen = NumberUtilities.wrap(screenRotationMonitor.currentRotation().minus(proposed).clockwiseCount(), 4);
 	}
 
 	private UserOrientation(Parcel in) {

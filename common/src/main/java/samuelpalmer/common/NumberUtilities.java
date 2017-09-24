@@ -1,0 +1,25 @@
+package samuelpalmer.common;
+
+public class NumberUtilities {
+	
+	public static int wrap(int value, int length) {
+		if (length <= 0)
+			throw new IllegalArgumentException();
+		
+		while (value < 0)
+			value += length;
+		
+		return value % length;
+	}
+	
+	public static float wrap(float value, float length) {
+		if (length <= 0)
+			throw new IllegalArgumentException();
+		
+		while (value < 0)
+			value += length;
+		
+		return value % length;
+	}
+	
+}

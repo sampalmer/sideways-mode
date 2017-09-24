@@ -47,7 +47,7 @@ public class Orientation implements Parcelable {
 
 	public Orientation negate() {
 		int unwrapped = -this.clockwiseRotationsFromNaturalOrientation;
-		int wrapped = IntegerUtilities.wrap(unwrapped, numberOfPossibleRotations);
+		int wrapped = NumberUtilities.wrap(unwrapped, numberOfPossibleRotations);
 		return new Orientation(wrapped);
 	}
 
@@ -57,7 +57,7 @@ public class Orientation implements Parcelable {
 
 	public Orientation plus(@NonNull Rotation change) {
 		int unwrappedResultingClockwiseIndex = getClockwiseRotationsFromNaturalOrientation() + change.clockwiseCount();
-		int wrappedResultingClockwiseIndex = IntegerUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
+		int wrappedResultingClockwiseIndex = NumberUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
 
 		return new Orientation(wrappedResultingClockwiseIndex);
 	}
