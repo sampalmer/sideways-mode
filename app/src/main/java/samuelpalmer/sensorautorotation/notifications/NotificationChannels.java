@@ -30,11 +30,11 @@ public abstract class NotificationChannels {
 				StringResource.get(R.string.notification_channel_controls),
 
 				/*
-				 * Deemphasising this notification since it is permanent and shouldn't get in the way of "real" notifications.
-				 * Not using "MIN" importance here since that causes the notification to collapse when another notification is above it,
-				 * which prevents the controls in the notification from showing by default.
+				 * Using normal importance since the user needs to:
+				 * 1. Know that everything will be rotated sideways
+				 * 2. Have easy access to the controls in the notification
 				 */
-				NotificationManager.IMPORTANCE_LOW
+				NotificationManager.IMPORTANCE_DEFAULT
 		);
 		controls.setShowBadge(false); // This isn't needed, but it makes it clearer to the user that the service notification won't show as a badge.
 		controls.setLockscreenVisibility(Notification.VISIBILITY_SECRET); // Since this notification isn't really relevant on a typical lock screen

@@ -26,7 +26,7 @@ class ServiceNotification {
 			.setSmallIcon(R.drawable.app)
 			.setContentIntent(ComponentType.create(DashboardActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationCompat.CATEGORY_STATUS)
-			.setPriority(NotificationCompat.PRIORITY_LOW)
+			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.addAction(
 				R.drawable.action_change_side,
 				StringResource.get(R.string.action_change_side),
