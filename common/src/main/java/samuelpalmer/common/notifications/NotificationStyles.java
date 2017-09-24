@@ -4,6 +4,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
 import android.view.View;
@@ -63,7 +67,7 @@ public final class NotificationStyles {
 
 		LinearLayout group = new LinearLayout(context);
 		ViewGroup event = (ViewGroup) contentView.apply(context, group);
-		recurseGroup(event);
+		extractColours(event);
 		group.removeAllViews();
 
 		if (title.colour == null)
@@ -77,27 +81,58 @@ public final class NotificationStyles {
 		return result == null ? builder.createContentView() : result;
 	}
 
-	private void recurseGroup(ViewGroup viewGroup)
+	private void extractColours(ViewGroup viewGroup)
 	{
 		for (int i = 0; i < viewGroup.getChildCount(); ++i)
 		{
 			View view = viewGroup.getChildAt(i);
-
+			
 			if (view instanceof TextView)
 			{
 				TextView textView = (TextView) view;
 				String text = textView.getText().toString();
 
-				//It'd be nice to be able to get the actual action *icon*'s colour instead of its text colour, but doing so seems too difficult.
-				for (StyleType type : new StyleType[] {title, actionButton})
-					if (text.equals(type.searchTip))
-						type.colour = textView.getTextColors().getDefaultColor();
+				if (text.equals(title.searchTip))
+					title.colour = extractTitleColour(textView);
+				
+				if (text.equals(actionButton.searchTip))
+					actionButton.colour = extractActionColour(textView);
 			}
 			else if (view instanceof ViewGroup)
-				recurseGroup((ViewGroup) view);
+				extractColours((ViewGroup) view);
 		}
 	}
-
+	
+	private Integer extractTitleColour(TextView textView) {
+		return extractTextColour(textView);
+	}
+	
+	private Integer extractActionColour(TextView textView) {
+		if (Build.VERSION.SDK_INT <= 19)
+			// These versions of Android didn't recolour the icon, so it should be the same as the source image, which should be white.
+			return Color.WHITE;
+		
+		Drawable[] drawables = textView.getCompoundDrawables();
+		if (drawables.length > 0) {
+			Drawable actionIcon = drawables[0];
+			if (actionIcon != null) {
+				ColorFilter colorFilter = actionIcon.getColorFilter();
+				if (colorFilter instanceof PorterDuffColorFilter)
+					try {
+						return (int) colorFilter.getClass().getMethod("getColor").invoke(colorFilter);
+					} catch (ReflectiveOperationException | ClassCastException ignored) {
+					}
+			}
+		}
+		
+		// We didn't find the action icon colour, but the text colour should be a good enough approximation
+		return extractTextColour(textView);
+	}
+	
+	private int extractTextColour(TextView textView) {
+		return textView.getTextColors().getDefaultColor();
+	}
+	
 	private static class StyleType {
 		public Integer colour;
 		private final String searchTip;
