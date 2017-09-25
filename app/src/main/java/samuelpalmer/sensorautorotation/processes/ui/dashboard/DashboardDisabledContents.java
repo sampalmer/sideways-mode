@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -100,8 +101,9 @@ public class DashboardDisabledContents extends LinearLayout {
 			1. We're using the vector compat stuff
 			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
 		 */
-		chooseLeftSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(), R.drawable.upright, null), null, null);
-		chooseRightSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(), R.drawable.upright, null), null, null);
+		Drawable arrow = ResourcesCompat.getDrawable(getResources(), R.drawable.upright, null);
+		chooseLeftSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, arrow, null, null);
+		chooseRightSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, arrow, null, null);
 		
 		buttonContainer = findViewById(R.id.choose_side_buttons_container);
 		animator = ObjectAnimator
