@@ -39,6 +39,7 @@ public class DashboardDisabledContents extends LinearLayout {
 	private boolean isAttachedToWindow = false;
 	private boolean running = false;
 	private ObjectAnimator animator;
+	private View buttonContainer;
 	
 	public DashboardDisabledContents(Context context) {
 		super(context);
@@ -101,9 +102,10 @@ public class DashboardDisabledContents extends LinearLayout {
 		 */
 		chooseLeftSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(), R.drawable.upright, null), null, null);
 		chooseRightSideCaption.setCompoundDrawablesWithIntrinsicBounds(null, ResourcesCompat.getDrawable(getResources(), R.drawable.upright, null), null, null);
-
+		
+		buttonContainer = findViewById(R.id.choose_side_buttons_container);
 		animator = ObjectAnimator
-			.ofFloat(findViewById(R.id.choose_side_buttons_container), "rotation", 0)
+			.ofFloat(buttonContainer, "rotation", 0)
 			.setDuration(200);
 
 		updateRunningState();
@@ -174,18 +176,14 @@ public class DashboardDisabledContents extends LinearLayout {
 	
 	private void somethingChanged() {
 		int device = deviceListener.getProposedRotation();
-		if (device < 0) {
-			setRotation(Orientation.NATURAL);
-			return;
+		if (device >= 0) {
+			Orientation screen = screenRotationMonitor.currentRotation();
+			setRotation(screen.minus(new Rotation(device)));
 		}
-
-		Orientation screen = screenRotationMonitor.currentRotation();
-
-		setRotation(screen.minus(new Rotation(device)));
 	}
 	
 	private void setRotation(Orientation rotation) {
-		float currentRotation = NumberUtilities.wrap((float)animator.getAnimatedValue(), 360f);
+		float currentRotation = NumberUtilities.wrap(buttonContainer.getRotation(), 360f);
 		float targetRotation = NumberUtilities.wrap((rotation.getClockwiseRotationsFromNaturalOrientation() + 1f) * -90f, 360f);
 		
 		// Always take the shortest path
