@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
+import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
 
 class ServiceNotification {
 
@@ -30,7 +30,7 @@ class ServiceNotification {
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.app)
-			.setContentIntent(ComponentType.create(DashboardActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
+			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)
