@@ -12,7 +12,6 @@ import java.util.Set;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.UserSide;
 
 /**
  * Keeps track of all running instances of {@link RotationService}.
@@ -30,7 +29,6 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 	private static final String TAG = ServiceRegistrar.class.getSimpleName();
 	private final Set<RotationService> serviceInstances;
 	private final Set<RotationService> readonlyServiceInstances;
-	private UserSide initialUserSide;
 	
 	private ServiceRegistrar() {
 		serviceInstances = new HashSet<>();
@@ -41,17 +39,7 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 		return readonlyServiceInstances;
 	}
 	
-	public UserSide getInitialUserSide() {
-		return initialUserSide;
-	}
-	
-	public void clearInitialUserSide() {
-		initialUserSide = null;
-	}
-	
-	public void serviceStarted(RotationService service, UserSide initialUserSide) {
-		this.initialUserSide = initialUserSide;
-		
+	public void serviceStarted(RotationService service) {
 		if (!serviceInstances.isEmpty()) {
 			// This should never happen, but it actually did happen occasionally on Production devices, presumably due to Android OS bugs.
 			// So the app tries to tolerate this.

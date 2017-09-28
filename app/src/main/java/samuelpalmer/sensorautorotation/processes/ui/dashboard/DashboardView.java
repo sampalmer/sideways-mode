@@ -18,18 +18,19 @@ import android.widget.ProgressBar;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public class DashboardView extends FrameLayout {
 
 	private final ApplicationStatusContentProvider.Client serviceClient;
 	private final Handler handler;
-	private final Settings.Setting<Boolean> enabledSetting;
+	private final Settings.Setting<UserSide> servicePersistentState;
 
 	private final boolean showSettings;
 	
@@ -57,7 +58,7 @@ public class DashboardView extends FrameLayout {
 
 		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
 		handler = new Handler(Looper.getMainLooper());
-		enabledSetting = ApplicationSettings.instance().enabled();
+		servicePersistentState = ServiceSettings.instance().persistentState();
 
 		View view = inflate(getContext(), R.layout.dashboard, null);
 		addView(view);
@@ -98,7 +99,7 @@ public class DashboardView extends FrameLayout {
 		super.onAttachedToWindow();
 
 		serviceClient.subscribe(statusChanged);
-		enabledSetting.subscribe(enabledChanged);
+		servicePersistentState.subscribe(enabledChanged);
 		EnvironmentError.onChange.subscribe(lastErrorChanged);
 
 		enabledChanged.update();
@@ -110,7 +111,7 @@ public class DashboardView extends FrameLayout {
 		super.onDetachedFromWindow();
 
 		serviceClient.unsubscribe(statusChanged);
-		enabledSetting.unsubscribe(enabledChanged);
+		servicePersistentState.unsubscribe(enabledChanged);
 		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
 	}
 	
@@ -142,7 +143,7 @@ public class DashboardView extends FrameLayout {
 	private final EventHandler enabledChanged = new EventHandler() {
 		@Override
 		public void update() {
-			isEnabled = enabledSetting.get();
+			isEnabled = servicePersistentState.hasValue();
 			if (!isEnabled)
 				lastStatus = null; //So we don't accidentally reuse the last status next time the app is enabled
 

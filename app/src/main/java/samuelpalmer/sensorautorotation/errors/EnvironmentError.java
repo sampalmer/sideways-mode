@@ -77,7 +77,7 @@ public abstract class EnvironmentError {
 		JSONObject json = serialise();
 		lastErrorSetting.set(json.toString());
 		
-		new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+		ServiceSynchroniser.disableService();
 	}
 	
 	abstract JSONObject serialiseDetails() throws JSONException;

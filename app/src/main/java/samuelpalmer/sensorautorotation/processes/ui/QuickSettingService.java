@@ -15,6 +15,7 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
@@ -22,12 +23,13 @@ import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplic
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 
 	private ApplicationStatusContentProvider.Client statusClient;
-	private Settings.Setting<Boolean> enabledSetting;
+	private Settings.Setting<UserSide> persistentServiceState;
 
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
@@ -38,8 +40,8 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 		
-		if (enabledSetting.get())
-			new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+		if (persistentServiceState.hasValue())
+			ServiceSynchroniser.disableService();
 		else {
 			if (isLocked()) {
 				//Not using the dialog here since dialogs don't show on the lock screen.
@@ -106,8 +108,8 @@ public class QuickSettingService extends TileService {
 		statusClient = new ApplicationStatusContentProvider.Client(this);
 		statusClient.subscribe(statusListener);
 		
-		enabledSetting = ApplicationSettings.instance().enabled();
-		enabledSetting.subscribe(enabledSettingListener);
+		persistentServiceState = ServiceSettings.instance().persistentState();
+		persistentServiceState.subscribe(enabledSettingListener);
 
 		enabledSettingListener.update();
 	}
@@ -116,8 +118,8 @@ public class QuickSettingService extends TileService {
 	public void onStopListening() {
 		super.onStopListening();
 
-		enabledSetting.unsubscribe(enabledSettingListener);
-		enabledSetting = null;
+		persistentServiceState.unsubscribe(enabledSettingListener);
+		persistentServiceState = null;
 
 		statusClient.unsubscribe(statusListener);
 		statusClient = null;
@@ -134,7 +136,7 @@ public class QuickSettingService extends TileService {
 	private final EventHandler enabledSettingListener = new EventHandler() {
 		@Override
 		public void update() {
-			if (!enabledSetting.get())
+			if (!persistentServiceState.hasValue())
 				updateTile(null);
 		}
 	};

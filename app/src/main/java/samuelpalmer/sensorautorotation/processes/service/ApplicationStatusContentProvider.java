@@ -66,11 +66,10 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 										listener.reportUpdate(lastStatus);
 								} else
 									/*
-									 * If the service has crashed or simply hasn't yet started (due to a phone restart, for example),
-									 * we want to make sure it's running. Otherwise the client will have to wait
-									 * a long time (or forever) to get the first service status update.
+									 * If the service has crashed or been killed, we want to make sure it's running.
+									 * Otherwise the client will have to wait a long time (or forever) to get the first service status update.
 									 */
-									new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+									ServiceSynchroniser.updateFromSettings();
 							}
 						});
 						

@@ -199,7 +199,7 @@ public class DashboardDisabledContents extends LinearLayout {
 	}
 	
 	private void startApp(UserSide userSide) {
-		new ServiceSynchroniser(ApplicationSettings.instance()).enableService(userSide);
+		ServiceSynchroniser.enableService(userSide);
 		
 		if (DashboardDialogCoordinator.dialogExists())
 			DashboardDialogCoordinator.dismissDialog();

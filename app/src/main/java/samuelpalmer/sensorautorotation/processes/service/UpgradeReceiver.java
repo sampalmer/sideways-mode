@@ -15,7 +15,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
 
 		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction()))
-			new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+			ServiceSynchroniser.updateFromSettings();
 		else
 			Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
 	}

@@ -8,14 +8,14 @@ import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.ui.ToastReceiver;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public abstract class ApplicationInstanceClient {
 
 	public static void send(ApplicationInstanceCommand command) {
 		if (ApplicationInstanceManager.isApplicationRunning())
 			ApplicationInstanceManager.applicationInstance().handle(command); //This seems to have less lag than an intent
-		else if (ApplicationSettings.instance().enabled().get())
+		else if (ServiceSettings.instance().persistentState().hasValue())
 			ServiceController.ensureStarted(command.toIntent());
 		else if (command.toastIfServiceDisabled)
 			showDisabledMessage();

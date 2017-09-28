@@ -9,9 +9,8 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 public class UninstallerFragment extends Fragment {
 	
 	void uninstall() {
-		ServiceSynchroniser serviceSynchroniser = new ServiceSynchroniser(ApplicationSettings.instance());
-		if (serviceSynchroniser.serviceEnabled())
-			serviceSynchroniser.disableService();
+		if (ServiceSynchroniser.serviceEnabled())
+			ServiceSynchroniser.disableService();
 		
 		Intent uninstallIntent = new SystemIntents(getActivity()).uninstall();
 		startActivity(uninstallIntent);

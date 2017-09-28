@@ -6,7 +6,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplays;
@@ -18,7 +17,6 @@ import samuelpalmer.sensorautorotation.processes.service.deviceorientation.Orien
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 /**
@@ -27,8 +25,6 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
  * avoids the complexities of binding and inability to determine service running state.
  */
 public class ApplicationInstance extends State {
-	
-	private final UserSide initialUserSide;
 	
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
@@ -43,9 +39,8 @@ public class ApplicationInstance extends State {
 	private ApplicationStatusDisplays display;
 	private ScreenOrientationUpdater screenUpdater;
 	
-	public ApplicationInstance(UserSide initialUserSide) {
+	public ApplicationInstance() {
 		super();
-		this.initialUserSide = initialUserSide;
 	}
 	
 	@Override
@@ -58,7 +53,7 @@ public class ApplicationInstance extends State {
 		SystemSettings systemSettings = new SystemSettings();
 		Screen screen = new Screen(SystemServices.windowManager());
 		
-		applicationState = new ApplicationState(initialUserSide);
+		applicationState = new ApplicationState();
 		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		
@@ -112,13 +107,7 @@ public class ApplicationInstance extends State {
 				display.update(applicationStatusDisplayUpdater.getLastStatus());
 				break;
 			case ApplicationInstanceCommand.ACTION_TURN_OFF:
-				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
-				break;
-			case ApplicationInstanceCommand.ACTION_SET_LEFT_SIDE:
-				calculator.setSide(UserSide.LEFT);
-				break;
-			case ApplicationInstanceCommand.ACTION_SET_RIGHT_SIDE:
-				calculator.setSide(UserSide.RIGHT);
+				ServiceSynchroniser.disableService();
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);

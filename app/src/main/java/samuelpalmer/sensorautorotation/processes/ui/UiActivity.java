@@ -13,7 +13,7 @@ public abstract class UiActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		new ServiceSynchroniser(ApplicationSettings.instance()).updateFromSettings();
+		ServiceSynchroniser.updateFromSettings();
 	}
 
 }

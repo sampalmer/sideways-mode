@@ -14,7 +14,7 @@ import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 class Migrations {
@@ -36,7 +36,7 @@ class Migrations {
 				Setting<Orientation> oldUserOrientation = applicationSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<String> screenOffBehaviour = applicationSettings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 
-				ServiceSettings serviceSettings = new ServiceSettings();
+				ServiceSettings serviceSettings = ServiceSettings.instance();
 				Setting<Orientation> newUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<Boolean> newAutoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				
@@ -65,7 +65,7 @@ class Migrations {
 			public void upgradeData() {
 				super.upgradeData();
 
-				ServiceSettings serviceSettings = new ServiceSettings();
+				ServiceSettings serviceSettings = ServiceSettings.instance();
 				Setting<Orientation> oldUserOrientation = serviceSettings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
 				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Setting<Rotation> screenOrientationOffset = serviceSettings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);
@@ -151,11 +151,13 @@ class Migrations {
 				ApplicationSettings applicationSettings = ApplicationSettings.instance();
 				Setting<Boolean> allowUpsideDownScreen = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "allowUpsideDownScreen", true);
 				Setting<String> notificationPriority = applicationSettings.new Setting<String>(new StringSetting(), "notificationPriority", "NORMAL");
+				Setting<Boolean> enabled = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "enabled", false);
+				boolean wasEnabled = enabled.get();
 				allowUpsideDownScreen.remove();
 				notificationPriority.remove();
+				enabled.remove();
 				
-				
-				ServiceSettings serviceSettings = new ServiceSettings();
+				ServiceSettings serviceSettings = ServiceSettings.instance();
 				
 				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Boolean autoRotateValue = autoRotate.tryGet();
@@ -166,14 +168,18 @@ class Migrations {
 				screenOrientationOffset.remove();
 				
 				if (
-					(autoRotateValue != null && !autoRotateValue)
-					||
-					(screenOrientationOffsetValue != null && screenOrientationOffsetValue.isNaturalOrUpsideDown())
-				)
-					applicationSettings.enabled().set(false);
-				else if (screenOrientationOffsetValue != null) {
+					wasEnabled
+					&&
+					autoRotateValue != null
+					&&
+					autoRotateValue
+					&&
+					screenOrientationOffsetValue != null
+					&&
+					!screenOrientationOffsetValue.isNaturalOrUpsideDown()
+				) {
 					UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
-					serviceSettings.userSide().set(newUserSide);
+					serviceSettings.persistentState().set(newUserSide);
 				}
 			}
 			

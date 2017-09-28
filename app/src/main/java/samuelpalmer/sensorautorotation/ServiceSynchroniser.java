@@ -1,39 +1,25 @@
 package samuelpalmer.sensorautorotation;
 
-import android.content.Intent;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-
-public class ServiceSynchroniser {
-
-	private final ApplicationSettings applicationSettings;
-
-	public ServiceSynchroniser(ApplicationSettings applicationSettings) {
-		this.applicationSettings = applicationSettings;
-	}
+public abstract class ServiceSynchroniser {
 	
-	public void updateFromSettings() {
+	public static void updateFromSettings() {
 		ServiceController.updateServiceState(serviceEnabled());
 	}
 
-	public void enableService(UserSide userSide) {
-		applicationSettings.enabled().set(true);
-		
-		Intent intent = ServiceController
-			.intent()
-			.putExtra(RotationService.EXTRA_INITIAL_USER_SIDE, userSide.name());
-		
-		ServiceController.ensureStarted(intent);
+	public static void enableService(UserSide userSide) {
+		ServiceSettings.instance().persistentState().set(userSide);
+		ServiceController.updateServiceState(true);
 	}
 
-	public void disableService() {
-		applicationSettings.enabled().set(false);
+	public static void disableService() {
+		ServiceSettings.instance().persistentState().remove();
 		ServiceController.updateServiceState(false);
 	}
 
-	public boolean serviceEnabled() {
-		return applicationSettings.enabled().get();
+	public static boolean serviceEnabled() {
+		return ServiceSettings.instance().persistentState().hasValue();
 	}
 	
 }

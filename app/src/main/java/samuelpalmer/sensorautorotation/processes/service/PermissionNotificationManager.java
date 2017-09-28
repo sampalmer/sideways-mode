@@ -16,32 +16,34 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 //Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272). Hopefully this notification will be sufficient for handling this.
 public class PermissionNotificationManager extends State {
 
 	private final NotificationManager notificationManager;
-	private final Settings.Setting<Boolean> enabled;
+	private final Settings.Setting<UserSide> serviceState;
 	private final Settings.Setting<Set<String>> forcedApps;
 	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
 
 	public PermissionNotificationManager() {
 		notificationManager = SystemServices.notificationManager();
 		
-		enabled = ApplicationSettings.instance().enabled();
+		serviceState = ServiceSettings.instance().persistentState();
 		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 
 	@Override
 	protected void start() {
-		enabled.subscribe(subscriber);
+		serviceState.subscribe(subscriber);
 		forcedApps.subscribe(subscriber);
 		accessibilityServiceMonitor.subscribe(subscriber);
 
@@ -54,7 +56,7 @@ public class PermissionNotificationManager extends State {
 
 		accessibilityServiceMonitor.unsubscribe(subscriber);
 		forcedApps.unsubscribe(subscriber);
-		enabled.unsubscribe(subscriber);
+		serviceState.unsubscribe(subscriber);
 	}
 
 	private final EventHandler subscriber = new EventHandler() {
@@ -65,7 +67,7 @@ public class PermissionNotificationManager extends State {
 	};
 
 	public void check() {
-		if (enabled.get() && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
+		if (serviceState.hasValue() && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
 			Notification notification = NotificationBuilderFactory
 					.create()
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)

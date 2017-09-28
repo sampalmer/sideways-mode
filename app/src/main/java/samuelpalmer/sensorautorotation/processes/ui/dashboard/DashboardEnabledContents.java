@@ -82,7 +82,7 @@ public class DashboardEnabledContents extends LinearLayout {
 			
 			@Override
 			public void onClick(View v) {
-				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+				ServiceSynchroniser.disableService();
 				
 				if (DashboardDialogCoordinator.dialogExists())
 					DashboardDialogCoordinator.dismissDialog();

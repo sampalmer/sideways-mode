@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StateMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivity;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public abstract class ApplicationInstanceManager {
 	
@@ -25,7 +25,7 @@ public abstract class ApplicationInstanceManager {
 			throw new RuntimeException("Already initialised");
 		
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
-		ApplicationSettings.instance().enabled().subscribe(updateApplicationState);
+		ServiceSettings.instance().persistentState().subscribe(updateApplicationState);
 		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
 		new UserInteractivityMonitor(userInteractivityListener).ensureStarted();
 		
@@ -36,7 +36,7 @@ public abstract class ApplicationInstanceManager {
 		@Override
 		public void stateChanged(UserInteractivity state) {
 			if (!state.active()) {
-				new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+				ServiceSynchroniser.disableService();
 			}
 		}
 	};
@@ -45,7 +45,7 @@ public abstract class ApplicationInstanceManager {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			new ServiceSynchroniser(ApplicationSettings.instance()).disableService();
+			ServiceSynchroniser.disableService();
 		}
 		
 	};
@@ -58,9 +58,8 @@ public abstract class ApplicationInstanceManager {
 			
 			if (shouldBeRunning != isRunning) {
 				if (shouldBeRunning) {
-					applicationInstance = new ApplicationInstance(ServiceRegistrar.instance.getInitialUserSide());
+					applicationInstance = new ApplicationInstance();
 					applicationInstance.ensureStarted();
-					ServiceRegistrar.instance.clearInitialUserSide();
 				}
 				else {
 					applicationInstance.ensureStopped();
@@ -87,7 +86,7 @@ public abstract class ApplicationInstanceManager {
 		return
 			!ServiceRegistrar.instance.getServiceInstances().isEmpty() // No point running the application if there are no services to keep it alive
 			&&
-			ApplicationSettings.instance().enabled().get() // It shouldn't be running if it's turned off!
+			ServiceSettings.instance().persistentState().hasValue() // It shouldn't be running if it's turned off!
 		;
 	}
 }
