@@ -1,25 +1,31 @@
 package samuelpalmer.sensorautorotation;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 import samuelpalmer.common.Rotation;
 
 public enum UserSide {
-	LEFT(R.string.user_rotation_left_side, new Rotation(-1)),
-	RIGHT(R.string.user_rotation_right_side, new Rotation(1));
+	LEFT(R.string.user_rotation_left_side, new Rotation(-1), R.drawable.app_left_side),
+	RIGHT(R.string.user_rotation_right_side, new Rotation(1), R.drawable.app_right_side);
 	
 	private final int descriptionId;
 	private final Rotation offset;
+	private final int iconId;
 	
-	UserSide(@StringRes int descriptionId, Rotation offset) {
+	UserSide(@StringRes int descriptionId, Rotation offset, @DrawableRes int iconId) {
 		this.descriptionId = descriptionId;
 		this.offset = offset;
+		this.iconId = iconId;
 	}
 	
 	@StringRes
 	public int descriptionId() {
 		return descriptionId;
 	}
+	
+	@DrawableRes
+	public int iconId() { return iconId; }
 	
 	public Rotation offset() {
 		return offset;

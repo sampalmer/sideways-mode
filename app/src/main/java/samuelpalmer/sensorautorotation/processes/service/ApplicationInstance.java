@@ -62,7 +62,7 @@ public class ApplicationInstance extends State {
 		
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
-		applicationStatusFactory = new ApplicationStatusFactory(calculator, screenRotationMonitor);
+		applicationStatusFactory = new ApplicationStatusFactory(calculator);
 		display = new ApplicationStatusDisplays();
 		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory, display);
 		

@@ -29,7 +29,6 @@ class ServiceNotification {
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
-			.setSmallIcon(R.drawable.app)
 			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
@@ -46,7 +45,9 @@ class ServiceNotification {
 	}
 
 	public Notification build(ApplicationStatus applicationStatus) {
-		builder.setProgress(0, 0, applicationStatus.waitingForSensor);
+		builder
+			.setSmallIcon(applicationStatus.user.iconId())
+			.setProgress(0, 0, applicationStatus.waitingForSensor);
 
 		int statusTextResource =
 			applicationStatus.waitingForSensor

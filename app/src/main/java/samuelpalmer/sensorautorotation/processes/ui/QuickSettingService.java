@@ -22,7 +22,6 @@ import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -150,7 +149,7 @@ public class QuickSettingService extends TileService {
 		tile.setState(status == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
 
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.quick_setting_off : R.drawable.app));
+		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.quick_setting_off : status.user.iconId()));
 
 		tile.setLabel(StringResource.get(status == null ? R.string.app_name : status.user.descriptionId()));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
