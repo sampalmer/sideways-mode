@@ -41,28 +41,33 @@ public class QuickSettingService extends TileService {
 		
 		if (persistentServiceState.hasValue())
 			ServiceSynchroniser.disableService();
-		else {
-			if (isLocked()) {
-				//Not using the dialog here since dialogs don't show on the lock screen.
-				startActivityAndCollapse(new Intent(this, DashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-			} else {
-				//We can't use an activity because the OS delays activity start when the home button is pressed.
-				
-				//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-				if (!DashboardDialogCoordinator.dialogExists()) {
-					Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
-						@Override
-						public void run() {
-						}
-					});
-					
-					tryShowDialog(dashboard);
-				} else {
-					DashboardDialogCoordinator.showDialog();
-					startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
+		else if (isLocked())
+			// On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
+			unlockAndRun(new Runnable() {
+				@Override
+				public void run() {
+					createOrShowDialog();
 				}
-				
-			}
+			});
+		else
+			createOrShowDialog();
+	}
+	
+	private void createOrShowDialog() {
+		//We can't use an activity because the OS delays activity start when the home button is pressed.
+		
+		//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
+		if (!DashboardDialogCoordinator.dialogExists()) {
+			Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
+				@Override
+				public void run() {
+				}
+			});
+			
+			tryShowDialog(dashboard);
+		} else {
+			DashboardDialogCoordinator.showDialog();
+			startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
 		}
 	}
 	
@@ -144,10 +149,20 @@ public class QuickSettingService extends TileService {
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
-
-		//STATE_UNAVAILABLE prevents the onClick() callback from firing, so using STATE_INACTIVE instead
-		tile.setState(status == null ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
-
+		
+		if (isSecure())
+			/*
+			 * On a secure lock screen, if we prompt the user to first unlock the device,
+			 * the OS doesn't close the notification drawer, resulting in the dashboard
+			 * being behind the notification drawer.
+			 * So it's simpler for the user to just have the quick setting unavailable here.
+			 */
+			tile.setState(Tile.STATE_UNAVAILABLE);
+		else if (status == null)
+			tile.setState(Tile.STATE_INACTIVE);
+		else
+			tile.setState(Tile.STATE_ACTIVE);
+		
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.quick_setting_off : status.user.iconId()));
 

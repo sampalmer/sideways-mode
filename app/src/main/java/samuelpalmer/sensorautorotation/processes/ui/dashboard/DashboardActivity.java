@@ -22,11 +22,7 @@ public class DashboardActivity extends DialogActivity {
 			DashboardDialogCoordinator.showDialog();
 			return;
 		}
-
-		Window window = getWindow();
-		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-
+		
 		dialog = DashboardDialogCoordinator.createDialog(this, new Runnable() {
 			@Override
 			public void run() {

@@ -165,7 +165,6 @@
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
 		          android:theme="@style/AppTheme.Dialog"
-		          android:showOnLockScreen="true"
 		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize|screenLayout"
 		          tools:ignore="UnusedAttribute">
