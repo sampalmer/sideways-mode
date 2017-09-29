@@ -20,7 +20,7 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class EnvironmentError {
@@ -29,7 +29,7 @@ public abstract class EnvironmentError {
 	private static final String JSON_KEY_TYPE = "type";
 	private static final String JSON_KEY_DETAILS = "details";
 	
-	private static final Settings.Setting<String> lastErrorSetting = ApplicationSettings.instance().lastErrorJson();
+	private static final Settings.Setting<String> lastErrorSetting = ServiceSettings.instance().lastErrorJson();
 	public static final EventRegistrar onChange = lastErrorSetting;
 	
 	public static EnvironmentError lastError() {

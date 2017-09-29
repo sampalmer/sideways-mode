@@ -136,15 +136,19 @@ class Migrations {
 				Setting<Boolean> allowUpsideDownScreen = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "allowUpsideDownScreen", true);
 				Setting<String> notificationPriority = applicationSettings.new Setting<String>(new StringSetting(), "notificationPriority", "NORMAL");
 				Setting<Boolean> enabled = applicationSettings.new Setting<Boolean>(new BooleanSetting(), "enabled", false);
+				Setting<String> lastErrorJson = applicationSettings.new Setting<String>(new StringSetting(), "lastError", null);
+				String lastErrorJsonValue = lastErrorJson.tryGet();
 				boolean wasEnabled = enabled.get();
 				allowUpsideDownScreen.remove();
 				notificationPriority.remove();
 				enabled.remove();
+				lastErrorJson.remove();
 				
 				ServiceSettings serviceSettings = ServiceSettings.instance();
-				
 				Setting<Boolean> autoRotate = serviceSettings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
 				Boolean autoRotateValue = autoRotate.tryGet();
+				if (lastErrorJsonValue != null)
+					serviceSettings.lastErrorJson().set(lastErrorJsonValue);
 				autoRotate.remove();
 				
 				Setting<Rotation> screenOrientationOffset = serviceSettings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);

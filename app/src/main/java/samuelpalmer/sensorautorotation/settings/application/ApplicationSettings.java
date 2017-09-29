@@ -43,12 +43,4 @@ public class ApplicationSettings extends ProcessIndependentSettings {
 	
 	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
 	
-	/**
-	 * Not sure if this really belongs here, but having it here allows us to listen for changes to
-	 * the error.
-	 *
-	 * Maybe this could be moved to a file in the app's cache directory?
-	 */
-	public Setting<String> lastErrorJson() { return new Setting<>(new StringSetting(), "lastError", null); }
-
 }
