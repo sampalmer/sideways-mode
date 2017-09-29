@@ -9,9 +9,10 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 
-public class StartUpCheck {
+public class AppCompatibilityCheck {
 	
 	/**
+	 * Determines whether the app will work on the current device.
 	 * Returns 0 on success. Otherwise returns explanation string resource.
 	 */
 	@StringRes

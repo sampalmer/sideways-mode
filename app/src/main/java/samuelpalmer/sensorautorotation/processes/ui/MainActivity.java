@@ -108,17 +108,6 @@ public class MainActivity extends UiActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		//Checking this after the activity starts in case the user wants to go out and back in again to retry the check in case the problem is intermittent
-		int startupErrorString = StartUpCheck.check();
-		if (startupErrorString != 0) {
-			//Not letting the user go any further since they shouldn't have installed the app
-			Log.w(MainActivity.class.getSimpleName(), StringResource.get(startupErrorString).toString());
-			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
-			
-			finish();
-			return;
-		}
 		
 		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
 		if (!lastVersionUserInstructedAbout.hasValue()) {
