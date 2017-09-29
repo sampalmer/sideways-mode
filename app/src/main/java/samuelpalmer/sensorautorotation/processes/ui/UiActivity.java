@@ -4,10 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
+import samuelpalmer.sensorautorotation.VersionInfo;
+import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
+import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
+	
+	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
 	
 	@Override
 	protected void onStart() {
@@ -21,6 +28,24 @@ public abstract class UiActivity extends AppCompatActivity {
 			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
 			
 			finish();
+			return;
+		}
+		
+		if (!(this instanceof InstructionsActivity)) {
+			Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
+			if (!lastVersionUserInstructedAbout.hasValue()) {
+				boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
+				
+				if (!tutorialComplete) {
+					Intent intent = ComponentType.create(InstructionsActivity.class)
+						.intent()
+						.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
+					startActivity(intent);
+					
+					finish();
+				} else
+					lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
+			}
 		}
 	}
 	

@@ -8,22 +8,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainActivity extends UiActivity {
-
-	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
+	
 	private static final String TAG_UNINSTALLER = "uninstaller";
 	
 	private DrawerLayout drawerLayout;
@@ -104,28 +98,7 @@ public class MainActivity extends UiActivity {
 		super.onPostCreate(savedInstanceState);
 		actionBarDrawerToggle.syncState();
 	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-		Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
-		if (!lastVersionUserInstructedAbout.hasValue()) {
-			boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
-			
-			if (!tutorialComplete) {
-				Intent intent = ComponentType.create(InstructionsActivity.class)
-					.intent()
-					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
-				startActivity(intent);
-				
-				finish();
-			}
-			else
-				lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
-		}
-	}
-
+	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
