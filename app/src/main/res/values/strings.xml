@@ -15,7 +15,6 @@
 
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
-	<string name="upgrade_v18">Locking the screen rotation is now supported. The user orientation screen has been removed since locking the screen rotation does the same thing. See the instructions in the main screen\'s menu for details.</string>
 	<string name="upgrade_v54">The option to hide the notification has been removed.</string>
 	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s."</string>
 

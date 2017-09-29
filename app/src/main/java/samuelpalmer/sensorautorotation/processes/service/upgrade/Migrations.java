@@ -21,13 +21,6 @@ class Migrations {
 	static SparseArray<Migration> buildMap() {
 		SparseArray<Migration> migrations = new SparseArray<>();
 
-		migrations.put(18, new Migration() {
-			@Override
-			public CharSequence getMessage() {
-				return StringResource.get(R.string.upgrade_v18);
-			}
-		});
-
 		migrations.put(25, new Migration() {
 			@Override
 			public void upgradeData() {

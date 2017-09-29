@@ -17,7 +17,6 @@
 
 	<string name="upgrade_summary">%1$s обновлен</string>
 	<string name="upgrade_notification_content">Нажмите для подробностей</string>
-	<string name="upgrade_v18">Теперь поддерживается блокировка поворота экрана. Ориентация экрана пользователя была удалена, так как блокировка поворота экрана делает тоже самое. Смотрите инструкцию в главном окне меню для деталей.</string>
 
 	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 	<string name="email_app_chooser_title">Отправить отзыв</string>
