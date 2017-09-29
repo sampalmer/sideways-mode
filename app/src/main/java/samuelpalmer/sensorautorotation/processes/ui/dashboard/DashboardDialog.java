@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 
 
 class DashboardDialog extends AlertDialog {

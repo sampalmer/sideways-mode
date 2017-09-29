@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +9,7 @@ import android.os.Build;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;

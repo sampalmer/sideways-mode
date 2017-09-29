@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
