@@ -15,6 +15,9 @@
 
 	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
+	<!-- For Crashlytics -->
+	<uses-permission android:name="android.permission.INTERNET" />
+
 	<uses-feature
 		android:name="android.hardware.sensor.accelerometer"
 		android:required="true" />
@@ -252,6 +255,12 @@
 		</service>
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
+
+		<meta-data
+			android:name="io.fabric.ApiKey"
+			android:value="${fabricApiKey}"
+			/>
+
 	</application>
 
 </manifest>

@@ -15,9 +15,12 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.fabric.sdk.android.Fabric;
 import samuelpalmer.common.ParcelableBinder;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
@@ -37,7 +40,12 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	private static final String KEY_BINDER = "binder";
 	
 	@Override
-	public boolean onCreate() { return true; }
+	public boolean onCreate() {
+		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
+		Fabric.with(getContext(), new Crashlytics());
+		
+		return true;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

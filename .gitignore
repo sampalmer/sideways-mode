@@ -13,3 +13,4 @@ Thumbs.db
 *.log
 *.iml
 *.apk
+/release.properties

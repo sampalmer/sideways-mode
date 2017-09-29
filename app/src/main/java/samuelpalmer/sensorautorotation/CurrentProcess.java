@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
@@ -48,7 +51,9 @@ public class CurrentProcess extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		
+		Fabric.with(this, new Crashlytics());
+		
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
 		
 		Log.i(TAG, "Process created");

@@ -8,6 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
+
 public class SharedPreferencesContentProvider extends ContentProvider {
 	
 	static final String KEY_RESULT = "result";
@@ -15,6 +19,8 @@ public class SharedPreferencesContentProvider extends ContentProvider {
 	
 	@Override
 	public boolean onCreate() {
+		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
+		Fabric.with(getContext(), new Crashlytics());
 		return true;
 	}
 
