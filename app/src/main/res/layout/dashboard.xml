@@ -1,6 +1,6 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
+	android:layout_width="wrap_content"
 	android:layout_height="wrap_content">
 
 	<ImageButton
@@ -15,9 +15,12 @@
 		/>
 
 	<RelativeLayout
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/dialog_content_margin">
+		android:padding="@dimen/dialog_content_margin"
+		android:layout_centerInParent="true"
+	    android:gravity="center"
+		>
 
 		<ProgressBar
 			android:layout_width="wrap_content"
@@ -25,7 +28,6 @@
 			android:id="@+id/dashboard_progress"
 			android:visibility="gone"
 		    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-			android:layout_centerInParent="true"
 			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionContents
@@ -45,7 +47,7 @@
 
 		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardEnabledContents
 			android:id="@+id/dashboard_enabled_contents"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 			/>
 
