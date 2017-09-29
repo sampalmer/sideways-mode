@@ -191,7 +191,7 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 
-			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist" />
+			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist_orb" />
 
 		</activity>
 

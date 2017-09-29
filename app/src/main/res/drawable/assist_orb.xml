@@ -4,15 +4,15 @@
 		android:state_enabled="true"
 		android:state_active="false"
 		android:state_focused="false"
-		android:drawable="@drawable/assist_normal" />
+		android:drawable="@drawable/assist_orb_normal" />
 	<item
 		android:state_enabled="true"
 		android:state_active="true"
 		android:state_focused="false"
-		android:drawable="@drawable/assist_activated" />
+		android:drawable="@drawable/assist_orb_activated" />
 	<item
 		android:state_enabled="true"
 		android:state_active="false"
 		android:state_focused="true"
-		android:drawable="@drawable/assist_activated" />
+		android:drawable="@drawable/assist_orb_activated" />
 </selector>
