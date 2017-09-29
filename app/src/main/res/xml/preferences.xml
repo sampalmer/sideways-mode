@@ -2,20 +2,7 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory android:title="@string/preference_controls" android:summary="controlling the screen orientation!">
-
-		<Preference
-			android:key="notifications"
-			android:persistent="false"
-			android:title="@string/preference_notifications"
-			android:icon="@drawable/preference_notifications" />
-
-		<Preference
-			android:key="allNotifications"
-			android:persistent="false"
-			android:title="@string/preference_all_notifications_title"
-			android:icon="@drawable/preference_visibility"
-			/>
+	<PreferenceCategory android:title="@string/preference_controls">
 
 		<Preference
 			android:key="quick_setting"

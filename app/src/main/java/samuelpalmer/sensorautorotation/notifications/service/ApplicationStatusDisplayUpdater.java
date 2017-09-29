@@ -9,9 +9,9 @@ public class ApplicationStatusDisplayUpdater extends State {
 	private final ApplicationStatusFactory statusGenerator;
 	private final ApplicationStatusDisplay display;
 
-	public ApplicationStatusDisplayUpdater(ApplicationStatusFactory statusGenerator, ApplicationStatusDisplay display) {
+	public ApplicationStatusDisplayUpdater(ApplicationStatusFactory statusGenerator) {
 		this.statusGenerator = statusGenerator;
-		this.display = display;
+		this.display = new ApplicationStatusDisplays();
 	}
 
 	@Override

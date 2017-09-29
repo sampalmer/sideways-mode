@@ -1,16 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.AppOpsManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,7 +12,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,29 +23,16 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
-import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
 	
-	private static final int REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED = 1;
-	
-	private NotificationManager notificationManager;
-	
-	private Preference notificationsPreference;
-	
 	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private Settings.Setting<Set<String>> forcedApps;
-	
-	private Preference allNotificationsPreference;
 	
 	//TODO: See if you can move this logic into an AutoSummaryListPreference
 	private void updateListPreferenceSummaries(PreferenceGroup group) {
@@ -72,18 +52,11 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		notificationManager = SystemServices.notificationManager();
-		
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
 		//TODO: Apply this to the other settings fragments as well
 		new SettingsInitialiser(ApplicationSettings.instance()).ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);
-		
-		notificationsPreference = findPreference("notifications");
-		notificationsPreference.setOnPreferenceClickListener(notificationsClicked);
-		if (Build.VERSION.SDK_INT < 26)
-			removePreference(notificationsPreference);
 		
 		Preference quickSettingPreference = findPreference("quick_setting");
 		quickSettingPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -177,111 +150,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 		
-		allNotificationsPreference = findPreference("allNotifications");
-		allNotificationsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (areNotificationsEnabled(getActivity()) == Boolean.FALSE)
-					openAppNotificationSystemSettings();
-				else
-					new AlertDialog.Builder(getActivity())
-						.setTitle(R.string.preference_all_notifications_title)
-						.setMessage(R.string.preference_all_notifications_explanation)
-						.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {}
-						})
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								openAppNotificationSystemSettings();
-							}
-						})
-						.show();
-				
-				return true;
-			}
-		});
-		
 		updateListPreferenceSummaries(getPreferenceScreen());
-		hideUnsupportedOptions();
-	}
-	
-	private void openAppNotificationSystemSettings() {
-		Intent appNotificationSettingsIntent = new Intent("android.settings.APP_NOTIFICATION_SETTINGS")
-			.putExtra("app_package", CurrentProcess.context().getPackageName())
-			.putExtra("app_uid", CurrentProcess.context().getApplicationInfo().uid);
-		
-		try {
-			startActivityForResult(appNotificationSettingsIntent, REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED);
-		} catch (Exception ex) {
-			Log.w(MainSettingsFragment.class.getSimpleName(), "Couldn't directly open app notification settings. Opening app settings instead.", ex);
-			
-			Intent appSettingsIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-				.setData(Uri.fromParts("package", CurrentProcess.context().getPackageName(), null));
-			
-			startActivity(appSettingsIntent);
-			//TODO: This activity might not exist either. Decide what to do.
-		}
-	}
-	
-	@SuppressLint("NewApi")
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED && areNotificationsEnabled(getActivity()) != Boolean.FALSE)
-			updateServiceNotification();
-	}
-	
-	public void updateServiceNotification() {
-		//The user might have just unblocked the app's notifications, so better add the status notification if needed.
-		ApplicationInstanceCommand updateNotificationCommand = new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION);
-		updateNotificationCommand.toastIfServiceDisabled = false;
-		
-		try {
-			ApplicationInstanceReceiver.getPendingIntent(updateNotificationCommand, PendingIntentIds.NOTIFICATION_SETTINGS_UPDATE_NOTIFICATION).send();
-		} catch (PendingIntent.CanceledException e) {
-			throw new RuntimeException(e); //Don't expect this to actually happen
-		}
-	}
-	
-	/**
-	 * Returns null if unknown
-	 */
-	public static Boolean areNotificationsEnabled(Context context) {
-		if (Build.VERSION.SDK_INT >= 24)
-			return SystemServices.notificationManager().areNotificationsEnabled();
-		else if (Build.VERSION.SDK_INT >= 18) {
-			// Before KitKat, NotificationManagerCompat.areNotificationsEnabled() is hard-coded to return true.
-			// It also returns true on error.
-			// However, the below code still worked on the Android 4.3 emulator.
-			
-			AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-			
-			try {
-				Method checkOpNoThrow = appOpsManager.getClass().getMethod(
-					"checkOpNoThrow",
-					Integer.TYPE,
-					Integer.TYPE,
-					String.class
-				);
-				
-				int opPostNotification = appOpsManager.getClass().getDeclaredField("OP_POST_NOTIFICATION").getInt(null);
-				int result = (int) checkOpNoThrow.invoke(appOpsManager, opPostNotification, context.getApplicationInfo().uid, context.getPackageName());
-				return result == AppOpsManager.MODE_ALLOWED;
-				
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException | NoSuchMethodException | ClassCastException e) {
-				Log.w(MainSettingsFragment.class.getSimpleName(), "Couldn't determine whether notifications are allowed for this app.", e);
-				return null; // This code is a hack, so we don't want the app to crash if it doesn't work.
-			}
-		}
-		else if (Build.VERSION.SDK_INT >= 16) {
-			return null; // Not aware of a way to do this on these Android versions.
-		}
-		else {
-			return true; // Notifications couldn't be blocked in Android ICS.
-		}
 	}
 	
 	private void removePreference(Preference preference) {
@@ -342,21 +211,9 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onStart() {
 		super.onStart();
 		
-		updateNotificationsSummary();
-		
 		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
 		forcedApps.subscribe(forcedAppsChanged);
 		updateForcedApps();
-		
-		Boolean areNotificationsEnabled = areNotificationsEnabled(getActivity());
-		
-		int text;
-		if (areNotificationsEnabled == null)
-			text = R.string.preference_all_notifications_summary;
-		else
-			text = areNotificationsEnabled ? R.string.on : R.string.off;
-		
-		allNotificationsPreference.setSummary(text);
 	}
 
 	@Override
@@ -365,44 +222,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 
 		forcedApps.unsubscribe(forcedAppsChanged);
 		accessibilityServiceEnabledStateMonitor.unsubscribe(forcedAppsChanged);
-	}
-	
-	private final Preference.OnPreferenceClickListener notificationsClicked = new Preference.OnPreferenceClickListener() {
-		@RequiresApi(api = Build.VERSION_CODES.O)
-		@Override
-		public boolean onPreferenceClick(Preference preference) {
-			//Notification configuration is built into Android O, so we'll just send the user to the relevant OS settings screen.
-			Intent intent;
-			
-			if (SystemServices.notificationManager().areNotificationsEnabled())
-				//Guide the user to block just the dashboard notification
-				intent = new Intent(android.provider.Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-					.putExtra(android.provider.Settings.EXTRA_CHANNEL_ID, NotificationChannels.ID_CONTROLS);
-			else
-				//Guide the user to unblock the app's notifications and toasts
-				intent = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-			
-			intent.putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-			
-			startActivityForResult(intent, REQUEST_CODE_ALL_NOTIFICATIONS_CHANGED);
-			
-			return true;
-		}
-	};
-	
-	private void updateNotificationsSummary() {
-		if (areNotificationsEnabled(CurrentProcess.context()) == Boolean.FALSE || dashboardNotificationHidden())
-			notificationsPreference.setSummary(R.string.off);
-		else
-			notificationsPreference.setSummary(R.string.on);
-	}
-	
-	private boolean dashboardNotificationHidden() {
-		return
-				Build.VERSION.SDK_INT >= 26
-				&&
-				notificationManager.getNotificationChannel(NotificationChannels.ID_CONTROLS).getImportance() == NotificationManager.IMPORTANCE_NONE
-			;
 	}
 	
 	private final EventHandler forcedAppsChanged = new EventHandler() {
@@ -421,13 +240,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 			forcedAppsPreference.setSummary(quantityString);
 		}
-	}
-	
-	private void hideUnsupportedOptions() {
-		if (Build.VERSION.SDK_INT >= 26)
-			removePreference(allNotificationsPreference);
-		else if (Build.VERSION.SDK_INT < 16)
-			removePreference(allNotificationsPreference);
 	}
 	
 }

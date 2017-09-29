@@ -120,17 +120,8 @@ class Migrations {
 			public CharSequence getMessage() {
 				boolean notificationWasHidden = !showNotificationSetting().get() && Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */;
 				
-				if (notificationWasHidden) {
-					StringBuilder message = new StringBuilder(StringResource.get(R.string.upgrade_v54));
-					
-					if (Build.VERSION.SDK_INT >= 16) {
-						// Here we can instruct the user to block the notification.
-						message.append(' ');
-						message.append(StringResource.get(R.string.upgrade_v54_workaround));
-					}
-					
-					return message;
-				}
+				if (notificationWasHidden)
+					return StringResource.get(R.string.upgrade_v54);
 				else
 					// No need to bother the user about this if they weren't using the feature.
 					return null;

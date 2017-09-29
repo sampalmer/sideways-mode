@@ -36,7 +36,6 @@ public class ApplicationInstance extends State {
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementManager orientationEnforcementManager;
 	ActivityMonitor activityMonitor;
-	private ApplicationStatusDisplays display;
 	private ScreenOrientationUpdater screenUpdater;
 	
 	public ApplicationInstance() {
@@ -63,8 +62,7 @@ public class ApplicationInstance extends State {
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
 		applicationStatusFactory = new ApplicationStatusFactory(calculator);
-		display = new ApplicationStatusDisplays();
-		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory, display);
+		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory);
 		
 		serviceRevivalManager = new ServiceRevivalManager();
 		
@@ -102,9 +100,6 @@ public class ApplicationInstance extends State {
 		switch (command.action) {
 			case ApplicationInstanceCommand.ACTION_CHANGE_SIDE:
 				calculator.changeSide();
-				break;
-			case ApplicationInstanceCommand.ACTION_UPDATE_NOTIFICATION:
-				display.update(applicationStatusDisplayUpdater.getLastStatus());
 				break;
 			case ApplicationInstanceCommand.ACTION_TURN_OFF:
 				ServiceSynchroniser.disableService();

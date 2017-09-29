@@ -25,8 +25,6 @@
 	<string name="settings">Настройки</string>
 
 	<!-- Common -->
-	<string name="on">Включить</string>
-	<string name="off">Выключить</string>
 	<string name="back">Назад</string>
 	<string name="next">Далее</string>
 	<string name="skip">Пропустить</string>
@@ -48,10 +46,6 @@
 	<string name="preference_assist">Помощник</string>
 
 	<string name="preference_small_app">Маленькое приложение</string>
-
-	<string name="preference_notifications">Заметки</string>
-
-	<string name="preference_all_notifications_title">Все заметки</string>
 
 	<string name="preference_forced_apps_title">Переопределить приложение</string>
 

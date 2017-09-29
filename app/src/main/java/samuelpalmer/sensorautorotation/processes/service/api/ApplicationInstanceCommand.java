@@ -10,18 +10,15 @@ import samuelpalmer.sensorautorotation.ServiceController;
 public class ApplicationInstanceCommand {
 
 	public static final String ACTION_CHANGE_SIDE = "change_side";
-	public static final String ACTION_UPDATE_NOTIFICATION = "update_notification";
 	public static final String ACTION_TURN_OFF = "turn_off";
 	
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_CHANGE_SIDE,
-			ACTION_UPDATE_NOTIFICATION,
 			ACTION_TURN_OFF
 	));
 	
 	public final String action;
-	public boolean toastIfServiceDisabled = true;
-
+	
 	public ApplicationInstanceCommand(String action) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
