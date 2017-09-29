@@ -1,10 +1,14 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 
 
+/*
+ * This must inherit from the plain AlertDialog rather than the support library one
+ * because otherwise it crashes when inflated into the quick settings dialog.
+ */
 class DashboardDialog extends AlertDialog {
 
 	private final Listener onStart;
