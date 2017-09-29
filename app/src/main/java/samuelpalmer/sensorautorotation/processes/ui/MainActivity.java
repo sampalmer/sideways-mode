@@ -15,8 +15,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
 
-public class MainActivity extends UiActivity {
+public class MainActivity extends PreferencesActivity /* So error messages are displayed here */ {
 	
 	private static final String TAG_UNINSTALLER = "uninstaller";
 	
