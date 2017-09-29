@@ -1,8 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
+def releasePropsFile = rootProject.file("release.properties")
 def releaseProps = new Properties()
-releaseProps.load(new FileInputStream(rootProject.file("release.properties")))
+if (releasePropsFile.exists())
+	releaseProps.load(new FileInputStream(releasePropsFile))
+else
+	releaseProps.fabricApiKey = '' // So debug build don't fail
 
 android {
 	compileSdkVersion 26
