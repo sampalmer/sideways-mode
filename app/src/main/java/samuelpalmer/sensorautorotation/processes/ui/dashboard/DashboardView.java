@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +22,7 @@ import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
-import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public class DashboardView extends FrameLayout {
@@ -31,8 +30,6 @@ public class DashboardView extends FrameLayout {
 	private final ApplicationStatusContentProvider.Client serviceClient;
 	private final Handler handler;
 	private final Settings.Setting<UserSide> servicePersistentState;
-
-	private final boolean showSettings;
 	
 	private final DashboardPermissionContents permissionSection;
 	private DashboardDisabledContents disabledSection;
@@ -44,18 +41,7 @@ public class DashboardView extends FrameLayout {
 
 	public DashboardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
-		TypedArray a = context.getTheme().obtainStyledAttributes(
-				attrs,
-				R.styleable.DashboardView,
-				0, 0);
-
-		try {
-			showSettings = a.getBoolean(R.styleable.DashboardView_showSettings, true);
-		} finally {
-			a.recycle();
-		}
-
+		
 		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
 		handler = new Handler(Looper.getMainLooper());
 		servicePersistentState = ServiceSettings.instance().persistentState();
@@ -64,18 +50,15 @@ public class DashboardView extends FrameLayout {
 		addView(view);
 
 		ImageButton settingsButton = findViewById(R.id.dashboard_settings);
-		if (showSettings)
-			settingsButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getContext().startActivity(new Intent(getContext(), MainActivity.class));
+		settingsButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getContext().startActivity(new Intent(getContext(), MainSettingsActivity.class));
 
-					if (DashboardDialogCoordinator.dialogExists())
-						DashboardDialogCoordinator.dismissDialog();
-				}
-			});
-		else
-			settingsButton.setVisibility(View.GONE);
+				if (DashboardDialogCoordinator.dialogExists())
+					DashboardDialogCoordinator.dismissDialog();
+			}
+		});
 
 		permissionSection = findViewById(R.id.dashboard_permission);
 		disabledSection = findViewById(R.id.dashboard_disabled_contents);

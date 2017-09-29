@@ -21,7 +21,7 @@ import android.widget.Button;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class InstructionsActivity extends UiActivity {
@@ -39,13 +39,13 @@ public class InstructionsActivity extends UiActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_instructions);
 		
-		mPager = (ViewPager) findViewById(R.id.pager);
+		mPager = findViewById(R.id.pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
 		
-		mNextButton = (Button) findViewById(R.id.next_button);
-		mPrevButton = (Button) findViewById(R.id.prev_button);
-		mFinishButton = (Button) findViewById(R.id.finish_button);
+		mNextButton = findViewById(R.id.next_button);
+		mPrevButton = findViewById(R.id.prev_button);
+		mFinishButton = findViewById(R.id.finish_button);
 		
 		mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
@@ -144,9 +144,9 @@ public class InstructionsActivity extends UiActivity {
 	 */
 	private void completeInstructions() {
 		if (isFirstRun()) {
-			Intent intent = ComponentType.create(MainActivity.class)
+			Intent intent = ComponentType.create(MainSettingsActivity.class)
 				.intent()
-				.putExtra(MainActivity.EXTRA_TUTORIAL_COMPLETE, true);
+				.putExtra(MainSettingsActivity.EXTRA_TUTORIAL_COMPLETE, true);
 			
 			startActivity(intent);
 		}

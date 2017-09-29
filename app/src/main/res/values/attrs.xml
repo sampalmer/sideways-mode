@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<declare-styleable name="DashboardView">
-		<attr name="showSettings" format="boolean" />
-	</declare-styleable>
-
+	
 	<!-- Copied from https://github.com/yoog568/VerticalTextView/blob/master/res/values/attr.xml -->
 	<declare-styleable name="verticaltextview">
 		<attr name="direction">

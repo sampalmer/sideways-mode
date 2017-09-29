@@ -9,11 +9,6 @@
 			android:icon="@drawable/menu_home"
 			/>
 		<item
-			android:id="@+id/action_settings"
-			android:title="@string/settings"
-			android:icon="@drawable/menu_settings"
-			/>
-		<item
 			android:id="@+id/action_feedback"
 			android:title="@string/action_feedback"
 			android:icon="@drawable/menu_feedback"

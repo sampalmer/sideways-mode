@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.MainActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 class ServiceNotification {
 
@@ -29,7 +29,7 @@ class ServiceNotification {
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
-			.setContentIntent(ComponentType.create(MainActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
+			.setContentIntent(ComponentType.create(MainSettingsActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)

@@ -46,40 +46,29 @@
 		<activity
 			android:name=".processes.ui.instructions.InstructionsActivity"
 			android:label="@string/instructions_heading"
-			android:parentActivityName=".processes.ui.MainActivity"
+			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.MainActivity" />
+				android:value=".processes.ui.preferences.MainSettingsActivity" />
 
-		</activity>
-
-		<activity
-			android:name=".processes.ui.MainActivity"
-			android:launchMode="singleTask"
-			>
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
-			</intent-filter>
 		</activity>
 
 		<activity
 			android:name=".processes.ui.preferences.MainSettingsActivity"
-			android:parentActivityName=".processes.ui.MainActivity"
-			android:label="@string/settings"
+			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.MainActivity" />
 
 			<intent-filter>
 				<action android:name="android.intent.action.APPLICATION_PREFERENCES" />
 				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
 			</intent-filter>
 
 		</activity>
@@ -91,7 +80,7 @@
 
 		<activity
 			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
-			android:parentActivityName=".processes.ui.MainActivity"
+			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
 			android:label="@string/preference_forced_apps_title"
 			android:launchMode="singleTask"
 			tools:ignore="UnusedAttribute">
@@ -99,7 +88,7 @@
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.MainActivity" />
+				android:value=".processes.ui.preferences.MainSettingsActivity" />
 
 		</activity>
 
@@ -120,7 +109,7 @@
 
 		<activity
 			android:name=".processes.ui.feedback.SendFeedbackActivity"
-			android:parentActivityName=".processes.ui.MainActivity"
+			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
 			android:label="@string/action_feedback"
 			android:theme="@style/AppTheme.Navigation"
 			tools:ignore="UnusedAttribute">
@@ -128,7 +117,7 @@
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="samuelpalmer.sensorautorotation.processes.ui.MainActivity"/>
+				android:value="samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity"/>
 
 		</activity>
 

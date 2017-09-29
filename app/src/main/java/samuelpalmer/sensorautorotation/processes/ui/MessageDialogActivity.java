@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 public class MessageDialogActivity extends DialogActivity {
 	private static final String INTENT_EXTRA_TITLE = "title";
@@ -18,7 +19,7 @@ public class MessageDialogActivity extends DialogActivity {
 	private static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message, int requestCode) {
-		Intent mainActivityIntent = ComponentType.create(MainActivity.class).intent();
+		Intent mainActivityIntent = ComponentType.create(MainSettingsActivity.class).intent();
 
 		ComponentType componentType = ComponentType.create(MessageDialogActivity.class);
 		Intent intent = componentType.intent()

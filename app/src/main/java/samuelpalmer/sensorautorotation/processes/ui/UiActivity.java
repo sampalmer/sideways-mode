@@ -24,7 +24,7 @@ public abstract class UiActivity extends AppCompatActivity {
 		int startupErrorString = AppCompatibilityCheck.check();
 		if (startupErrorString != 0) {
 			//Not letting the user go any further since they shouldn't have installed the app
-			Log.w(MainActivity.class.getSimpleName(), StringResource.get(startupErrorString).toString());
+			Log.w(getClass().getSimpleName(), StringResource.get(startupErrorString).toString());
 			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
 			
 			finish();
