@@ -27,7 +27,6 @@ import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.WindowOrientationListener;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class DashboardDisabledContents extends LinearLayout {
 	

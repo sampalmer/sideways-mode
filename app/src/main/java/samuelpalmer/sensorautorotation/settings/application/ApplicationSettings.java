@@ -7,7 +7,6 @@ import java.util.Set;
 
 import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.StringSetSetting;
-import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 public class ApplicationSettings extends ProcessIndependentSettings {

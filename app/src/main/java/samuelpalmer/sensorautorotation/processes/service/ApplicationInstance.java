@@ -8,7 +8,6 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplays;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
 import samuelpalmer.sensorautorotation.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.orientationenforcement.OrientationEnforcementManager;

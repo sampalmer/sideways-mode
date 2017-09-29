@@ -26,7 +26,6 @@ import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class ApplicationStatusContentProvider extends ContentProvider {
 	

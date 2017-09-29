@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Build.VERSION;
 import android.widget.RemoteViews;
 
-import samuelpalmer.common.R;
+import samuelpalmer.sensorautorotation.R;
 
 public class NotificationButtons {
 
@@ -19,7 +19,7 @@ public class NotificationButtons {
 	public NotificationButtons(Context context, int layoutResource, RemoteViews originalNotification, int buttonColourArgb) {
 		content = new RemoteViews(context.getPackageName(), layoutResource);
 		content.removeAllViews(R.id.notification_content);
-		content.addView(samuelpalmer.common.R.id.notification_content, originalNotification);
+		content.addView(R.id.notification_content, originalNotification);
 
 		this.buttonColourArgb = buttonColourArgb;
 	}
