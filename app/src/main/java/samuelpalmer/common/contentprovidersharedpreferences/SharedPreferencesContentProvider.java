@@ -8,9 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
+import samuelpalmer.sensorautorotation.CrashReportingConfig;
 
 public class SharedPreferencesContentProvider extends ContentProvider {
 	
@@ -20,7 +18,7 @@ public class SharedPreferencesContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
-		Fabric.with(getContext(), new Crashlytics());
+		CrashReportingConfig.init(getContext());
 		return true;
 	}
 

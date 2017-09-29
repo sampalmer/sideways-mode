@@ -52,7 +52,7 @@ public class CurrentProcess extends Application {
 	public void onCreate() {
 		super.onCreate();
 		
-		Fabric.with(this, new Crashlytics());
+		CrashReportingConfig.init(this);
 		
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
 		

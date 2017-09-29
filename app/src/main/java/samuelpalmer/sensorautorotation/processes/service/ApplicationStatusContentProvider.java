@@ -15,13 +15,11 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.fabric.sdk.android.Fabric;
 import samuelpalmer.common.ParcelableBinder;
+import samuelpalmer.sensorautorotation.CrashReportingConfig;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -42,7 +40,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
-		Fabric.with(getContext(), new Crashlytics());
+		CrashReportingConfig.init(getContext());
 		
 		return true;
 	}

@@ -30,6 +30,10 @@ android {
 		manifestPlaceholders = [fabricApiKey: releaseProps.fabricApiKey]
 	}
 	buildTypes {
+		debug {
+			// Disable fabric build ID generation for debug builds
+			ext.enableCrashlytics = false
+		}
 		release {
 			minifyEnabled true
 			shrinkResources true
