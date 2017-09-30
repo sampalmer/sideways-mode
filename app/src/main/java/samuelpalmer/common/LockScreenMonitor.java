@@ -46,7 +46,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	@Override
 	protected void subscribeToAdaptee() {
 		for (String action : actions())
-			context.registerReceiver(notificationUpdateReceiver, new IntentFilter(action));
+			context.registerReceiver(anythingChangedReceiver, new IntentFilter(action));
 		monitoring = true;
 	}
 
@@ -54,7 +54,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	protected void unsubscribeFromAdaptee() {
 		monitoring = false;
 		isOnLockScreen = null;
-		context.unregisterReceiver(notificationUpdateReceiver);
+		context.unregisterReceiver(anythingChangedReceiver);
 	}
 
 	private Iterable<String> actions() {
@@ -73,7 +73,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 		return result;
 	}
 
-	private final BroadcastReceiver notificationUpdateReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver anythingChangedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			boolean newValue = poll();
