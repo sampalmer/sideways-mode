@@ -21,12 +21,13 @@ import android.widget.Button;
 
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 
 public class InstructionsActivity extends UiActivity {
 	
 	public static final String EXTRA_FIRST_RUN = "first_run";
+	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
 	
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
@@ -144,9 +145,9 @@ public class InstructionsActivity extends UiActivity {
 	 */
 	private void completeInstructions() {
 		if (isFirstRun()) {
-			Intent intent = ComponentType.create(MainSettingsActivity.class)
+			Intent intent = ComponentType.create(DashboardActivity.class)
 				.intent()
-				.putExtra(MainSettingsActivity.EXTRA_TUTORIAL_COMPLETE, true);
+				.putExtra(EXTRA_TUTORIAL_COMPLETE, true);
 			
 			startActivity(intent);
 		}

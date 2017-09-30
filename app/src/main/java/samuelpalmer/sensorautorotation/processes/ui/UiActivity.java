@@ -14,8 +14,6 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
 	
-	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
-	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -34,7 +32,7 @@ public abstract class UiActivity extends AppCompatActivity {
 		if (!(this instanceof InstructionsActivity)) {
 			Settings.Setting<Integer> lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
 			if (!lastVersionUserInstructedAbout.hasValue()) {
-				boolean tutorialComplete = getIntent().getBooleanExtra(EXTRA_TUTORIAL_COMPLETE, false);
+				boolean tutorialComplete = getIntent().getBooleanExtra(InstructionsActivity.EXTRA_TUTORIAL_COMPLETE, false);
 				
 				if (!tutorialComplete) {
 					Intent intent = ComponentType.create(InstructionsActivity.class)
