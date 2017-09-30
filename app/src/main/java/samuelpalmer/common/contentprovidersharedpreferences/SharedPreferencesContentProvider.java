@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import samuelpalmer.sensorautorotation.CrashReportingConfig;
-
 public class SharedPreferencesContentProvider extends ContentProvider {
 	
 	static final String KEY_RESULT = "result";
@@ -17,8 +15,6 @@ public class SharedPreferencesContentProvider extends ContentProvider {
 	
 	@Override
 	public boolean onCreate() {
-		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
-		CrashReportingConfig.init(getContext());
 		return true;
 	}
 

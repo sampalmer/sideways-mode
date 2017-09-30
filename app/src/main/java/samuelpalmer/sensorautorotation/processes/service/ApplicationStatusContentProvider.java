@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import samuelpalmer.common.ParcelableBinder;
-import samuelpalmer.sensorautorotation.CrashReportingConfig;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
@@ -38,12 +37,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 	private static final String KEY_BINDER = "binder";
 	
 	@Override
-	public boolean onCreate() {
-		// This code is run prior to Application.onCreate, so I'm adding Crashlytics here as well
-		CrashReportingConfig.init(getContext());
-		
-		return true;
-	}
+	public boolean onCreate() { return true; }
 
 	@SuppressWarnings("unchecked")
 	@Override

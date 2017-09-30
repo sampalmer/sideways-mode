@@ -1,12 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-
-def releasePropsFile = rootProject.file("release.properties")
-def releaseProps = new Properties()
-if (releasePropsFile.exists())
-	releaseProps.load(new FileInputStream(releasePropsFile))
-else
-	releaseProps.fabricApiKey = '' // So debug build don't fail
 
 android {
 	compileSdkVersion 26
@@ -30,14 +22,8 @@ android {
 		 */
 		resConfigs "en", "ru"
 		vectorDrawables.useSupportLibrary = true
-
-		manifestPlaceholders = [fabricApiKey: releaseProps.fabricApiKey]
 	}
 	buildTypes {
-		debug {
-			// Disable fabric build ID generation for debug builds
-			ext.enableCrashlytics = false
-		}
 		release {
 			minifyEnabled true
 			shrinkResources true
@@ -49,9 +35,6 @@ android {
 repositories {
 	flatDir {
 		dirs 'libs'
-	}
-	maven {
-		url 'https://maven.fabric.io/public'
 	}
 	maven {
 		url 'https://maven.google.com'
@@ -72,7 +55,4 @@ dependencies {
 	compile 'com.android.support:cardview-v7:26.0.0'
 
 	compile 'com.booking:rtlviewpager:1.0.1'
-	compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-		transitive = true;
-	}
 }
