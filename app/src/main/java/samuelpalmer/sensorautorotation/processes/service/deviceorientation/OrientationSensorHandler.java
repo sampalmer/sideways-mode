@@ -13,10 +13,11 @@ import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 
 public class OrientationSensorHandler extends State {
@@ -28,7 +29,7 @@ public class OrientationSensorHandler extends State {
 	private Integer oldBias;
 
 	public static boolean canDetectOrientation() {
-		SensorManager sensorManager = SystemServices.sensorManager();
+		SensorManager sensorManager = (SensorManager) CurrentProcess.context().getSystemService(SENSOR_SERVICE);
 		ArrayList<Sensor> supportedSensors = WindowOrientationListener.getSupportedSensors(sensorManager);
 		return !supportedSensors.isEmpty();
 	}

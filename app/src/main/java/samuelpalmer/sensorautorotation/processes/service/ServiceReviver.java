@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.os.SystemClock;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.SystemServices;
+
+import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Useful for when the service is killed due to out-of-memory conditions
@@ -19,7 +21,7 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void start() {
-		SystemServices.alarmManager().setInexactRepeating(
+		((AlarmManager) CurrentProcess.context().getSystemService(ALARM_SERVICE)).setInexactRepeating(
 				AlarmManager.ELAPSED_REALTIME,
 				firstTriggerTimeInMilliseconds(),
 				PERIOD_MILLISECONDS,
@@ -38,7 +40,7 @@ public class ServiceReviver extends State {
 
 	@Override
 	protected void stop() {
-		SystemServices.alarmManager().cancel(intent());
+		((AlarmManager) CurrentProcess.context().getSystemService(ALARM_SERVICE)).cancel(intent());
 	}
 
 }

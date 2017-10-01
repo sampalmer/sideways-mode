@@ -11,7 +11,8 @@ import java.util.Set;
 
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.SystemServices;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Keeps track of all running instances of {@link RotationService}.
@@ -69,7 +70,7 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 	private String makeServiceAlreadyRunningError(RotationService service) {
 		ComponentName rotationServiceComponent = new ComponentName(CurrentProcess.context(), RotationService.class);
 		
-		List<ActivityManager.RunningServiceInfo> runningServices = SystemServices.activityManager().getRunningServices(Integer.MAX_VALUE);
+		List<ActivityManager.RunningServiceInfo> runningServices = ((ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE);
 		int serviceCount = 0;
 		StringBuilder runningServiceDescription = new StringBuilder("Running instances:\n");
 		

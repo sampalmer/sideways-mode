@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.SystemServices;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
@@ -37,7 +37,7 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 
 	@Override
 	protected ArrayList<InstalledApp> doInBackground(Void... params) {
-		PackageManager packageManager = SystemServices.packageManager();
+		PackageManager packageManager = CurrentProcess.context().getPackageManager();
 
 		if (isCancelled())
 			return null;

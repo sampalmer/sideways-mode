@@ -1,11 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.view.WindowManager;
+
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
@@ -17,6 +18,8 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * I'm using a global instead of Android's binding mechanism.
@@ -49,7 +52,7 @@ public class ApplicationInstance extends State {
 		EnvironmentError.clear();
 		
 		SystemSettings systemSettings = new SystemSettings();
-		Screen screen = new Screen(SystemServices.windowManager());
+		Screen screen = new Screen((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE));
 		
 		applicationState = new ApplicationState();
 		

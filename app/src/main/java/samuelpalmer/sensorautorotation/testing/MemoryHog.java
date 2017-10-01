@@ -1,6 +1,10 @@
 package samuelpalmer.sensorautorotation.testing;
 
-import samuelpalmer.sensorautorotation.SystemServices;
+import android.app.ActivityManager;
+
+import samuelpalmer.sensorautorotation.CurrentProcess;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Useful for testing behaviour when the OS is low on RAM.
@@ -15,7 +19,7 @@ public class MemoryHog {
 	private final long[] data;
 
 	public MemoryHog() {
-		int maxMemoryMegabytes = SystemServices.activityManager().getLargeMemoryClass();
+		int maxMemoryMegabytes = ((ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE)).getLargeMemoryClass();
 		int byteCount = fromMegabytes(maxMemoryMegabytes - 10);
 		int longCount = byteCount / 8;
 		data = new long[longCount];

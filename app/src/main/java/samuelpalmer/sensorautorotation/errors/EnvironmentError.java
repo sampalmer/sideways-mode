@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.errors;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -13,14 +14,16 @@ import org.json.JSONObject;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class EnvironmentError {
@@ -104,14 +107,14 @@ public abstract class EnvironmentError {
 			builder.setVibrate(new long[]{});
 
 		Notification notification = builder.build();
-
-		SystemServices.notificationManager().notify(NotificationIds.ERROR, notification);
+		
+		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
 	}
 
 	public abstract PendingIntent showError();
 
 	public static void clear() {
-		SystemServices.notificationManager().cancel(NotificationIds.ERROR);
+		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
 		lastErrorSetting.remove();
 	}
 	

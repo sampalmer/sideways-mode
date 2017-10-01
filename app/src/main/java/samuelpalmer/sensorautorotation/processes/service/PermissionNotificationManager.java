@@ -15,7 +15,6 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
@@ -24,6 +23,8 @@ import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationE
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 //Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272). Hopefully this notification will be sufficient for handling this.
 public class PermissionNotificationManager extends State {
@@ -34,7 +35,7 @@ public class PermissionNotificationManager extends State {
 	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
 
 	public PermissionNotificationManager() {
-		notificationManager = SystemServices.notificationManager();
+		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
 		
 		serviceState = ServiceSettings.instance().persistentState();
 		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();

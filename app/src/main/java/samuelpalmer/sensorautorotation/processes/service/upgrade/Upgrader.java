@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -12,12 +13,13 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class Upgrader {
 
@@ -27,7 +29,7 @@ public class Upgrader {
 
 	public Upgrader() {
 		try {
-			newAppVersion = SystemServices.packageManager().getPackageInfo(CurrentProcess.context().getPackageName(), 0).versionCode;
+			newAppVersion = CurrentProcess.context().getPackageManager().getPackageInfo(CurrentProcess.context().getPackageName(), 0).versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -82,8 +84,8 @@ public class Upgrader {
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 				.setChannelId(NotificationChannels.ID_UPGRADES)
 				.build();
-
-		SystemServices.notificationManager().notify(NotificationIds.UPGRADE, notification);
+		
+		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
 	}
 
 	private PendingIntent makeDialogIntent(String message) {

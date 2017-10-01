@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
+import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.util.Log;
 
@@ -7,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 class CurrentProcessNameDetector {
 	public static String currentProcessName() {
@@ -65,8 +68,8 @@ class CurrentProcessNameDetector {
 
 	private static String getNameFromActivityManager() {
 		int pid = getPid();
-
-		for (RunningAppProcessInfo process : SystemServices.activityManager().getRunningAppProcesses())
+		
+		for (RunningAppProcessInfo process :  ((ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE)).getRunningAppProcesses())
 			if (process.pid == pid) {
 				String result = process.processName;
 				if (result == null)

@@ -23,8 +23,8 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.SystemServices;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -77,7 +77,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		if (Build.VERSION.SDK_INT >= 23) {
 			final Intent assistSettingsIntent = new Intent(android.provider.Settings.ACTION_VOICE_INPUT_SETTINGS);
 			
-			if (IntentExtensions.activityDoesntExist(assistSettingsIntent, SystemServices.packageManager()))
+			if (IntentExtensions.activityDoesntExist(assistSettingsIntent, CurrentProcess.context().getPackageManager()))
 				removePreference(assistPreference);
 			else
 				assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

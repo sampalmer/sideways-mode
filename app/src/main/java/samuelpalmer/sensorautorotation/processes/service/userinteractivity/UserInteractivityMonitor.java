@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.PowerManager;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.StateMonitor;
-import samuelpalmer.sensorautorotation.SystemServices;
+
+import static android.content.Context.POWER_SERVICE;
 
 public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 
@@ -36,10 +38,10 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 	private boolean isInteractive() {
 
 		if (Build.VERSION.SDK_INT >= 20)
-			return SystemServices.powerManager().isInteractive();
+			return ((PowerManager) CurrentProcess.context().getSystemService(POWER_SERVICE)).isInteractive();
 		else
 			//noinspection deprecation
-			return SystemServices.powerManager().isScreenOn();
+			return ((PowerManager) CurrentProcess.context().getSystemService(POWER_SERVICE)).isScreenOn();
 	}
 
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {

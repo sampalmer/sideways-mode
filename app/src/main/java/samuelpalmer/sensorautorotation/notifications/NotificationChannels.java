@@ -10,9 +10,11 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.SystemServices;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public abstract class NotificationChannels {
 
@@ -64,7 +66,7 @@ public abstract class NotificationChannels {
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
 		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
-		SystemServices.notificationManager().createNotificationChannels(channels);
+		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).createNotificationChannels(channels);
 	}
 
 }
