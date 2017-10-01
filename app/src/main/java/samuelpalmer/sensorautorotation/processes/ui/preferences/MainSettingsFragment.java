@@ -145,6 +145,10 @@ public class MainSettingsFragment extends PreferenceFragment {
 		if (!supportsSmallApp())
 			removePreference(smallAppPreference);
 		
+		PreferenceGroup controlsSection = (PreferenceGroup) findPreference("controls");
+		if (controlsSection.getPreferenceCount() == 0)
+			removePreference(controlsSection);
+		
 		//TODO: move all of this preference summary updating stuff into its own class
 		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());

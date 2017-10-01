@@ -2,7 +2,11 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory android:title="@string/preference_controls">
+	<PreferenceCategory
+		android:key="controls"
+		android:persistent="false"
+		android:title="@string/preference_controls"
+	>
 
 		<Preference
 			android:key="quick_setting"
