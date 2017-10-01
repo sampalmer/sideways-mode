@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -8,7 +9,6 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -41,8 +41,16 @@ public abstract class UiActivity extends AppCompatActivity {
 					startActivity(intent);
 					
 					finish();
-				} else
-					lastVersionUserInstructedAbout.set(VersionInfo.installedVersionCode());
+				} else {
+					int result;
+					try {
+						result = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+					} catch (PackageManager.NameNotFoundException e) {
+						throw new RuntimeException(e);
+					}
+					
+					lastVersionUserInstructedAbout.set(result);
+				}
 			}
 		}
 	}

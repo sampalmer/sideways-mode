@@ -2,16 +2,17 @@ package samuelpalmer.sensorautorotation.processes.service.upgrade;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.util.SparseArray;
 
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.SystemServices;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -25,7 +26,12 @@ public class Upgrader {
 	private final Integer lastAppVersion;
 
 	public Upgrader() {
-		newAppVersion = VersionInfo.installedVersionCode();
+		try {
+			newAppVersion = SystemServices.packageManager().getPackageInfo(CurrentProcess.context().getPackageName(), 0).versionCode;
+		} catch (PackageManager.NameNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		
 		lastVersionUserInstructedAbout = ApplicationSettings.instance().lastVersionUserInstructedAbout();
 		lastAppVersion = lastVersionUserInstructedAbout.tryGet();
 	}
