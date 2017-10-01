@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 public class UpgradeReceiver extends BroadcastReceiver {
 
@@ -15,6 +14,8 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
 
 		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction()))
+			// When Android updates an app, it kills the app's process and doesn't restart them.
+			// So we need to restart the app ourselves.
 			ServiceSynchroniser.updateFromSettings();
 		else
 			Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
