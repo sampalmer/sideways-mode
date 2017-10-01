@@ -9,8 +9,6 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.StateMonitor;
-import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivity;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
@@ -19,6 +17,7 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
+	private static UserInteractivityMonitor userInteractivityMonitor;
 	
 	public static void init() {
 		if (initialised)
@@ -27,15 +26,18 @@ public abstract class ApplicationInstanceManager {
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
 		ServiceSettings.instance().persistentState().subscribe(updateApplicationState);
 		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
-		new UserInteractivityMonitor(userInteractivityListener).ensureStarted();
+		
+		userInteractivityMonitor = new UserInteractivityMonitor();
+		userInteractivityMonitor.subscribe(userInteractivityListener);
+		userInteractivityListener.update();
 		
 		initialised = true;
 	}
 	
-	private static final StateMonitor.Listener<UserInteractivity> userInteractivityListener = new StateMonitor.Listener<UserInteractivity>() {
+	private static final EventHandler userInteractivityListener = new EventHandler() {
 		@Override
-		public void stateChanged(UserInteractivity state) {
-			if (!state.active()) {
+		public void update() {
+			if (!userInteractivityMonitor.get().active()) {
 				ServiceSynchroniser.disableService();
 			}
 		}

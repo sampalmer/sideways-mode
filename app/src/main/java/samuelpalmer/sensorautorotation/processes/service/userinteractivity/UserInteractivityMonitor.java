@@ -7,34 +7,34 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.PowerManager;
 
+import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.StateMonitor;
 
 import static android.content.Context.POWER_SERVICE;
 
-public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
-
-	public UserInteractivityMonitor(Listener<UserInteractivity> listener) {
-		super(listener);
-	}
-
+public class UserInteractivityMonitor extends EventRegistrarAdaptor {
+	
+	private UserInteractivity last;
+	
 	@Override
-	protected void startInternal() {
+	protected void subscribeToAdaptee() {
 		CurrentProcess.context().registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 		CurrentProcess.context().registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
-
+	
 	@Override
-	protected void stop() {
+	protected void unsubscribeFromAdaptee() {
 		CurrentProcess.context().unregisterReceiver(screenOffReceiver);
 		CurrentProcess.context().unregisterReceiver(screenOnReceiver);
 	}
-
-	@Override
-	protected UserInteractivity get() {
-		return new UserInteractivity(isInteractive());
+	
+	public UserInteractivity get() {
+		if (last == null)
+			return new UserInteractivity(isInteractive());
+		else
+			return last;
 	}
-
+	
 	private boolean isInteractive() {
 
 		if (Build.VERSION.SDK_INT >= 20)
@@ -47,14 +47,16 @@ public class UserInteractivityMonitor extends StateMonitor<UserInteractivity> {
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			reportChange(new UserInteractivity(true));
+			last = new UserInteractivity(true);
+			report();
 		}
 	};
 
 	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			reportChange(new UserInteractivity(false));
+			last = new UserInteractivity(false);
+			report();
 		}
 	};
 
