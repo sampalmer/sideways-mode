@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
