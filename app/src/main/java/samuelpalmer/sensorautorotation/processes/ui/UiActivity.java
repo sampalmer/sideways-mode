@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
@@ -35,8 +34,7 @@ public abstract class UiActivity extends AppCompatActivity {
 				boolean tutorialComplete = getIntent().getBooleanExtra(InstructionsActivity.EXTRA_TUTORIAL_COMPLETE, false);
 				
 				if (!tutorialComplete) {
-					Intent intent = ComponentType.create(InstructionsActivity.class)
-						.intent()
+					Intent intent = new Intent(CurrentProcess.context(), InstructionsActivity.class)
 						.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
 					startActivity(intent);
 					

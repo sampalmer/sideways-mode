@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
@@ -145,8 +145,7 @@ public class InstructionsActivity extends UiActivity {
 	 */
 	private void completeInstructions() {
 		if (isFirstRun()) {
-			Intent intent = ComponentType.create(DashboardActivity.class)
-				.intent()
+			Intent intent = new Intent(CurrentProcess.context(), DashboardActivity.class)
 				.putExtra(EXTRA_TUTORIAL_COMPLETE, true);
 			
 			startActivity(intent);

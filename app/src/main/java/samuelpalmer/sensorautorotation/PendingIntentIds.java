@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
-public abstract class PendingIntentIds {
+import android.app.PendingIntent;
 
+public abstract class PendingIntentIds {
+	
 	public static final int MAIN_NOTIFICATION_CLICK = 1;
 	public static final int SERVICE_REVIVER = 2;
 	public static final int FORCED_APPS_ACQUIRE_PERMISSION = 3;
@@ -14,5 +16,8 @@ public abstract class PendingIntentIds {
 	public static final int UPGRADE_MESSAGE = 10;
 	public static final int MAIN_NOTIFICATION_CHANGE_SIDE = 11;
 	public static final int MAIN_NOTIFICATION_TURN_OFF = 12;
-
+	
+	// Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
+	public static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_CANCEL_CURRENT;
+	
 }

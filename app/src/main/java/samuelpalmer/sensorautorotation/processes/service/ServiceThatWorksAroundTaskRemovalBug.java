@@ -3,7 +3,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Service;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.BroadcastKillFix;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 
 abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 
@@ -21,8 +22,9 @@ abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 	private void clearImmediateDeath() {
 		// Some users got ANRs when the broadcast receiver actually did work,
 		// so now we just use a receiver that doesn't do anything.
-		Intent intent = ComponentType.create(DummyReceiver.class).intent();
-
+		Intent intent = new Intent(CurrentProcess.context(), DummyReceiver.class);
+		BroadcastKillFix.apply(intent);
+		
 		//This seems to be timing-related; the more times we do this, the less likely the process gets killed
 		for (int i = 0; i < 50; ++i)
 			sendBroadcast(intent);

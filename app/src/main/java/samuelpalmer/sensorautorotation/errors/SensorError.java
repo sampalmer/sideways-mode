@@ -6,7 +6,6 @@ import android.content.Intent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -58,13 +57,10 @@ public class SensorError extends EnvironmentError {
 	
 	@Override
 	public PendingIntent showError() {
-		ComponentType componentType = ComponentType.create(DeviceUnsupportedActivity.class);
-		
-		Intent intent = componentType
-			.intent()
+		Intent intent = new Intent(CurrentProcess.context(), DeviceUnsupportedActivity.class)
 			.putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, R.string.device_problem_explanation_sensor);
 		
-		return componentType.pendingIntent(intent, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
+		return PendingIntent.getActivity(CurrentProcess.context(), PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 	
 }

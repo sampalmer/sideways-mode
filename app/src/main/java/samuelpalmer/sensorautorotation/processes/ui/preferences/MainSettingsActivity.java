@@ -10,7 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UninstallerFragment;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
@@ -35,12 +35,12 @@ public class MainSettingsActivity extends PreferencesActivity {
 				case R.id.action_home:
 					break;
 				case R.id.action_help: {
-					Intent intent = ComponentType.create(InstructionsActivity.class).intent();
+					Intent intent = new Intent(CurrentProcess.context(), InstructionsActivity.class);
 					startActivity(intent);
 					break;
 				}
 				case R.id.action_feedback: {
-					Intent intent = ComponentType.create(SendFeedbackActivity.class).intent();
+					Intent intent = new Intent(CurrentProcess.context(), SendFeedbackActivity.class);
 					startActivity(intent);
 					break;
 				}

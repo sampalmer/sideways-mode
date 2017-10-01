@@ -2,9 +2,10 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.SystemClock;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.BroadcastKillFix;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.State;
@@ -34,8 +35,14 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		ComponentType componentType = ComponentType.create(ServiceSyncReceiver.class);
-		return componentType.pendingIntent(PendingIntentIds.SERVICE_REVIVER);
+		Intent intent = new Intent(CurrentProcess.context(), ServiceSyncReceiver.class);
+		BroadcastKillFix.apply(intent);
+		
+		return PendingIntent.getBroadcast(
+			CurrentProcess.context(),
+			PendingIntentIds.SERVICE_REVIVER,
+			intent,
+			PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 
 	@Override

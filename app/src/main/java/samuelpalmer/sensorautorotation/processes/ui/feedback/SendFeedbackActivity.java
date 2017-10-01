@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import samuelpalmer.common.IntentExtensions;
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
@@ -25,8 +25,7 @@ public class SendFeedbackActivity extends UiActivity {
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
 				case R.id.action_feedback_email: {
-					Intent intent = ComponentType.create(EnterFeedbackActivity.class)
-							.intent()
+					Intent intent = new Intent(CurrentProcess.context(), EnterFeedbackActivity.class)
 							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_FEEDBACK)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the feedback screen when a different activity starts
 					startActivity(intent);
@@ -45,8 +44,7 @@ public class SendFeedbackActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_report: {
-					Intent intent = ComponentType.create(EnterFeedbackActivity.class)
-							.intent()
+					Intent intent = new Intent(CurrentProcess.context(), EnterFeedbackActivity.class)
 							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_PROBLEM)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 					startActivity(intent);
@@ -66,7 +64,7 @@ public class SendFeedbackActivity extends UiActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_feedback);
 
-		navigation = (NavigationView) findViewById(R.id.feedback_navigation);
+		navigation = findViewById(R.id.feedback_navigation);
 		navigation.setNavigationItemSelectedListener(itemSelectedListener);
 		
 		updateReviewItemVisibility();

@@ -33,7 +33,7 @@ public abstract class ServiceController {
 	}
 
 	public static Intent intent() {
-		return ComponentType.create(RotationService.class).intent();
+		return new Intent(CurrentProcess.context(), RotationService.class);
 	}
 
 }

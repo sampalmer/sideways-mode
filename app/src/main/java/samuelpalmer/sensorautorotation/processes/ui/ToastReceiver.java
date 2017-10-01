@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.BroadcastKillFix;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
@@ -18,9 +18,11 @@ public class ToastReceiver extends BroadcastReceiver {
 	private static final String EXTRA_DURATION = "duration";
 
 	public static void send(CharSequence message, int duration) {
-		Intent intent = ComponentType.create(ToastReceiver.class).intent()
+		Intent intent = new Intent(CurrentProcess.context(), ToastReceiver.class)
 				.putExtra(EXTRA_MESSAGE, message)
 				.putExtra(EXTRA_DURATION, duration);
+		BroadcastKillFix.apply(intent);
+		
 		CurrentProcess.context().sendBroadcast(intent);
 	}
 

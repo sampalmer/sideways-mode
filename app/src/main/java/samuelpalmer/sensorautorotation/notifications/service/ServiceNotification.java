@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.support.v4.content.ContextCompat;
@@ -9,7 +11,6 @@ import android.util.Log;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.common.notifications.NotificationStyles;
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -25,10 +26,16 @@ class ServiceNotification {
 	private final int actionButtonColour; //Cached for RAM & CPU efficiency
 
 	public ServiceNotification() {
+		PendingIntent settingsActivityIntent = PendingIntent.getActivity(
+			CurrentProcess.context(),
+			PendingIntentIds.MAIN_NOTIFICATION_CLICK,
+			new Intent(CurrentProcess.context(), MainSettingsActivity.class),
+			PendingIntentIds.PENDING_INTENT_FLAGS);
+		
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create()
-			.setContentIntent(ComponentType.create(MainSettingsActivity.class).pendingIntent(PendingIntentIds.MAIN_NOTIFICATION_CLICK))
+			.setContentIntent(settingsActivityIntent)
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)

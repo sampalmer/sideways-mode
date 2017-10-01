@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 public class MessageDialogActivity extends DialogActivity {
@@ -19,15 +19,14 @@ public class MessageDialogActivity extends DialogActivity {
 	private static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message, int requestCode) {
-		Intent mainActivityIntent = ComponentType.create(MainSettingsActivity.class).intent();
-
-		ComponentType componentType = ComponentType.create(MessageDialogActivity.class);
-		Intent intent = componentType.intent()
+		Intent mainActivityIntent = new Intent(CurrentProcess.context(), MainSettingsActivity.class);
+		
+		Intent intent = new Intent(CurrentProcess.context(), MessageDialogActivity.class)
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title);
 
 		Intent[] intents = {mainActivityIntent, intent};
-		return PendingIntent.getActivities(CurrentProcess.context(), requestCode, intents, ComponentType.PENDING_INTENT_FLAGS);
+		return PendingIntent.getActivities(CurrentProcess.context(), requestCode, intents, PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 
 	@Override
