@@ -11,11 +11,11 @@ import samuelpalmer.common.settings.application.RotationSetting;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.common.settings.application.StringSetting;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 class Migrations {
 	static SparseArray<Migration> buildMap() {
@@ -114,7 +114,7 @@ class Migrations {
 				boolean notificationWasHidden = !showNotificationSetting().get() && Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */;
 				
 				if (notificationWasHidden)
-					return StringResource.get(R.string.upgrade_v54);
+					return CurrentProcess.context().getText(R.string.upgrade_v54);
 				else
 					// No need to bother the user about this if they weren't using the feature.
 					return null;
@@ -173,7 +173,7 @@ class Migrations {
 			
 			@Override
 			public CharSequence getMessage() {
-				return StringResource.format(R.string.upgrade_v57, R.string.app_name);
+				return CurrentProcess.context().getString(R.string.upgrade_v57, CurrentProcess.context().getText(R.string.app_name));
 			}
 			
 		});

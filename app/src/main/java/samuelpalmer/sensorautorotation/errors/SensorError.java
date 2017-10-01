@@ -7,9 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import samuelpalmer.sensorautorotation.ComponentType;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
 
 public class SensorError extends EnvironmentError {
@@ -24,7 +24,7 @@ public class SensorError extends EnvironmentError {
 	}
 	
 	public SensorError(Type type) {
-		summary = StringResource.get(R.string.device_problem);
+		summary = CurrentProcess.context().getText(R.string.device_problem);
 		this.type = type;
 	}
 	

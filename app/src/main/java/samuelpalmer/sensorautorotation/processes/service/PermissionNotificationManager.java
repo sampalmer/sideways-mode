@@ -14,7 +14,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
@@ -73,8 +72,8 @@ public class PermissionNotificationManager extends State {
 					.create()
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 					.setContentIntent(ComponentType.create(ForcedAppsActivity.class).pendingIntent(PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION))
-					.setContentTitle(StringResource.get(R.string.permission_needed_summary))
-					.setContentText(StringResource.get(R.string.permission_touch_to_fix))
+					.setContentTitle(CurrentProcess.context().getText(R.string.permission_needed_summary))
+					.setContentText(CurrentProcess.context().getText(R.string.permission_touch_to_fix))
 					.setSmallIcon(R.drawable.notification_error)
 					.setChannelId(NotificationChannels.ID_PERMISSIONS)
 					.build();

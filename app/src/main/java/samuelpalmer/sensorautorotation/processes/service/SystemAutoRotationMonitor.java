@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
@@ -36,7 +37,7 @@ public class SystemAutoRotationMonitor extends State {
 	private void checkIfSystemAutoRotationWasEnabled() {
 		boolean accelerometerRotation = settings.accelerometerRotation.get();
 		if (accelerometerRotation)
-			new GenericError(R.string.environment_error_system_rotation_enabled_summary, R.string.environment_error_system_rotation_enabled_message).report();
+			new GenericError(R.string.environment_error_system_rotation_enabled_summary, CurrentProcess.context().getText(R.string.environment_error_system_rotation_enabled_message)).report();
 	}
 
 }

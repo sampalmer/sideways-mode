@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import samuelpalmer.common.ComponentNameExtensions;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 
 class Email {
 	
@@ -62,7 +62,7 @@ class Email {
 		
 		// Needed to customise the chooser dialog title since it might default to "Share with"
 		// Note that the chooser will still be skipped if only one app is matched
-		return Intent.createChooser(emailAppIntents.remove(0), StringResource.get(R.string.email_app_chooser_title))
+		return Intent.createChooser(emailAppIntents.remove(0), CurrentProcess.context().getText(R.string.email_app_chooser_title))
 			.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[emailAppIntents.size()]))
 		;
 	}

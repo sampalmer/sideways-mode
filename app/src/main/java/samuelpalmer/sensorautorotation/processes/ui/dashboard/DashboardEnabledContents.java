@@ -17,11 +17,9 @@ import android.widget.TextView;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceClient;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
 
 public class DashboardEnabledContents extends LinearLayout {
@@ -106,7 +104,7 @@ public class DashboardEnabledContents extends LinearLayout {
 		}
 		else {
 			userIcon.setImageResource(lastStatus.user.iconId());
-			userIcon.setContentDescription(StringResource.get(lastStatus.user.descriptionId()));
+			userIcon.setContentDescription(CurrentProcess.context().getText(lastStatus.user.descriptionId()));
 			ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
 			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 		}

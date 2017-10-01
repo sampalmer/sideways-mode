@@ -58,14 +58,14 @@ public class Setting<T> {
 			&&
 			!Settings.System.canWrite(CurrentProcess.context())
 		) {
-			new GenericError(R.string.permission_needed_summary, R.string.environment_error_system_setting_write_denied_message).report();
+			new GenericError(R.string.permission_needed_summary, CurrentProcess.context().getText(R.string.environment_error_system_setting_write_denied_message)).report();
 			return;
 		}
 
 		boolean writeErrors = !putString(contentResolver, key, value);
 		if (writeErrors) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			new GenericError(R.string.environment_error_system_setting_write_failure_summary, R.string.environment_error_system_setting_write_failure_message, key, value).report();
+			new GenericError(R.string.environment_error_system_setting_write_failure_summary, CurrentProcess.context().getString(R.string.environment_error_system_setting_write_failure_message, key, value)).report();
 		}
 	}
 

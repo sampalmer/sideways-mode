@@ -12,7 +12,6 @@ import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -78,7 +77,7 @@ public class Upgrader {
 				.setSmallIcon(R.drawable.notification_update)
 				.setContentIntent(makeDialogIntent(upgradeMessage))
 				.setContentTitle(messageTitle())
-				.setContentText(StringResource.get(R.string.upgrade_notification_content))
+				.setContentText(CurrentProcess.context().getText(R.string.upgrade_notification_content))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
@@ -93,7 +92,7 @@ public class Upgrader {
 	}
 
 	private CharSequence messageTitle() {
-		return StringResource.format(R.string.upgrade_summary, R.string.app_name);
+		return CurrentProcess.context().getString(R.string.upgrade_summary, CurrentProcess.context().getText(R.string.app_name));
 	}
 
 }

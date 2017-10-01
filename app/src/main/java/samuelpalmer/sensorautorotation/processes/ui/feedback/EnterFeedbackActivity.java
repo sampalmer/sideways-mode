@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
@@ -30,7 +30,7 @@ public class EnterFeedbackActivity extends UiActivity {
 	private Button send;
 
 	private static String emailRecipients() {
-		return StringResource.get(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
+		return CurrentProcess.context().getText(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>";
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class EnterFeedbackActivity extends UiActivity {
 		 */
 		description.setError(null);
 		if (!isProblemReport && descriptionText.isEmpty()) {
-			description.setError(StringResource.get(R.string.enter_feedback_nofeedback));
+			description.setError(CurrentProcess.context().getText(R.string.enter_feedback_nofeedback));
 			return;
 		}
 		
@@ -109,11 +109,8 @@ public class EnterFeedbackActivity extends UiActivity {
 			throw new RuntimeException(e);
 		}
 		
-		String subject = StringResource.format(
-			isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject,
-			R.string.app_name,
-			appInfo.versionName
-		).toString();
+		int formatStringResource = isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject;
+		String subject = CurrentProcess.context().getString(formatStringResource, CurrentProcess.context().getText(R.string.app_name), appInfo.versionName);
 		
 		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body =
@@ -138,6 +135,6 @@ public class EnterFeedbackActivity extends UiActivity {
 			finish();
 		}
 		else
-			Toaster.show(StringResource.get(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
+			Toaster.show(CurrentProcess.context().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
 	}
 }

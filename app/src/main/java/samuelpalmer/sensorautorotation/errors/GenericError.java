@@ -5,9 +5,9 @@ import android.app.PendingIntent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 
 public class GenericError extends EnvironmentError {
@@ -16,10 +16,9 @@ public class GenericError extends EnvironmentError {
 	
 	private CharSequence message;
 	
-	public GenericError(int summaryResourceId, int messageResourceId, Object... messageArguments) {
-		summary = StringResource.get(summaryResourceId);
-		CharSequence messageEndingWithFullStop = StringResource.format(messageResourceId, messageArguments);
-		message = StringResource.format(R.string.environment_error_message, messageEndingWithFullStop, R.string.app_name);
+	public GenericError(int summaryResourceId, CharSequence messageEndingWithFullStop) {
+		summary = CurrentProcess.context().getText(summaryResourceId);
+		message = CurrentProcess.context().getString(R.string.environment_error_message, messageEndingWithFullStop, CurrentProcess.context().getText(R.string.app_name));
 	}
 	
 	GenericError() {}

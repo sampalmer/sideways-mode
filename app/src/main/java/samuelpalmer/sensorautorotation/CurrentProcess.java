@@ -35,7 +35,7 @@ public class CurrentProcess extends Application {
 			String currentProcessName = CurrentProcessNameDetector.currentProcessName();
 			String packageName = context().getPackageName();
 			
-			if (currentProcessName.equals(packageName + StringResource.get(R.string.service_process_name)))
+			if (currentProcessName.equals(packageName + context().getText(R.string.service_process_name)))
 				isServiceProcess = true; // Service process
 			else if (currentProcessName.equals(packageName))
 				isServiceProcess = false; // UI process

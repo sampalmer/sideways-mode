@@ -6,7 +6,6 @@ import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderShare
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 
 
 public abstract class ProcessIndependentSettings extends Settings {
@@ -17,7 +16,7 @@ public abstract class ProcessIndependentSettings extends Settings {
 			return CurrentProcess.context().getSharedPreferences(sharedPreferencesName, 0);
 		else
 			// For use outside the service process for concurrency safety.
-			return new ContentProviderSharedPreferences(CurrentProcess.context(), StringResource.get(R.string.preferences_provider_authority).toString(), sharedPreferencesName);
+			return new ContentProviderSharedPreferences(CurrentProcess.context(), CurrentProcess.context().getText(R.string.preferences_provider_authority).toString(), sharedPreferencesName);
 	}
 	
 	protected ProcessIndependentSettings(SharedPreferences prefs) {

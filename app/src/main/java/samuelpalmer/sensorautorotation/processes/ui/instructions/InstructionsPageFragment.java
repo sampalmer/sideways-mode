@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 
 public class InstructionsPageFragment extends Fragment {
 	
@@ -43,17 +43,17 @@ public class InstructionsPageFragment extends Fragment {
 		int headingId = args.getInt(KEY_HEADING);
 		int textId = args.getInt(KEY_TEXT);
 		
-		int[] textArguments = args.getIntArray(KEY_ARGUMENTS);
-		assert textArguments != null;
-		Object[] textArgumentObjects = new Object[textArguments.length];
-		for (int i = 0; i < textArguments.length; ++i)
-			textArgumentObjects[i] = textArguments[i];
+		int[] textArgumentIds = args.getIntArray(KEY_ARGUMENTS);
+		assert textArgumentIds != null;
+		Object[] textArgumentObjects = new CharSequence[textArgumentIds.length];
+		for (int i = 0; i < textArgumentIds.length; ++i)
+			textArgumentObjects[i] = CurrentProcess.context().getText(textArgumentIds[i]);
 		
-		CharSequence contentsText = StringResource.format(textId, textArgumentObjects);
+		CharSequence contentsText = CurrentProcess.context().getString(textId, textArgumentObjects);
 		
 		//View stuff
-		TextView heading = (TextView) view.findViewById(R.id.instruction_heading);
-		TextView contents = (TextView) view.findViewById(R.id.instruction_contents);
+		TextView heading = view.findViewById(R.id.instruction_heading);
+		TextView contents = view.findViewById(R.id.instruction_contents);
 		
 		heading.setText(headingId);
 		contents.setText(contentsText);

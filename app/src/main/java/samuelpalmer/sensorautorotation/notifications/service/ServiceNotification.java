@@ -13,7 +13,6 @@ import samuelpalmer.sensorautorotation.ComponentType;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
@@ -56,14 +55,14 @@ class ServiceNotification {
 			:
 			applicationStatus.user.descriptionId();
 		
-		CharSequence statusText = StringResource.get(statusTextResource);
+		CharSequence statusText = CurrentProcess.context().getText(statusTextResource);
 
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
 			builder.setContentTitle(statusText);
 		}
 		else {
-			builder.setContentTitle(StringResource.get(R.string.app_name));
+			builder.setContentTitle(CurrentProcess.context().getText(R.string.app_name));
 			builder.setContentText(statusText);
 		}
 		
@@ -87,12 +86,12 @@ class ServiceNotification {
 				R.id.change_side_button,
 				R.drawable.action_change_side,
 				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
-				StringResource.get(R.string.action_change_side))
+				CurrentProcess.context().getText(R.string.action_change_side))
 			.configureButton(
 				R.id.turn_off_button,
 				R.drawable.action_turn_off,
 				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF),
-				StringResource.get(R.string.action_turn_off))
+				CurrentProcess.context().getText(R.string.action_turn_off))
 		;
 
 		builder.setCustomContentView(notificationButtons.getContentView());

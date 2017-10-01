@@ -17,7 +17,6 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -94,7 +93,7 @@ public abstract class EnvironmentError {
 			.setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
 			.setContentIntent(showError())
 			.setContentTitle(summary)
-			.setContentText(StringResource.get(R.string.app_disabled_view_error))
+			.setContentText(CurrentProcess.context().getText(R.string.app_disabled_view_error))
 			.setAutoCancel(true)
 			.setTicker(summary) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)

@@ -12,15 +12,14 @@ import android.util.Log;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
 import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
 import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
@@ -165,8 +164,9 @@ public class QuickSettingService extends TileService {
 		
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.quick_setting_off : status.user.iconId()));
-
-		tile.setLabel(StringResource.get(status == null ? R.string.app_name : status.user.descriptionId()));
+		
+		int id = status == null ? R.string.app_name : status.user.descriptionId();
+		tile.setLabel(CurrentProcess.context().getText(id));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
 

@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import samuelpalmer.common.ParcelableBinder;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
@@ -243,7 +243,7 @@ public class ApplicationStatusContentProvider extends ContentProvider {
 				Bundle resultWrapper = contentResolver.call(
 					new Uri.Builder()
 						.scheme("content")
-						.authority(StringResource.get(R.string.status_provider_authority).toString())
+						.authority(CurrentProcess.context().getText(R.string.status_provider_authority).toString())
 						.build(),
 					method, null, args
 				);

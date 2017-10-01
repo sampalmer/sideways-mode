@@ -13,8 +13,8 @@ import android.support.v7.app.AlertDialog;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.StringResource;
 import samuelpalmer.sensorautorotation.orientationenforcement.ScreenOrientationEnforcer;
 
 public class ForcedAppsPermissionFragment extends Fragment {
@@ -66,7 +66,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_accessibility_service_summary)
-					.setMessage(StringResource.format(R.string.permission_needed_accessibility_service_description, R.string.app_name))
+					.setMessage(CurrentProcess.context().getString(R.string.permission_needed_accessibility_service_description, CurrentProcess.context().getText(R.string.app_name)))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {}
