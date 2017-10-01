@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.feedback;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import java.util.Locale;
 import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.StringResource;
-import samuelpalmer.sensorautorotation.VersionInfo;
 import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
@@ -102,7 +102,13 @@ public class EnterFeedbackActivity extends UiActivity {
 			return;
 		}
 		
-		PackageInfo appInfo = VersionInfo.packageInfo();
+		PackageInfo appInfo;
+		try {
+			appInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		} catch (PackageManager.NameNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		
 		String subject = StringResource.format(
 			isProblemReport ? R.string.email_problem_subject : R.string.email_feedback_subject,
 			R.string.app_name,
