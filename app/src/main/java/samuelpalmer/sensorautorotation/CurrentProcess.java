@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.ContentProvider;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -45,14 +46,26 @@ public class CurrentProcess extends Application {
 		return isServiceProcess;
 	}
 	
+	/**
+	 * This seems to be called before everything else, even {@link ContentProvider#onCreate()}.
+	 */
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		
+		Log.i(TAG, "Process created");
+		context = this;
+	}
+	
+	/**
+	 * This is effectively the entrypoint into the current process.
+	 * However, this is still called after {@link ContentProvider#onCreate()}.
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
-		
-		Log.i(TAG, "Process created");
-		context = this;
 		
 		/*
 		 * Must setup notification channels before doing anything else so channels will exist when notifications are posted.
