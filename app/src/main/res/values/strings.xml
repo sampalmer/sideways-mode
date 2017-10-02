@@ -40,9 +40,6 @@
 
 	<string name="action_change_side">Change side</string>
 
-	<string name="app_disabled_message">%1$s is off</string>
-	<string name="app_disabled_because_of_error">%1$s was turned off because of an error.</string>
-	<string name="app_disabled_view_error_instruction">To see the error, open the app.</string>
 	<string name="app_disabled_view_error">View error</string>
 
 	<string name="status_waiting_sensor">Waiting for sensor</string>

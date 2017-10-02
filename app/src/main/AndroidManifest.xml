@@ -76,8 +76,6 @@
 		<activity android:name=".processes.ui.MessageDialogActivity"
 			android:theme="@style/AppTheme.Dialog"/>
 
-		<receiver android:name=".processes.ui.ToastReceiver" />
-
 		<activity
 			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
 			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
