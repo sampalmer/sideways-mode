@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import android.os.Message;
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import samuelpalmer.sensorautorotation.UserSide;
 
 @SuppressWarnings("WeakerAccess")
-public class ApplicationStatus implements Parcelable {
+public class ApplicationStatus {
 	
 	public final UserSide user;
 	public final boolean waitingForSensor;
@@ -23,12 +23,6 @@ public class ApplicationStatus implements Parcelable {
 		if (in.dataAvail() != 0)
 			throw new RuntimeException("Found more data in parcel than expected");
 	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(user.name());
-		dest.writeByte((byte) (waitingForSensor ? 1 : 0));
-	}
 	
 	public boolean equals(ApplicationStatus other) {
 		return
@@ -37,20 +31,25 @@ public class ApplicationStatus implements Parcelable {
 			waitingForSensor == other.waitingForSensor;
 	}
 	
-	public static final Creator<ApplicationStatus> CREATOR = new Creator<ApplicationStatus>() {
-		@Override
-		public ApplicationStatus createFromParcel(Parcel in) {
-			return new ApplicationStatus(in);
-		}
-
-		@Override
-		public ApplicationStatus[] newArray(int size) {
-			return new ApplicationStatus[size];
-		}
-	};
+	private static final int MSG_WHAT = 1;
 	
-	@Override
-	public int describeContents() {
-		return 0;
+	public ApplicationStatus(Message message) {
+		if (message.arg1 == UserSide.LEFT.offset().clockwiseCount())
+			this.user = UserSide.LEFT;
+		else if (message.arg1 == UserSide.RIGHT.offset().clockwiseCount())
+			this.user = UserSide.RIGHT;
+		else
+			throw new IllegalArgumentException("Unknown value for user side offset: " + message.arg1);
+		
+		if (message.arg2 == 0)
+			this.waitingForSensor = false;
+		else if (message.arg2 == 1)
+			this.waitingForSensor = true;
+		else
+			throw new IllegalArgumentException("Unknown value for waitingForSensor: " + message.arg2);
+	}
+	
+	public Message asMessage() {
+		return Message.obtain(null, MSG_WHAT, user.offset().clockwiseCount(), waitingForSensor ? 1 : 0);
 	}
 }

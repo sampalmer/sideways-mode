@@ -194,9 +194,8 @@
 			android:exported="false"
 			android:process="@string/service_process_name" />
 
-		<provider
-			android:authorities="@string/status_provider_authority"
-			android:name=".processes.service.ApplicationStatusContentProvider"
+		<service
+			android:name=".processes.service.ApplicationStatusService"
 			android:exported="false"
 			android:process="@string/service_process_name" />
 

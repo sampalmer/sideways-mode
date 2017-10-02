@@ -1,11 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -20,15 +21,13 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
-import samuelpalmer.sensorautorotation.processes.service.statusinterface.IApplicationStatusListener;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public class DashboardView extends FrameLayout {
-
-	private final ApplicationStatusContentProvider.Client serviceClient;
-	private final Handler handler;
+	
+	private ApplicationStatusService.Client serviceClient;
 	private final Settings.Setting<UserSide> servicePersistentState;
 	
 	private final DashboardPermissionContents permissionSection;
@@ -38,12 +37,10 @@ public class DashboardView extends FrameLayout {
 	private boolean childrenInflated;
 	private ApplicationStatus lastStatus;
 	private boolean isEnabled;
-
+	
 	public DashboardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		serviceClient = new ApplicationStatusContentProvider.Client(getContext());
-		handler = new Handler(Looper.getMainLooper());
 		servicePersistentState = ServiceSettings.instance().persistentState();
 
 		View view = inflate(getContext(), R.layout.dashboard, null);
@@ -80,8 +77,19 @@ public class DashboardView extends FrameLayout {
 	@Override
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
-
-		serviceClient.subscribe(statusChanged);
+		
+		boolean boundSuccessfully = getContext().bindService(
+			new Intent(getContext(), ApplicationStatusService.class),
+			serviceConnection,
+			Context.BIND_AUTO_CREATE
+		);
+		
+		if (!boundSuccessfully) {
+			// The documentation says you should still unbind after a binding failure
+			getContext().unbindService(serviceConnection);
+			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
+		}
+		
 		servicePersistentState.subscribe(enabledChanged);
 		EnvironmentError.onChange.subscribe(lastErrorChanged);
 
@@ -92,11 +100,40 @@ public class DashboardView extends FrameLayout {
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-
-		serviceClient.unsubscribe(statusChanged);
+		
+		if (serviceClient != null)
+			try {
+				serviceClient.unsubscribe();
+			} catch (RemoteException ignored) {
+				// The service process died, but that doesn't matter since we're unsubscribing.
+			}
+		getContext().unbindService(serviceConnection);
+		
 		servicePersistentState.unsubscribe(enabledChanged);
 		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
 	}
+	
+	private final ServiceConnection serviceConnection = new ServiceConnection() {
+		
+		@Override
+		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+			serviceClient = new ApplicationStatusService.Client(iBinder, statusChanged);
+			
+			try {
+				serviceClient.subscribe();
+			} catch (RemoteException e) {
+				// Service process died, so we'll have to try again once it's back up.
+				serviceClient = null;
+			}
+		}
+		
+		@Override
+		public void onServiceDisconnected(ComponentName componentName) {
+			serviceClient = null;
+		}
+		
+	};
+	
 	
 	@Override
 	protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
@@ -106,19 +143,12 @@ public class DashboardView extends FrameLayout {
 		maybeUpdateUi();
 	}
 	
-	private final IApplicationStatusListener.Stub statusChanged = new IApplicationStatusListener.Stub() {
+	private final ApplicationStatusService.Client.Listener statusChanged = new ApplicationStatusService.Client.Listener() {
 
 		@Override
-		public void onChange(final ApplicationStatus status) throws RemoteException {
-			handler.post(new Runnable() {
-
-				@Override
-				public void run() {
-					lastStatus = status;
-					maybeUpdateUi();
-				}
-
-			});
+		public void onChange(final ApplicationStatus status) {
+			lastStatus = status;
+			maybeUpdateUi();
 		}
 
 	};

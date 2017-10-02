@@ -5,7 +5,7 @@ import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusContentProvider;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRegistrar;
 
@@ -19,7 +19,7 @@ public class ApplicationStatusDisplays extends State implements ApplicationStatu
 		for (RotationService service : ServiceRegistrar.instance.getServiceInstances())
 			addServiceDisplay(service);
 		
-		add(new ApplicationStatusContentProvider.RemoteStatusDisplay());
+		add(new ApplicationStatusService.RemoteStatusDisplay());
 	}
 	
 	@Override
