@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
 import android.content.res.Configuration;
 import android.os.Build;
@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-public class DiagnosticInfo {
+import samuelpalmer.sensorautorotation.CurrentProcess;
+
+class DiagnosticInfo {
 
 	public static String deviceInfo() {
 		return String.format(Locale.US, "Device: %s %s (%s/%s/%s)\nOS: Android %s %s (%s) (SDK %d)\nLanguage: %s",

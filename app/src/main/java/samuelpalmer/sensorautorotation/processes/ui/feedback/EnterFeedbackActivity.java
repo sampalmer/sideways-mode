@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.Locale;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.DiagnosticInfo;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
