@@ -70,7 +70,11 @@ public class ServiceRegistrar extends UpdatingEventRegistrar {
 	private String makeServiceAlreadyRunningError(RotationService service) {
 		ComponentName rotationServiceComponent = new ComponentName(CurrentProcess.context(), RotationService.class);
 		
-		List<ActivityManager.RunningServiceInfo> runningServices = ((ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE);
+		ActivityManager activityManager = (ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE);
+		
+		@SuppressWarnings("deprecation") // The documentation says that getRunningServices() will still return your app's services for backwards compatibility, so no issues here
+		List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(Integer.MAX_VALUE);
+		
 		int serviceCount = 0;
 		StringBuilder runningServiceDescription = new StringBuilder("Running instances:\n");
 		
