@@ -27,7 +27,8 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/dashboard_progress"
 			android:visibility="gone"
-		    style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+			android:layout_centerInParent="true"
+			style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
 			/>
 
 		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionContents
