@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
@@ -33,8 +34,8 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 			
 			if (ApplicationInstanceManager.isApplicationRunning())
 				ApplicationInstanceManager.applicationInstance().handle(command);
-			
-			// Not really sure what to do if the application isn't running...
+			else
+				Log.w(RotationService.class.getSimpleName(), "Received command, but the application isn't running");
 		}
 		
 		return Service.START_STICKY;
