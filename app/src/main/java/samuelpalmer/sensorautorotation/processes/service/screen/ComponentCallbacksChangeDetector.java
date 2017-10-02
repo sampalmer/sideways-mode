@@ -2,9 +2,10 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
+import android.view.Display;
 
+import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
-import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
@@ -13,9 +14,9 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDetector {
 
 	private final ScreenRotationMonitor.Callback callback;
-	private final Screen screen;
+	private final Display screen;
 
-	public ComponentCallbacksChangeDetector(ScreenRotationMonitor.Callback callback, Screen screen) {
+	public ComponentCallbacksChangeDetector(ScreenRotationMonitor.Callback callback, Display screen) {
 		this.callback = callback;
 		this.screen = screen;
 	}
@@ -32,7 +33,7 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 
 	@Override
 	public Orientation currentRotation() {
-		return screen.realOrientation();
+		return new AndroidSurfaceRotation(screen.getRotation()).orientation();
 	}
 
 	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {

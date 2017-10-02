@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.view.Display;
+
+import samuelpalmer.common.AndroidSurfaceRotation;
 import samuelpalmer.common.Orientation;
-import samuelpalmer.common.Screen;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor.Callback;
@@ -12,10 +14,10 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 public class RotationWatcherChangeDetector implements ScreenRotationMonitor.ChangeDetector {
 
 	private final ScreenRotationMonitor.Callback callback;
-	private final Screen screen;
+	private final Display screen;
 	private final RotationWatcherRegistrar watcher;
 
-	public RotationWatcherChangeDetector(Callback callback, Screen screen) throws RotationWatcherNotSupportedException {
+	public RotationWatcherChangeDetector(Callback callback, Display screen) throws RotationWatcherNotSupportedException {
 		this.callback = callback;
 		this.screen = screen;
 		watcher = RotationWatcherRegistrar.instance();
@@ -36,7 +38,7 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 		if (watcher.lastRotationOrNull() != null)
 			return watcher.lastRotationOrNull();
 		else
-			return screen.realOrientation();
+			return new AndroidSurfaceRotation(screen.getRotation()).orientation();
 	}
 
 	private final EventHandler subscriber = new EventHandler() {

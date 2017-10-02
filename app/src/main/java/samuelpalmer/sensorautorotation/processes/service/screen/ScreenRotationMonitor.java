@@ -1,18 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.util.Log;
+import android.view.Display;
 
 import samuelpalmer.common.Orientation;
-import samuelpalmer.common.Screen;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 
 public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 
-	private final Screen screen;
+	private final Display screen;
 	private ChangeDetector changeDetector;
 
-	public ScreenRotationMonitor(Screen screen) {
+	public ScreenRotationMonitor(Display screen) {
 		this.screen = screen;
 
 		try {

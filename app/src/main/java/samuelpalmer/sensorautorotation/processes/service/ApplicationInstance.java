@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.view.Display;
 import android.view.WindowManager;
 
 import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.Screen;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.State;
@@ -52,7 +52,7 @@ public class ApplicationInstance extends State {
 		EnvironmentError.clear();
 		
 		SystemSettings systemSettings = new SystemSettings();
-		Screen screen = new Screen((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE));
+		Display screen = ((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		
 		applicationState = new ApplicationState();
 		
