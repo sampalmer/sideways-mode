@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -48,16 +49,22 @@ public class DashboardPermissionContents extends LinearLayout {
 			@RequiresApi(api = Build.VERSION_CODES.M)
 			@Override
 			public void onClick(View view) {
+				// If we're in a quick setting dialog, the dialog can end up over the top of the system settings activity, so we need to close the dialog.
+				if (DashboardDialogCoordinator.dialogExists())
+					DashboardDialogCoordinator.dismissDialog();
+				
+				final Intent[] activities = new Intent[] {
+					// Putting the dashboard in the back stack so the user sees it after granting the permission
+					new Intent(getContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+					new SystemIntents(getContext()).modifySystemSettings()
+				};
+				
 				try {
-					getContext().startActivity(new SystemIntents(getContext()).modifySystemSettings());
+					getContext().startActivities(activities);
 				}
 				catch (ActivityNotFoundException e) {
 					throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
 				}
-				
-				// If we're in a quick setting dialog, the dialog can end up over the top of the system settings activity, so we need to close the dialog.
-				if (DashboardDialogCoordinator.dialogExists())
-					DashboardDialogCoordinator.dismissDialog();
 			}
 		});
 	}

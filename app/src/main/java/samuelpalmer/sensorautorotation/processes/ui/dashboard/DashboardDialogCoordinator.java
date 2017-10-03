@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
 /**
@@ -9,37 +11,24 @@ import android.util.Log;
  */
 public class DashboardDialogCoordinator {
 
-	private static Dialog dialog;
+	private static AlertDialog dialog;
 
-	public static Dialog createDialog(Context context, final Runnable onStopped) {
-		DashboardDialog.Listener onStart = new DashboardDialog.Listener() {
+	public static Dialog createDialog(Context context, final Dialog.OnDismissListener listener) {
+		dialog = new AlertDialog.Builder(context).create();
+		dialog.setView(new DashboardView(context, null));
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 			@Override
-			public void onChange(Dialog dialog) {
-				if (DashboardDialogCoordinator.dialog != null)
-					throw new RuntimeException("Already have a dialog");
-
-				DashboardDialogCoordinator.dialog = dialog;
-				Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog started");
+			public void onDismiss(DialogInterface dialogInterface) {
+				dialog = null;
+				Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog dismissed");
+				
+				listener.onDismiss(dialogInterface);
 			}
-		};
-
-		DashboardDialog.Listener onStop = new DashboardDialog.Listener() {
-			@Override
-			public void onChange(Dialog dialog) {
-				if (DashboardDialogCoordinator.dialog == null)
-					throw new RuntimeException("Don't have a dialog");
-				if (DashboardDialogCoordinator.dialog != dialog)
-					throw new RuntimeException("Unrecognised dialog");
-
-				DashboardDialogCoordinator.dialog = null;
-				Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog stopped");
-				onStopped.run();
-			}
-		};
-
-		Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Created dialog");
-
-		return new DashboardDialog(context, onStart, onStop);
+		});
+		
+		Log.i(DashboardDialogCoordinator.class.getSimpleName(), "Dialog created");
+		
+		return dialog;
 	}
 
 	public static boolean dialogExists() {

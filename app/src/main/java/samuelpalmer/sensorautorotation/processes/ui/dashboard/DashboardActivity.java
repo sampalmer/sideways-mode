@@ -1,10 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 
@@ -23,9 +22,10 @@ public class DashboardActivity extends DialogActivity {
 			return;
 		}
 		
-		dialog = DashboardDialogCoordinator.createDialog(this, new Runnable() {
+		dialog = DashboardDialogCoordinator.createDialog(this, new DialogInterface.OnDismissListener() {
 			@Override
-			public void run() {
+			public void onDismiss(DialogInterface dialogInterface) {
+				dialog = null;
 				finish();
 			}
 		});
@@ -44,24 +44,6 @@ public class DashboardActivity extends DialogActivity {
 			dialog.dismiss();
 			dialog = null;
 		}
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		
-		/*
-		 * Since this activity can be shown on the lock screen,
-		 * leaving the activity open when you lock your phone would
-		 * result in it being shown when you next unlock your phone.
-		 * (At least in Android 7.1.1.)
-		 *
-		 * Finishing the activity on stop seems to fix this nicely.
-		 * Note that this only works because the activity is declared as
-		 * supporting screen size, orientation & layout config changes. If it wasn't,
-		 * changes to those properties would also result in the activity finishing.
-		 */
-		finish();
 	}
 	
 }

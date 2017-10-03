@@ -159,11 +159,9 @@
 		</service>
 
 		<activity android:name=".processes.ui.dashboard.DashboardActivity"
-		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
 		          android:theme="@style/AppTheme.Dialog"
-		          android:noHistory="true"
 		          android:configChanges="orientation|screenSize|screenLayout"
 		          tools:ignore="UnusedAttribute">
 

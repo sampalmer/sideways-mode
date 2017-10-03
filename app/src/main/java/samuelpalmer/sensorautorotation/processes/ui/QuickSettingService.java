@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Icon;
@@ -60,9 +61,10 @@ public class QuickSettingService extends TileService {
 		
 		//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
 		if (!DashboardDialogCoordinator.dialogExists()) {
-			Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new Runnable() {
+			Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new DialogInterface.OnDismissListener() {
 				@Override
-				public void run() {
+				public void onDismiss(DialogInterface dialogInterface) {
+					
 				}
 			});
 			
