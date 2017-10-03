@@ -14,6 +14,7 @@ import android.os.RemoteException;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
@@ -61,7 +62,9 @@ public class QuickSettingService extends TileService {
 		
 		//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
 		if (!DashboardDialogCoordinator.dialogExists()) {
-			Dialog dashboard = DashboardDialogCoordinator.createDialog(getApplicationContext(), new DialogInterface.OnDismissListener() {
+			// Need to re-theme the context since both the Application context and TileService context don't have the app theme applied by default
+			ContextThemeWrapper themedContext = new ContextThemeWrapper(getApplicationContext(), R.style.AppTheme_Dialog);
+			Dialog dashboard = DashboardDialogCoordinator.createDialog(themedContext, new DialogInterface.OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface dialogInterface) {
 					
