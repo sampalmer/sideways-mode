@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -81,9 +82,7 @@ public class DashboardEnabledContents extends LinearLayout {
 			@Override
 			public void onClick(View v) {
 				ServiceSynchroniser.disableService();
-				
-				if (DashboardDialogCoordinator.dialogExists())
-					DashboardDialogCoordinator.dismissDialog();
+				((Activity)getContext()).finish();
 			}
 			
 		});

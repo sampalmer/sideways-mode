@@ -158,6 +158,7 @@
 			</intent-filter>
 		</service>
 
+		<!-- Intentionally allowing history on this activity so you can return to it after granting permission -->
 		<activity android:name=".processes.ui.dashboard.DashboardActivity"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""

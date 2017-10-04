@@ -1,10 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Icon;
@@ -14,18 +13,17 @@ import android.os.RemoteException;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
-import samuelpalmer.sensorautorotation.processes.service.DummyActivity;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDialogCoordinator;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -50,52 +48,27 @@ public class QuickSettingService extends TileService {
 			unlockAndRun(new Runnable() {
 				@Override
 				public void run() {
-					createOrShowDialog();
+					launchDashboard();
 				}
 			});
-		else
-			createOrShowDialog();
-	}
-	
-	private void createOrShowDialog() {
-		//We can't use an activity because the OS delays activity start when the home button is pressed.
-		
-		//Caching and reusing the dialog to prevent multiple dialogs from being open at the same time.
-		if (!DashboardDialogCoordinator.dialogExists()) {
-			// Need to re-theme the context since both the Application context and TileService context don't have the app theme applied by default
-			ContextThemeWrapper themedContext = new ContextThemeWrapper(getApplicationContext(), R.style.AppTheme_Dialog);
-			Dialog dashboard = DashboardDialogCoordinator.createDialog(themedContext, new DialogInterface.OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialogInterface) {
-					
-				}
-			});
-			
-			tryShowDialog(dashboard);
-		} else {
-			DashboardDialogCoordinator.showDialog();
-			startActivityAndCollapse(new Intent(this, DummyActivity.class)); //To collapse the navigation drawer
+		else {
+			launchDashboard();
 		}
 	}
 	
-	private void tryShowDialog(Dialog dashboard) {
-		for (int i = 0; i < 3; ++i)
-			try {
-				showDialog(dashboard);
-				return;
-			}
-			catch (RuntimeException ex) {
-				// There's an Android bug that causes showDialog() to crash sometimes: https://issuetracker.google.com/issues/37105965
-				// Retrying just in case it's an intermittent issue.
-				if (ex.getClass().getName().equals("android.view.WindowManager$BadTokenException")) {
-					if (i >= 2)
-						throw ex;
-					else
-						Log.w(QuickSettingService.class.getSimpleName(), "Encountered OS bug when showing quick setting dialog. Retrying...", ex);
-				}
-				else
-					throw ex;
-			}
+	private void launchDashboard() {
+		Intent intent = new Intent(this, DashboardActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+		
+		// This is needed to collapse the status bar.
+		startActivityAndCollapse(intent);
+		
+		// Using a PendingIntent works around the issue where pressing the home button causes a delay in activity starts (https://issuetracker.google.com/issues/36910222)
+		try {
+			pendingIntent.send();
+		} catch (PendingIntent.CanceledException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -104,7 +77,7 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Tile added");
 	}
-
+	
 	@Override
 	public void onTileRemoved() {
 		super.onTileRemoved();

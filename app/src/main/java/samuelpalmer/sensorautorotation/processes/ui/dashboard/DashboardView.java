@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -51,9 +52,7 @@ public class DashboardView extends FrameLayout {
 			@Override
 			public void onClick(View v) {
 				getContext().startActivity(new Intent(getContext(), MainSettingsActivity.class));
-
-				if (DashboardDialogCoordinator.dialogExists())
-					DashboardDialogCoordinator.dismissDialog();
+				((Activity)getContext()).finish();
 			}
 		});
 
