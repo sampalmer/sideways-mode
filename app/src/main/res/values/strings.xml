@@ -106,7 +106,7 @@
 
 	<string name="instructions_help_heading">Troubleshooting</string>
 	<string name="instructions_help_contents">
-		If the screen faces the wrong way:\n1. Ensure the app you\'re using isn\'t controlling the screen.\n2. Use the %1$s button in the notification to correct it.\n\nIf this app crashes, please press the "Report" button so I can fix the problem.\n\nIf you have any feedback, you can send it from the store listing or the menu in this app.
+		If the screen faces the wrong way:\n1. Make sure the app you have open isn\'t controlling the screen.\n2. Use the %1$s button in the notification to fix it.
 	</string>
 
 	<!-- Enter feedback -->
