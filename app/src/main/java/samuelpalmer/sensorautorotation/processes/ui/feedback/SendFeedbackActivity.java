@@ -24,14 +24,6 @@ public class SendFeedbackActivity extends UiActivity {
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
-				case R.id.action_feedback_email: {
-					Intent intent = new Intent(CurrentProcess.context(), EnterFeedbackActivity.class)
-							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_FEEDBACK)
-							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the feedback screen when a different activity starts
-					startActivity(intent);
-
-					break;
-				}
 				case R.id.action_review: {
 					Intent intent = appMarketIntent();
 					
@@ -44,8 +36,7 @@ public class SendFeedbackActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_report: {
-					Intent intent = new Intent(CurrentProcess.context(), EnterFeedbackActivity.class)
-							.putExtra(EnterFeedbackActivity.EXTRA_TYPE, EnterFeedbackActivity.TYPE_PROBLEM)
+					Intent intent = new Intent(CurrentProcess.context(), ReportProblemActivity.class)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 					startActivity(intent);
 

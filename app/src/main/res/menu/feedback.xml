@@ -4,13 +4,7 @@
 	<item android:id="@+id/action_report"
 	      android:title="@string/action_report"
 	      android:icon="@drawable/menu_report" />
-
-	<item
-		android:id="@+id/action_feedback_email"
-		android:title="@string/action_feedback_email"
-		android:icon="@drawable/menu_email"
-		/>
-
+	
 	<!-- Placing this one last since users should contact the developer about problems before leaving bad reviews on Google Play Store. -->
 	<item
 		android:id="@+id/action_review"

@@ -8,7 +8,6 @@
 	<string name="action_home">Домой</string>
 	<string name="action_help">Справка</string>
 	<string name="action_feedback">Отправить отзыв</string>
-	<string name="action_feedback_email">Почта</string>
 	<string name="action_feedback_review">Обзор</string>
 	<string name="action_report">Отчет о проблемах</string>
 	<string name="action_uninstall">Удаление</string>
