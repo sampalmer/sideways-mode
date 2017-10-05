@@ -31,10 +31,10 @@ public class DashboardActivity extends DialogActivity {
 	
 	private AlertDialog dialog;
 
-	private DashboardPermissionContents permissionSection;
-	private DashboardDisabledContents disabledSection;
+	private DashboardPermissionFragment permissionSection;
+	private DashboardDisabledFragment disabledSection;
 	private ProgressBar progressBar;
-	private DashboardEnabledContents enabledSection;
+	private DashboardEnabledFragment enabledSection;
 	
 	private Settings.Setting<UserSide> servicePersistentState;
 	private ApplicationStatusService.Client serviceClient;
@@ -73,10 +73,10 @@ public class DashboardActivity extends DialogActivity {
 		
 		fragmentManager = getSupportFragmentManager();
 		
-		permissionSection = (DashboardPermissionContents) fragmentManager.findFragmentById(R.id.dashboard_permission);
-		disabledSection = (DashboardDisabledContents) fragmentManager.findFragmentById(R.id.dashboard_disabled_contents);
+		permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentById(R.id.dashboard_permission);
+		disabledSection = (DashboardDisabledFragment) fragmentManager.findFragmentById(R.id.dashboard_disabled_contents);
 		progressBar = dialog.findViewById(R.id.dashboard_progress);
-		enabledSection = (DashboardEnabledContents) fragmentManager.findFragmentById(R.id.dashboard_enabled_contents);
+		enabledSection = (DashboardEnabledFragment) fragmentManager.findFragmentById(R.id.dashboard_enabled_contents);
 	}
 	
 	@Override
