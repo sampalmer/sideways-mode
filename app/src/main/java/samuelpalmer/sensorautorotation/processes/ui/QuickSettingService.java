@@ -162,15 +162,7 @@ public class QuickSettingService extends TileService {
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 		
-		if (isSecure())
-			/*
-			 * On a secure lock screen, if we prompt the user to first unlock the device,
-			 * the OS doesn't close the notification drawer, resulting in the dashboard
-			 * being behind the notification drawer.
-			 * So it's simpler for the user to just have the quick setting unavailable here.
-			 */
-			tile.setState(Tile.STATE_UNAVAILABLE);
-		else if (status == null)
+		if (status == null)
 			tile.setState(Tile.STATE_INACTIVE);
 		else
 			tile.setState(Tile.STATE_ACTIVE);
