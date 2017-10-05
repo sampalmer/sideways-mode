@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstance
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
 
-public class DashboardEnabledContents extends Fragment {
+public class DashboardEnabledFragment extends Fragment {
 	
 	private ImageView userIcon;
 	private View sensorProgress;
@@ -30,7 +30,7 @@ public class DashboardEnabledContents extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View layout = inflater.inflate(R.layout.dashboard_enabled_contents, container, false);
+		View layout = inflater.inflate(R.layout.fragment_dashboard_enabled, container, false);
 		
 		userIcon = layout.findViewById(R.id.dashboard_user_icon);
 		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);

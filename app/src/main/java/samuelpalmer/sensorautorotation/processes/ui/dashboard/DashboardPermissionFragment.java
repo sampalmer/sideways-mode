@@ -14,12 +14,12 @@ import android.widget.Button;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 
-public class DashboardPermissionContents extends Fragment {
+public class DashboardPermissionFragment extends Fragment {
 	
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View layout = inflater.inflate(R.layout.dashboard_permission_contents, container, false);
+		View layout = inflater.inflate(R.layout.fragment_dashboard_permission, container, false);
 		
 		Button fixButton = layout.findViewById(R.id.dashboard_permission_fix);
 		

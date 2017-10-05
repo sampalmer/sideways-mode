@@ -15,12 +15,12 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.UserSide;
 
-public class DashboardDisabledContents extends Fragment {
+public class DashboardDisabledFragment extends Fragment {
 	
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.dashboard_disabled_contents, container, false);
+		View view = inflater.inflate(R.layout.fragment_dashboard_disabled, container, false);
 		configureUserSideButton(view, R.id.choose_side_left_caption, UserSide.LEFT, R.drawable.app_left_side);
 		configureUserSideButton(view, R.id.choose_side_right_caption, UserSide.RIGHT, R.drawable.app_right_side);
 		
