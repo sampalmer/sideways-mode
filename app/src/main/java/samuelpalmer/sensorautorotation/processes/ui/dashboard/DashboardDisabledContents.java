@@ -1,57 +1,36 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.UserSide;
 
-public class DashboardDisabledContents extends LinearLayout {
+public class DashboardDisabledContents extends Fragment {
 	
-	public DashboardDisabledContents(Context context) {
-		super(context);
-		init();
-	}
-	
-	public DashboardDisabledContents(Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
-	
-	public DashboardDisabledContents(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-		init();
-	}
-	
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	public DashboardDisabledContents(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		init();
-	}
-	
-	private void init() {
-		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_disabled_contents, this, true);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.dashboard_disabled_contents, container, false);
+		configureUserSideButton(view, R.id.choose_side_left_caption, UserSide.LEFT, R.drawable.app_left_side);
+		configureUserSideButton(view, R.id.choose_side_right_caption, UserSide.RIGHT, R.drawable.app_right_side);
 		
-		configureUserSideButton(R.id.choose_side_left_caption, UserSide.LEFT, R.drawable.app_left_side);
-		configureUserSideButton(R.id.choose_side_right_caption, UserSide.RIGHT, R.drawable.app_right_side);
+		return view;
 	}
 	
-	private void configureUserSideButton(int buttonId, final UserSide side, int iconId) {
-		TextView button = findViewById(buttonId);
+	private void configureUserSideButton(View layout, int buttonId, final UserSide side, int iconId) {
+		TextView button = layout.findViewById(buttonId);
 		
-		button.setOnClickListener(new OnClickListener() {
+		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				startApp(side);
@@ -73,7 +52,7 @@ public class DashboardDisabledContents extends LinearLayout {
 	
 	private void startApp(UserSide userSide) {
 		ServiceSynchroniser.enableService(userSide);
-		((Activity)getContext()).finish();
+		getActivity().finish();
 	}
 	
 }

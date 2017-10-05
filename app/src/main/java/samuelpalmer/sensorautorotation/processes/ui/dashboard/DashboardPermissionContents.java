@@ -1,61 +1,42 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.AttributeSet;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 
-public class DashboardPermissionContents extends LinearLayout {
+public class DashboardPermissionContents extends Fragment {
 	
-	private Button fixButton;
-	
-	public DashboardPermissionContents(Context context) {
-		super(context);
-		init();
-	}
-	
-	public DashboardPermissionContents(Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
-	
-	public DashboardPermissionContents(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-		init();
-	}
-	
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	public DashboardPermissionContents(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		init();
-	}
-	
-	private void init() {
-		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_permission_contents, this, true);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View layout = inflater.inflate(R.layout.dashboard_permission_contents, container, false);
 		
-		fixButton = findViewById(R.id.dashboard_permission_fix);
+		Button fixButton = layout.findViewById(R.id.dashboard_permission_fix);
 		
 		fixButton.setOnClickListener(new View.OnClickListener() {
 			@RequiresApi(api = Build.VERSION_CODES.M)
 			@Override
 			public void onClick(View view) {
 				try {
-					getContext().startActivity(new SystemIntents(getContext()).modifySystemSettings());
+					startActivity(new SystemIntents(getContext()).modifySystemSettings());
 				}
 				catch (ActivityNotFoundException e) {
 					throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
 				}
 			}
 		});
+		
+		return layout;
 	}
 	
 }

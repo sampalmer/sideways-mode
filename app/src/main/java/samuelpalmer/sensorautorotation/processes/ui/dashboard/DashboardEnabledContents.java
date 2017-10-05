@@ -1,18 +1,14 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -23,28 +19,7 @@ import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstance
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
 
-public class DashboardEnabledContents extends LinearLayout {
-	
-	public DashboardEnabledContents(Context context) {
-		super(context);
-		init();
-	}
-	
-	public DashboardEnabledContents(Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
-		init();
-	}
-	
-	public DashboardEnabledContents(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-		init();
-	}
-	
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	public DashboardEnabledContents(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		init();
-	}
+public class DashboardEnabledContents extends Fragment {
 	
 	private ImageView userIcon;
 	private View sensorProgress;
@@ -52,22 +27,21 @@ public class DashboardEnabledContents extends LinearLayout {
 	private ImageButton changeSideButton;
 	private ImageButton turnOffButton;
 	
-	private void init() {
-		LayoutInflater.from(getContext()).inflate(R.layout.dashboard_enabled_contents, this, true);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View layout = inflater.inflate(R.layout.dashboard_enabled_contents, container, false);
 		
-		setOrientation(VERTICAL);
-		setGravity(Gravity.CENTER_HORIZONTAL);
+		userIcon = layout.findViewById(R.id.dashboard_user_icon);
+		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
 		
-		userIcon = findViewById(R.id.dashboard_user_icon);
-		sensorProgress = findViewById(R.id.dashboard_sensor_progress);
-		
-		statusText = findViewById(R.id.dashboard_status);
-		changeSideButton = findViewById(R.id.dashboard_button_change_side);
-		turnOffButton = findViewById(R.id.dashboard_button_turn_off);
+		statusText = layout.findViewById(R.id.dashboard_status);
+		changeSideButton = layout.findViewById(R.id.dashboard_button_change_side);
+		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		
 		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		
-		changeSideButton.setOnClickListener(new OnClickListener() {
+		changeSideButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -77,12 +51,12 @@ public class DashboardEnabledContents extends LinearLayout {
 			
 		});
 		
-		turnOffButton.setOnClickListener(new OnClickListener() {
+		turnOffButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				ServiceSynchroniser.disableService();
-				((Activity)getContext()).finish();
+				getActivity().finish();
 			}
 			
 		});
@@ -94,6 +68,8 @@ public class DashboardEnabledContents extends LinearLayout {
 		 */
 		changeSideButton.setImageResource(R.drawable.dashboard_change_side);
 		turnOffButton.setImageResource(R.drawable.dashboard_turn_off);
+		
+		return layout;
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {

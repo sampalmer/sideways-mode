@@ -1,5 +1,6 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content">
 
@@ -11,6 +12,7 @@
 		android:layout_alignParentStart="true"
 		android:layout_alignParentLeft="true"
 		style="@style/Widget.AppCompat.Button.Borderless"
+		app:srcCompat="@drawable/menu_settings"
 		android:contentDescription="@string/settings"
 		/>
 
@@ -31,14 +33,16 @@
 			style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
 			/>
 
-		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionContents
+		<fragment
+			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionContents"
 			android:id="@+id/dashboard_permission"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:visibility="gone"
 			/>
 
-		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDisabledContents
+		<fragment
+			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDisabledContents"
 			android:id="@+id/dashboard_disabled_contents"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -46,7 +50,8 @@
 			android:visibility="gone"
 			/>
 
-		<samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardEnabledContents
+		<fragment
+			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardEnabledContents"
 			android:id="@+id/dashboard_enabled_contents"
 			android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
