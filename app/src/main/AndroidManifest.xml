@@ -160,6 +160,7 @@
 
 		<!-- Intentionally allowing history on this activity so you can return to it after granting permission -->
 		<activity android:name=".processes.ui.dashboard.DashboardActivity"
+		          android:launchMode="singleInstance"
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
 		          android:theme="@style/AppTheme.Dialog"
