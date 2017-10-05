@@ -57,6 +57,13 @@ public class QuickSettingService extends TileService {
 	}
 	
 	private void launchDashboard() {
+		/*
+		 * Not using the quick setting dialog because:
+		 *  1. It is affected by an OS layout bug (https://issuetracker.google.com/issues/38188882)
+		 *  2. It appears over system activities such as "recents"
+		 *  3. It's simpler to just use the one activity for all possible ways of accessing the dashboard
+		 */
+		
 		Intent intent = new Intent(this, DashboardActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 		
