@@ -1,31 +1,26 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import android.os.Message;
-import android.os.Parcel;
 
 import samuelpalmer.sensorautorotation.UserSide;
 
 @SuppressWarnings("WeakerAccess")
 public class ApplicationStatus {
 	
+	public final boolean appEnabled;
 	public final UserSide user;
 	public final boolean waitingForSensor;
 
-	public ApplicationStatus(UserSide user, boolean waitingForSensor) {
+	public ApplicationStatus(boolean appEnabled, UserSide user, boolean waitingForSensor) {
+		this.appEnabled = appEnabled;
 		this.user = user;
 		this.waitingForSensor = waitingForSensor;
-	}
-
-	private ApplicationStatus(Parcel in) {
-		user = UserSide.valueOf(in.readString());
-		waitingForSensor = in.readByte() != 0;
-		
-		if (in.dataAvail() != 0)
-			throw new RuntimeException("Found more data in parcel than expected");
 	}
 	
 	public boolean equals(ApplicationStatus other) {
 		return
+			appEnabled == other.appEnabled
+			&&
 			user.equals(other.user)
 			&&
 			waitingForSensor == other.waitingForSensor;
@@ -34,22 +29,28 @@ public class ApplicationStatus {
 	private static final int MSG_WHAT = 1;
 	
 	public ApplicationStatus(Message message) {
-		if (message.arg1 == UserSide.LEFT.offset().clockwiseCount())
+		if (message.arg1 == 0)
+			this.user = null;
+		else if (message.arg1 == UserSide.LEFT.offset().clockwiseCount())
 			this.user = UserSide.LEFT;
 		else if (message.arg1 == UserSide.RIGHT.offset().clockwiseCount())
 			this.user = UserSide.RIGHT;
 		else
 			throw new IllegalArgumentException("Unknown value for user side offset: " + message.arg1);
 		
-		if (message.arg2 == 0)
-			this.waitingForSensor = false;
-		else if (message.arg2 == 1)
-			this.waitingForSensor = true;
-		else
-			throw new IllegalArgumentException("Unknown value for waitingForSensor: " + message.arg2);
+		waitingForSensor = (message.arg2 & 0x1) == 0x1;
+		appEnabled = (message.arg2 & 0x2) == 0x2;
 	}
 	
 	public Message asMessage() {
-		return Message.obtain(null, MSG_WHAT, user.offset().clockwiseCount(), waitingForSensor ? 1 : 0);
+		return Message.obtain(
+			null,
+			MSG_WHAT,
+			user == null ? 0 : user.offset().clockwiseCount(),
+			(waitingForSensor ? 1 : 0)
+			|
+			(appEnabled ? 1 : 0) << 1
+		);
 	}
+	
 }

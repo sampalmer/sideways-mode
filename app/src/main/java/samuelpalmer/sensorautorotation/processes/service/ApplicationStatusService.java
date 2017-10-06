@@ -15,10 +15,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
+import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 /**
  * Provides access to remotely monitor the state of the service.
@@ -27,6 +30,8 @@ import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDi
 public class ApplicationStatusService extends Service {
 	
 	private static final Set<Messenger> clients = new HashSet<>();
+	
+	private static Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
 	
 	private static final int MSG_SUBSCRIBE = 1;
 	private static final int MSG_UNSUBSCRIBE = 2;
@@ -42,26 +47,36 @@ public class ApplicationStatusService extends Service {
 					boolean isNewSubscription = clients.add(newClient);
 					
 					if (isNewSubscription) {
-						if (ApplicationInstanceManager.isApplicationRunning()) {
-							ApplicationInstance application = ApplicationInstanceManager.applicationInstance();
-							
-							//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
-							ApplicationStatusDisplayUpdater manager = application.applicationStatusDisplayUpdater;
-							ApplicationStatus lastStatus = manager.getLastStatus();
-							if (lastStatus != null) {
-								try {
-									newClient.send(lastStatus.asMessage());
-								} catch (RemoteException e) {
-									// The client is dead. Remove it from the list.
-									clients.remove(newClient);
-								}
+						Message message = null;
+						
+						if (enabledState.hasValue())
+							if (ApplicationInstanceManager.isApplicationRunning()) {
+								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
+								ApplicationStatus lastStatus = ApplicationInstanceManager.applicationInstance().applicationStatusDisplayUpdater.getLastStatus();
+								if (lastStatus != null)
+									message = lastStatus.asMessage();
+							} else {
+								/*
+								 * If the service has crashed or been killed, we want to make sure it's running.
+								 * Otherwise the client will have to wait a long time (or forever) to get the first service status update.
+								 */
+								ServiceSynchroniser.updateFromSettings();
 							}
-						} else
-						/*
-						 * If the service has crashed or been killed, we want to make sure it's running.
-						 * Otherwise the client will have to wait a long time (or forever) to get the first service status update.
-						 */
-							ServiceSynchroniser.updateFromSettings();
+						else {
+							message = new ApplicationStatus(false, null, false).asMessage();
+						}
+						
+						if (message != null)
+							try {
+								newClient.send(message);
+							} catch (RemoteException e) {
+								// The client is dead. Remove it from the list.
+								clients.remove(newClient);
+							}
+							
+						if (clients.size() == 1) {
+							enabledState.subscribe(enabledStateChanged);
+						}
 					}
 					else
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received duplicate subscription");
@@ -72,6 +87,8 @@ public class ApplicationStatusService extends Service {
 					boolean wasSubscribed = clients.remove(msg.replyTo);
 					if (!wasSubscribed)
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received unsubscription for non-subscriber");
+					else if (clients.size() == 0)
+						enabledState.unsubscribe(enabledStateChanged);
 					
 					break;
 				}
@@ -94,6 +111,14 @@ public class ApplicationStatusService extends Service {
 	public IBinder onBind(Intent intent) {
 		return messenger.getBinder();
 	}
+	
+	private static final EventHandler enabledStateChanged = new EventHandler() {
+		@Override
+		public void update() {
+			if (!enabledState.hasValue())
+				sendUpdate(new ApplicationStatus(false, null, false));
+		}
+	};
 	
 	public static class Client {
 		
@@ -155,22 +180,26 @@ public class ApplicationStatusService extends Service {
 
 		@Override
 		public void update(ApplicationStatus applicationStatus) {
-			Message message = applicationStatus.asMessage();
-			
-			Iterator<Messenger> iterator = clients.iterator();
-			while (iterator.hasNext()) {
-				Messenger client = iterator.next();
-				
-				try {
-					client.send(message);
-				}
-				catch (RemoteException e) {
-					// The client is dead. Remove it from the list.
-					iterator.remove();
-				}
-			}
+			sendUpdate(applicationStatus);
 		}
 
 	}
-
+	
+	private static void sendUpdate(ApplicationStatus applicationStatus) {
+		Message message = applicationStatus.asMessage();
+		
+		Iterator<Messenger> iterator = clients.iterator();
+		while (iterator.hasNext()) {
+			Messenger client = iterator.next();
+			
+			try {
+				client.send(message);
+			}
+			catch (RemoteException e) {
+				// The client is dead. Remove it from the list.
+				iterator.remove();
+			}
+		}
+	}
+	
 }

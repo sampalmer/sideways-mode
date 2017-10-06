@@ -17,15 +17,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public class DashboardActivity extends DialogActivity {
 	
@@ -36,11 +32,9 @@ public class DashboardActivity extends DialogActivity {
 	private ProgressBar progressBar;
 	private DashboardEnabledFragment enabledSection;
 	
-	private Settings.Setting<UserSide> servicePersistentState;
 	private ApplicationStatusService.Client serviceClient;
 	
 	private ApplicationStatus lastStatus;
-	private boolean isEnabled;
 	private FragmentManager fragmentManager;
 	
 	@Override
@@ -68,8 +62,6 @@ public class DashboardActivity extends DialogActivity {
 				finish();
 			}
 		});
-		
-		servicePersistentState = ServiceSettings.instance().persistentState();
 		
 		fragmentManager = getSupportFragmentManager();
 		
@@ -105,9 +97,6 @@ public class DashboardActivity extends DialogActivity {
 			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
 		}
 		
-		
-		servicePersistentState.subscribe(enabledChanged);
-		enabledChanged.update();
 		showStatus();
 	}
 	
@@ -115,15 +104,16 @@ public class DashboardActivity extends DialogActivity {
 	protected void onStop() {
 		super.onStop();
 		
-		if (serviceClient != null)
+		if (serviceClient != null) {
 			try {
 				serviceClient.unsubscribe();
 			} catch (RemoteException ignored) {
 				// The service process died, but that doesn't matter since we're unsubscribing.
 			}
+			
+			serviceClient = null;
+		}
 		unbindService(serviceConnection);
-		
-		servicePersistentState.unsubscribe(enabledChanged);
 	}
 	
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -157,51 +147,43 @@ public class DashboardActivity extends DialogActivity {
 		
 	};
 	
-	private final EventHandler enabledChanged = new EventHandler() {
-		@Override
-		public void update() {
-			isEnabled = servicePersistentState.hasValue();
-			if (!isEnabled)
-				lastStatus = null; //So we don't accidentally reuse the last status next time the app is enabled
-			
-			showStatus();
-		}
-	};
-	
 	@SuppressLint("SetTextI18n")
 	private void showStatus() {
-		boolean isLoading = isEnabled && lastStatus == null;
-		
-		ViewHelpers.ensureVisibility(progressBar, isLoading ? View.VISIBLE : View.GONE);
 		
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		
-		if (!isEnabled) {
-			transaction.hide(enabledSection);
-			
-			boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(this);
-			if (hasPermission)
-				transaction
-					.show(disabledSection)
-					.hide(permissionSection);
-			else
-				transaction
-					.hide(disabledSection)
-					.show(permissionSection);
-		}
-		else {
-			//Don't want the view to change size after loading; it should stay the same
-			if (isLoading)
-				transaction.hide(enabledSection);
-			else
-				transaction.show(enabledSection);
-			
-			if (lastStatus != null)
-				enabledSection.setStatus(lastStatus);
-			
+		if (lastStatus == null) {
+			ViewHelpers.ensureVisibility(progressBar, View.VISIBLE);
 			transaction
+				.hide(enabledSection)
 				.hide(disabledSection)
 				.hide(permissionSection);
+		}
+		else {
+			ViewHelpers.ensureVisibility(progressBar, View.GONE);
+			
+			if (!lastStatus.appEnabled) {
+				transaction.hide(enabledSection);
+				
+				boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(this);
+				if (hasPermission)
+					transaction
+						.show(disabledSection)
+						.hide(permissionSection);
+				else
+					transaction
+						.hide(disabledSection)
+						.show(permissionSection);
+			}
+			else {
+				//Don't want the view to change size after loading; it should stay the same
+				transaction
+					.show(enabledSection)
+					.hide(disabledSection)
+					.hide(permissionSection);
+				
+				enabledSection.setStatus(lastStatus);
+			}
 		}
 		
 		/*

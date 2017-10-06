@@ -14,23 +14,20 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
-import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.ServiceSynchroniser;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 	
 	private ApplicationStatusService.Client statusClient;
-	private Settings.Setting<UserSide> persistentServiceState;
+	private ApplicationStatus status;
+	private boolean pendingClick;
 	
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
@@ -41,7 +38,21 @@ public class QuickSettingService extends TileService {
 
 		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
 		
-		if (persistentServiceState.hasValue())
+		if (status != null) {
+			handleClick();
+			pendingClick = false;
+		}
+		else {
+			Log.i(QuickSettingService.class.getSimpleName(), "Don't know application status to handle click. Waiting until status is available.");
+			pendingClick = true;
+		}
+	}
+	
+	/**
+	 * Assumes that we have the current status.
+	 */
+	private void handleClick() {
+		if (status.appEnabled)
 			ServiceSynchroniser.disableService();
 		else if (isLocked())
 			// On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
@@ -107,26 +118,22 @@ public class QuickSettingService extends TileService {
 			unbindService(serviceConnection);
 			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
 		}
-		
-		persistentServiceState = ServiceSettings.instance().persistentState();
-		persistentServiceState.subscribe(enabledSettingListener);
-
-		enabledSettingListener.update();
 	}
 
 	@Override
 	public void onStopListening() {
 		super.onStopListening();
-
-		persistentServiceState.unsubscribe(enabledSettingListener);
-		persistentServiceState = null;
 		
-		if (statusClient != null)
+		if (statusClient != null) {
 			try {
 				statusClient.unsubscribe();
 			} catch (RemoteException ignored) {
 				// The service process died, but that doesn't matter since we're unsubscribing.
 			}
+			
+			disconnected();
+		}
+		
 		unbindService(serviceConnection);
 	}
 	
@@ -139,45 +146,53 @@ public class QuickSettingService extends TileService {
 				statusClient.subscribe();
 			} catch (RemoteException e) {
 				// Service process died, so we'll have to try again once it's back up.
-				statusClient = null;
+				disconnected();
 			}
 		}
 		
 		@Override
 		public void onServiceDisconnected(ComponentName componentName) {
-			statusClient = null;
+			disconnected();
 		}
 	};
 	
 	private final ApplicationStatusService.Client.Listener statusListener = new ApplicationStatusService.Client.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
-			updateTile(status);
+			QuickSettingService.this.status = status;
+			
+			updateTile();
+			
+			if (pendingClick) {
+				Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
+				handleClick();
+				pendingClick = false;
+			}
 		}
 	};
-
-	private final EventHandler enabledSettingListener = new EventHandler() {
-		@Override
-		public void update() {
-			if (!persistentServiceState.hasValue())
-				updateTile(null);
-		}
-	};
-
-	private void updateTile(ApplicationStatus status) {
+	
+	private void disconnected() {
+		statusClient = null;
+		status = null;
+	}
+	
+	/**
+	 * Assumes status is available.
+	 */
+	private void updateTile() {
 		Tile tile = getQsTile();
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 		
-		if (status == null)
-			tile.setState(Tile.STATE_INACTIVE);
-		else
+		if (status.appEnabled)
 			tile.setState(Tile.STATE_ACTIVE);
+		else
+			tile.setState(Tile.STATE_INACTIVE);
 		
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status == null ? R.drawable.quick_setting_off : status.user.iconId()));
+		tile.setIcon(Icon.createWithResource(this, status.appEnabled ? status.user.iconId() : R.drawable.quick_setting_off));
 		
-		int id = status == null ? R.string.app_name : status.user.descriptionId();
+		int id = status.appEnabled ? status.user.descriptionId() : R.string.app_name;
 		tile.setLabel(CurrentProcess.context().getText(id));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}

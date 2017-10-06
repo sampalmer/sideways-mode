@@ -26,6 +26,7 @@ public class ApplicationStatusFactory {
 
 	public ApplicationStatus generate() {
 		return new ApplicationStatus(
+			true,
 			calculator.side(),
 			calculator.isWaitingForSensor()
 		);
