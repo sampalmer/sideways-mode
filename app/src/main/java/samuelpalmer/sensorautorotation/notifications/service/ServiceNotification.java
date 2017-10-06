@@ -11,13 +11,12 @@ import android.util.Log;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.common.notifications.NotificationStyles;
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 class ServiceNotification {
@@ -52,7 +51,7 @@ class ServiceNotification {
 
 	public Notification build(ApplicationStatus applicationStatus) {
 		builder
-			.setSmallIcon(applicationStatus.user.iconId())
+			.setSmallIcon(applicationStatus.user.iconId)
 			.setProgress(0, 0, applicationStatus.waitingForSensor);
 
 		int statusTextResource =
@@ -60,7 +59,7 @@ class ServiceNotification {
 			?
 			R.string.status_waiting_sensor
 			:
-			applicationStatus.user.descriptionId();
+			applicationStatus.user.descriptionId;
 		
 		CharSequence statusText = CurrentProcess.context().getText(statusTextResource);
 
@@ -92,12 +91,12 @@ class ServiceNotification {
 			.configureButton(
 				R.id.change_side_button,
 				R.drawable.action_change_side,
-				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
+				new ApplicationCommand(ApplicationCommand.ACTION_CHANGE_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
 				CurrentProcess.context().getText(R.string.action_change_side))
 			.configureButton(
 				R.id.turn_off_button,
 				R.drawable.action_turn_off,
-				ApplicationInstanceReceiver.getPendingIntent(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_TURN_OFF), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF),
+				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF),
 				CurrentProcess.context().getText(R.string.action_turn_off))
 		;
 

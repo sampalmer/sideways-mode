@@ -31,9 +31,9 @@ public class ApplicationStatus {
 	public ApplicationStatus(Message message) {
 		if (message.arg1 == 0)
 			this.user = null;
-		else if (message.arg1 == UserSide.LEFT.offset().clockwiseCount())
+		else if (message.arg1 == UserSide.LEFT.offset.clockwiseCount())
 			this.user = UserSide.LEFT;
-		else if (message.arg1 == UserSide.RIGHT.offset().clockwiseCount())
+		else if (message.arg1 == UserSide.RIGHT.offset.clockwiseCount())
 			this.user = UserSide.RIGHT;
 		else
 			throw new IllegalArgumentException("Unknown value for user side offset: " + message.arg1);
@@ -46,7 +46,7 @@ public class ApplicationStatus {
 		return Message.obtain(
 			null,
 			MSG_WHAT,
-			user == null ? 0 : user.offset().clockwiseCount(),
+			user == null ? 0 : user.offset.clockwiseCount(),
 			(waitingForSensor ? 1 : 0)
 			|
 			(appEnabled ? 1 : 0) << 1

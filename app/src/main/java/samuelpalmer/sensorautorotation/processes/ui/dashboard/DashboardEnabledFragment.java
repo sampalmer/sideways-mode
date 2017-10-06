@@ -11,12 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceClient;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 
 
 public class DashboardEnabledFragment extends Fragment {
@@ -45,7 +43,7 @@ public class DashboardEnabledFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				ApplicationInstanceClient.send(new ApplicationInstanceCommand(ApplicationInstanceCommand.ACTION_CHANGE_SIDE));
+				new ApplicationCommand(ApplicationCommand.ACTION_CHANGE_SIDE).send(getContext());
 				//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
 			}
 			
@@ -55,7 +53,7 @@ public class DashboardEnabledFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				ServiceSynchroniser.disableService();
+				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(getContext());
 				getActivity().finish();
 			}
 			
@@ -78,12 +76,12 @@ public class DashboardEnabledFragment extends Fragment {
 			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
 		}
 		else {
-			userIcon.setImageResource(lastStatus.user.iconId());
-			userIcon.setContentDescription(CurrentProcess.context().getText(lastStatus.user.descriptionId()));
+			userIcon.setImageResource(lastStatus.user.iconId);
+			userIcon.setContentDescription(CurrentProcess.context().getText(lastStatus.user.descriptionId));
 			ViewHelpers.ensureVisibility(userIcon, View.VISIBLE);
 			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 		}
 		
-		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.descriptionId());
+		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.descriptionId);
 	}
 }

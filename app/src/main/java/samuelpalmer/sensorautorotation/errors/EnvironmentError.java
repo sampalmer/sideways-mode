@@ -14,9 +14,9 @@ import org.json.JSONObject;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -79,7 +79,7 @@ public abstract class EnvironmentError {
 		JSONObject json = serialise();
 		lastErrorSetting.set(json.toString());
 		
-		ServiceSynchroniser.disableService();
+		new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(CurrentProcess.context());
 	}
 	
 	abstract JSONObject serialiseDetails() throws JSONException;

@@ -5,12 +5,10 @@ import android.view.WindowManager;
 
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
@@ -98,17 +96,8 @@ public class ApplicationInstance extends State {
 		applicationState.clear();
 	}
 	
-	public void handle(ApplicationInstanceCommand command) {
-		switch (command.action) {
-			case ApplicationInstanceCommand.ACTION_CHANGE_SIDE:
-				calculator.changeSide();
-				break;
-			case ApplicationInstanceCommand.ACTION_TURN_OFF:
-				ServiceSynchroniser.disableService();
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown action: " + command.action);
-		}
+	public void changeSide() {
+		calculator.changeSide();
 	}
 	
 }

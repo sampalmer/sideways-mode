@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationInstanceCommand;
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 
 /**
  * Basically responsible for keeping the background logic running and preventing
@@ -30,10 +30,10 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent != null && intent.getAction() != null) { // Service is started from a remote commmand
-			ApplicationInstanceCommand command = ApplicationInstanceCommand.fromIntent(intent);
+			ApplicationCommand command = new ApplicationCommand(intent);
 			
 			if (ApplicationInstanceManager.isApplicationRunning())
-				ApplicationInstanceManager.applicationInstance().handle(command);
+				ApplicationInstanceManager.handle(command);
 			else
 				Log.w(RotationService.class.getSimpleName(), "Received command, but the application isn't running");
 		}

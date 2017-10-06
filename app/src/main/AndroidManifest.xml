@@ -212,7 +212,7 @@
 		<receiver android:name=".processes.service.DummyReceiver"
 		          android:process="@string/service_process_name" />
 
-		<receiver android:name=".processes.service.api.ApplicationInstanceReceiver"
+		<receiver android:name=".processes.service.ApplicationCommandReceiver"
 		          android:process="@string/service_process_name" />
 
 		<service

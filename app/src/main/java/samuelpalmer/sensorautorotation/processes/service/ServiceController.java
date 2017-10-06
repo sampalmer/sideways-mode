@@ -1,10 +1,10 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 
 public abstract class ServiceController {
 
@@ -15,7 +15,7 @@ public abstract class ServiceController {
 			ensureStopped();
 	}
 
-	public static void ensureStarted(Intent intent) {
+	private static void ensureStarted(Intent intent) {
 		ComponentName name;
 		if (Build.VERSION.SDK_INT >= 26)
 			name = CurrentProcess.context().startForegroundService(intent); // So the OS doesn't block the service start due to it begin a "background" app
@@ -32,7 +32,7 @@ public abstract class ServiceController {
 		CurrentProcess.context().stopService(intent());
 	}
 
-	public static Intent intent() {
+	private static Intent intent() {
 		return new Intent(CurrentProcess.context(), RotationService.class);
 	}
 

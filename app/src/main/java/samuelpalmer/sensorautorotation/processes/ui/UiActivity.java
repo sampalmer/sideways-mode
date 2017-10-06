@@ -6,8 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import samuelpalmer.common.settings.application.Settings;
+import samuelpalmer.sensorautorotation.BroadcastKillFix;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSyncReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -59,7 +60,9 @@ public abstract class UiActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		ServiceSynchroniser.updateFromSettings();
+		Intent intent = new Intent(this, ServiceSyncReceiver.class);
+		BroadcastKillFix.apply(intent);
+		sendBroadcast(intent);
 	}
 
 }

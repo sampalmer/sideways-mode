@@ -17,7 +17,6 @@ import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
@@ -60,7 +59,7 @@ public class ApplicationStatusService extends Service {
 								 * If the service has crashed or been killed, we want to make sure it's running.
 								 * Otherwise the client will have to wait a long time (or forever) to get the first service status update.
 								 */
-								ServiceSynchroniser.updateFromSettings();
+								ServiceController.updateServiceState(true);
 							}
 						else {
 							message = new ApplicationStatus(false, null, false).asMessage();

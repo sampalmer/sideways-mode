@@ -14,10 +14,10 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
@@ -53,7 +53,7 @@ public class QuickSettingService extends TileService {
 	 */
 	private void handleClick() {
 		if (status.appEnabled)
-			ServiceSynchroniser.disableService();
+			new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(this);
 		else if (isLocked())
 			// On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
 			unlockAndRun(new Runnable() {
@@ -190,9 +190,9 @@ public class QuickSettingService extends TileService {
 			tile.setState(Tile.STATE_INACTIVE);
 		
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status.appEnabled ? status.user.iconId() : R.drawable.quick_setting_off));
+		tile.setIcon(Icon.createWithResource(this, status.appEnabled ? status.user.iconId : R.drawable.quick_setting_off));
 		
-		int id = status.appEnabled ? status.user.descriptionId() : R.string.app_name;
+		int id = status.appEnabled ? status.user.descriptionId : R.string.app_name;
 		tile.setLabel(CurrentProcess.context().getText(id));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
 import samuelpalmer.sensorautorotation.UserSide;
 
 public class DashboardDisabledFragment extends Fragment {
@@ -51,7 +50,7 @@ public class DashboardDisabledFragment extends Fragment {
 	}
 	
 	private void startApp(UserSide userSide) {
-		ServiceSynchroniser.enableService(userSide);
+		userSide.command.send(getContext());
 		getActivity().finish();
 	}
 	

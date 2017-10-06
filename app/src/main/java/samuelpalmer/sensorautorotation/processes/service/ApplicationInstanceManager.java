@@ -7,8 +7,9 @@ import android.content.IntentFilter;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.ServiceSynchroniser;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
@@ -38,7 +39,7 @@ public abstract class ApplicationInstanceManager {
 		@Override
 		public void update() {
 			if (!userInteractivityMonitor.get().active()) {
-				ServiceSynchroniser.disableService();
+				disableService();
 			}
 		}
 	};
@@ -47,7 +48,7 @@ public abstract class ApplicationInstanceManager {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ServiceSynchroniser.disableService();
+			disableService();
 		}
 		
 	};
@@ -90,5 +91,33 @@ public abstract class ApplicationInstanceManager {
 			&&
 			ServiceSettings.instance().persistentState().hasValue() // It shouldn't be running if it's turned off!
 		;
+	}
+	
+	public static void handle(ApplicationCommand command) {
+		// TODO: Do proper validation of application enabled state and running state here.
+		
+		switch (command.action) {
+			case ApplicationCommand.ACTION_LEFT_SIDE:
+				ServiceSettings.instance().persistentState().set(UserSide.LEFT);
+				ServiceController.updateServiceState(true);
+				break;
+			case ApplicationCommand.ACTION_RIGHT_SIDE:
+				ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
+				ServiceController.updateServiceState(true);
+				break;
+			case ApplicationCommand.ACTION_CHANGE_SIDE:
+				applicationInstance().changeSide();
+				break;
+			case ApplicationCommand.ACTION_TURN_OFF:
+				disableService();
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown action: " + command.action);
+		}
+	}
+	
+	private static void disableService() {
+		ServiceSettings.instance().persistentState().remove();
+		ServiceController.updateServiceState(false);
 	}
 }

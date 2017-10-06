@@ -35,7 +35,7 @@ public class OrientationCalculator {
 	}
 	
 	private @NonNull Rotation offset() {
-		return state.userSide.get().offset();
+		return state.userSide.get().offset;
 	}
 
 	public void changeSide() {
