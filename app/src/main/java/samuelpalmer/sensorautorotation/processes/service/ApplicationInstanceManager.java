@@ -112,7 +112,7 @@ public abstract class ApplicationInstanceManager {
 				disableService();
 				break;
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
-				ServiceSynchroniser.updateFromSettings();
+				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
