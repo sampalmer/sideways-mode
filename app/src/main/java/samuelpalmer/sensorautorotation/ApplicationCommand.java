@@ -12,19 +12,20 @@ import samuelpalmer.sensorautorotation.processes.service.ApplicationCommandRecei
 /**
  * Provides a way to remotely communicate with the back-end.
  */
-
 public class ApplicationCommand {
 
 	public static final String ACTION_LEFT_SIDE = "left_side";
 	public static final String ACTION_RIGHT_SIDE = "right_side";
 	public static final String ACTION_CHANGE_SIDE = "change_side";
 	public static final String ACTION_TURN_OFF = "turn_off";
+	public static final String ACTION_SYNC_SERVICE = "sync_service";
 	
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_LEFT_SIDE,
 			ACTION_RIGHT_SIDE,
 			ACTION_CHANGE_SIDE,
-			ACTION_TURN_OFF
+			ACTION_TURN_OFF,
+			ACTION_SYNC_SERVICE
 	));
 	
 	public final String action;

@@ -111,6 +111,9 @@ public abstract class ApplicationInstanceManager {
 			case ApplicationCommand.ACTION_TURN_OFF:
 				disableService();
 				break;
+			case ApplicationCommand.ACTION_SYNC_SERVICE:
+				ServiceSynchroniser.updateFromSettings();
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}

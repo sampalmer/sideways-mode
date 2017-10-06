@@ -206,9 +206,6 @@
 			</intent-filter>
 		</receiver>
 
-		<receiver android:name=".processes.service.ServiceSyncReceiver"
-		          android:process="@string/service_process_name" />
-
 		<receiver android:name=".processes.service.DummyReceiver"
 		          android:process="@string/service_process_name" />
 
