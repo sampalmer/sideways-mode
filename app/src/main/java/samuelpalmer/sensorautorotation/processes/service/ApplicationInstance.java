@@ -44,8 +44,6 @@ public class ApplicationInstance extends State {
 	
 	@Override
 	protected void start() {
-		//TODO: Maybe check if the service is actually enabled and stop if it's not?
-		
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentError.clear();
 		
