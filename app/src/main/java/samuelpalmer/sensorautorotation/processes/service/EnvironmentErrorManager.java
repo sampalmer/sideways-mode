@@ -8,6 +8,7 @@ import android.util.Log;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
@@ -42,6 +43,7 @@ public abstract class EnvironmentErrorManager {
 			.setContentTitle(error.getSummary())
 			.setContentText(CurrentProcess.context().getText(R.string.app_disabled_view_error))
 			.setAutoCancel(true)
+			.setDeleteIntent(new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).asPendingIntent(CurrentProcess.context(), PendingIntentIds.ENVIRONMENT_ERROR_NOTIFICATION_CLEAR))
 			.setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)

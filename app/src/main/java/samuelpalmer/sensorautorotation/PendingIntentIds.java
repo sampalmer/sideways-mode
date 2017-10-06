@@ -17,6 +17,7 @@ public abstract class PendingIntentIds {
 	public static final int MAIN_NOTIFICATION_CHANGE_SIDE = 11;
 	public static final int MAIN_NOTIFICATION_TURN_OFF = 12;
 	public static final int QUICK_SETTING_CLICK = 13;
+	public static final int ENVIRONMENT_ERROR_NOTIFICATION_CLEAR = 14;
 	
 	// Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
 	public static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_CANCEL_CURRENT;

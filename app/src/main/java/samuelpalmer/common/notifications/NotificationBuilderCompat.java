@@ -130,6 +130,11 @@ public class NotificationBuilderCompat {
 		builder.setAutoCancel(autoCancel);
 		return this;
 	}
+	
+	public NotificationBuilderCompat setDeleteIntent(PendingIntent intent) {
+		builder.setDeleteIntent(intent);
+		return this;
+	}
 
 	public NotificationBuilderCompat setTicker(CharSequence tickerText) {
 		builder.setTicker(tickerText);
