@@ -41,7 +41,7 @@ public class SensorError extends EnvironmentError {
 	}
 	
 	@Override
-	String logMessage() {
+	public String logMessage() {
 		return type.name();
 	}
 	

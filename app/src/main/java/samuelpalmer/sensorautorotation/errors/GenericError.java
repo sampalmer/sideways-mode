@@ -34,7 +34,7 @@ public class GenericError extends EnvironmentError {
 	}
 	
 	@Override
-	String logMessage() {
+	public String logMessage() {
 		return message.toString();
 	}
 	

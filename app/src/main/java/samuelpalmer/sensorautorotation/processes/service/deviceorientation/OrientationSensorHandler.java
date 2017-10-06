@@ -14,6 +14,7 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.SensorError;
+import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
@@ -39,7 +40,7 @@ public class OrientationSensorHandler extends State {
 		this.screen = screen;
 
 		if (!windowOrientationListener.canDetectOrientation())
-			new SensorError(SensorError.Type.NOT_FOUND).report();
+			EnvironmentErrorManager.report(new SensorError(SensorError.Type.NOT_FOUND));
 	}
 
 	@Override

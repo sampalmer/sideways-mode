@@ -6,7 +6,6 @@ import android.view.WindowManager;
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
@@ -45,7 +44,7 @@ public class ApplicationInstance extends State {
 	@Override
 	protected void start() {
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-		EnvironmentError.clear();
+		EnvironmentErrorManager.clear();
 		
 		SystemSettings systemSettings = new SystemSettings();
 		Display screen = ((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();

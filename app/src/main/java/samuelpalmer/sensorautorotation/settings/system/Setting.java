@@ -10,8 +10,6 @@ import android.provider.Settings;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
 import static android.provider.Settings.System.getString;
@@ -43,7 +41,7 @@ public class Setting<T> {
 		return converter.tryParse(value);
 	}
 
-	public void set(T value) {
+	public void set(T value) throws SystemSettingAccessDeniedException, SystemSettingWriteException {
 		String textValue = converter.format(value);
 		set(key, textValue);
 	}
@@ -52,21 +50,17 @@ public class Setting<T> {
 		return getString(contentResolver, key);
 	}
 
-	private void set(String key, String value) {
+	private void set(String key, String value) throws SystemSettingWriteException, SystemSettingAccessDeniedException {
 		if (
 			VERSION.SDK_INT >= 23
 			&&
 			!Settings.System.canWrite(CurrentProcess.context())
-		) {
-			new GenericError(R.string.permission_needed_summary, CurrentProcess.context().getText(R.string.environment_error_system_setting_write_denied_message)).report();
-			return;
-		}
-
+		)
+			throw new SystemSettingAccessDeniedException();
+		
 		boolean writeErrors = !putString(contentResolver, key, value);
-		if (writeErrors) {
-			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			new GenericError(R.string.environment_error_system_setting_write_failure_summary, CurrentProcess.context().getString(R.string.environment_error_system_setting_write_failure_message, key, value)).report();
-		}
+		if (writeErrors)
+			throw new SystemSettingWriteException(key, value);
 	}
 
 	//Mostly copied from ApplicationSettings.Setting

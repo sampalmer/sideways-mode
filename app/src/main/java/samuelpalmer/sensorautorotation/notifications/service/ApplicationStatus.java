@@ -1,17 +1,23 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
+import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.UserSide;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 
 @SuppressWarnings("WeakerAccess")
 public class ApplicationStatus {
 	
+	@Nullable
+	public final EnvironmentError error;
 	public final boolean appEnabled;
 	public final UserSide user;
 	public final boolean waitingForSensor;
 
-	public ApplicationStatus(boolean appEnabled, UserSide user, boolean waitingForSensor) {
+	public ApplicationStatus(@Nullable EnvironmentError error, boolean appEnabled, UserSide user, boolean waitingForSensor) {
+		this.error = error;
 		this.appEnabled = appEnabled;
 		this.user = user;
 		this.waitingForSensor = waitingForSensor;
@@ -19,6 +25,8 @@ public class ApplicationStatus {
 	
 	public boolean equals(ApplicationStatus other) {
 		return
+			((error == null || other.error == null) ? error == other.error : error.equals(other.error))
+			&&
 			appEnabled == other.appEnabled
 			&&
 			user.equals(other.user)
@@ -40,10 +48,16 @@ public class ApplicationStatus {
 		
 		waitingForSensor = (message.arg2 & 0x1) == 0x1;
 		appEnabled = (message.arg2 & 0x2) == 0x2;
+		
+		String errorJson = message.getData().getString(null);
+		if (errorJson != null)
+			error = EnvironmentError.fromJson(errorJson);
+		else
+			error = null;
 	}
 	
 	public Message asMessage() {
-		return Message.obtain(
+		Message result = Message.obtain(
 			null,
 			MSG_WHAT,
 			user == null ? 0 : user.offset.clockwiseCount(),
@@ -51,6 +65,14 @@ public class ApplicationStatus {
 			|
 			(appEnabled ? 1 : 0) << 1
 		);
+		
+		if (error != null) {
+			Bundle bundle = new Bundle();
+			bundle.putString(null, error.toJson());
+			result.setData(bundle);
+		}
+		
+		return result;
 	}
 	
 }

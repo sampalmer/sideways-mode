@@ -114,6 +114,9 @@ public abstract class ApplicationInstanceManager {
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
 				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
 				break;
+			case ApplicationCommand.ACTION_CLEAR_ERROR:
+				EnvironmentErrorManager.clear();
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}

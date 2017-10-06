@@ -36,8 +36,10 @@ public class SystemAutoRotationMonitor extends State {
 
 	private void checkIfSystemAutoRotationWasEnabled() {
 		boolean accelerometerRotation = settings.accelerometerRotation.get();
-		if (accelerometerRotation)
-			new GenericError(R.string.environment_error_system_rotation_enabled_summary, CurrentProcess.context().getText(R.string.environment_error_system_rotation_enabled_message)).report();
+		if (accelerometerRotation) {
+			GenericError error = new GenericError(R.string.environment_error_system_rotation_enabled_summary, CurrentProcess.context().getText(R.string.environment_error_system_rotation_enabled_message));
+			EnvironmentErrorManager.report(error);
+		}
 	}
 
 }

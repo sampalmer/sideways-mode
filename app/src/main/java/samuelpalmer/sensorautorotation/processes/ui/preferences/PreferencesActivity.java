@@ -1,14 +1,22 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
+import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
 
@@ -18,28 +26,68 @@ import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
  */
 //TODO: Improve the name of this, or reorganise it.
 public abstract class PreferencesActivity extends UiActivity {
-
+	
+	private ApplicationStatusService.Client serviceClient;
 	private Snackbar snackbar;
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		EnvironmentError.onChange.subscribe(lastErrorChanged);
-		lastErrorChanged.update();
+		
+		boolean boundSuccessfully = bindService(
+			new Intent(this, ApplicationStatusService.class),
+			serviceConnection,
+			Context.BIND_AUTO_CREATE
+		);
+		
+		if (!boundSuccessfully) {
+			// The documentation says you should still unbind after a binding failure
+			this.unbindService(serviceConnection);
+			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
+		}
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-		EnvironmentError.onChange.unsubscribe(lastErrorChanged);
+		
+		if (serviceClient != null) {
+			try {
+				serviceClient.unsubscribe();
+			} catch (RemoteException ignored) {
+				// The service process died, but that doesn't matter since we're unsubscribing.
+			}
+			
+			serviceClient = null;
+		}
+		unbindService(serviceConnection);
 	}
-
-	private final EventHandler lastErrorChanged = new EventHandler() {
+	
+	private final ServiceConnection serviceConnection = new ServiceConnection() {
+		
 		@Override
-		public void update() {
-			final EnvironmentError lastError = EnvironmentError.lastError();
+		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+			serviceClient = new ApplicationStatusService.Client(iBinder, statusChanged);
+			
+			try {
+				serviceClient.subscribe();
+			} catch (RemoteException e) {
+				// Service process died, so we'll have to try again once it's back up.
+				serviceClient = null;
+			}
+		}
+		
+		@Override
+		public void onServiceDisconnected(ComponentName componentName) {
+			serviceClient = null;
+		}
+		
+	};
+	
+	private final ApplicationStatusService.Client.Listener statusChanged = new ApplicationStatusService.Client.Listener() {
+		@Override
+		public void onChange(ApplicationStatus status) {
+			final EnvironmentError lastError = status.error;
 
 			if (snackbar == null) {
 				//http://stackoverflow.com/a/5069354/238753
@@ -57,7 +105,7 @@ public abstract class PreferencesActivity extends UiActivity {
 						super.onDismissed(snackbar, event);
 
 						if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
-							EnvironmentError.clear();
+							new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(PreferencesActivity.this);
 
 						//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
 						PreferencesActivity.this.snackbar = null;

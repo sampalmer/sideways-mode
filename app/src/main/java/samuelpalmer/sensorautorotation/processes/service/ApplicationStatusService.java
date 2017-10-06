@@ -18,6 +18,7 @@ import java.util.Set;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.UserSide;
+import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
 import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
@@ -31,6 +32,7 @@ public class ApplicationStatusService extends Service {
 	private static final Set<Messenger> clients = new HashSet<>();
 	
 	private static Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
+	private static Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
 	
 	private static final int MSG_SUBSCRIBE = 1;
 	private static final int MSG_UNSUBSCRIBE = 2;
@@ -62,7 +64,7 @@ public class ApplicationStatusService extends Service {
 								ServiceController.updateServiceState(true);
 							}
 						else {
-							message = new ApplicationStatus(false, null, false).asMessage();
+							message = makeAppDisabledStatus().asMessage();
 						}
 						
 						if (message != null)
@@ -75,6 +77,7 @@ public class ApplicationStatusService extends Service {
 							
 						if (clients.size() == 1) {
 							enabledState.subscribe(enabledStateChanged);
+							error.subscribe(enabledStateChanged);
 						}
 					}
 					else
@@ -86,8 +89,10 @@ public class ApplicationStatusService extends Service {
 					boolean wasSubscribed = clients.remove(msg.replyTo);
 					if (!wasSubscribed)
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received unsubscription for non-subscriber");
-					else if (clients.size() == 0)
+					else if (clients.size() == 0) {
+						error.unsubscribe(enabledStateChanged);
 						enabledState.unsubscribe(enabledStateChanged);
+					}
 					
 					break;
 				}
@@ -96,6 +101,15 @@ public class ApplicationStatusService extends Service {
 			}
 		}
 		
+	}
+	
+	private static ApplicationStatus makeAppDisabledStatus() {
+		return new ApplicationStatus(
+			error.hasValue() ? EnvironmentError.fromJson(error.get()) : null,
+			false,
+			null,
+			false
+		);
 	}
 	
 	private final Messenger messenger = new Messenger(new ServerHandler());
@@ -115,7 +129,7 @@ public class ApplicationStatusService extends Service {
 		@Override
 		public void update() {
 			if (!enabledState.hasValue())
-				sendUpdate(new ApplicationStatus(false, null, false));
+				sendUpdate(makeAppDisabledStatus());
 		}
 	};
 	

@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.errors.SensorError;
+import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 
 /**
  * A special helper class used by the WindowManager
@@ -115,7 +116,7 @@ public abstract class WindowOrientationListener {
 			synchronized (mLock) {
 				if (mEnabled && !mGotSensorEvent) {
 					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
-					new SensorError(SensorError.Type.NO_DATA).report();
+					EnvironmentErrorManager.report(new SensorError(SensorError.Type.NO_DATA));
 				}
 			}
 		}
