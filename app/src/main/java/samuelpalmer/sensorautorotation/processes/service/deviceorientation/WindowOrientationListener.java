@@ -762,6 +762,7 @@ public abstract class WindowOrientationListener {
 				mLastSensorType = event.sensor.getType();
 			}
 			
+			boolean gotBadSensorData = false;
 			int proposedRotation;
 			int oldProposedRotation;
 			
@@ -769,16 +770,37 @@ public abstract class WindowOrientationListener {
 				mGotSensorEvent = true;
 				
 				if (event.sensor.getType() == SENSOR_TYPE_DEVICE_ORIENTATION) {
-					oldProposedRotation = mProposedRotation;
-					mProposedRotation = (int) event.values[0];
-					proposedRotation = mProposedRotation;
+					int sensorValue = (int) event.values[0];
+					
+					// This sensor isn't exposed through the Android SDK, so it's possible its implementation will change in the future.
+					if (sensorValue < -1 || sensorValue > 3) {
+						Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from device orientation sensor: " + sensorValue);
+						gotBadSensorData = true;
+						oldProposedRotation = mProposedRotation;
+						proposedRotation = mProposedRotation;
+					}
+					else {
+						oldProposedRotation = mProposedRotation;
+						mProposedRotation = sensorValue;
+						proposedRotation = mProposedRotation;
+					}
 				}
 				else if (event.sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION) {
-					oldProposedRotation = mProposedRotation;
-					mProposedRotation = (int) event.values[0];
-					if (mProposedRotation == 255)
-						mProposedRotation = -1;
-					proposedRotation = mProposedRotation;
+					int sensorValue = (int) event.values[0];
+					
+					// This is a custom vendor-specific, so we can't guarantee it will work the way we expect.
+					if ((sensorValue < 0 || sensorValue > 3) && sensorValue != 255) {
+						Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from Samsung device orientation sensor: " + sensorValue);
+						gotBadSensorData = true;
+						oldProposedRotation = mProposedRotation;
+						proposedRotation = mProposedRotation;
+					}
+					else {
+						oldProposedRotation = mProposedRotation;
+						// The Samsung device orientation sensor uses 255 for "unknown".
+						mProposedRotation = sensorValue == 255 ? -1 : sensorValue;
+						proposedRotation = mProposedRotation;
+					}
 				}
 				else {
 					// The vector given in the SensorEvent points straight up (towards the sky) under
@@ -961,6 +983,18 @@ public abstract class WindowOrientationListener {
 							mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS));
 					}
 				}
+			}
+			
+			if (gotBadSensorData) {
+				Log.w(WindowOrientationListener.class.getSimpleName(), "Forgetting this sensor and restarting since it produced bad data: " + stringify(event.sensor));
+				disable();
+				
+				if (!prioritisedSensorTypes.remove((Object) event.sensor.getType()))
+					throw new RuntimeException("Couldn't remove bad sensor type");
+				
+				mSensors = getSupportedSensors(mSensorManager);
+				enable();
+				return;
 			}
 			
 			// Tell the listener.
