@@ -93,6 +93,11 @@ public abstract class WindowOrientationListener {
 	static {
 		ArrayList<Integer> result = new ArrayList<>();
 		
+		/*
+		 * My Motorola Moto G5 Plus has an issue where its "game rotation vector" sensor
+		 * starts off with incorrect readings and then corrects itself after a few seconds.
+		 * Using the Android 7 device orientation sensor works around this (and may have other benefits).
+		 */
 		if (Build.VERSION.SDK_INT >= 24)
 			result.add(SENSOR_TYPE_DEVICE_ORIENTATION);
 		
