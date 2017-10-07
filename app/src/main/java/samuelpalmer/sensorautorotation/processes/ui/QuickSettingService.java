@@ -20,12 +20,13 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 	
-	private ApplicationStatusService.Client statusClient;
+	private ApplicationStatusClient statusClient;
 	private ApplicationStatus status;
 	private boolean pendingClick;
 	
@@ -140,7 +141,7 @@ public class QuickSettingService extends TileService {
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			statusClient = new ApplicationStatusService.Client(iBinder, statusListener);
+			statusClient = new ApplicationStatusClient(iBinder, statusListener);
 			
 			try {
 				statusClient.subscribe();
@@ -156,7 +157,7 @@ public class QuickSettingService extends TileService {
 		}
 	};
 	
-	private final ApplicationStatusService.Client.Listener statusListener = new ApplicationStatusService.Client.Listener() {
+	private final ApplicationStatusClient.Listener statusListener = new ApplicationStatusClient.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
 			QuickSettingService.this.status = status;

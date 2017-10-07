@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
@@ -27,7 +28,7 @@ import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 //TODO: Improve the name of this, or reorganise it.
 public abstract class PreferencesActivity extends UiActivity {
 	
-	private ApplicationStatusService.Client serviceClient;
+	private ApplicationStatusClient serviceClient;
 	private Snackbar snackbar;
 
 	@Override
@@ -67,7 +68,7 @@ public abstract class PreferencesActivity extends UiActivity {
 		
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			serviceClient = new ApplicationStatusService.Client(iBinder, statusChanged);
+			serviceClient = new ApplicationStatusClient(iBinder, statusChanged);
 			
 			try {
 				serviceClient.subscribe();
@@ -84,7 +85,7 @@ public abstract class PreferencesActivity extends UiActivity {
 		
 	};
 	
-	private final ApplicationStatusService.Client.Listener statusChanged = new ApplicationStatusService.Client.Listener() {
+	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
 			final EnvironmentError lastError = status.error;

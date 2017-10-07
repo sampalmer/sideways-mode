@@ -10,7 +10,6 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,8 +32,8 @@ public class ApplicationStatusService extends Service {
 	private static Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
 	private static Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
 	
-	private static final int MSG_SUBSCRIBE = 1;
-	private static final int MSG_UNSUBSCRIBE = 2;
+	public static final int MSG_SUBSCRIBE = 1;
+	public static final int MSG_UNSUBSCRIBE = 2;
 	
 	private static class ServerHandler extends Handler {
 		
@@ -132,59 +131,6 @@ public class ApplicationStatusService extends Service {
 		}
 	};
 	
-	public static class Client {
-		
-		private final Messenger serviceMessenger;
-		private final Listener listener;
-		private final Messenger clientMessenger;
-		
-		public Client(IBinder service, Listener listener) {
-			this.serviceMessenger = new Messenger(service);
-			this.listener = listener;
-			this.clientMessenger = new Messenger(new ClientHandler(this));
-		}
-		
-		public void subscribe() throws RemoteException {
-			Message msg = Message.obtain(null, MSG_SUBSCRIBE);
-			msg.replyTo = clientMessenger;
-			serviceMessenger.send(msg);
-		}
-		
-		public void unsubscribe() throws RemoteException {
-			Message msg = Message.obtain(null, MSG_UNSUBSCRIBE);
-			msg.replyTo = clientMessenger;
-			serviceMessenger.send(msg);
-		}
-		
-		public interface Listener {
-			void onChange(ApplicationStatus status);
-		}
-		
-		private static class ClientHandler extends Handler {
-			
-			private final WeakReference<Client> clientReference;
-			
-			public ClientHandler(Client client) {
-				// Android Studio issued a warning saying that I must use weak references to outside of the handler, hence the use of weak references here
-				this.clientReference = new WeakReference<>(client);
-			}
-			
-			@Override
-			public void handleMessage(Message msg) {
-				ApplicationStatus status = new ApplicationStatus(msg);
-				Client client = clientReference.get();
-				if (client != null)
-					client.listener.onChange(status);
-				else {
-					// Can't do much here
-					Log.w(getClass().getSimpleName(), "Received client message but client has been garbage collected");
-				}
-			}
-			
-		}
-		
-	}
-
 	public static class RemoteStatusDisplay implements ApplicationStatusDisplay {
 
 		@Override

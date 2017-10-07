@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
@@ -32,7 +33,7 @@ public class DashboardActivity extends DialogActivity {
 	private ProgressBar progressBar;
 	private DashboardEnabledFragment enabledSection;
 	
-	private ApplicationStatusService.Client serviceClient;
+	private ApplicationStatusClient serviceClient;
 	
 	private ApplicationStatus lastStatus;
 	private FragmentManager fragmentManager;
@@ -120,7 +121,7 @@ public class DashboardActivity extends DialogActivity {
 		
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			serviceClient = new ApplicationStatusService.Client(iBinder, statusChanged);
+			serviceClient = new ApplicationStatusClient(iBinder, statusChanged);
 			
 			try {
 				serviceClient.subscribe();
@@ -137,7 +138,7 @@ public class DashboardActivity extends DialogActivity {
 		
 	};
 	
-	private final ApplicationStatusService.Client.Listener statusChanged = new ApplicationStatusService.Client.Listener() {
+	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		
 		@Override
 		public void onChange(final ApplicationStatus status) {

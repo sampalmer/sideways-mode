@@ -7,7 +7,7 @@ import android.content.Intent;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import samuelpalmer.sensorautorotation.processes.service.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 
 /**
  * Provides a way to remotely communicate with the back-end.
