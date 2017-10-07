@@ -14,8 +14,8 @@ import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 class Migrations {
 	static SparseArray<Migration> buildMap() {

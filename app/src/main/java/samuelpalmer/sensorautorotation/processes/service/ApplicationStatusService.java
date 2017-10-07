@@ -21,7 +21,6 @@ import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplay;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 /**
  * Provides access to remotely monitor the state of the service.

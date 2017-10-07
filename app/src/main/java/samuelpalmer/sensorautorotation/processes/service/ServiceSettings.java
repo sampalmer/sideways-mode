@@ -1,13 +1,16 @@
-package samuelpalmer.sensorautorotation.settings.application;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.settings.application.EnumSetting;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.StringSetting;
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.UserSide;
 
 /**
  * Holds persistent service state. Not intended for backup or sync.
+ * Only for use within the service process.
  */
-public class ServiceSettings extends ProcessIndependentSettings {
+public class ServiceSettings extends Settings {
 	
 	private static ServiceSettings instance;
 	
@@ -19,7 +22,7 @@ public class ServiceSettings extends ProcessIndependentSettings {
 	}
 	
 	private ServiceSettings() {
-		super(makePreferences("service"));
+		super(CurrentProcess.context().getSharedPreferences("service", 0));
 	}
 	
 	/**

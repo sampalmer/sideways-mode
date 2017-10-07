@@ -9,7 +9,7 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
-import samuelpalmer.sensorautorotation.settings.application.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
 	

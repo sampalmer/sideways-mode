@@ -11,7 +11,6 @@ import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public abstract class ApplicationInstanceManager {
 	

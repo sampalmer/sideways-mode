@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.settings.CachedSetting;
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
 
 public class ApplicationState {
 	

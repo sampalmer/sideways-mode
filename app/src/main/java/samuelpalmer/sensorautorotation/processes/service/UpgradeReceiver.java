@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.settings.application.ServiceSettings;
-
 public class UpgradeReceiver extends BroadcastReceiver {
 
 	@Override

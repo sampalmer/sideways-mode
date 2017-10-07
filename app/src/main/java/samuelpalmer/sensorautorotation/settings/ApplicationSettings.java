@@ -1,15 +1,18 @@
-package samuelpalmer.sensorautorotation.settings.application;
+package samuelpalmer.sensorautorotation.settings;
 
 import android.content.SharedPreferences;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderSharedPreferences;
 import samuelpalmer.common.settings.application.IntegerSetting;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.StringSetSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.R;
 
-public class ApplicationSettings extends ProcessIndependentSettings {
+public class ApplicationSettings extends Settings {
 
 	public static String sharedPreferencesName() {
 		return CurrentProcess.context().getPackageName() + "_preferences";
@@ -18,8 +21,22 @@ public class ApplicationSettings extends ProcessIndependentSettings {
 	private static ApplicationSettings instance;
 	
 	public static ApplicationSettings instance() {
-		if (instance == null)
-			instance = new ApplicationSettings(makePreferences(sharedPreferencesName()));
+		if (instance == null) {
+			SharedPreferences sharedPreferences;
+			
+			if (CurrentProcess.isServiceProcess())
+				// For use in the service process for improved performance.
+				sharedPreferences = CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0);
+			else
+				// For use outside the service process for concurrency safety.
+				sharedPreferences = new ContentProviderSharedPreferences(
+					CurrentProcess.context(),
+					CurrentProcess.context().getResources().getString(R.string.preferences_provider_authority),
+					sharedPreferencesName()
+				);
+			
+			instance = new ApplicationSettings(sharedPreferences);
+		}
 		
 		return instance;
 	}
