@@ -54,7 +54,7 @@ public class ApplicationInstance extends State {
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		
 		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor, applicationState);
+		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor);
 		
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
 		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());

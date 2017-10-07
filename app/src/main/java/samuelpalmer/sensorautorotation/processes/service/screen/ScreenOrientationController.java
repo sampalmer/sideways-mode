@@ -8,7 +8,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationState;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.settings.system.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
@@ -19,12 +18,10 @@ public class ScreenOrientationController extends State {
 
 	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
-	private final ApplicationState state;
 	
-	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen, ApplicationState state) {
+	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen) {
 		this.settings = settings;
 		this.screen = screen;
-		this.state = state;
 	}
 
 	@Override
