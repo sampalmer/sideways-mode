@@ -73,7 +73,9 @@ public class OrientationSensorHandler extends State {
 			
 			if (lastRotation == null || lastRotation != rotation) {
 				lastRotation = rotation;
-				calculator.setDevice(rotation == -1 ? null : new AndroidSurfaceRotation(rotation).orientation());
+				Orientation orientation = rotation == -1 ? null : new AndroidSurfaceRotation(rotation).orientation();
+				Log.i(OrientationSensorHandler.class.getSimpleName(), "Device orientation changed: " + orientation);
+				calculator.setDevice(orientation);
 			}
 		}
 	};
