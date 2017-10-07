@@ -65,6 +65,7 @@ import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager
 @SuppressLint("all")
 public abstract class WindowOrientationListener {
 	private static final int SENSOR_TYPE_DEVICE_ORIENTATION = 27 /* Sensor.TYPE_DEVICE_ORIENTATION */;
+	private static final int SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION = 65558;
 	
 	private static final String TAG = "WindowOrientationListener";
 	private static final boolean LOG = false;
@@ -100,6 +101,13 @@ public abstract class WindowOrientationListener {
 		 */
 		if (Build.VERSION.SDK_INT >= 24)
 			result.add(SENSOR_TYPE_DEVICE_ORIENTATION);
+		
+		/*
+		 * Samsung has its own custom device orientation sensor. It doesn't suffer from any of
+		 * "rotation vector sensor" problems I've seen on my Samsung Galaxy S5, so this custom
+		 * sensor is preferred.
+		 */
+		result.add(SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION);
 		
 		// Got a couple of crashes related to "gesture" sensor events.
 		// Maybe it was because TYPE_GAME_ROTATION_VECTOR's value had a different meaning on those devices?
@@ -137,13 +145,36 @@ public abstract class WindowOrientationListener {
 
 		for (int type : prioritisedSensorTypes) {
 			Sensor sensor = sensorManager.getDefaultSensor(type);
-			if (sensor != null)
+			if (isSupported(sensor))
 				result.add(sensor);
 		}
 
 		return result;
 	}
-
+	
+	private static boolean isSupported(Sensor sensor) {
+		if (sensor == null)
+			return false;
+		
+		// The Samsung sensor is a custom one, so we need to make sure
+		// we're not looking at another vendor's custom sensor that uses the same type number.
+		if (
+			sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION
+			&&
+			!
+			(
+				sensor.getVendor().toLowerCase().contains("samsung")
+				&&
+				sensor.getName().toLowerCase().contains("screen orientation")
+				&&
+				sensor.getMaximumRange() == 255f
+			)
+		)
+			return false;
+		
+		return true;
+	}
+	
 	/**
 	 * Creates a new WindowOrientationListener.
 	 *
@@ -721,7 +752,7 @@ public abstract class WindowOrientationListener {
 					mMeasuringAcceleration = true;
 				else if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR || event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
 					mMeasuringAcceleration = false;
-				else if (event.sensor.getType() != SENSOR_TYPE_DEVICE_ORIENTATION)
+				else if (event.sensor.getType() != SENSOR_TYPE_DEVICE_ORIENTATION && event.sensor.getType() != SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION)
 					return;
 				
 				if (mSensors.size() > 1) {
@@ -752,6 +783,13 @@ public abstract class WindowOrientationListener {
 				if (event.sensor.getType() == SENSOR_TYPE_DEVICE_ORIENTATION) {
 					oldProposedRotation = mProposedRotation;
 					mProposedRotation = (int) event.values[0];
+					proposedRotation = mProposedRotation;
+				}
+				else if (event.sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION) {
+					oldProposedRotation = mProposedRotation;
+					mProposedRotation = (int) event.values[0];
+					if (mProposedRotation == 255)
+						mProposedRotation = -1;
 					proposedRotation = mProposedRotation;
 				}
 				else {
