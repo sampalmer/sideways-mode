@@ -3,9 +3,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
-
-import samuelpalmer.sensorautorotation.ApplicationCommand;
 
 /**
  * Basically responsible for keeping the background logic running and preventing
@@ -29,15 +26,6 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent != null && intent.getAction() != null) { // Service is started from a remote commmand
-			ApplicationCommand command = new ApplicationCommand(intent);
-			
-			if (ApplicationInstanceManager.isApplicationRunning())
-				ApplicationInstanceManager.handle(command);
-			else
-				Log.w(RotationService.class.getSimpleName(), "Received command, but the application isn't running");
-		}
-		
 		return Service.START_STICKY;
 	}
 	
