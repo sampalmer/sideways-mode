@@ -70,7 +70,7 @@ public class OrientationSensorHandler extends State {
 				Log.w(OrientationSensorHandler.class.getSimpleName(), "Got callback while stopped");
 				return;
 			}
-
+			
 			if (lastRotation == null || lastRotation != rotation) {
 				lastRotation = rotation;
 				calculator.setDevice(rotation == -1 ? null : new AndroidSurfaceRotation(rotation).orientation());
