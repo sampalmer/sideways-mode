@@ -2,14 +2,9 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
@@ -19,7 +14,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 
@@ -29,6 +23,11 @@ public class QuickSettingService extends TileService {
 	private ApplicationStatusClient statusClient;
 	private ApplicationStatus status;
 	private boolean pendingClick;
+	
+	@Override
+	public void onCreate() {
+		statusClient = new ApplicationStatusClient(this, statusListener);
+	}
 	
 	/**
 	 * Doesn't seem to fire when the tile is in STATE_UNAVAILABLE
@@ -107,62 +106,22 @@ public class QuickSettingService extends TileService {
 	@Override
 	public void onStartListening() {
 		super.onStartListening();
-		
-		boolean boundSuccessfully = bindService(
-			new Intent(this, ApplicationStatusService.class),
-			serviceConnection,
-			Context.BIND_AUTO_CREATE
-		);
-		
-		if (!boundSuccessfully) {
-			// The documentation says you should still unbind after a binding failure
-			unbindService(serviceConnection);
-			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
-		}
+		statusClient.subscribe();
 	}
 
 	@Override
 	public void onStopListening() {
 		super.onStopListening();
-		
-		if (statusClient != null) {
-			try {
-				statusClient.unsubscribe();
-			} catch (RemoteException ignored) {
-				// The service process died, but that doesn't matter since we're unsubscribing.
-			}
-			
-			disconnected();
-		}
-		
-		unbindService(serviceConnection);
+		statusClient.unsubscribe();
 	}
-	
-	private final ServiceConnection serviceConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			statusClient = new ApplicationStatusClient(iBinder, statusListener);
-			
-			try {
-				statusClient.subscribe();
-			} catch (RemoteException e) {
-				// Service process died, so we'll have to try again once it's back up.
-				disconnected();
-			}
-		}
-		
-		@Override
-		public void onServiceDisconnected(ComponentName componentName) {
-			disconnected();
-		}
-	};
 	
 	private final ApplicationStatusClient.Listener statusListener = new ApplicationStatusClient.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
 			QuickSettingService.this.status = status;
 			
-			updateTile();
+			if (status != null)
+				updateTile();
 			
 			if (pendingClick) {
 				Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
@@ -171,11 +130,6 @@ public class QuickSettingService extends TileService {
 			}
 		}
 	};
-	
-	private void disconnected() {
-		statusClient = null;
-		status = null;
-	}
 	
 	/**
 	 * Assumes status is available.

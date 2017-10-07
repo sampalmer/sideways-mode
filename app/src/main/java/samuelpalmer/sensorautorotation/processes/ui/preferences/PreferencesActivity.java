@@ -1,13 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -16,7 +12,6 @@ import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
@@ -28,66 +23,33 @@ import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 //TODO: Improve the name of this, or reorganise it.
 public abstract class PreferencesActivity extends UiActivity {
 	
-	private ApplicationStatusClient serviceClient;
+	private ApplicationStatusClient statusClient;
 	private Snackbar snackbar;
-
+	
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		statusClient = new ApplicationStatusClient(this, statusChanged);
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
-		boolean boundSuccessfully = bindService(
-			new Intent(this, ApplicationStatusService.class),
-			serviceConnection,
-			Context.BIND_AUTO_CREATE
-		);
-		
-		if (!boundSuccessfully) {
-			// The documentation says you should still unbind after a binding failure
-			this.unbindService(serviceConnection);
-			throw new RuntimeException("Couldn't connect to " + ApplicationStatusService.class.getSimpleName());
-		}
+		statusClient.subscribe();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
-		if (serviceClient != null) {
-			try {
-				serviceClient.unsubscribe();
-			} catch (RemoteException ignored) {
-				// The service process died, but that doesn't matter since we're unsubscribing.
-			}
-			
-			serviceClient = null;
-		}
-		unbindService(serviceConnection);
+		statusClient.unsubscribe();
 	}
-	
-	private final ServiceConnection serviceConnection = new ServiceConnection() {
-		
-		@Override
-		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			serviceClient = new ApplicationStatusClient(iBinder, statusChanged);
-			
-			try {
-				serviceClient.subscribe();
-			} catch (RemoteException e) {
-				// Service process died, so we'll have to try again once it's back up.
-				serviceClient = null;
-			}
-		}
-		
-		@Override
-		public void onServiceDisconnected(ComponentName componentName) {
-			serviceClient = null;
-		}
-		
-	};
 	
 	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
+			if (status == null)
+				return;
+			
 			final EnvironmentError lastError = status.error;
 
 			if (snackbar == null) {
