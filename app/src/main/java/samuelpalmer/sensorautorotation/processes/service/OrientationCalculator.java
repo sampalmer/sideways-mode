@@ -25,7 +25,7 @@ public class OrientationCalculator {
 		
 		// This infers the device orientation from the screen orientation so we have something to start with.
 		// It might be better to infer it from USER_ROTATION if system auto rotation was off.
-		device = screen.currentRotation().minus(offset());
+		device = offset().minus(screen.currentRotation());
 		
 		onAnythingChanged = new UpdatingEventRegistrar();
 	}
@@ -58,7 +58,7 @@ public class OrientationCalculator {
 	}
 
 	public @NonNull Orientation proposedScreenOrientation() {
-		return device.plus(offset());
+		return offset().minus(device);
 	}
 	
 	public boolean isWaitingForSensor() {

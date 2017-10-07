@@ -73,7 +73,15 @@ public class OrientationSensorHandler extends State {
 			
 			if (lastRotation == null || lastRotation != rotation) {
 				lastRotation = rotation;
-				Orientation orientation = rotation == -1 ? null : new AndroidSurfaceRotation(rotation).orientation();
+				
+				Orientation orientation =
+					rotation == -1
+					?
+					null
+					:
+					// Device orientations are anticlockwise, so we need to negate them for consistency.
+					new AndroidSurfaceRotation(rotation).orientation().negate();
+				
 				Log.i(OrientationSensorHandler.class.getSimpleName(), "Device orientation changed: " + orientation);
 				calculator.setDevice(orientation);
 			}
