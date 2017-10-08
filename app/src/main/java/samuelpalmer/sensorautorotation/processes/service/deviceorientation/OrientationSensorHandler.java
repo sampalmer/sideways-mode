@@ -50,12 +50,12 @@ public class OrientationSensorHandler extends State {
 		windowOrientationListener.enable();
 
 		calculator.onAnythingChanged.subscribe(screenUserOrAutoRotateChanged);
-		screen.subscribe(screenUserOrAutoRotateChanged);
+		screen.subscribe(screenOrientationChanged);
 	}
 
 	@Override
 	protected void stop() {
-		screen.unsubscribe(screenUserOrAutoRotateChanged);
+		screen.unsubscribe(screenOrientationChanged);
 		calculator.onAnythingChanged.unsubscribe(screenUserOrAutoRotateChanged);
 
 		windowOrientationListener.disable();
@@ -87,7 +87,15 @@ public class OrientationSensorHandler extends State {
 			}
 		}
 	};
-
+	
+	private final EventHandler screenOrientationChanged = new EventHandler() {
+		@Override
+		public void update() {
+			Log.i(OrientationSensorHandler.class.getSimpleName(), "Screen orientation changed: " + screen.currentRotation());
+			screenUserOrAutoRotateChanged.update();
+		}
+	};
+	
 	private final EventHandler screenUserOrAutoRotateChanged = new EventHandler() {
 		@Override
 		public void update() {
