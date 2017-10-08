@@ -1,6 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui.feedback;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.LocaleList;
@@ -10,9 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Locale;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.processes.service.deviceorientation.WindowOrientationListener;
 
 class DiagnosticInfo {
 
@@ -87,4 +92,19 @@ class DiagnosticInfo {
 
 		return result.toString();
 	}
+	
+	public static String sensorDump() {
+		StringBuilder result = new StringBuilder();
+		
+		SensorManager sensorManager = (SensorManager) CurrentProcess.context().getSystemService(Context.SENSOR_SERVICE);
+		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+		
+		for (Sensor sensor : sensors) {
+			result.append(WindowOrientationListener.stringify(sensor));
+			result.append('\n');
+		}
+		
+		return result.toString();
+	}
+	
 }

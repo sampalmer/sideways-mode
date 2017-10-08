@@ -73,10 +73,11 @@ public class ReportProblemActivity extends UiActivity {
 		
 		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body = String.format(
-			"Problem:\n%s\n\nDevice info:\n%s\n\nApp version:\n%s\n\nLogs:\n%s\n\n",
+			"App version:\n%s\n\nProblem:\n%s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
+			fullAppVersion,
 			description.getText().toString(),
 			DiagnosticInfo.deviceInfo(),
-			fullAppVersion,
+			DiagnosticInfo.sensorDump(),
 			problemLogs
 		);
 		

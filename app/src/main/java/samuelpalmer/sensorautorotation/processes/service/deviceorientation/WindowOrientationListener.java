@@ -164,14 +164,13 @@ public abstract class WindowOrientationListener {
 		if (
 			sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION
 				&&
-				!
-					(
-						sensor.getVendor().toLowerCase().contains("samsung")
-							&&
-							sensor.getName().toLowerCase().contains("screen orientation")
-							&&
-							sensor.getMaximumRange() == 255f
-					)
+				!(
+					sensor.getVendor().toLowerCase().contains("samsung")
+					&&
+					sensor.getName().toLowerCase().contains("screen orientation")
+					&&
+					sensor.getMaximumRange() == 255f
+				)
 			)
 			return false;
 		
@@ -218,7 +217,7 @@ public abstract class WindowOrientationListener {
 	/**
 	 * Equivalent of {@link android.hardware.Sensor#toString()} in API 23 SDK since not all devices implement it.
 	 */
-	private String stringify(Sensor sensor) {
+	public static String stringify(Sensor sensor) {
 		return "{Sensor name=\"" + sensor.getName() + "\", vendor=\"" + sensor.getVendor() + "\", version=" + sensor.getVersion()
 			+ ", type=" + sensor.getType() + ", maxRange=" + sensor.getMaximumRange() + ", resolution=" + sensor.getResolution()
 			+ ", power=" + sensor.getPower() + ", minDelay=" + sensor.getMinDelay() + "}";
