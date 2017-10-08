@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import samuelpalmer.common.contentprovidersharedpreferences.ObjectExtensions;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 
@@ -25,7 +26,7 @@ public class ApplicationStatus {
 	
 	public boolean equals(ApplicationStatus other) {
 		return
-			((error == null || other.error == null) ? error == other.error : error.equals(other.error))
+			ObjectExtensions.areEqual(error, other.error)
 			&&
 			appEnabled == other.appEnabled
 			&&
