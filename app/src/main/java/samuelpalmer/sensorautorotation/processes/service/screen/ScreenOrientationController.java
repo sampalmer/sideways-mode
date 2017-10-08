@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 import android.util.Log;
 
 import samuelpalmer.common.Orientation;
-import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
@@ -45,9 +44,8 @@ public class ScreenOrientationController extends State {
 		if (value == null)
 			throw new IllegalArgumentException();
 
-		if (BuildConfig.DEBUG)
-			Log.d(getClass().getSimpleName(), "Proposing " + value);
-
+		Log.i(getClass().getSimpleName(), "Proposing screen orientation: " + value);
+		
 		setAndHandleErrors(settings.userRotation, value);
 	}
 	
