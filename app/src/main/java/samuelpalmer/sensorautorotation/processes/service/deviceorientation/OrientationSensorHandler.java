@@ -22,7 +22,9 @@ import static android.content.Context.SENSOR_SERVICE;
 
 
 public class OrientationSensorHandler extends State {
-
+	
+	private static final String TAG = OrientationSensorHandler.class.getSimpleName();
+	
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screen;
 
@@ -67,7 +69,7 @@ public class OrientationSensorHandler extends State {
 			if (!started()) {
 				//This happens if you quickly repeatedly enable and disable the service on an emulator.
 				//It might only affect older versions of Android (API 14-16)
-				Log.w(OrientationSensorHandler.class.getSimpleName(), "Got callback while stopped");
+				Log.w(TAG, "Got callback while stopped");
 				return;
 			}
 			
@@ -82,7 +84,7 @@ public class OrientationSensorHandler extends State {
 					// Device orientations are anticlockwise, so we need to negate them for consistency.
 					new AndroidSurfaceRotation(rotation).orientation().negate();
 				
-				Log.i(OrientationSensorHandler.class.getSimpleName(), "Device orientation changed: " + orientation);
+				Log.i(TAG, "Device orientation changed: " + orientation);
 				calculator.setDevice(orientation);
 			}
 		}
@@ -91,7 +93,7 @@ public class OrientationSensorHandler extends State {
 	private final EventHandler screenOrientationChanged = new EventHandler() {
 		@Override
 		public void update() {
-			Log.i(OrientationSensorHandler.class.getSimpleName(), "Screen orientation changed: " + screen.currentRotation());
+			Log.i(TAG, "Screen orientation changed: " + screen.currentRotation());
 			screenUserOrAutoRotateChanged.update();
 		}
 	};

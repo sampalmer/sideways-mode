@@ -14,7 +14,9 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteExcepti
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationController extends State {
-
+	
+	private static final String TAG = ScreenOrientationController.class.getSimpleName();
+	
 	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
 	
@@ -44,7 +46,7 @@ public class ScreenOrientationController extends State {
 		if (value == null)
 			throw new IllegalArgumentException();
 
-		Log.i(getClass().getSimpleName(), "Proposing screen orientation: " + value);
+		Log.i(TAG, "Proposing screen orientation: " + value);
 		
 		setAndHandleErrors(settings.userRotation, value);
 	}

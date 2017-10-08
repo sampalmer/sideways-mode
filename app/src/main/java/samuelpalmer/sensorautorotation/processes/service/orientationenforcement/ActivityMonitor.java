@@ -9,7 +9,9 @@ import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.State;
 
 public class ActivityMonitor extends State {
-
+	
+	private static final String TAG = ActivityMonitor.class.getSimpleName();
+	
 	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private ComponentName lastActivity;
 
@@ -19,7 +21,7 @@ public class ActivityMonitor extends State {
 
 	public void setCurrentActivity(ComponentName activityOrNull) {
 		if (!ObjectExtensions.areEqual(activityOrNull, lastActivity)) {
-			Log.i(ActivityMonitor.class.getSimpleName(), "Activity changed"); // Not logging specific activity since that would be a privacy violation since logs are included in error reports.
+			Log.i(TAG, "Activity changed"); // Not logging specific activity since that would be a privacy violation since logs are included in error reports.
 			lastActivity = activityOrNull;
 			onChange.report();
 		}
