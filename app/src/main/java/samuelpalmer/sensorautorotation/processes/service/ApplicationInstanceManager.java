@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
@@ -13,6 +14,8 @@ import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 
 public abstract class ApplicationInstanceManager {
+	
+	private static final String TAG = ApplicationInstanceManager.class.getSimpleName();
 	
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
@@ -94,6 +97,8 @@ public abstract class ApplicationInstanceManager {
 	
 	public static void handle(ApplicationCommand command) {
 		// TODO: Do proper validation of application enabled state and running state here.
+		
+		Log.i(TAG, "Received command: " + command.action);
 		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
