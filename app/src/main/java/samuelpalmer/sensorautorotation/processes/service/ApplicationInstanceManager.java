@@ -96,24 +96,38 @@ public abstract class ApplicationInstanceManager {
 	}
 	
 	public static void handle(ApplicationCommand command) {
-		// TODO: Do proper validation of application enabled state and running state here.
-		
 		Log.i(TAG, "Received command: " + command.action);
+		
+		String commandIgnoredReason = null;
 		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
-				ServiceSettings.instance().persistentState().set(UserSide.LEFT);
-				ServiceController.updateServiceState(true);
+				if (ServiceSettings.instance().persistentState().hasValue())
+					commandIgnoredReason = "Application is already enabled";
+				else {
+					ServiceSettings.instance().persistentState().set(UserSide.LEFT);
+					ServiceController.updateServiceState(true);
+				}
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
-				ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
-				ServiceController.updateServiceState(true);
+				if (ServiceSettings.instance().persistentState().hasValue())
+					commandIgnoredReason = "Application is already enabled";
+				else {
+					ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
+					ServiceController.updateServiceState(true);
+				}
 				break;
 			case ApplicationCommand.ACTION_CHANGE_SIDE:
-				applicationInstance().changeSide();
+				if (!isApplicationRunning())
+					commandIgnoredReason = "Application is not running";
+				else
+					applicationInstance().changeSide();
 				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
-				disableService();
+				if (!isApplicationRunning())
+					commandIgnoredReason = "Application is not running";
+				else
+					disableService();
 				break;
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
 				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
@@ -124,6 +138,9 @@ public abstract class ApplicationInstanceManager {
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}
+		
+		if (commandIgnoredReason != null)
+			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
 	}
 	
 	private static void disableService() {
