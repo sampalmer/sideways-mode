@@ -147,8 +147,8 @@ public class QuickSettingService extends TileService {
 		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, status.appEnabled ? status.user.iconId : R.drawable.quick_setting_off));
 		
-		int id = status.appEnabled ? status.user.descriptionId : R.string.app_name;
-		tile.setLabel(CurrentProcess.context().getText(id));
+		int lableId = status.appEnabled ? status.user.descriptionId : R.string.app_name_full;
+		tile.setLabel(CurrentProcess.context().getText(lableId));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
 

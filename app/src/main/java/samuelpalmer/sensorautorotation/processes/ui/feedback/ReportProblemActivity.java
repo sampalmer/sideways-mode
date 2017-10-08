@@ -69,7 +69,7 @@ public class ReportProblemActivity extends UiActivity {
 			throw new RuntimeException(e);
 		}
 		
-		String subject = CurrentProcess.context().getString(R.string.email_problem_subject, CurrentProcess.context().getText(R.string.app_name), appInfo.versionName);
+		String subject = CurrentProcess.context().getString(R.string.email_problem_subject, CurrentProcess.context().getText(R.string.app_name_full), appInfo.versionName);
 		
 		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body = String.format(
@@ -82,7 +82,7 @@ public class ReportProblemActivity extends UiActivity {
 		
 		Intent emailIntent = new Email(
 			ReportProblemActivity.this,
-			CurrentProcess.context().getText(R.string.app_name) + " <sampalmer4+androidautorotate@gmail.com>",
+			CurrentProcess.context().getText(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>",
 			subject,
 			body
 		).getIntent();

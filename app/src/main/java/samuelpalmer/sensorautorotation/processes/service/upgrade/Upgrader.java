@@ -92,7 +92,7 @@ public class Upgrader {
 	}
 
 	private CharSequence messageTitle() {
-		return CurrentProcess.context().getString(R.string.upgrade_summary, CurrentProcess.context().getText(R.string.app_name));
+		return CurrentProcess.context().getString(R.string.upgrade_summary, CurrentProcess.context().getText(R.string.app_name_full));
 	}
 
 }

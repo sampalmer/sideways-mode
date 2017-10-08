@@ -18,7 +18,7 @@ public class GenericError extends EnvironmentError {
 	
 	public GenericError(int summaryResourceId, CharSequence messageEndingWithFullStop) {
 		summary = CurrentProcess.context().getText(summaryResourceId);
-		message = CurrentProcess.context().getString(R.string.environment_error_message, messageEndingWithFullStop, CurrentProcess.context().getText(R.string.app_name));
+		message = CurrentProcess.context().getString(R.string.environment_error_message, messageEndingWithFullStop, CurrentProcess.context().getText(R.string.app_name_full));
 	}
 	
 	GenericError() {}

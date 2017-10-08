@@ -68,7 +68,7 @@ class ServiceNotification {
 			builder.setContentTitle(statusText);
 		}
 		else {
-			builder.setContentTitle(CurrentProcess.context().getText(R.string.app_name));
+			builder.setContentTitle(CurrentProcess.context().getText(R.string.app_name_full));
 			builder.setContentText(statusText);
 		}
 		

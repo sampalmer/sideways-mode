@@ -173,7 +173,7 @@ class Migrations {
 			
 			@Override
 			public CharSequence getMessage() {
-				return CurrentProcess.context().getString(R.string.upgrade_v57, CurrentProcess.context().getText(R.string.app_name));
+				return CurrentProcess.context().getString(R.string.upgrade_v57, CurrentProcess.context().getText(R.string.app_name_full));
 			}
 			
 		});
