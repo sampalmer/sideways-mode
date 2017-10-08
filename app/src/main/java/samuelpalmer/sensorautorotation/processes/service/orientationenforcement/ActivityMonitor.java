@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
 import android.content.ComponentName;
+import android.util.Log;
 
 import samuelpalmer.common.contentprovidersharedpreferences.ObjectExtensions;
 import samuelpalmer.common.eventhandling.EventRegistrar;
@@ -18,6 +19,7 @@ public class ActivityMonitor extends State {
 
 	public void setCurrentActivity(ComponentName activityOrNull) {
 		if (!ObjectExtensions.areEqual(activityOrNull, lastActivity)) {
+			Log.i(ActivityMonitor.class.getSimpleName(), "Activity changed"); // Not logging specific activity since that would be a privacy violation since logs are included in error reports.
 			lastActivity = activityOrNull;
 			onChange.report();
 		}
