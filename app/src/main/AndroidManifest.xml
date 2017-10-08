@@ -236,7 +236,7 @@
 			/>
 
 		<service
-			android:name=".processes.service.WindowChangeDetectingService"
+			android:name=".processes.service.ActivityChangeDetectingService"
 			android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
 			android:process="@string/service_process_name">
 			<intent-filter>

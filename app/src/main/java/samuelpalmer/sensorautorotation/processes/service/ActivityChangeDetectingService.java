@@ -12,9 +12,10 @@ import android.view.accessibility.AccessibilityEvent;
 import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
 
-public class WindowChangeDetectingService extends AccessibilityService {
+// Keep in mind that renaming (or moving?) this class will result in users having to re-enable the accessibility service.
+public class ActivityChangeDetectingService extends AccessibilityService {
 
-	private static final String TAG = WindowChangeDetectingService.class.getSimpleName();
+	private static final String TAG = ActivityChangeDetectingService.class.getSimpleName();
 
 	@Override
 	public void onCreate() {
