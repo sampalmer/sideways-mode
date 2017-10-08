@@ -30,7 +30,7 @@ public class ApplicationStatus {
 			&&
 			appEnabled == other.appEnabled
 			&&
-			user.equals(other.user)
+			ObjectExtensions.areEqual(user, other.user)
 			&&
 			waitingForSensor == other.waitingForSensor;
 	}
