@@ -15,8 +15,12 @@ public class ServiceSettings extends Settings {
 	private static ServiceSettings instance;
 	
 	public static ServiceSettings instance() {
-		if (instance == null)
+		if (instance == null) {
+			if (!CurrentProcess.isServiceProcess())
+				throw new RuntimeException("Service settings accessed outside of the service process");
+			
 			instance = new ServiceSettings();
+		}
 		
 		return instance;
 	}
