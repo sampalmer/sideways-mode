@@ -1,17 +1,19 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
+import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 
 public abstract class ApplicationInstanceManager {
 	
@@ -20,39 +22,59 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
-	private static UserInteractivityMonitor userInteractivityMonitor;
+	private static KeyguardManager keyguardManager;
 	
 	public static void init() {
 		if (initialised)
 			throw new RuntimeException("Already initialised");
 		
+		keyguardManager = (KeyguardManager) CurrentProcess.context().getSystemService(Context.KEYGUARD_SERVICE);
+		
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
 		ServiceSettings.instance().persistentState().subscribe(updateApplicationState);
 		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
+		CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		
-		userInteractivityMonitor = new UserInteractivityMonitor();
-		userInteractivityMonitor.subscribe(userInteractivityListener);
-		userInteractivityListener.update();
+		if (Build.VERSION.SDK_INT >= 17) {
+			CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_USER_BACKGROUND));
+			CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_USER_FOREGROUND));
+		}
+		
+		CurrentProcess.context().registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
 		
 		initialised = true;
 	}
-	
-	private static final EventHandler userInteractivityListener = new EventHandler() {
-		@Override
-		public void update() {
-			if (!userInteractivityMonitor.get().active()) {
-				disableService();
-			}
-		}
-	};
 	
 	private static final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			disableService();
+			disableService("Device is shutting down");
 		}
 		
+	};
+	
+	private static final BroadcastReceiver screenChangedReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+			if (isOnLockScreen)
+				disableService("Device is locked");
+		}
+	};
+	
+	private static final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// We receive this broadcast after the device gets unlocked.
+			// This implies that the device was locked, so the app shouldn't be on.
+			// We need this check because Android doesn't broadcast when the device gets locked,
+			// and our polling approach might sometimes be too slow to detect the lock screen.
+			// For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
+			// so quickly that you don't see the lock screen.
+			disableService("Device was locked");
+		}
 	};
 	
 	private static final EventHandler updateApplicationState = new EventHandler() {
@@ -127,7 +149,7 @@ public abstract class ApplicationInstanceManager {
 				if (!isApplicationRunning())
 					commandIgnoredReason = "Application is not running";
 				else
-					disableService();
+					disableService("Received application command");
 				break;
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
 				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
@@ -143,7 +165,8 @@ public abstract class ApplicationInstanceManager {
 			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
 	}
 	
-	private static void disableService() {
+	private static void disableService(String reason) {
+		Log.i(TAG, "Turning off app. Reason: " + reason);
 		ServiceSettings.instance().persistentState().remove();
 		ServiceController.updateServiceState(false);
 	}

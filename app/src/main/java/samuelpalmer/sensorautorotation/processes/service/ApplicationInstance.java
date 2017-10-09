@@ -4,6 +4,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import samuelpalmer.common.LockScreenMonitor;
+import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
@@ -14,6 +15,7 @@ import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -36,6 +38,7 @@ public class ApplicationInstance extends State {
 	private OrientationEnforcementManager orientationEnforcementManager;
 	ActivityMonitor activityMonitor;
 	private ScreenOrientationUpdater screenUpdater;
+	private UserInteractivityMonitor userInteractivityMonitor;
 	
 	public ApplicationInstance() {
 		super();
@@ -73,19 +76,23 @@ public class ApplicationInstance extends State {
 		screenOrientationController.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
 		screenUpdater.ensureStarted();
-		orientationSensorHandler.ensureStarted();
 		serviceRevivalManager.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementManager.ensureStarted();
+		
+		userInteractivityMonitor = new UserInteractivityMonitor();
+		userInteractivityMonitor.subscribe(userInteractivityListener);
+		userInteractivityListener.update();
 	}
 	
 	@Override
 	protected void stop() {
+		userInteractivityMonitor.unsubscribe(userInteractivityListener);
+		orientationSensorHandler.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenOrientationController.ensureStopped();
-		orientationSensorHandler.ensureStopped();
 		screenUpdater.ensureStopped();
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
@@ -96,5 +103,16 @@ public class ApplicationInstance extends State {
 	public void changeSide() {
 		calculator.changeSide();
 	}
+	
+	private final EventHandler userInteractivityListener = new EventHandler() {
+		@Override
+		public void update() {
+			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
+			if (userInteractivityMonitor.get().active())
+				orientationSensorHandler.ensureStarted();
+			else
+				orientationSensorHandler.ensureStopped();
+		}
+	};
 	
 }
