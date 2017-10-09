@@ -35,9 +35,9 @@ public class CurrentProcess extends Application {
 			String currentProcessName = CurrentProcessNameDetector.currentProcessName();
 			String packageName = context().getPackageName();
 			
-			if (currentProcessName.equals(packageName + context().getText(R.string.service_process_name)))
+			if (currentProcessName.equals(packageName + context().getText(R.string.process_service)))
 				isServiceProcess = true; // Service process
-			else if (currentProcessName.equals(packageName))
+			else if (currentProcessName.equals(packageName + context().getText(R.string.process_ui)))
 				isServiceProcess = false; // UI process
 			else
 				throw new RuntimeException("Current process has unrecognised name: " + currentProcessName);
