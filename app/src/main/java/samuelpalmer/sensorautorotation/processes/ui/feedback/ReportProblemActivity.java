@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.Toaster;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 public class ReportProblemActivity extends UiActivity {
@@ -102,6 +101,6 @@ public class ReportProblemActivity extends UiActivity {
 			finish();
 		}
 		else
-			Toaster.show(CurrentProcess.context().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT);
+			Toast.makeText(this, getResources().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT).show();
 	}
 }
