@@ -23,10 +23,7 @@
 	<string name="settings">Настройки</string>
 
 	<!-- Common -->
-	<string name="back">Назад</string>
-	<string name="next">Далее</string>
 	<string name="skip">Пропустить</string>
-	<string name="finish">Заверишть</string>
 
 	<!-- Notification -->
 

@@ -45,7 +45,7 @@
 		<!-- Main Process -->
 
 		<activity
-			android:name=".processes.ui.instructions.InstructionsActivity"
+			android:name=".processes.ui.InstructionsActivity"
 			android:label="@string/instructions_heading"
 			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
 			android:launchMode="singleTask"

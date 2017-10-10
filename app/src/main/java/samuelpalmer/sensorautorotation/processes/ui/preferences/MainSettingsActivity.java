@@ -12,9 +12,9 @@ import android.view.MenuItem;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.UninstallerFragment;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
-import samuelpalmer.sensorautorotation.processes.ui.instructions.InstructionsActivity;
 
 public class MainSettingsActivity extends PreferencesActivity {
 	
