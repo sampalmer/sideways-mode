@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
@@ -33,20 +32,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private Settings.Setting<Set<String>> forcedApps;
-	
-	//TODO: See if you can move this logic into an AutoSummaryListPreference
-	private void updateListPreferenceSummaries(PreferenceGroup group) {
-		for (int i = 0; i < group.getPreferenceCount(); ++i) {
-			Preference preference = group.getPreference(i);
-			if (preference instanceof ListPreference) {
-				ListPreference listPreference = (ListPreference) preference;
-				listPreference.setSummary(listPreference.getEntry());
-			}
-			else if (preference instanceof PreferenceGroup) {
-				updateListPreferenceSummaries((PreferenceGroup) preference);
-			}
-		}
-	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -153,8 +138,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
 		forcedAppsPreference = findPreference(forcedApps.getKey());
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
-		
-		updateListPreferenceSummaries(getPreferenceScreen());
 	}
 	
 	private void removePreference(Preference preference) {
