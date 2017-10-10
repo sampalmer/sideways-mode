@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -27,6 +28,8 @@ import static android.content.Context.WINDOW_SERVICE;
  */
 public class ApplicationInstance extends State {
 	
+	private static final String TAG = ApplicationInstance.class.getSimpleName();
+	
 	private ScreenOrientationController screenOrientationController;
 	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
@@ -46,6 +49,8 @@ public class ApplicationInstance extends State {
 	
 	@Override
 	protected void start() {
+		Log.i(TAG, "Application is starting");
+		
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
 		EnvironmentErrorManager.clear();
 		
@@ -87,6 +92,8 @@ public class ApplicationInstance extends State {
 	
 	@Override
 	protected void stop() {
+		Log.i(TAG, "Application is starting");
+		
 		userInteractivityMonitor.unsubscribe(userInteractivityListener);
 		orientationSensorHandler.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
@@ -108,10 +115,14 @@ public class ApplicationInstance extends State {
 		@Override
 		public void update() {
 			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
-			if (userInteractivityMonitor.get().active())
+			if (userInteractivityMonitor.get().active()) {
+				Log.i(TAG, "User is interactive. Listening to sensors.");
 				orientationSensorHandler.ensureStarted();
-			else
+			}
+			else {
+				Log.i(TAG, "User is not interactive. Not listening to sensors.");
 				orientationSensorHandler.ensureStopped();
+			}
 		}
 	};
 	
