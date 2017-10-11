@@ -44,19 +44,12 @@
 
 		<!-- Main Process -->
 
+		<!-- Not specifying parent activity here since this activity can have a couple of different parents. -->
 		<activity
 			android:name=".processes.ui.InstructionsActivity"
 			android:label="@string/instructions_heading"
-			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
 			android:launchMode="singleTask"
-			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.MainSettingsActivity" />
-
-		</activity>
+			tools:ignore="UnusedAttribute" />
 
 		<activity
 			android:name=".processes.ui.preferences.MainSettingsActivity"

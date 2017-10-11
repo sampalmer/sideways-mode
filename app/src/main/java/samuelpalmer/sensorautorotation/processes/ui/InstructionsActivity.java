@@ -40,19 +40,23 @@ public class InstructionsActivity extends UiActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (isFirstRun()) {
-			ActionBar supportActionBar = getSupportActionBar();
-			assert supportActionBar != null;
+		ActionBar supportActionBar = getSupportActionBar();
+		assert supportActionBar != null;
+		supportActionBar.setDisplayHomeAsUpEnabled(true);
+		
+		if (isFirstRun())
 			supportActionBar.setHomeAsUpIndicator(R.drawable.close);
-		}
 		
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) // User pressed action bar back/close button
+		if (item.getItemId() == android.R.id.home) { // User pressed action bar back/close button
 			completeInstructions();
+			finish();
+			return true;
+		}
 		
 		return super.onOptionsItemSelected(item);
 	}
