@@ -53,7 +53,10 @@ public class DashboardActivity extends DialogActivity {
 		settingsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(DashboardActivity.this, MainSettingsActivity.class));
+				Intent intent = new Intent(DashboardActivity.this, MainSettingsActivity.class)
+					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				
+				startActivity(intent);
 				finish();
 			}
 		});
