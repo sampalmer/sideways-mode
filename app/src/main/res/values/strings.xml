@@ -27,9 +27,6 @@
 
 	<string name="choose_side">Which side are you on?</string>
 
-	<!-- Common -->
-	<string name="skip">Skip</string>
-
 	<!-- Notification -->
 
 	<string name="user_rotation_left_side">Left side</string>

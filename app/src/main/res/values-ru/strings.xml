@@ -22,9 +22,6 @@
 
 	<string name="settings">Настройки</string>
 
-	<!-- Common -->
-	<string name="skip">Пропустить</string>
-
 	<!-- Notification -->
 
 	<string name="user_rotation_left_side">Левая сторона</string>

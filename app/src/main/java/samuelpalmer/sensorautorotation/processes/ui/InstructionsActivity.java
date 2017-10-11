@@ -1,21 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
+import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public class InstructionsActivity extends UiActivity {
 	
 	public static final String EXTRA_FIRST_RUN = "first_run";
-	public static final String EXTRA_TUTORIAL_COMPLETE = "tutorial_complete";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +40,10 @@ public class InstructionsActivity extends UiActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.instructions, menu);
-		
-		boolean isFirstRun = isFirstRun();
-		if (isFirstRun) {
+		if (isFirstRun()) {
 			ActionBar supportActionBar = getSupportActionBar();
 			assert supportActionBar != null;
-			supportActionBar.setDisplayHomeAsUpEnabled(false); //Remove "back" button from action bar
+			supportActionBar.setHomeAsUpIndicator(R.drawable.close);
 		}
 		
 		return true;
@@ -58,12 +51,16 @@ public class InstructionsActivity extends UiActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.skip) {
+		if (item.getItemId() == android.R.id.home) // User pressed action bar back/close button
 			completeInstructions();
-			return true;
-		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		completeInstructions();
+		super.onBackPressed();
 	}
 	
 	/**
@@ -71,13 +68,15 @@ public class InstructionsActivity extends UiActivity {
 	 */
 	private void completeInstructions() {
 		if (isFirstRun()) {
-			Intent intent = new Intent(CurrentProcess.context(), DashboardActivity.class)
-				.putExtra(EXTRA_TUTORIAL_COMPLETE, true);
+			int appVersionCode;
+			try {
+				appVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			} catch (PackageManager.NameNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 			
-			startActivity(intent);
+			ApplicationSettings.instance().lastVersionUserInstructedAbout().set(appVersionCode);
 		}
-		
-		finish();
 	}
 	
 	private boolean isFirstRun() {
