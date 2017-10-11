@@ -16,10 +16,6 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 	 */
 	public static final String EXTRA_EXPLANATION = "explanation";
 	
-	private static final String TAG_UNINSTALLER = "uninstaller";
-	
-	private UninstallerFragment uninstaller;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,26 +24,16 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 		int explanationStringResource = getIntent().getIntExtra(EXTRA_EXPLANATION, 0);
 		if (explanationStringResource == 0)
 			throw new RuntimeException("Explanation not provided");
-		TextView explanationView = (TextView) findViewById(R.id.device_unsupported_explanation);
+		TextView explanationView = findViewById(R.id.device_unsupported_explanation);
 		explanationView.setText(explanationStringResource);
 		
-		Button uninstallButton = (Button) findViewById(R.id.device_unsupported_uninstall);
+		Button uninstallButton = findViewById(R.id.device_unsupported_uninstall);
 		uninstallButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				uninstaller.uninstall();
+				Uninstaller.uninstall(DeviceUnsupportedActivity.this);
 			}
 		});
-		
-		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
-		if (uninstaller == null) {
-			uninstaller = new UninstallerFragment();
-			
-			getSupportFragmentManager()
-				.beginTransaction()
-				.add(uninstaller, TAG_UNINSTALLER)
-				.commit();
-		}
 	}
 	
 }

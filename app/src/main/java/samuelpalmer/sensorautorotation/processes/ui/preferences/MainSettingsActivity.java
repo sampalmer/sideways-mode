@@ -13,17 +13,14 @@ import android.view.MenuItem;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
-import samuelpalmer.sensorautorotation.processes.ui.UninstallerFragment;
+import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 
 public class MainSettingsActivity extends PreferencesActivity {
 	
-	private static final String TAG_UNINSTALLER = "uninstaller";
-	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
-	private UninstallerFragment uninstaller;
 	
 	private final NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 		@SuppressWarnings("SameReturnValue")
@@ -45,7 +42,7 @@ public class MainSettingsActivity extends PreferencesActivity {
 					break;
 				}
 				case R.id.action_uninstall:
-					uninstaller.uninstall();
+					Uninstaller.uninstall(MainSettingsActivity.this);
 					break;
 				default:
 					throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
@@ -76,16 +73,6 @@ public class MainSettingsActivity extends PreferencesActivity {
 		supportActionBar.setHomeButtonEnabled(true);
 		
 		navigation.setCheckedItem(R.id.action_home);
-		
-		uninstaller = (UninstallerFragment) getSupportFragmentManager().findFragmentByTag(TAG_UNINSTALLER);
-		
-		if (uninstaller == null) {
-			uninstaller = new UninstallerFragment();
-			getSupportFragmentManager()
-				.beginTransaction()
-				.add(uninstaller, TAG_UNINSTALLER)
-				.commit();
-		}
 	}
 
 	@Override
