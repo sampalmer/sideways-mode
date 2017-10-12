@@ -8,6 +8,7 @@ import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
@@ -109,6 +110,10 @@ public class ApplicationInstance extends State {
 	
 	public void changeSide() {
 		calculator.changeSide();
+	}
+	
+	public void setSide(UserSide side) {
+		calculator.setSide(side);
 	}
 	
 	private final EventHandler userInteractivityListener = new EventHandler() {

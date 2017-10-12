@@ -124,16 +124,17 @@ public abstract class ApplicationInstanceManager {
 		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue())
-					commandIgnoredReason = "Application is already enabled";
+				if (ServiceSettings.instance().persistentState().hasValue() && isApplicationRunning()) {
+					applicationInstance().setSide(UserSide.LEFT);
+				}
 				else {
 					ServiceSettings.instance().persistentState().set(UserSide.LEFT);
 					ServiceController.updateServiceState(true);
 				}
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue())
-					commandIgnoredReason = "Application is already enabled";
+				if (ServiceSettings.instance().persistentState().hasValue() && isApplicationRunning())
+					applicationInstance().setSide(UserSide.RIGHT);
 				else {
 					ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
 					ServiceController.updateServiceState(true);
