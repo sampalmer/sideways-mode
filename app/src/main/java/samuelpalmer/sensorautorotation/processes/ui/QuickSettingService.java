@@ -120,13 +120,14 @@ public class QuickSettingService extends TileService {
 		public void onChange(ApplicationStatus status) {
 			QuickSettingService.this.status = status;
 			
-			if (status != null)
+			if (status != null) {
 				updateTile();
-			
-			if (pendingClick) {
-				Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
-				handleClick();
-				pendingClick = false;
+				
+				if (pendingClick) {
+					Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
+					handleClick();
+					pendingClick = false;
+				}
 			}
 		}
 	};
