@@ -37,7 +37,7 @@ public class DashboardActivity extends DialogActivity {
 		super.onCreate(savedInstanceState);
 		
 		dialog = new AlertDialog.Builder(this)
-			.setView(R.layout.dashboard)
+			.setView(R.layout.activity_dashboard)
 			.create();
 		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 			@Override

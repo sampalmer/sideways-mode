@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +36,6 @@ public class DashboardEnabledFragment extends Fragment {
 		changeSideButton = layout.findViewById(R.id.dashboard_button_change_side);
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		
-		userIcon.setColorFilter(ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
-		
 		changeSideButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -58,14 +55,6 @@ public class DashboardEnabledFragment extends Fragment {
 			}
 			
 		});
-		
-		/*
-			All image drawables must be set in app code to avoid crashes since:
-			1. We're using the vector compat stuff
-			2. When this view is inflated by the quick setting service, any images defined in the XML aren't loaded
-		 */
-		changeSideButton.setImageResource(R.drawable.dashboard_change_side);
-		turnOffButton.setImageResource(R.drawable.dashboard_turn_off);
 		
 		return layout;
 	}
