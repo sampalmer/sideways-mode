@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.R;
@@ -17,7 +16,7 @@ import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 public class DashboardNormalFragment extends Fragment {
 	
 	private View sensorProgress;
-	private TextView statusText;
+//	private TextView statusText;
 	
 	private View leftSideButton;
 	private View turnOffButton;
@@ -30,7 +29,7 @@ public class DashboardNormalFragment extends Fragment {
 		
 		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
 		
-		statusText = layout.findViewById(R.id.dashboard_status);
+//		statusText = layout.findViewById(R.id.dashboard_status);
 		leftSideButton = layout.findViewById(R.id.dashboard_button_left_side);
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
@@ -61,8 +60,8 @@ public class DashboardNormalFragment extends Fragment {
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {
-		ViewHelpers.ensureVisibility(sensorProgress, lastStatus.waitingForSensor ? View.VISIBLE : View.GONE);
-		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.appEnabled ? lastStatus.user.descriptionId : R.string.choose_side);
+//		ViewHelpers.ensureVisibility(sensorProgress, lastStatus.waitingForSensor ? View.VISIBLE : View.GONE);
+//		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.appEnabled ? lastStatus.user.descriptionId : R.string.choose_side);
 		
 		leftSideButton.setSelected(false);
 		turnOffButton.setSelected(false);

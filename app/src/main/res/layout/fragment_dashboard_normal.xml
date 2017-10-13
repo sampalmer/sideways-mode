@@ -9,39 +9,14 @@
 	android:gravity="center_horizontal"
 	>
 
-	<LinearLayout
-		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
-		android:layout_marginLeft="36dp"
-		android:layout_marginRight="36dp"
-		android:orientation="horizontal"
-		android:paddingBottom="20dp"
-		>
-
-		<ProgressBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/dashboard_sensor_progress"
-			android:layout_gravity="center_vertical"
-			android:visibility="gone"
-			style="@android:style/Widget.DeviceDefault.ProgressBar.Small"
-			/>
-
-		<View
-			android:layout_width="6dp"
-			android:layout_height="match_parent" />
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/dashboard_status"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="?android:attr/textColorPrimary"
-			android:textStyle="bold"
-			android:gravity="center_horizontal"
-		    />
-
-	</LinearLayout>
+	<!--<ProgressBar-->
+		<!--android:layout_width="wrap_content"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:id="@+id/dashboard_sensor_progress"-->
+		<!--android:layout_gravity="center_vertical"-->
+		<!--android:visibility="gone"-->
+		<!--style="@android:style/Widget.DeviceDefault.ProgressBar.Small"-->
+		<!--/>-->
 
 	<LinearLayout
 		android:layout_width="wrap_content"
