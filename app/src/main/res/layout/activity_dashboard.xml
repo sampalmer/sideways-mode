@@ -12,8 +12,7 @@
 		android:layout_marginStart="12dp"
 		android:layout_marginTop="12dp"
 		style="@style/Widget.AppCompat.Button.Borderless"
-		app:srcCompat="@drawable/menu_settings"
-		android:tint="?attr/colorControlNormal"
+		app:srcCompat="@drawable/dashboard_settings"
 		android:contentDescription="@string/settings"
 		/>
 
