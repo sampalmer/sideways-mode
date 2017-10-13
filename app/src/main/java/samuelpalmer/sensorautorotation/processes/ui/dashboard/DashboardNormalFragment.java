@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.ApplicationCommand;
@@ -20,9 +19,9 @@ public class DashboardNormalFragment extends Fragment {
 	private View sensorProgress;
 	private TextView statusText;
 	
-	private ImageButton leftSideButton;
-	private ImageButton turnOffButton;
-	private ImageButton rightSideButton;
+	private View leftSideButton;
+	private View turnOffButton;
+	private View rightSideButton;
 	
 	@Nullable
 	@Override
