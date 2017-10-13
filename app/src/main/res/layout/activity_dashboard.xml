@@ -42,17 +42,8 @@
 			/>
 
 		<fragment
-			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardDisabledFragment"
-			android:id="@+id/dashboard_disabled_contents"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:visibility="gone"
-			/>
-
-		<fragment
-			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardEnabledFragment"
-			android:id="@+id/dashboard_enabled_contents"
+			android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardNormalFragment"
+			android:id="@+id/dashboard_normal_contents"
 			android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 			/>

@@ -23,9 +23,8 @@ public class DashboardActivity extends DialogActivity {
 	private AlertDialog dialog;
 
 	private DashboardPermissionFragment permissionSection;
-	private DashboardDisabledFragment disabledSection;
 	private ProgressBar progressBar;
-	private DashboardEnabledFragment enabledSection;
+	private DashboardNormalFragment enabledSection;
 	
 	private ApplicationStatusClient statusClient;
 	
@@ -64,9 +63,8 @@ public class DashboardActivity extends DialogActivity {
 		fragmentManager = getSupportFragmentManager();
 		
 		permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentById(R.id.dashboard_permission);
-		disabledSection = (DashboardDisabledFragment) fragmentManager.findFragmentById(R.id.dashboard_disabled_contents);
 		progressBar = dialog.findViewById(R.id.dashboard_progress);
-		enabledSection = (DashboardEnabledFragment) fragmentManager.findFragmentById(R.id.dashboard_enabled_contents);
+		enabledSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
 		
 		statusClient = new ApplicationStatusClient(this, statusChanged);
 	}
@@ -115,30 +113,22 @@ public class DashboardActivity extends DialogActivity {
 			ViewHelpers.ensureVisibility(progressBar, View.VISIBLE);
 			transaction
 				.hide(enabledSection)
-				.hide(disabledSection)
 				.hide(permissionSection);
 		}
 		else {
 			ViewHelpers.ensureVisibility(progressBar, View.GONE);
 			
-			if (!lastStatus.appEnabled) {
-				transaction.hide(enabledSection);
-				
-				boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(this);
-				if (hasPermission)
-					transaction
-						.show(disabledSection)
-						.hide(permissionSection);
-				else
-					transaction
-						.hide(disabledSection)
-						.show(permissionSection);
+			boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(this);
+			
+			if (!hasPermission) {
+				transaction
+					.hide(enabledSection)
+					.show(permissionSection);
 			}
 			else {
 				//Don't want the view to change size after loading; it should stay the same
 				transaction
 					.show(enabledSection)
-					.hide(disabledSection)
 					.hide(permissionSection);
 				
 				enabledSection.setStatus(lastStatus);

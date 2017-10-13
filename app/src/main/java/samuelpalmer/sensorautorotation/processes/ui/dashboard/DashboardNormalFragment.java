@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 
 
-public class DashboardEnabledFragment extends Fragment {
+public class DashboardNormalFragment extends Fragment {
 	
 	private View sensorProgress;
 	private TextView statusText;
@@ -27,7 +27,7 @@ public class DashboardEnabledFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View layout = inflater.inflate(R.layout.fragment_dashboard_enabled, container, false);
+		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
 		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
 		
@@ -41,7 +41,7 @@ public class DashboardEnabledFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).send(getContext());
-				//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
+				getActivity().finish();
 			}
 			
 		});
@@ -61,7 +61,7 @@ public class DashboardEnabledFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).send(getContext());
-				//Not showing a progress bar here since most of the time the update will be instant, in which case flicker would occur
+				getActivity().finish();
 			}
 			
 		});
@@ -70,22 +70,18 @@ public class DashboardEnabledFragment extends Fragment {
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {
-		if (lastStatus.waitingForSensor) {
-			ViewHelpers.ensureVisibility(sensorProgress, View.VISIBLE);
-		}
-		else {
-			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
-			
-			if (lastStatus.user.equals(UserSide.LEFT)) {
-				leftSideButton.setSelected(true);
-				rightSideButton.setSelected(false);
-			}
-			else {
-				leftSideButton.setSelected(false);
-				rightSideButton.setSelected(true);
-			}
-		}
+		ViewHelpers.ensureVisibility(sensorProgress, lastStatus.waitingForSensor ? View.VISIBLE : View.GONE);
+		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.appEnabled ? lastStatus.user.descriptionId : R.string.choose_side);
 		
-		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.user.descriptionId);
+		leftSideButton.setSelected(false);
+		turnOffButton.setSelected(false);
+		rightSideButton.setSelected(false);
+		
+		if (!lastStatus.appEnabled)
+			turnOffButton.setSelected(true);
+		else if (lastStatus.user.equals(UserSide.LEFT))
+			leftSideButton.setSelected(true);
+		else
+			rightSideButton.setSelected(true);
 	}
 }
