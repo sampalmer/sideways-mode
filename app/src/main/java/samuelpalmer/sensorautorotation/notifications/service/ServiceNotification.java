@@ -89,15 +89,20 @@ class ServiceNotification {
 
 		notificationButtons
 			.configureButton(
-				R.id.change_side_button,
-				R.drawable.action_change_side,
-				new ApplicationCommand(ApplicationCommand.ACTION_CHANGE_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_CHANGE_SIDE),
-				CurrentProcess.context().getText(R.string.action_change_side))
+				R.id.notification_left_side_button,
+				R.drawable.app_left_side,
+				new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE),
+				CurrentProcess.context().getText(R.string.user_rotation_left_side))
 			.configureButton(
-				R.id.turn_off_button,
+				R.id.notification_turn_off_button,
 				R.drawable.action_turn_off,
 				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF),
 				CurrentProcess.context().getText(R.string.action_turn_off))
+			.configureButton(
+				R.id.notification_right_side_button,
+				R.drawable.app_right_side,
+				new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE),
+				CurrentProcess.context().getText(R.string.user_rotation_right_side))
 		;
 
 		builder.setCustomContentView(notificationButtons.getContentView());

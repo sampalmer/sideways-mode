@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-	style="@style/notification_buttons"
-	tools:ignore="UnusedAttribute"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools"
+	style="@style/notification_buttons"
+	android:layoutDirection="ltr"
+	tools:ignore="UnusedAttribute"
+	>
 
-	<include layout="@layout/notification_button" android:id="@+id/change_side_button" />
-	<include layout="@layout/notification_button" android:id="@+id/turn_off_button" />
+	<include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+	<include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+	<include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
 
 </LinearLayout>
