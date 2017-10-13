@@ -92,6 +92,12 @@ public class DashboardActivity extends DialogActivity {
 		statusClient.unsubscribe();
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		showStatus(); // Just in case the permission has changed
+	}
+	
 	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		
 		@Override
