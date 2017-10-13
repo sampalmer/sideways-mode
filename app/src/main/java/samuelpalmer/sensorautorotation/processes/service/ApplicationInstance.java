@@ -108,10 +108,6 @@ public class ApplicationInstance extends State {
 		applicationState.clear();
 	}
 	
-	public void changeSide() {
-		calculator.changeSide();
-	}
-	
 	public void setSide(UserSide side) {
 		calculator.setSide(side);
 	}

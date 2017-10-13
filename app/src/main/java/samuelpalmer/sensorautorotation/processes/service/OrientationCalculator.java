@@ -37,12 +37,6 @@ public class OrientationCalculator {
 	private @NonNull Rotation offset() {
 		return state.userSide.get().offset;
 	}
-
-	public void changeSide() {
-		UserSide currentSide = state.userSide.get();
-		UserSide newSide = currentSide.oppositeSide();
-		setSide(newSide);
-	}
 	
 	public void setDevice(@Nullable Orientation newDevice) {
 		waitingForSensor = false;

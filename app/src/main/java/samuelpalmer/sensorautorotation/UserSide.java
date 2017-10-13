@@ -6,6 +6,7 @@ import android.support.annotation.StringRes;
 import samuelpalmer.common.Rotation;
 
 public enum UserSide {
+	
 	LEFT(R.string.user_rotation_left_side, new Rotation(-1), R.drawable.app_left_side, new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE)),
 	RIGHT(R.string.user_rotation_right_side, new Rotation(1), R.drawable.app_right_side, new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE));
 	
@@ -24,17 +25,6 @@ public enum UserSide {
 		this.offset = offset;
 		this.iconId = iconId;
 		this.command = command;
-	}
-	
-	public UserSide oppositeSide() {
-		switch (this) {
-			case LEFT:
-				return UserSide.RIGHT;
-			case RIGHT:
-				return UserSide.LEFT;
-			default:
-				throw new RuntimeException("Can't determine opposite side of user side '" + this.toString() + "'.");
-		}
 	}
 	
 }

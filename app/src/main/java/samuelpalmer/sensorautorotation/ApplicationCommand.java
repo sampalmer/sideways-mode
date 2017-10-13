@@ -16,7 +16,6 @@ public class ApplicationCommand {
 
 	public static final String ACTION_LEFT_SIDE = "left_side";
 	public static final String ACTION_RIGHT_SIDE = "right_side";
-	public static final String ACTION_CHANGE_SIDE = "change_side";
 	public static final String ACTION_TURN_OFF = "turn_off";
 	public static final String ACTION_SYNC_SERVICE = "sync_service";
 	public static final String ACTION_CLEAR_ERROR = "clear_error";
@@ -24,7 +23,6 @@ public class ApplicationCommand {
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_LEFT_SIDE,
 			ACTION_RIGHT_SIDE,
-			ACTION_CHANGE_SIDE,
 			ACTION_TURN_OFF,
 			ACTION_SYNC_SERVICE,
 			ACTION_CLEAR_ERROR

@@ -31,10 +31,7 @@ public class InstructionsActivity extends UiActivity {
 		);
 		
 		helpContents.setText(
-			getResources().getString(
-				R.string.instructions_help_contents,
-				getResources().getText(R.string.action_change_side)
-			)
+			getResources().getString(R.string.instructions_help_contents)
 		);
 	}
 	

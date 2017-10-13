@@ -32,8 +32,6 @@
 	<string name="user_rotation_left_side">Left side</string>
 	<string name="user_rotation_right_side">Right side</string>
 
-	<string name="action_change_side">Change side</string>
-
 	<string name="app_disabled_view_error">View error</string>
 
 	<string name="status_waiting_sensor">Waiting for sensor</string>
@@ -100,7 +98,7 @@
 
 	<string name="instructions_help_heading">Troubleshooting</string>
 	<string name="instructions_help_contents">
-		If the screen faces the wrong way:\n1. Make sure the app you have open isn\'t controlling the screen.\n2. Use the %1$s button in the notification to fix it.
+		If the screen faces the wrong way:\n1. Make sure the app you have open isn\'t controlling the screen.\n2. Use the buttons in the notification to fix it.
 	</string>
 
 	<!-- Enter feedback -->

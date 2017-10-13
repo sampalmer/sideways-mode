@@ -146,12 +146,6 @@ public abstract class ApplicationInstanceManager {
 				collapseNotificationShade();
 				
 				break;
-			case ApplicationCommand.ACTION_CHANGE_SIDE:
-				if (!isApplicationRunning())
-					commandIgnoredReason = "Application is not running";
-				else
-					applicationInstance().changeSide();
-				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
 				if (!isApplicationRunning())
 					commandIgnoredReason = "Application is not running";

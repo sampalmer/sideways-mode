@@ -43,7 +43,7 @@ class ServiceNotification {
 		
 		hideTimestamp();
 		
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_change_side, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_turn_off, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
