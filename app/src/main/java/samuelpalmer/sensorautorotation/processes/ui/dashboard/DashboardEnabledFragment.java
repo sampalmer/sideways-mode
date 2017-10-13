@@ -1,11 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,22 +76,13 @@ public class DashboardEnabledFragment extends Fragment {
 		else {
 			ViewHelpers.ensureVisibility(sensorProgress, View.GONE);
 			
-			int[] attrs = {R.attr.colorControlNormal};
-			TypedArray ta = getActivity().obtainStyledAttributes(attrs);
-			int color = ta.getResourceId(0, android.R.color.black);
-			ta.recycle();
-			
 			if (lastStatus.user.equals(UserSide.LEFT)) {
-				leftSideButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary_500, null));
-				leftSideButton.setColorFilter(Color.WHITE);
-				rightSideButton.setBackgroundColor(Color.TRANSPARENT);
-				rightSideButton.setColorFilter(ResourcesCompat.getColor(getResources(), color, null));
+				leftSideButton.setSelected(true);
+				rightSideButton.setSelected(false);
 			}
 			else {
-				rightSideButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary_500, null));
-				rightSideButton.setColorFilter(Color.WHITE);
-				leftSideButton.setBackgroundColor(Color.TRANSPARENT);
-				leftSideButton.setColorFilter(ResourcesCompat.getColor(getResources(), color, null));
+				leftSideButton.setSelected(false);
+				rightSideButton.setSelected(true);
 			}
 		}
 		

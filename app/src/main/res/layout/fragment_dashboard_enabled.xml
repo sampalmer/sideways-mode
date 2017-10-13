@@ -48,35 +48,22 @@
 
 		<ImageButton
 			android:id="@+id/dashboard_button_left_side"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_left_side"
-			style="@style/Widget.AppCompat.Button.Borderless"
 			android:contentDescription="@string/user_rotation_left_side"
 			/>
 
 		<ImageButton
 			android:id="@+id/dashboard_button_turn_off"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_turn_off"
-			android:tint="?attr/colorControlNormal"
-			style="@style/Widget.AppCompat.Button.Borderless"
 			android:contentDescription="@string/action_turn_off"
 			/>
 
 		<ImageButton
 			android:id="@+id/dashboard_button_right_side"
-			android:scaleType="center"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_right_side"
-			style="@style/Widget.AppCompat.Button.Borderless"
 			android:contentDescription="@string/user_rotation_right_side"
 			/>
 
