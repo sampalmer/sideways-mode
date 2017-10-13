@@ -36,37 +36,29 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
 		
-		leftSideButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).send(getContext());
-				getActivity().finish();
-			}
-			
-		});
-		
-		turnOffButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(getContext());
-				getActivity().finish();
-			}
-			
-		});
-		
-		rightSideButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).send(getContext());
-				getActivity().finish();
-			}
-			
-		});
+		leftSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_LEFT_SIDE));
+		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
+		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
 		return layout;
+	}
+	
+	private class ActionClickListener implements View.OnClickListener {
+		
+		private final String action;
+		
+		public ActionClickListener(String action) {
+			this.action = action;
+		}
+		
+		@Override
+		public void onClick(View view) {
+			if (!view.isSelected()) {
+				new ApplicationCommand(action).send(getContext());
+				getActivity().finish();
+			}
+		}
+		
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {
