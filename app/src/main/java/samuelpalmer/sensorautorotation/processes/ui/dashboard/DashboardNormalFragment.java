@@ -27,7 +27,7 @@ public class DashboardNormalFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
-		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
+//		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
 		
 //		statusText = layout.findViewById(R.id.dashboard_status);
 		leftSideButton = layout.findViewById(R.id.dashboard_button_left_side);
