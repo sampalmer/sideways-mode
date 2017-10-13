@@ -55,6 +55,7 @@
 			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_left_side"
 			android:contentDescription="@string/user_rotation_left_side"
+		    android:background="@drawable/toggle_button_background_left"
 			/>
 
 		<ImageButton
@@ -62,6 +63,7 @@
 			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_turn_off"
 			android:contentDescription="@string/action_turn_off"
+			android:background="@drawable/toggle_button_background_middle"
 			/>
 
 		<ImageButton
@@ -69,6 +71,7 @@
 			style="@style/ExclusiveButton"
 			app:srcCompat="@drawable/dashboard_right_side"
 			android:contentDescription="@string/user_rotation_right_side"
+			android:background="@drawable/toggle_button_background_right"
 			/>
 
 	</LinearLayout>
