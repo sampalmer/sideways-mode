@@ -1,6 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,9 +15,13 @@ import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 
 
 public class DashboardNormalFragment extends Fragment {
+	
+	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
+	private static final String KEY_PENDING_ACTION = "pending_action";
 	
 	private View sensorProgress;
 //	private TextView statusText;
@@ -21,6 +29,14 @@ public class DashboardNormalFragment extends Fragment {
 	private View leftSideButton;
 	private View turnOffButton;
 	private View rightSideButton;
+	
+	private String pendingAction;
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(KEY_PENDING_ACTION, pendingAction);
+	}
 	
 	@Nullable
 	@Override
@@ -38,6 +54,9 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
 		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
+		if (savedInstanceState != null)
+			pendingAction = savedInstanceState.getString(KEY_PENDING_ACTION);
+		
 		return layout;
 	}
 	
@@ -52,11 +71,43 @@ public class DashboardNormalFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			if (!view.isSelected()) {
-				new ApplicationCommand(action).send(getContext());
-				getActivity().finish();
+				if (!canModifySystemSettings()) {
+					pendingAction = action;
+					Intent intent = new SystemIntents(getContext()).modifySystemSettings();
+					
+					try {
+						startActivityForResult(intent, REQUEST_CODE_BUTTON_PRESSED);
+					}
+					catch (ActivityNotFoundException e) {
+						throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
+					}
+				} else
+					buttonPressed(action);
 			}
 		}
 		
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_CODE_BUTTON_PRESSED) {
+			if (canModifySystemSettings())
+				buttonPressed(pendingAction);
+			else
+				pendingAction = null; // The user might have returned without actually granting the permission
+		}
+		else
+			super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private boolean canModifySystemSettings() {
+		return Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(getContext());
+	}
+	
+	private void buttonPressed(String action) {
+		new ApplicationCommand(action).send(getContext());
+		getActivity().finish();
+		pendingAction = null;
 	}
 	
 	public void setStatus(ApplicationStatus lastStatus) {

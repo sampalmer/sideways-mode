@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,10 +20,9 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActi
 public class DashboardActivity extends DialogActivity {
 	
 	private AlertDialog dialog;
-
-	private DashboardPermissionFragment permissionSection;
+	
 	private ProgressBar progressBar;
-	private DashboardNormalFragment enabledSection;
+	private DashboardNormalFragment normalSection;
 	
 	private ApplicationStatusClient statusClient;
 	
@@ -62,9 +60,8 @@ public class DashboardActivity extends DialogActivity {
 		
 		fragmentManager = getSupportFragmentManager();
 		
-		permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentById(R.id.dashboard_permission);
 		progressBar = dialog.findViewById(R.id.dashboard_progress);
-		enabledSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
+		normalSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
 		
 		statusClient = new ApplicationStatusClient(this, statusChanged);
 	}
@@ -92,12 +89,6 @@ public class DashboardActivity extends DialogActivity {
 		statusClient.unsubscribe();
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		showStatus(); // Just in case the permission has changed
-	}
-	
 	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		
 		@Override
@@ -117,28 +108,15 @@ public class DashboardActivity extends DialogActivity {
 		
 		if (lastStatus == null) {
 			ViewHelpers.ensureVisibility(progressBar, View.VISIBLE);
-			transaction
-				.hide(enabledSection)
-				.hide(permissionSection);
+			transaction.hide(normalSection);
 		}
 		else {
 			ViewHelpers.ensureVisibility(progressBar, View.GONE);
 			
-			boolean hasPermission = Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(this);
+			//Don't want the view to change size after loading; it should stay the same
+			transaction.show(normalSection);
 			
-			if (!hasPermission) {
-				transaction
-					.hide(enabledSection)
-					.show(permissionSection);
-			}
-			else {
-				//Don't want the view to change size after loading; it should stay the same
-				transaction
-					.show(enabledSection)
-					.hide(permissionSection);
-				
-				enabledSection.setStatus(lastStatus);
-			}
+			normalSection.setStatus(lastStatus);
 		}
 		
 		/*
