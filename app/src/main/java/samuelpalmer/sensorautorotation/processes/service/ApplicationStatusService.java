@@ -31,6 +31,7 @@ public class ApplicationStatusService extends Service {
 	
 	private static Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
 	private static Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
+	private static boolean isSubscribed = false;
 	
 	public static final int MSG_SUBSCRIBE = 1;
 	public static final int MSG_UNSUBSCRIBE = 2;
@@ -72,11 +73,6 @@ public class ApplicationStatusService extends Service {
 								// The client is dead. Remove it from the list.
 								clients.remove(newClient);
 							}
-							
-						if (clients.size() == 1) {
-							enabledState.subscribe(enabledStateChanged);
-							error.subscribe(enabledStateChanged);
-						}
 					}
 					else
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received duplicate subscription");
@@ -87,16 +83,14 @@ public class ApplicationStatusService extends Service {
 					boolean wasSubscribed = clients.remove(msg.replyTo);
 					if (!wasSubscribed)
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received unsubscription for non-subscriber");
-					else if (clients.size() == 0) {
-						error.unsubscribe(enabledStateChanged);
-						enabledState.unsubscribe(enabledStateChanged);
-					}
 					
 					break;
 				}
 				default:
 					throw new RuntimeException("Received unknown message: " + msg.what);
 			}
+			
+			syncInternalSubscriptions();
 		}
 		
 	}
@@ -157,6 +151,21 @@ public class ApplicationStatusService extends Service {
 				// The client is dead. Remove it from the list.
 				iterator.remove();
 			}
+		}
+		
+		syncInternalSubscriptions(); // In case we've removed a client
+	}
+	
+	private static void syncInternalSubscriptions() {
+		if (clients.size() > 0 && !isSubscribed) {
+			enabledState.subscribe(enabledStateChanged);
+			error.subscribe(enabledStateChanged);
+			isSubscribed = true;
+		}
+		else if (clients.size() == 0 && isSubscribed) {
+			error.unsubscribe(enabledStateChanged);
+			enabledState.unsubscribe(enabledStateChanged);
+			isSubscribed = false;
 		}
 	}
 	
