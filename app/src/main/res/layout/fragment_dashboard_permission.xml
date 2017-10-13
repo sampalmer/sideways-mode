@@ -1,36 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
+
 	>
 
 	<TextView
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="36dp"
-		android:layout_marginRight="36dp"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="?android:attr/textColorPrimary"
-		android:textStyle="bold"
-		android:text="@string/permission_needed_summary"
-		android:gravity="center_horizontal"
-		/>
-
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/dialog_content_margin"
 		android:text="@string/permission_needed_system_settings"
-	    android:gravity="center_horizontal"
 		/>
 
 	<Button
 		android:id="@+id/dashboard_permission_fix"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
 		android:text="@string/permission_needed_fix"
-		style="?android:attr/buttonBarButtonStyle"
+		style="@style/Widget.AppCompat.Button.Borderless.Colored"
+	    android:layout_gravity="end"
 		/>
 
 </LinearLayout>
