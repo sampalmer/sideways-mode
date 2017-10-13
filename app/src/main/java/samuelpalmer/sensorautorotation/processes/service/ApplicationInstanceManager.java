@@ -131,6 +131,9 @@ public abstract class ApplicationInstanceManager {
 					ServiceSettings.instance().persistentState().set(UserSide.LEFT);
 					ServiceController.updateServiceState(true);
 				}
+				
+				collapseNotificationShade();
+				
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
 				if (ServiceSettings.instance().persistentState().hasValue() && isApplicationRunning())
@@ -139,6 +142,9 @@ public abstract class ApplicationInstanceManager {
 					ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
 					ServiceController.updateServiceState(true);
 				}
+				
+				collapseNotificationShade();
+				
 				break;
 			case ApplicationCommand.ACTION_CHANGE_SIDE:
 				if (!isApplicationRunning())
@@ -151,6 +157,9 @@ public abstract class ApplicationInstanceManager {
 					commandIgnoredReason = "Application is not running";
 				else
 					disableService("Received application command");
+				
+				collapseNotificationShade();
+				
 				break;
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
 				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
@@ -164,6 +173,11 @@ public abstract class ApplicationInstanceManager {
 		
 		if (commandIgnoredReason != null)
 			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
+	}
+	
+	private static void collapseNotificationShade() {
+		// The user might be in a hurry and want to quickly press a notification button and then return to their task.
+		CurrentProcess.context().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 	}
 	
 	private static void disableService(String reason) {
