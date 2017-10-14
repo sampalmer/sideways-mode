@@ -34,7 +34,11 @@ public class ServiceReviver extends State {
 	}
 
 	private PendingIntent intent() {
-		return new ApplicationCommand(ApplicationCommand.ACTION_SYNC_SERVICE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.SERVICE_REVIVER);
+		return PendingIntent.getBroadcast(
+			CurrentProcess.context(),
+			PendingIntentIds.SERVICE_REVIVER,
+			new ApplicationCommand(ApplicationCommand.ACTION_SYNC_SERVICE).asIntent(CurrentProcess.context()),
+			PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 
 	@Override

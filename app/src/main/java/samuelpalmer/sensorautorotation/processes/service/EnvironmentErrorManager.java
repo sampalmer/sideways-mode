@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.os.Build;
 import android.util.Log;
 
@@ -36,13 +37,20 @@ public abstract class EnvironmentErrorManager {
 	}
 	
 	private static void postNotification(EnvironmentError error) {
+		PendingIntent clearIntentIntent = PendingIntent.getBroadcast(
+			CurrentProcess.context(),
+			PendingIntentIds.ENVIRONMENT_ERROR_NOTIFICATION_CLEAR,
+			new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).asIntent(CurrentProcess.context()),
+			PendingIntentIds.PENDING_INTENT_FLAGS
+		);
+		
 		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
 			.setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
 			.setContentIntent(error.showError())
 			.setContentTitle(error.getSummary())
 			.setContentText(CurrentProcess.context().getText(R.string.app_disabled_view_error))
 			.setAutoCancel(true)
-			.setDeleteIntent(new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).asPendingIntent(CurrentProcess.context(), PendingIntentIds.ENVIRONMENT_ERROR_NOTIFICATION_CLEAR))
+			.setDeleteIntent(clearIntentIntent)
 			.setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)

@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
@@ -44,16 +43,6 @@ public class ApplicationCommand {
 	public void send(Context context) {
 		Intent intent = asIntent(context);
 		context.sendBroadcast(intent);
-	}
-	
-	public PendingIntent asPendingIntent(Context context, int requestCode) {
-		Intent intent = asIntent(context);
-		
-		return PendingIntent.getBroadcast(
-			CurrentProcess.context(),
-			requestCode,
-			intent,
-			PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 	
 	public Intent asIntent(Context context) {
