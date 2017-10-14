@@ -4,9 +4,30 @@
               style="@style/notification"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-	>
+              android:baselineAligned="false">
 
-	<include layout="@layout/notification_content" />
-	<include layout="@layout/notification_buttons" />
+	<FrameLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/notification_content"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		tools:ignore="MergeRootFrame"/>
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		style="@style/notification_buttons"
+		android:layoutDirection="ltr"
+		tools:ignore="UnusedAttribute"
+		>
+
+		<include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+		<include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+		<include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+
+	</LinearLayout>
+
 
 </LinearLayout>
