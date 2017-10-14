@@ -20,7 +20,7 @@
 
 	<LinearLayout
 		android:layout_width="wrap_content"
-		android:layout_height="?android:attr/listPreferredItemHeight"
+		android:layout_height="?attr/listPreferredItemHeight"
 		android:orientation="horizontal"
 	    android:layoutDirection="ltr"
 		tools:ignore="UnusedAttribute">
@@ -29,7 +29,7 @@
 			android:id="@+id/dashboard_button_left_side"
 			android:layout_width="64dp"
 			android:layout_height="match_parent"
-			android:background="?android:attr/actionBarItemBackground"
+			android:background="?attr/selectableItemBackground"
 			android:contentDescription="@string/user_rotation_left_side"
 			android:focusable="true"
 			>
@@ -57,7 +57,7 @@
 			android:id="@+id/dashboard_button_turn_off"
 			android:layout_width="64dp"
 			android:layout_height="match_parent"
-			android:background="?android:attr/actionBarItemBackground"
+			android:background="?attr/selectableItemBackground"
 			android:contentDescription="@string/action_turn_off"
 			android:focusable="true"
 			>
@@ -86,7 +86,7 @@
 			android:id="@+id/dashboard_button_right_side"
 			android:layout_width="64dp"
 			android:layout_height="match_parent"
-			android:background="?android:attr/actionBarItemBackground"
+			android:background="?attr/selectableItemBackground"
 			android:contentDescription="@string/user_rotation_right_side"
 			android:focusable="true"
 			>
