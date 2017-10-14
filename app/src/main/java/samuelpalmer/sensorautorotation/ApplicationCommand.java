@@ -56,11 +56,10 @@ public class ApplicationCommand {
 			PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 	
-	private Intent asIntent(Context context) {
+	public Intent asIntent(Context context) {
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
 		BroadcastKillFix.apply(result);
 		return result;
 	}
-	
 	
 }

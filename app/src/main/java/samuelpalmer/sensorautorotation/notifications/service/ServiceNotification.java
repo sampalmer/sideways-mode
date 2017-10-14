@@ -15,15 +15,20 @@ import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.processes.service.DummyReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 class ServiceNotification {
 
 	private final NotificationBuilderCompat builder;
-	private final int actionButtonColour; //Cached for RAM & CPU efficiency
-
+	
+	//Cached for RAM & CPU efficiency
+	private final int actionButtonColour;
+	private final int unselectedButtonBackground;
+	
 	public ServiceNotification() {
 		PendingIntent settingsActivityIntent = PendingIntent.getActivity(
 			CurrentProcess.context(),
@@ -45,7 +50,8 @@ class ServiceNotification {
 		
 		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_turn_off, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
-
+		unselectedButtonBackground = styles.getUnselectedButtonBackground();
+		
 		Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
 	}
 
@@ -72,37 +78,46 @@ class ServiceNotification {
 			builder.setContentText(statusText);
 		}
 		
-		applyButtons();
+		applyButtons(applicationStatus);
 
 		return builder.build();
 	}
 	
-	private void applyButtons() {
+	private void applyButtons(ApplicationStatus status) {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
 			CurrentProcess.context(),
 			R.layout.notification,
 			builder.createContentView(),
-			actionButtonColour
+			actionButtonColour,
+			unselectedButtonBackground
 		);
-
+		
 		notificationButtons
 			.configureButton(
 				R.id.notification_left_side_button,
 				R.drawable.app_left_side,
-				new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE),
-				CurrentProcess.context().getText(R.string.user_rotation_left_side))
+				PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
+				// Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
+				status.user.equals(UserSide.LEFT) ? new Intent(CurrentProcess.context(), DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(CurrentProcess.context()),
+				CurrentProcess.context().getText(R.string.user_rotation_left_side),
+				status.user.equals(UserSide.LEFT))
 			.configureButton(
 				R.id.notification_turn_off_button,
 				R.drawable.action_turn_off,
-				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF),
-				CurrentProcess.context().getText(R.string.action_turn_off))
+				PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
+				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(CurrentProcess.context()),
+				CurrentProcess.context().getText(R.string.action_turn_off),
+				false)
 			.configureButton(
 				R.id.notification_right_side_button,
 				R.drawable.app_right_side,
-				new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asPendingIntent(CurrentProcess.context(), PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE),
-				CurrentProcess.context().getText(R.string.user_rotation_right_side))
+				PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
+				// Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
+				status.user.equals(UserSide.RIGHT) ? new Intent(CurrentProcess.context(), DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(CurrentProcess.context()),
+				CurrentProcess.context().getText(R.string.user_rotation_right_side),
+				status.user.equals(UserSide.RIGHT))
 		;
 
 		builder.setCustomContentView(notificationButtons.getContentView());

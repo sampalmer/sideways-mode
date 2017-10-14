@@ -3,6 +3,7 @@ package samuelpalmer.common.notifications;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuffColorFilter;
@@ -33,7 +34,7 @@ public final class NotificationStyles {
 		this.colourArgb = colourArgb;
 		extractColors();
 	}
-
+	
 	public int getActionButtonColour() {
 		int result;
 
@@ -50,7 +51,19 @@ public final class NotificationStyles {
 
 		return result;
 	}
-
+	
+	public int getUnselectedButtonBackground() {
+		int[] attrs = { android.R.attr.background };
+		
+		TypedArray ta = context.obtainStyledAttributes(android.R.style.Widget_DeviceDefault_Button_Borderless_Small, attrs);
+		try {
+			return ta.getResourceId(0, 0);
+		}
+		finally {
+			ta.recycle();
+		}
+	}
+	
 	private void extractColors()
 	{
 		NotificationBuilderCompat builder = NotificationBuilderCompat.create(context)
