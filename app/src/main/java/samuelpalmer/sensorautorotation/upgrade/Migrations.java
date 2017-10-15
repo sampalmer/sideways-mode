@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.upgrade;
 
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.util.SparseArray;
 
 import samuelpalmer.common.Orientation;
@@ -18,6 +19,9 @@ import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 class Migrations {
 	static SparseArray<Migration> buildMap() {
@@ -33,6 +37,22 @@ class Migrations {
 				Setting<String> screenOffBehaviour = settings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 				
 				// Not migrating these settings anywhere since the UI process (which owns the app settings) can't directly access the service process's settings as of v57.
+				// Instead, we'll gracefully disable the app and restore normal Android rotation.
+				if (oldAutoRotate.hasValue()) {
+					Log.w(Migrations.class.getSimpleName(), "App was enabled, but service state cannot be migrated to service process. Disabling app.");
+					
+					SystemSettings systemSettings = new SystemSettings();
+					
+					try {
+						systemSettings.accelerometerRotation.set(oldAutoRotate.get());
+						systemSettings.userRotation.set(Orientation.NATURAL);
+					} catch (SystemSettingAccessDeniedException e) {
+						// We'll get here if the user is running Android 6 or higher due to runtime permissions.
+						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to change the system settings while upgrading.", e);
+					} catch (SystemSettingWriteException e) {
+						Log.w(Migrations.class.getSimpleName(), "Encountered write error when changing the system settings while upgrading.", e);
+					}
+				}
 				
 				Transaction deleteTransaction = settings.new Transaction();
 				oldAutoRotate.remove(deleteTransaction);
