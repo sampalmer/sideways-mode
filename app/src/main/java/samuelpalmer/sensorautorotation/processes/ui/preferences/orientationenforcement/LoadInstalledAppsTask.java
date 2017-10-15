@@ -98,7 +98,7 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 				boolean checked = ((Checkable)view).isChecked();
 				String packageName = result.get(position).packageName;
 
-				Set<String> forcedAppPackages = setting.get();
+				Set<String> forcedAppPackages = new HashSet<>(setting.get()); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
 				if (checked)
 					forcedAppPackages.add(packageName);
 				else
