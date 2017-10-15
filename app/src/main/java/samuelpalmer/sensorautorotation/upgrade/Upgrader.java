@@ -9,6 +9,7 @@ import android.util.SparseArray;
 
 import java.util.Map;
 
+import samuelpalmer.common.Orientation;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -20,6 +21,9 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -62,32 +66,51 @@ public class Upgrader {
 		) {
 			Log.i(Upgrader.class.getSimpleName(), "Upgrading " + (CurrentProcess.isServiceProcess() ? "service" : "application") + " settings from " + lastAppVersion + " to " + newAppVersion);
 			
-			StringBuilder upgradeMessage = new StringBuilder();
-			
-			SparseArray<Migration> migrations = Migrations.buildMap();
-			for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
-				Migration migration = migrations.get(version);
-				if (migration != null) {
-					Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
-					
-					if (CurrentProcess.isServiceProcess()) {
-						migration.upgradeServiceProcessData(ServiceSettings.instance());
-					}
-					else {
-						// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
-						CharSequence message = migration.getMessage(ApplicationSettings.instance());
-						if (message != null)
-							upgradeMessage.append(message);
-						
-						migration.upgradeUiProcessData(ApplicationSettings.instance());
+			if (lastAppVersion > newAppVersion) {
+				// On my Sony Xperia M running Android 4.1.2, the OS lets me downgrade the app, so we need to guard against this.
+				
+				Log.w(Upgrader.class.getSimpleName(), "Warning: user is downgrading from a later version. Clearing settings.");
+				
+				if (CurrentProcess.isServiceProcess()) {
+					ServiceSettings.instance().prefs.edit().clear().apply();
+					try {
+						new SystemSettings().userRotation.set(Orientation.NATURAL);
+					} catch (SystemSettingAccessDeniedException e) {
+						// We'll get here if the user is running Android 6 or higher due to runtime permissions.
+						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.", e);
+					} catch (SystemSettingWriteException e) {
+						Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the screen orientation while downgrading.", e);
 					}
 				}
 			}
-			
-			if (upgradeMessage.length() != 0)
-				notify(upgradeMessage.toString());
-			
-			settingsAppVersion.set(newAppVersion);
+			else {
+				StringBuilder upgradeMessage = new StringBuilder();
+				
+				SparseArray<Migration> migrations = Migrations.buildMap();
+				for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
+					Migration migration = migrations.get(version);
+					if (migration != null) {
+						Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
+						
+						if (CurrentProcess.isServiceProcess()) {
+							migration.upgradeServiceProcessData(ServiceSettings.instance());
+						}
+						else {
+							// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
+							CharSequence message = migration.getMessage(ApplicationSettings.instance());
+							if (message != null)
+								upgradeMessage.append(message);
+							
+							migration.upgradeUiProcessData(ApplicationSettings.instance());
+						}
+					}
+				}
+				
+				if (upgradeMessage.length() != 0)
+					notify(upgradeMessage.toString());
+				
+				settingsAppVersion.set(newAppVersion);
+			}
 		}
 		else if (lastAppVersion == null)
 			// So that we know the settings version when we next upgrade.
