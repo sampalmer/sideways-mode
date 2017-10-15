@@ -20,6 +20,11 @@ public class SystemIntents {
 		return new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, packageUri());
 	}
 	
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public Intent drawOnTopOfApps() {
+		return new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri());
+	}
+	
 	public Intent uninstall() {
 		return new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri());
 	}

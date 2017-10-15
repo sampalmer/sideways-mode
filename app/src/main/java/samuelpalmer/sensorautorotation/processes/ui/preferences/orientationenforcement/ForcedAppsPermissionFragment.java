@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 
 public class ForcedAppsPermissionFragment extends Fragment {
 
@@ -110,7 +111,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 						@TargetApi(Build.VERSION_CODES.M)
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+							Intent intent = new SystemIntents(getActivity()).drawOnTopOfApps();
 
 							//TODO: Apparently the activity isn't guaranteed to actually exist. Decide what to do here.
 							startActivity(intent);
