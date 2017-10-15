@@ -107,11 +107,11 @@ public class DashboardActivity extends DialogActivity {
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		
 		if (lastStatus == null) {
-			ViewHelpers.ensureVisibility(progressBar, View.VISIBLE);
+			ensureVisibility(progressBar, View.VISIBLE);
 			transaction.hide(normalSection);
 		}
 		else {
-			ViewHelpers.ensureVisibility(progressBar, View.GONE);
+			ensureVisibility(progressBar, View.GONE);
 			
 			//Don't want the view to change size after loading; it should stay the same
 			transaction.show(normalSection);
@@ -127,6 +127,16 @@ public class DashboardActivity extends DialogActivity {
 		 * so state loss shouldn't cause any noticeable problems.
 		 */
 		transaction.commitAllowingStateLoss();
+	}
+	
+	/**
+	 * Only changes the visibility if it's different to the current value.
+	 * This is to minimise lag.
+	 */
+	private static void ensureVisibility(View control, int newVisibility) {
+		int currentVisibility = control.getVisibility();
+		if (currentVisibility != newVisibility)
+			control.setVisibility(newVisibility);
 	}
 	
 }
