@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * This receiver ensure the service process will be created when the app is upgraded.
+ * This allows the process to restart the service straight away since the OS has killed it.
+ */
 public class UpgradeReceiver extends BroadcastReceiver {
 
 	@Override

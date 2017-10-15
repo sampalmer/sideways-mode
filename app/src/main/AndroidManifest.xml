@@ -179,6 +179,12 @@
 
 		<receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
+		<receiver android:name=".processes.ui.UpgradeReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+			</intent-filter>
+		</receiver>
+
 		<!-- Service Process -->
 
 		<service
