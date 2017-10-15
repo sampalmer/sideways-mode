@@ -38,7 +38,7 @@ public class NotificationButtons {
 		content.setImageViewResource(id, icon);
 		content.setInt(id, "setColorFilter", buttonColourArgb);
 		content.setOnClickPendingIntent(id, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
-		content.setInt(id, "setBackgroundResource", selected ? R.drawable.tab_selected_holo : unselectedBackgroundResource);
+		content.setInt(id, "setBackgroundResource", selected ? R.drawable.button_selectable_selected : unselectedBackgroundResource);
 		
 		if (VERSION.SDK_INT >= 15)
 			content.setContentDescription(id, contentDescription);
