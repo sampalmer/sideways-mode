@@ -9,7 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import java.util.Set;
+
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -100,12 +103,19 @@ public class CurrentProcess extends Application {
 	 * This ensures preference changes made by the user appear to instantly take effect.
 	 */
 	private static void autoSyncConfigChanges() {
-		ApplicationSettings.instance().forcedOrientationAppPackages().subscribe(new EventHandler() {
+		// Need to hold a copy of the setting so the listener doesn't get garbage collected.
+		forcedOrientationAppPackages = ApplicationSettings.instance().forcedOrientationAppPackages();
+		
+		forcedOrientationAppPackages.subscribe(new EventHandler() {
 			@Override
 			public void update() {
+				Log.i(TAG, "User preferences changed. Sending to service process.");
 				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(context());
 			}
 		});
 	}
+	
+	// Do not use. This is just used to prevent garbage collection of the listener.
+	private static Settings.Setting<Set<String>> forcedOrientationAppPackages;
 	
 }
