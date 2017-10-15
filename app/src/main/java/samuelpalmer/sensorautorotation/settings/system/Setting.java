@@ -2,10 +2,8 @@ package samuelpalmer.sensorautorotation.settings.system;
 
 import android.content.ContentResolver;
 import android.database.ContentObserver;
-import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
@@ -51,11 +49,7 @@ public class Setting<T> {
 	}
 
 	private void set(String key, String value) throws SystemSettingWriteException, SystemSettingAccessDeniedException {
-		if (
-			VERSION.SDK_INT >= 23
-			&&
-			!Settings.System.canWrite(CurrentProcess.context())
-		)
+		if (!SystemSettings.canWrite(CurrentProcess.context()))
 			throw new SystemSettingAccessDeniedException();
 		
 		boolean writeErrors = !putString(contentResolver, key, value);

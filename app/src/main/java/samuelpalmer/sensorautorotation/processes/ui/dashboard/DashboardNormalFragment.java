@@ -2,9 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +15,7 @@ import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 
 public class DashboardNormalFragment extends Fragment {
@@ -72,7 +71,7 @@ public class DashboardNormalFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			if (!view.isSelected()) {
-				if (!canModifySystemSettings()) {
+				if (!SystemSettings.canWrite(DashboardNormalFragment.this.getContext())) {
 					pendingAction = action;
 					Intent intent = new SystemIntents(getContext()).modifySystemSettings();
 					
@@ -92,17 +91,13 @@ public class DashboardNormalFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_BUTTON_PRESSED) {
-			if (canModifySystemSettings())
+			if (SystemSettings.canWrite(getContext()))
 				buttonPressed(pendingAction);
 			else
 				pendingAction = null; // The user might have returned without actually granting the permission
 		}
 		else
 			super.onActivityResult(requestCode, resultCode, data);
-	}
-	
-	private boolean canModifySystemSettings() {
-		return Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(getContext());
 	}
 	
 	private void buttonPressed(String action) {
