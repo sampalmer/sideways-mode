@@ -9,7 +9,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
-import samuelpalmer.sensorautorotation.processes.service.ActivityChangeDetectingService;
+import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
 public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdaptor {
 
@@ -18,7 +18,7 @@ public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdapt
 	private final ContentResolver contentResolver;
 
 	public AccessibilityServiceEnabledStateMonitor() {
-		expected = new ComponentName(CurrentProcess.context(), ActivityChangeDetectingService.class);
+		expected = new ComponentName(CurrentProcess.context(), WindowChangeDetectingService.class);
 		contentResolver = CurrentProcess.context().getContentResolver();
 	}
 

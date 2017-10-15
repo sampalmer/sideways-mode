@@ -13,9 +13,9 @@ import samuelpalmer.common.ComponentNameExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
 
 // Keep in mind that renaming (or moving?) this class will result in users having to re-enable the accessibility service.
-public class ActivityChangeDetectingService extends AccessibilityService {
+public class WindowChangeDetectingService extends AccessibilityService {
 
-	private static final String TAG = ActivityChangeDetectingService.class.getSimpleName();
+	private static final String TAG = WindowChangeDetectingService.class.getSimpleName();
 
 	@Override
 	public void onCreate() {
