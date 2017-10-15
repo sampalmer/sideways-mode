@@ -38,19 +38,20 @@ class Migrations {
 				
 				// Not migrating these settings anywhere since the UI process (which owns the app settings) can't directly access the service process's settings as of v57.
 				// Instead, we'll gracefully disable the app and restore normal Android rotation.
-				if (oldAutoRotate.hasValue()) {
+				if (oldAutoRotate.hasValue() || oldUserOrientation.hasValue()) {
 					Log.w(Migrations.class.getSimpleName(), "App was enabled, but service state cannot be migrated to service process. Disabling app.");
 					
 					SystemSettings systemSettings = new SystemSettings();
 					
 					try {
-						systemSettings.accelerometerRotation.set(oldAutoRotate.get());
+						if (oldAutoRotate.hasValue())
+							systemSettings.accelerometerRotation.set(oldAutoRotate.get());
 						systemSettings.userRotation.set(Orientation.NATURAL);
 					} catch (SystemSettingAccessDeniedException e) {
 						// We'll get here if the user is running Android 6 or higher due to runtime permissions.
-						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to change the system settings while upgrading.", e);
+						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.", e);
 					} catch (SystemSettingWriteException e) {
-						Log.w(Migrations.class.getSimpleName(), "Encountered write error when changing the system settings while upgrading.", e);
+						Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the system settings while upgrading.", e);
 					}
 				}
 				
@@ -168,24 +169,40 @@ class Migrations {
 				Boolean autoRotateValue = autoRotate.tryGet();
 				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? Orientation.NATURAL.plus(screenOrientationOffset.get()) : null;
 				
-				// We don't have access to the authoritative "enabled" setting from this process, so we'll just infer it.
-				boolean wasEnabled = autoRotate.hasValue() || screenOrientationOffset.hasValue();
-				
 				Transaction transaction = settings.new Transaction();
 				
-				if (
-					wasEnabled
-					&&
-					autoRotateValue != null
-					&&
-					autoRotateValue
-					&&
-					screenOrientationOffsetValue != null
-					&&
-					!screenOrientationOffsetValue.isNaturalOrUpsideDown()
-				) {
-					UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
-					settings.persistentState().enqueue(newUserSide, transaction);
+				// We don't have access to the authoritative "enabled" setting from this process, so we'll just infer it.
+				boolean wasEnabled = autoRotate.hasValue() || screenOrientationOffset.hasValue();
+				if (wasEnabled) {
+					if (
+						autoRotateValue != null
+						&&
+						screenOrientationOffsetValue != null
+						&&
+						autoRotateValue
+						&&
+						!screenOrientationOffsetValue.isNaturalOrUpsideDown()
+					) {
+						UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
+						settings.persistentState().enqueue(newUserSide, transaction);
+					}
+					else {
+						Log.w(Migrations.class.getSimpleName(), "App was enabled, but locked mode and upright position are no longer supported. Disabling app.");
+						
+						// The app doesn't support locked mode or being upright anymore, so we'll gracefully disable the app.
+						SystemSettings systemSettings = new SystemSettings();
+						
+						try {
+							if (autoRotateValue != null)
+								systemSettings.accelerometerRotation.set(autoRotateValue);
+							systemSettings.userRotation.set(Orientation.NATURAL);
+						} catch (SystemSettingAccessDeniedException e) {
+							// We'll get here if the user is running Android 6 or higher due to runtime permissions.
+							Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.", e);
+						} catch (SystemSettingWriteException e) {
+							Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the system settings while upgrading.", e);
+						}
+					}
 				}
 				
 				autoRotate.remove(transaction);
