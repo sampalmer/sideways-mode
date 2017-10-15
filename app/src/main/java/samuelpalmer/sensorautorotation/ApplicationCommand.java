@@ -28,7 +28,8 @@ public class ApplicationCommand {
 			ACTION_RIGHT_SIDE,
 			ACTION_TURN_OFF,
 			ACTION_SYNC_SERVICE,
-			ACTION_CLEAR_ERROR
+			ACTION_CLEAR_ERROR,
+			ACTION_SYNC_CONFIG
 	));
 	
 	public final String action;
@@ -69,6 +70,9 @@ public class ApplicationCommand {
 	
 	public Intent asIntent(Context context) {
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
+		if (forcedOrientationAppPackages != null)
+			result.putExtra(null, forcedOrientationAppPackages.toArray(new String[forcedOrientationAppPackages.size()]));
+			
 		BroadcastKillFix.apply(result);
 		return result;
 	}
