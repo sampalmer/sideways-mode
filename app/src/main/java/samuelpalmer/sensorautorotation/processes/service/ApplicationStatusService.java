@@ -29,8 +29,8 @@ public class ApplicationStatusService extends Service {
 	
 	private static final Set<Messenger> clients = new HashSet<>();
 	
-	private static Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
-	private static Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
+	private static final Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
+	private static final Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
 	private static boolean isSubscribed = false;
 	
 	public static final int MSG_SUBSCRIBE = 1;

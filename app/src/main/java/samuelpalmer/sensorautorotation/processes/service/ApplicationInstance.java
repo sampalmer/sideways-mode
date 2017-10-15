@@ -74,7 +74,7 @@ public class ApplicationInstance extends State {
 		
 		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
 		
-		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings, calculator);
+		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings);
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor, lockScreenMonitor);
 		

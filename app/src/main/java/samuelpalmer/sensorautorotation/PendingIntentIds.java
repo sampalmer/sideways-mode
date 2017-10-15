@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.PendingIntent;
 
+@SuppressWarnings("unused") // Need to keep old pending intent ids around since they might persist across app upgrades.
 public abstract class PendingIntentIds {
 	
 	public static final int MAIN_NOTIFICATION_CLICK = 1;

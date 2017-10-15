@@ -12,14 +12,4 @@ public class NumberUtilities {
 		return value % length;
 	}
 	
-	public static float wrap(float value, float length) {
-		if (length <= 0)
-			throw new IllegalArgumentException();
-		
-		while (value < 0)
-			value += length;
-		
-		return value % length;
-	}
-	
 }

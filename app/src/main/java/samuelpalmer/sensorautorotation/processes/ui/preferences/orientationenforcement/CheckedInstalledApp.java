@@ -61,11 +61,11 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		setPadding(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0, getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0);
 		setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.list_item_min_height));
 		
-		icon = (ImageView) findViewById(R.id.forced_apps_item_icon);
-		iconProgress = (ProgressBar) findViewById(R.id.forced_apps_item_icon_progress);
-		label = (TextView) findViewById(R.id.forced_apps_item_label);
-		packageName = (TextView) findViewById(R.id.forced_apps_item_package);
-		checkbox = (CheckBox)findViewById(R.id.forced_apps_item_checkbox);
+		icon = findViewById(R.id.forced_apps_item_icon);
+		iconProgress = findViewById(R.id.forced_apps_item_icon_progress);
+		label = findViewById(R.id.forced_apps_item_label);
+		packageName = findViewById(R.id.forced_apps_item_package);
+		checkbox = findViewById(R.id.forced_apps_item_checkbox);
 	}
 	
 	@Override

@@ -10,11 +10,9 @@ import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 public class SystemAutoRotationMonitor extends State {
 
 	private final SystemSettings settings;
-	private final OrientationCalculator calculator;
-
-	public SystemAutoRotationMonitor(SystemSettings settings, OrientationCalculator calculator) {
+	
+	public SystemAutoRotationMonitor(SystemSettings settings) {
 		this.settings = settings;
-		this.calculator = calculator;
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class PermissionTipViewPreference extends Preference {
 		View layout = super.onCreateView(parent);
 		layout.setBackgroundColor(0xffe5e5e5);
 		
-		TextView title = (TextView) layout.findViewById(android.R.id.title);
+		TextView title = layout.findViewById(android.R.id.title);
 		if (title != null) {
 			title.setSingleLine(false);
 			title.setMaxLines(Integer.MAX_VALUE);
