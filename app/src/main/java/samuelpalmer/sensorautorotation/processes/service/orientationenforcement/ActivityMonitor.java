@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service.orientationenforcement
 import android.content.ComponentName;
 import android.util.Log;
 
-import samuelpalmer.common.contentprovidersharedpreferences.ObjectExtensions;
+import samuelpalmer.common.ObjectExtensions;
 import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.State;

@@ -2,14 +2,12 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenfo
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.PreferencesActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SnackbarStatusActivity;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
-public class ForcedAppsChooserActivity extends PreferencesActivity {
+public class ForcedAppsChooserActivity extends SnackbarStatusActivity {
 
 	private ProgressListView list;
 	private LoadInstalledAppsTask loader;
@@ -21,10 +19,10 @@ public class ForcedAppsChooserActivity extends PreferencesActivity {
 
 		list = new ProgressListView();
 		list.adapter = new InstalledAppAdapter(this);
-		list.list = (ListView) findViewById(R.id.forced_apps_list);
+		list.list = findViewById(R.id.forced_apps_list);
 		list.list.setAdapter(list.adapter);
 		list.list.setItemsCanFocus(false); //Don't know if this is needed
-		list.progressBar = (ProgressBar) findViewById(R.id.forced_apps_progress);
+		list.progressBar = findViewById(R.id.forced_apps_progress);
 
 		loader = new LoadInstalledAppsTask(list);
 		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

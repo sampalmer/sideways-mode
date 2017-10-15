@@ -120,6 +120,11 @@ public abstract class ApplicationInstanceManager {
 	public static void handle(ApplicationCommand command) {
 		Log.i(TAG, "Received command: " + command.action);
 		
+		if (command.forcedOrientationAppPackages != null) {
+			Log.i(TAG, "Command included config. Applying new config.");
+			ServiceSettings.instance().forcedOrientationAppPackages().set(command.forcedOrientationAppPackages);
+		}
+		
 		String commandIgnoredReason = null;
 		
 		switch (command.action) {
@@ -160,6 +165,13 @@ public abstract class ApplicationInstanceManager {
 				break;
 			case ApplicationCommand.ACTION_CLEAR_ERROR:
 				EnvironmentErrorManager.clear();
+				break;
+			case ApplicationCommand.ACTION_SYNC_CONFIG:
+				if (command.forcedOrientationAppPackages == null)
+					throw new RuntimeException("Received request to sync config, but no config was provided.");
+				
+				// No need to sync the config here; it is handled elsewhere.
+				
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);

@@ -21,7 +21,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -37,7 +36,7 @@ public class PermissionNotificationManager extends State {
 		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
 		
 		serviceState = ServiceSettings.instance().persistentState();
-		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
+		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 

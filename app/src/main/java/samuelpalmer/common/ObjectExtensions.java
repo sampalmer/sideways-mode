@@ -1,4 +1,4 @@
-package samuelpalmer.common.contentprovidersharedpreferences;
+package samuelpalmer.common;
 
 public final class ObjectExtensions {
 

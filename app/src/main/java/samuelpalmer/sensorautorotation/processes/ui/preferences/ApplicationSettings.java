@@ -1,16 +1,14 @@
-package samuelpalmer.sensorautorotation.settings;
+package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.content.SharedPreferences;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.common.contentprovidersharedpreferences.ContentProviderSharedPreferences;
 import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.common.settings.application.StringSetSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.R;
 
 public class ApplicationSettings extends Settings {
 
@@ -22,33 +20,24 @@ public class ApplicationSettings extends Settings {
 	
 	public static ApplicationSettings instance() {
 		if (instance == null) {
-			SharedPreferences sharedPreferences;
-			
 			if (CurrentProcess.isServiceProcess())
-				// For use in the service process for improved performance.
-				sharedPreferences = CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0);
-			else
-				// For use outside the service process for concurrency safety.
-				sharedPreferences = new ContentProviderSharedPreferences(
-					CurrentProcess.context(),
-					CurrentProcess.context().getResources().getString(R.string.preferences_provider_authority),
-					sharedPreferencesName()
-				);
+				throw new RuntimeException("Application settings accessed outside of the UI process");
 			
-			instance = new ApplicationSettings(sharedPreferences);
+			instance = new ApplicationSettings(CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0));
 		}
 		
 		return instance;
 	}
 	
-	public final SharedPreferences sharedPreferences;
-
 	private ApplicationSettings(SharedPreferences sharedPreferences) {
 		super(sharedPreferences);
-		this.sharedPreferences = sharedPreferences;
 	}
 	
-	//NOTE: If you add/remove/change preference config, add a migration to the "Migrations" class
+	/*
+	 * NOTE: If you change preference config:
+	 * 1. Add a migration to the "Migrations" class
+	 * 2. Make sure your changes to the service process
+	 */
 	
 	/**
 	 * Serves 2 purposes:

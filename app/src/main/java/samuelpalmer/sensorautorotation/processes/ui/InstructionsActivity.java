@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class InstructionsActivity extends UiActivity {
 	

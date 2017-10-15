@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
-import samuelpalmer.common.contentprovidersharedpreferences.ObjectExtensions;
+import samuelpalmer.common.ObjectExtensions;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 

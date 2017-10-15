@@ -10,7 +10,7 @@ import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 
 public class OrientationEnforcementMonitor extends State {
 
@@ -26,7 +26,7 @@ public class OrientationEnforcementMonitor extends State {
 		this.permissionNotificationManager = permissionNotificationManager;
 		orientationEnforcer = new ScreenOrientationEnforcer(CurrentProcess.context());
 		this.lockScreenDetector = lockScreenMonitor;
-		forcedOrientationAppPackagesSetting = ApplicationSettings.instance().forcedOrientationAppPackages();
+		forcedOrientationAppPackagesSetting = ServiceSettings.instance().forcedOrientationAppPackages();
 	}
 
 	@Override

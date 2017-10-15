@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 
 
 public class DashboardNormalFragment extends Fragment {
@@ -105,7 +106,8 @@ public class DashboardNormalFragment extends Fragment {
 	}
 	
 	private void buttonPressed(String action) {
-		new ApplicationCommand(action).send(getContext());
+		// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
+		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync()).send(getContext());
 		getActivity().finish();
 		pendingAction = null;
 	}

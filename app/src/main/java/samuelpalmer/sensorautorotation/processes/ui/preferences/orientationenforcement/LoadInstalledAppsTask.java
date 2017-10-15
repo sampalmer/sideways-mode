@@ -18,7 +18,7 @@ import java.util.Set;
 
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
 

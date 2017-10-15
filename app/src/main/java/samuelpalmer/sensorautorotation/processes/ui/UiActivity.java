@@ -6,7 +6,7 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
 	
@@ -36,12 +36,13 @@ public abstract class UiActivity extends AppCompatActivity {
 	}
 	
 	/**
-	 * Ensures the background service is running if necessary in case it's died.
+	 * Ensures the background service is running, just in case it has died.
+	 * Also ensures the service process has the latest copy of the user preferences, just in case it somehow got out-of-sync.
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
 		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_SERVICE).send(this);
 	}
-
+	
 }

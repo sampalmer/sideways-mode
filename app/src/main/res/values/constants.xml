@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="preferences_provider_authority" translatable="false">samuelpalmer.sensorautorotation.settings.application.multiprocess.SharedPreferencesContentProvider</string>
-
 	<!-- The processes have simple, easy-to-read names since the user can see them in the Android memory usage screen. -->
 	<string name="process_ui" translatable="false">:UI</string>
 	<string name="process_service" translatable="false">:Service</string>

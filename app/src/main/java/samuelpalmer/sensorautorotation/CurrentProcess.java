@@ -9,9 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
-import samuelpalmer.sensorautorotation.processes.service.upgrade.Upgrader;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 
 public class CurrentProcess extends Application {
 
@@ -74,19 +77,35 @@ public class CurrentProcess extends Application {
 		if (Build.VERSION.SDK_INT >= 26)
 			NotificationChannels.setup();
 		
-		if (isServiceProcess()) {
-			new Upgrader().upgradeIfNecessary();
+		// Must upgrade settings before any settings-related code runs.
+		new Upgrader().upgradeIfNecessary();
+		
+		if (isServiceProcess())
 			ApplicationInstanceManager.init();
-		}
-		else
+		else {
+			autoSyncConfigChanges();
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+		}
 	}
-
+	
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
 
 		Log.i(TAG, "Process terminated");
 	}
-
+	
+	/**
+	 * Automatically pushes changes to user preferences from the UI process to the service process.
+	 * This ensures preference changes made by the user appear to instantly take effect.
+	 */
+	private static void autoSyncConfigChanges() {
+		ApplicationSettings.instance().forcedOrientationAppPackages().subscribe(new EventHandler() {
+			@Override
+			public void update() {
+				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(context());
+			}
+		});
+	}
+	
 }

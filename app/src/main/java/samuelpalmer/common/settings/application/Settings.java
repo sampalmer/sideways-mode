@@ -7,8 +7,11 @@ import android.content.SharedPreferences.Editor;
 import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 
 public class Settings {
-
-	private final SharedPreferences prefs;
+	
+	/**
+	 * Don't use this unless you need to.
+	 */
+	public final SharedPreferences prefs;
 
 	protected Settings(SharedPreferences prefs) {
 		this.prefs = prefs;

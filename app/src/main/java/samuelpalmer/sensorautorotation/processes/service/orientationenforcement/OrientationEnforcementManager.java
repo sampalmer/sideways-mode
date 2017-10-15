@@ -7,7 +7,7 @@ import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 
 /**
  * Turns the screen orientation enforcement feature on and off as needed.
@@ -25,7 +25,7 @@ public class OrientationEnforcementManager extends State {
 	public OrientationEnforcementManager(ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
 		permissionNotificationManager = new PermissionNotificationManager();
 		monitor = new OrientationEnforcementMonitor(activityMonitor, lockScreenMonitor, permissionNotificationManager);
-		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
+		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
 	}
 
 	@Override

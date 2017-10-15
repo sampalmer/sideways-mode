@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.app.PendingIntent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,14 +13,11 @@ import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 /**
- * UI proxy to settings stored in background process.
- * Also supports showing an error message at the bottom of the activity.
+ * Supports showing an error message at the bottom of the activity.
  */
-//TODO: Improve the name of this, or reorganise it.
-public abstract class PreferencesActivity extends UiActivity {
+public abstract class SnackbarStatusActivity extends UiActivity {
 	
 	private ApplicationStatusClient statusClient;
 	private Snackbar snackbar;
@@ -68,10 +64,10 @@ public abstract class PreferencesActivity extends UiActivity {
 						super.onDismissed(snackbar, event);
 
 						if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
-							new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(PreferencesActivity.this);
+							new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(SnackbarStatusActivity.this);
 
 						//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
-						PreferencesActivity.this.snackbar = null;
+						SnackbarStatusActivity.this.snackbar = null;
 					}
 				});
 			}
@@ -94,14 +90,5 @@ public abstract class PreferencesActivity extends UiActivity {
 			}
 		}
 	};
-
-	@Override
-	public SharedPreferences getSharedPreferences(String name, int mode) {
-		//PreferenceFragment calls this for its underlying preference storage
-		if (name.equals(ApplicationSettings.sharedPreferencesName()))
-			return ApplicationSettings.instance().sharedPreferences;
-		else
-			return super.getSharedPreferences(name, mode);
-	}
-
+	
 }

@@ -25,7 +25,6 @@ import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.settings.ApplicationSettings;
 
 public class MainSettingsFragment extends PreferenceFragment {
 	
@@ -37,8 +36,9 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.sharedPreferencesName());
+		
 		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
-		//TODO: Apply this to the other settings fragments as well
 		new SettingsInitialiser(ApplicationSettings.instance()).ensureInitialised();
 
 		addPreferencesFromResource(R.xml.preferences);

@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 
-public class MainSettingsActivity extends PreferencesActivity {
+public class MainSettingsActivity extends SnackbarStatusActivity {
 	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;

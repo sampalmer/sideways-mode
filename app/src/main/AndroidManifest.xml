@@ -177,14 +177,9 @@
 			android:name=".processes.ui.DeviceUnsupportedActivity"
 			android:label="@string/device_problem" />
 
+		<receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
 		<!-- Service Process -->
-
-		<provider
-			android:authorities="@string/preferences_provider_authority"
-			android:name="samuelpalmer.common.contentprovidersharedpreferences.SharedPreferencesContentProvider"
-			android:exported="false"
-			android:process="@string/process_service" />
 
 		<service
 			android:name=".processes.service.ApplicationStatusService"
