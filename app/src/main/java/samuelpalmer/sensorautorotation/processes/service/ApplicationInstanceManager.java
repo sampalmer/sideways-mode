@@ -1,17 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import android.app.KeyguardManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.util.Log;
 
-import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.CurrentProcess;
 
 public abstract class ApplicationInstanceManager {
 	
@@ -20,64 +12,31 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
-	private static KeyguardManager keyguardManager;
+	private static AppDisabler appDisabler;
 	
 	public static void init() {
 		if (initialised)
 			throw new RuntimeException("Already initialised");
 		
-		keyguardManager = (KeyguardManager) CurrentProcess.context().getSystemService(Context.KEYGUARD_SERVICE);
+		appDisabler = new AppDisabler();
 		
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
 		ServiceSettings.instance().persistentState().subscribe(updateApplicationState);
-		CurrentProcess.context().registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
-		CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		
-		if (Build.VERSION.SDK_INT >= 17) {
-			CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_USER_BACKGROUND));
-			CurrentProcess.context().registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_USER_FOREGROUND));
-		}
-		
-		CurrentProcess.context().registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+		updateApplicationState.update();
 		
 		initialised = true;
 	}
 	
-	private static final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
-		
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			turnOffApp("Device is shutting down");
-		}
-		
-	};
-	
-	private static final BroadcastReceiver screenChangedReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
-			if (isOnLockScreen)
-				turnOffApp("Device is locked");
-		}
-	};
-	
-	private static final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// We receive this broadcast after the device gets unlocked.
-			// This implies that the device was locked, so the app shouldn't be on.
-			// We need this check because Android doesn't broadcast when the device gets locked,
-			// and our polling approach might sometimes be too slow to detect the lock screen.
-			// For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
-			// so quickly that you don't see the lock screen.
-			turnOffApp("Device was locked");
-		}
-	};
-	
 	private static final EventHandler updateApplicationState = new EventHandler() {
 		@Override
 		public void update() {
+			if (ServiceSettings.instance().persistentState().hasValue())
+				appDisabler.ensureStarted();
+			else
+				// No need to waste system resources monitoring the device's state while this app is turned off.
+				appDisabler.ensureStopped();
+			
 			boolean isRunning = isApplicationRunning();
 			boolean shouldBeRunning = applicationShouldBeRunning();
 			
