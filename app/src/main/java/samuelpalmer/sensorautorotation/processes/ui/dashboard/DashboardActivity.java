@@ -111,7 +111,7 @@ public class DashboardActivity extends DialogActivity {
 			transaction.hide(normalSection);
 		}
 		else {
-			ensureVisibility(progressBar, View.GONE);
+			ensureVisibility(progressBar, View.INVISIBLE);
 			
 			//Don't want the view to change size after loading; it should stay the same
 			transaction.show(normalSection);
