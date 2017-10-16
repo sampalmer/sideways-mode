@@ -11,9 +11,7 @@ import android.util.Log;
 import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.UserSide;
 
 public abstract class ApplicationInstanceManager {
 	
@@ -50,7 +48,7 @@ public abstract class ApplicationInstanceManager {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			disableService("Device is shutting down");
+			turnOffApp("Device is shutting down");
 		}
 		
 	};
@@ -60,7 +58,7 @@ public abstract class ApplicationInstanceManager {
 		public void onReceive(Context context, Intent intent) {
 			boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
 			if (isOnLockScreen)
-				disableService("Device is locked");
+				turnOffApp("Device is locked");
 		}
 	};
 	
@@ -73,7 +71,7 @@ public abstract class ApplicationInstanceManager {
 			// and our polling approach might sometimes be too slow to detect the lock screen.
 			// For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
 			// so quickly that you don't see the lock screen.
-			disableService("Device was locked");
+			turnOffApp("Device was locked");
 		}
 	};
 	
@@ -117,78 +115,10 @@ public abstract class ApplicationInstanceManager {
 		;
 	}
 	
-	public static void handle(ApplicationCommand command) {
-		Log.i(TAG, "Received command: " + command.action);
-		
-		if (command.forcedOrientationAppPackages != null) {
-			Log.i(TAG, "Command included config. Applying new config.");
-			ServiceSettings.instance().forcedOrientationAppPackages().set(command.forcedOrientationAppPackages);
-		}
-		
-		String commandIgnoredReason = null;
-		
-		switch (command.action) {
-			case ApplicationCommand.ACTION_LEFT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue() && isApplicationRunning()) {
-					applicationInstance().setSide(UserSide.LEFT);
-				}
-				else {
-					ServiceSettings.instance().persistentState().set(UserSide.LEFT);
-					ServiceController.updateServiceState(true);
-				}
-				
-				collapseNotificationShade();
-				
-				break;
-			case ApplicationCommand.ACTION_RIGHT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue() && isApplicationRunning())
-					applicationInstance().setSide(UserSide.RIGHT);
-				else {
-					ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
-					ServiceController.updateServiceState(true);
-				}
-				
-				collapseNotificationShade();
-				
-				break;
-			case ApplicationCommand.ACTION_TURN_OFF:
-				if (!isApplicationRunning())
-					commandIgnoredReason = "Application is not running";
-				else
-					disableService("Received application command");
-				
-				collapseNotificationShade();
-				
-				break;
-			case ApplicationCommand.ACTION_SYNC_SERVICE:
-				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
-				break;
-			case ApplicationCommand.ACTION_CLEAR_ERROR:
-				EnvironmentErrorManager.clear();
-				break;
-			case ApplicationCommand.ACTION_SYNC_CONFIG:
-				if (command.forcedOrientationAppPackages == null)
-					throw new RuntimeException("Received request to sync config, but no config was provided.");
-				
-				// No need to sync the config here; it is handled elsewhere.
-				
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown action: " + command.action);
-		}
-		
-		if (commandIgnoredReason != null)
-			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
-	}
-	
-	private static void collapseNotificationShade() {
-		// The user might be in a hurry and want to quickly press a notification button and then return to their task.
-		CurrentProcess.context().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-	}
-	
-	private static void disableService(String reason) {
+	public static void turnOffApp(String reason) {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
 		ServiceSettings.instance().persistentState().remove();
 		ServiceController.updateServiceState(false);
 	}
+	
 }
