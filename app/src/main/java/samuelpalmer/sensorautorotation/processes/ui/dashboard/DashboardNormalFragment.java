@@ -23,19 +23,19 @@ public class DashboardNormalFragment extends Fragment {
 	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
 	private static final String KEY_PENDING_ACTION = "pending_action";
 	
-	private View sensorProgress;
-//	private TextView statusText;
-	
+	private View waitingForSensor;
 	private View leftSideButton;
 	private View turnOffButton;
 	private View rightSideButton;
 	
-	private String pendingAction;
+	// The button the user pressed while the app didn't have access to write system settings.
+	private String pendingButtonPress;
+	private String actionInProgress;
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_PENDING_ACTION, pendingAction);
+		outState.putString(KEY_PENDING_ACTION, pendingButtonPress);
 	}
 	
 	@Nullable
@@ -43,9 +43,7 @@ public class DashboardNormalFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
-//		sensorProgress = layout.findViewById(R.id.dashboard_sensor_progress);
-		
-//		statusText = layout.findViewById(R.id.dashboard_status);
+		waitingForSensor = layout.findViewById(R.id.dashboard_normal_waiting_sensor);
 		leftSideButton = layout.findViewById(R.id.dashboard_button_left_side);
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
@@ -55,7 +53,7 @@ public class DashboardNormalFragment extends Fragment {
 		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
 		if (savedInstanceState != null)
-			pendingAction = savedInstanceState.getString(KEY_PENDING_ACTION);
+			pendingButtonPress = savedInstanceState.getString(KEY_PENDING_ACTION);
 		
 		return layout;
 	}
@@ -72,7 +70,7 @@ public class DashboardNormalFragment extends Fragment {
 		public void onClick(View view) {
 			if (!view.isSelected()) {
 				if (!SystemSettings.canWrite(DashboardNormalFragment.this.getContext())) {
-					pendingAction = action;
+					pendingButtonPress = action;
 					Intent intent = new SystemIntents(getContext()).modifySystemSettings();
 					
 					try {
@@ -92,9 +90,9 @@ public class DashboardNormalFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_BUTTON_PRESSED) {
 			if (SystemSettings.canWrite(getContext()))
-				buttonPressed(pendingAction);
+				buttonPressed(pendingButtonPress);
 			else
-				pendingAction = null; // The user might have returned without actually granting the permission
+				pendingButtonPress = null; // The user might have returned without actually granting the permission
 		}
 		else
 			super.onActivityResult(requestCode, resultCode, data);
@@ -103,23 +101,37 @@ public class DashboardNormalFragment extends Fragment {
 	private void buttonPressed(String action) {
 		// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
 		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync()).send(getContext());
-		getActivity().finish();
-		pendingAction = null;
+		pendingButtonPress = null;
+		actionInProgress = action;
 	}
 	
-	public void setStatus(ApplicationStatus lastStatus) {
-//		ViewHelpers.ensureVisibility(sensorProgress, lastStatus.waitingForSensor ? View.VISIBLE : View.GONE);
-//		statusText.setText(lastStatus.waitingForSensor ? R.string.status_waiting_sensor : lastStatus.appEnabled ? lastStatus.user.descriptionId : R.string.choose_side);
+	public void setStatus(ApplicationStatus status) {
+		if (actionInProgress != null && actionIsCompleted(actionInProgress, status)) {
+			getActivity().finish();
+			actionInProgress = null;
+			return; // So the UI doesn't update and cause a flicker while the activity closes.
+		}
+		
+		waitingForSensor.setVisibility(status.waitingForSensor ? View.VISIBLE : View.GONE);
 		
 		leftSideButton.setSelected(false);
 		turnOffButton.setSelected(false);
 		rightSideButton.setSelected(false);
 		
-		if (!lastStatus.appEnabled)
+		if (!status.appEnabled)
 			turnOffButton.setSelected(true);
-		else if (lastStatus.user.equals(UserSide.LEFT))
+		else if (status.user.equals(UserSide.LEFT))
 			leftSideButton.setSelected(true);
 		else
 			rightSideButton.setSelected(true);
+	}
+	
+	private static boolean actionIsCompleted(String action, ApplicationStatus status) {
+		return
+			action.equals(ApplicationCommand.ACTION_LEFT_SIDE) && UserSide.LEFT.equals(status.user) && !status.waitingForSensor
+			||
+			action.equals(ApplicationCommand.ACTION_TURN_OFF) && !status.appEnabled
+			||
+			action.equals(ApplicationCommand.ACTION_RIGHT_SIDE) && UserSide.RIGHT.equals(status.user) && !status.waitingForSensor;
 	}
 }

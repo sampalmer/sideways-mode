@@ -9,14 +9,30 @@
 	android:gravity="center_horizontal"
 	>
 
-	<!--<ProgressBar-->
-		<!--android:layout_width="wrap_content"-->
-		<!--android:layout_height="wrap_content"-->
-		<!--android:id="@+id/dashboard_sensor_progress"-->
-		<!--android:layout_gravity="center_vertical"-->
-		<!--android:visibility="gone"-->
-		<!--style="@android:style/Widget.DeviceDefault.ProgressBar.Small"-->
-		<!--/>-->
+	<LinearLayout
+		android:id="@+id/dashboard_normal_waiting_sensor"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+	    android:visibility="gone"
+		>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/status_waiting_sensor"
+		    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			/>
+
+		<ProgressBar
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/dashboard_sensor_progress"
+			android:indeterminate="true"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			/>
+
+	</LinearLayout>
 
 	<LinearLayout
 		android:layout_width="wrap_content"
