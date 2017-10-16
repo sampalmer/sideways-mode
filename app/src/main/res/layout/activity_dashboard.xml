@@ -37,7 +37,6 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/dialog_content_margin"
 			android:gravity="center"
 			>
 
@@ -58,6 +57,7 @@
 			<ProgressBar
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/dialog_content_margin"
 				android:id="@+id/dashboard_progress"
 				android:visibility="invisible"
 				style="@style/Widget.AppCompat.ProgressBar"
