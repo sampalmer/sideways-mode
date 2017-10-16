@@ -32,7 +32,6 @@ public class ApplicationInstance extends State {
 	private static final String TAG = ApplicationInstance.class.getSimpleName();
 	
 	private ScreenOrientationController screenOrientationController;
-	private ApplicationState applicationState;
 	private OrientationCalculator calculator;
 	ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
@@ -58,11 +57,9 @@ public class ApplicationInstance extends State {
 		SystemSettings systemSettings = new SystemSettings();
 		Display screen = ((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		
-		applicationState = new ApplicationState();
-		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		
-		calculator = new OrientationCalculator(screenRotationMonitor, applicationState);
+		calculator = new OrientationCalculator(screenRotationMonitor);
 		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor);
 		
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
@@ -105,7 +102,7 @@ public class ApplicationInstance extends State {
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 		
-		applicationState.clear();
+		ServiceSettings.instance().persistentState().remove();
 	}
 	
 	public void setSide(UserSide side) {

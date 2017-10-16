@@ -6,12 +6,13 @@ import android.support.annotation.Nullable;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 
 public class OrientationCalculator {
 	
-	private final ApplicationState state;
+	private final Settings.Setting<UserSide> state;
 	
 	@NonNull
 	private Orientation device;
@@ -20,8 +21,8 @@ public class OrientationCalculator {
 
 	public final UpdatingEventRegistrar onAnythingChanged;
 
-	public OrientationCalculator(ScreenRotationMonitor screen, ApplicationState state) {
-		this.state = state;
+	public OrientationCalculator(ScreenRotationMonitor screen) {
+		this.state = ServiceSettings.instance().persistentState();
 		
 		// This infers the device orientation from the screen orientation so we have something to start with.
 		// It might be better to infer it from USER_ROTATION if system auto rotation was off.
@@ -35,7 +36,7 @@ public class OrientationCalculator {
 	}
 	
 	private @NonNull Rotation offset() {
-		return state.userSide.get().offset;
+		return state.get().offset;
 	}
 	
 	public void setDevice(@Nullable Orientation newDevice) {
@@ -60,11 +61,11 @@ public class OrientationCalculator {
 	}
 	
 	public UserSide side() {
-		return state.userSide.get();
+		return state.get();
 	}
 	
 	public void setSide(UserSide userSide) {
-		state.userSide.set(userSide);
+		state.set(userSide);
 		reportChange();
 	}
 }
