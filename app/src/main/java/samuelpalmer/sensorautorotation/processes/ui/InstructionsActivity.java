@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -68,16 +67,8 @@ public class InstructionsActivity extends UiActivity {
 	 * Indicates that the user has finished working through the instructions.
 	 */
 	private void completeInstructions() {
-		if (isFirstRun()) {
-			int appVersionCode;
-			try {
-				appVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-			} catch (PackageManager.NameNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-			
-			ApplicationSettings.instance().lastVersionUserInstructedAbout().set(appVersionCode);
-		}
+		if (isFirstRun())
+			ApplicationSettings.instance().userInstructed().set(true);
 	}
 	
 	private boolean isFirstRun() {

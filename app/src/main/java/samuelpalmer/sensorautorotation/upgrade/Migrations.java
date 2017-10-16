@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.Rotation;
 import samuelpalmer.common.settings.application.BooleanSetting;
+import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.OrientationSetting;
 import samuelpalmer.common.settings.application.RotationSetting;
 import samuelpalmer.common.settings.application.Settings.Setting;
@@ -147,12 +148,18 @@ class Migrations {
 				Setting<String> notificationPriority = settings.new Setting<String>(new StringSetting(), "notificationPriority", "NORMAL");
 				Setting<Boolean> enabled = settings.new Setting<Boolean>(new BooleanSetting(), "enabled", false);
 				Setting<String> lastErrorJson = settings.new Setting<String>(new StringSetting(), "lastError", null);
+				Setting<Integer> lastVersionUserInstructedAbout = settings.new Setting<Integer>(new IntegerSetting(), "lastVersionUserInstructedAbout", null);
+				
 				
 				Transaction transaction = settings.new Transaction();
+				
+				settings.userInstructed().enqueue(lastVersionUserInstructedAbout.hasValue(), transaction);
 				allowUpsideDownScreen.remove(transaction);
 				notificationPriority.remove(transaction);
 				enabled.remove(transaction); // This is now determined by the service process.
 				lastErrorJson.remove(transaction); // This setting has been moved into the service process.
+				lastVersionUserInstructedAbout.remove(transaction);
+				
 				transaction.commit();
 			}
 			

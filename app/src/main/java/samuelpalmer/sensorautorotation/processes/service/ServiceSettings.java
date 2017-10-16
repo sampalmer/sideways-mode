@@ -35,6 +35,8 @@ public class ServiceSettings extends Settings {
 		super(CurrentProcess.context().getSharedPreferences("service", 0));
 	}
 	
+	// NOTE: If you change preference config, add a migration to the "Migrations" class
+	
 	/**
 	 * Has no value if the service is off. Otherwise set to the side the user is on.
 	 */

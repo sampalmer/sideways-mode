@@ -11,6 +11,7 @@ import java.util.Map;
 
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
+import samuelpalmer.common.settings.application.IntegerSetting;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -55,8 +56,12 @@ public class Upgrader {
 			}
 		}
 		else {
-			settingsAppVersion = ApplicationSettings.instance().lastVersionUserInstructedAbout();
+			settingsAppVersion = ApplicationSettings.instance().appVersion();
 			lastAppVersion = settingsAppVersion.tryGet();
+			
+			if (lastAppVersion == null)
+				// The settings app version was stored in a different setting prior to v57.
+				lastAppVersion = ApplicationSettings.instance().new Setting<Integer>(new IntegerSetting(), "lastVersionUserInstructedAbout", null).tryGet();
 		}
 		
 		if (
