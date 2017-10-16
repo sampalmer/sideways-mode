@@ -90,7 +90,7 @@ public class ApplicationInstance extends State {
 	
 	@Override
 	protected void stop() {
-		Log.i(TAG, "Application is starting");
+		Log.i(TAG, "Application is stopping");
 		
 		userInteractivityMonitor.unsubscribe(userInteractivityListener);
 		orientationSensorHandler.ensureStopped();
