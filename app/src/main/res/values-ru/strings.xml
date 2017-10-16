@@ -51,7 +51,7 @@
 
 	<string name="environment_error_system_setting_write_failure_summary">Невозможно вписать настройки</string>
 	<string name="environment_error_system_setting_write_failure_message">Не удалось задать настройки \'%1$s\' для \'%2$s\'.</string>
-	<string name="environment_error_system_setting_write_denied_message">Это приложение не имеет разрешения на изменение настроек системы. Чтобы это исправить, повторно включите приложение на следующем экране.</string>
+	<string name="environment_error_system_setting_write_denied_message">Это приложение не имеет разрешения на изменение настроек системы. Чтобы это исправить, повторно включите приложение.</string>
 
 	<string name="error_no_market_app">"Не удалось найти Market"</string>
 
