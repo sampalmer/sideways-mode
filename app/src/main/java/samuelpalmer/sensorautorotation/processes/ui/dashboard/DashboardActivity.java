@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
@@ -22,12 +21,12 @@ public class DashboardActivity extends DialogActivity {
 	private AlertDialog dialog;
 	
 	private ProgressBar progressBar;
+	private ViewGroup normalSectionContainer;
 	private DashboardNormalFragment normalSection;
 	
 	private ApplicationStatusClient statusClient;
 	
 	private ApplicationStatus lastStatus;
-	private FragmentManager fragmentManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +57,9 @@ public class DashboardActivity extends DialogActivity {
 			}
 		});
 		
-		fragmentManager = getSupportFragmentManager();
-		
 		progressBar = dialog.findViewById(R.id.dashboard_progress);
-		normalSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
+		normalSection = (DashboardNormalFragment) getSupportFragmentManager().findFragmentById(R.id.dashboard_normal_contents);
+		normalSectionContainer = dialog.findViewById(R.id.dashboard_normal_contents_container);
 		
 		statusClient = new ApplicationStatusClient(this, statusChanged);
 	}
@@ -103,30 +101,12 @@ public class DashboardActivity extends DialogActivity {
 	
 	@SuppressLint("SetTextI18n")
 	private void showStatus() {
+		// Intentionally preserving space so the dashboard doesn't resize once it finished loading.
+		ensureVisibility(progressBar, lastStatus == null ? View.VISIBLE : View.INVISIBLE);
+		ensureVisibility(normalSectionContainer, lastStatus == null ? View.INVISIBLE : View.VISIBLE);
 		
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		
-		if (lastStatus == null) {
-			ensureVisibility(progressBar, View.VISIBLE);
-			transaction.hide(normalSection);
-		}
-		else {
-			ensureVisibility(progressBar, View.INVISIBLE);
-			
-			//Don't want the view to change size after loading; it should stay the same
-			transaction.show(normalSection);
-			
+		if (lastStatus != null)
 			normalSection.setStatus(lastStatus);
-		}
-		
-		/*
-		 * I'm allowing state loss here to work around the following exception:
-		 * java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-		 *
-		 * This is acceptable because the UI will be updated the next time onStart() is called,
-		 * so state loss shouldn't cause any noticeable problems.
-		 */
-		transaction.commitAllowingStateLoss();
 	}
 	
 	/**
