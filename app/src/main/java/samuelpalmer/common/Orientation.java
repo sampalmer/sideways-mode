@@ -52,11 +52,11 @@ public class Orientation implements Parcelable {
 	}
 
 	public Rotation minus(@NonNull Orientation other) {
-		return new Rotation(getClockwiseRotationsFromNaturalOrientation() - other.getClockwiseRotationsFromNaturalOrientation());
+		return new Rotation(clockwiseRotationsFromNaturalOrientation - other.clockwiseRotationsFromNaturalOrientation);
 	}
 
 	public Orientation plus(@NonNull Rotation change) {
-		int unwrappedResultingClockwiseIndex = getClockwiseRotationsFromNaturalOrientation() + change.clockwiseCount();
+		int unwrappedResultingClockwiseIndex = clockwiseRotationsFromNaturalOrientation + change.clockwiseCount();
 		int wrappedResultingClockwiseIndex = NumberUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
 
 		return new Orientation(wrappedResultingClockwiseIndex);
@@ -70,12 +70,12 @@ public class Orientation implements Parcelable {
 	public boolean equals(@Nullable Object o) {
 		return o != null
 				&& this.getClass() == o.getClass()
-				&& this.getClockwiseRotationsFromNaturalOrientation() == ((Orientation) o).getClockwiseRotationsFromNaturalOrientation();
+				&& this.clockwiseRotationsFromNaturalOrientation == ((Orientation) o).clockwiseRotationsFromNaturalOrientation;
 	}
 
 	@Override
 	public String toString() {
-		switch (this.getClockwiseRotationsFromNaturalOrientation()) {
+		switch (clockwiseRotationsFromNaturalOrientation) {
 			case 0:
 				return "Natural";
 			case 1:
@@ -85,14 +85,10 @@ public class Orientation implements Parcelable {
 			case 3:
 				return "Left Side";
 			default:
-				throw new RuntimeException("Unknown number of rotations: " + this.getClockwiseRotationsFromNaturalOrientation());
+				throw new RuntimeException("Unknown number of rotations: " + clockwiseRotationsFromNaturalOrientation);
 		}
 	}
-
-	public int getClockwiseRotationsFromNaturalOrientation() {
-		return clockwiseRotationsFromNaturalOrientation;
-	}
-
+	
 	public boolean isNaturalOrUpsideDown() {
 		return clockwiseRotationsFromNaturalOrientation % 2 == 0;
 	}

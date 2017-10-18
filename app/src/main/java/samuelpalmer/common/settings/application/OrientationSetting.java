@@ -10,7 +10,7 @@ public class OrientationSetting extends WrapperSetting<Orientation, Integer> {
 
 	@Override
 	protected Integer convertToUnderlying(Orientation orientation) {
-		return orientation.getClockwiseRotationsFromNaturalOrientation();
+		return orientation.minus(Orientation.NATURAL).clockwiseCount();
 	}
 
 	@Override
