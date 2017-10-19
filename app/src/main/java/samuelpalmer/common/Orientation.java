@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-@SuppressWarnings("unused")
 public class Orientation implements Parcelable {
 
 	private static final int numberOfPossibleRotations = 4;
@@ -61,11 +60,7 @@ public class Orientation implements Parcelable {
 
 		return new Orientation(wrappedResultingClockwiseIndex);
 	}
-
-	public Orientation minus(@NonNull Rotation other) {
-		return plus(other.negate());
-	}
-
+	
 	@Override
 	public boolean equals(@Nullable Object o) {
 		return o != null
