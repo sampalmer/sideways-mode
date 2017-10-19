@@ -1,11 +1,10 @@
 package samuelpalmer.common;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class Orientation implements Parcelable {
+public class Orientation {
 
 	private static final int numberOfPossibleRotations = 4;
 	public static final Orientation NATURAL = new Orientation(0);
@@ -26,24 +25,7 @@ public class Orientation implements Parcelable {
 	protected Orientation(Parcel in) {
 		clockwiseRotationsFromNaturalOrientation = in.readInt();
 	}
-
-	public static final Creator<Orientation> CREATOR = new Creator<Orientation>() {
-		@Override
-		public Orientation createFromParcel(Parcel in) {
-			return new Orientation(in);
-		}
-
-		@Override
-		public Orientation[] newArray(int size) {
-			return new Orientation[size];
-		}
-	};
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(clockwiseRotationsFromNaturalOrientation);
-	}
-
+	
 	public Orientation negate() {
 		int unwrapped = -this.clockwiseRotationsFromNaturalOrientation;
 		int wrapped = NumberUtilities.wrap(unwrapped, numberOfPossibleRotations);
@@ -87,9 +69,5 @@ public class Orientation implements Parcelable {
 	public boolean isSideways() {
 		return clockwiseRotationsFromNaturalOrientation % 2 != 0;
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+	
 }
