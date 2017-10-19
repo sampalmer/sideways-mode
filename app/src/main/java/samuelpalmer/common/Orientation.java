@@ -1,6 +1,5 @@
 package samuelpalmer.common;
 
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,48 +10,42 @@ public class Orientation {
 	public static final Orientation RIGHT_SIDE = new Orientation(1);
 	public static final Orientation UPSIDE_DOWN = new Orientation(2);
 	public static final Orientation LEFT_SIDE = new Orientation(3);
-
-	private final int clockwiseRotationsFromNaturalOrientation;
+	
+	/**
+	 * Number of clockwise 90 degree turns from natural/upright orientation. Must be in the range [0, 3].
+	 */
+	public final int offset;
 
 	//TODO: Replace this with a factory method and reuse a single pool of objects to reduce heap allocation
-	public Orientation(int clockwiseRotationsFromNaturalOrientation) throws IllegalArgumentException {
-		if (clockwiseRotationsFromNaturalOrientation < 0 || clockwiseRotationsFromNaturalOrientation >= numberOfPossibleRotations)
-			throw new IllegalArgumentException("Unknown orientation: " + clockwiseRotationsFromNaturalOrientation);
+	
+	/**
+	 * @param offset Number of clockwise 90 degree turns from natural/upright orientation. Must be in the range [0, 3].
+	 */
+	public Orientation(int offset) throws IllegalArgumentException {
+		if (offset < 0 || offset >= numberOfPossibleRotations)
+			throw new IllegalArgumentException("Unknown orientation: " + offset);
 
-		this.clockwiseRotationsFromNaturalOrientation = clockwiseRotationsFromNaturalOrientation;
-	}
-
-	protected Orientation(Parcel in) {
-		clockwiseRotationsFromNaturalOrientation = in.readInt();
+		this.offset = offset;
 	}
 	
-	public Orientation negate() {
-		int unwrapped = -this.clockwiseRotationsFromNaturalOrientation;
-		int wrapped = NumberUtilities.wrap(unwrapped, numberOfPossibleRotations);
-		return new Orientation(wrapped);
+	public Orientation minus(@NonNull Orientation other) {
+		return new Orientation(NumberUtilities.wrap(offset - other.offset, numberOfPossibleRotations));
 	}
 
-	public Rotation minus(@NonNull Orientation other) {
-		return new Rotation(clockwiseRotationsFromNaturalOrientation - other.clockwiseRotationsFromNaturalOrientation);
-	}
-
-	public Orientation plus(@NonNull Rotation change) {
-		int unwrappedResultingClockwiseIndex = clockwiseRotationsFromNaturalOrientation + change.clockwiseCount();
-		int wrappedResultingClockwiseIndex = NumberUtilities.wrap(unwrappedResultingClockwiseIndex, numberOfPossibleRotations);
-
-		return new Orientation(wrappedResultingClockwiseIndex);
+	public Orientation plus(@NonNull Orientation change) {
+		return new Orientation(NumberUtilities.wrap(offset + change.offset, numberOfPossibleRotations));
 	}
 	
 	@Override
 	public boolean equals(@Nullable Object o) {
 		return o != null
 				&& this.getClass() == o.getClass()
-				&& this.clockwiseRotationsFromNaturalOrientation == ((Orientation) o).clockwiseRotationsFromNaturalOrientation;
+				&& this.offset == ((Orientation) o).offset;
 	}
 
 	@Override
 	public String toString() {
-		switch (clockwiseRotationsFromNaturalOrientation) {
+		switch (offset) {
 			case 0:
 				return "Natural";
 			case 1:
@@ -62,12 +55,8 @@ public class Orientation {
 			case 3:
 				return "Left Side";
 			default:
-				throw new RuntimeException("Unknown number of rotations: " + clockwiseRotationsFromNaturalOrientation);
+				throw new RuntimeException("Unknown number of rotations: " + offset);
 		}
-	}
-	
-	public boolean isSideways() {
-		return clockwiseRotationsFromNaturalOrientation % 2 != 0;
 	}
 	
 }

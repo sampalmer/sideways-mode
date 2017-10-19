@@ -5,7 +5,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 
 import samuelpalmer.common.ObjectExtensions;
-import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 
@@ -41,9 +40,9 @@ public class ApplicationStatus {
 	public ApplicationStatus(Message message) {
 		if (message.arg1 == 0)
 			this.user = null;
-		else if (message.arg1 == UserSide.LEFT.orientation.minus(Orientation.NATURAL).clockwiseCount())
+		else if (message.arg1 == UserSide.LEFT.orientation.offset)
 			this.user = UserSide.LEFT;
-		else if (message.arg1 == UserSide.RIGHT.orientation.minus(Orientation.NATURAL).clockwiseCount())
+		else if (message.arg1 == UserSide.RIGHT.orientation.offset)
 			this.user = UserSide.RIGHT;
 		else
 			throw new IllegalArgumentException("Unknown value for user side offset: " + message.arg1);
@@ -62,7 +61,7 @@ public class ApplicationStatus {
 		Message result = Message.obtain(
 			null,
 			MSG_WHAT,
-			user == null ? 0 : user.orientation.minus(Orientation.NATURAL).clockwiseCount(),
+			user == null ? 0 : user.orientation.offset,
 			(waitingForSensor ? 1 : 0)
 			|
 			(appEnabled ? 1 : 0) << 1

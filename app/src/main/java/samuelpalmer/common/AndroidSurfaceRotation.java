@@ -14,7 +14,7 @@ public class AndroidSurfaceRotation {
 	}
 
 	public AndroidSurfaceRotation(Orientation value) {
-		this(Surface.ROTATION_0 + value.minus(Orientation.NATURAL).clockwiseCount());
+		this(Surface.ROTATION_0 + value.offset);
 	}
 
 	public Orientation orientation() throws IllegalArgumentException {

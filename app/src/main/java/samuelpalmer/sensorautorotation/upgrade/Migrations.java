@@ -6,11 +6,8 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import samuelpalmer.common.Orientation;
-import samuelpalmer.common.Rotation;
 import samuelpalmer.common.settings.application.BooleanSetting;
 import samuelpalmer.common.settings.application.IntegerSetting;
-import samuelpalmer.common.settings.application.OrientationSetting;
-import samuelpalmer.common.settings.application.RotationSetting;
 import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.common.settings.application.Settings.Transaction;
 import samuelpalmer.common.settings.application.StringSetting;
@@ -34,7 +31,7 @@ class Migrations {
 				super.upgradeUiProcessData(settings);
 				
 				Setting<Boolean> oldAutoRotate = settings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
-				Setting<Orientation> oldUserOrientation = settings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+				Setting<Integer> oldUserOrientation = settings.new Setting<Integer>(new IntegerSetting(), "userOrientation", null);
 				Setting<String> screenOffBehaviour = settings.new Setting<String>(new StringSetting(), "screenOnBehaviour", null);
 				
 				// Not migrating these settings anywhere since the UI process (which owns the app settings) can't directly access the service process's settings as of v57.
@@ -69,9 +66,9 @@ class Migrations {
 			public void upgradeServiceProcessData(ServiceSettings settings) {
 				super.upgradeServiceProcessData(settings);
 				
-				Setting<Orientation> oldUserOrientation = settings.new Setting<Orientation>(new OrientationSetting(), "userOrientation", null);
+				Setting<Integer> oldUserOrientation = settings.new Setting<Integer>(new IntegerSetting(), "userOrientation", null);
 				Setting<Boolean> autoRotate = settings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
-				Setting<Rotation> screenOrientationOffset = settings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);
+				Setting<Integer> screenOrientationOffset = settings.new Setting<Integer>(new IntegerSetting(), "screenOrientationOffset", null);
 				
 				Transaction transaction = settings.new Transaction();
 
@@ -80,7 +77,7 @@ class Migrations {
 				if (autoRotate.hasValue() && oldUserOrientation.hasValue() && autoRotate.get())
 					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
 					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
-					screenOrientationOffset.enqueue(Orientation.NATURAL.minus(oldUserOrientation.get()), transaction);
+					screenOrientationOffset.enqueue(Orientation.NATURAL.minus(new Orientation(oldUserOrientation.get())).offset, transaction);
 
 				transaction.commit();
 			}
@@ -171,10 +168,10 @@ class Migrations {
 				CurrentProcess.context().sendBroadcast(new Intent(CurrentProcess.context(), SendConfigReceiver.class));
 				
 				Setting<Boolean> autoRotate = settings.new Setting<Boolean>(new BooleanSetting(), "autoRotate", null);
-				Setting<Rotation> screenOrientationOffset = settings.new Setting<Rotation>(new RotationSetting(), "screenOrientationOffset", null);
+				Setting<Integer> screenOrientationOffset = settings.new Setting<Integer>(new IntegerSetting(), "screenOrientationOffset", null);
 				
 				Boolean autoRotateValue = autoRotate.tryGet();
-				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? Orientation.NATURAL.plus(screenOrientationOffset.get()) : null;
+				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? new Orientation(screenOrientationOffset.get()) : null;
 				
 				Transaction transaction = settings.new Transaction();
 				
@@ -188,7 +185,11 @@ class Migrations {
 						&&
 						autoRotateValue
 						&&
-						screenOrientationOffsetValue.isSideways()
+						(
+							screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE)
+							||
+							screenOrientationOffsetValue.equals(Orientation.RIGHT_SIDE)
+						)
 					) {
 						UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
 						settings.persistentState().enqueue(newUserSide, transaction);
