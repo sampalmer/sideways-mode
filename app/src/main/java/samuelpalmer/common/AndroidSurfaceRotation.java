@@ -18,7 +18,7 @@ public class AndroidSurfaceRotation {
 	}
 
 	public Orientation orientation() throws IllegalArgumentException {
-		return new Orientation(offset());
+		return Orientation.fromOffset(offset());
 	}
 
 	private int offset() {

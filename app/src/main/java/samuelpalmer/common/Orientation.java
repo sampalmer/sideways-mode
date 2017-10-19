@@ -1,62 +1,51 @@
 package samuelpalmer.common;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-public class Orientation {
-
+public enum Orientation { // Using an enum to reduce heap allocation and garbage collection
+	
+	NATURAL(0, "Natural"),
+	RIGHT_SIDE(1, "Right Side"),
+	UPSIDE_DOWN(2, "Upside-Down"),
+	LEFT_SIDE(3, "Left Side");
+	
 	private static final int numberOfPossibleRotations = 4;
-	public static final Orientation NATURAL = new Orientation(0);
-	public static final Orientation RIGHT_SIDE = new Orientation(1);
-	public static final Orientation UPSIDE_DOWN = new Orientation(2);
-	public static final Orientation LEFT_SIDE = new Orientation(3);
 	
 	/**
 	 * Number of clockwise 90 degree turns from natural/upright orientation. Must be in the range [0, 3].
 	 */
 	public final int offset;
-
-	//TODO: Replace this with a factory method and reuse a single pool of objects to reduce heap allocation
+	private final String name;
+	
+	Orientation(int offset, String name) {
+		this.offset = offset;
+		this.name = name;
+	}
 	
 	/**
 	 * @param offset Number of clockwise 90 degree turns from natural/upright orientation. Must be in the range [0, 3].
 	 */
-	public Orientation(int offset) throws IllegalArgumentException {
-		if (offset < 0 || offset >= numberOfPossibleRotations)
-			throw new IllegalArgumentException("Unknown orientation: " + offset);
-
-		this.offset = offset;
+	public static Orientation fromOffset(int offset) throws IllegalArgumentException {
+		switch (offset) {
+			case 0: return Orientation.NATURAL;
+			case 1: return Orientation.RIGHT_SIDE;
+			case 2: return Orientation.UPSIDE_DOWN;
+			case 3: return Orientation.LEFT_SIDE;
+			default: throw new IllegalArgumentException("Unknown orientation: " + offset);
+		}
 	}
 	
 	public Orientation minus(@NonNull Orientation other) {
-		return new Orientation(NumberUtilities.wrap(offset - other.offset, numberOfPossibleRotations));
+		return fromOffset(NumberUtilities.wrap(offset - other.offset, numberOfPossibleRotations));
 	}
 
 	public Orientation plus(@NonNull Orientation change) {
-		return new Orientation(NumberUtilities.wrap(offset + change.offset, numberOfPossibleRotations));
+		return fromOffset(NumberUtilities.wrap(offset + change.offset, numberOfPossibleRotations));
 	}
 	
 	@Override
-	public boolean equals(@Nullable Object o) {
-		return o != null
-				&& this.getClass() == o.getClass()
-				&& this.offset == ((Orientation) o).offset;
-	}
-
-	@Override
 	public String toString() {
-		switch (offset) {
-			case 0:
-				return "Natural";
-			case 1:
-				return "Right Side";
-			case 2:
-				return "Upside-Down";
-			case 3:
-				return "Left Side";
-			default:
-				throw new RuntimeException("Unknown number of rotations: " + offset);
-		}
+		return name;
 	}
 	
 }

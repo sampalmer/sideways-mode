@@ -77,7 +77,7 @@ class Migrations {
 				if (autoRotate.hasValue() && oldUserOrientation.hasValue() && autoRotate.get())
 					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
 					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
-					screenOrientationOffset.enqueue(Orientation.NATURAL.minus(new Orientation(oldUserOrientation.get())).offset, transaction);
+					screenOrientationOffset.enqueue(Orientation.NATURAL.minus(Orientation.fromOffset(oldUserOrientation.get())).offset, transaction);
 
 				transaction.commit();
 			}
@@ -171,7 +171,7 @@ class Migrations {
 				Setting<Integer> screenOrientationOffset = settings.new Setting<Integer>(new IntegerSetting(), "screenOrientationOffset", null);
 				
 				Boolean autoRotateValue = autoRotate.tryGet();
-				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? new Orientation(screenOrientationOffset.get()) : null;
+				Orientation screenOrientationOffsetValue = screenOrientationOffset.hasValue() ? Orientation.fromOffset(screenOrientationOffset.get()) : null;
 				
 				Transaction transaction = settings.new Transaction();
 				
