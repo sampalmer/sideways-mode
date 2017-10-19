@@ -1,148 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
 	>
 
 	<LinearLayout
-		android:id="@+id/dashboard_normal_main_contents"
+		android:id="@+id/dashboard_normal_waiting_sensor"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/dialog_content_margin"
 		android:orientation="vertical"
-		android:gravity="center_horizontal"
+	    android:visibility="gone"
 		>
 
-		<LinearLayout
-			android:id="@+id/dashboard_normal_waiting_sensor"
+		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-		    android:visibility="gone"
-			>
+			android:text="@string/status_waiting_sensor"
+		    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			/>
 
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/status_waiting_sensor"
-			    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-				/>
-
-			<ProgressBar
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/dashboard_sensor_progress"
-				android:indeterminate="true"
-				style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-				/>
-
-		</LinearLayout>
-
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="?attr/listPreferredItemHeight"
-			android:orientation="horizontal"
-		    android:layoutDirection="ltr"
-			tools:ignore="UnusedAttribute">
-
-			<LinearLayout
-				android:id="@+id/dashboard_button_left_side"
-				android:layout_width="64dp"
-				android:layout_height="match_parent"
-				android:background="?attr/selectableItemBackground"
-				android:contentDescription="@string/user_rotation_left_side"
-				android:focusable="true"
-			    android:gravity="center_horizontal"
-				>
-				<ImageView
-					android:layout_width="48dp"
-					android:layout_height="match_parent"
-					android:layout_gravity="center"
-					android:layout_marginStart="8dp"
-					android:layout_marginEnd="8dp"
-					android:layout_marginTop="6dp"
-					android:layout_marginBottom="6dp"
-					app:srcCompat="@drawable/dashboard_left_side"
-					android:scaleType="center"
-					android:duplicateParentState="true"
-					android:background="@drawable/button_selectable"
-					tools:ignore="ContentDescription"/>
-			</LinearLayout>
-			<!-- Spacer -->
-			<View android:layout_width="0dp"
-			      android:layout_height="match_parent"
-			      android:layout_weight="1"
-			      android:visibility="invisible"/>
-
-			<LinearLayout
-				android:id="@+id/dashboard_button_turn_off"
-				android:layout_width="64dp"
-				android:layout_height="match_parent"
-				android:background="?attr/selectableItemBackground"
-				android:contentDescription="@string/action_turn_off"
-				android:focusable="true"
-				android:gravity="center_horizontal"
-				>
-				<ImageView
-					android:layout_width="48dp"
-					android:layout_height="match_parent"
-					android:layout_gravity="center"
-					android:layout_marginStart="8dp"
-					android:layout_marginEnd="8dp"
-					android:layout_marginTop="6dp"
-					android:layout_marginBottom="6dp"
-					app:srcCompat="@drawable/dashboard_turn_off"
-					android:scaleType="center"
-					android:duplicateParentState="true"
-					android:background="@drawable/button_selectable"
-					tools:ignore="ContentDescription"/>
-			</LinearLayout>
-
-			<!-- Spacer -->
-			<View android:layout_width="0dp"
-			      android:layout_height="match_parent"
-			      android:layout_weight="1"
-			      android:visibility="invisible"/>
-
-			<LinearLayout
-				android:id="@+id/dashboard_button_right_side"
-				android:layout_width="64dp"
-				android:layout_height="match_parent"
-				android:background="?attr/selectableItemBackground"
-				android:contentDescription="@string/user_rotation_right_side"
-				android:focusable="true"
-				android:gravity="center_horizontal"
-				>
-				<ImageView
-					android:layout_width="48dp"
-					android:layout_height="match_parent"
-					android:layout_gravity="center"
-					android:layout_marginStart="8dp"
-					android:layout_marginEnd="8dp"
-					android:layout_marginTop="6dp"
-					android:layout_marginBottom="6dp"
-					app:srcCompat="@drawable/dashboard_right_side"
-					android:scaleType="center"
-					android:duplicateParentState="true"
-					android:background="@drawable/button_selectable"
-					tools:ignore="ContentDescription"/>
-			</LinearLayout>
-		</LinearLayout>
+		<ProgressBar
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/dashboard_sensor_progress"
+			android:indeterminate="true"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			/>
 
 	</LinearLayout>
 
-	<!-- TODO: Remove padding and style as a material progress bar (for older platforms) -->
-	<ProgressBar
-		android:id="@+id/dashboard_normal_waiting"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignBottom="@id/dashboard_normal_main_contents"
-		android:visibility="gone"
-		android:indeterminate="true"
-	    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-		/>
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="?attr/listPreferredItemHeight"
+		android:orientation="horizontal"
+	    android:layoutDirection="ltr"
+		tools:ignore="UnusedAttribute">
 
-</RelativeLayout>
+		<LinearLayout
+			android:id="@+id/dashboard_button_left_side"
+			android:layout_width="64dp"
+			android:layout_height="match_parent"
+			android:background="?attr/selectableItemBackground"
+			android:contentDescription="@string/user_rotation_left_side"
+			android:focusable="true"
+		    android:gravity="center_horizontal"
+			>
+			<ImageView
+				android:layout_width="48dp"
+				android:layout_height="match_parent"
+				android:layout_gravity="center"
+				android:layout_marginStart="8dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginTop="6dp"
+				android:layout_marginBottom="6dp"
+				app:srcCompat="@drawable/dashboard_left_side"
+				android:scaleType="center"
+				android:duplicateParentState="true"
+				android:background="@drawable/button_selectable"
+				tools:ignore="ContentDescription"/>
+		</LinearLayout>
+		<!-- Spacer -->
+		<View android:layout_width="0dp"
+		      android:layout_height="match_parent"
+		      android:layout_weight="1"
+		      android:visibility="invisible"/>
+
+		<LinearLayout
+			android:id="@+id/dashboard_button_turn_off"
+			android:layout_width="64dp"
+			android:layout_height="match_parent"
+			android:background="?attr/selectableItemBackground"
+			android:contentDescription="@string/action_turn_off"
+			android:focusable="true"
+			android:gravity="center_horizontal"
+			>
+			<ImageView
+				android:layout_width="48dp"
+				android:layout_height="match_parent"
+				android:layout_gravity="center"
+				android:layout_marginStart="8dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginTop="6dp"
+				android:layout_marginBottom="6dp"
+				app:srcCompat="@drawable/dashboard_turn_off"
+				android:scaleType="center"
+				android:duplicateParentState="true"
+				android:background="@drawable/button_selectable"
+				tools:ignore="ContentDescription"/>
+		</LinearLayout>
+
+		<!-- Spacer -->
+		<View android:layout_width="0dp"
+		      android:layout_height="match_parent"
+		      android:layout_weight="1"
+		      android:visibility="invisible"/>
+
+		<LinearLayout
+			android:id="@+id/dashboard_button_right_side"
+			android:layout_width="64dp"
+			android:layout_height="match_parent"
+			android:background="?attr/selectableItemBackground"
+			android:contentDescription="@string/user_rotation_right_side"
+			android:focusable="true"
+			android:gravity="center_horizontal"
+			>
+			<ImageView
+				android:layout_width="48dp"
+				android:layout_height="match_parent"
+				android:layout_gravity="center"
+				android:layout_marginStart="8dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginTop="6dp"
+				android:layout_marginBottom="6dp"
+				app:srcCompat="@drawable/dashboard_right_side"
+				android:scaleType="center"
+				android:duplicateParentState="true"
+				android:background="@drawable/button_selectable"
+				tools:ignore="ContentDescription"/>
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>

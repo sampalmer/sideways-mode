@@ -23,7 +23,6 @@ public class DashboardNormalFragment extends Fragment {
 	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
 	private static final String KEY_PENDING_ACTION = "pending_action";
 	
-	private View loading;
 	private View waitingForSensor;
 	private View leftSideButton;
 	private View turnOffButton;
@@ -44,7 +43,6 @@ public class DashboardNormalFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
-		loading = layout.findViewById(R.id.dashboard_normal_waiting);
 		waitingForSensor = layout.findViewById(R.id.dashboard_normal_waiting_sensor);
 		leftSideButton = layout.findViewById(R.id.dashboard_button_left_side);
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
@@ -105,7 +103,6 @@ public class DashboardNormalFragment extends Fragment {
 		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync()).send(getContext());
 		pendingButtonPress = null;
 		actionInProgress = action;
-		loading.setVisibility(View.VISIBLE);
 	}
 	
 	public void setStatus(ApplicationStatus status) {
