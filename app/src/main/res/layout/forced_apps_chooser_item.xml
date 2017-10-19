@@ -22,7 +22,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
-			style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+			style="@style/Widget.AppCompat.ProgressBar"
 			android:visibility="gone"
 			android:indeterminate="true"
 			android:id="@+id/forced_apps_item_icon_progress"/>
