@@ -89,8 +89,8 @@ public class Orientation implements Parcelable {
 		}
 	}
 	
-	public boolean isNaturalOrUpsideDown() {
-		return clockwiseRotationsFromNaturalOrientation % 2 == 0;
+	public boolean isSideways() {
+		return clockwiseRotationsFromNaturalOrientation % 2 != 0;
 	}
 
 	@Override

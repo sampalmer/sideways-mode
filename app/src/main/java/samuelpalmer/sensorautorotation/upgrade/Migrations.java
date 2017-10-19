@@ -188,7 +188,7 @@ class Migrations {
 						&&
 						autoRotateValue
 						&&
-						!screenOrientationOffsetValue.isNaturalOrUpsideDown()
+						screenOrientationOffsetValue.isSideways()
 					) {
 						UserSide newUserSide = screenOrientationOffsetValue.equals(Orientation.LEFT_SIDE) ? UserSide.LEFT : UserSide.RIGHT;
 						settings.persistentState().enqueue(newUserSide, transaction);
