@@ -48,15 +48,6 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				collapseNotificationShade(context);
 				
 				break;
-			case ApplicationCommand.ACTION_SYNC_SERVICE:
-				if (!ServiceSettings.instance().persistentState().hasValue())
-					commandIgnoredReason = "Application is turned off";
-				else if (ApplicationInstanceManager.isApplicationRunning())
-					commandIgnoredReason = "Application is already running";
-				else
-					ServiceController.updateServiceState(true);
-				
-				break;
 			case ApplicationCommand.ACTION_CLEAR_ERROR:
 				EnvironmentErrorManager.clear();
 				break;

@@ -20,7 +20,6 @@ public class ApplicationCommand {
 	public static final String ACTION_LEFT_SIDE = "left_side";
 	public static final String ACTION_RIGHT_SIDE = "right_side";
 	public static final String ACTION_TURN_OFF = "turn_off";
-	public static final String ACTION_SYNC_SERVICE = "sync_service";
 	public static final String ACTION_CLEAR_ERROR = "clear_error";
 	public static final String ACTION_SYNC_CONFIG = "sync_config";
 	
@@ -28,7 +27,6 @@ public class ApplicationCommand {
 			ACTION_LEFT_SIDE,
 			ACTION_RIGHT_SIDE,
 			ACTION_TURN_OFF,
-			ACTION_SYNC_SERVICE,
 			ACTION_CLEAR_ERROR,
 			ACTION_SYNC_CONFIG
 	));
