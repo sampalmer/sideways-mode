@@ -18,7 +18,7 @@ public class OrientationTypeConverter implements TypeConverter<Orientation> {
 			return null;
 
 		try {
-			return new AndroidSurfaceRotation(androidSurfaceRotation).orientation();
+			return AndroidSurfaceRotation.toOrientationClockwise(androidSurfaceRotation);
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
@@ -26,7 +26,7 @@ public class OrientationTypeConverter implements TypeConverter<Orientation> {
 
 	@Override
 	public String format(Orientation nonNullValue) {
-		int androidSurfaceRotation = new AndroidSurfaceRotation(nonNullValue).getValue();
+		int androidSurfaceRotation = AndroidSurfaceRotation.fromOrientationClockwise(nonNullValue);
 		return integer.format(androidSurfaceRotation);
 	}
 

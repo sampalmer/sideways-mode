@@ -38,7 +38,7 @@ public class RotationWatcherChangeDetector implements ScreenRotationMonitor.Chan
 		if (watcher.lastRotationOrNull() != null)
 			return watcher.lastRotationOrNull();
 		else
-			return new AndroidSurfaceRotation(screen.getRotation()).orientation();
+			return AndroidSurfaceRotation.toOrientationClockwise(screen.getRotation());
 	}
 
 	private final EventHandler subscriber = new EventHandler() {

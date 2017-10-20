@@ -33,7 +33,7 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 
 	@Override
 	public Orientation currentRotation() {
-		return new AndroidSurfaceRotation(screen.getRotation()).orientation();
+		return AndroidSurfaceRotation.toOrientationClockwise(screen.getRotation());
 	}
 
 	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {

@@ -111,7 +111,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 				}
 
 				try {
-					currentRotation = wrap(currentRotationOffset);
+					currentRotation = AndroidSurfaceRotation.toOrientationClockwise(currentRotationOffset);
 				} catch (IllegalArgumentException e) {
 					throw new RotationWatcherNotSupportedException(e);
 				}
@@ -159,7 +159,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 					//It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
 					if (subscribed) {
 						try {
-							currentRotation = wrap(rotation);
+							currentRotation = AndroidSurfaceRotation.toOrientationClockwise(rotation);
 						} catch (IllegalArgumentException e) {
 							badRotationReceivedError = e;
 						}
@@ -180,11 +180,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 
 		return currentRotation;
 	}
-
-	private static Orientation wrap(int rotation) throws IllegalArgumentException {
-		return new AndroidSurfaceRotation(rotation).orientation();
-	}
-
+	
 	public static class RotationWatcherNotSupportedException extends RuntimeException {
 
 		public RotationWatcherNotSupportedException(Exception inner) {

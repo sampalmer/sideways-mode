@@ -2,35 +2,46 @@ package samuelpalmer.common;
 
 import android.view.Surface;
 
-public class AndroidSurfaceRotation {
-
-	private final int value;
-
-	public AndroidSurfaceRotation(int value) throws IllegalArgumentException {
-		if (value < Surface.ROTATION_0 || value > Surface.ROTATION_270)
-			throw new IllegalArgumentException("Value " + value + " is not a valid surface rotation");
-
-		this.value = value;
+/**
+ * Utilities for working with Android's {@link Surface}{@code .ROTATION_} constants.
+ */
+public abstract class AndroidSurfaceRotation {
+	
+	/**
+	 * Converts the given rotation to an {@link Orientation}, assuming that that the rotation
+	 * is clockwise.
+	 */
+	public static Orientation toOrientationClockwise(int clockwiseRotation) throws IllegalArgumentException {
+		int offset = offset(clockwiseRotation);
+		return Orientation.fromOffset(offset);
 	}
-
-	public AndroidSurfaceRotation(Orientation value) {
-		this(Surface.ROTATION_0 + value.offset);
+	
+	/**
+	 * Converts the given rotation to an {@link Orientation}, assuming that that the rotation
+	 * is anticlockwise.
+	 */
+	public static Orientation toOrientationAnticlockwise(int anticlockwiseRotation) throws IllegalArgumentException {
+		int anticlockwiseOffset = offset(anticlockwiseRotation);
+		int clockwiseOffset = NumberUtilities.wrap(4 - anticlockwiseOffset, 4);
+		return Orientation.fromOffset(clockwiseOffset);
 	}
-
-	public Orientation orientation() throws IllegalArgumentException {
-		return Orientation.fromOffset(offset());
+	
+	/**
+	 * Converts the given orientation to a clockwise rotation.
+	 */
+	public static int fromOrientationClockwise(Orientation orientation) {
+		return Surface.ROTATION_0 + orientation.offset;
 	}
-
-	private int offset() {
-		return getValue() - Surface.ROTATION_0;
+	
+	public static String name(int rotation) throws IllegalArgumentException {
+		return "ROTATION_" + offset(rotation) * 90;
 	}
-
-	public int getValue() {
-		return value;
+	
+	private static int offset(int rotation) throws IllegalArgumentException {
+		if (rotation < Surface.ROTATION_0 || rotation > Surface.ROTATION_270)
+			throw new IllegalArgumentException("Value " + rotation + " is not a valid surface rotation");
+		
+		return rotation - Surface.ROTATION_0;
 	}
-
-	@Override
-	public String toString() {
-		return "ROTATION_" + offset() * 90;
-	}
+	
 }

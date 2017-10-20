@@ -9,7 +9,6 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.NumberUtilities;
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -82,8 +81,7 @@ public class OrientationSensorHandler extends State {
 					?
 					null
 					:
-					// Device orientations are anticlockwise, so we need to negate them for consistency.
-					new AndroidSurfaceRotation(NumberUtilities.wrap(4 - rotation, 4)).orientation();
+					AndroidSurfaceRotation.toOrientationAnticlockwise(rotation);
 				
 				Log.i(TAG, "Device orientation changed: " + orientation);
 				calculator.setDevice(orientation);
