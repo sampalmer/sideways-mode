@@ -14,11 +14,13 @@ public class UpgradeReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
-
-		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction()))
-			// When Android updates an app, it kills the app's process and doesn't restart them.
-			// So we need to restart the app ourselves.
-			ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
+		
+		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
+			if (ServiceSettings.instance().persistentState().hasValue())
+				// When Android updates an app, it kills the app's processes and doesn't restart the service.
+				// So we need to restart it ourselves.
+				ServiceController.updateServiceState(true);
+		}
 		else
 			Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
 	}

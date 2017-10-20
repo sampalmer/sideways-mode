@@ -30,25 +30,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue() && ApplicationInstanceManager.isApplicationRunning()) {
-					ApplicationInstanceManager.applicationInstance().setSide(UserSide.LEFT);
-				}
-				else {
-					ServiceSettings.instance().persistentState().set(UserSide.LEFT);
-					ServiceController.updateServiceState(true);
-				}
-				
+				setUserSide(UserSide.LEFT);
 				collapseNotificationShade(context);
 				
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
-				if (ServiceSettings.instance().persistentState().hasValue() && ApplicationInstanceManager.isApplicationRunning())
-					ApplicationInstanceManager.applicationInstance().setSide(UserSide.RIGHT);
-				else {
-					ServiceSettings.instance().persistentState().set(UserSide.RIGHT);
-					ServiceController.updateServiceState(true);
-				}
-				
+				setUserSide(UserSide.RIGHT);
 				collapseNotificationShade(context);
 				
 				break;
@@ -62,7 +49,13 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				
 				break;
 			case ApplicationCommand.ACTION_SYNC_SERVICE:
-				ServiceController.updateServiceState(ServiceSettings.instance().persistentState().hasValue());
+				if (!ServiceSettings.instance().persistentState().hasValue())
+					commandIgnoredReason = "Application is turned off";
+				else if (ApplicationInstanceManager.isApplicationRunning())
+					commandIgnoredReason = "Application is already running";
+				else
+					ServiceController.updateServiceState(true);
+				
 				break;
 			case ApplicationCommand.ACTION_CLEAR_ERROR:
 				EnvironmentErrorManager.clear();
@@ -80,6 +73,21 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		
 		if (commandIgnoredReason != null)
 			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
+	}
+	
+	private void setUserSide(UserSide userSide) {
+		if (ServiceSettings.instance().persistentState().hasValue()) {
+			if (ApplicationInstanceManager.isApplicationRunning())
+				ApplicationInstanceManager.applicationInstance().setSide(userSide);
+			else
+				ServiceSettings.instance().persistentState().set(userSide);
+		}
+		else {
+			ServiceSettings.instance().persistentState().set(userSide);
+			
+			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
+			ServiceController.updateServiceState(true);
+		}
 	}
 	
 	private static void collapseNotificationShade(Context context) {

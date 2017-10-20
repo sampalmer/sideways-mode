@@ -35,13 +35,4 @@ public abstract class UiActivity extends AppCompatActivity {
 		}
 	}
 	
-	/**
-	 * Ensures the background service is running, just in case it has died.
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_SERVICE).send(this);
-	}
-	
 }

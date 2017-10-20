@@ -76,8 +76,13 @@ public abstract class ApplicationInstanceManager {
 	
 	public static void turnOffApp(String reason) {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
-		ServiceSettings.instance().persistentState().remove();
-		ServiceController.updateServiceState(false);
+		
+		if (ServiceSettings.instance().persistentState().hasValue()) {
+			ServiceSettings.instance().persistentState().remove();
+			ServiceController.updateServiceState(false);
+		}
+		else
+			Log.w(TAG, "Ignoring request to turn off app since it is already off");
 	}
 	
 }

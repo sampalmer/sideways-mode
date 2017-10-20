@@ -48,19 +48,14 @@ public class ApplicationStatusService extends Service {
 					if (isNewSubscription) {
 						Message message = null;
 						
-						if (enabledState.hasValue())
+						if (enabledState.hasValue()) {
 							if (ApplicationInstanceManager.isApplicationRunning()) {
 								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
 								ApplicationStatus lastStatus = ApplicationInstanceManager.applicationInstance().applicationStatusDisplayUpdater.getLastStatus();
 								if (lastStatus != null)
 									message = lastStatus.asMessage();
-							} else {
-								/*
-								 * If the service has crashed or been killed, we want to make sure it's running.
-								 * Otherwise the client will have to wait a long time (or forever) to get the first service status update.
-								 */
-								ServiceController.updateServiceState(true);
 							}
+						}
 						else {
 							message = makeAppDisabledStatus().asMessage();
 						}
