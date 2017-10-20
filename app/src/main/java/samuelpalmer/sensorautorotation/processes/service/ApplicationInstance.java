@@ -78,8 +78,6 @@ public class ApplicationInstance extends State {
 		screenUpdater.ensureStopped();
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
-		
-		ServiceSettings.instance().persistentState().remove();
 	}
 	
 	public void setSide(UserSide side) {
