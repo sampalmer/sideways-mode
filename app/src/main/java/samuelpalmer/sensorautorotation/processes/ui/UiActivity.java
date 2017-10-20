@@ -37,7 +37,6 @@ public abstract class UiActivity extends AppCompatActivity {
 	
 	/**
 	 * Ensures the background service is running, just in case it has died.
-	 * Also ensures the service process has the latest copy of the user preferences, just in case it somehow got out-of-sync.
 	 */
 	@Override
 	protected void onResume() {
