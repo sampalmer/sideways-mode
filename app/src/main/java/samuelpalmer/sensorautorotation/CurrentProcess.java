@@ -12,11 +12,11 @@ import android.util.Log;
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 
 public class CurrentProcess extends Application {

@@ -15,10 +15,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 /**
  * Provides access to remotely monitor the state of the service.

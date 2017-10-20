@@ -3,14 +3,14 @@ package samuelpalmer.sensorautorotation.processes.service;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.common.settings.application.EnumSetting;
-import samuelpalmer.common.settings.application.IntegerSetting;
-import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.common.settings.application.StringSetSetting;
-import samuelpalmer.common.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.EnumSetting;
+import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
+import samuelpalmer.sensorautorotation.settings.application.StringSetSetting;
+import samuelpalmer.sensorautorotation.settings.application.StringSetting;
 
 /**
  * Holds persistent service state. Not intended for backup or sync.

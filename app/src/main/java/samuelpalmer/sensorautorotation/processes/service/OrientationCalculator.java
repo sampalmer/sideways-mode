@@ -5,9 +5,9 @@ import android.support.annotation.Nullable;
 
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 public class OrientationCalculator {
 	

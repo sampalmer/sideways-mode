@@ -1,4 +1,4 @@
-package samuelpalmer.common.settings.application;
+package samuelpalmer.sensorautorotation.settings.application;
 
 public class EnumSetting<T extends Enum<T>> extends WrapperSetting<T, String> {
 	private final Class<T> clazz;

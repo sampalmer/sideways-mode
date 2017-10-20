@@ -19,12 +19,12 @@ import java.util.Set;
 
 import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.common.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
+import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 
 public class MainSettingsFragment extends PreferenceFragment {
 	

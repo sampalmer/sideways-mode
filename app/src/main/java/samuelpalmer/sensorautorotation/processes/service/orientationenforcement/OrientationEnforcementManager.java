@@ -3,10 +3,10 @@ package samuelpalmer.sensorautorotation.processes.service.orientationenforcement
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 /**
  * Turns the screen orientation enforcement feature on and off as needed.

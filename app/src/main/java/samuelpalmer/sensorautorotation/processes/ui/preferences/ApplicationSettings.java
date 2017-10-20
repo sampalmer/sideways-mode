@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.common.settings.application.BooleanSetting;
-import samuelpalmer.common.settings.application.IntegerSetting;
-import samuelpalmer.common.settings.application.Settings;
-import samuelpalmer.common.settings.application.StringSetSetting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
+import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
+import samuelpalmer.sensorautorotation.settings.application.StringSetSetting;
 
 public class ApplicationSettings extends Settings {
 

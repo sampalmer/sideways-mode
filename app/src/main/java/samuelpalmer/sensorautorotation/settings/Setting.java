@@ -1,4 +1,4 @@
-package samuelpalmer.common.settings;
+package samuelpalmer.sensorautorotation.settings;
 
 public interface Setting<T> {
 

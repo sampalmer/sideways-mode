@@ -1,10 +1,10 @@
-package samuelpalmer.common.settings.application;
+package samuelpalmer.sensorautorotation.settings.application;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import samuelpalmer.common.settings.application.Settings.Setting;
+import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 
 /**
  * We're using this instead of {@link android.preference.PreferenceManager#setDefaultValues} since

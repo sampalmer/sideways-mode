@@ -7,9 +7,9 @@ import android.preference.PreferenceFragment;
 import java.util.Set;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 
 public class ForcedAppsFragment extends PreferenceFragment {

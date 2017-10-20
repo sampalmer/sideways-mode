@@ -1,4 +1,4 @@
-package samuelpalmer.common.settings.application;
+package samuelpalmer.sensorautorotation.settings.application;
 
 import android.content.SharedPreferences;
 

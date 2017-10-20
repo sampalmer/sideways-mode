@@ -11,8 +11,6 @@ import java.util.Map;
 
 import samuelpalmer.common.Orientation;
 import samuelpalmer.common.notifications.NotificationBuilderCompat;
-import samuelpalmer.common.settings.application.IntegerSetting;
-import samuelpalmer.common.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -22,6 +20,8 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
+import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;

@@ -1,4 +1,4 @@
-package samuelpalmer.common.settings.application;
+package samuelpalmer.sensorautorotation.settings.application;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -32,7 +32,7 @@ public class Settings {
 
 	}
 
-	public class Setting<T> extends EventRegistrarAdaptor implements samuelpalmer.common.settings.Setting<T> {
+	public class Setting<T> extends EventRegistrarAdaptor implements samuelpalmer.sensorautorotation.settings.Setting<T> {
 
 		private final SettingType<T> type;
 		private final String key;
