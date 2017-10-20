@@ -71,7 +71,7 @@ public class DashboardNormalFragment extends Fragment {
 			if (!view.isSelected()) {
 				if (!SystemSettings.canWrite(DashboardNormalFragment.this.getContext())) {
 					pendingButtonPress = action;
-					Intent intent = new SystemIntents(getContext()).modifySystemSettings();
+					Intent intent = SystemIntents.modifySystemSettings(getContext());
 					
 					try {
 						startActivityForResult(intent, REQUEST_CODE_BUTTON_PRESSED);

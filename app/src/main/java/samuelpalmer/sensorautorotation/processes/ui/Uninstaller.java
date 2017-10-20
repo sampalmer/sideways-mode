@@ -10,7 +10,7 @@ public abstract class Uninstaller {
 	public static void uninstall(Activity activity) {
 		new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(activity);
 		
-		Intent uninstallIntent = new SystemIntents(activity).uninstall();
+		Intent uninstallIntent = SystemIntents.uninstall(activity);
 		activity.startActivity(uninstallIntent);
 	}
 	

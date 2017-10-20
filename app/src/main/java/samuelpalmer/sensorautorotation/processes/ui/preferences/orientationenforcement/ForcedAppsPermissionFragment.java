@@ -111,7 +111,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 						@TargetApi(Build.VERSION_CODES.M)
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new SystemIntents(getActivity()).drawOnTopOfApps();
+							Intent intent = SystemIntents.drawOnTopOfApps(getActivity());
 
 							//TODO: Apparently the activity isn't guaranteed to actually exist. Decide what to do here.
 							startActivity(intent);

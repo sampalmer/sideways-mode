@@ -21,7 +21,7 @@ public class AppCompatibilityCheck {
 			return R.string.device_problem_explanation_sensor;
 		
 		if (Build.VERSION.SDK_INT >= 23) {
-			Intent modifySystemSettingsIntent = new SystemIntents(CurrentProcess.context()).modifySystemSettings();
+			Intent modifySystemSettingsIntent = SystemIntents.modifySystemSettings(CurrentProcess.context());
 			if (IntentExtensions.activityDoesntExist(modifySystemSettingsIntent, CurrentProcess.context().getPackageManager()))
 				return R.string.device_problem_explanation_permission;
 		}
