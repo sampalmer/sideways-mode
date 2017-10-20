@@ -21,11 +21,11 @@ public class OrientationEnforcementMonitor extends State {
 	private final Settings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
 	private Set<String> orientationEnforcedPackages;
 
-	public OrientationEnforcementMonitor(ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor, PermissionNotificationManager permissionNotificationManager) {
+	public OrientationEnforcementMonitor(ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
 		this.activityMonitor = activityMonitor;
 		this.permissionNotificationManager = permissionNotificationManager;
 		orientationEnforcer = new ScreenOrientationEnforcer(CurrentProcess.context());
-		this.lockScreenDetector = lockScreenMonitor;
+		this.lockScreenDetector = new LockScreenMonitor(CurrentProcess.context());
 		forcedOrientationAppPackagesSetting = ServiceSettings.instance().forcedOrientationAppPackages();
 	}
 

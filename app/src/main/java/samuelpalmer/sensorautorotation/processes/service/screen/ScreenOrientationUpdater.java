@@ -6,25 +6,28 @@ import samuelpalmer.common.Orientation;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
+import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class ScreenOrientationUpdater extends State {
 
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screen;
 	
-	public ScreenOrientationUpdater(OrientationCalculator calculator, ScreenOrientationController screen) {
+	public ScreenOrientationUpdater(OrientationCalculator calculator, SystemSettings systemSettings, ScreenRotationMonitor screenRotationMonitor) {
 		this.calculator = calculator;
-		this.screen = screen;
+		this.screen = new ScreenOrientationController(systemSettings, screenRotationMonitor);
 	}
 
 	@Override
 	protected void start() {
+		screen.ensureStarted();
 		calculator.onAnythingChanged.subscribe(applyChange);
 	}
 
 	@Override
 	protected void stop() {
 		calculator.onAnythingChanged.unsubscribe(applyChange);
+		screen.ensureStopped();
 	}
 
 	private final EventHandler applyChange = new EventHandler() {

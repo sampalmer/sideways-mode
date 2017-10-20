@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service.orientationenforcement
 
 import java.util.Set;
 
-import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.common.settings.application.Settings;
 import samuelpalmer.sensorautorotation.State;
@@ -22,9 +21,9 @@ public class OrientationEnforcementManager extends State {
 	private final Settings.Setting<Set<String>> forcedApps;
 	private final PermissionNotificationManager permissionNotificationManager;
 
-	public OrientationEnforcementManager(ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
+	public OrientationEnforcementManager(ActivityMonitor activityMonitor) {
 		permissionNotificationManager = new PermissionNotificationManager();
-		monitor = new OrientationEnforcementMonitor(activityMonitor, lockScreenMonitor, permissionNotificationManager);
+		monitor = new OrientationEnforcementMonitor(activityMonitor, permissionNotificationManager);
 		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
 	}
 

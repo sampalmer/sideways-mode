@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
@@ -14,7 +13,6 @@ import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFa
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
-import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
@@ -31,7 +29,6 @@ public class ApplicationInstance extends State {
 	
 	private static final String TAG = ApplicationInstance.class.getSimpleName();
 	
-	private ScreenOrientationController screenOrientationController;
 	private OrientationCalculator calculator;
 	ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
@@ -58,25 +55,17 @@ public class ApplicationInstance extends State {
 		Display screen = ((WindowManager) CurrentProcess.context().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
-		
 		calculator = new OrientationCalculator(screenRotationMonitor);
-		screenOrientationController = new ScreenOrientationController(systemSettings, screenRotationMonitor);
-		
-		screenUpdater = new ScreenOrientationUpdater(calculator, screenOrientationController);
-		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(CurrentProcess.context());
+		screenUpdater = new ScreenOrientationUpdater(calculator, systemSettings, screenRotationMonitor);
 		applicationStatusFactory = new ApplicationStatusFactory(calculator);
 		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory);
-		
 		serviceRevivalManager = new ServiceRevivalManager();
-		
 		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
-		
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings);
 		activityMonitor = new ActivityMonitor();
-		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor, lockScreenMonitor);
+		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor);
 		
 		systemAutoRotationMonitor.ensureStarted();
-		screenOrientationController.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
 		screenUpdater.ensureStarted();
 		serviceRevivalManager.ensureStarted();
@@ -97,7 +86,6 @@ public class ApplicationInstance extends State {
 		orientationEnforcementManager.ensureStopped();
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
-		screenOrientationController.ensureStopped();
 		screenUpdater.ensureStopped();
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
