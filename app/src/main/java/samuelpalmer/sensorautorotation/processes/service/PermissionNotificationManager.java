@@ -15,7 +15,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -28,34 +27,34 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class PermissionNotificationManager extends State {
 
 	private final NotificationManager notificationManager;
-	private final Settings.Setting<UserSide> serviceState;
 	private final Settings.Setting<Set<String>> forcedApps;
 	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
-
+	
+	private boolean isRunning = false;
+	
 	public PermissionNotificationManager() {
 		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
 		
-		serviceState = ServiceSettings.instance().persistentState();
 		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 
 	@Override
 	protected void start() {
-		serviceState.subscribe(subscriber);
 		forcedApps.subscribe(subscriber);
 		accessibilityServiceMonitor.subscribe(subscriber);
-
+		
+		isRunning = true;
 		check();
 	}
 
 	@Override
 	protected void stop() {
+		isRunning = false;
 		check();
 
 		accessibilityServiceMonitor.unsubscribe(subscriber);
 		forcedApps.unsubscribe(subscriber);
-		serviceState.unsubscribe(subscriber);
 	}
 
 	private final EventHandler subscriber = new EventHandler() {
@@ -66,7 +65,7 @@ public class PermissionNotificationManager extends State {
 	};
 
 	public void check() {
-		if (serviceState.hasValue() && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
+		if (isRunning && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
 			PendingIntent forcedAppsIntent = PendingIntent.getActivity(
 				CurrentProcess.context(),
 				PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION,
