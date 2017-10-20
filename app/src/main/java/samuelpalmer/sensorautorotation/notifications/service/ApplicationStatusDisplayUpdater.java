@@ -1,31 +1,28 @@
 package samuelpalmer.sensorautorotation.notifications.service;
 
 import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 
 public class ApplicationStatusDisplayUpdater extends State {
 
-	private final ApplicationStatusFactory statusGenerator;
+	private final OrientationCalculator calculator;
 	private final ApplicationStatusDisplay display;
 
-	public ApplicationStatusDisplayUpdater(ApplicationStatusFactory statusGenerator) {
-		this.statusGenerator = statusGenerator;
+	public ApplicationStatusDisplayUpdater(OrientationCalculator calculator) {
+		this.calculator = calculator;
 		this.display = new ApplicationStatusDisplays();
 	}
 
 	@Override
 	protected void start() {
 		updateDisplays.update();
-
-		for (EventRegistrar trigger : statusGenerator.updateTriggers())
-			trigger.subscribe(updateDisplays);
+		calculator.onAnythingChanged.subscribe(updateDisplays);
 	}
 
 	@Override
 	protected void stop() {
-		for (EventRegistrar trigger : statusGenerator.updateTriggers())
-			trigger.unsubscribe(updateDisplays);
+		calculator.onAnythingChanged.unsubscribe(updateDisplays);
 
 		display.onApplicationStopped();
 	}
@@ -33,7 +30,12 @@ public class ApplicationStatusDisplayUpdater extends State {
 	private final EventHandler updateDisplays = new EventHandler() {
 		@Override
 		public void update() {
-			ApplicationStatus applicationStatus = statusGenerator.generate();
+			ApplicationStatus applicationStatus = new ApplicationStatus(
+				null,
+				true,
+				calculator.side(),
+				calculator.isWaitingForSensor()
+			);;
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
 				display.update(applicationStatus);

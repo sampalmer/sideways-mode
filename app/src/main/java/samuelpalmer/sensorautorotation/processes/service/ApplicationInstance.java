@@ -9,7 +9,6 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusFactory;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
@@ -32,7 +31,6 @@ public class ApplicationInstance extends State {
 	private OrientationCalculator calculator;
 	ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
 	private ServiceRevivalManager serviceRevivalManager;
-	private ApplicationStatusFactory applicationStatusFactory;
 	private OrientationSensorHandler orientationSensorHandler;
 	private SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private OrientationEnforcementManager orientationEnforcementManager;
@@ -57,8 +55,7 @@ public class ApplicationInstance extends State {
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(screen);
 		calculator = new OrientationCalculator(screenRotationMonitor);
 		screenUpdater = new ScreenOrientationUpdater(calculator, systemSettings, screenRotationMonitor);
-		applicationStatusFactory = new ApplicationStatusFactory(calculator);
-		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(applicationStatusFactory);
+		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(calculator);
 		serviceRevivalManager = new ServiceRevivalManager();
 		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings);
