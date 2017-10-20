@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
-import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.settings.system.types.BooleanTypeConverter;
 import samuelpalmer.sensorautorotation.settings.system.types.OrientationTypeConverter;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 import static android.provider.Settings.System.ACCELEROMETER_ROTATION;
 import static android.provider.Settings.System.USER_ROTATION;

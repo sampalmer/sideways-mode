@@ -1,4 +1,4 @@
-package samuelpalmer.common;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.content.ComponentName;
 import android.content.pm.PackageItemInfo;

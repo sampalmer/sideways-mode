@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 
 public class DashboardNormalFragment extends Fragment {

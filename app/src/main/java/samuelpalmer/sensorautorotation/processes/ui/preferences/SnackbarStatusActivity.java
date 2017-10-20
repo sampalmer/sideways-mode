@@ -7,12 +7,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 /**
  * Supports showing an error message at the bottom of the activity.

@@ -8,15 +8,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
-import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.SensorError;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 import static android.content.Context.SENSOR_SERVICE;
 

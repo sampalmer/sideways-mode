@@ -12,10 +12,10 @@ import android.view.IRotationWatcher;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
-import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.BuildConfig;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
  * Single point of entry to RotationWatcher. Protects against duplicate subscriptions and handles

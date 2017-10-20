@@ -4,10 +4,10 @@ import android.content.ComponentName;
 
 import java.util.Set;
 
-import samuelpalmer.common.LockScreenMonitor;
-import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.settings.application.Settings;

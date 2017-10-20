@@ -1,9 +1,9 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.values;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-import samuelpalmer.common.Orientation;
+import samuelpalmer.sensorautorotation.R;
 
 public enum UserSide {
 	

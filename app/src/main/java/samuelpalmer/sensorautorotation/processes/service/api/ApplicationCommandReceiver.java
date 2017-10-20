@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class ApplicationCommandReceiver extends BroadcastReceiver {
 	

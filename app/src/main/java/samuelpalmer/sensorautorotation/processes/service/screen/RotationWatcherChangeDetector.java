@@ -2,11 +2,11 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.view.Display;
 
-import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
-import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor.Callback;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
  * Supports detection of all four screen rotations using a hidden API

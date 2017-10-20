@@ -5,10 +5,8 @@ import android.os.Build;
 import android.util.Log;
 import android.util.SparseArray;
 
-import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
@@ -20,6 +18,8 @@ import samuelpalmer.sensorautorotation.settings.application.StringSetting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.values.Orientation;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 class Migrations {
 	static SparseArray<Migration> buildMap() {

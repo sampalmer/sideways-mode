@@ -3,11 +3,11 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import samuelpalmer.common.Orientation;
-import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.UserSide;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.settings.application.Settings;
+import samuelpalmer.sensorautorotation.values.Orientation;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class OrientationCalculator {
 	

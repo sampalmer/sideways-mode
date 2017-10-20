@@ -1,4 +1,4 @@
-package samuelpalmer.common.notifications;
+package samuelpalmer.sensorautorotation.notifications;
 
 import android.app.PendingIntent;
 import android.content.Context;

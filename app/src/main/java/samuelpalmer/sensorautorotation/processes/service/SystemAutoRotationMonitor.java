@@ -1,10 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 
 public class SystemAutoRotationMonitor extends State {

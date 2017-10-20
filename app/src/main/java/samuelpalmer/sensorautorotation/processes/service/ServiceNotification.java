@@ -8,18 +8,18 @@ import android.os.Build.VERSION;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
-import samuelpalmer.common.notifications.NotificationButtons;
-import samuelpalmer.common.notifications.NotificationStyles;
-import samuelpalmer.sensorautorotation.ApplicationCommand;
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.UserSide;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 class ServiceNotification {
 

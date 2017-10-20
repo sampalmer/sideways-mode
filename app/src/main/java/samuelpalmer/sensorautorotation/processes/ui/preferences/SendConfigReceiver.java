@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
  * Sends the user preferences to the service process for synchronisation. This is needed because

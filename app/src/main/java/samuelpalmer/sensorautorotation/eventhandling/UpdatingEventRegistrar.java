@@ -1,4 +1,4 @@
-package samuelpalmer.common.eventhandling;
+package samuelpalmer.sensorautorotation.eventhandling;
 
 public class UpdatingEventRegistrar extends IntolerantEventRegistrar {
 

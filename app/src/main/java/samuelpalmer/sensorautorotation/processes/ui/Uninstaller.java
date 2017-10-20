@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.app.Activity;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 public abstract class Uninstaller {
 	

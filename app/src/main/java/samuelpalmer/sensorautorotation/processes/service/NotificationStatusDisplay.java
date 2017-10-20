@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Notification;
 import android.app.Service;
 
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class NotificationStatusDisplay implements ApplicationStatusDisplay {
 	private final Service service;

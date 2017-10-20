@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusDisplayUpdater extends State {
 

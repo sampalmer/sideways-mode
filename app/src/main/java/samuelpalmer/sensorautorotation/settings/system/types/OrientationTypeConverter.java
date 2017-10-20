@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.settings.system.types;
 
-import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class OrientationTypeConverter implements TypeConverter<Orientation> {
 

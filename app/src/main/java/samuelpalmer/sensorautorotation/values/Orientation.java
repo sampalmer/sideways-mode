@@ -1,6 +1,8 @@
-package samuelpalmer.common;
+package samuelpalmer.sensorautorotation.values;
 
 import android.support.annotation.NonNull;
+
+import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 
 public enum Orientation { // Using an enum to reduce heap allocation and garbage collection
 	

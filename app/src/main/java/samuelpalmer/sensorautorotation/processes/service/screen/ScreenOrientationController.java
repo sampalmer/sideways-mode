@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.util.Log;
 
-import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
@@ -12,6 +11,7 @@ import samuelpalmer.sensorautorotation.settings.system.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
 	

@@ -5,9 +5,9 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
 
-import samuelpalmer.common.eventhandling.EventRegistrar;
-import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.settings.system.types.TypeConverter;
 
 import static android.provider.Settings.System.getString;

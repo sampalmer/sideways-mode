@@ -6,15 +6,15 @@ import android.app.PendingIntent;
 import android.os.Build;
 import android.util.Log;
 
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 

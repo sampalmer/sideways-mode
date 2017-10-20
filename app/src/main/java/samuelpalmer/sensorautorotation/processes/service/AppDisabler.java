@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
-import samuelpalmer.common.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.State;
 
 

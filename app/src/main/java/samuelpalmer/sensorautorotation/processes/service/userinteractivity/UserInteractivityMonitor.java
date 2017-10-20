@@ -7,8 +7,8 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.PowerManager;
 
-import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 import static android.content.Context.POWER_SERVICE;
 

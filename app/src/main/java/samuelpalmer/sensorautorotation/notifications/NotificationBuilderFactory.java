@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.notifications;
 
 import android.support.v4.content.ContextCompat;
 
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 

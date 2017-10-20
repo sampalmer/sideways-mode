@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.values;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 /**
  * Provides a way to remotely communicate with the back-end.

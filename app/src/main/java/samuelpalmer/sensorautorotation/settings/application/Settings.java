@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import samuelpalmer.common.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 public class Settings {
 	

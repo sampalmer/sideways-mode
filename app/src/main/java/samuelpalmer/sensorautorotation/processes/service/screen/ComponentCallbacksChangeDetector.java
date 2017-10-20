@@ -4,9 +4,9 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.view.Display;
 
-import samuelpalmer.common.AndroidSurfaceRotation;
-import samuelpalmer.common.Orientation;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
  * Only detects changes between landscape and portrait.

@@ -2,8 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
 
-import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.common.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
 public abstract class ApplicationInstanceManager {
 	

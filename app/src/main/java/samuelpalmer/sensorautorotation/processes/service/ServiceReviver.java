@@ -4,10 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.os.SystemClock;
 
-import samuelpalmer.sensorautorotation.ApplicationCommand;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 import static android.content.Context.ALARM_SERVICE;
 

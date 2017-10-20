@@ -1,11 +1,11 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.values;
 
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
-import samuelpalmer.common.ObjectExtensions;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
+import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
 @SuppressWarnings("WeakerAccess")
 public class ApplicationStatus {

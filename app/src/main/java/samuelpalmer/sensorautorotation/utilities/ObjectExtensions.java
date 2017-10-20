@@ -1,4 +1,4 @@
-package samuelpalmer.common;
+package samuelpalmer.sensorautorotation.utilities;
 
 public final class ObjectExtensions {
 

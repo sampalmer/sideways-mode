@@ -9,11 +9,10 @@ import android.util.SparseArray;
 
 import java.util.Map;
 
-import samuelpalmer.common.Orientation;
-import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -25,6 +24,7 @@ import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 

@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Service;
 import android.content.Intent;
 
-import samuelpalmer.sensorautorotation.BroadcastKillFix;
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 

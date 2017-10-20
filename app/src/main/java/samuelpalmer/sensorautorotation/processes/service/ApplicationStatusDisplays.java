@@ -3,9 +3,9 @@ package samuelpalmer.sensorautorotation.processes.service;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.common.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusDisplays extends State implements ApplicationStatusDisplay {
 

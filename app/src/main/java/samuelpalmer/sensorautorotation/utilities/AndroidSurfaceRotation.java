@@ -1,6 +1,8 @@
-package samuelpalmer.common;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.view.Surface;
+
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
  * Utilities for working with Android's {@link Surface}{@code .ROTATION_} constants.

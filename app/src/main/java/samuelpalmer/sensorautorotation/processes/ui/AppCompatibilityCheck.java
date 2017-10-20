@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.StringRes;
 
-import samuelpalmer.common.IntentExtensions;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
+import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
 
 public class AppCompatibilityCheck {
 	
