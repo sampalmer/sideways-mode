@@ -5,7 +5,6 @@ import android.util.Log;
 import samuelpalmer.common.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatusDisplayUpdater;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;

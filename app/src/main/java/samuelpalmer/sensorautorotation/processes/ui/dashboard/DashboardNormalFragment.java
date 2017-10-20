@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import samuelpalmer.sensorautorotation.ApplicationCommand;
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;

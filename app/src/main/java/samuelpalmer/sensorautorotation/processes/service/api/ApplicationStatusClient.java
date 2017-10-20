@@ -14,7 +14,7 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 
 public class ApplicationStatusClient {

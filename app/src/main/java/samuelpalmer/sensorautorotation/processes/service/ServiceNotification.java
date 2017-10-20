@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.notifications.service;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -12,13 +12,13 @@ import samuelpalmer.common.notifications.NotificationBuilderCompat;
 import samuelpalmer.common.notifications.NotificationButtons;
 import samuelpalmer.common.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.ApplicationCommand;
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.UserSide;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.service.DummyReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
 
 class ServiceNotification {

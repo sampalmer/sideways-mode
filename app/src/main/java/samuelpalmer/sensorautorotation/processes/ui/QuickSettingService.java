@@ -10,10 +10,10 @@ import android.service.quicksettings.TileService;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.ApplicationCommand;
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.service.ApplicationStatus;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 

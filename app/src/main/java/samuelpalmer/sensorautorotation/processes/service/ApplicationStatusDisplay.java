@@ -1,4 +1,6 @@
-package samuelpalmer.sensorautorotation.notifications.service;
+package samuelpalmer.sensorautorotation.processes.service;
+
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 
 public interface ApplicationStatusDisplay {
 

@@ -1,8 +1,8 @@
-package samuelpalmer.sensorautorotation.notifications.service;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.common.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.ApplicationStatus;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 
 public class ApplicationStatusDisplayUpdater extends State {
 
@@ -35,7 +35,7 @@ public class ApplicationStatusDisplayUpdater extends State {
 				true,
 				calculator.side(),
 				calculator.isWaitingForSensor()
-			);;
+			);
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
 				display.update(applicationStatus);
