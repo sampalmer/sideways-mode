@@ -49,9 +49,9 @@ public class ApplicationStatusService extends Service {
 						Message message = null;
 						
 						if (enabledState.hasValue()) {
-							if (ApplicationInstanceManager.isApplicationRunning()) {
+							if (ServiceHolder.isServiceRunning()) {
 								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
-								ApplicationStatus lastStatus = ApplicationInstanceManager.applicationInstance().applicationStatusDisplayUpdater.getLastStatus();
+								ApplicationStatus lastStatus = ServiceHolder.getServiceInstance().applicationStatusDisplayUpdater.getLastStatus();
 								if (lastStatus != null)
 									message = lastStatus.asMessage();
 							}

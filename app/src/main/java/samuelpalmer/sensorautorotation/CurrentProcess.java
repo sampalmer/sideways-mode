@@ -13,7 +13,6 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.settings.application.Settings;
@@ -84,9 +83,7 @@ public class CurrentProcess extends Application {
 		// Must upgrade settings before any settings-related code runs.
 		new Upgrader().upgradeIfNecessary();
 		
-		if (isServiceProcess())
-			ApplicationInstanceManager.init();
-		else {
+		if (!isServiceProcess()) {
 			autoSyncConfigChanges();
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		}

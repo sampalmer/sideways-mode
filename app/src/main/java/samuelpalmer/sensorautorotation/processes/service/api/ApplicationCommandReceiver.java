@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.processes.service.ApplicationInstanceManager;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
+import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
+import samuelpalmer.sensorautorotation.processes.service.ServiceHolder;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -40,10 +41,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				
 				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
-				if (!ApplicationInstanceManager.isApplicationRunning())
-					commandIgnoredReason = "Application is not running";
+				if (!ServiceSettings.instance().persistentState().hasValue()) // No state means service has not started and is not enabled
+					// We could stop the service here just in case the OS considers it "started" but hasn't yet started it.
+					// But maybe that could contribute to the OS starting multiple simultaneous instances of the service?
+					commandIgnoredReason = "Service is not running";
 				else
-					ApplicationInstanceManager.turnOffApp("Received application command");
+					turnOffApp("Received application command");
 				
 				collapseNotificationShade(context);
 				
@@ -66,10 +69,21 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
 	}
 	
+	public static void turnOffApp(String reason) {
+		Log.i(TAG, "Turning off app. Reason: " + reason);
+		
+		if (ServiceSettings.instance().persistentState().hasValue()) {
+			ServiceSettings.instance().persistentState().remove();
+			ServiceController.updateServiceState(false);
+		}
+		else
+			Log.w(TAG, "Ignoring request to turn off app since it is already off");
+	}
+	
 	private void setUserSide(UserSide userSide) {
 		if (ServiceSettings.instance().persistentState().hasValue()) {
-			if (ApplicationInstanceManager.isApplicationRunning())
-				ApplicationInstanceManager.applicationInstance().setSide(userSide);
+			if (ServiceHolder.isServiceRunning())
+				ServiceHolder.getServiceInstance().setSide(userSide);
 			else
 				ServiceSettings.instance().persistentState().set(userSide);
 		}

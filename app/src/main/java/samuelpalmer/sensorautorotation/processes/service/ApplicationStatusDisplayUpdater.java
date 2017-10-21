@@ -1,5 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -7,11 +10,13 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 public class ApplicationStatusDisplayUpdater extends State {
 
 	private final OrientationCalculator calculator;
-	private final ApplicationStatusDisplay display;
+	private final Set<ApplicationStatusDisplay> displays;
 
-	public ApplicationStatusDisplayUpdater(OrientationCalculator calculator) {
+	public ApplicationStatusDisplayUpdater(OrientationCalculator calculator, RotationService service) {
 		this.calculator = calculator;
-		this.display = new ApplicationStatusDisplays();
+		displays = new HashSet<>();
+		displays.add(new NotificationStatusDisplay(service));
+		displays.add(new ApplicationStatusService.RemoteStatusDisplay());
 	}
 
 	@Override
@@ -23,8 +28,9 @@ public class ApplicationStatusDisplayUpdater extends State {
 	@Override
 	protected void stop() {
 		calculator.onAnythingChanged.unsubscribe(updateDisplays);
-
-		display.onApplicationStopped();
+		
+		for (ApplicationStatusDisplay display : displays)
+			display.onApplicationStopped();
 	}
 
 	private final EventHandler updateDisplays = new EventHandler() {
@@ -38,7 +44,9 @@ public class ApplicationStatusDisplayUpdater extends State {
 			);
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
-				display.update(applicationStatus);
+				for (ApplicationStatusDisplay display : displays)
+					display.update(applicationStatus);
+				
 				lastApplicationStatus = applicationStatus;
 			}
 		}
