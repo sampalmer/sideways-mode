@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
-import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
@@ -27,8 +26,6 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			ServiceSettings.instance().forcedOrientationAppPackages().set(command.forcedOrientationAppPackages);
 		}
 		
-		String commandIgnoredReason = null;
-		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
 				setUserSide(UserSide.LEFT);
@@ -41,13 +38,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				
 				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
-				if (!ServiceSettings.instance().persistentState().hasValue()) // No state means service has not started and is not enabled
-					// We could stop the service here just in case the OS considers it "started" but hasn't yet started it.
-					// But maybe that could contribute to the OS starting multiple simultaneous instances of the service?
-					commandIgnoredReason = "Service is not running";
-				else
-					turnOffApp("Received application command");
-				
+				turnOffApp("Received application command");
 				collapseNotificationShade(context);
 				
 				break;
@@ -64,9 +55,6 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			default:
 				throw new IllegalArgumentException("Unknown action: " + command.action);
 		}
-		
-		if (commandIgnoredReason != null)
-			Log.w(TAG, "Ignored action " + command.action + ". Reason: " + commandIgnoredReason);
 	}
 	
 	public static void turnOffApp(String reason) {
@@ -74,8 +62,13 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		
 		if (ServiceSettings.instance().persistentState().hasValue())
 			ServiceController.updateServiceState(false);
-		else
+		else {
+			// No state means service has not started and is not enabled.
+			// We could stop the service here just in case the OS considers it "started" but hasn't yet started it.
+			// But maybe that could contribute to the OS starting multiple simultaneous instances of the service?
+			
 			Log.w(TAG, "Ignoring request to turn off app since it is already off");
+		}
 	}
 	
 	private void setUserSide(UserSide userSide) {
