@@ -8,23 +8,25 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 
 public abstract class ServiceController {
 	
-	public static void updateServiceState(boolean enabled) {
+	public static void ensureStarted() {
 		Intent intent = new Intent(CurrentProcess.context(), RotationService.class);
 		
-		if (enabled) {
-			ComponentName name;
-			if (Build.VERSION.SDK_INT >= 26)
-				name = CurrentProcess.context().startForegroundService(intent); // So the OS doesn't block the service start due to it being a "background" app
-			else
-				name = CurrentProcess.context().startService(intent);
-			
-			if (name == null)
-				throw new RuntimeException("Service doesn't exist: " + intent.getComponent());
-		}
+		ComponentName name;
+		if (Build.VERSION.SDK_INT >= 26)
+			name = CurrentProcess.context().startForegroundService(intent); // So the OS doesn't block the service start due to it being a "background" app
 		else
-			// It's important that we try to stop the service even if it doesn't look like it's running
-			// since maybe the service has started but hasn't yet been stored in ServiceHolder.
-			CurrentProcess.context().stopService(intent);
+			name = CurrentProcess.context().startService(intent);
+		
+		if (name == null)
+			throw new RuntimeException("Service doesn't exist: " + intent.getComponent());
+	}
+	
+	public static void ensureStopped() {
+		Intent intent = new Intent(CurrentProcess.context(), RotationService.class);
+		
+		// It's important that we try to stop the service even if it doesn't look like it's running
+		// since maybe the OS considers the service started, but it hasn't yet actually started it.
+		CurrentProcess.context().stopService(intent);
 	}
 	
 }

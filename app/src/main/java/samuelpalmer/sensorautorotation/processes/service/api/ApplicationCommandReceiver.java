@@ -61,7 +61,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
 		
 		if (ServiceSettings.instance().persistentState().hasValue())
-			ServiceController.updateServiceState(false);
+			ServiceController.ensureStopped();
 		else {
 			// No state means service has not started and is not enabled.
 			// We could stop the service here just in case the OS considers it "started" but hasn't yet started it.
@@ -82,7 +82,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			ServiceSettings.instance().persistentState().set(userSide);
 			
 			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
-			ServiceController.updateServiceState(true);
+			ServiceController.ensureStarted();
 		}
 	}
 	

@@ -16,10 +16,12 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
 		
 		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-			if (ServiceSettings.instance().persistentState().hasValue())
+			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
+			if (ServiceSettings.instance().persistentState().hasValue()) {
 				// When Android updates an app, it kills the app's processes and doesn't restart the service.
 				// So we need to restart it ourselves.
-				ServiceController.updateServiceState(true);
+				ServiceController.ensureStarted();
+			}
 		}
 		else
 			Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
