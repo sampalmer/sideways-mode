@@ -28,9 +28,8 @@ public class ServiceRevivalManager extends State {
 		public void onLowMemory() {
 			Log.i(ServiceRevivalManager.class.getSimpleName(), "Detected low system RAM. The OS might kill this process soon.");
 			
-			// Intentionally not doing anything to recover here because:
-			// 1. The app should operate for as long as possible so screen orientation doesn't get stuck
-			// 2. Using hacks to keep the process alive could have side effects such as being the cause of Android having multiple simultaneous instances of the service.
+			// Not stopping the app here because the user hasn't asked to stop. If the OS kills the process, the user will just have to wait for the OS to restart the service.
+			// Not using hacks to keep the process alive because it could have side effects such as causing Android to having multiple simultaneous instances of the service.
 		}
 	};
 	
