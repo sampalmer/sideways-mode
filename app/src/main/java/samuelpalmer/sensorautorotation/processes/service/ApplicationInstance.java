@@ -31,6 +31,7 @@ public class ApplicationInstance extends State {
 	ActivityMonitor activityMonitor;
 	private ScreenOrientationUpdater screenUpdater;
 	private UserInteractivityMonitor userInteractivityMonitor;
+	private AppDisabler appDisabler;
 	
 	public ApplicationInstance() {
 		super();
@@ -53,6 +54,7 @@ public class ApplicationInstance extends State {
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings);
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor);
+		appDisabler = new AppDisabler();
 		
 		systemAutoRotationMonitor.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
@@ -60,6 +62,7 @@ public class ApplicationInstance extends State {
 		serviceRevivalManager.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementManager.ensureStarted();
+		appDisabler.ensureStarted();
 		
 		userInteractivityMonitor = new UserInteractivityMonitor();
 		userInteractivityMonitor.subscribe(userInteractivityListener);
@@ -71,6 +74,7 @@ public class ApplicationInstance extends State {
 		Log.i(TAG, "Application is stopping");
 		
 		userInteractivityMonitor.unsubscribe(userInteractivityListener);
+		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
 		activityMonitor.ensureStopped();

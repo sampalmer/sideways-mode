@@ -12,13 +12,10 @@ public abstract class ApplicationInstanceManager {
 	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private static boolean initialised = false;
 	private static ApplicationInstance applicationInstance;
-	private static AppDisabler appDisabler;
 	
 	public static void init() {
 		if (initialised)
 			throw new RuntimeException("Already initialised");
-		
-		appDisabler = new AppDisabler();
 		
 		ServiceRegistrar.instance.subscribe(updateApplicationState);
 		ServiceSettings.instance().persistentState().subscribe(updateApplicationState);
@@ -31,12 +28,6 @@ public abstract class ApplicationInstanceManager {
 	private static final EventHandler updateApplicationState = new EventHandler() {
 		@Override
 		public void update() {
-			if (ServiceSettings.instance().persistentState().hasValue())
-				appDisabler.ensureStarted();
-			else
-				// No need to waste system resources monitoring the device's state while this app is turned off.
-				appDisabler.ensureStopped();
-			
 			boolean isRunning = isApplicationRunning();
 			boolean shouldBeRunning = applicationShouldBeRunning();
 			
