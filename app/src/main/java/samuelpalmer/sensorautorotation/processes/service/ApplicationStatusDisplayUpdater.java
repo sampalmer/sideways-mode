@@ -1,22 +1,25 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.app.Notification;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusDisplayUpdater extends State {
 
 	private final OrientationCalculator calculator;
-	private final Set<ApplicationStatusDisplay> displays;
-
+	private final RotationService service;
+	private final ServiceNotification notificationBuilder;
+	
 	public ApplicationStatusDisplayUpdater(OrientationCalculator calculator, RotationService service) {
 		this.calculator = calculator;
-		displays = new HashSet<>();
-		displays.add(new NotificationStatusDisplay(service));
-		displays.add(new ApplicationStatusService.RemoteStatusDisplay());
+		this.service = service;
+		notificationBuilder = new ServiceNotification();
 	}
 
 	@Override
@@ -28,9 +31,6 @@ public class ApplicationStatusDisplayUpdater extends State {
 	@Override
 	protected void stop() {
 		calculator.onAnythingChanged.unsubscribe(updateDisplays);
-		
-		for (ApplicationStatusDisplay display : displays)
-			display.onApplicationStopped();
 	}
 
 	private final EventHandler updateDisplays = new EventHandler() {
@@ -44,8 +44,12 @@ public class ApplicationStatusDisplayUpdater extends State {
 			);
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
-				for (ApplicationStatusDisplay display : displays)
-					display.update(applicationStatus);
+				Notification notification = notificationBuilder.build(applicationStatus);
+				
+				// Running the service in the foreground reduces the chance of the process being killed.
+				// This is important, since the process being killed would result in the screen no longer rotating.
+				service.startForeground(NotificationIds.SERVICE, notification);
+				ApplicationStatusService.sendUpdate(applicationStatus);
 				
 				lastApplicationStatus = applicationStatus;
 			}

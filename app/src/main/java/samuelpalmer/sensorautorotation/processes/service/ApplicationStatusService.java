@@ -119,19 +119,7 @@ public class ApplicationStatusService extends Service {
 		}
 	};
 	
-	public static class RemoteStatusDisplay implements ApplicationStatusDisplay {
-
-		@Override
-		public void onApplicationStopped() {}
-
-		@Override
-		public void update(ApplicationStatus applicationStatus) {
-			sendUpdate(applicationStatus);
-		}
-
-	}
-	
-	private static void sendUpdate(ApplicationStatus applicationStatus) {
+	public static void sendUpdate(ApplicationStatus applicationStatus) {
 		Message message = applicationStatus.asMessage();
 		
 		Iterator<Messenger> iterator = clients.iterator();
