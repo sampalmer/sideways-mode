@@ -68,6 +68,7 @@ public class ApplicationCommand {
 	}
 	
 	public Intent asIntent(Context context) {
+		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
 		if (forcedOrientationAppPackages != null)
 			result.putExtra(null, forcedOrientationAppPackages.toArray(new String[forcedOrientationAppPackages.size()]));
