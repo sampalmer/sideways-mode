@@ -20,8 +20,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		ServiceHolder.onChange.subscribe(applicationChanged);
+		
+		ServiceRunningStateHolder.onStartedOrStopped.subscribe(applicationChanged);
 
 		Log.i(TAG, "Accessibility service created");
 	}
@@ -31,8 +31,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		ServiceHolder.onChange.unsubscribe(applicationChanged);
+		
+		ServiceRunningStateHolder.onStartedOrStopped.unsubscribe(applicationChanged);
 
 		Log.i(TAG, "Accessibility service destroyed");
 	}
@@ -52,8 +52,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		if (ServiceHolder.isServiceRunning())
-			ServiceHolder.getServiceInstance().activityMonitor.setCurrentActivity(null);
+		if (ServiceRunningStateHolder.isServiceRunning())
+			ServiceRunningStateHolder.getServiceInstance().activityMonitor.setCurrentActivity(null);
 
 		Log.i(TAG, "Accessibility service disconnected");
 		return super.onUnbind(intent);
@@ -73,7 +73,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	private void updateServiceInfo() {
 		AccessibilityServiceInfo config = new AccessibilityServiceInfo();
 
-		if (ServiceHolder.isServiceRunning()) {
+		if (ServiceRunningStateHolder.isServiceRunning()) {
 			config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 			config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 
@@ -89,10 +89,10 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
-		if (ServiceHolder.isServiceRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+		if (ServiceRunningStateHolder.isServiceRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
-				ServiceHolder.getServiceInstance().activityMonitor.setCurrentActivity(componentName);
+				ServiceRunningStateHolder.getServiceInstance().activityMonitor.setCurrentActivity(componentName);
 		}
 	}
 

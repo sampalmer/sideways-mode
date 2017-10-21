@@ -8,7 +8,7 @@ import android.util.Log;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
-import samuelpalmer.sensorautorotation.processes.service.ServiceHolder;
+import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -80,8 +80,8 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 	
 	private void setUserSide(UserSide userSide) {
 		if (ServiceSettings.instance().persistentState().hasValue()) {
-			if (ServiceHolder.isServiceRunning())
-				ServiceHolder.getServiceInstance().setSide(userSide);
+			if (ServiceRunningStateHolder.isServiceRunning())
+				ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
 			else
 				ServiceSettings.instance().persistentState().set(userSide);
 		}

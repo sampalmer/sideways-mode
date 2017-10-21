@@ -2,24 +2,24 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 
-public abstract class ServiceHolder {
+public abstract class ServiceRunningStateHolder {
 	
-	public static final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
+	public static final UpdatingEventRegistrar onStartedOrStopped = new UpdatingEventRegistrar();
 	
 	/**
 	 * I'm using a global instead of Android's binding mechanism.
 	 * This is because the service's process is mostly a single-threaded process and it
 	 * avoids the complexities of binding and inability to determine service running state.
 	 */
-	private static RotationService instance;
+	private static ServiceRunningState instance;
 	
-	public static void serviceStarted(RotationService service) {
+	public static void serviceStarted(ServiceRunningState service) {
 		if (instance != null)
 			throw new RuntimeException("Already have an instance");
 		
 		instance = service;
 		
-		onChange.report();
+		onStartedOrStopped.report();
 	}
 	
 	public static void serviceStopped() {
@@ -28,14 +28,14 @@ public abstract class ServiceHolder {
 		
 		instance = null;
 		
-		onChange.report();
+		onStartedOrStopped.report();
 	}
 	
 	public static boolean isServiceRunning() {
 		return instance != null;
 	}
 	
-	public static RotationService getServiceInstance() {
+	public static ServiceRunningState getServiceInstance() {
 		if (instance == null)
 			throw new IllegalStateException("The service is not running.");
 		
