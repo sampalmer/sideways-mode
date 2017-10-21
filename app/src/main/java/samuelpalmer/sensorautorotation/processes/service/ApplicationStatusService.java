@@ -18,7 +18,6 @@ import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.settings.application.Settings;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
-import samuelpalmer.sensorautorotation.values.UserSide;
 
 /**
  * Provides access to remotely monitor the state of the service.
@@ -28,7 +27,6 @@ public class ApplicationStatusService extends Service {
 	
 	private static final Set<Messenger> clients = new HashSet<>();
 	
-	private static final Settings.Setting<UserSide> enabledState = ServiceSettings.instance().persistentState();
 	private static final Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
 	private static boolean isSubscribed = false;
 	
@@ -48,13 +46,11 @@ public class ApplicationStatusService extends Service {
 					if (isNewSubscription) {
 						Message message = null;
 						
-						if (enabledState.hasValue()) {
-							if (ServiceRunningStateHolder.isServiceRunning()) {
-								//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
-								ApplicationStatus lastStatus = ServiceRunningStateHolder.getServiceInstance().applicationStatusDisplayUpdater.getLastStatus();
-								if (lastStatus != null)
-									message = lastStatus.asMessage();
-							}
+						if (ServiceRunningStateHolder.isServiceRunning()) {
+							//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
+							ApplicationStatus lastStatus = ServiceRunningStateHolder.getServiceInstance().applicationStatusDisplayUpdater.getLastStatus();
+							if (lastStatus != null)
+								message = lastStatus.asMessage();
 						}
 						else {
 							message = makeAppDisabledStatus().asMessage();
@@ -114,7 +110,7 @@ public class ApplicationStatusService extends Service {
 	private static final EventHandler enabledStateChanged = new EventHandler() {
 		@Override
 		public void update() {
-			if (!enabledState.hasValue())
+			if (!ServiceRunningStateHolder.isServiceRunning())
 				sendUpdate(makeAppDisabledStatus());
 		}
 	};
@@ -140,13 +136,13 @@ public class ApplicationStatusService extends Service {
 	
 	private static void syncInternalSubscriptions() {
 		if (clients.size() > 0 && !isSubscribed) {
-			enabledState.subscribe(enabledStateChanged);
+			ServiceRunningStateHolder.onStartedOrStopped.subscribe(enabledStateChanged);
 			error.subscribe(enabledStateChanged);
 			isSubscribed = true;
 		}
 		else if (clients.size() == 0 && isSubscribed) {
 			error.unsubscribe(enabledStateChanged);
-			enabledState.unsubscribe(enabledStateChanged);
+			ServiceRunningStateHolder.onStartedOrStopped.unsubscribe(enabledStateChanged);
 			isSubscribed = false;
 		}
 	}
