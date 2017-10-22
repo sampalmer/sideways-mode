@@ -49,7 +49,6 @@ public abstract class EnvironmentErrorManager {
 			.setContentIntent(error.showError())
 			.setContentTitle(error.getSummary())
 			.setContentText(CurrentProcess.context().getText(R.string.app_disabled_view_error))
-			.setAutoCancel(true)
 			.setDeleteIntent(clearIntentIntent)
 			.setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)

@@ -50,7 +50,7 @@ public class GenericError extends EnvironmentError {
 	
 	@Override
 	public PendingIntent showError() {
-		return MessageDialogActivity.makePendingIntent(summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
+		return MessageDialogActivity.makePendingIntent(summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, true);
 	}
 	
 }

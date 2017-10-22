@@ -153,7 +153,7 @@ public class Upgrader {
 	
 	private void notify(String upgradeMessage) {
 		String messageTitle = CurrentProcess.context().getString(R.string.upgrade_summary, CurrentProcess.context().getText(R.string.app_name_full));
-		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE);
+		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
 		
 		Notification notification = NotificationBuilderFactory.create()
 				.setSmallIcon(R.drawable.notification_update)

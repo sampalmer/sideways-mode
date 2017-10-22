@@ -6,7 +6,6 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 public abstract class UiActivity extends AppCompatActivity {
 	
@@ -19,7 +18,11 @@ public abstract class UiActivity extends AppCompatActivity {
 		if (startupErrorString != 0) {
 			//Not letting the user go any further since they shouldn't have installed the app
 			Log.w(getClass().getSimpleName(), CurrentProcess.context().getText(startupErrorString).toString());
-			startActivity(new Intent(this, DeviceUnsupportedActivity.class).putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString));
+			Intent intent = new Intent(this, DeviceUnsupportedActivity.class)
+				.putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString)
+				.putExtra(DeviceUnsupportedActivity.EXTRA_IS_ERROR, false)
+			;
+			startActivity(intent);
 			
 			finish();
 			return;
