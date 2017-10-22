@@ -13,10 +13,11 @@ import android.view.MenuItem;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 
-public class MainSettingsActivity extends SnackbarStatusActivity {
+public class MainSettingsActivity extends UiActivity {
 	
 	private DrawerLayout drawerLayout;
 	private NavigationView navigation;

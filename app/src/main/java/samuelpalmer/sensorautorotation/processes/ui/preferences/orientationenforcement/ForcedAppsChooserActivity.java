@@ -4,10 +4,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SnackbarStatusActivity;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 //TODO: Keep the list of installed apps up-to-date (the user might install, uninstall, disable, or enable apps)
-public class ForcedAppsChooserActivity extends SnackbarStatusActivity {
+public class ForcedAppsChooserActivity extends UiActivity {
 
 	private ProgressListView list;
 	private LoadInstalledAppsTask loader;

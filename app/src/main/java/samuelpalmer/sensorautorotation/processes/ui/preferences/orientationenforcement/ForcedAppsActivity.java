@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SnackbarStatusActivity;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
 
-public class ForcedAppsActivity extends SnackbarStatusActivity {
+public class ForcedAppsActivity extends UiActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
