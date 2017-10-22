@@ -101,6 +101,6 @@ public class ReportProblemActivity extends UiActivity {
 			finish();
 		}
 		else
-			Toast.makeText(this, getResources().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), getResources().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT).show();
 	}
 }

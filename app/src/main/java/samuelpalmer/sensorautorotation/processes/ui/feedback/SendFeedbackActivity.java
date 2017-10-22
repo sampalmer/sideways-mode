@@ -30,7 +30,7 @@ public class SendFeedbackActivity extends UiActivity {
 					try {
 						startActivity(intent);
 					} catch (ActivityNotFoundException ex) {
-						Toast.makeText(SendFeedbackActivity.this, R.string.error_no_market_app, Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), R.string.error_no_market_app, Toast.LENGTH_LONG).show();
 					}
 
 					break;
