@@ -72,16 +72,16 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 	}
 	
 	private void setUserSide(UserSide userSide) {
-		if (ServiceSettings.instance().persistentState().hasValue()) {
-			if (ServiceRunningStateHolder.isServiceRunning())
-				ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
-			else
-				ServiceSettings.instance().persistentState().set(userSide);
-		}
+		if (ServiceRunningStateHolder.isServiceRunning())
+			ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
 		else {
 			ServiceSettings.instance().persistentState().set(userSide);
 			
 			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
+			// It's possible for the service to not be running but still have its state. Examples:
+			// * User force stops the app while the service is running.
+			// * The service crashed and the OS didn't restart it.
+			// * User's device dies while the service is running.
 			ServiceController.ensureStarted();
 		}
 	}
