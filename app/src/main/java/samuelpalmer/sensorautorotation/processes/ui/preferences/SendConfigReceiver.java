@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.Collections;
 import java.util.Set;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
@@ -34,7 +36,9 @@ public class SendConfigReceiver extends BroadcastReceiver {
 	}
 	
 	public static Set<String> getConfigToSync() {
-		return ApplicationSettings.instance().forcedOrientationAppPackages().get();
+		return ApplicationSettings
+			.getSharedPreferences(CurrentProcess.context())
+			.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
 	}
 	
 }

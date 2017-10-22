@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
@@ -80,7 +81,11 @@ public class ServiceRunningState extends State {
 		applicationStatusDisplayUpdater.ensureStopped();
 		serviceRevivalManager.ensureStopped();
 		
-		ServiceSettings.instance().persistentState().remove();
+		ServiceSettings
+			.getSharedPreferences(CurrentProcess.context())
+			.edit()
+			.remove(ServiceSettings.KEY_PERSISTENT_STATE)
+			.apply();
 	}
 	
 	private final EventHandler userInteractivityListener = new EventHandler() {

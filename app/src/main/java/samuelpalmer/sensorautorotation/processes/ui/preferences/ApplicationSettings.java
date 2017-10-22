@@ -1,37 +1,30 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.settings.application.BooleanSetting;
-import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
-import samuelpalmer.sensorautorotation.settings.application.StringSetSetting;
 
-public class ApplicationSettings extends Settings {
-
-	public static String sharedPreferencesName() {
-		return CurrentProcess.context().getPackageName() + "_preferences";
-	}
-
-	private static ApplicationSettings instance;
+/**
+ * The app's main {@link SharedPreferences} file. For use by the UI process only.
+ * This is intentionally kept simple so that {@link SharedPreferences} access is consistent with
+ * other apps.
+ */
+public abstract class ApplicationSettings {
 	
-	public static ApplicationSettings instance() {
-		if (instance == null) {
-			if (CurrentProcess.isServiceProcess())
-				throw new RuntimeException("Application settings accessed outside of the UI process");
-			
-			instance = new ApplicationSettings(CurrentProcess.context().getSharedPreferences(sharedPreferencesName(), 0));
-		}
+	public static SharedPreferences getSharedPreferences(Context context) {
+		String name = getFileName(context);
+		return context.getSharedPreferences(name, Context.MODE_PRIVATE);
+	}
+	
+	/**
+	 * Name of the {@link android.content.SharedPreferences} file containing these preferences.
+	 */
+	public static String getFileName(Context context) {
+		if (CurrentProcess.isServiceProcess())
+			throw new RuntimeException("Application settings accessed outside of the UI process");
 		
-		return instance;
-	}
-	
-	private ApplicationSettings(SharedPreferences sharedPreferences) {
-		super(sharedPreferences);
+		return context.getPackageName() + "_preferences";
 	}
 	
 	/*
@@ -43,13 +36,13 @@ public class ApplicationSettings extends Settings {
 	/**
 	 * Whether the user has viewed the startup instructions screen.
 	 */
-	public Setting<Boolean> userInstructed() { return new Setting<>(new BooleanSetting(), "userInstructed", false); }
+	public static final String KEY_USER_INSTRUCTED = "userInstructed"; // Defaults to false
 	
 	/**
 	 * Used for upgrading settings data when upgrading to a newer version of the app.
 	 */
-	public Setting<Integer> appVersion() { return new Setting<>(new IntegerSetting(), "appVersion", null); }
+	public static final String KEY_APP_VERSION = "appVersion";
 	
-	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
+	public static final String KEY_FORCED_ORIENTATION_APP_PACKAGES = "forcedOrientationAppPackages";
 	
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
@@ -23,7 +24,11 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		
 		if (command.forcedOrientationAppPackages != null) {
 			Log.i(TAG, "Command included config. Applying new config.");
-			ServiceSettings.instance().forcedOrientationAppPackages().set(command.forcedOrientationAppPackages);
+			
+			ServiceSettings.getSharedPreferences(context)
+				.edit()
+				.putStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, command.forcedOrientationAppPackages)
+				.apply();
 		}
 		
 		switch (command.action) {
@@ -60,7 +65,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 	public static void turnOffApp(String reason) {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
 		
-		if (ServiceSettings.instance().persistentState().hasValue())
+		if (ServiceSettings.getSharedPreferences(CurrentProcess.context()).contains(ServiceSettings.KEY_PERSISTENT_STATE))
 			ServiceController.ensureStopped();
 		else {
 			// No state means service has not started and is not enabled.
@@ -75,7 +80,11 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		if (ServiceRunningStateHolder.isServiceRunning())
 			ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
 		else {
-			ServiceSettings.instance().persistentState().set(userSide);
+			ServiceSettings
+				.getSharedPreferences(CurrentProcess.context())
+				.edit()
+				.putString(ServiceSettings.KEY_PERSISTENT_STATE, userSide.name())
+				.apply();
 			
 			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
 			// It's possible for the service to not be running but still have its state. Examples:

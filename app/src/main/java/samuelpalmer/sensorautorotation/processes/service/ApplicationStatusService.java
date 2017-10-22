@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -14,9 +15,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 /**
@@ -27,7 +28,7 @@ public class ApplicationStatusService extends Service {
 	
 	private static final Set<Messenger> clients = new HashSet<>();
 	
-	private static final Settings.Setting<String> error = ServiceSettings.instance().lastErrorJson();
+	private static final SharedPreferences prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
 	private static boolean isSubscribed = false;
 	
 	public static final int MSG_SUBSCRIBE = 1;
@@ -86,8 +87,10 @@ public class ApplicationStatusService extends Service {
 	}
 	
 	private static ApplicationStatus makeAppDisabledStatus() {
+		String errorJson = prefs.getString(ServiceSettings.KEY_LAST_ERROR_JSON, null);
+		
 		return new ApplicationStatus(
-			error.hasValue() ? EnvironmentError.fromJson(error.get()) : null,
+			errorJson == null ? null : EnvironmentError.fromJson(errorJson),
 			false,
 			null,
 			false
@@ -137,14 +140,22 @@ public class ApplicationStatusService extends Service {
 	private static void syncInternalSubscriptions() {
 		if (clients.size() > 0 && !isSubscribed) {
 			ServiceRunningStateHolder.onStartedOrStopped.subscribe(enabledStateChanged);
-			error.subscribe(enabledStateChanged);
+			prefs.registerOnSharedPreferenceChangeListener(errorChanged);
 			isSubscribed = true;
 		}
 		else if (clients.size() == 0 && isSubscribed) {
-			error.unsubscribe(enabledStateChanged);
+			prefs.unregisterOnSharedPreferenceChangeListener(errorChanged);
 			ServiceRunningStateHolder.onStartedOrStopped.unsubscribe(enabledStateChanged);
 			isSubscribed = false;
 		}
 	}
+	
+	private static final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
+				enabledStateChanged.update();
+		}
+	};
 	
 }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,32 +16,27 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Set;
+import java.util.Collections;
 
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
-import samuelpalmer.sensorautorotation.settings.application.SettingsInitialiser;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
 
 public class MainSettingsFragment extends PreferenceFragment {
 	
 	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
-	private Settings.Setting<Set<String>> forcedApps;
+	private SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.sharedPreferencesName());
+		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.getFileName(CurrentProcess.context()));
 		
-		//We're not using the built-in way of specifying default preference values, so they must be explicitly set in order to show correctly in the settings UI
-		new SettingsInitialiser(ApplicationSettings.instance()).ensureInitialised();
-
 		addPreferencesFromResource(R.xml.preferences);
 		
 		Preference quickSettingPreference = findPreference("quick_setting");
@@ -134,9 +130,8 @@ public class MainSettingsFragment extends PreferenceFragment {
 		if (controlsSection.getPreferenceCount() == 0)
 			removePreference(controlsSection);
 		
-		//TODO: move all of this preference summary updating stuff into its own class
-		forcedApps = ApplicationSettings.instance().forcedOrientationAppPackages();
-		forcedAppsPreference = findPreference(forcedApps.getKey());
+		prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+		forcedAppsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
 		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 	
@@ -198,28 +193,36 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onStart() {
 		super.onStart();
 		
-		accessibilityServiceEnabledStateMonitor.subscribe(forcedAppsChanged);
-		forcedApps.subscribe(forcedAppsChanged);
+		accessibilityServiceEnabledStateMonitor.subscribe(accessibilityServiceChanged);
+		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
 		updateForcedApps();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-
-		forcedApps.unsubscribe(forcedAppsChanged);
-		accessibilityServiceEnabledStateMonitor.unsubscribe(forcedAppsChanged);
+		
+		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
+		accessibilityServiceEnabledStateMonitor.unsubscribe(accessibilityServiceChanged);
 	}
 	
-	private final EventHandler forcedAppsChanged = new EventHandler() {
+	private final EventHandler accessibilityServiceChanged = new EventHandler() {
 		@Override
 		public void update() {
 			updateForcedApps();
 		}
 	};
-
+	
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+				updateForcedApps();
+		}
+	};
+	
 	private void updateForcedApps() {
-		final int quantity = forcedApps.get().size();
+		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet()).size();
 
 		if (quantity > 0 && !(accessibilityServiceEnabledStateMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(getActivity())))
 			forcedAppsPreference.setSummary(R.string.permission_needed_summary);

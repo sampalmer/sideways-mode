@@ -26,14 +26,23 @@ public abstract class EnvironmentErrorManager {
 		
 		postNotification(error);
 		
-		ServiceSettings.instance().lastErrorJson().set(error.toJson());
+		ServiceSettings
+			.getSharedPreferences(CurrentProcess.context())
+			.edit()
+			.putString(ServiceSettings.KEY_LAST_ERROR_JSON, error.toJson())
+			.apply();
 		
 		new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(CurrentProcess.context());
 	}
 	
 	public static void clear() {
 		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
-		ServiceSettings.instance().lastErrorJson().remove();
+		
+		ServiceSettings
+			.getSharedPreferences(CurrentProcess.context())
+			.edit()
+			.remove(ServiceSettings.KEY_LAST_ERROR_JSON)
+			.apply();
 	}
 	
 	private static void postNotification(EnvironmentError error) {

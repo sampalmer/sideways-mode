@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.upgrade;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.util.SparseArray;
@@ -19,8 +20,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
-import samuelpalmer.sensorautorotation.settings.application.Settings.Setting;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
 import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
@@ -41,27 +40,30 @@ public class Upgrader {
 	}
 
 	public void upgradeIfNecessary() {
-		Setting<Integer> settingsAppVersion;
+		SharedPreferences prefs;
+		String settingsAppVersionKey;
 		Integer lastAppVersion;
 		
 		if (CurrentProcess.isServiceProcess()) {
-			settingsAppVersion = ServiceSettings.instance().appVersion();
-			lastAppVersion = settingsAppVersion.tryGet();
+			prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
+			settingsAppVersionKey = ServiceSettings.KEY_APP_VERSION;
+			lastAppVersion = prefs.contains(settingsAppVersionKey) ? prefs.getInt(settingsAppVersionKey, -1) : null;
 			
 			if (lastAppVersion == null) {
 				// Either the app is newly installed or the user was using a version prior to 57, in which the app version wasn't stored in the service settings.
-				lastAppVersion = guessLastAppVersion(ServiceSettings.instance());
+				lastAppVersion = guessLastAppVersion(prefs);
 				if (lastAppVersion != null)
 					Log.i(Upgrader.class.getSimpleName(), "Guessing that app was previously on version " + lastAppVersion);
 			}
 		}
 		else {
-			settingsAppVersion = ApplicationSettings.instance().appVersion();
-			lastAppVersion = settingsAppVersion.tryGet();
+			prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+			settingsAppVersionKey = ApplicationSettings.KEY_APP_VERSION;
+			lastAppVersion = prefs.contains(settingsAppVersionKey) ? prefs.getInt(settingsAppVersionKey, -1) : null;
 			
 			if (lastAppVersion == null)
 				// The settings app version was stored in a different setting prior to v57.
-				lastAppVersion = ApplicationSettings.instance().new Setting<Integer>(new IntegerSetting(), "lastVersionUserInstructedAbout", null).tryGet();
+				lastAppVersion = prefs.contains("lastVersionUserInstructedAbout") ? prefs.getInt("lastVersionUserInstructedAbout", -1) : null;
 		}
 		
 		if (
@@ -77,7 +79,7 @@ public class Upgrader {
 				Log.w(Upgrader.class.getSimpleName(), "Warning: user is downgrading from a later version. Clearing settings.");
 				
 				if (CurrentProcess.isServiceProcess()) {
-					ServiceSettings.instance().prefs.edit().clear().apply();
+					prefs.edit().clear().apply();
 					try {
 						new SystemSettings().userRotation.set(Orientation.NATURAL);
 					} catch (SystemSettingAccessDeniedException e) {
@@ -98,15 +100,15 @@ public class Upgrader {
 						Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
 						
 						if (CurrentProcess.isServiceProcess()) {
-							migration.upgradeServiceProcessData(ServiceSettings.instance());
+							migration.upgradeServiceProcessData(prefs);
 						}
 						else {
 							// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
-							CharSequence message = migration.getMessage(ApplicationSettings.instance());
+							CharSequence message = migration.getMessage(prefs);
 							if (message != null)
 								upgradeMessage.append(message);
 							
-							migration.upgradeUiProcessData(ApplicationSettings.instance());
+							migration.upgradeUiProcessData(prefs);
 						}
 					}
 				}
@@ -114,20 +116,20 @@ public class Upgrader {
 				if (upgradeMessage.length() != 0)
 					notify(upgradeMessage.toString());
 				
-				settingsAppVersion.set(newAppVersion);
+				prefs.edit().putInt(settingsAppVersionKey, newAppVersion).apply();
 			}
 		}
 		else if (lastAppVersion == null)
 			// So that we know the settings version when we next upgrade.
-			settingsAppVersion.set(newAppVersion);
+			prefs.edit().putInt(settingsAppVersionKey, newAppVersion).apply();
 	}
 	
 	/**
 	 * App versions prior to 57 didn't store the app version number in the service process's preferences.
 	 * This method guesses the version based on the contents of the settings.
 	 */
-	private Integer guessLastAppVersion(ServiceSettings settings) {
-		Map<String, ?> allPreferences = settings.prefs.getAll();
+	private Integer guessLastAppVersion(SharedPreferences serviceSettings) {
+		Map<String, ?> allPreferences = serviceSettings.getAll();
 		
 		if (!allPreferences.isEmpty()) {
 			if (

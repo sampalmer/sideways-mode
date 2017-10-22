@@ -1,38 +1,25 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import java.util.HashSet;
-import java.util.Set;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.EnumSetting;
-import samuelpalmer.sensorautorotation.settings.application.IntegerSetting;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
-import samuelpalmer.sensorautorotation.settings.application.StringSetSetting;
-import samuelpalmer.sensorautorotation.settings.application.StringSetting;
-import samuelpalmer.sensorautorotation.values.UserSide;
 
 /**
  * Holds persistent service state. Not intended for backup or sync.
  * Only for use within the service process.
+ *
+ * This is intentionally kept simple so that {@link SharedPreferences} access is consistent with
+ * other apps.
  */
-public class ServiceSettings extends Settings {
+public abstract class ServiceSettings {
 	
-	private static ServiceSettings instance;
-	
-	public static ServiceSettings instance() {
-		if (instance == null) {
-			if (!CurrentProcess.isServiceProcess())
-				throw new RuntimeException("Service settings accessed outside of the service process");
-			
-			instance = new ServiceSettings();
-		}
+	public static SharedPreferences getSharedPreferences(Context context) {
+		if (!CurrentProcess.isServiceProcess())
+			throw new RuntimeException("Service settings accessed outside of the service process");
 		
-		return instance;
-	}
-	
-	private ServiceSettings() {
-		super(CurrentProcess.context().getSharedPreferences("service", 0));
+		return context.getSharedPreferences("service", Context.MODE_PRIVATE);
 	}
 	
 	// NOTE: If you change preference config, add a migration to the "Migrations" class
@@ -40,21 +27,21 @@ public class ServiceSettings extends Settings {
 	/**
 	 * Has no value if the service is off. Otherwise set to the side the user is on.
 	 */
-	public Setting<UserSide> persistentState() { return new Setting<>(new EnumSetting<>(UserSide.class), "persistentState", null); }
+	public static final String KEY_PERSISTENT_STATE = "persistentState";
 	
 	/**
 	 * The error, if any, that occurred when the service was last running.
 	 */
-	public Setting<String> lastErrorJson() { return new Setting<>(new StringSetting(), "lastError", null); }
+	public static final String KEY_LAST_ERROR_JSON = "lastError";
 	
 	/**
 	 * Used for upgrading settings data when upgrading to a newer version of the app.
 	 */
-	public Setting<Integer> appVersion() { return new Setting<>(new IntegerSetting(), "appVersion", null); }
+	public static final String KEY_APP_VERSION = "appVersion";
 	
 	/**
-	 * Cached copy of {@link ApplicationSettings#forcedOrientationAppPackages()} for use in the service process.
+	 * Cached copy of {@link ApplicationSettings#KEY_FORCED_ORIENTATION_APP_PACKAGES} for use in the service process.
 	 */
-	public Setting<Set<String>> forcedOrientationAppPackages() { return new Setting<>(new StringSetSetting(), "forcedOrientationAppPackages", new HashSet<String>(0)); }
+	public static final String KEY_FORCED_ORIENTATION_APP_PACKAGES = "forcedOrientationAppPackages";
 	
 }

@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
 import android.content.ComponentName;
+import android.content.SharedPreferences;
 
+import java.util.Collections;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -10,7 +12,6 @@ import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 public class OrientationEnforcementMonitor extends State {
 
@@ -18,7 +19,7 @@ public class OrientationEnforcementMonitor extends State {
 	private final PermissionNotificationManager permissionNotificationManager;
 	private final ScreenOrientationEnforcer orientationEnforcer;
 	private final LockScreenMonitor lockScreenDetector;
-	private final Settings.Setting<Set<String>> forcedOrientationAppPackagesSetting;
+	private final SharedPreferences prefs;
 	private Set<String> orientationEnforcedPackages;
 
 	public OrientationEnforcementMonitor(ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
@@ -26,14 +27,14 @@ public class OrientationEnforcementMonitor extends State {
 		this.permissionNotificationManager = permissionNotificationManager;
 		orientationEnforcer = new ScreenOrientationEnforcer(CurrentProcess.context());
 		this.lockScreenDetector = new LockScreenMonitor(CurrentProcess.context());
-		forcedOrientationAppPackagesSetting = ServiceSettings.instance().forcedOrientationAppPackages();
+		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
 	}
 
 	@Override
 	protected void start() {
 		lockScreenDetector.subscribe(enforcementUpdater);
 		activityMonitor.onChange().subscribe(enforcementUpdater);
-		forcedOrientationAppPackagesSetting.subscribe(forcedAppsChanged);
+		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
 
 		updatePackages();
 		tryToStartEnforcer();
@@ -48,22 +49,26 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void stop() {
-		forcedOrientationAppPackagesSetting.unsubscribe(forcedAppsChanged);
+		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
 		activityMonitor.onChange().unsubscribe(enforcementUpdater);
 		lockScreenDetector.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}
 
-	private final EventHandler forcedAppsChanged = new EventHandler() {
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+
 		@Override
-		public void update() {
-			updatePackages();
-			updateEnforcement();
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+				updatePackages();
+				updateEnforcement();
+			}
 		}
+		
 	};
 
 	private void updatePackages() {
-		orientationEnforcedPackages = forcedOrientationAppPackagesSetting.get();
+		orientationEnforcedPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
 	}
 
 	private void updateEnforcement() {

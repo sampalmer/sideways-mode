@@ -1,22 +1,22 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import java.util.Set;
+import java.util.Collections;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 
 public class ForcedAppsFragment extends PreferenceFragment {
 
 	private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-	private Settings.Setting<Set<String>> apps;
+	private SharedPreferences prefs;
 	private Preference appsPreference;
 
 	@Override
@@ -24,8 +24,8 @@ public class ForcedAppsFragment extends PreferenceFragment {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences_overridden_apps);
 		
-		apps = ApplicationSettings.instance().forcedOrientationAppPackages();
-		appsPreference = findPreference(apps.getKey());
+		prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+		appsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
 
 		ForcedAppsPermissionFragment permissionFragment = (ForcedAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
 		if (permissionFragment == null) {
@@ -44,25 +44,26 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	public void onStart() {
 		super.onStart();
 
-		apps.subscribe(appsChanged);
+		prefs.registerOnSharedPreferenceChangeListener(appsChanged);
 		updateAppsSummary();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		apps.unsubscribe(appsChanged);
+		prefs.unregisterOnSharedPreferenceChangeListener(appsChanged);
 	}
 
-	private final EventHandler appsChanged = new EventHandler() {
+	private final SharedPreferences.OnSharedPreferenceChangeListener appsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
-		public void update() {
-			updateAppsSummary();
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+				updateAppsSummary();
 		}
 	};
 
 	private void updateAppsSummary() {
-		final int quantity = apps.get().size();
+		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet()).size();
 		final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
 		appsPreference.setSummary(quantityString);
 	}

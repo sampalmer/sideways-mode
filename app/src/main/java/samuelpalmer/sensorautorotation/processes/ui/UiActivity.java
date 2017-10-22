@@ -29,7 +29,10 @@ public abstract class UiActivity extends AppCompatActivity {
 		}
 		
 		if (!(this instanceof InstructionsActivity)) {
-			boolean userInstructed = ApplicationSettings.instance().userInstructed().get();
+			boolean userInstructed = ApplicationSettings
+				.getSharedPreferences(CurrentProcess.context())
+				.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
+			
 			if (!userInstructed) {
 				Intent intent = new Intent(CurrentProcess.context(), InstructionsActivity.class)
 					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);

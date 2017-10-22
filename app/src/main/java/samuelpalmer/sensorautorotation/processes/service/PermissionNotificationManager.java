@@ -4,7 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
+import java.util.Collections;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
@@ -19,7 +21,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -27,7 +28,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class PermissionNotificationManager extends State {
 
 	private final NotificationManager notificationManager;
-	private final Settings.Setting<Set<String>> forcedApps;
+	private final SharedPreferences prefs;
 	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
 	
 	private boolean isRunning = false;
@@ -35,37 +36,45 @@ public class PermissionNotificationManager extends State {
 	public PermissionNotificationManager() {
 		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
 		
-		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
+		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
 	}
 
 	@Override
 	protected void start() {
-		forcedApps.subscribe(subscriber);
+		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
 		accessibilityServiceMonitor.subscribe(subscriber);
 		
 		isRunning = true;
 		check();
-	}
-
+}
+	
 	@Override
 	protected void stop() {
 		isRunning = false;
 		check();
-
+		
 		accessibilityServiceMonitor.unsubscribe(subscriber);
-		forcedApps.unsubscribe(subscriber);
+		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
 	}
 
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+				check();
+		}
+	};
+	
 	private final EventHandler subscriber = new EventHandler() {
 		@Override
 		public void update() {
 			check();
 		}
 	};
-
+	
 	public void check() {
-		if (isRunning && !forcedApps.get().isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context()))) {
+		if (needsPermission()) {
 			PendingIntent forcedAppsIntent = PendingIntent.getActivity(
 				CurrentProcess.context(),
 				PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION,
@@ -87,5 +96,15 @@ public class PermissionNotificationManager extends State {
 		else
 			notificationManager.cancel(NotificationIds.PERMISSION);
 	}
-
+	
+	private boolean needsPermission() {
+		if (isRunning) {
+			Set<String> forcedAppPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
+			if (!forcedAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context())))
+				return true;
+		}
+		
+		return false;
+	}
+	
 }

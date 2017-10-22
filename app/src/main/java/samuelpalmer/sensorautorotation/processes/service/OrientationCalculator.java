@@ -1,17 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class OrientationCalculator {
 	
-	private final Settings.Setting<UserSide> state;
+	private final SharedPreferences prefs;
 	
 	@NonNull
 	private Orientation device;
@@ -21,7 +22,7 @@ public class OrientationCalculator {
 	public final UpdatingEventRegistrar onAnythingChanged;
 
 	public OrientationCalculator(ScreenRotationMonitor screen) {
-		this.state = ServiceSettings.instance().persistentState();
+		this.prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
 		
 		// This infers the device orientation from the screen orientation so we have something to start with.
 		// It might be better to infer it from USER_ROTATION if system auto rotation was off.
@@ -31,7 +32,7 @@ public class OrientationCalculator {
 	}
 	
 	public @NonNull Orientation user() {
-		return state.get().orientation;
+		return side().orientation;
 	}
 	
 	public void setDevice(@Nullable Orientation newDevice) {
@@ -56,11 +57,19 @@ public class OrientationCalculator {
 	}
 	
 	public UserSide side() {
-		return state.get();
+		String name = prefs.getString(ServiceSettings.KEY_PERSISTENT_STATE, null);
+		if (name == null)
+			throw new RuntimeException("Service has no state; don't know user side.");
+		
+		return UserSide.valueOf(name);
 	}
 	
 	public void setSide(UserSide userSide) {
-		state.set(userSide);
+		prefs
+			.edit()
+			.putString(ServiceSettings.KEY_PERSISTENT_STATE, userSide.name())
+			.apply();
+		
 		reportChange();
 	}
 }

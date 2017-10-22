@@ -1,12 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
+import android.content.SharedPreferences;
+
 import java.util.Set;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 /**
  * Turns the screen orientation enforcement feature on and off as needed.
@@ -18,38 +19,43 @@ import samuelpalmer.sensorautorotation.settings.application.Settings;
 public class OrientationEnforcementManager extends State {
 
 	private final OrientationEnforcementMonitor monitor;
-	private final Settings.Setting<Set<String>> forcedApps;
+	private final SharedPreferences prefs;
 	private final PermissionNotificationManager permissionNotificationManager;
-
+	
 	public OrientationEnforcementManager(ActivityMonitor activityMonitor) {
 		permissionNotificationManager = new PermissionNotificationManager();
 		monitor = new OrientationEnforcementMonitor(activityMonitor, permissionNotificationManager);
-		forcedApps = ServiceSettings.instance().forcedOrientationAppPackages();
+		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
 	}
 
 	@Override
 	protected void start() {
 		permissionNotificationManager.ensureStarted();
-		forcedApps.subscribe(forcedAppsChanged);
+		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+		
 		updateMonitorState();
 	}
 
 	@Override
 	protected void stop() {
-		forcedApps.unsubscribe(forcedAppsChanged);
+		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
 		monitor.ensureStopped();
 		permissionNotificationManager.ensureStopped();
 	}
-
-	private final EventHandler forcedAppsChanged = new EventHandler() {
+	
+	// This must be stored in a field to prevent garbage collection.
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
-		public void update() {
-			updateMonitorState();
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+				updateMonitorState();
 		}
 	};
-
+	
 	private void updateMonitorState() {
-		if (!forcedApps.get().isEmpty())
+		Set<String> forcedAppPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, null);
+		
+		if (forcedAppPackages != null && !forcedAppPackages.isEmpty())
 			monitor.ensureStarted();
 		else
 			monitor.ensureStopped();

@@ -4,18 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
-import java.util.Set;
-
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -84,7 +81,12 @@ public class CurrentProcess extends Application {
 		new Upgrader().upgradeIfNecessary();
 		
 		if (!isServiceProcess()) {
-			autoSyncConfigChanges();
+			/*
+			  Automatically pushes changes to user preferences from the UI process to the service process.
+			  This ensures preference changes made by the user appear to instantly take effect.
+			 */
+			ApplicationSettings.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+			
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		}
 	}
@@ -92,28 +94,21 @@ public class CurrentProcess extends Application {
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
-
+		
+		// This isn't called on real devices, so there's no need to do cleanup work here.
+		
 		Log.i(TAG, "Process terminated");
 	}
 	
-	/**
-	 * Automatically pushes changes to user preferences from the UI process to the service process.
-	 * This ensures preference changes made by the user appear to instantly take effect.
-	 */
-	private static void autoSyncConfigChanges() {
-		// Need to hold a copy of the setting so the listener doesn't get garbage collected.
-		forcedOrientationAppPackages = ApplicationSettings.instance().forcedOrientationAppPackages();
-		
-		forcedOrientationAppPackages.subscribe(new EventHandler() {
-			@Override
-			public void update() {
-				Log.i(TAG, "User preferences changed. Sending to service process.");
-				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(context());
-			}
-		});
-	}
-	
 	// Do not use. This is just used to prevent garbage collection of the listener.
-	private static Settings.Setting<Set<String>> forcedOrientationAppPackages;
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+				Log.i(TAG, "User preferences changed. Sending to service process.");
+				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(CurrentProcess.this);
+			}
+		}
+	};
 	
 }

@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,7 +19,6 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.application.Settings;
 
 class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
 
@@ -84,26 +84,32 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		list.adapter.addAll(result);
 
 		//TODO: Maybe move all of this setting code somewhere else?
-		final Settings.Setting<Set<String>> setting = ApplicationSettings.instance().forcedOrientationAppPackages();
-		Set<String> forcedAppPackages = setting.get();
+		final SharedPreferences prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+		Set<String> forcedAppPackages = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
 		for (int i = 0; i < result.size(); ++i) {
 			InstalledApp app = result.get(i);
 			if (forcedAppPackages.contains(app.packageName))
 				list.list.setItemChecked(i, true);
 		}
-
+		
 		list.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				boolean checked = ((Checkable)view).isChecked();
 				String packageName = result.get(position).packageName;
-
-				Set<String> forcedAppPackages = new HashSet<>(setting.get()); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+				
+				Set<String> forcedAppPackages = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
+				forcedAppPackages = new HashSet<>(forcedAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+				
 				if (checked)
 					forcedAppPackages.add(packageName);
 				else
 					forcedAppPackages.remove(packageName);
-				setting.set(forcedAppPackages);
+				
+				prefs
+					.edit()
+					.putStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, forcedAppPackages)
+					.apply();
 			}
 		});
 
