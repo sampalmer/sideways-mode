@@ -65,6 +65,15 @@
 
 		</RelativeLayout>
 
+		<!--
+		    Using a CoordinatorLayout so the error can be swiped away.
+		    Not putting other content in it so the snackbar uses its own space rather than overlapping other content.
+	     -->
+		<android.support.design.widget.CoordinatorLayout
+			android:id="@+id/dashboard_error_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+
 	</LinearLayout>
 
 </RelativeLayout>

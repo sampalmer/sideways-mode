@@ -1,9 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +17,20 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class DashboardActivity extends DialogActivity {
 	
 	private AlertDialog dialog;
 	
+	private CoordinatorLayout container;
 	private ProgressBar progressBar;
 	private ViewGroup normalSectionContainer;
 	private DashboardNormalFragment normalSection;
+	private Snackbar snackbar;
 	
 	private ApplicationStatusClient statusClient;
-	
 	private ApplicationStatus lastStatus;
 	
 	@Override
@@ -57,6 +62,7 @@ public class DashboardActivity extends DialogActivity {
 			}
 		});
 		
+		container = dialog.findViewById(R.id.dashboard_error_container);
 		progressBar = dialog.findViewById(R.id.dashboard_progress);
 		normalSection = (DashboardNormalFragment) getSupportFragmentManager().findFragmentById(R.id.dashboard_normal_contents);
 		normalSectionContainer = dialog.findViewById(R.id.dashboard_normal_contents_container);
@@ -105,8 +111,45 @@ public class DashboardActivity extends DialogActivity {
 		ensureVisibility(progressBar, lastStatus == null ? View.VISIBLE : View.INVISIBLE);
 		ensureVisibility(normalSectionContainer, lastStatus == null ? View.INVISIBLE : View.VISIBLE);
 		
-		if (lastStatus != null)
+		if (lastStatus != null) {
 			normalSection.setStatus(lastStatus);
+			updateSnackbar();
+		}
+	}
+	
+	private void updateSnackbar() {
+		if (snackbar == null) {
+			snackbar = Snackbar.make(container, "", Snackbar.LENGTH_INDEFINITE);
+			snackbar.addCallback(new Snackbar.Callback() {
+				@Override
+				public void onDismissed(Snackbar snackbar, int event) {
+					super.onDismissed(snackbar, event);
+					
+					if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
+						new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(DashboardActivity.this);
+					
+					//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
+					DashboardActivity.this.snackbar = null;
+				}
+			});
+		}
+		
+		if (lastStatus.error == null)
+			snackbar.dismiss();
+		else {
+			snackbar.setText(lastStatus.error.getSummary());
+			snackbar.setAction(R.string.environment_error_more, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						lastStatus.error.showError().send();
+					} catch (PendingIntent.CanceledException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			});
+			snackbar.show();
+		}
 	}
 	
 	/**
