@@ -66,7 +66,7 @@ public class Upgrader {
 		}
 		
 		if (
-			lastAppVersion != null // We only need to instruct the user about changes if he/she has actually run the app before.
+			lastAppVersion != null // We only need to upgrade the app if it has been run before.
 			&&
 			lastAppVersion != newAppVersion
 		) {
@@ -77,8 +77,9 @@ public class Upgrader {
 				
 				Log.w(Upgrader.class.getSimpleName(), "Warning: user is downgrading from a later version. Clearing settings.");
 				
+				prefs.edit().clear().apply();
+				
 				if (CurrentProcess.isServiceProcess()) {
-					prefs.edit().clear().apply();
 					if (!SystemSettings.canWrite(CurrentProcess.context()))
 						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
 					else {
@@ -112,9 +113,9 @@ public class Upgrader {
 				
 				if (upgradeMessage.length() != 0)
 					notify(upgradeMessage.toString());
-				
-				prefs.edit().putInt(settingsAppVersionKey, newAppVersion).apply();
 			}
+			
+			prefs.edit().putInt(settingsAppVersionKey, newAppVersion).apply();
 		}
 		else if (lastAppVersion == null)
 			// So that we know the settings version when we next upgrade.
