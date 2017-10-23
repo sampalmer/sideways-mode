@@ -19,7 +19,7 @@ public class ServiceRunningState extends State {
 	
 	private final OrientationCalculator calculator;
 	final ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
-	private final ServiceRevivalManager serviceRevivalManager;
+	private final LowMemoryDetector lowMemoryDetector;
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private final OrientationEnforcementManager orientationEnforcementManager;
@@ -33,7 +33,7 @@ public class ServiceRunningState extends State {
 		calculator = new OrientationCalculator(screenRotationMonitor);
 		screenUpdater = new ScreenOrientationUpdater(calculator, screenRotationMonitor);
 		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(calculator, service);
-		serviceRevivalManager = new ServiceRevivalManager();
+		lowMemoryDetector = new LowMemoryDetector();
 		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor();
 		activityMonitor = new ActivityMonitor();
@@ -52,7 +52,7 @@ public class ServiceRunningState extends State {
 		systemAutoRotationMonitor.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
 		screenUpdater.ensureStarted();
-		serviceRevivalManager.ensureStarted();
+		lowMemoryDetector.ensureStarted();
 		activityMonitor.ensureStarted();
 		orientationEnforcementManager.ensureStarted();
 		appDisabler.ensureStarted();
@@ -77,7 +77,7 @@ public class ServiceRunningState extends State {
 		systemAutoRotationMonitor.ensureStopped();
 		screenUpdater.ensureStopped();
 		applicationStatusDisplayUpdater.ensureStopped();
-		serviceRevivalManager.ensureStopped();
+		lowMemoryDetector.ensureStopped();
 		
 		ServiceSettings
 			.getSharedPreferences(CurrentProcess.context())
