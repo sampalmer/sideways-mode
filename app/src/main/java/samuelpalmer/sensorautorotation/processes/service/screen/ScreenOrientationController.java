@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
@@ -7,38 +8,34 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
-import samuelpalmer.sensorautorotation.settings.system.Setting;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.utilities.SystemSettings;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
 	
 	private static final String TAG = ScreenOrientationController.class.getSimpleName();
 	
-	private final SystemSettings settings;
 	private final ScreenRotationMonitor screen;
 	
-	public ScreenOrientationController(SystemSettings settings, ScreenRotationMonitor screen) {
-		this.settings = settings;
+	public ScreenOrientationController(ScreenRotationMonitor screen) {
 		this.screen = screen;
 	}
 
 	@Override
 	protected void start() {
-		if (settings.accelerometerRotation.get()) {
+		if (Settings.System.getInt(CurrentProcess.context().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1) == 1) {
 			Orientation realOrientation = screen.currentRotation();
 			propose(realOrientation);
 			
-			setAndHandleErrors(settings.accelerometerRotation, false);
+			setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 0);
 			propose(realOrientation); //Just in case disabling system rotation reset this.
 		}
 	}
 
 	@Override
 	protected void stop() {
-		setAndHandleErrors(settings.accelerometerRotation, true);
+		setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
 		propose(Orientation.NATURAL);
 	}
 
@@ -48,19 +45,21 @@ public class ScreenOrientationController extends State {
 
 		Log.i(TAG, "Proposing screen orientation: " + value);
 		
-		setAndHandleErrors(settings.userRotation, value);
+		setAndHandleErrors(Settings.System.USER_ROTATION, AndroidSurfaceRotation.fromOrientationClockwise(value));
 	}
 	
-	private <T> void setAndHandleErrors(Setting<T> setting, T newValue) {
-		try {
-			setting.set(newValue);
-		} catch (SystemSettingAccessDeniedException e) {
+	private void setAndHandleErrors(String name, int newValue) {
+		if (!SystemSettings.canWrite(CurrentProcess.context())) {
 			GenericError error = new GenericError(R.string.permission_needed_summary, CurrentProcess.context().getText(R.string.environment_error_system_setting_write_denied_message));
 			EnvironmentErrorManager.report(error);
-		} catch (SystemSettingWriteException e) {
-			//Because the developer can't do anything about this; it seems to be a problem on the device.
-			GenericError error = new GenericError(R.string.environment_error_system_setting_write_failure_summary, CurrentProcess.context().getString(R.string.environment_error_system_setting_write_failure_message, e.key, e.value));
-			EnvironmentErrorManager.report(error);
+		}
+		else {
+			boolean worked = Settings.System.putInt(CurrentProcess.context().getContentResolver(), name, newValue);
+			if (!worked) {
+				//Because the developer can't do anything about this; it seems to be a problem on the device.
+				GenericError error = new GenericError(R.string.environment_error_system_setting_write_failure_summary, CurrentProcess.context().getString(R.string.environment_error_system_setting_write_failure_message, name, Integer.toString(newValue)));
+				EnvironmentErrorManager.report(error);
+			}
 		}
 	}
 	

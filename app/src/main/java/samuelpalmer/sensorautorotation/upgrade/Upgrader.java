@@ -5,8 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Surface;
 
 import java.util.Map;
 
@@ -20,10 +22,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
-import samuelpalmer.sensorautorotation.values.Orientation;
+import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -80,13 +79,11 @@ public class Upgrader {
 				
 				if (CurrentProcess.isServiceProcess()) {
 					prefs.edit().clear().apply();
-					try {
-						new SystemSettings().userRotation.set(Orientation.NATURAL);
-					} catch (SystemSettingAccessDeniedException e) {
-						// We'll get here if the user is running Android 6 or higher due to runtime permissions.
-						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.", e);
-					} catch (SystemSettingWriteException e) {
-						Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the screen orientation while downgrading.", e);
+					if (!SystemSettings.canWrite(CurrentProcess.context()))
+						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
+					else {
+						Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
+						// Note that it's possible for the above to fail due to DB write errors, but we'll just have to accept that and move on.
 					}
 				}
 			}

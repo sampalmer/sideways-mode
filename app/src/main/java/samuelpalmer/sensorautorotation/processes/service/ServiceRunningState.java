@@ -11,7 +11,6 @@ import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class ServiceRunningState extends State {
@@ -30,14 +29,13 @@ public class ServiceRunningState extends State {
 	private final UserInteractivityMonitor userInteractivityMonitor;
 	
 	public ServiceRunningState(RotationService service) {
-		SystemSettings systemSettings = new SystemSettings();
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor();
 		calculator = new OrientationCalculator(screenRotationMonitor);
-		screenUpdater = new ScreenOrientationUpdater(calculator, systemSettings, screenRotationMonitor);
+		screenUpdater = new ScreenOrientationUpdater(calculator, screenRotationMonitor);
 		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(calculator, service);
 		serviceRevivalManager = new ServiceRevivalManager();
 		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
-		systemAutoRotationMonitor = new SystemAutoRotationMonitor(systemSettings);
+		systemAutoRotationMonitor = new SystemAutoRotationMonitor();
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor);
 		appDisabler = new AppDisabler();

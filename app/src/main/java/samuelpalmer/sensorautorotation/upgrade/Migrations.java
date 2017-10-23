@@ -3,17 +3,17 @@ package samuelpalmer.sensorautorotation.upgrade;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Surface;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingAccessDeniedException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettingWriteException;
-import samuelpalmer.sensorautorotation.settings.system.SystemSettings;
+import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
@@ -30,19 +30,7 @@ class Migrations {
 				// Instead, we'll gracefully disable the app and restore normal Android rotation.
 				if (prefs.contains("autoRotate") || prefs.contains("userOrientation")) {
 					Log.w(Migrations.class.getSimpleName(), "App was enabled, but service state cannot be migrated to service process. Disabling app.");
-					
-					SystemSettings systemSettings = new SystemSettings();
-					
-					try {
-						if (prefs.contains("autoRotate"))
-							systemSettings.accelerometerRotation.set(prefs.getBoolean("autoRotate", true));
-						systemSettings.userRotation.set(Orientation.NATURAL);
-					} catch (SystemSettingAccessDeniedException e) {
-						// We'll get here if the user is running Android 6 or higher due to runtime permissions.
-						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.", e);
-					} catch (SystemSettingWriteException e) {
-						Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the system settings while upgrading.", e);
-					}
+					restoreSystemSettings(prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null);
 				}
 				
 				prefs.edit()
@@ -178,18 +166,7 @@ class Migrations {
 						Log.w(Migrations.class.getSimpleName(), "App was enabled, but locked mode and upright position are no longer supported. Disabling app.");
 						
 						// The app doesn't support locked mode or being upright anymore, so we'll gracefully disable the app.
-						SystemSettings systemSettings = new SystemSettings();
-						
-						try {
-							if (autoRotateValue != null)
-								systemSettings.accelerometerRotation.set(autoRotateValue);
-							systemSettings.userRotation.set(Orientation.NATURAL);
-						} catch (SystemSettingAccessDeniedException e) {
-							// We'll get here if the user is running Android 6 or higher due to runtime permissions.
-							Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.", e);
-						} catch (SystemSettingWriteException e) {
-							Log.w(Migrations.class.getSimpleName(), "Encountered write error when restoring the system settings while upgrading.", e);
-						}
+						restoreSystemSettings(autoRotateValue);
 					}
 				}
 				
@@ -201,5 +178,16 @@ class Migrations {
 		});
 		
 		return migrations;
+	}
+	
+	private static void restoreSystemSettings(Boolean autoRotate) {
+		if (!SystemSettings.canWrite(CurrentProcess.context()))
+			Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.");
+		else {
+			if (autoRotate != null)
+				Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, autoRotate ? 1 : 0);
+			Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
+			// Note that it's possible for the above to fail due to DB write errors, but we'll just have to accept that and move on.
+		}
 	}
 }
