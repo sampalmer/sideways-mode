@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.eventhandling;
 
-public abstract class EventRegistrarAdaptor extends IntolerantEventRegistrar {
+public abstract class EventRegistrarAdaptor extends EventRegistrar {
 
 	@Override
 	public void subscribe(EventHandler subscriber) {

@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.eventhandling;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class IntolerantEventRegistrar {
+public abstract class EventRegistrar {
 	private final Set<EventHandler> subscriptions = new HashSet<>();
 	
 	public void subscribe(EventHandler subscriber) {

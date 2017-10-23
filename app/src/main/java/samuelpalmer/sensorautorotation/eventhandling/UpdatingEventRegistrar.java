@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.eventhandling;
 
-public class UpdatingEventRegistrar extends IntolerantEventRegistrar {
+public class UpdatingEventRegistrar extends EventRegistrar {
 
 	@Override
 	public void report() {
