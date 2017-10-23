@@ -1,5 +1,9 @@
 package samuelpalmer.sensorautorotation.eventhandling;
 
+/**
+ * An event that is triggered by listening to something else for events.
+ * Basically adapts an external event into an {@link EventRegistrar}.
+ */
 public abstract class EventRegistrarAdaptor extends EventRegistrar {
 
 	@Override
@@ -22,7 +26,10 @@ public abstract class EventRegistrarAdaptor extends EventRegistrar {
 		if (noSubscriptions())
 			unsubscribeFromAdaptee();
 	}
-
+	
+	/**
+	 * Call {@link #report()} when the adaptee is triggered.
+	 */
 	protected abstract void subscribeToAdaptee();
 	protected abstract void unsubscribeFromAdaptee();
 

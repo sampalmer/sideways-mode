@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.eventhandling;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents an event that can be listened to for callbacks.
+ */
 public abstract class EventRegistrar {
 	private final Set<EventHandler> subscriptions = new HashSet<>();
 	
