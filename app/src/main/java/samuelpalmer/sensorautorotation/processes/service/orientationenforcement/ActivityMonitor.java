@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
@@ -12,7 +11,7 @@ public class ActivityMonitor extends State {
 	
 	private static final String TAG = ActivityMonitor.class.getSimpleName();
 	
-	private final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
+	public final UpdatingEventRegistrar onChange = new UpdatingEventRegistrar();
 	private ComponentName lastActivity;
 
 	public ComponentName currentOrNull() {
@@ -26,11 +25,7 @@ public class ActivityMonitor extends State {
 			onChange.report();
 		}
 	}
-
-	public EventRegistrar onChange() {
-		return onChange;
-	}
-
+	
 	@Override
 	protected void start() {
 		lastActivity = null;

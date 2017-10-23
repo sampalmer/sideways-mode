@@ -33,7 +33,7 @@ public class OrientationEnforcementMonitor extends State {
 	@Override
 	protected void start() {
 		lockScreenDetector.subscribe(enforcementUpdater);
-		activityMonitor.onChange().subscribe(enforcementUpdater);
+		activityMonitor.onChange.subscribe(enforcementUpdater);
 		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
 
 		updatePackages();
@@ -50,7 +50,7 @@ public class OrientationEnforcementMonitor extends State {
 	@Override
 	protected void stop() {
 		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
-		activityMonitor.onChange().unsubscribe(enforcementUpdater);
+		activityMonitor.onChange.unsubscribe(enforcementUpdater);
 		lockScreenDetector.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}

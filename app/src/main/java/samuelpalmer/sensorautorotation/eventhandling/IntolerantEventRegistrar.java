@@ -3,18 +3,16 @@ package samuelpalmer.sensorautorotation.eventhandling;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class IntolerantEventRegistrar implements EventRegistrar {
+public abstract class IntolerantEventRegistrar {
 	private final Set<EventHandler> subscriptions = new HashSet<>();
-
-	@Override
+	
 	public void subscribe(EventHandler subscriber) {
 		if (subscribed(subscriber))
 			throw new RuntimeException("Already subscribed: " + subscriber);
 
 		subscriptions.add(subscriber);
 	}
-
-	@Override
+	
 	public void unsubscribe(EventHandler subscriber) {
 		if (!subscribed(subscriber))
 			throw new RuntimeException("Unknown subscriber: " + subscriber);
