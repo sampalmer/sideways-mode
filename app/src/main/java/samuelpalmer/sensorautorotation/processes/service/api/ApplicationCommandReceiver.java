@@ -91,6 +91,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			// * User force stops the app while the service is running.
 			// * The service crashed and the OS didn't restart it.
 			// * User's device dies while the service is running.
+			// * The OS ran extremely low on memory and killed the service process while it was running.
 			ServiceController.ensureStarted();
 		}
 	}
