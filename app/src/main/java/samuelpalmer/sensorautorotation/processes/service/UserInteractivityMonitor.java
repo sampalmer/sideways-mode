@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.userinteractivity;
+package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +14,8 @@ import static android.content.Context.POWER_SERVICE;
 
 public class UserInteractivityMonitor extends EventRegistrarAdaptor {
 	
-	private UserInteractivity last;
+	private boolean isUpToDate = false;
+	private boolean last;
 	
 	@Override
 	protected void subscribeToAdaptee() {
@@ -26,28 +27,31 @@ public class UserInteractivityMonitor extends EventRegistrarAdaptor {
 	protected void unsubscribeFromAdaptee() {
 		CurrentProcess.context().unregisterReceiver(screenOffReceiver);
 		CurrentProcess.context().unregisterReceiver(screenOnReceiver);
+		isUpToDate = false; // We're no longer subscribed, so the last received value might be out-of-date.
 	}
 	
-	public UserInteractivity get() {
-		if (last == null)
-			return new UserInteractivity(isInteractive());
-		else
+	public boolean isInteractive() {
+		if (isUpToDate)
 			return last;
+		else
+			return poll();
 	}
 	
-	private boolean isInteractive() {
-
+	private boolean poll() {
+		PowerManager powerManager = (PowerManager) CurrentProcess.context().getSystemService(POWER_SERVICE);
+		
 		if (Build.VERSION.SDK_INT >= 20)
-			return ((PowerManager) CurrentProcess.context().getSystemService(POWER_SERVICE)).isInteractive();
+			return powerManager.isInteractive();
 		else
 			//noinspection deprecation
-			return ((PowerManager) CurrentProcess.context().getSystemService(POWER_SERVICE)).isScreenOn();
+			return powerManager.isScreenOn();
 	}
 
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			last = new UserInteractivity(true);
+			last = true;
+			isUpToDate = true;
 			report();
 		}
 	};
@@ -55,7 +59,8 @@ public class UserInteractivityMonitor extends EventRegistrarAdaptor {
 	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			last = new UserInteractivity(false);
+			last = false;
+			isUpToDate = true;
 			report();
 		}
 	};

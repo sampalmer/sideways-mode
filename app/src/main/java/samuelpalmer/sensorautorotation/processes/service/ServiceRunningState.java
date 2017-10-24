@@ -10,7 +10,6 @@ import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.processes.service.userinteractivity.UserInteractivityMonitor;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class ServiceRunningState extends State {
@@ -90,7 +89,7 @@ public class ServiceRunningState extends State {
 		@Override
 		public void update() {
 			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
-			if (userInteractivityMonitor.get().active()) {
+			if (userInteractivityMonitor.isInteractive()) {
 				Log.i(TAG, "User is interactive. Listening to sensors.");
 				orientationSensorHandler.ensureStarted();
 			}
