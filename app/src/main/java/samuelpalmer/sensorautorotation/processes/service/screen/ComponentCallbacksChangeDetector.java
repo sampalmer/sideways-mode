@@ -9,7 +9,9 @@ import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
- * Only detects changes between landscape and portrait.
+ * Uses {@link ComponentCallbacks} to detect changes to screen orientation.
+ * This only detects changes between landscape and portrait; it won't detect 180 degree changes
+ * due to limitations of {@link ComponentCallbacks}.
  */
 class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDetector {
 
