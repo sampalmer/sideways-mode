@@ -2,9 +2,9 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusDisplayUpdater extends State {

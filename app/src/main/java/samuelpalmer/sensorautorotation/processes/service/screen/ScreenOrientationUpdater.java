@@ -2,9 +2,9 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.support.annotation.Nullable;
 
+import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationUpdater extends State {

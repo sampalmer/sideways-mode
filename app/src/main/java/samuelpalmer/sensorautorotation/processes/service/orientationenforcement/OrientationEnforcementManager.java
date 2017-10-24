@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.utilities.State;
 
 /**
  * Turns the screen orientation enforcement feature on and off as needed.

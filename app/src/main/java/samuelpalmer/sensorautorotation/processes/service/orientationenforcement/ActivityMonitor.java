@@ -3,9 +3,9 @@ package samuelpalmer.sensorautorotation.processes.service.orientationenforcement
 import android.content.ComponentName;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
-import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
 public class ActivityMonitor extends State {
 	

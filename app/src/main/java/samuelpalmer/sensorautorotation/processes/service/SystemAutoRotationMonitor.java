@@ -8,8 +8,8 @@ import android.provider.Settings;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
+import samuelpalmer.sensorautorotation.utilities.State;
 
 public class SystemAutoRotationMonitor extends State {
 	

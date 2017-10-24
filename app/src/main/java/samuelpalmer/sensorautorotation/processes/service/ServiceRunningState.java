@@ -3,14 +3,14 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.DeviceInteractivityMonitor;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class ServiceRunningState extends State {

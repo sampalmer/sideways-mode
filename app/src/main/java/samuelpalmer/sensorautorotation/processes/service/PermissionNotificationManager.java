@@ -9,18 +9,18 @@ import android.content.SharedPreferences;
 import java.util.Collections;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 

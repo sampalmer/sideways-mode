@@ -18,13 +18,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
  * Hosts the main settings.

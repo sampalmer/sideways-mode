@@ -11,13 +11,13 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 
-import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 public class ForcedAppsPermissionFragment extends Fragment {
 

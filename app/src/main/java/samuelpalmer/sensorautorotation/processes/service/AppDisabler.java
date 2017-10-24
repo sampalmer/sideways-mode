@@ -8,9 +8,9 @@ import android.content.IntentFilter;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 
 
 public class AppDisabler extends State {

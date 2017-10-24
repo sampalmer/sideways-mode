@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 

@@ -13,8 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import samuelpalmer.sensorautorotation.BuildConfig;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**

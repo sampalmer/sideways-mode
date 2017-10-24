@@ -5,8 +5,8 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 import static android.content.Context.WINDOW_SERVICE;

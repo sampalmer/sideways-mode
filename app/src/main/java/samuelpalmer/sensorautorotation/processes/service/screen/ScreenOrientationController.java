@@ -5,11 +5,11 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {

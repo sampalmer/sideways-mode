@@ -7,11 +7,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
+import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
-import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 
 /**
  * Represents the "overridden apps" feature. Dynamically overrides the screen orientation

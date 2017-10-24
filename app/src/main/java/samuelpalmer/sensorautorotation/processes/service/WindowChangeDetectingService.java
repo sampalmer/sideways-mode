@@ -9,8 +9,8 @@ import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 // Keep in mind that renaming (or moving?) this class will result in users having to re-enable the accessibility service.
 public class WindowChangeDetectingService extends AccessibilityService {
