@@ -22,7 +22,7 @@ public abstract class EnvironmentErrorManager {
 	
 	public static void report(EnvironmentError error) {
 		//This is useful when checking log output from Cloud Test Lab on Google Play Store.
-		Log.i(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
+		Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
 		
 		postNotification(error);
 		
