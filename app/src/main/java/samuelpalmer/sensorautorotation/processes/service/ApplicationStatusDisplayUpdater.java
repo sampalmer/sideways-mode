@@ -34,14 +34,12 @@ public class ApplicationStatusDisplayUpdater extends State {
 		@Override
 		public void update() {
 			ApplicationStatus applicationStatus = new ApplicationStatus(
-				null,
-				true,
-				calculator.side(),
-				calculator.isWaitingForSensor()
+				new ApplicationStatus.RunningState(calculator.side(), calculator.isWaitingForSensor()),
+				null
 			);
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
-				Notification notification = notificationBuilder.build(applicationStatus);
+				Notification notification = notificationBuilder.build(applicationStatus.runningState);
 				
 				// Running the service in the foreground reduces the chance of the process being killed.
 				// This is important, since the process being killed would result in the screen no longer rotating.

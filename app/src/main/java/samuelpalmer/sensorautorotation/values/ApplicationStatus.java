@@ -7,47 +7,48 @@ import android.support.annotation.Nullable;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
-@SuppressWarnings("WeakerAccess")
 public class ApplicationStatus {
 	
+	/**
+	 * If the application is not running, this is {@code null}.
+	 * Otherwise this is the state of the running instance of the application.
+	 */
+	@Nullable
+	public final RunningState runningState;
+	
+	/**
+	 * The current error or [@code null} if there is none.
+	 */
 	@Nullable
 	public final EnvironmentError error;
-	public final boolean appEnabled;
-	public final UserSide user;
-	public final boolean waitingForSensor;
-
-	public ApplicationStatus(@Nullable EnvironmentError error, boolean appEnabled, UserSide user, boolean waitingForSensor) {
+	
+	public ApplicationStatus(@Nullable RunningState runningState, @Nullable EnvironmentError error) {
+		this.runningState = runningState;
 		this.error = error;
-		this.appEnabled = appEnabled;
-		this.user = user;
-		this.waitingForSensor = waitingForSensor;
 	}
 	
-	public boolean equals(ApplicationStatus other) {
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !obj.getClass().equals(this.getClass()))
+			return false;
+		
+		ApplicationStatus other = (ApplicationStatus)obj;
+		
 		return
-			ObjectExtensions.areEqual(error, other.error)
+			ObjectExtensions.areEqual(this.runningState, other.runningState)
 			&&
-			appEnabled == other.appEnabled
-			&&
-			ObjectExtensions.areEqual(user, other.user)
-			&&
-			waitingForSensor == other.waitingForSensor;
+			ObjectExtensions.areEqual(this.error, other.error);
 	}
 	
 	private static final int MSG_WHAT = 1;
 	
 	public ApplicationStatus(Message message) {
 		if (message.arg1 == 0)
-			this.user = null;
-		else if (message.arg1 == UserSide.LEFT.orientation.offset)
-			this.user = UserSide.LEFT;
-		else if (message.arg1 == UserSide.RIGHT.orientation.offset)
-			this.user = UserSide.RIGHT;
+			this.runningState = null;
+		else if (message.arg1 == 1)
+			this.runningState = new RunningState(message.arg2);
 		else
-			throw new IllegalArgumentException("Unknown value for user side offset: " + message.arg1);
-		
-		waitingForSensor = (message.arg2 & 0x1) == 0x1;
-		appEnabled = (message.arg2 & 0x2) == 0x2;
+			throw new IllegalArgumentException("Found unknown value in arg1: " + message.arg1);
 		
 		String errorJson = message.getData().getString(null);
 		if (errorJson != null)
@@ -60,10 +61,8 @@ public class ApplicationStatus {
 		Message result = Message.obtain(
 			null,
 			MSG_WHAT,
-			user == null ? 0 : user.orientation.offset,
-			(waitingForSensor ? 1 : 0)
-			|
-			(appEnabled ? 1 : 0) << 1
+			runningState == null ? 0 : 1,
+			runningState == null ? 0 : runningState.serialise()
 		);
 		
 		if (error != null) {
@@ -73,6 +72,46 @@ public class ApplicationStatus {
 		}
 		
 		return result;
+	}
+	
+	public static class RunningState {
+		
+		public final UserSide userSide;
+		public final boolean waitingForSensor;
+		
+		public RunningState(UserSide userSide, boolean waitingForSensor) {
+			this.userSide = userSide;
+			this.waitingForSensor = waitingForSensor;
+		}
+		
+		RunningState(int serialised) {
+			this.userSide = (serialised & 0x1) == 0 ? UserSide.LEFT : UserSide.RIGHT;
+			this.waitingForSensor = (serialised & 0x2) != 0;
+			
+			if (serialised >> 2 != 0)
+				throw new IllegalArgumentException("Unknown serialised value: " + serialised);
+		}
+		
+		int serialise() {
+			return
+				(userSide.equals(UserSide.LEFT) ? 0 : 1)
+				|
+				(waitingForSensor ? 1 : 0) << 1;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || !obj.getClass().equals(this.getClass()))
+				return false;
+			
+			RunningState other = (RunningState)obj;
+			
+			return
+				this.userSide.equals(other.userSide)
+				&&
+				this.waitingForSensor == other.waitingForSensor;
+		}
+		
 	}
 	
 }

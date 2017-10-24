@@ -52,7 +52,7 @@ public class QuickSettingService extends TileService {
 	 * Assumes that we have the current status.
 	 */
 	private void handleClick() {
-		if (status.appEnabled)
+		if (status.runningState != null)
 			new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(this);
 		else if (isLocked())
 			// On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
@@ -140,15 +140,15 @@ public class QuickSettingService extends TileService {
 		if (tile == null)
 			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
 		
-		if (status.appEnabled)
+		if (status.runningState != null)
 			tile.setState(Tile.STATE_ACTIVE);
 		else
 			tile.setState(Tile.STATE_INACTIVE);
 		
 		//noinspection ResourceType
-		tile.setIcon(Icon.createWithResource(this, status.appEnabled ? status.user.iconId : R.drawable.quick_setting_off));
+		tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.iconId : R.drawable.quick_setting_off));
 		
-		int lableId = status.appEnabled ? status.user.descriptionId : R.string.app_name_full;
+		int lableId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.app_name_full;
 		tile.setLabel(CurrentProcess.context().getText(lableId));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}

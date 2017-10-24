@@ -90,10 +90,8 @@ public class ApplicationStatusService extends Service {
 		String errorJson = prefs.getString(ServiceSettings.KEY_LAST_ERROR_JSON, null);
 		
 		return new ApplicationStatus(
-			errorJson == null ? null : EnvironmentError.fromJson(errorJson),
-			false,
 			null,
-			false
+			errorJson == null ? null : EnvironmentError.fromJson(errorJson)
 		);
 	}
 	

@@ -109,20 +109,20 @@ public class DashboardNormalFragment extends Fragment {
 	
 	public void setStatus(ApplicationStatus status) {
 		if (actionInProgress != null && actionIsCompleted(actionInProgress, status)) {
-				getActivity().finish();
-				actionInProgress = null;
-				return; // So the UI doesn't update and cause a flicker while the activity closes.
-			}
+			getActivity().finish();
+			actionInProgress = null;
+			return; // So the UI doesn't update and cause a flicker while the activity closes.
+		}
 		
-		waitingForSensor.setVisibility(status.waitingForSensor ? View.VISIBLE : View.GONE);
+		waitingForSensor.setVisibility(status.runningState != null && status.runningState.waitingForSensor ? View.VISIBLE : View.GONE);
 		
 		leftSideButton.setSelected(false);
 		turnOffButton.setSelected(false);
 		rightSideButton.setSelected(false);
 		
-		if (!status.appEnabled)
+		if (status.runningState == null)
 			turnOffButton.setSelected(true);
-		else if (status.user.equals(UserSide.LEFT))
+		else if (status.runningState.userSide.equals(UserSide.LEFT))
 			leftSideButton.setSelected(true);
 		else
 			rightSideButton.setSelected(true);
@@ -130,10 +130,10 @@ public class DashboardNormalFragment extends Fragment {
 	
 	private static boolean actionIsCompleted(String action, ApplicationStatus status) {
 		return
-			action.equals(ApplicationCommand.ACTION_LEFT_SIDE) && UserSide.LEFT.equals(status.user) && !status.waitingForSensor
+			action.equals(ApplicationCommand.ACTION_LEFT_SIDE) && status.runningState != null && status.runningState.userSide.equals(UserSide.LEFT) && !status.runningState.waitingForSensor
 			||
-			action.equals(ApplicationCommand.ACTION_TURN_OFF) && !status.appEnabled
+			action.equals(ApplicationCommand.ACTION_TURN_OFF) && status.runningState == null
 			||
-			action.equals(ApplicationCommand.ACTION_RIGHT_SIDE) && UserSide.RIGHT.equals(status.user) && !status.waitingForSensor;
+			action.equals(ApplicationCommand.ACTION_RIGHT_SIDE) && status.runningState != null && status.runningState.userSide.equals(UserSide.RIGHT) && !status.runningState.waitingForSensor;
 	}
 }
