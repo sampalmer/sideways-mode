@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
-
 /**
  * This receiver ensure the service process will be created when the app is upgraded.
  * This allows the process to restart the service straight away since the OS has killed it.
@@ -18,7 +16,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 		Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
 		
 		if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-			boolean wasRunning = ServiceSettings.getSharedPreferences(CurrentProcess.context()).contains(ServiceSettings.KEY_PERSISTENT_STATE);
+			boolean wasRunning = ServiceSettings.getSharedPreferences(context).contains(ServiceSettings.KEY_PERSISTENT_STATE);
 			
 			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
 			if (wasRunning) {
@@ -29,7 +27,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
 				Note that it's also possible that the app crashed a long time ago, leaving behind its state, and was never re-run.
 				In that situation, the service shouldn't be started, but I haven't come up with a good way of detecting that situation yet.
 				*/
-				ServiceController.ensureStarted();
+				ServiceController.ensureStarted(context);
 			}
 		}
 		else

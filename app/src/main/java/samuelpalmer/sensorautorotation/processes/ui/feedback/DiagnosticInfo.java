@@ -16,21 +16,20 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.WindowOrientationListener;
 
 class DiagnosticInfo {
 
-	public static String deviceInfo() {
+	public static String deviceInfo(Context context) {
 		return String.format(Locale.US, "Device: %s %s (%s/%s/%s)\nOS: Android %s %s (%s) (SDK %d)\nLanguage: %s",
 			Build.BRAND, Build.MODEL, Build.DEVICE, Build.PRODUCT, Build.HARDWARE,
 			VERSION.RELEASE, VERSION.CODENAME, VERSION.INCREMENTAL, VERSION.SDK_INT,
-			getPrimaryLanguageName() // This is so I can reply to the user in their own language
+			getPrimaryLanguageName(context) // This is so I can reply to the user in their own language
 		);
 	}
 	
-	private static String getPrimaryLanguageName() {
-		Configuration configuration = CurrentProcess.context().getResources().getConfiguration();
+	private static String getPrimaryLanguageName(Context context) {
+		Configuration configuration = context.getResources().getConfiguration();
 		
 		Locale locale;
 		if (Build.VERSION.SDK_INT >= 24) {
@@ -93,10 +92,10 @@ class DiagnosticInfo {
 		return result.toString();
 	}
 	
-	public static String sensorDump() {
+	public static String sensorDump(Context context) {
 		StringBuilder result = new StringBuilder();
 		
-		SensorManager sensorManager = (SensorManager) CurrentProcess.context().getSystemService(Context.SENSOR_SERVICE);
+		SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 		
 		for (Sensor sensor : sensors) {

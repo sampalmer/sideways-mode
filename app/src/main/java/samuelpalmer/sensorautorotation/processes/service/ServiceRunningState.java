@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
@@ -17,6 +16,7 @@ public class ServiceRunningState extends State {
 	
 	private static final String TAG = ServiceRunningState.class.getSimpleName();
 	
+	private final RotationService service;
 	private final OrientationCalculator calculator;
 	final ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
 	private final LowMemoryDetector lowMemoryDetector;
@@ -29,17 +29,19 @@ public class ServiceRunningState extends State {
 	private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 	
 	public ServiceRunningState(RotationService service) {
-		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor();
-		calculator = new OrientationCalculator(screenRotationMonitor);
-		screenUpdater = new ScreenOrientationUpdater(calculator, screenRotationMonitor);
-		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(calculator, service);
-		lowMemoryDetector = new LowMemoryDetector();
-		orientationSensorHandler = new OrientationSensorHandler(calculator, screenRotationMonitor);
-		systemAutoRotationMonitor = new SystemAutoRotationMonitor();
+		this.service = service;
+		
+		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
+		calculator = new OrientationCalculator(service, screenRotationMonitor);
+		screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
+		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(service, calculator, service);
+		lowMemoryDetector = new LowMemoryDetector(service);
+		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
+		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
 		activityMonitor = new ActivityMonitor();
-		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor);
-		appDisabler = new AppDisabler();
-		deviceInteractivityMonitor = new DeviceInteractivityMonitor();
+		orientationEnforcementManager = new OrientationEnforcementManager(service, activityMonitor);
+		appDisabler = new AppDisabler(service);
+		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
 	}
 	
 	@Override
@@ -47,7 +49,7 @@ public class ServiceRunningState extends State {
 		Log.i(TAG, "App is turning on");
 		
 		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-		EnvironmentErrorManager.clear();
+		EnvironmentErrorManager.clear(service);
 		
 		systemAutoRotationMonitor.ensureStarted();
 		applicationStatusDisplayUpdater.ensureStarted();
@@ -80,7 +82,7 @@ public class ServiceRunningState extends State {
 		lowMemoryDetector.ensureStopped();
 		
 		ServiceSettings
-			.getSharedPreferences(CurrentProcess.context())
+			.getSharedPreferences(service)
 			.edit()
 			.remove(ServiceSettings.KEY_PERSISTENT_STATE)
 			.apply();

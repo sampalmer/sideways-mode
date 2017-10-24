@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -18,8 +17,8 @@ public class AppDisabler extends State {
 	private final KeyguardManager keyguardManager;
 	private final Context context;
 	
-	public AppDisabler() {
-		context = CurrentProcess.context();
+	public AppDisabler(Context context) {
+		this.context = context;
 		keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 	}
 	
@@ -48,7 +47,7 @@ public class AppDisabler extends State {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ApplicationCommandReceiver.turnOffApp("Device is shutting down");
+			ApplicationCommandReceiver.turnOffApp(context, "Device is shutting down");
 		}
 		
 	};
@@ -58,7 +57,7 @@ public class AppDisabler extends State {
 		public void onReceive(Context context, Intent intent) {
 			boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
 			if (isOnLockScreen)
-				ApplicationCommandReceiver.turnOffApp("Device is locked");
+				ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
 		}
 	};
 	
@@ -71,7 +70,7 @@ public class AppDisabler extends State {
 			// and our polling approach might sometimes be too slow to detect the lock screen.
 			// For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
 			// so quickly that you don't see the lock screen.
-			ApplicationCommandReceiver.turnOffApp("Device was locked");
+			ApplicationCommandReceiver.turnOffApp(context, "Device was locked");
 		}
 	};
 	

@@ -1,22 +1,24 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 public class SystemAutoRotationMonitor extends State {
 	
+	private final Context context;
 	private final ContentResolver contentResolver;
 	
-	public SystemAutoRotationMonitor() {
-		contentResolver = CurrentProcess.context().getContentResolver();
+	public SystemAutoRotationMonitor(Context context) {
+		this.context = context;
+		contentResolver = context.getContentResolver();
 	}
 
 	@Override
@@ -36,8 +38,8 @@ public class SystemAutoRotationMonitor extends State {
 			
 			boolean accelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1;
 			if (accelerometerRotation) {
-				GenericError error = new GenericError(R.string.environment_error_system_rotation_enabled_summary, CurrentProcess.context().getText(R.string.environment_error_system_rotation_enabled_message));
-				EnvironmentErrorManager.report(error);
+				GenericError error = new GenericError(context, R.string.environment_error_system_rotation_enabled_summary, context.getText(R.string.environment_error_system_rotation_enabled_message));
+				EnvironmentErrorManager.report(context, error);
 			}
 		}
 	};

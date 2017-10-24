@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Handler;
@@ -8,7 +9,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -27,22 +27,24 @@ public class OrientationSensorHandler extends State {
 	
 	private final OrientationCalculator calculator;
 	private final ScreenRotationMonitor screen;
-
+	private final WindowOrientationListener windowOrientationListener;
+	
 	private Integer lastRotation;
 	private Integer oldBias;
 
-	public static boolean canDetectOrientation() {
-		SensorManager sensorManager = (SensorManager) CurrentProcess.context().getSystemService(SENSOR_SERVICE);
+	public static boolean canDetectOrientation(Context context) {
+		SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
 		ArrayList<Sensor> supportedSensors = WindowOrientationListener.getSupportedSensors(sensorManager);
 		return !supportedSensors.isEmpty();
 	}
 
-	public OrientationSensorHandler(OrientationCalculator calculator, ScreenRotationMonitor screen) {
+	public OrientationSensorHandler(Context context, OrientationCalculator calculator, ScreenRotationMonitor screen) {
 		this.calculator = calculator;
 		this.screen = screen;
-
+		
+		windowOrientationListener = new MyWindowOrientationListener(context);
 		if (!windowOrientationListener.canDetectOrientation())
-			EnvironmentErrorManager.report(new SensorError(SensorError.Type.NOT_FOUND));
+			EnvironmentErrorManager.report(context, new SensorError(context, SensorError.Type.NOT_FOUND));
 	}
 
 	@Override
@@ -62,32 +64,6 @@ public class OrientationSensorHandler extends State {
 
 		windowOrientationListener.disable();
 	}
-
-	private final WindowOrientationListener windowOrientationListener = new WindowOrientationListener(CurrentProcess.context(), new Handler(Looper.getMainLooper())) {
-		@Override
-		public void onProposedRotationChanged(int rotation) {
-			if (!started()) {
-				//This happens if you quickly repeatedly enable and disable the service on an emulator.
-				//It might only affect older versions of Android (API 14-16)
-				Log.w(TAG, "Got callback while stopped");
-				return;
-			}
-			
-			if (lastRotation == null || lastRotation != rotation) {
-				lastRotation = rotation;
-				
-				Orientation orientation =
-					rotation == -1
-					?
-					null
-					:
-					AndroidSurfaceRotation.toOrientationAnticlockwise(rotation);
-				
-				Log.i(TAG, "Device orientation changed: " + orientation);
-				calculator.setDevice(orientation);
-			}
-		}
-	};
 	
 	private final EventHandler screenOrientationChanged = new EventHandler() {
 		@Override
@@ -115,5 +91,34 @@ public class OrientationSensorHandler extends State {
 	private int deviceRotationBias() {
 		return screen.currentRotation().minus(calculator.user()).offset;
 	}
-
+	
+	private class MyWindowOrientationListener extends WindowOrientationListener {
+		public MyWindowOrientationListener(Context context) {
+			super(context, new Handler(Looper.getMainLooper()));
+		}
+		
+		@Override
+		public void onProposedRotationChanged(int rotation) {
+			if (!started()) {
+				//This happens if you quickly repeatedly enable and disable the service on an emulator.
+				//It might only affect older versions of Android (API 14-16)
+				Log.w(TAG, "Got callback while stopped");
+				return;
+			}
+			
+			if (lastRotation == null || lastRotation != rotation) {
+				lastRotation = rotation;
+				
+				Orientation orientation =
+					rotation == -1
+					?
+					null
+					:
+					AndroidSurfaceRotation.toOrientationAnticlockwise(rotation);
+				
+				Log.i(TAG, "Device orientation changed: " + orientation);
+				calculator.setDevice(orientation);
+			}
+		}
+	}
 }

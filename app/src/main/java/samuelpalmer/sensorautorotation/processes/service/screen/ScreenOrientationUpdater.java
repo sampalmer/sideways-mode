@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -12,9 +13,9 @@ public class ScreenOrientationUpdater extends State {
 	private final OrientationCalculator calculator;
 	private final ScreenOrientationController screen;
 	
-	public ScreenOrientationUpdater(OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor) {
+	public ScreenOrientationUpdater(Context context, OrientationCalculator calculator, ScreenRotationMonitor screenRotationMonitor) {
 		this.calculator = calculator;
-		this.screen = new ScreenOrientationController(screenRotationMonitor);
+		this.screen = new ScreenOrientationController(context, screenRotationMonitor);
 	}
 
 	@Override

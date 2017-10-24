@@ -11,7 +11,6 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
@@ -32,7 +31,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	public void initialise(PreferenceScreen preferenceScreen) {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
-		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
+		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(getActivity(), WindowChangeDetectingService.class);
 
 		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("forcedOrientationPermission");
 		tipView.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -68,7 +67,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_accessibility_service_summary)
-					.setMessage(CurrentProcess.context().getString(R.string.permission_needed_accessibility_service_description, CurrentProcess.context().getText(R.string.app_name_full)))
+					.setMessage(getString(R.string.permission_needed_accessibility_service_description, getText(R.string.app_name_full)))
 					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {}

@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Collections;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -24,14 +24,16 @@ public class OrientationEnforcementMonitor extends State {
 	private final ScreenOrientationEnforcer orientationEnforcer;
 	private final LockScreenMonitor lockScreenDetector;
 	private final SharedPreferences prefs;
+	private final Context context;
 	private Set<String> orientationEnforcedPackages;
-
-	public OrientationEnforcementMonitor(ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
+	
+	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
+		this.context = context;
 		this.activityMonitor = activityMonitor;
 		this.permissionNotificationManager = permissionNotificationManager;
-		orientationEnforcer = new ScreenOrientationEnforcer(CurrentProcess.context());
-		this.lockScreenDetector = new LockScreenMonitor(CurrentProcess.context());
-		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
+		orientationEnforcer = new ScreenOrientationEnforcer(this.context);
+		this.lockScreenDetector = new LockScreenMonitor(this.context);
+		prefs = ServiceSettings.getSharedPreferences(this.context);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private void tryToStartEnforcer() {
-		if (ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context())) {
+		if (ScreenOrientationEnforcer.hasPermissionToStart(context)) {
 			orientationEnforcer.ensureStarted();
 			updateEnforcement();
 		}

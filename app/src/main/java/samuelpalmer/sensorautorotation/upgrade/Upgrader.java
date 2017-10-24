@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.upgrade;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
@@ -29,10 +30,13 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class Upgrader {
 
 	private final int newAppVersion;
+	private final Context context;
 	
-	public Upgrader() {
+	public Upgrader(Context context) {
+		this.context = context;
+		
 		try {
-			newAppVersion = CurrentProcess.context().getPackageManager().getPackageInfo(CurrentProcess.context().getPackageName(), 0).versionCode;
+			newAppVersion = this.context.getPackageManager().getPackageInfo(this.context.getPackageName(), 0).versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -43,8 +47,8 @@ public class Upgrader {
 		String settingsAppVersionKey;
 		Integer lastAppVersion;
 		
-		if (CurrentProcess.isServiceProcess()) {
-			prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
+		if (CurrentProcess.isServiceProcess(context)) {
+			prefs = ServiceSettings.getSharedPreferences(context);
 			settingsAppVersionKey = ServiceSettings.KEY_APP_VERSION;
 			lastAppVersion = prefs.contains(settingsAppVersionKey) ? prefs.getInt(settingsAppVersionKey, -1) : null;
 			
@@ -56,7 +60,7 @@ public class Upgrader {
 			}
 		}
 		else {
-			prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+			prefs = ApplicationSettings.getSharedPreferences(context);
 			settingsAppVersionKey = ApplicationSettings.KEY_APP_VERSION;
 			lastAppVersion = prefs.contains(settingsAppVersionKey) ? prefs.getInt(settingsAppVersionKey, -1) : null;
 			
@@ -70,7 +74,7 @@ public class Upgrader {
 			&&
 			lastAppVersion != newAppVersion
 		) {
-			Log.i(Upgrader.class.getSimpleName(), "Upgrading " + (CurrentProcess.isServiceProcess() ? "service" : "application") + " settings from " + lastAppVersion + " to " + newAppVersion);
+			Log.i(Upgrader.class.getSimpleName(), "Upgrading " + (CurrentProcess.isServiceProcess(context) ? "service" : "application") + " settings from " + lastAppVersion + " to " + newAppVersion);
 			
 			if (lastAppVersion > newAppVersion) {
 				// On my Sony Xperia M running Android 4.1.2, the OS lets me downgrade the app, so we need to guard against this.
@@ -79,11 +83,11 @@ public class Upgrader {
 				
 				prefs.edit().clear().apply();
 				
-				if (CurrentProcess.isServiceProcess()) {
-					if (!SystemSettings.canWrite(CurrentProcess.context()))
+				if (CurrentProcess.isServiceProcess(context)) {
+					if (!SystemSettings.canWrite(context))
 						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
 					else {
-						Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
+						Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
 						// Note that it's possible for the above to fail due to DB write errors, but we'll just have to accept that and move on.
 					}
 				}
@@ -97,16 +101,16 @@ public class Upgrader {
 					if (migration != null) {
 						Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
 						
-						if (CurrentProcess.isServiceProcess()) {
-							migration.upgradeServiceProcessData(prefs);
+						if (CurrentProcess.isServiceProcess(context)) {
+							migration.upgradeServiceProcessData(context, prefs);
 						}
 						else {
 							// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
-							CharSequence message = migration.getMessage(prefs);
+							CharSequence message = migration.getMessage(context, prefs);
 							if (message != null)
 								upgradeMessage.append(message);
 							
-							migration.upgradeUiProcessData(prefs);
+							migration.upgradeUiProcessData(context, prefs);
 						}
 					}
 				}
@@ -152,21 +156,21 @@ public class Upgrader {
 	}
 	
 	private void notify(String upgradeMessage) {
-		String messageTitle = CurrentProcess.context().getString(R.string.upgrade_summary, CurrentProcess.context().getText(R.string.app_name_full));
-		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
+		String messageTitle = context.getString(R.string.upgrade_summary, context.getText(R.string.app_name_full));
+		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(context, messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
 		
-		Notification notification = NotificationBuilderFactory.create()
+		Notification notification = NotificationBuilderFactory.create(context)
 				.setSmallIcon(R.drawable.notification_update)
 				.setContentIntent(viewMessageIntent)
 				.setContentTitle(messageTitle)
-				.setContentText(CurrentProcess.context().getText(R.string.upgrade_notification_content))
+				.setContentText(context.getText(R.string.upgrade_notification_content))
 				.setAutoCancel(true)
 				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
 				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 				.setChannelId(NotificationChannels.ID_UPGRADES)
 				.build();
 		
-		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
+		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
 	}
 	
 }

@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
@@ -36,7 +35,7 @@ public class SendFeedbackActivity extends UiActivity {
 					break;
 				}
 				case R.id.action_report: {
-					Intent intent = new Intent(CurrentProcess.context(), ReportProblemActivity.class)
+					Intent intent = new Intent(SendFeedbackActivity.this, ReportProblemActivity.class)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 					startActivity(intent);
 

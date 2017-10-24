@@ -24,7 +24,7 @@ public class ForcedAppsChooserActivity extends UiActivity {
 		list.list.setItemsCanFocus(false); //Don't know if this is needed
 		list.progressBar = findViewById(R.id.forced_apps_progress);
 
-		loader = new LoadInstalledAppsTask(list);
+		loader = new LoadInstalledAppsTask(this, list);
 		loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 

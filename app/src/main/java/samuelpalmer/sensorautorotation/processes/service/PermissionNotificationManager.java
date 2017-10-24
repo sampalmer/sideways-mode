@@ -3,13 +3,13 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
 import java.util.Collections;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -30,14 +30,16 @@ public class PermissionNotificationManager extends State {
 	private final NotificationManager notificationManager;
 	private final SharedPreferences prefs;
 	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
+	private final Context context;
 	
 	private boolean isRunning = false;
 	
-	public PermissionNotificationManager() {
-		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
+	public PermissionNotificationManager(Context context) {
+		this.context = context;
+		notificationManager = (NotificationManager) this.context.getSystemService(NOTIFICATION_SERVICE);
 		
-		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
-		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
+		prefs = ServiceSettings.getSharedPreferences(this.context);
+		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(this.context, WindowChangeDetectingService.class);
 	}
 
 	@Override
@@ -76,17 +78,17 @@ public class PermissionNotificationManager extends State {
 	public void check() {
 		if (needsPermission()) {
 			PendingIntent forcedAppsIntent = PendingIntent.getActivity(
-				CurrentProcess.context(),
+			context,
 				PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION,
-				new Intent(CurrentProcess.context(), ForcedAppsActivity.class),
+				new Intent(context, ForcedAppsActivity.class),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
 			
 			Notification notification = NotificationBuilderFactory
-					.create()
+					.create(context)
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
 					.setContentIntent(forcedAppsIntent)
-					.setContentTitle(CurrentProcess.context().getText(R.string.permission_needed_summary))
-					.setContentText(CurrentProcess.context().getText(R.string.permission_touch_to_fix))
+					.setContentTitle(context.getText(R.string.permission_needed_summary))
+					.setContentText(context.getText(R.string.permission_touch_to_fix))
 					.setSmallIcon(R.drawable.notification_error)
 					.setChannelId(NotificationChannels.ID_PERMISSIONS)
 					.build();
@@ -100,7 +102,7 @@ public class PermissionNotificationManager extends State {
 	private boolean needsPermission() {
 		if (isRunning) {
 			Set<String> forcedAppPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
-			if (!forcedAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(CurrentProcess.context())))
+			if (!forcedAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
 				return true;
 		}
 		

@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -70,7 +69,7 @@ public class InstructionsActivity extends UiActivity {
 	private void completeInstructions() {
 		if (isFirstRun())
 			ApplicationSettings
-				.getSharedPreferences(CurrentProcess.context())
+				.getSharedPreferences(this)
 				.edit()
 				.putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
 				.apply();

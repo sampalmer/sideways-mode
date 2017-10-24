@@ -1,8 +1,7 @@
 package samuelpalmer.sensorautorotation.utilities.testing;
 
 import android.app.ActivityManager;
-
-import samuelpalmer.sensorautorotation.CurrentProcess;
+import android.content.Context;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
@@ -18,8 +17,8 @@ public class MemoryHog {
 	@SuppressWarnings("FieldCanBeLocal")
 	private final long[] data;
 
-	public MemoryHog() {
-		int maxMemoryMegabytes = ((ActivityManager) CurrentProcess.context().getSystemService(ACTIVITY_SERVICE)).getLargeMemoryClass();
+	public MemoryHog(Context context) {
+		int maxMemoryMegabytes = ((ActivityManager) context.getSystemService(ACTIVITY_SERVICE)).getLargeMemoryClass();
 		int byteCount = fromMegabytes(maxMemoryMegabytes - 10);
 		int longCount = byteCount / 8;
 		data = new long[longCount];

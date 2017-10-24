@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.errors;
 
 import android.app.PendingIntent;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public abstract class EnvironmentError {
 	abstract String code();
 	abstract EnvironmentError newInstance();
 	
-	public abstract PendingIntent showError();
+	public abstract PendingIntent showError(Context context);
 	
 	public CharSequence getSummary() {
 		return summary;

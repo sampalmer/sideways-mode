@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.utilities.Email;
@@ -69,24 +68,24 @@ public class ReportProblemActivity extends UiActivity {
 			throw new RuntimeException(e);
 		}
 		
-		String subject = CurrentProcess.context().getString(R.string.email_problem_subject, CurrentProcess.context().getText(R.string.app_name_full), appInfo.versionName);
+		String subject = getString(R.string.email_problem_subject, getText(R.string.app_name_full), appInfo.versionName);
 		
 		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body = String.format(
 			"App version:\n%s\n\nProblem:\n%s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
 			fullAppVersion,
 			description.getText().toString(),
-			DiagnosticInfo.deviceInfo(),
-			DiagnosticInfo.sensorDump(),
+			DiagnosticInfo.deviceInfo(this),
+			DiagnosticInfo.sensorDump(this),
 			problemLogs
 		);
 		
 		Intent emailIntent = new Email(
 			ReportProblemActivity.this,
-			CurrentProcess.context().getText(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>",
+			getText(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>",
 			subject,
 			body
-		).getIntent(CurrentProcess.context().getText(R.string.email_app_chooser_title));
+		).getIntent(getText(R.string.email_app_chooser_title));
 		
 		boolean intentStarted = false;
 		

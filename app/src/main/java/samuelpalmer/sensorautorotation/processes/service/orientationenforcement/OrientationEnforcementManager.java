@@ -1,10 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -22,10 +22,10 @@ public class OrientationEnforcementManager extends State {
 	private final SharedPreferences prefs;
 	private final PermissionNotificationManager permissionNotificationManager;
 	
-	public OrientationEnforcementManager(ActivityMonitor activityMonitor) {
-		permissionNotificationManager = new PermissionNotificationManager();
-		monitor = new OrientationEnforcementMonitor(activityMonitor, permissionNotificationManager);
-		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
+	public OrientationEnforcementManager(Context context, ActivityMonitor activityMonitor) {
+		permissionNotificationManager = new PermissionNotificationManager(context);
+		monitor = new OrientationEnforcementMonitor(context, activityMonitor, permissionNotificationManager);
+		prefs = ServiceSettings.getSharedPreferences(context);
 	}
 
 	@Override

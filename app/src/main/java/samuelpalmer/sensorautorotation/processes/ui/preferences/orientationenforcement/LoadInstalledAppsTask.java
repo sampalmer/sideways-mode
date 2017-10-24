@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -17,14 +18,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
-
+	
+	private final SharedPreferences prefs;
+	
+	// Only for use in the background thread
+	private final PackageManager packageManager;
+	
+	// Only for use in the UI thread
 	private final ProgressListView list;
-
-	public LoadInstalledAppsTask(ProgressListView v) {
+	
+	public LoadInstalledAppsTask(Context context, ProgressListView v) {
+		prefs = ApplicationSettings.getSharedPreferences(context);
+		packageManager = context.getPackageManager();
 		this.list = v;
 	}
 
@@ -37,8 +45,6 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 
 	@Override
 	protected ArrayList<InstalledApp> doInBackground(Void... params) {
-		PackageManager packageManager = CurrentProcess.context().getPackageManager();
-
 		if (isCancelled())
 			return null;
 
@@ -84,7 +90,6 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		list.adapter.addAll(result);
 
 		//TODO: Maybe move all of this setting code somewhere else?
-		final SharedPreferences prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
 		Set<String> forcedAppPackages = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
 		for (int i = 0; i < result.size(); ++i) {
 			InstalledApp app = result.get(i);

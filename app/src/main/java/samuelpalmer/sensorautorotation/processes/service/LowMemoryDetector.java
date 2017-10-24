@@ -1,22 +1,28 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.ComponentCallbacks;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 public class LowMemoryDetector extends State {
-
+	
+	private final Context context;
+	
+	public LowMemoryDetector(Context context) {
+		this.context = context;
+	}
+	
 	@Override
 	protected void start() {
-		CurrentProcess.context().registerComponentCallbacks(callback);
+		context.registerComponentCallbacks(callback);
 	}
 
 	@Override
 	protected void stop() {
-		CurrentProcess.context().unregisterComponentCallbacks(callback);
+		context.unregisterComponentCallbacks(callback);
 	}
 
 	private final ComponentCallbacks callback = new ComponentCallbacks() {

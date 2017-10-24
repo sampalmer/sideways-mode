@@ -7,7 +7,6 @@ import android.content.Intent;
 import java.util.Collections;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
@@ -32,12 +31,12 @@ public class SendConfigReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, getConfigToSync()).send(context);
+		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, getConfigToSync(context)).send(context);
 	}
 	
-	public static Set<String> getConfigToSync() {
+	public static Set<String> getConfigToSync(Context context) {
 		return ApplicationSettings
-			.getSharedPreferences(CurrentProcess.context())
+			.getSharedPreferences(context)
 			.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet());
 	}
 	

@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
+import android.content.Context;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -8,15 +9,15 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusDisplayUpdater extends State {
-
+	
 	private final OrientationCalculator calculator;
 	private final RotationService service;
 	private final ServiceNotification notificationBuilder;
 	
-	public ApplicationStatusDisplayUpdater(OrientationCalculator calculator, RotationService service) {
+	public ApplicationStatusDisplayUpdater(Context context, OrientationCalculator calculator, RotationService service) {
 		this.calculator = calculator;
 		this.service = service;
-		notificationBuilder = new ServiceNotification();
+		notificationBuilder = new ServiceNotification(context);
 	}
 
 	@Override

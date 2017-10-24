@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.errors;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
@@ -22,8 +22,8 @@ public class SensorError extends EnvironmentError {
 		NO_DATA
 	}
 	
-	public SensorError(Type type) {
-		summary = CurrentProcess.context().getText(R.string.device_problem);
+	public SensorError(Context context, Type type) {
+		summary = context.getText(R.string.device_problem);
 		this.type = type;
 	}
 	
@@ -56,13 +56,13 @@ public class SensorError extends EnvironmentError {
 	}
 	
 	@Override
-	public PendingIntent showError() {
-		Intent intent = new Intent(CurrentProcess.context(), DeviceUnsupportedActivity.class)
+	public PendingIntent showError(Context context) {
+		Intent intent = new Intent(context, DeviceUnsupportedActivity.class)
 			.putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, R.string.device_problem_explanation_sensor)
 			.putExtra(DeviceUnsupportedActivity.EXTRA_IS_ERROR, true)
 		;
 		
-		return PendingIntent.getActivity(CurrentProcess.context(), PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+		return PendingIntent.getActivity(context, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 	
 }

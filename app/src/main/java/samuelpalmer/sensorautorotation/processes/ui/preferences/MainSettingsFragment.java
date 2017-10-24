@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
@@ -39,7 +38,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.getFileName(CurrentProcess.context()));
+		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.getFileName(getActivity()));
 		
 		addPreferencesFromResource(R.xml.preferences);
 		
@@ -62,7 +61,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		if (Build.VERSION.SDK_INT >= 23) {
 			final Intent assistSettingsIntent = new Intent(android.provider.Settings.ACTION_VOICE_INPUT_SETTINGS);
 			
-			if (IntentExtensions.activityDoesntExist(assistSettingsIntent, CurrentProcess.context().getPackageManager()))
+			if (IntentExtensions.activityDoesntExist(assistSettingsIntent, getActivity().getPackageManager()))
 				removePreference(assistPreference);
 			else
 				assistPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -134,9 +133,9 @@ public class MainSettingsFragment extends PreferenceFragment {
 		if (controlsSection.getPreferenceCount() == 0)
 			removePreference(controlsSection);
 		
-		prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+		prefs = ApplicationSettings.getSharedPreferences(getActivity());
 		forcedAppsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
-		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
+		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor(getActivity(), WindowChangeDetectingService.class);
 	}
 	
 	private void removePreference(Preference preference) {

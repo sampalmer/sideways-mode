@@ -1,9 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
@@ -16,15 +16,17 @@ public class ScreenOrientationController extends State {
 	
 	private static final String TAG = ScreenOrientationController.class.getSimpleName();
 	
+	private final Context context;
 	private final ScreenRotationMonitor screen;
 	
-	public ScreenOrientationController(ScreenRotationMonitor screen) {
+	public ScreenOrientationController(Context context, ScreenRotationMonitor screen) {
+		this.context = context;
 		this.screen = screen;
 	}
 
 	@Override
 	protected void start() {
-		if (Settings.System.getInt(CurrentProcess.context().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1) == 1) {
+		if (Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1) == 1) {
 			Orientation realOrientation = screen.currentRotation();
 			propose(realOrientation);
 			
@@ -49,16 +51,16 @@ public class ScreenOrientationController extends State {
 	}
 	
 	private void setAndHandleErrors(String name, int newValue) {
-		if (!SystemSettings.canWrite(CurrentProcess.context())) {
-			GenericError error = new GenericError(R.string.permission_needed_summary, CurrentProcess.context().getText(R.string.environment_error_system_setting_write_denied_message));
-			EnvironmentErrorManager.report(error);
+		if (!SystemSettings.canWrite(context)) {
+			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getText(R.string.environment_error_system_setting_write_denied_message));
+			EnvironmentErrorManager.report(context, error);
 		}
 		else {
-			boolean worked = Settings.System.putInt(CurrentProcess.context().getContentResolver(), name, newValue);
+			boolean worked = Settings.System.putInt(context.getContentResolver(), name, newValue);
 			if (!worked) {
 				//Because the developer can't do anything about this; it seems to be a problem on the device.
-				GenericError error = new GenericError(R.string.environment_error_system_setting_write_failure_summary, CurrentProcess.context().getString(R.string.environment_error_system_setting_write_failure_message, name, Integer.toString(newValue)));
-				EnvironmentErrorManager.report(error);
+				GenericError error = new GenericError(context, R.string.environment_error_system_setting_write_failure_summary, context.getString(R.string.environment_error_system_setting_write_failure_message, name, Integer.toString(newValue)));
+				EnvironmentErrorManager.report(context, error);
 			}
 		}
 	}

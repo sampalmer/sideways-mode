@@ -21,7 +21,7 @@ public abstract class ApplicationSettings {
 	 * Name of the {@link android.content.SharedPreferences} file containing these preferences.
 	 */
 	public static String getFileName(Context context) {
-		if (CurrentProcess.isServiceProcess())
+		if (CurrentProcess.isServiceProcess(context))
 			throw new RuntimeException("Application settings accessed outside of the UI process");
 		
 		return context.getPackageName() + "_preferences";

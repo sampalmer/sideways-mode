@@ -72,6 +72,7 @@ public abstract class WindowOrientationListener {
 	private static final boolean USE_GRAVITY_SENSOR = false;
 	private static final int DEFAULT_BATCH_LATENCY = 100000;
 	
+	private final Context context;
 	private Handler mHandler;
 	private SensorManager mSensorManager;
 	private boolean mEnabled;
@@ -137,7 +138,7 @@ public abstract class WindowOrientationListener {
 			synchronized (mLock) {
 				if (mEnabled && !mGotSensorEvent) {
 					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
-					EnvironmentErrorManager.report(new SensorError(SensorError.Type.NO_DATA));
+					EnvironmentErrorManager.report(context, new SensorError(context, SensorError.Type.NO_DATA));
 				}
 			}
 		}
@@ -200,6 +201,7 @@ public abstract class WindowOrientationListener {
 	 * This constructor is private since no one uses it.
 	 */
 	private WindowOrientationListener(Context context, Handler handler, int rate) {
+		this.context = context;
 		mHandler = handler;
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;

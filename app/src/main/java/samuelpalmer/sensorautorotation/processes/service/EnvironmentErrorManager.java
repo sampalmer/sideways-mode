@@ -3,10 +3,10 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
@@ -20,44 +20,44 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public abstract class EnvironmentErrorManager {
 	
-	public static void report(EnvironmentError error) {
+	public static void report(Context context, EnvironmentError error) {
 		//This is useful when checking log output from Cloud Test Lab on Google Play Store.
 		Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
 		
-		postNotification(error);
+		postNotification(context, error);
 		
 		ServiceSettings
-			.getSharedPreferences(CurrentProcess.context())
+			.getSharedPreferences(context)
 			.edit()
 			.putString(ServiceSettings.KEY_LAST_ERROR_JSON, error.toJson())
 			.apply();
 		
-		new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(CurrentProcess.context());
+		new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(context);
 	}
 	
-	public static void clear() {
-		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
+	public static void clear(Context context) {
+		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
 		
 		ServiceSettings
-			.getSharedPreferences(CurrentProcess.context())
+			.getSharedPreferences(context)
 			.edit()
 			.remove(ServiceSettings.KEY_LAST_ERROR_JSON)
 			.apply();
 	}
 	
-	private static void postNotification(EnvironmentError error) {
+	private static void postNotification(Context context, EnvironmentError error) {
 		PendingIntent clearIntentIntent = PendingIntent.getBroadcast(
-			CurrentProcess.context(),
+			context,
 			PendingIntentIds.ENVIRONMENT_ERROR_NOTIFICATION_CLEAR,
-			new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).asIntent(CurrentProcess.context()),
+			new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).asIntent(context),
 			PendingIntentIds.PENDING_INTENT_FLAGS
 		);
 		
-		NotificationBuilderCompat builder = NotificationBuilderFactory.create()
+		NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
 			.setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
-			.setContentIntent(error.showError())
+			.setContentIntent(error.showError(context))
 			.setContentTitle(error.getSummary())
-			.setContentText(CurrentProcess.context().getText(R.string.app_disabled_view_error))
+			.setContentText(context.getText(R.string.app_disabled_view_error))
 			.setDeleteIntent(clearIntentIntent)
 			.setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
 			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
@@ -71,7 +71,7 @@ public abstract class EnvironmentErrorManager {
 		
 		Notification notification = builder.build();
 		
-		((NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
+		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
 	}
 	
 }

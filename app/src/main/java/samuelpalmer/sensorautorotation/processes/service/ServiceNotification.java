@@ -2,13 +2,13 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -22,23 +22,26 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 class ServiceNotification {
-
+	
+	private final Context context;
 	private final NotificationBuilderCompat builder;
 	
 	//Cached for RAM & CPU efficiency
 	private final int actionButtonColour;
 	private final int unselectedButtonBackground;
 	
-	public ServiceNotification() {
+	public ServiceNotification(Context context) {
+		this.context = context;
+		
 		PendingIntent settingsActivityIntent = PendingIntent.getActivity(
-			CurrentProcess.context(),
+		this.context,
 			PendingIntentIds.MAIN_NOTIFICATION_CLICK,
-			new Intent(CurrentProcess.context(), MainSettingsActivity.class),
+			new Intent(this.context, MainSettingsActivity.class),
 			PendingIntentIds.PENDING_INTENT_FLAGS);
 		
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
-		builder = NotificationBuilderFactory.create()
+		builder = NotificationBuilderFactory.create(this.context)
 			.setContentIntent(settingsActivityIntent)
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
@@ -48,7 +51,7 @@ class ServiceNotification {
 		
 		hideTimestamp();
 		
-		NotificationStyles styles = new NotificationStyles(CurrentProcess.context(), R.drawable.action_turn_off, ContextCompat.getColor(CurrentProcess.context(), R.color.primary_500));
+		NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
 		actionButtonColour = styles.getActionButtonColour();
 		unselectedButtonBackground = styles.getUnselectedButtonBackground();
 		
@@ -67,14 +70,14 @@ class ServiceNotification {
 			:
 			runningState.userSide.descriptionId;
 		
-		CharSequence statusText = CurrentProcess.context().getText(statusTextResource);
+		CharSequence statusText = context.getText(statusTextResource);
 
 		if (VERSION.SDK_INT >= 24) {
 			//In Android N, the app name is already shown in the notification's header section, so we can skip it here.
 			builder.setContentTitle(statusText);
 		}
 		else {
-			builder.setContentTitle(CurrentProcess.context().getText(R.string.app_name_full));
+			builder.setContentTitle(context.getText(R.string.app_name_full));
 			builder.setContentText(statusText);
 		}
 		
@@ -87,7 +90,7 @@ class ServiceNotification {
 		builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
 
 		NotificationButtons notificationButtons = new NotificationButtons(
-			CurrentProcess.context(),
+		context,
 			R.layout.notification,
 			builder.createContentView(),
 			actionButtonColour,
@@ -100,23 +103,23 @@ class ServiceNotification {
 				R.drawable.app_left_side,
 				PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
 				// Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-				userSide.equals(UserSide.LEFT) ? new Intent(CurrentProcess.context(), DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(CurrentProcess.context()),
-				CurrentProcess.context().getText(R.string.user_rotation_left_side),
+				userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
+				context.getText(R.string.user_rotation_left_side),
 				userSide.equals(UserSide.LEFT))
 			.configureButton(
 				R.id.notification_turn_off_button,
 				R.drawable.action_turn_off,
 				PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
-				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(CurrentProcess.context()),
-				CurrentProcess.context().getText(R.string.action_turn_off),
+				new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
+				context.getText(R.string.action_turn_off),
 				false)
 			.configureButton(
 				R.id.notification_right_side_button,
 				R.drawable.app_right_side,
 				PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
 				// Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-				userSide.equals(UserSide.RIGHT) ? new Intent(CurrentProcess.context(), DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(CurrentProcess.context()),
-				CurrentProcess.context().getText(R.string.user_rotation_right_side),
+				userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
+				context.getText(R.string.user_rotation_right_side),
 				userSide.equals(UserSide.RIGHT))
 		;
 

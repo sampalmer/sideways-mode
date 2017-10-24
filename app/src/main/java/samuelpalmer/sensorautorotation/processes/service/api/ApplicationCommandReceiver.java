@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
@@ -33,22 +32,22 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
-				setUserSide(UserSide.LEFT);
+				setUserSide(context, UserSide.LEFT);
 				collapseNotificationShade(context);
 				
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
-				setUserSide(UserSide.RIGHT);
+				setUserSide(context, UserSide.RIGHT);
 				collapseNotificationShade(context);
 				
 				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
-				turnOffApp("Received application command");
+				turnOffApp(context, "Received application command");
 				collapseNotificationShade(context);
 				
 				break;
 			case ApplicationCommand.ACTION_CLEAR_ERROR:
-				EnvironmentErrorManager.clear();
+				EnvironmentErrorManager.clear(context);
 				break;
 			case ApplicationCommand.ACTION_SYNC_CONFIG:
 				if (command.forcedOrientationAppPackages == null)
@@ -63,11 +62,11 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 	}
 	
 	// It would be nice to move this logic into the service as an intent action, but maybe that could contribute to the OS starting multiple simultaneous instances of the service?
-	public static void turnOffApp(String reason) {
+	public static void turnOffApp(Context context, String reason) {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
 		
-		if (ServiceSettings.getSharedPreferences(CurrentProcess.context()).contains(ServiceSettings.KEY_PERSISTENT_STATE))
-			ServiceController.ensureStopped();
+		if (ServiceSettings.getSharedPreferences(context).contains(ServiceSettings.KEY_PERSISTENT_STATE))
+			ServiceController.ensureStopped(context);
 		else {
 			// No state means service has not started and is not enabled.
 			// We could stop the service here just in case the OS considers it "started" but hasn't yet started it.
@@ -78,12 +77,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 	}
 	
 	// It would be nice to move this logic into the service as an intent action, but maybe that could contribute to the OS starting multiple simultaneous instances of the service?
-	private void setUserSide(UserSide userSide) {
+	private void setUserSide(Context context, UserSide userSide) {
 		if (ServiceRunningStateHolder.isServiceRunning())
 			ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
 		else {
 			ServiceSettings
-				.getSharedPreferences(CurrentProcess.context())
+				.getSharedPreferences(context)
 				.edit()
 				.putString(ServiceSettings.KEY_PERSISTENT_STATE, userSide.name())
 				.apply();
@@ -94,7 +93,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			// * The service crashed and the OS didn't restart it.
 			// * User's device dies while the service is running.
 			// * The OS ran extremely low on memory and killed the service process while it was running.
-			ServiceController.ensureStarted();
+			ServiceController.ensureStarted(context);
 		}
 	}
 	

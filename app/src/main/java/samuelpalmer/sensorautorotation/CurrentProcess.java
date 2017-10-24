@@ -37,14 +37,14 @@ public class CurrentProcess extends Application {
 		return context;
 	}
 	
-	public static boolean isServiceProcess() {
+	public static boolean isServiceProcess(Context context) {
 		if (isServiceProcess == null) {
-			String currentProcessName = CurrentProcessNameDetector.currentProcessName();
-			String packageName = context().getPackageName();
+			String currentProcessName = CurrentProcessNameDetector.currentProcessName(context);
+			String packageName = context.getPackageName();
 			
-			if (currentProcessName.equals(packageName + context().getText(R.string.process_service)))
+			if (currentProcessName.equals(packageName + context.getText(R.string.process_service)))
 				isServiceProcess = true; // Service process
-			else if (currentProcessName.equals(packageName + context().getText(R.string.process_ui)))
+			else if (currentProcessName.equals(packageName + context.getText(R.string.process_ui)))
 				isServiceProcess = false; // UI process
 			else
 				throw new RuntimeException("Current process has unrecognised name: " + currentProcessName);
@@ -79,12 +79,12 @@ public class CurrentProcess extends Application {
 		 * Doing this regardless of which process we're in since notifications can (technically) be posted from either process.
 		 */
 		if (Build.VERSION.SDK_INT >= 26)
-			NotificationChannels.setup();
+			NotificationChannels.setup(this);
 		
 		// Must upgrade settings before any settings-related code runs.
-		new Upgrader().upgradeIfNecessary();
+		new Upgrader(this).upgradeIfNecessary();
 		
-		if (!isServiceProcess()) {
+		if (!isServiceProcess(this)) {
 			/*
 			  Automatically pushes changes to user preferences from the UI process to the service process.
 			  This ensures preference changes made by the user appear to instantly take effect.
@@ -110,7 +110,7 @@ public class CurrentProcess extends Application {
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
 				Log.i(TAG, "User preferences changed. Sending to service process.");
-				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(CurrentProcess.this);
+				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync(CurrentProcess.this)).send(CurrentProcess.this);
 			}
 		}
 	};

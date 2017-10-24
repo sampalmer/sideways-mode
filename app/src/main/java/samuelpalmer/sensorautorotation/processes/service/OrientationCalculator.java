@@ -1,10 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -22,8 +22,8 @@ public class OrientationCalculator {
 
 	public final UpdatingEventRegistrar onAnythingChanged;
 
-	public OrientationCalculator(ScreenRotationMonitor screen) {
-		this.prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
+	public OrientationCalculator(Context context, ScreenRotationMonitor screen) {
+		this.prefs = ServiceSettings.getSharedPreferences(context);
 		
 		// This infers the device orientation from the screen orientation so we have something to start with.
 		// It might be better to infer it from USER_ROTATION if system auto rotation was off.

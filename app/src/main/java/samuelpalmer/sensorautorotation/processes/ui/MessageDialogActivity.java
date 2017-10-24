@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
@@ -20,16 +20,16 @@ public class MessageDialogActivity extends DialogActivity {
 	private static final String INTENT_EXTRA_IS_ERROR = "is_error";
 	private static final String TAG = "dialog";
 
-	public static PendingIntent makePendingIntent(CharSequence title, CharSequence message, int requestCode, boolean isError) {
-		Intent mainActivityIntent = new Intent(CurrentProcess.context(), DashboardActivity.class);
+	public static PendingIntent makePendingIntent(Context context, CharSequence title, CharSequence message, int requestCode, boolean isError) {
+		Intent mainActivityIntent = new Intent(context, DashboardActivity.class);
 		
-		Intent intent = new Intent(CurrentProcess.context(), MessageDialogActivity.class)
+		Intent intent = new Intent(context, MessageDialogActivity.class)
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title)
 				.putExtra(INTENT_EXTRA_IS_ERROR, isError);
 
 		Intent[] intents = {mainActivityIntent, intent};
-		return PendingIntent.getActivities(CurrentProcess.context(), requestCode, intents, PendingIntentIds.PENDING_INTENT_FLAGS);
+		return PendingIntent.getActivities(context, requestCode, intents, PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 
 	@Override

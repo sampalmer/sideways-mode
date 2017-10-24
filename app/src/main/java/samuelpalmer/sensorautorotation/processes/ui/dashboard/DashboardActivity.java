@@ -142,7 +142,7 @@ public class DashboardActivity extends DialogActivity {
 				@Override
 				public void onClick(View v) {
 					try {
-						lastStatus.error.showError().send();
+						lastStatus.error.showError(DashboardActivity.this).send();
 					} catch (PendingIntent.CanceledException e) {
 						throw new RuntimeException(e);
 					}

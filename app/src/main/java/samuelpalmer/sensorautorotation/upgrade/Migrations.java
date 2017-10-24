@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.upgrade;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -8,7 +9,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -23,14 +23,14 @@ class Migrations {
 
 		migrations.put(25, new Migration() {
 			@Override
-			public void upgradeUiProcessData(SharedPreferences prefs) {
-				super.upgradeUiProcessData(prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeUiProcessData(context, prefs);
 				
 				// Not migrating these prefs anywhere since the UI process (which owns the app prefs) can't directly access the service process's prefs as of v57.
 				// Instead, we'll gracefully disable the app and restore normal Android rotation.
 				if (prefs.contains("autoRotate") || prefs.contains("userOrientation")) {
 					Log.w(Migrations.class.getSimpleName(), "App was enabled, but service state cannot be migrated to service process. Disabling app.");
-					restoreSystemSettings(prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null);
+					restoreSystemSettings(context, prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null);
 				}
 				
 				prefs.edit()
@@ -43,8 +43,8 @@ class Migrations {
 
 		migrations.put(43, new Migration() {
 			@Override
-			public void upgradeServiceProcessData(SharedPreferences prefs) {
-				super.upgradeServiceProcessData(prefs);
+			public void upgradeServiceProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeServiceProcessData(context, prefs);
 				
 				SharedPreferences.Editor editor = prefs.edit();
 
@@ -61,8 +61,8 @@ class Migrations {
 
 		migrations.put(47, new Migration() {
 			@Override
-			public void upgradeUiProcessData(SharedPreferences prefs) {
-				super.upgradeUiProcessData(prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeUiProcessData(context, prefs);
 				
 				prefs
 					.edit()
@@ -73,8 +73,8 @@ class Migrations {
 		
 		migrations.put(51, new Migration() {
 			@Override
-			public void upgradeUiProcessData(SharedPreferences prefs) {
-				super.upgradeUiProcessData(prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeUiProcessData(context, prefs);
 				
 				//The format of this setting has changed.
 				prefs
@@ -86,19 +86,19 @@ class Migrations {
 		
 		migrations.put(54, new Migration() {
 			@Override
-			public CharSequence getMessage(SharedPreferences prefs) {
+			public CharSequence getMessage(Context context, SharedPreferences prefs) {
 				boolean notificationWasHidden = !prefs.getBoolean("showNotification", true) && Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */;
 				
 				if (notificationWasHidden)
-					return CurrentProcess.context().getText(R.string.upgrade_v54);
+					return context.getText(R.string.upgrade_v54);
 				else
 					// No need to bother the user about this if they weren't using the feature.
 					return null;
 			}
 			
 			@Override
-			public void upgradeUiProcessData(SharedPreferences prefs) {
-				super.upgradeUiProcessData(prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeUiProcessData(context, prefs);
 				
 				// This setting was removed since it exploited an Android OS bug, which might be considered a violation of Google Play terms regarding malicious behaviour.
 				// See https://play.google.com/about/privacy-security/malicious-behavior/
@@ -112,13 +112,13 @@ class Migrations {
 		migrations.put(57, new Migration() {
 			
 			@Override
-			public CharSequence getMessage(SharedPreferences prefs) {
-				return CurrentProcess.context().getString(R.string.upgrade_v57, CurrentProcess.context().getText(R.string.app_name_full));
+			public CharSequence getMessage(Context context, SharedPreferences prefs) {
+				return context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
 			}
 			
 			@Override
-			public void upgradeUiProcessData(SharedPreferences prefs) {
-				super.upgradeUiProcessData(prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeUiProcessData(context, prefs);
 				
 				prefs
 					.edit()
@@ -132,11 +132,11 @@ class Migrations {
 			}
 			
 			@Override
-			public void upgradeServiceProcessData(SharedPreferences prefs) {
-				super.upgradeServiceProcessData(prefs);
+			public void upgradeServiceProcessData(Context context, SharedPreferences prefs) {
+				super.upgradeServiceProcessData(context, prefs);
 				
 				// The service process no longer has direct access to user preferences, so we'll have to ask the UI process to send over a copy.
-				CurrentProcess.context().sendBroadcast(new Intent(CurrentProcess.context(), SendConfigReceiver.class));
+				context.sendBroadcast(new Intent(context, SendConfigReceiver.class));
 				
 				Boolean autoRotateValue = prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null;
 				Orientation screenOrientationOffsetValue = prefs.contains("screenOrientationOffset") ? Orientation.fromOffset(prefs.getInt("screenOrientationOffset", 0)) : null;
@@ -166,7 +166,7 @@ class Migrations {
 						Log.w(Migrations.class.getSimpleName(), "App was enabled, but locked mode and upright position are no longer supported. Disabling app.");
 						
 						// The app doesn't support locked mode or being upright anymore, so we'll gracefully disable the app.
-						restoreSystemSettings(autoRotateValue);
+						restoreSystemSettings(context, autoRotateValue);
 					}
 				}
 				
@@ -180,13 +180,13 @@ class Migrations {
 		return migrations;
 	}
 	
-	private static void restoreSystemSettings(Boolean autoRotate) {
-		if (!SystemSettings.canWrite(CurrentProcess.context()))
+	private static void restoreSystemSettings(Context context, Boolean autoRotate) {
+		if (!SystemSettings.canWrite(context))
 			Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.");
 		else {
 			if (autoRotate != null)
-				Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, autoRotate ? 1 : 0);
-			Settings.System.putInt(CurrentProcess.context().getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
+				Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, autoRotate ? 1 : 0);
+			Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);
 			// Note that it's possible for the above to fail due to DB write errors, but we'll just have to accept that and move on.
 		}
 	}

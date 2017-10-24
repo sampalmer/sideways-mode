@@ -7,7 +7,6 @@ import android.preference.PreferenceFragment;
 
 import java.util.Collections;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -24,7 +23,7 @@ public class ForcedAppsFragment extends PreferenceFragment {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences_overridden_apps);
 		
-		prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
+		prefs = ApplicationSettings.getSharedPreferences(getActivity());
 		appsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
 
 		ForcedAppsPermissionFragment permissionFragment = (ForcedAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);

@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 public abstract class ServiceSettings {
 	
 	public static SharedPreferences getSharedPreferences(Context context) {
-		if (!CurrentProcess.isServiceProcess())
+		if (!CurrentProcess.isServiceProcess(context))
 			throw new RuntimeException("Service settings accessed outside of the service process");
 		
 		return context.getSharedPreferences("service", Context.MODE_PRIVATE);
