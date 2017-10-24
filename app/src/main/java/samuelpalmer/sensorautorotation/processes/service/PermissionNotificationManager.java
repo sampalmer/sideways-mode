@@ -37,7 +37,7 @@ public class PermissionNotificationManager extends State {
 		notificationManager = (NotificationManager) CurrentProcess.context().getSystemService(NOTIFICATION_SERVICE);
 		
 		prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
-		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor();
+		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
 	}
 
 	@Override

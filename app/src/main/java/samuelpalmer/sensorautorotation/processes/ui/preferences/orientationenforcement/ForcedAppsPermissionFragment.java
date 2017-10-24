@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
@@ -31,7 +32,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	public void initialise(PreferenceScreen preferenceScreen) {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
-		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor();
+		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
 
 		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("forcedOrientationPermission");
 		tipView.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

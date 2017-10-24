@@ -21,6 +21,7 @@ import java.util.Collections;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
@@ -135,7 +136,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 		
 		prefs = ApplicationSettings.getSharedPreferences(CurrentProcess.context());
 		forcedAppsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
-		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor();
+		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor(CurrentProcess.context(), WindowChangeDetectingService.class);
 	}
 	
 	private void removePreference(Preference preference) {
