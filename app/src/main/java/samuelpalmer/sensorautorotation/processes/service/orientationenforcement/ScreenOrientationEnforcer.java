@@ -14,6 +14,7 @@ import android.view.WindowManager.LayoutParams;
 import samuelpalmer.sensorautorotation.State;
 
 /**
+ * Forces the OS to use the {@link ActivityInfo#SCREEN_ORIENTATION_USER} screen orientation.
  * Requires the {@link android.Manifest.permission#SYSTEM_ALERT_WINDOW} permission.
  */
 public class ScreenOrientationEnforcer extends State {
@@ -56,13 +57,13 @@ public class ScreenOrientationEnforcer extends State {
 
 	private static LayoutParams generateLayout() {
 		LayoutParams layoutParams = new LayoutParams();
-
-		//This seems like the most relevant window type
-		//Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
+		
 		if (Build.VERSION.SDK_INT >= 26)
 			//noinspection WrongConstant
 			layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
 		else
+			//This seems like the most relevant window type for what we're doing.
+			//Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
 			//noinspection deprecation
 			layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
 

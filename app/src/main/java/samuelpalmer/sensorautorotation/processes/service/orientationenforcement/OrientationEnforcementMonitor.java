@@ -13,6 +13,10 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 
+/**
+ * Represents the "overridden apps" feature. Dynamically overrides the screen orientation
+ * depending on the currently open activity.
+ */
 public class OrientationEnforcementMonitor extends State {
 
 	private final ActivityMonitor activityMonitor;
