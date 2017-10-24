@@ -33,10 +33,7 @@ public class ApplicationStatusDisplayUpdater extends State {
 	private final EventHandler updateDisplays = new EventHandler() {
 		@Override
 		public void update() {
-			ApplicationStatus applicationStatus = new ApplicationStatus(
-				new ApplicationStatus.RunningState(calculator.side(), calculator.isWaitingForSensor()),
-				null
-			);
+			ApplicationStatus applicationStatus = new ApplicationStatus(calculator.runningState(), null);
 
 			if (lastApplicationStatus == null || !applicationStatus.equals(lastApplicationStatus)) {
 				Notification notification = notificationBuilder.build(applicationStatus.runningState);

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
@@ -52,18 +53,6 @@ public class OrientationCalculator {
 		return user().minus(device);
 	}
 	
-	public boolean isWaitingForSensor() {
-		return waitingForSensor;
-	}
-	
-	public UserSide side() {
-		String name = prefs.getString(ServiceSettings.KEY_PERSISTENT_STATE, null);
-		if (name == null)
-			throw new RuntimeException("Service has no state; don't know user side.");
-		
-		return UserSide.valueOf(name);
-	}
-	
 	public void setSide(UserSide userSide) {
 		prefs
 			.edit()
@@ -72,4 +61,17 @@ public class OrientationCalculator {
 		
 		reportChange();
 	}
+	
+	public ApplicationStatus.RunningState runningState() {
+		return new ApplicationStatus.RunningState(side(), waitingForSensor);
+	}
+	
+	private UserSide side() {
+		String name = prefs.getString(ServiceSettings.KEY_PERSISTENT_STATE, null);
+		if (name == null)
+			throw new RuntimeException("Service has no state; don't know user side.");
+		
+		return UserSide.valueOf(name);
+	}
+	
 }
