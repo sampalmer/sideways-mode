@@ -25,7 +25,7 @@ public class ServiceRunningState extends State {
 	final ActivityMonitor activityMonitor;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final AppDisabler appDisabler;
-	private final UserInteractivityMonitor userInteractivityMonitor;
+	private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 	
 	public ServiceRunningState(RotationService service) {
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor();
@@ -38,7 +38,7 @@ public class ServiceRunningState extends State {
 		activityMonitor = new ActivityMonitor();
 		orientationEnforcementManager = new OrientationEnforcementManager(activityMonitor);
 		appDisabler = new AppDisabler();
-		userInteractivityMonitor = new UserInteractivityMonitor();
+		deviceInteractivityMonitor = new DeviceInteractivityMonitor();
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public class ServiceRunningState extends State {
 		orientationEnforcementManager.ensureStarted();
 		appDisabler.ensureStarted();
 		
-		userInteractivityMonitor.subscribe(userInteractivityListener);
+		deviceInteractivityMonitor.subscribe(userInteractivityListener);
 		userInteractivityListener.update();
 		
 		ServiceRunningStateHolder.serviceStarted(this);
@@ -68,7 +68,7 @@ public class ServiceRunningState extends State {
 		
 		ServiceRunningStateHolder.serviceStopped();
 		
-		userInteractivityMonitor.unsubscribe(userInteractivityListener);
+		deviceInteractivityMonitor.unsubscribe(userInteractivityListener);
 		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
@@ -89,12 +89,12 @@ public class ServiceRunningState extends State {
 		@Override
 		public void update() {
 			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
-			if (userInteractivityMonitor.isInteractive()) {
-				Log.i(TAG, "User is interactive. Listening to sensors.");
+			if (deviceInteractivityMonitor.isInteractive()) {
+				Log.i(TAG, "Device is interactive. Listening to sensors.");
 				orientationSensorHandler.ensureStarted();
 			}
 			else {
-				Log.i(TAG, "User is not interactive. Not listening to sensors.");
+				Log.i(TAG, "Device is not interactive. Not listening to sensors.");
 				orientationSensorHandler.ensureStopped();
 			}
 		}

@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
 import static android.content.Context.POWER_SERVICE;
 
-public class UserInteractivityMonitor extends EventRegistrarAdaptor {
+public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
 	
 	private boolean isUpToDate = false;
 	private boolean last;
