@@ -8,7 +8,7 @@ class InstalledApp {
 
 	public final String packageName;
 	public final CharSequence label;
-	public final ApplicationInfo app;
+	private final ApplicationInfo app;
 
 	public InstalledApp(ApplicationInfo app, PackageManager packageManager) {
 		packageName = app.packageName;
