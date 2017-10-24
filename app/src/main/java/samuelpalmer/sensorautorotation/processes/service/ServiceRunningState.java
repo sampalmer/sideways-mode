@@ -57,8 +57,8 @@ public class ServiceRunningState extends State {
 		orientationEnforcementManager.ensureStarted();
 		appDisabler.ensureStarted();
 		
-		deviceInteractivityMonitor.subscribe(userInteractivityListener);
-		userInteractivityListener.update();
+		deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
+		deviceInteractivityListener.update();
 		
 		ServiceRunningStateHolder.serviceStarted(this);
 	}
@@ -69,7 +69,7 @@ public class ServiceRunningState extends State {
 		
 		ServiceRunningStateHolder.serviceStopped();
 		
-		deviceInteractivityMonitor.unsubscribe(userInteractivityListener);
+		deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
 		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
 		orientationEnforcementManager.ensureStopped();
@@ -86,7 +86,7 @@ public class ServiceRunningState extends State {
 			.apply();
 	}
 	
-	private final EventHandler userInteractivityListener = new EventHandler() {
+	private final EventHandler deviceInteractivityListener = new EventHandler() {
 		@Override
 		public void update() {
 			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
