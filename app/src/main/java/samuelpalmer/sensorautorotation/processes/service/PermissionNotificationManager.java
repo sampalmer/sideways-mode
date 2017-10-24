@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import java.util.Collections;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;

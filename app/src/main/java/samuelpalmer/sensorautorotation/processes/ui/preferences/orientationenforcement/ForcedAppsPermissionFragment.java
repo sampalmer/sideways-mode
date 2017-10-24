@@ -11,7 +11,7 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 
-import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
