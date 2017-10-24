@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import samuelpalmer.sensorautorotation.eventhandling.UpdatingEventRegistrar;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 
 public abstract class ServiceRunningStateHolder {
 	

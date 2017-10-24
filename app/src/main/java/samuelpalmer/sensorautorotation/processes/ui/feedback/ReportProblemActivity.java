@@ -15,6 +15,7 @@ import java.util.Locale;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.utilities.Email;
 
 public class ReportProblemActivity extends UiActivity {
 	
@@ -85,7 +86,7 @@ public class ReportProblemActivity extends UiActivity {
 			CurrentProcess.context().getText(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>",
 			subject,
 			body
-		).getIntent();
+		).getIntent(CurrentProcess.context().getText(R.string.email_app_chooser_title));
 		
 		boolean intentStarted = false;
 		

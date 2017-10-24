@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.utilities.State;
 
 /**
  * Forces the OS to use the {@link ActivityInfo#SCREEN_ORIENTATION_USER} screen orientation.

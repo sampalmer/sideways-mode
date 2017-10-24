@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
 /**

@@ -14,9 +14,9 @@ import android.support.v7.app.AlertDialog;
 import samuelpalmer.sensorautorotation.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.processes.ui.SystemIntents;
+import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 
 public class ForcedAppsPermissionFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
  * Detects when the device is locked.

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.eventhandling;
+package samuelpalmer.sensorautorotation.utilities.eventhandling;
 
 /**
  * An event that is triggered by listening to something else for events.

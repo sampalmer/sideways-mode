@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.feedback;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
-
-class Email {
+public class Email {
 	
 	private final Intent sendIntent;
 	private final List<ResolveInfo> emailActivities;
@@ -49,7 +45,7 @@ class Email {
 		}
 	}
 	
-	public Intent getIntent() {
+	public Intent getIntent(CharSequence chooserTitle) {
 		if (emailActivities.isEmpty())
 			return null;
 		
@@ -62,7 +58,7 @@ class Email {
 		
 		// Needed to customise the chooser dialog title since it might default to "Share with"
 		// Note that the chooser will still be skipped if only one app is matched
-		return Intent.createChooser(emailAppIntents.remove(0), CurrentProcess.context().getText(R.string.email_app_chooser_title))
+		return Intent.createChooser(emailAppIntents.remove(0), chooserTitle)
 			.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[emailAppIntents.size()]))
 		;
 	}

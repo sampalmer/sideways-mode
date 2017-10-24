@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
@@ -9,9 +9,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
+
 import static android.content.Context.ACTIVITY_SERVICE;
 
-class CurrentProcessNameDetector {
+public class CurrentProcessNameDetector {
 	public static String currentProcessName() {
 		try {
 			return getNameFromCommandLine();

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.testing;
+package samuelpalmer.sensorautorotation.utilities.testing;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

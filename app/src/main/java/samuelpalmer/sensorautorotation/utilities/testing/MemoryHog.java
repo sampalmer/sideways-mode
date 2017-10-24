@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.testing;
+package samuelpalmer.sensorautorotation.utilities.testing;
 
 import android.app.ActivityManager;
 

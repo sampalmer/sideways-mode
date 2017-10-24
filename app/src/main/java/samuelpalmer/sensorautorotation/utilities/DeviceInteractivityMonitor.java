@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.os.Build;
 import android.os.PowerManager;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 import static android.content.Context.POWER_SERVICE;
 

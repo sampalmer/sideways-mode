@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 

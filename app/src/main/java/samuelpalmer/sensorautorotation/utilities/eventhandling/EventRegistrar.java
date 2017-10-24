@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.eventhandling;
+package samuelpalmer.sensorautorotation.utilities.eventhandling;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.eventhandling;
+package samuelpalmer.sensorautorotation.utilities.eventhandling;
 
 /**
  * An event that can be triggered externally by calling {@link #report()}.

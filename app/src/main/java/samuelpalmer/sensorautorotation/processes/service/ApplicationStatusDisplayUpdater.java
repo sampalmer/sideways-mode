@@ -2,11 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import samuelpalmer.sensorautorotation.State;
-import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 

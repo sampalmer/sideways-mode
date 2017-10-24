@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.content.Context;
 import android.content.Intent;

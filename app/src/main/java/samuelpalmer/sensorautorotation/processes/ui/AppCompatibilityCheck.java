@@ -8,6 +8,7 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
+import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 
 public class AppCompatibilityCheck {
 	

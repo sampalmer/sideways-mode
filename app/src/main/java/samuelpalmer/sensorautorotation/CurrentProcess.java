@@ -14,6 +14,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
+import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**

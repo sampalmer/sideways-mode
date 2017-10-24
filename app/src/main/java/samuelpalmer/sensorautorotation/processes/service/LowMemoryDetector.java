@@ -5,7 +5,7 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.State;
+import samuelpalmer.sensorautorotation.utilities.State;
 
 public class LowMemoryDetector extends State {
 
