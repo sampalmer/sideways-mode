@@ -41,6 +41,7 @@ public enum Orientation { // Using an enum to reduce heap allocation and garbage
 		return fromOffset(NumberUtilities.wrap(offset - other.offset, numberOfPossibleRotations));
 	}
 
+	@SuppressWarnings("unused")
 	public Orientation plus(@NonNull Orientation change) {
 		return fromOffset(NumberUtilities.wrap(offset + change.offset, numberOfPossibleRotations));
 	}

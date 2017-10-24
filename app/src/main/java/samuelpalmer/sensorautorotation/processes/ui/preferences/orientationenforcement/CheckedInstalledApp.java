@@ -47,6 +47,7 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		init(context);
 	}
 	
+	@SuppressWarnings("unused")
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public CheckedInstalledApp(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		super(context, attrs, defStyleAttr, defStyleRes);

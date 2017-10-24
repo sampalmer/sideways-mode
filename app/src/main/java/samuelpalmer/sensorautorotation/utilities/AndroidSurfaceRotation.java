@@ -35,6 +35,7 @@ public abstract class AndroidSurfaceRotation {
 		return Surface.ROTATION_0 + orientation.offset;
 	}
 	
+	@SuppressWarnings("unused")
 	public static String name(int rotation) throws IllegalArgumentException {
 		return "ROTATION_" + offset(rotation) * 90;
 	}

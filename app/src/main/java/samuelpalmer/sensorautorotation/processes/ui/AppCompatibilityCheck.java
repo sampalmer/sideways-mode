@@ -10,6 +10,7 @@ import samuelpalmer.sensorautorotation.processes.service.deviceorientation.Orien
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 
+@SuppressWarnings("WeakerAccess")
 public class AppCompatibilityCheck {
 	
 	/**
