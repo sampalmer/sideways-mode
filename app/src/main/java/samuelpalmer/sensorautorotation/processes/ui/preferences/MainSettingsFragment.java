@@ -25,6 +25,9 @@ import samuelpalmer.sensorautorotation.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
 
+/**
+ * Hosts the main settings.
+ */
 public class MainSettingsFragment extends PreferenceFragment {
 	
 	private Preference forcedAppsPreference;

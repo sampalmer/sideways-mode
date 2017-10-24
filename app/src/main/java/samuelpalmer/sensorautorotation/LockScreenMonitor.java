@@ -13,6 +13,9 @@ import java.util.List;
 
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 
+/**
+ * Detects when the device is locked.
+ */
 public class LockScreenMonitor extends EventRegistrarAdaptor {
 
 	private final KeyguardManager keyguardManager;

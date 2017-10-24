@@ -17,7 +17,9 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
-
+/**
+ * The main content of the dashboard. This fragment requires the application status to be available.
+ */
 public class DashboardNormalFragment extends Fragment {
 	
 	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;

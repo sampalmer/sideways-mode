@@ -16,6 +16,9 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiv
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
+/**
+ * Performs process startup logic, tracks the application context, and identifies which process the calling code is running in.
+ */
 public class CurrentProcess extends Application {
 
 	private static final String TAG = CurrentProcess.class.getSimpleName();

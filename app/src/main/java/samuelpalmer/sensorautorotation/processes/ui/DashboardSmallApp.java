@@ -8,6 +8,9 @@ import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
+/**
+ * Shortcut to open {@link DashboardActivity} from the small app tray.
+ */
 public class DashboardSmallApp extends SmallApplication {
 
 	@Override

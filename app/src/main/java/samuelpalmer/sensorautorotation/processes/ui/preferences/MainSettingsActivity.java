@@ -17,6 +17,9 @@ import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.SendFeedbackActivity;
 
+/**
+ * Hosts the navigation drawer and settings.
+ */
 public class MainSettingsActivity extends UiActivity {
 	
 	private DrawerLayout drawerLayout;

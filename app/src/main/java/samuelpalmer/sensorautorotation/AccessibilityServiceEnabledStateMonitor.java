@@ -11,6 +11,9 @@ import android.text.TextUtils;
 import samuelpalmer.sensorautorotation.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 
+/**
+ * Detects when {@link WindowChangeDetectingService} gets enabled and disabled.
+ */
 public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdaptor {
 
 	private final static TextUtils.SimpleStringSplitter sStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
