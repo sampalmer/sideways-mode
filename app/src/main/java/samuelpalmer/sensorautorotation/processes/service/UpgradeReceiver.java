@@ -22,8 +22,13 @@ public class UpgradeReceiver extends BroadcastReceiver {
 			
 			// Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
 			if (wasRunning) {
-				// When Android updates an app, it kills the app's processes and doesn't restart the service.
-				// So we need to restart it ourselves.
+				/*
+				When Android updates an app, it kills the app's processes and doesn't restart the service.
+				So we need to restart it ourselves.
+				
+				Note that it's also possible that the app crashed a long time ago, leaving behind its state, and was never re-run.
+				In that situation, the service shouldn't be started, but I haven't come up with a good way of detecting that situation yet.
+				*/
 				ServiceController.ensureStarted();
 			}
 		}

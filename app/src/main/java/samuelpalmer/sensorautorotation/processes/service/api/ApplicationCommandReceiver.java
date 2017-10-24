@@ -62,6 +62,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		}
 	}
 	
+	// It would be nice to move this logic into the service as an intent action, but maybe that could contribute to the OS starting multiple simultaneous instances of the service?
 	public static void turnOffApp(String reason) {
 		Log.i(TAG, "Turning off app. Reason: " + reason);
 		
@@ -76,6 +77,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		}
 	}
 	
+	// It would be nice to move this logic into the service as an intent action, but maybe that could contribute to the OS starting multiple simultaneous instances of the service?
 	private void setUserSide(UserSide userSide) {
 		if (ServiceRunningStateHolder.isServiceRunning())
 			ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
