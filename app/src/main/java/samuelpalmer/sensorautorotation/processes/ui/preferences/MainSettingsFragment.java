@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -179,6 +180,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	 * Returns {@code null} if this couldn't be determined.
 	 */
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	@SuppressLint("PrivateApi") // The app is designed to tolerate the private APIs being unavailable
 	private static Boolean hasNavigationBar() {
 		try {
 			Class<?> serviceManager = Class.forName("android.os.ServiceManager");

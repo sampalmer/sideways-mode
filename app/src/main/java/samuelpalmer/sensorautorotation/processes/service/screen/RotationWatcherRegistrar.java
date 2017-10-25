@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,7 +38,8 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	private final Method watchRotation;
 	private final Method removeRotationWatcher;
 	private boolean subscribed;
-
+	
+	@SuppressLint("PrivateApi") // Use of private API is OK here since the code gracefully falls back to another approach on failure
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
 		Class<?>[] watchRotationParameterTypes;
 
