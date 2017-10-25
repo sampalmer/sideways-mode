@@ -6,6 +6,7 @@ import android.content.ContentProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -70,6 +71,23 @@ public class CurrentProcess extends Application {
 	 */
 	@Override
 	public void onCreate() {
+		if (BuildConfig.DEBUG) {
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+				.detectAll()
+				.permitDiskReads() // So we can read SharedPreferences and the current process name
+				.penaltyLog()
+				.penaltyDialog()
+				.build()
+			);
+			
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+				.detectAll()
+				.penaltyLog()
+				.penaltyDeath()
+				.build()
+			);
+		}
+		
 		super.onCreate();
 
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
