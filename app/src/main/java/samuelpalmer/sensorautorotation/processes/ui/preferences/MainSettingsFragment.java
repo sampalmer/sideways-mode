@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -35,8 +36,8 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private SharedPreferences prefs;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		
 		getPreferenceManager().setSharedPreferencesName(ApplicationSettings.getFileName(getActivity()));
 		

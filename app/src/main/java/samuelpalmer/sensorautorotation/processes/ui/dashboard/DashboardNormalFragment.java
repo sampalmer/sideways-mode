@@ -102,7 +102,7 @@ public class DashboardNormalFragment extends Fragment {
 	
 	private void buttonPressed(String action) {
 		// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
-		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getActivity())).send(getContext());
+		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
 		pendingButtonPress = null;
 		actionInProgress = action;
 	}

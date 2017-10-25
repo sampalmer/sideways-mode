@@ -31,7 +31,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	public void initialise(PreferenceScreen preferenceScreen) {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
-		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(getActivity(), WindowChangeDetectingService.class);
+		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(context, WindowChangeDetectingService.class);
 
 		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("forcedOrientationPermission");
 		tipView.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

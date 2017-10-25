@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.Nullable;
 
 import java.util.Collections;
 
@@ -17,10 +18,10 @@ public class ForcedAppsFragment extends PreferenceFragment {
 
 	private SharedPreferences prefs;
 	private Preference appsPreference;
-
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences_overridden_apps);
 		
 		prefs = ApplicationSettings.getSharedPreferences(getActivity());
@@ -38,11 +39,10 @@ public class ForcedAppsFragment extends PreferenceFragment {
 
 		permissionFragment.initialise(getPreferenceScreen());
 	}
-
+	
 	@Override
 	public void onStart() {
 		super.onStart();
-
 		prefs.registerOnSharedPreferenceChangeListener(appsChanged);
 		updateAppsSummary();
 	}
