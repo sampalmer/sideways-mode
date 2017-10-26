@@ -8,7 +8,7 @@ import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherR
  * Copied from Android source code. Actual implementation shouldn't be used; this is present to
  * trick our code into running the hidden Android implementation.
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("ALL") // Suppressing everything since this is AOSP code and I want it to stay the same as the original.
 @SuppressLint("all")
 public interface IRotationWatcher extends android.os.IInterface
 {

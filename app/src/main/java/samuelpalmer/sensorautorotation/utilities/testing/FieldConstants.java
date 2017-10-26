@@ -24,8 +24,7 @@ public class FieldConstants<TClass> {
 				} catch (IllegalAccessException e) {
 					throw new RuntimeException(e);
 				}
-
-				//noinspection ResourceType
+				
 				if (currentFieldValue.equals(value))
 					return field.getName();
 			}

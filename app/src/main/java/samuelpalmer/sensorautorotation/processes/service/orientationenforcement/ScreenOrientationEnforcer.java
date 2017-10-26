@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
@@ -32,7 +31,6 @@ public class ScreenOrientationEnforcer extends State {
 		layout = generateLayout();
 	}
 
-	@SuppressLint("NewApi")
 	public static boolean hasPermissionToStart(Context context) {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
 	}
@@ -59,7 +57,6 @@ public class ScreenOrientationEnforcer extends State {
 		LayoutParams layoutParams = new LayoutParams();
 		
 		if (Build.VERSION.SDK_INT >= 26)
-			//noinspection WrongConstant
 			layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
 		else
 			//This seems like the most relevant window type for what we're doing.

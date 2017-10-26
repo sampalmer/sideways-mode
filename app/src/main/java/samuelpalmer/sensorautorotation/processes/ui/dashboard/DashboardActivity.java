@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -105,7 +104,6 @@ public class DashboardActivity extends DialogActivity {
 		
 	};
 	
-	@SuppressLint("SetTextI18n")
 	private void showStatus() {
 		// Intentionally preserving space so the dashboard doesn't resize once it finished loading.
 		ensureVisibility(progressBar, lastStatus == null ? View.VISIBLE : View.INVISIBLE);

@@ -60,7 +60,7 @@ import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager
  * You can also visualize the behavior of the WindowOrientationListener.
  * Refer to frameworks/base/tools/orientationplot/README.txt for details.
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("ALL") // Suppressing everything since this is mostly AOSP code and I want to keep it close to the original.
 @SuppressLint("all")
 public abstract class WindowOrientationListener {
 	private static final int SENSOR_TYPE_DEVICE_ORIENTATION = 27 /* Sensor.TYPE_DEVICE_ORIENTATION */;

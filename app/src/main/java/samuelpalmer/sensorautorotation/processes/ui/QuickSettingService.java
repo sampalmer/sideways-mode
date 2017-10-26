@@ -144,7 +144,6 @@ public class QuickSettingService extends TileService {
 		else
 			tile.setState(Tile.STATE_INACTIVE);
 		
-		//noinspection ResourceType
 		tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.iconId : R.drawable.quick_setting_off));
 		
 		int lableId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.app_name_full;
