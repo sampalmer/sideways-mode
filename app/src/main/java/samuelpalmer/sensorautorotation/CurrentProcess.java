@@ -75,6 +75,7 @@ public class CurrentProcess extends Application {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectAll()
 				.permitDiskReads() // So we can read SharedPreferences and the current process name
+				.permitDiskWrites() // So SharedPreferences can initialise itself on first-run
 				.penaltyLog()
 				.penaltyDialog()
 				.build()
