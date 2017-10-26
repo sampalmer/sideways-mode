@@ -53,7 +53,6 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			typedWatchRotationArguments = new Object[]{screenRotationChanged};
 		}
 
-		//noinspection TryWithIdenticalCatches
 		try {
 			Class<?> serviceManager = Class.forName("android.os.ServiceManager");
 			IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
@@ -61,15 +60,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
 			watchRotation = windowManagerService.getClass().getMethod("watchRotation", watchRotationParameterTypes);
 			removeRotationWatcher = tryFindRemoveMethod();
-		} catch (ClassNotFoundException e) {
-			throw new RotationWatcherNotSupportedException(e);
-		} catch (ClassCastException e) {
-			throw new RotationWatcherNotSupportedException(e);
-		} catch (InvocationTargetException e) {
-			throw new RotationWatcherNotSupportedException(e);
-		} catch (NoSuchMethodException e) {
-			throw new RotationWatcherNotSupportedException(e);
-		} catch (IllegalAccessException e) {
+		} catch (ClassNotFoundException | ClassCastException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
 			throw new RotationWatcherNotSupportedException(e);
 		}
 	}
@@ -93,7 +84,6 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	protected void subscribeToAdaptee() throws RotationWatcherNotSupportedException {
 		if (!subscribed) { //Might already be subscribed since unsubscription is impossible on older Android versions
 			Object watchResult;
-			//noinspection TryWithIdenticalCatches
 			try {
 				watchResult = watchRotation.invoke(windowManagerService, typedWatchRotationArguments);
 			} catch (IllegalAccessException e) {
@@ -135,7 +125,6 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		currentRotation = null;
 
 		if (removeRotationWatcher != null) {
-			//noinspection TryWithIdenticalCatches
 			try {
 				removeRotationWatcher.invoke(windowManagerService, screenRotationChanged);
 			} catch (IllegalAccessException e) {
