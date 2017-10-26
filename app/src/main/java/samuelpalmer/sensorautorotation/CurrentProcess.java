@@ -24,19 +24,9 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 public class CurrentProcess extends Application {
 
 	private static final String TAG = CurrentProcess.class.getSimpleName();
-
-	@SuppressLint("StaticFieldLeak") //Don't think this is much of a problem since it's the application context.
-	private static Context context;
 	
 	@Nullable
 	private static Boolean isServiceProcess;
-	
-	public static Context context() {
-		if (context == null)
-			throw new RuntimeException("Haven't got a context yet");
-
-		return context;
-	}
 	
 	public static boolean isServiceProcess(Context context) {
 		if (isServiceProcess == null) {
@@ -54,15 +44,13 @@ public class CurrentProcess extends Application {
 		return isServiceProcess;
 	}
 	
-	/**
-	 * This seems to be called before everything else, even {@link ContentProvider#onCreate()}.
-	 */
 	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
 		
+		// Application.onCreate() is called *after* ContentProvider.onCreate().
+		// However, attachBaseContext() is called before it, which is why this method is used here.
 		Log.i(TAG, "Process created");
-		context = this;
 	}
 	
 	/**
