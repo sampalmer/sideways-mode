@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -11,12 +10,11 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
@@ -26,44 +24,52 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
  */
 public class ApplicationStatusService extends Service {
 	
-	private static final Set<Messenger> clients = new HashSet<>();
-	
-	private static final SharedPreferences prefs = ServiceSettings.getSharedPreferences(CurrentProcess.context());
-	private static boolean isSubscribed = false;
-	
 	public static final int MSG_SUBSCRIBE = 1;
 	public static final int MSG_UNSUBSCRIBE = 2;
 	
+	private final Set<Messenger> clients = new HashSet<>();
+	private ApplicationStatusMonitor applicationStatusMonitor;
+	
 	private static class ServerHandler extends Handler {
+		
+		// Using a WeakReference because Android Studio said to do so
+		private final WeakReference<ApplicationStatusService> serviceReference;
+		
+		public ServerHandler(WeakReference<ApplicationStatusService> serviceReference) {
+			this.serviceReference = serviceReference;
+		}
 		
 		@Override
 		public void handleMessage(Message msg) {
+			ApplicationStatusService service = serviceReference.get();
+			if (service == null) {
+				Log.w(ApplicationStatusService.class.getSimpleName(), "Received message after service was garbage collected. Ignoring.");
+				return;
+			}
+			
+			if (service.applicationStatusMonitor == null) {
+				Log.w(ApplicationStatusService.class.getSimpleName(), "Received message after service onDestroy(). Ignoring.");
+				return;
+			}
 			
 			switch (msg.what) {
 				case MSG_SUBSCRIBE: {
 					final Messenger newClient = msg.replyTo;
-					boolean isNewSubscription = clients.add(newClient);
+					boolean isNewSubscription = service.clients.add(newClient);
 					
 					if (isNewSubscription) {
-						Message message = null;
+						ApplicationStatus status = service.applicationStatusMonitor.getStatus();
 						
-						if (ServiceRunningStateHolder.isServiceRunning()) {
-							//TODO: Replace all this with an EventRegistrarAdaptor and ApplicationStatusDisplays.add()
-							ApplicationStatus lastStatus = ServiceRunningStateHolder.getServiceInstance().applicationStatusDisplayUpdater.getLastStatus();
-							if (lastStatus != null)
-								message = lastStatus.asMessage();
-						}
-						else {
-							message = makeAppDisabledStatus().asMessage();
-						}
-						
-						if (message != null)
+						if (status != null) {
+							Message message = status.asMessage();
+							
 							try {
 								newClient.send(message);
 							} catch (RemoteException e) {
 								// The client is dead. Remove it from the list.
-								clients.remove(newClient);
+								service.clients.remove(newClient);
 							}
+						}
 					}
 					else
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received duplicate subscription");
@@ -71,7 +77,7 @@ public class ApplicationStatusService extends Service {
 					break;
 				}
 				case MSG_UNSUBSCRIBE: {
-					boolean wasSubscribed = clients.remove(msg.replyTo);
+					boolean wasSubscribed = service.clients.remove(msg.replyTo);
 					if (!wasSubscribed)
 						Log.w(ApplicationStatusService.class.getSimpleName(), "Received unsubscription for non-subscriber");
 					
@@ -80,22 +86,25 @@ public class ApplicationStatusService extends Service {
 				default:
 					throw new RuntimeException("Received unknown message: " + msg.what);
 			}
-			
-			syncInternalSubscriptions();
 		}
 		
 	}
 	
-	private static ApplicationStatus makeAppDisabledStatus() {
-		String errorJson = prefs.getString(ServiceSettings.KEY_LAST_ERROR_JSON, null);
-		
-		return new ApplicationStatus(
-			null,
-			errorJson == null ? null : EnvironmentError.fromJson(errorJson)
-		);
+	private final Messenger messenger = new Messenger(new ServerHandler(new WeakReference<>(this)));
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		applicationStatusMonitor = new ApplicationStatusMonitor(this);
+		applicationStatusMonitor.subscribe(statusChanged);
 	}
 	
-	private final Messenger messenger = new Messenger(new ServerHandler());
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		applicationStatusMonitor.unsubscribe(statusChanged);
+		applicationStatusMonitor = null;
+	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -108,51 +117,27 @@ public class ApplicationStatusService extends Service {
 		return messenger.getBinder();
 	}
 	
-	private static final EventHandler enabledStateChanged = new EventHandler() {
+	private final EventHandler statusChanged = new EventHandler() {
 		@Override
 		public void update() {
-			if (!ServiceRunningStateHolder.isServiceRunning())
-				sendUpdate(makeAppDisabledStatus());
-		}
-	};
-	
-	public static void sendUpdate(ApplicationStatus applicationStatus) {
-		Message message = applicationStatus.asMessage();
-		
-		Iterator<Messenger> iterator = clients.iterator();
-		while (iterator.hasNext()) {
-			Messenger client = iterator.next();
+			ApplicationStatus status = applicationStatusMonitor.getStatus();
+			if (status == null)
+				return;
 			
-			try {
-				client.send(message);
+			Message message = status.asMessage();
+			
+			Iterator<Messenger> iterator = clients.iterator();
+			while (iterator.hasNext()) {
+				Messenger client = iterator.next();
+				
+				try {
+					client.send(message);
+				}
+				catch (RemoteException e) {
+					// The client is dead. Remove it from the list.
+					iterator.remove();
+				}
 			}
-			catch (RemoteException e) {
-				// The client is dead. Remove it from the list.
-				iterator.remove();
-			}
-		}
-		
-		syncInternalSubscriptions(); // In case we've removed a client
-	}
-	
-	private static void syncInternalSubscriptions() {
-		if (clients.size() > 0 && !isSubscribed) {
-			ServiceRunningStateHolder.onStartedOrStopped.subscribe(enabledStateChanged);
-			prefs.registerOnSharedPreferenceChangeListener(errorChanged);
-			isSubscribed = true;
-		}
-		else if (clients.size() == 0 && isSubscribed) {
-			prefs.unregisterOnSharedPreferenceChangeListener(errorChanged);
-			ServiceRunningStateHolder.onStartedOrStopped.unsubscribe(enabledStateChanged);
-			isSubscribed = false;
-		}
-	}
-	
-	private static final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
-				enabledStateChanged.update();
 		}
 	};
 	

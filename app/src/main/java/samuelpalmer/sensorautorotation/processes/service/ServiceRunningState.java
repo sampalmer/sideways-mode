@@ -18,7 +18,7 @@ public class ServiceRunningState extends State {
 	
 	private final RotationService service;
 	private final OrientationCalculator calculator;
-	final ApplicationStatusDisplayUpdater applicationStatusDisplayUpdater;
+	final RunningStateUpdater runningStateUpdater;
 	private final LowMemoryDetector lowMemoryDetector;
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final SystemAutoRotationMonitor systemAutoRotationMonitor;
@@ -34,7 +34,7 @@ public class ServiceRunningState extends State {
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
 		calculator = new OrientationCalculator(service, screenRotationMonitor);
 		screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
-		applicationStatusDisplayUpdater = new ApplicationStatusDisplayUpdater(service, calculator, service);
+		runningStateUpdater = new RunningStateUpdater(service, calculator, service);
 		lowMemoryDetector = new LowMemoryDetector(service);
 		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
@@ -52,7 +52,7 @@ public class ServiceRunningState extends State {
 		EnvironmentErrorManager.clear(service);
 		
 		systemAutoRotationMonitor.ensureStarted();
-		applicationStatusDisplayUpdater.ensureStarted();
+		runningStateUpdater.ensureStarted();
 		screenUpdater.ensureStarted();
 		lowMemoryDetector.ensureStarted();
 		activityMonitor.ensureStarted();
@@ -78,7 +78,7 @@ public class ServiceRunningState extends State {
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenUpdater.ensureStopped();
-		applicationStatusDisplayUpdater.ensureStopped();
+		runningStateUpdater.ensureStopped();
 		lowMemoryDetector.ensureStopped();
 		
 		ServiceSettings
