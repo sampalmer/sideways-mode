@@ -34,18 +34,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		switch (command.action) {
 			case ApplicationCommand.ACTION_LEFT_SIDE:
 				setUserSide(context, UserSide.LEFT);
-				collapseNotificationShade(context);
-				
 				break;
 			case ApplicationCommand.ACTION_RIGHT_SIDE:
 				setUserSide(context, UserSide.RIGHT);
-				collapseNotificationShade(context);
-				
 				break;
 			case ApplicationCommand.ACTION_TURN_OFF:
 				turnOffApp(context, "Received application command");
-				collapseNotificationShade(context);
-				
 				break;
 			case ApplicationCommand.ACTION_CLEAR_ERROR:
 				EnvironmentErrorManager.clear(context);
@@ -100,11 +94,6 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 			// * The OS ran extremely low on memory and killed the service process while it was running.
 			ServiceController.ensureStarted(context);
 		}
-	}
-	
-	private static void collapseNotificationShade(Context context) {
-		// The user might be in a hurry and want to quickly press a notification button and then return to their task.
-		context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 	}
 	
 }
