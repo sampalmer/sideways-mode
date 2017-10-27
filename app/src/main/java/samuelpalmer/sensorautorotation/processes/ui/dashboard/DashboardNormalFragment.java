@@ -24,7 +24,6 @@ public class DashboardNormalFragment extends Fragment {
 	
 	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
 	private static final String KEY_PENDING_ACTION = "pending_action";
-	private static final String KEY_ACTION_IN_PROGRESS = "action_in_progress";
 	
 	private View waitingForSensor;
 	private View leftSideButton;
@@ -33,13 +32,11 @@ public class DashboardNormalFragment extends Fragment {
 	
 	// The button the user pressed while the app didn't have access to write system settings.
 	private String pendingButtonPress;
-	private String actionInProgress;
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_PENDING_ACTION, pendingButtonPress);
-		outState.putString(KEY_ACTION_IN_PROGRESS, actionInProgress);
 	}
 	
 	@Nullable
@@ -56,10 +53,8 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
 		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
-		if (savedInstanceState != null) {
+		if (savedInstanceState != null)
 			pendingButtonPress = savedInstanceState.getString(KEY_PENDING_ACTION);
-			actionInProgress = savedInstanceState.getString(KEY_ACTION_IN_PROGRESS);
-		}
 		
 		return layout;
 	}
@@ -108,16 +103,10 @@ public class DashboardNormalFragment extends Fragment {
 		// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
 		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
 		pendingButtonPress = null;
-		actionInProgress = action;
+		getActivity().finish();
 	}
 	
 	public void setStatus(ApplicationStatus status) {
-		if (actionInProgress != null && actionIsCompleted(actionInProgress, status)) {
-			getActivity().finish();
-			actionInProgress = null;
-			return; // So the UI doesn't update and cause a flicker while the activity closes.
-		}
-		
 		waitingForSensor.setVisibility(status.runningState != null && status.runningState.waitingForSensor ? View.VISIBLE : View.GONE);
 		
 		leftSideButton.setSelected(false);
@@ -130,14 +119,5 @@ public class DashboardNormalFragment extends Fragment {
 			leftSideButton.setSelected(true);
 		else
 			rightSideButton.setSelected(true);
-	}
-	
-	private static boolean actionIsCompleted(String action, ApplicationStatus status) {
-		return
-			action.equals(ApplicationCommand.ACTION_LEFT_SIDE) && status.runningState != null && status.runningState.userSide.equals(UserSide.LEFT) && !status.runningState.waitingForSensor
-			||
-			action.equals(ApplicationCommand.ACTION_TURN_OFF) && status.runningState == null
-			||
-			action.equals(ApplicationCommand.ACTION_RIGHT_SIDE) && status.runningState != null && status.runningState.userSide.equals(UserSide.RIGHT) && !status.runningState.waitingForSensor;
 	}
 }
