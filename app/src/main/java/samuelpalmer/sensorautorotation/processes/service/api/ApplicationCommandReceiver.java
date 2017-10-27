@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service.api;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
@@ -81,8 +82,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		if (ServiceRunningStateHolder.isServiceRunning())
 			ServiceRunningStateHolder.getServiceInstance().setSide(userSide);
 		else {
-			ServiceSettings
-				.getSharedPreferences(context)
+			SharedPreferences prefs = ServiceSettings.getSharedPreferences(context);
+			
+			if (prefs.contains(ServiceSettings.KEY_PERSISTENT_STATE))
+				Log.w(TAG, "Service is not running but has persistent state, so the app may not have shut down correctly.");
+			
+			prefs
 				.edit()
 				.putString(ServiceSettings.KEY_PERSISTENT_STATE, userSide.name())
 				.apply();

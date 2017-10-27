@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.Context;
