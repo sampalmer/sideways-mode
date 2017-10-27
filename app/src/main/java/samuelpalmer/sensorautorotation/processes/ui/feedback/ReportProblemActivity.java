@@ -56,10 +56,14 @@ public class ReportProblemActivity extends UiActivity {
 	}
 
 	private void sendEmail() {
-		/*
-		 * Problem reports don't require descriptions at this stage since sometimes the problem can be inferred from the logs anyway.
-		 */
-		description.setError(null);
+		if (description.getText().length() < 5) {
+			// Users have sent a lot of blank problem reports where the logs suggest nothing is wrong.
+			// So we need the users to actually say what's wrong.
+			description.setError(getText(R.string.report_problem_description_missing));
+			return;
+		}
+		else
+			description.setError(null);
 		
 		PackageInfo appInfo;
 		try {

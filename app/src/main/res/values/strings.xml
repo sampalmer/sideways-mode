@@ -101,6 +101,7 @@
 
 	<!-- Enter feedback -->
 	<string name="report_problem_hint">Describe the problem here</string>
+	<string name="report_problem_description_missing">Please describe the problem</string>
 	<string name="enter_feedback_send">Send by email</string>
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
 
