@@ -44,8 +44,8 @@ public abstract class EventRegistrar {
 			if (subscriptions.contains(subscriber))
 				subscriber.update();
 	}
-
-	protected boolean noSubscriptions() {
-		return subscriptions.isEmpty();
+	
+	protected boolean hasSubscriptions() {
+		return !subscriptions.isEmpty();
 	}
 }

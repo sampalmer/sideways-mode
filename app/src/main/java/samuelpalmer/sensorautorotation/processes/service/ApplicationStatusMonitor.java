@@ -65,7 +65,7 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 	
 	private void syncRunningStateSubscription() {
 		if (ServiceRunningStateHolder.isServiceRunning()) {
-			boolean shouldBeSubscribedToRunningStateUpdates = !noSubscriptions();
+			boolean shouldBeSubscribedToRunningStateUpdates = hasSubscriptions();
 			if (subscribedToRunningStateUpdates != shouldBeSubscribedToRunningStateUpdates) {
 				if (shouldBeSubscribedToRunningStateUpdates) {
 					ServiceRunningStateHolder.getServiceInstance().runningStateUpdater.onStateChanged.subscribe(runningStateChanged);
@@ -86,7 +86,7 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 	private final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (!noSubscriptions() && s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
+			if (hasSubscriptions() && s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
 				enabledStateChanged.update();
 		}
 	};

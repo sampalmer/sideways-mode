@@ -32,7 +32,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 		try {
 			return changeDetector.currentRotation();
 		} catch (RotationWatcherNotSupportedException e) {
-			if (!noSubscriptions()) {
+			if (hasSubscriptions()) {
 				try {
 					changeDetector.stop();
 				} catch (RotationWatcherNotSupportedException ignored) {
@@ -41,8 +41,8 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 			}
 
 			fallback(e);
-
-			if (!noSubscriptions())
+			
+			if (hasSubscriptions())
 				subscribeToAdaptee();
 
 			return currentRotation();

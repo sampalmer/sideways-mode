@@ -8,7 +8,7 @@ public abstract class EventRegistrarAdaptor extends EventRegistrar {
 
 	@Override
 	public void subscribe(EventHandler subscriber) {
-		boolean wasEmpty = noSubscriptions();
+		boolean wasEmpty = !hasSubscriptions();
 		super.subscribe(subscriber);
 		if (wasEmpty)
 			try {
@@ -23,7 +23,7 @@ public abstract class EventRegistrarAdaptor extends EventRegistrar {
 	@Override
 	public void unsubscribe(EventHandler subscriber) {
 		super.unsubscribe(subscriber);
-		if (noSubscriptions())
+		if (!hasSubscriptions())
 			unsubscribeFromAdaptee();
 	}
 	

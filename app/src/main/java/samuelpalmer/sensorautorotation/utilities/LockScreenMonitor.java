@@ -79,7 +79,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 	private final BroadcastReceiver anythingChangedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (!noSubscriptions()) {
+			if (hasSubscriptions()) {
 				boolean newValue = poll(keyguardManager);
 				if (isOnLockScreen == null || isOnLockScreen != newValue) {
 					isOnLockScreen = newValue;
