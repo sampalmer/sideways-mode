@@ -121,7 +121,7 @@ public final class NotificationStyles {
 	}
 	
 	private Integer extractActionColour(TextView textView) {
-		if (Build.VERSION.SDK_INT <= 19)
+		if (Build.VERSION.SDK_INT < 21)
 			// These versions of Android didn't recolour the icon, so it should be the same as the source image, which should be white.
 			return Color.WHITE;
 		
