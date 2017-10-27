@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import samuelpalmer.sensorautorotation.R;
 
 
@@ -90,7 +92,7 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 				currentLoader.cancel(true);
 			
 			//Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
-			currentLoader = new ImageLoader(item);
+			currentLoader = new ImageLoader(item, new WeakReference<>(this));
 			currentLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 			
 			label.setText(item.label);
@@ -104,20 +106,30 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 	/**
 	 * Loads icons in the background to avoid lag when scrolling through the list
 	 */
-	private class ImageLoader extends AsyncTask<Void, Void, Drawable> {
+	private static class ImageLoader extends AsyncTask<Void, Void, Drawable> {
 		
 		private final InstalledApp installedApp;
 		
-		public ImageLoader(InstalledApp installedApp) {
+		// Android Studio says this class could cause a memory leak by indirectly holding onto the context in a background thread.
+		// So using a weak reference to get around that.
+		private final WeakReference<CheckedInstalledApp> listItemReference;
+		
+		public ImageLoader(InstalledApp installedApp, WeakReference<CheckedInstalledApp> listItemReference) {
 			this.installedApp = installedApp;
+			this.listItemReference = listItemReference;
 		}
 		
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			
-			iconProgress.setVisibility(View.VISIBLE);
-			icon.setVisibility(View.GONE);
+			CheckedInstalledApp listItem = listItemReference.get();
+			if (listItem != null) {
+				listItem.iconProgress.setVisibility(View.VISIBLE);
+				listItem.icon.setVisibility(View.GONE);
+			}
+			else
+				cancel(true);
 		}
 		
 		@Override
@@ -125,17 +137,26 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 			if (isCancelled())
 				return null;
 			
-			return installedApp.loadIcon(packageManager);
+			CheckedInstalledApp listItem = listItemReference.get();
+			if (listItem != null)
+				return installedApp.loadIcon(listItem.packageManager);
+			else {
+				cancel(true);
+				return null;
+			}
 		}
 		
 		@Override
 		protected void onPostExecute(Drawable drawable) {
 			super.onPostExecute(drawable);
 			
-			if (installedApp == currentItem) {
-				iconProgress.setVisibility(View.GONE);
-				icon.setImageDrawable(drawable);
-				icon.setVisibility(View.VISIBLE);
+			CheckedInstalledApp listItem = listItemReference.get();
+			if (listItem != null) {
+				if (installedApp == listItem.currentItem) {
+					listItem.iconProgress.setVisibility(View.GONE);
+					listItem.icon.setImageDrawable(drawable);
+					listItem.icon.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 		
