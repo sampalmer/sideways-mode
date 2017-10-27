@@ -50,7 +50,11 @@ public class OrientationCalculator {
 	}
 
 	public @NonNull Orientation proposedScreenOrientation() {
-		return user().minus(device);
+		return proposedScreenOrientationForUser(user());
+	}
+	
+	public @NonNull Orientation proposedScreenOrientationForUser(Orientation user) {
+		return user.minus(device);
 	}
 	
 	public void setSide(UserSide userSide) {
