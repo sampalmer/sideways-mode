@@ -47,7 +47,8 @@ public class AppDisabler extends State {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ApplicationCommandReceiver.turnOffApp(context, "Device is shutting down");
+			if (started())
+				ApplicationCommandReceiver.turnOffApp(context, "Device is shutting down");
 		}
 		
 	};
@@ -55,22 +56,28 @@ public class AppDisabler extends State {
 	private final BroadcastReceiver screenChangedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
-			if (isOnLockScreen)
-				ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
+			if (started()) {
+				boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+				if (isOnLockScreen)
+					ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
+			}
 		}
 	};
 	
 	private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// We receive this broadcast after the device gets unlocked.
-			// This implies that the device was locked, so the app shouldn't be on.
-			// We need this check because Android doesn't broadcast when the device gets locked,
-			// and our polling approach might sometimes be too slow to detect the lock screen.
-			// For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
-			// so quickly that you don't see the lock screen.
-			ApplicationCommandReceiver.turnOffApp(context, "Device was locked");
+			if (started()) {
+				/*
+				We receive this broadcast after the device gets unlocked.
+				This implies that the device was locked, so the app shouldn't be on.
+				We need this check because Android doesn't broadcast when the device gets locked,
+				and our polling approach might sometimes be too slow to detect the lock screen.
+				For example, fingerprint unlock on my Motorola Moto G5 Plus unlocks the device
+				so quickly that you don't see the lock screen.
+				*/
+				ApplicationCommandReceiver.turnOffApp(context, "Device was locked");
+			}
 		}
 	};
 	

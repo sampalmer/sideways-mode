@@ -22,6 +22,7 @@ public class QuickSettingService extends TileService {
 	private ApplicationStatusClient statusClient;
 	private ApplicationStatus status;
 	private boolean pendingClick;
+	private boolean isListening;
 	
 	@Override
 	public void onCreate() {
@@ -105,27 +106,31 @@ public class QuickSettingService extends TileService {
 	@Override
 	public void onStartListening() {
 		super.onStartListening();
+		isListening = true;
 		statusClient.subscribe();
 	}
 
 	@Override
 	public void onStopListening() {
 		super.onStopListening();
+		isListening = false;
 		statusClient.unsubscribe();
 	}
 	
 	private final ApplicationStatusClient.Listener statusListener = new ApplicationStatusClient.Listener() {
 		@Override
 		public void onChange(ApplicationStatus status) {
-			QuickSettingService.this.status = status;
-			
-			if (status != null) {
-				updateTile();
+			if (isListening) {
+				QuickSettingService.this.status = status;
 				
-				if (pendingClick) {
-					Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
-					handleClick();
-					pendingClick = false;
+				if (status != null) {
+					updateTile();
+					
+					if (pendingClick) {
+						Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
+						handleClick();
+						pendingClick = false;
+					}
 				}
 			}
 		}

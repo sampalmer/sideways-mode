@@ -73,21 +73,24 @@ public class ApplicationStatusClient {
 	private final ServiceConnection serviceConnection = new ServiceConnection() {
 		@Override
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-			serviceMessenger = new Messenger(iBinder);
-			
-			try {
-				Message msg = Message.obtain(null, ApplicationStatusService.MSG_SUBSCRIBE);
-				msg.replyTo = clientMessenger;
-				serviceMessenger.send(msg);
-			} catch (RemoteException e) {
-				// Service process died, so we'll have to try again once it's back up.
-				disconnected();
+			if (bound) {
+				serviceMessenger = new Messenger(iBinder);
+				
+				try {
+					Message msg = Message.obtain(null, ApplicationStatusService.MSG_SUBSCRIBE);
+					msg.replyTo = clientMessenger;
+					serviceMessenger.send(msg);
+				} catch (RemoteException e) {
+					// Service process died, so we'll have to try again once it's back up.
+					disconnected();
+				}
 			}
 		}
 		
 		@Override
 		public void onServiceDisconnected(ComponentName componentName) {
-			disconnected();
+			if (bound)
+				disconnected();
 		}
 	};
 	

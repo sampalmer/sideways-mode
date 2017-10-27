@@ -52,11 +52,13 @@ public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdapt
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
 			
-			boolean isEnabled = poll();
-			if (!isUpToDate || isEnabled != wasEnabled) {
-				wasEnabled = isEnabled;
-				isUpToDate = true;
-				report();
+			if (!noSubscriptions()) {
+				boolean isEnabled = poll();
+				if (!isUpToDate || isEnabled != wasEnabled) {
+					wasEnabled = isEnabled;
+					isUpToDate = true;
+					report();
+				}
 			}
 		}
 	};

@@ -55,18 +55,22 @@ public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
 	private final BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			last = true;
-			isUpToDate = true;
-			report();
+			if (!noSubscriptions()) {
+				last = true;
+				isUpToDate = true;
+				report();
+			}
 		}
 	};
 
 	private final BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			last = false;
-			isUpToDate = true;
-			report();
+			if (!noSubscriptions()) {
+				last = false;
+				isUpToDate = true;
+				report();
+			}
 		}
 	};
 

@@ -19,6 +19,8 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 	private final ScreenRotationMonitor.Callback callback;
 	private final Display screen;
 	
+	private boolean started;
+	
 	public ComponentCallbacksChangeDetector(Context context, ScreenRotationMonitor.Callback callback, Display screen) {
 		this.context = context;
 		this.callback = callback;
@@ -27,11 +29,13 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 
 	@Override
 	public void start() {
+		started = true;
 		context.registerComponentCallbacks(componentCallbacks);
 	}
 
 	@Override
 	public void stop() {
+		started = false;
 		context.unregisterComponentCallbacks(componentCallbacks);
 	}
 
@@ -43,7 +47,8 @@ class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDe
 	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {
 		@Override
 		public void onConfigurationChanged(Configuration newConfig) {
-			callback.changed();
+			if (started)
+				callback.changed();
 		}
 
 		@Override

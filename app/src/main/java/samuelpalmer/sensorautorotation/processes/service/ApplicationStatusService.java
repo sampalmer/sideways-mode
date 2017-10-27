@@ -29,6 +29,7 @@ public class ApplicationStatusService extends Service {
 	
 	private final Set<Messenger> clients = new HashSet<>();
 	private ApplicationStatusMonitor applicationStatusMonitor;
+	private boolean isCreated;
 	
 	private static class ServerHandler extends Handler {
 		
@@ -47,7 +48,7 @@ public class ApplicationStatusService extends Service {
 				return;
 			}
 			
-			if (service.applicationStatusMonitor == null) {
+			if (!service.isCreated) {
 				Log.w(ApplicationStatusService.class.getSimpleName(), "Received message after service onDestroy(). Ignoring.");
 				return;
 			}
@@ -95,6 +96,9 @@ public class ApplicationStatusService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		isCreated = true;
+		
 		applicationStatusMonitor = new ApplicationStatusMonitor(this);
 		applicationStatusMonitor.subscribe(statusChanged);
 	}
@@ -102,6 +106,9 @@ public class ApplicationStatusService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		
+		isCreated = false;
+		
 		applicationStatusMonitor.unsubscribe(statusChanged);
 		applicationStatusMonitor = null;
 	}
