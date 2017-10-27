@@ -63,7 +63,7 @@ public class PermissionNotificationManager extends State {
 	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+			if (isRunning && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
 				check();
 		}
 	};

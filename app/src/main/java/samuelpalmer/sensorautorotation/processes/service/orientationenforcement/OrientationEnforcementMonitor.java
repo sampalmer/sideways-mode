@@ -65,7 +65,7 @@ public class OrientationEnforcementMonitor extends State {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+			if (started() && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
 				updatePackages();
 				updateEnforcement();
 			}

@@ -35,6 +35,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private Preference forcedAppsPreference;
 	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
 	private SharedPreferences prefs;
+	private boolean isStarted;
 	
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -202,11 +203,15 @@ public class MainSettingsFragment extends PreferenceFragment {
 		accessibilityServiceEnabledStateMonitor.subscribe(accessibilityServiceChanged);
 		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
 		updateForcedApps();
+		
+		isStarted = true;
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
+		
+		isStarted = false;
 		
 		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
 		accessibilityServiceEnabledStateMonitor.unsubscribe(accessibilityServiceChanged);
@@ -222,7 +227,7 @@ public class MainSettingsFragment extends PreferenceFragment {
 	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+			if (isStarted && s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
 				updateForcedApps();
 		}
 	};

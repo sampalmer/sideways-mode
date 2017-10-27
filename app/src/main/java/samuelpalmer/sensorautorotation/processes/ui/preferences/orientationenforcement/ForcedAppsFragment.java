@@ -18,6 +18,7 @@ public class ForcedAppsFragment extends PreferenceFragment {
 
 	private SharedPreferences prefs;
 	private Preference appsPreference;
+	private boolean isStarted;
 	
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -45,18 +46,23 @@ public class ForcedAppsFragment extends PreferenceFragment {
 		super.onStart();
 		prefs.registerOnSharedPreferenceChangeListener(appsChanged);
 		updateAppsSummary();
+		
+		isStarted = true;
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
+		
+		isStarted = false;
+		
 		prefs.unregisterOnSharedPreferenceChangeListener(appsChanged);
 	}
 
 	private final SharedPreferences.OnSharedPreferenceChangeListener appsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+			if (isStarted && s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
 				updateAppsSummary();
 		}
 	};

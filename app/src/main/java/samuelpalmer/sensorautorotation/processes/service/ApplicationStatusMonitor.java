@@ -85,7 +85,7 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 	private final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
+			if (!noSubscriptions() && s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
 				enabledStateChanged.update();
 		}
 	};
