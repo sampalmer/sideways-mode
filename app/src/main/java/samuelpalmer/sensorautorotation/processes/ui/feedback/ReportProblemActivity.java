@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.support.design.widget.TextInputLayout;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,23 +22,17 @@ public class ReportProblemActivity extends UiActivity {
 	private final static String PROBLEM_LOGS_KEY = "logcat";
 	
 	private String problemLogs;
+	private TextInputLayout descriptionLayout;
 	private EditText description;
-	private Button send;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_report_problem);
-
+		
+		descriptionLayout = findViewById(R.id.problem_description_layout);
 		description = findViewById(R.id.problem_description);
-		send = findViewById(R.id.problem_send);
-		send.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				sendEmail();
-			}
-		});
 
 		// This activity saves the logs as soon as it's created.
 		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
@@ -45,25 +40,39 @@ public class ReportProblemActivity extends UiActivity {
 			problemLogs = DiagnosticInfo.logcat();
 		else
 			problemLogs = savedInstanceState.getString(PROBLEM_LOGS_KEY);
-		
-		setTitle(R.string.action_report);
 	}
-
+	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(PROBLEM_LOGS_KEY, problemLogs);
 	}
-
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.report_problem, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_send) {
+			sendEmail();
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
 	private void sendEmail() {
 		if (description.getText().length() < 5) {
 			// Users have sent a lot of blank problem reports where the logs suggest nothing is wrong.
 			// So we need the users to actually say what's wrong.
-			description.setError(getText(R.string.report_problem_description_missing));
+			descriptionLayout.setError(getText(R.string.report_problem_description_missing));
 			return;
 		}
 		else
-			description.setError(null);
+			descriptionLayout.setError(null);
 		
 		PackageInfo appInfo;
 		try {
