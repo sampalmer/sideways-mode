@@ -24,6 +24,7 @@ public class DashboardNormalFragment extends Fragment {
 	
 	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
 	private static final String KEY_PENDING_ACTION = "pending_action";
+	private static final String KEY_ACTION_IN_PROGRESS = "action_in_progress";
 	
 	private View waitingForSensor;
 	private View leftSideButton;
@@ -38,6 +39,7 @@ public class DashboardNormalFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_PENDING_ACTION, pendingButtonPress);
+		outState.putString(KEY_ACTION_IN_PROGRESS, actionInProgress);
 	}
 	
 	@Nullable
@@ -54,8 +56,10 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
 		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
-		if (savedInstanceState != null)
+		if (savedInstanceState != null) {
 			pendingButtonPress = savedInstanceState.getString(KEY_PENDING_ACTION);
+			actionInProgress = savedInstanceState.getString(KEY_ACTION_IN_PROGRESS);
+		}
 		
 		return layout;
 	}
