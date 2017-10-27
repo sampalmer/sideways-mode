@@ -33,7 +33,13 @@ public abstract class EventRegistrar {
 		HashSet<EventHandler> subscriptionsClone = new HashSet<>(subscriptions);
 		
 		for (EventHandler subscriber : subscriptionsClone)
-			subscriber.update();
+			/*
+			It's possible that the last subscriber unsubscribed *another* subscriber as part of its callback.
+			This is bad because the just-unsubscribed subscriber is about to be called.
+			So we'll check for that here and abort as a courtesy.
+			*/
+			if (subscriptions.contains(subscriber))
+				subscriber.update();
 	}
 
 	protected boolean noSubscriptions() {
