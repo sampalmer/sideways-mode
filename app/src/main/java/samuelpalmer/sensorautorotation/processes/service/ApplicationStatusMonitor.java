@@ -64,6 +64,11 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 	};
 	
 	private void syncRunningStateSubscription() {
+		if (subscribedToRunningStateUpdates && !ServiceRunningStateHolder.isServiceRunning()) {
+			// The service has stopped, so now we aren't subscribed anymore.
+			subscribedToRunningStateUpdates = false;
+		}
+		
 		boolean shouldBeSubscribedToRunningStateUpdates = !noSubscriptions();
 		if (subscribedToRunningStateUpdates != shouldBeSubscribedToRunningStateUpdates) {
 			if (shouldBeSubscribedToRunningStateUpdates) {
