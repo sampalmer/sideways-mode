@@ -147,8 +147,11 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 			callerHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					//It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
-					if (subscribed) {
+					if (
+						subscribed
+						&&
+						hasSubscriptions() //It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
+					) {
 						try {
 							currentRotation = AndroidSurfaceRotation.toOrientationClockwise(rotation);
 						} catch (IllegalArgumentException e) {
