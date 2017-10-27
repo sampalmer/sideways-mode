@@ -16,6 +16,9 @@ public abstract class EventRegistrar {
 		subscriptions.add(subscriber);
 	}
 	
+	/**
+	 * Unsubscribes the given subscriber. Guarantees that the subscriber will not be called after this call completes.
+	 */
 	public void unsubscribe(EventHandler subscriber) {
 		if (!subscribed(subscriber))
 			throw new RuntimeException("Unknown subscriber: " + subscriber);
