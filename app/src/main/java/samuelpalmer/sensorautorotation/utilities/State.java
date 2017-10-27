@@ -18,15 +18,15 @@ public abstract class State {
 		}
 	}
 
-	protected boolean started() {
+	protected boolean isStarted() {
 		return started;
 	}
 
 	/**
-	 * Throws an exception if {@link #started()} is {@code false}
+	 * Throws an exception if {@link #isStarted()} is {@code false}
 	 */
 	protected void verifyStarted() {
-		if (!started())
+		if (!isStarted())
 			throw new RuntimeException("Not started");
 	}
 

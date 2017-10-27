@@ -36,7 +36,7 @@ public class SystemAutoRotationMonitor extends State {
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
 			
-			if (started()) {
+			if (isStarted()) {
 				boolean accelerometerRotation = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1;
 				if (accelerometerRotation) {
 					GenericError error = new GenericError(context, R.string.environment_error_system_rotation_enabled_summary, context.getText(R.string.environment_error_system_rotation_enabled_message));

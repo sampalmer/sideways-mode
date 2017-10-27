@@ -32,7 +32,7 @@ public class LowMemoryDetector extends State {
 
 		@Override
 		public void onLowMemory() {
-			if (started()) {
+			if (isStarted()) {
 				/*
 				This is rare, but it can happen if an app is extremely memory intensive or if the OS has memory leaks.
 				This situation is a warning that the OS might kill the process.

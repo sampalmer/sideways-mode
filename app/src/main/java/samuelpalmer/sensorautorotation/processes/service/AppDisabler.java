@@ -47,7 +47,7 @@ public class AppDisabler extends State {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (started())
+			if (isStarted())
 				ApplicationCommandReceiver.turnOffApp(context, "Device is shutting down");
 		}
 		
@@ -56,7 +56,7 @@ public class AppDisabler extends State {
 	private final BroadcastReceiver screenChangedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (started()) {
+			if (isStarted()) {
 				boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
 				if (isOnLockScreen)
 					ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
@@ -67,7 +67,7 @@ public class AppDisabler extends State {
 	private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (started()) {
+			if (isStarted()) {
 				/*
 				We receive this broadcast after the device gets unlocked.
 				This implies that the device was locked, so the app shouldn't be on.

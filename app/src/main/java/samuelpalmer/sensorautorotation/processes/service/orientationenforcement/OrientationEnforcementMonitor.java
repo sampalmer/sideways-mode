@@ -65,7 +65,7 @@ public class OrientationEnforcementMonitor extends State {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (started() && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+			if (isStarted() && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
 				updatePackages();
 				updateEnforcement();
 			}
@@ -78,7 +78,7 @@ public class OrientationEnforcementMonitor extends State {
 	}
 
 	private void updateEnforcement() {
-		if (orientationEnforcer.started()) {
+		if (orientationEnforcer.isStarted()) {
 			//Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag.
 
 			//Not allowing lock screen orientation enforcement just in case it breaks the lock screen
@@ -87,7 +87,7 @@ public class OrientationEnforcementMonitor extends State {
 		}
 		else {
 			tryToStartEnforcer();
-			if (orientationEnforcer.started())
+			if (orientationEnforcer.isStarted())
 				permissionNotificationManager.check(); //Android doesn't tell us when the permission is granted, so we'll just keep checking it so the error notification can be cancelled
 		}
 	}

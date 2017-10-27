@@ -99,7 +99,7 @@ public class OrientationSensorHandler extends State {
 		
 		@Override
 		public void onProposedRotationChanged(int rotation) {
-			if (!started()) {
+			if (!isStarted()) {
 				//This happens if you quickly repeatedly enable and disable the service on an emulator.
 				//It might only affect older versions of Android (API 14-16)
 				Log.w(TAG, "Got callback while stopped");

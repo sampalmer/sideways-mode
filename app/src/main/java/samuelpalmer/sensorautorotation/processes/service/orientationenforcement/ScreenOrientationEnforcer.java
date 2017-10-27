@@ -36,8 +36,8 @@ public class ScreenOrientationEnforcer extends State {
 	}
 
 	@Override
-	public boolean started() {
-		return super.started();
+	public boolean isStarted() {
+		return super.isStarted();
 	}
 
 	@Override
