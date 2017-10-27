@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
-import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 
@@ -57,8 +56,7 @@ public class AppDisabler extends State {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (isStarted()) {
-				boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
-				if (isOnLockScreen)
+				if (isOnLockScreen())
 					ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
 			}
 		}
@@ -80,5 +78,12 @@ public class AppDisabler extends State {
 			}
 		}
 	};
+	
+	private boolean isOnLockScreen() {
+		if (Build.VERSION.SDK_INT >= 16)
+			return keyguardManager.isKeyguardLocked();
+		else
+			return keyguardManager.inKeyguardRestrictedInputMode();
+	}
 	
 }
