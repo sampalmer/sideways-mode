@@ -56,6 +56,10 @@ public class AppDisabler extends State {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (isStarted()) {
+				/*
+				Don't want to turn the app off when the screen turns off because the screen might
+				have turned off due to inactivity while the user is actually still using the device.
+				 */
 				if (isOnLockScreen())
 					ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
 			}

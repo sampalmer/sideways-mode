@@ -97,6 +97,10 @@ public class ServiceRunningState extends State {
 					Log.i(TAG, "Device is interactive. Listening to sensors.");
 					orientationSensorHandler.ensureStarted();
 				} else {
+					/*
+					Don't want to turn the app off when the screen turns off because the screen might
+					have turned off due to inactivity while the user is actually still using the device.
+					 */
 					Log.i(TAG, "Device is not interactive. Not listening to sensors.");
 					orientationSensorHandler.ensureStopped();
 				}
