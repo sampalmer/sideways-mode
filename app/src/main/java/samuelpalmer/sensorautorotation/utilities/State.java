@@ -18,7 +18,7 @@ public abstract class State {
 		}
 	}
 
-	protected boolean isStarted() {
+	public boolean isStarted() {
 		return started;
 	}
 
