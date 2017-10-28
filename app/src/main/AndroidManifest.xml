@@ -26,6 +26,18 @@
 		android:name="android.hardware.screen.portrait"
 		android:required="true" />
 
+	<!--
+		Not sure if the below will work correctly, but I'm trying to declare to Google Play Store
+		that this app is designed for both low-RAM and normal devices.
+	-->
+	<uses-feature
+		android:name="android.hardware.ram.low"
+	    android:required="false" />
+	<uses-feature
+		android:name="android.hardware.ram.normal"
+	    android:required="false" />
+
+
 	<application
 		android:name=".CurrentProcess"
 		android:allowBackup="true"
