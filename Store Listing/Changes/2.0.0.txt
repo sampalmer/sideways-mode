@@ -1,0 +1,9 @@
+This app has been renamed to "Sideways Mode" to more clearly reflect its purpose. It is now just a "mode" that you only use while you lie on your side.
+
+Other changes:
+• Removed support for blocking this app's notification
+• Removed "allow upside-down" setting
+• Removed "notification priority" setting
+• Added support for Android 7's & Samsung's device orientation sensors
+• Removed support for gravity and rotation vector sensors since they were unreliable
+• Added support for Android 8.1
