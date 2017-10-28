@@ -91,14 +91,15 @@ public class ServiceRunningState extends State {
 	private final EventHandler deviceInteractivityListener = new EventHandler() {
 		@Override
 		public void update() {
-			// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
-			if (deviceInteractivityMonitor.isInteractive()) {
-				Log.i(TAG, "Device is interactive. Listening to sensors.");
-				orientationSensorHandler.ensureStarted();
-			}
-			else {
-				Log.i(TAG, "Device is not interactive. Not listening to sensors.");
-				orientationSensorHandler.ensureStopped();
+			if (deviceInteractivityMonitor.isInteractive() != orientationSensorHandler.isStarted()) {
+				// We should only monitor the sensors while the screen is on. Otherwise it will waste battery.
+				if (deviceInteractivityMonitor.isInteractive()) {
+					Log.i(TAG, "Device is interactive. Listening to sensors.");
+					orientationSensorHandler.ensureStarted();
+				} else {
+					Log.i(TAG, "Device is not interactive. Not listening to sensors.");
+					orientationSensorHandler.ensureStopped();
+				}
 			}
 		}
 	};
