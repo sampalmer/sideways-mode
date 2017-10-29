@@ -1,1 +1,1 @@
-include ':app', ':com.sony.smallapp', ':loremipsum'
+include ':app', ':com.sony.smallapp', ':loremipsum', ':memoryhog'

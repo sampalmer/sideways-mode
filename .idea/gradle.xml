@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/com.sony.smallapp" />
             <option value="$PROJECT_DIR$/loremipsum" />
+            <option value="$PROJECT_DIR$/memoryhog" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
