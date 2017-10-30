@@ -15,7 +15,6 @@
 
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
-	<string name="upgrade_v54">The option to hide the notification has been removed.</string>
 	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications is no longer supported. If you have them blocked, please unblock them."</string>
 
 	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
