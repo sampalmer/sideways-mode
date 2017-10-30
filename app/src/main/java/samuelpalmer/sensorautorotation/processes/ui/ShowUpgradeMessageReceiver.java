@@ -76,10 +76,18 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 			CharSequence message;
 			switch (version) {
 				case 54:
-					if (Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */)
+					boolean couldHideNotification =
+						lastAppVersion >= 50 // The setting wasn't available before this version
+						&&
+						Build.VERSION.SDK_INT < 25 // The setting didn't apply in Android 7.1.
+					;
+					
+					if (couldHideNotification)
 						message = context.getText(R.string.upgrade_v54);
 					else
+						// Don't want to bother the user about a feature that wasn't available to them
 						message = null;
+					
 					break;
 				case 57:
 					message = context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
