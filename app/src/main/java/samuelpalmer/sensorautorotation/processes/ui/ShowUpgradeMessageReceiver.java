@@ -6,8 +6,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -56,39 +54,15 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 			return;
 		}
 		
-		int currentAppVersion;
-		try {
-			currentAppVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-		} catch (PackageManager.NameNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		
-		String upgradeMessage = makeUpgradeMessage(context, lastAppVersion, currentAppVersion);
+		String upgradeMessage = makeUpgradeMessage(context, lastAppVersion);
 		if (upgradeMessage != null)
 			postUpgradeNotification(context, upgradeMessage);
 	}
 	
 	@Nullable
-	private String makeUpgradeMessage(Context context, int lastAppVersion, int currentAppVersion) {
-		StringBuilder upgradeMessage = new StringBuilder();
-		
-		for (int version = lastAppVersion + 1; version <= currentAppVersion; ++version) {
-			CharSequence message;
-			switch (version) {
-				case 57:
-					message = context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
-					break;
-				default:
-					message = null;
-					break;
-			}
-			
-			if (message != null)
-				upgradeMessage.append(message);
-		}
-		
-		if (upgradeMessage.length() != 0)
-			return upgradeMessage.toString();
+	private String makeUpgradeMessage(Context context, int lastAppVersion) {
+		if (lastAppVersion < 57)
+			return context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
 		else
 			return null;
 	}
