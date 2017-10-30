@@ -88,7 +88,7 @@ public class CurrentProcess extends Application {
 			NotificationChannels.setup(this);
 		
 		// Must upgrade settings before any settings-related code runs.
-		new Upgrader(this).upgradeIfNecessary();
+		Upgrader.upgradeIfNecessary(this);
 		
 		if (!isServiceProcess(this)) {
 			/*

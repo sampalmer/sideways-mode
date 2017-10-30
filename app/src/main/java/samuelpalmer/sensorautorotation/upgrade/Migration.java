@@ -15,12 +15,4 @@ class Migration {
 	 */
 	public void upgradeServiceProcessData(Context context, SharedPreferences serviceSettings) {}
 	
-	/**
-	 * Called in the UI process immediately before {@link #upgradeUiProcessData(Context, SharedPreferences)}.
-	 * Return {@code null} if no message is applicable.
-	 */
-	public CharSequence getMessage(Context context, SharedPreferences applicationSettings) {
-		return null;
-	}
-	
 }

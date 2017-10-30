@@ -1,8 +1,5 @@
 package samuelpalmer.sensorautorotation.upgrade;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,38 +11,40 @@ import android.view.Surface;
 import java.util.Map;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.PendingIntentIds;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
-import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
-import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-
 public class Upgrader {
-
-	private final int newAppVersion;
-	private final Context context;
 	
-	public Upgrader(Context context) {
-		this.context = context;
+	/**
+	 * The last version of this app that was run. Intended for upgrade-related logic. Note that this
+	 * is only available after {@link #upgradeIfNecessary(Context)} has been called.
+	 * @return The {@link android.content.pm.PackageInfo#versionCode} of the previously-run version of this app, or {@code null} if none exists.
+	 */
+	public static Integer getLastAppVersion() {
+		if (!lastAppVersionSet)
+			throw new RuntimeException("The last app version hasn't yet been determined. Please try after upgrading the settings.");
 		
+		return lastAppVersion;
+	}
+	
+	private static Integer lastAppVersion;
+	private static boolean lastAppVersionSet = false;
+	
+	public static void upgradeIfNecessary(Context context) {
+		if (lastAppVersionSet)
+			throw new RuntimeException("This has already been called.");
+		
+		int newAppVersion;
 		try {
-			newAppVersion = this.context.getPackageManager().getPackageInfo(this.context.getPackageName(), 0).versionCode;
+			newAppVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public void upgradeIfNecessary() {
+		
 		SharedPreferences prefs;
 		String settingsAppVersionKey;
-		Integer lastAppVersion;
 		
 		if (CurrentProcess.isServiceProcess(context)) {
 			prefs = ServiceSettings.getSharedPreferences(context);
@@ -68,6 +67,7 @@ public class Upgrader {
 				// The settings app version was stored in a different setting prior to v57.
 				lastAppVersion = prefs.contains("lastVersionUserInstructedAbout") ? prefs.getInt("lastVersionUserInstructedAbout", -1) : null;
 		}
+		lastAppVersionSet = true;
 		
 		if (
 			lastAppVersion != null // We only need to upgrade the app if it has been run before.
@@ -93,30 +93,18 @@ public class Upgrader {
 				}
 			}
 			else {
-				StringBuilder upgradeMessage = new StringBuilder();
-				
 				SparseArray<Migration> migrations = Migrations.buildMap();
 				for (int version = lastAppVersion + 1; version <= newAppVersion; ++version) {
 					Migration migration = migrations.get(version);
 					if (migration != null) {
 						Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
 						
-						if (CurrentProcess.isServiceProcess(context)) {
+						if (CurrentProcess.isServiceProcess(context))
 							migration.upgradeServiceProcessData(context, prefs);
-						}
-						else {
-							// It's important that this is done *before* upgrading the data in case the data needs to be referenced.
-							CharSequence message = migration.getMessage(context, prefs);
-							if (message != null)
-								upgradeMessage.append(message);
-							
+						else
 							migration.upgradeUiProcessData(context, prefs);
-						}
 					}
 				}
-				
-				if (upgradeMessage.length() != 0)
-					notify(upgradeMessage.toString());
 			}
 			
 			prefs.edit().putInt(settingsAppVersionKey, newAppVersion).apply();
@@ -130,7 +118,7 @@ public class Upgrader {
 	 * App versions prior to 57 didn't store the app version number in the service process's preferences.
 	 * This method guesses the version based on the contents of the settings.
 	 */
-	private Integer guessLastAppVersion(SharedPreferences serviceSettings) {
+	private static Integer guessLastAppVersion(SharedPreferences serviceSettings) {
 		Map<String, ?> allPreferences = serviceSettings.getAll();
 		
 		if (!allPreferences.isEmpty()) {
@@ -153,24 +141,6 @@ public class Upgrader {
 		}
 		
 		return null;
-	}
-	
-	private void notify(String upgradeMessage) {
-		String messageTitle = context.getString(R.string.upgrade_summary, context.getText(R.string.app_name_full));
-		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(context, messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
-		
-		Notification notification = NotificationBuilderFactory.create(context)
-				.setSmallIcon(R.drawable.notification_update)
-				.setContentIntent(viewMessageIntent)
-				.setContentTitle(messageTitle)
-				.setContentText(context.getText(R.string.upgrade_notification_content))
-				.setAutoCancel(true)
-				.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-				.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-				.setChannelId(NotificationChannels.ID_UPGRADES)
-				.build();
-		
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
 	}
 	
 }

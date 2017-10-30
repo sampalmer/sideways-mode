@@ -3,13 +3,11 @@ package samuelpalmer.sensorautorotation.upgrade;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
@@ -86,17 +84,6 @@ class Migrations {
 		
 		migrations.put(54, new Migration() {
 			@Override
-			public CharSequence getMessage(Context context, SharedPreferences prefs) {
-				boolean notificationWasHidden = !prefs.getBoolean("showNotification", true) && Build.VERSION.SDK_INT < 25 /* The setting didn't apply in Android 7.1. */;
-				
-				if (notificationWasHidden)
-					return context.getText(R.string.upgrade_v54);
-				else
-					// No need to bother the user about this if they weren't using the feature.
-					return null;
-			}
-			
-			@Override
 			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
 				super.upgradeUiProcessData(context, prefs);
 				
@@ -110,12 +97,6 @@ class Migrations {
 		});
 		
 		migrations.put(57, new Migration() {
-			
-			@Override
-			public CharSequence getMessage(Context context, SharedPreferences prefs) {
-				return context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
-			}
-			
 			@Override
 			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
 				super.upgradeUiProcessData(context, prefs);

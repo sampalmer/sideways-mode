@@ -188,7 +188,7 @@
 
 		<receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
-		<receiver android:name=".processes.ui.UpgradeReceiver">
+		<receiver android:name=".processes.ui.ShowUpgradeMessageReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
 			</intent-filter>
