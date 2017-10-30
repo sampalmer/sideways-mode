@@ -21,15 +21,12 @@ public class MessageDialogActivity extends DialogActivity {
 	private static final String TAG = "dialog";
 
 	public static PendingIntent makePendingIntent(Context context, CharSequence title, CharSequence message, int requestCode, boolean isError) {
-		Intent mainActivityIntent = new Intent(context, DashboardActivity.class);
-		
 		Intent intent = new Intent(context, MessageDialogActivity.class)
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title)
 				.putExtra(INTENT_EXTRA_IS_ERROR, isError);
-
-		Intent[] intents = {mainActivityIntent, intent};
-		return PendingIntent.getActivities(context, requestCode, intents, PendingIntentIds.PENDING_INTENT_FLAGS);
+		
+		return PendingIntent.getActivity(context, requestCode, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 	}
 
 	@Override
