@@ -34,12 +34,7 @@ public class ScreenOrientationEnforcer extends State {
 	public static boolean hasPermissionToStart(Context context) {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
 	}
-
-	@Override
-	public boolean isStarted() {
-		return super.isStarted();
-	}
-
+	
 	@Override
 	protected void start() {
 		setEnforcedUnconditionally(false);

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 public class MessageDialogActivity extends DialogActivity {

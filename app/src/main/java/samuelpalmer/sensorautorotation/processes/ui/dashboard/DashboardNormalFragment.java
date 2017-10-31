@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,14 +35,14 @@ public class DashboardNormalFragment extends Fragment {
 	private String pendingButtonPress;
 	
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_PENDING_ACTION, pendingButtonPress);
 	}
 	
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
 		waitingForSensor = layout.findViewById(R.id.dashboard_normal_waiting_sensor);
