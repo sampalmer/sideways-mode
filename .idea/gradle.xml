@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/com.sony.smallapp" />
             <option value="$PROJECT_DIR$/loremipsum" />
             <option value="$PROJECT_DIR$/memoryhog" />
+            <option value="$PROJECT_DIR$/screenorientations" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
