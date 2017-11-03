@@ -19,6 +19,8 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
 	
+	private static final String TAG = QuickSettingService.class.getSimpleName();
+	
 	private ApplicationStatusClient statusClient;
 	private ApplicationStatus status;
 	private boolean pendingClick;
@@ -36,14 +38,14 @@ public class QuickSettingService extends TileService {
 	public void onClick() {
 		super.onClick();
 
-		Log.i(QuickSettingService.class.getSimpleName(), "Clicked");
+		Log.i(TAG, "Clicked");
 		
 		if (status != null) {
 			handleClick();
 			pendingClick = false;
 		}
 		else {
-			Log.i(QuickSettingService.class.getSimpleName(), "Don't know application status to handle click. Waiting until status is available.");
+			Log.i(TAG, "Don't know application status to handle click. Waiting until status is available.");
 			pendingClick = true;
 		}
 	}
@@ -93,14 +95,14 @@ public class QuickSettingService extends TileService {
 	public void onTileAdded() {
 		super.onTileAdded();
 
-		Log.i(QuickSettingService.class.getSimpleName(), "Tile added");
+		Log.i(TAG, "Tile added");
 	}
 	
 	@Override
 	public void onTileRemoved() {
 		super.onTileRemoved();
 
-		Log.i(QuickSettingService.class.getSimpleName(), "Tile removed");
+		Log.i(TAG, "Tile removed");
 	}
 
 	@Override
@@ -127,7 +129,7 @@ public class QuickSettingService extends TileService {
 					updateTile();
 					
 					if (pendingClick) {
-						Log.i(QuickSettingService.class.getSimpleName(), "Got status update. Handling pending click.");
+						Log.i(TAG, "Got status update. Handling pending click.");
 						handleClick();
 						pendingClick = false;
 					}
@@ -137,12 +139,19 @@ public class QuickSettingService extends TileService {
 	};
 	
 	/**
-	 * Assumes status is available.
+	 * Assumes {@link #status} is available.
 	 */
 	private void updateTile() {
 		Tile tile = getQsTile();
-		if (tile == null)
-			throw new RuntimeException("Couldn't get quick setting tile. Maybe the service isn't in listening state?");
+		if (tile == null) {
+			/*
+			This happened once on the Android 7.1.1 emulator even though the tile was in listening state.
+			Maybe the OS isn't guaranteed to have the tile available during listening state.
+			Or maybe it's just an Android bug.
+			*/
+			Log.w(TAG, "Couldn't get quick setting tile. Maybe the service isn't in listening state?");
+			return;
+		}
 		
 		if (status.runningState != null)
 			tile.setState(Tile.STATE_ACTIVE);
