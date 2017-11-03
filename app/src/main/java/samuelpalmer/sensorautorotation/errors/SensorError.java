@@ -58,6 +58,7 @@ public class SensorError extends EnvironmentError {
 	@Override
 	public PendingIntent showError(Context context) {
 		Intent intent = new Intent(context, DeviceUnsupportedActivity.class)
+			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 			.putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, R.string.device_problem_explanation_sensor)
 			.putExtra(DeviceUnsupportedActivity.EXTRA_IS_ERROR, true)
 		;

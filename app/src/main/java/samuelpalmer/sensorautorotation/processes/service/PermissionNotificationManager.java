@@ -80,7 +80,7 @@ public class PermissionNotificationManager extends State {
 			PendingIntent forcedAppsIntent = PendingIntent.getActivity(
 			context,
 				PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION,
-				new Intent(context, ForcedAppsActivity.class),
+				new Intent(context, ForcedAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
 			
 			Notification notification = NotificationBuilderFactory

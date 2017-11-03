@@ -36,7 +36,7 @@ class ServiceNotification {
 		PendingIntent settingsActivityIntent = PendingIntent.getActivity(
 		this.context,
 			PendingIntentIds.MAIN_NOTIFICATION_CLICK,
-			new Intent(this.context, MainSettingsActivity.class),
+			new Intent(this.context, MainSettingsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 			PendingIntentIds.PENDING_INTENT_FLAGS);
 		
 		//Caching and re-using the builder prevents the notification from disappearing and

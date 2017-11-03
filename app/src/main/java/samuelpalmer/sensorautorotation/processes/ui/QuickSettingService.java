@@ -75,7 +75,7 @@ public class QuickSettingService extends TileService {
 		 *  3. It's simpler to just use the one activity for all possible ways of accessing the dashboard
 		 */
 		
-		Intent intent = new Intent(this, DashboardActivity.class);
+		Intent intent = new Intent(this, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 		
 		// This is needed to collapse the status bar.

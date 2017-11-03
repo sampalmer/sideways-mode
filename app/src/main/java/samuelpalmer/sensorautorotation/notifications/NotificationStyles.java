@@ -72,7 +72,7 @@ public final class NotificationStyles {
 
 		//Add action button
 		String actionTitle = actionButton.searchTip;
-		PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent(""), 0);
+		PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
 		builder.addAction(exampleIconResource, actionTitle, intent);
 
 		//Build

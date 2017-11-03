@@ -21,6 +21,7 @@ public class MessageDialogActivity extends DialogActivity {
 
 	public static PendingIntent makePendingIntent(Context context, CharSequence title, CharSequence message, int requestCode, boolean isError) {
 		Intent intent = new Intent(context, MessageDialogActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 				.putExtra(INTENT_EXTRA_MESSAGE, message)
 				.putExtra(INTENT_EXTRA_TITLE, title)
 				.putExtra(INTENT_EXTRA_IS_ERROR, isError);
