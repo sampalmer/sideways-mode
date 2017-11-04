@@ -17,6 +17,17 @@
 		android:orientation="vertical">
 
 		<!--
+		I want the user to first see and understand the entire form before they start writing,
+		so we we'll have the keyboard closed by default.
+		-->
+		<View
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			/>
+
+		<!--
 			Not using material design TextInputLayout because:
 			1. It doesn't match the material design spec
 			2. It introduces visual clutter in error state
