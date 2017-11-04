@@ -16,61 +16,45 @@
 		android:paddingTop="@dimen/activity_vertical_margin"
 		android:orientation="vertical">
 
-		<android.support.design.widget.TextInputLayout
-			android:id="@+id/problem_steps_layout"
+		<!--
+			Not using material design TextInputLayout because:
+			1. It doesn't match the material design spec
+			2. It introduces visual clutter in error state
+			3. It has wrong colours when in error state
+			4. No editor hint in full screen view (landscape)
+		-->
+
+		<EditText
+			android:id="@+id/problem_steps"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_reproduce"
-			>
-
-			<EditText
-				android:id="@+id/problem_steps"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-				/>
-
-		</android.support.design.widget.TextInputLayout>
+			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+			/>
 
 		<android.support.v4.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
-		<android.support.design.widget.TextInputLayout
-			android:id="@+id/problem_problem_layout"
+		<EditText
+			android:id="@+id/problem_problem"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_problem"
-			>
-
-			<EditText
-				android:id="@+id/problem_problem"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-				/>
-
-		</android.support.design.widget.TextInputLayout>
+			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+			/>
 
 		<android.support.v4.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
-		<android.support.design.widget.TextInputLayout
-			android:id="@+id/problem_expected_layout"
+		<EditText
+			android:id="@+id/problem_expected"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_expected"
-			>
-
-			<EditText
-				android:id="@+id/problem_expected"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-				/>
-
-		</android.support.design.widget.TextInputLayout>
+			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+			/>
 
 		<android.support.v4.widget.Space
 			android:layout_width="match_parent"
