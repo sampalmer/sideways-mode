@@ -75,6 +75,7 @@ public class QuickSettingService extends TileService {
 		 *  1. It is affected by an OS layout bug (https://issuetracker.google.com/issues/38188882)
 		 *  2. It appears over system activities such as "recents"
 		 *  3. It's simpler to just use the one activity for all possible ways of accessing the dashboard
+		 *  4. It occasionally crashes
 		 */
 		
 		Intent intent = new Intent(this, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
