@@ -121,7 +121,6 @@
 			android:name=".processes.ui.feedback.ReportProblemActivity"
 			android:label="@string/action_report"
 			android:parentActivityName=".processes.ui.feedback.SendFeedbackActivity"
-		    android:windowSoftInputMode="stateVisible"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->

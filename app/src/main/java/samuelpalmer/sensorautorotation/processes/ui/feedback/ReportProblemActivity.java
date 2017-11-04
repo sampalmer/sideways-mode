@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -22,8 +21,9 @@ public class ReportProblemActivity extends UiActivity {
 	private final static String PROBLEM_LOGS_KEY = "logcat";
 	
 	private String problemLogs;
-	private TextInputLayout descriptionLayout;
-	private EditText description;
+	private EditText steps;
+	private EditText problem;
+	private EditText expected;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +31,9 @@ public class ReportProblemActivity extends UiActivity {
 
 		setContentView(R.layout.activity_report_problem);
 		
-		descriptionLayout = findViewById(R.id.problem_description_layout);
-		description = findViewById(R.id.problem_description);
+		steps = findViewById(R.id.problem_steps);
+		problem = findViewById(R.id.problem_problem);
+		expected = findViewById(R.id.problem_expected);
 
 		// This activity saves the logs as soon as it's created.
 		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
@@ -65,14 +66,8 @@ public class ReportProblemActivity extends UiActivity {
 	}
 	
 	private void sendEmail() {
-		if (description.getText().length() < 5) {
-			// Users have sent a lot of blank problem reports where the logs suggest nothing is wrong.
-			// So we need the users to actually say what's wrong.
-			descriptionLayout.setError(getText(R.string.report_problem_description_missing));
+		if (!validateUserInput())
 			return;
-		}
-		else
-			descriptionLayout.setError(null);
 		
 		PackageInfo appInfo;
 		try {
@@ -85,9 +80,11 @@ public class ReportProblemActivity extends UiActivity {
 		
 		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
 		String body = String.format(
-			"App version:\n%s\n\nProblem:\n%s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
+			"App version:\n%s\n\nWhat I did: %s\nWhat happened: %s\nWhat I expected: %s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
 			fullAppVersion,
-			description.getText().toString(),
+			steps.getText().toString(),
+			problem.getText().toString(),
+			expected.getText().toString(),
 			DiagnosticInfo.deviceInfo(this),
 			DiagnosticInfo.sensorDump(this),
 			problemLogs
@@ -115,5 +112,25 @@ public class ReportProblemActivity extends UiActivity {
 		}
 		else
 			Toast.makeText(getApplicationContext(), getResources().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT).show();
+	}
+	
+	private boolean validateUserInput() {
+		// Users have sent a lot of useless problem reports, so now they must fill out 3 mandatory fields.
+		
+		EditText[] inputs = new EditText[] { steps, problem, expected };
+		
+		boolean isValid = true;
+		
+		for (EditText input : inputs) {
+			if (input.getText().toString().trim().length() < 5) {
+				// Not using material design errors here because they result in a lot of visual clutter.
+				input.setError(getText(R.string.report_problem_field_missing));
+				isValid = false;
+			}
+			else
+				steps.setError(null);
+		}
+		
+		return isValid;
 	}
 }

@@ -17,14 +17,14 @@
 		android:orientation="vertical">
 
 		<android.support.design.widget.TextInputLayout
-			android:id="@+id/problem_description_layout"
+			android:id="@+id/problem_steps_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/report_problem_lable"
+			android:hint="@string/report_problem_reproduce"
 			>
 
-			<android.support.design.widget.TextInputEditText
-				android:id="@+id/problem_description"
+			<EditText
+				android:id="@+id/problem_steps"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
@@ -32,12 +32,55 @@
 
 		</android.support.design.widget.TextInputLayout>
 
+		<android.support.v4.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="16dp"/>
+
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/problem_problem_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/report_problem_problem"
+			>
+
+			<EditText
+				android:id="@+id/problem_problem"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				/>
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.v4.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="16dp"/>
+
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/problem_expected_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/report_problem_expected"
+			>
+
+			<EditText
+				android:id="@+id/problem_expected"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				/>
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.v4.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="16dp"/>
+
 		<!-- This notice is required by Google Play (https://play.google.com/about/privacy-security/user-data/) -->
 		<TextView
 			android:id="@+id/feedback_disclosure"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="12dp"
 			android:text="@string/report_problem_disclosure"
 			/>
 
