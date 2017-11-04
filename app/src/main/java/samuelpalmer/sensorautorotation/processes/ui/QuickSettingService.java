@@ -111,6 +111,12 @@ public class QuickSettingService extends TileService {
 		super.onStartListening();
 		isListening = true;
 		statusClient.subscribe();
+		
+		/*
+		Not updating the tile here because
+		1. We might not have a status
+		2. Even if we have a status, it might be out-of-date
+		*/
 	}
 
 	@Override
