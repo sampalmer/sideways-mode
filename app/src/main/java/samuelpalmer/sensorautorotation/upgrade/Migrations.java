@@ -11,6 +11,7 @@ import android.view.Surface;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -120,7 +121,11 @@ class Migrations {
 				context.sendBroadcast(new Intent(context, SendConfigReceiver.class));
 				
 				Boolean autoRotateValue = prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null;
-				Orientation screenOrientationOffsetValue = prefs.contains("screenOrientationOffset") ? Orientation.fromOffset(prefs.getInt("screenOrientationOffset", 0)) : null;
+				Orientation screenOrientationOffsetValue = prefs.contains("screenOrientationOffset")
+					?
+					Orientation.fromOffset(NumberUtilities.wrap(prefs.getInt("screenOrientationOffset", 0), 4))
+					:
+					null;
 				
 				SharedPreferences.Editor editor = prefs.edit();
 				
