@@ -37,7 +37,6 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/dialog_content_margin"
 			android:gravity="center"
 			>
 
@@ -55,24 +54,21 @@
 
 			</FrameLayout>
 
-			<ProgressBar
+			<FrameLayout
+				android:id="@+id/dashboard_permission_contents_container"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/dashboard_progress"
-				android:visibility="invisible"
-				style="@style/Widget.AppCompat.ProgressBar"
-				/>
+				android:layout_height="wrap_content">
+
+				<fragment
+					android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionFragment"
+					android:id="@+id/dashboard_permission_contents"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					/>
+
+			</FrameLayout>
 
 		</RelativeLayout>
-
-		<!--
-		    Using a CoordinatorLayout so the error can be swiped away.
-		    Not putting other content in it so the snackbar uses its own space rather than overlapping other content.
-	     -->
-		<android.support.design.widget.CoordinatorLayout
-			android:id="@+id/dashboard_error_container"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
 
 	</LinearLayout>
 

@@ -3,126 +3,161 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
 	>
 
-	<LinearLayout
-		android:id="@+id/dashboard_normal_waiting_sensor"
+	<RelativeLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-	    android:visibility="gone"
+		android:padding="@dimen/dialog_content_margin"
+	    android:layout_gravity="center"
 		>
 
-		<TextView
+		<LinearLayout
+			android:id="@+id/dashboard_status"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/status_waiting_sensor"
-		    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-			/>
+			android:orientation="vertical"
+			android:gravity="center_horizontal">
+
+			<LinearLayout
+				android:id="@+id/dashboard_normal_waiting_sensor"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:visibility="gone"
+				>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/status_waiting_sensor"
+					android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+					/>
+
+				<ProgressBar
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/dashboard_sensor_progress"
+					android:indeterminate="true"
+					style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+					/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="?attr/listPreferredItemHeight"
+				android:orientation="horizontal"
+				android:layoutDirection="ltr"
+				tools:ignore="UnusedAttribute">
+
+				<LinearLayout
+					android:id="@+id/dashboard_button_left_side"
+					android:layout_width="64dp"
+					android:layout_height="match_parent"
+					android:background="?attr/selectableItemBackground"
+					android:contentDescription="@string/user_rotation_left_side"
+					android:focusable="true"
+					android:gravity="center_horizontal"
+					>
+					<ImageView
+						android:layout_width="48dp"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_marginStart="8dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginTop="6dp"
+						android:layout_marginBottom="6dp"
+						app:srcCompat="@drawable/dashboard_left_side"
+						android:scaleType="center"
+						android:duplicateParentState="true"
+						android:background="@drawable/button_selectable"
+						tools:ignore="ContentDescription"/>
+				</LinearLayout>
+				<!-- Spacer -->
+				<View android:layout_width="0dp"
+				      android:layout_height="match_parent"
+				      android:layout_weight="1"
+				      android:visibility="invisible"/>
+
+				<LinearLayout
+					android:id="@+id/dashboard_button_turn_off"
+					android:layout_width="64dp"
+					android:layout_height="match_parent"
+					android:background="?attr/selectableItemBackground"
+					android:contentDescription="@string/action_turn_off"
+					android:focusable="true"
+					android:gravity="center_horizontal"
+					>
+					<ImageView
+						android:layout_width="48dp"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_marginStart="8dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginTop="6dp"
+						android:layout_marginBottom="6dp"
+						app:srcCompat="@drawable/dashboard_turn_off"
+						android:scaleType="center"
+						android:duplicateParentState="true"
+						android:background="@drawable/button_selectable"
+						tools:ignore="ContentDescription"/>
+				</LinearLayout>
+
+				<!-- Spacer -->
+				<View android:layout_width="0dp"
+				      android:layout_height="match_parent"
+				      android:layout_weight="1"
+				      android:visibility="invisible"/>
+
+				<LinearLayout
+					android:id="@+id/dashboard_button_right_side"
+					android:layout_width="64dp"
+					android:layout_height="match_parent"
+					android:background="?attr/selectableItemBackground"
+					android:contentDescription="@string/user_rotation_right_side"
+					android:focusable="true"
+					android:gravity="center_horizontal"
+					>
+					<ImageView
+						android:layout_width="48dp"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_marginStart="8dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginTop="6dp"
+						android:layout_marginBottom="6dp"
+						app:srcCompat="@drawable/dashboard_right_side"
+						android:scaleType="center"
+						android:duplicateParentState="true"
+						android:background="@drawable/button_selectable"
+						tools:ignore="ContentDescription"/>
+				</LinearLayout>
+			</LinearLayout>
+
+		</LinearLayout>
 
 		<ProgressBar
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/dashboard_sensor_progress"
-			android:indeterminate="true"
-			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:id="@+id/dashboard_progress"
+			android:visibility="invisible"
+			style="@style/Widget.AppCompat.ProgressBar"
 			/>
 
-	</LinearLayout>
+	</RelativeLayout>
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="?attr/listPreferredItemHeight"
-		android:orientation="horizontal"
-	    android:layoutDirection="ltr"
-		tools:ignore="UnusedAttribute">
-
-		<LinearLayout
-			android:id="@+id/dashboard_button_left_side"
-			android:layout_width="64dp"
-			android:layout_height="match_parent"
-			android:background="?attr/selectableItemBackground"
-			android:contentDescription="@string/user_rotation_left_side"
-			android:focusable="true"
-		    android:gravity="center_horizontal"
-			>
-			<ImageView
-				android:layout_width="48dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="center"
-				android:layout_marginStart="8dp"
-				android:layout_marginEnd="8dp"
-				android:layout_marginTop="6dp"
-				android:layout_marginBottom="6dp"
-				app:srcCompat="@drawable/dashboard_left_side"
-				android:scaleType="center"
-				android:duplicateParentState="true"
-				android:background="@drawable/button_selectable"
-				tools:ignore="ContentDescription"/>
-		</LinearLayout>
-		<!-- Spacer -->
-		<View android:layout_width="0dp"
-		      android:layout_height="match_parent"
-		      android:layout_weight="1"
-		      android:visibility="invisible"/>
-
-		<LinearLayout
-			android:id="@+id/dashboard_button_turn_off"
-			android:layout_width="64dp"
-			android:layout_height="match_parent"
-			android:background="?attr/selectableItemBackground"
-			android:contentDescription="@string/action_turn_off"
-			android:focusable="true"
-			android:gravity="center_horizontal"
-			>
-			<ImageView
-				android:layout_width="48dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="center"
-				android:layout_marginStart="8dp"
-				android:layout_marginEnd="8dp"
-				android:layout_marginTop="6dp"
-				android:layout_marginBottom="6dp"
-				app:srcCompat="@drawable/dashboard_turn_off"
-				android:scaleType="center"
-				android:duplicateParentState="true"
-				android:background="@drawable/button_selectable"
-				tools:ignore="ContentDescription"/>
-		</LinearLayout>
-
-		<!-- Spacer -->
-		<View android:layout_width="0dp"
-		      android:layout_height="match_parent"
-		      android:layout_weight="1"
-		      android:visibility="invisible"/>
-
-		<LinearLayout
-			android:id="@+id/dashboard_button_right_side"
-			android:layout_width="64dp"
-			android:layout_height="match_parent"
-			android:background="?attr/selectableItemBackground"
-			android:contentDescription="@string/user_rotation_right_side"
-			android:focusable="true"
-			android:gravity="center_horizontal"
-			>
-			<ImageView
-				android:layout_width="48dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="center"
-				android:layout_marginStart="8dp"
-				android:layout_marginEnd="8dp"
-				android:layout_marginTop="6dp"
-				android:layout_marginBottom="6dp"
-				app:srcCompat="@drawable/dashboard_right_side"
-				android:scaleType="center"
-				android:duplicateParentState="true"
-				android:background="@drawable/button_selectable"
-				tools:ignore="ContentDescription"/>
-		</LinearLayout>
-	</LinearLayout>
+	<!--
+		Using a CoordinatorLayout so the error can be swiped away.
+		Not putting other content in it so the snackbar uses its own space rather than overlapping other content.
+		This is separate from the other views so it doesn't get any padding.
+	 -->
+	<android.support.design.widget.CoordinatorLayout
+		android:id="@+id/dashboard_error_container"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 
 </LinearLayout>

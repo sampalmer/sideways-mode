@@ -1,36 +1,24 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
-import samuelpalmer.sensorautorotation.values.ApplicationCommand;
-import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 
 public class DashboardActivity extends DialogActivity {
 	
 	private AlertDialog dialog;
 	
-	private CoordinatorLayout container;
-	private ProgressBar progressBar;
-	private ViewGroup normalSectionContainer;
-	private DashboardNormalFragment normalSection;
-	private Snackbar snackbar;
-	
-	private ApplicationStatusClient statusClient;
-	private ApplicationStatus lastStatus;
+	private ViewGroup normalSection;
+	private ViewGroup permissionSection;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +49,8 @@ public class DashboardActivity extends DialogActivity {
 			}
 		});
 		
-		container = dialog.findViewById(R.id.dashboard_error_container);
-		progressBar = dialog.findViewById(R.id.dashboard_progress);
-		normalSection = (DashboardNormalFragment) getSupportFragmentManager().findFragmentById(R.id.dashboard_normal_contents);
-		normalSectionContainer = dialog.findViewById(R.id.dashboard_normal_contents_container);
-		
-		statusClient = new ApplicationStatusClient(this, statusChanged);
+		normalSection = dialog.findViewById(R.id.dashboard_normal_contents_container);
+		permissionSection = dialog.findViewById(R.id.dashboard_permission_contents_container);
 	}
 	
 	@Override
@@ -82,82 +66,10 @@ public class DashboardActivity extends DialogActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		statusClient.subscribe();
-		showStatus();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		statusClient.unsubscribe();
-	}
-	
-	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
 		
-		@Override
-		public void onChange(final ApplicationStatus status) {
-			if (status != null) {
-				lastStatus = status;
-				showStatus();
-			}
-		}
-		
-	};
-	
-	private void showStatus() {
-		// Intentionally preserving space so the dashboard doesn't resize once it finished loading.
-		ensureVisibility(progressBar, lastStatus == null ? View.VISIBLE : View.INVISIBLE);
-		ensureVisibility(normalSectionContainer, lastStatus == null ? View.INVISIBLE : View.VISIBLE);
-		
-		if (lastStatus != null) {
-			normalSection.setStatus(lastStatus);
-			updateSnackbar();
-		}
-	}
-	
-	private void updateSnackbar() {
-		if (snackbar == null) {
-			snackbar = Snackbar.make(container, "", Snackbar.LENGTH_INDEFINITE);
-			snackbar.addCallback(new Snackbar.Callback() {
-				@Override
-				public void onDismissed(Snackbar snackbar, int event) {
-					super.onDismissed(snackbar, event);
-					
-					if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
-						new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(DashboardActivity.this);
-					
-					//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
-					DashboardActivity.this.snackbar = null;
-				}
-			});
-		}
-		
-		if (lastStatus.error == null)
-			snackbar.dismiss();
-		else {
-			snackbar.setText(lastStatus.error.getSummary());
-			snackbar.setAction(R.string.environment_error_more, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					try {
-						lastStatus.error.showError(DashboardActivity.this).send();
-					} catch (PendingIntent.CanceledException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
-			snackbar.show();
-		}
-	}
-	
-	/**
-	 * Only changes the visibility if it's different to the current value.
-	 * This is to minimise lag.
-	 */
-	private static void ensureVisibility(View control, int newVisibility) {
-		int currentVisibility = control.getVisibility();
-		if (currentVisibility != newVisibility)
-			control.setVisibility(newVisibility);
+		boolean hasPermission = SystemSettings.canWrite(this);
+		ViewUtilities.ensureVisibility(normalSection, hasPermission ? View.VISIBLE : View.GONE);
+		ViewUtilities.ensureVisibility(permissionSection, hasPermission ? View.GONE : View.VISIBLE);
 	}
 	
 }

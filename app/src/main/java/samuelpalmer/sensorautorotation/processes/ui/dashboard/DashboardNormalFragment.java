@@ -1,19 +1,20 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
-import samuelpalmer.sensorautorotation.utilities.SystemIntents;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -23,29 +24,30 @@ import samuelpalmer.sensorautorotation.values.UserSide;
  */
 public class DashboardNormalFragment extends Fragment {
 	
-	private static final int REQUEST_CODE_BUTTON_PRESSED = 1;
-	private static final String KEY_PENDING_ACTION = "pending_action";
+	private CoordinatorLayout snackbarContainer;
+	private ProgressBar progressBar;
+	private ViewGroup statusContainer;
+	private Snackbar snackbar;
 	
 	private View waitingForSensor;
 	private View leftSideButton;
 	private View turnOffButton;
 	private View rightSideButton;
 	
-	// The button the user pressed while the app didn't have access to write system settings.
-	private String pendingButtonPress;
-	
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(KEY_PENDING_ACTION, pendingButtonPress);
-	}
+	private ApplicationStatusClient statusClient;
+	private ApplicationStatus lastStatus;
 	
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_normal, container, false);
 		
+		snackbarContainer = layout.findViewById(R.id.dashboard_error_container);
+		progressBar = layout.findViewById(R.id.dashboard_progress);
+		statusContainer = layout.findViewById(R.id.dashboard_status);
+		
 		waitingForSensor = layout.findViewById(R.id.dashboard_normal_waiting_sensor);
+		
 		leftSideButton = layout.findViewById(R.id.dashboard_button_left_side);
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
@@ -54,10 +56,13 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
 		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
 		
-		if (savedInstanceState != null)
-			pendingButtonPress = savedInstanceState.getString(KEY_PENDING_ACTION);
-		
 		return layout;
+	}
+	
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		statusClient = new ApplicationStatusClient(getContext(), statusChanged);
 	}
 	
 	private class ActionClickListener implements View.OnClickListener {
@@ -71,54 +76,97 @@ public class DashboardNormalFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			if (!view.isSelected()) {
-				if (!SystemSettings.canWrite(DashboardNormalFragment.this.getContext())) {
-					pendingButtonPress = action;
-					Intent intent = SystemIntents.modifySystemSettings(getContext());
-					
-					try {
-						startActivityForResult(intent, REQUEST_CODE_BUTTON_PRESSED);
-					}
-					catch (ActivityNotFoundException e) {
-						throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
-					}
-				} else
-					buttonPressed(action);
+				// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
+				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
+				
+				//noinspection ConstantConditions
+				getActivity().finish();
 			}
 		}
 		
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_BUTTON_PRESSED) {
-			if (SystemSettings.canWrite(getContext()))
-				buttonPressed(pendingButtonPress);
-			else
-				pendingButtonPress = null; // The user might have returned without actually granting the permission
+	public void onStart() {
+		super.onStart();
+		statusClient.subscribe();
+		showStatus();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		statusClient.unsubscribe();
+	}
+	
+	private final ApplicationStatusClient.Listener statusChanged = new ApplicationStatusClient.Listener() {
+		
+		@Override
+		public void onChange(final ApplicationStatus status) {
+			if (status != null) {
+				lastStatus = status;
+				showStatus();
+			}
 		}
-		else
-			super.onActivityResult(requestCode, resultCode, data);
+		
+	};
+	
+	private void showStatus() {
+		// Intentionally preserving space so the dashboard doesn't resize once it finished loading.
+		ViewUtilities.ensureVisibility(progressBar, lastStatus == null ? View.VISIBLE : View.INVISIBLE);
+		ViewUtilities.ensureVisibility(statusContainer, lastStatus == null ? View.INVISIBLE : View.VISIBLE);
+		
+		if (lastStatus != null) {
+			waitingForSensor.setVisibility(lastStatus.runningState != null && lastStatus.runningState.waitingForSensor ? View.VISIBLE : View.GONE);
+			
+			leftSideButton.setSelected(false);
+			turnOffButton.setSelected(false);
+			rightSideButton.setSelected(false);
+			
+			if (lastStatus.runningState == null)
+				turnOffButton.setSelected(true);
+			else if (lastStatus.runningState.userSide.equals(UserSide.LEFT))
+				leftSideButton.setSelected(true);
+			else
+				rightSideButton.setSelected(true);
+			
+			updateSnackbar();
+		}
 	}
 	
-	private void buttonPressed(String action) {
-		// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
-		new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
-		pendingButtonPress = null;
-		getActivity().finish();
+	private void updateSnackbar() {
+		if (snackbar == null) {
+			snackbar = Snackbar.make(snackbarContainer, "", Snackbar.LENGTH_INDEFINITE);
+			snackbar.addCallback(new Snackbar.Callback() {
+				@Override
+				public void onDismissed(Snackbar snackbar, int event) {
+					super.onDismissed(snackbar, event);
+					
+					if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
+						new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(getContext());
+					
+					//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
+					DashboardNormalFragment.this.snackbar = null;
+				}
+			});
+		}
+		
+		if (lastStatus.error == null)
+			snackbar.dismiss();
+		else {
+			snackbar.setText(lastStatus.error.getSummary());
+			snackbar.setAction(R.string.environment_error_more, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						lastStatus.error.showError(getContext()).send();
+					} catch (PendingIntent.CanceledException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			});
+			snackbar.show();
+		}
 	}
 	
-	public void setStatus(ApplicationStatus status) {
-		waitingForSensor.setVisibility(status.runningState != null && status.runningState.waitingForSensor ? View.VISIBLE : View.GONE);
-		
-		leftSideButton.setSelected(false);
-		turnOffButton.setSelected(false);
-		rightSideButton.setSelected(false);
-		
-		if (status.runningState == null)
-			turnOffButton.setSelected(true);
-		else if (status.runningState.userSide.equals(UserSide.LEFT))
-			leftSideButton.setSelected(true);
-		else
-			rightSideButton.setSelected(true);
-	}
 }
