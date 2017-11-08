@@ -142,7 +142,7 @@ public class DashboardNormalFragment extends Fragment {
 				public void onDismissed(Snackbar snackbar, int event) {
 					super.onDismissed(snackbar, event);
 					
-					if (event == DISMISS_EVENT_SWIPE || event == DISMISS_EVENT_ACTION)
+					if (event == DISMISS_EVENT_SWIPE)
 						new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(getContext());
 					
 					//If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
