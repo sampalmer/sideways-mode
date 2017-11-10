@@ -22,8 +22,8 @@ class Migrations {
 
 		migrations.put(25, new Migration() {
 			@Override
-			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeUiProcessData(context, prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, prefs, editor);
 				
 				// Not migrating these prefs anywhere since the UI process (which owns the app prefs) can't directly access the service process's prefs as of v57.
 				// Instead, we'll gracefully disable the app and restore normal Android rotation.
@@ -32,90 +32,74 @@ class Migrations {
 					restoreSystemSettings(context, prefs.contains("autoRotate") ? prefs.getBoolean("autoRotate", true) : null);
 				}
 				
-				prefs.edit()
+				editor
 					.remove("autoRotate")
 					.remove("userOrientation")
-					.remove("screenOnBehaviour")
-					.apply();
+					.remove("screenOnBehaviour");
 			}
 		});
 
 		migrations.put(43, new Migration() {
 			@Override
-			public void upgradeServiceProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeServiceProcessData(context, prefs);
+			public void upgradeServiceProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeServiceProcessData(context, prefs, editor);
 				
-				SharedPreferences.Editor editor = prefs.edit();
-
 				editor.remove("userOrientation");
 				
 				if (prefs.contains("autoRotate") && prefs.contains("userOrientation") && prefs.getBoolean("autoRotate", true))
 					//Not migrating this value when in locked orientation mode since it depends on the device orientation,
 					// which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
 					editor.putInt("screenOrientationOffset", Orientation.NATURAL.minus(Orientation.fromOffset(prefs.getInt("userOrientation", 0))).offset);
-
-				editor.apply();
 			}
 		});
 
 		migrations.put(47, new Migration() {
 			@Override
-			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeUiProcessData(context, prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, prefs, editor);
 				
-				prefs
-					.edit()
-					.remove("inferUserWhenDeviceLocked")
-					.apply();
+				editor.remove("inferUserWhenDeviceLocked");
 			}
 		});
 		
 		migrations.put(51, new Migration() {
 			@Override
-			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeUiProcessData(context, prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, prefs, editor);
 				
 				//The format of this setting has changed.
-				prefs
-					.edit()
-					.remove("lastError")
-					.apply();
+				editor.remove("lastError");
 			}
 		});
 		
 		migrations.put(54, new Migration() {
 			@Override
-			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeUiProcessData(context, prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, prefs, editor);
 				
 				// This setting was removed since it exploited an Android OS bug, which might be considered a violation of Google Play terms regarding malicious behaviour.
 				// See https://play.google.com/about/privacy-security/malicious-behavior/
-				prefs
-					.edit()
-					.remove("showNotification")
-					.apply();
+				editor.remove("showNotification");
 			}
 		});
 		
 		migrations.put(57, new Migration() {
 			@Override
-			public void upgradeUiProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeUiProcessData(context, prefs);
+			public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, prefs, editor);
 				
-				prefs
-					.edit()
+				editor
 					.putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, prefs.contains("lastVersionUserInstructedAbout"))
 					.remove("allowUpsideDownScreen")
 					.remove("notificationPriority")
 					.remove("enabled") // This is now determined by the service process.
 					.remove("lastError") // This setting has been moved into the service process.
-					.remove("lastVersionUserInstructedAbout")
-					.apply();
+					.remove("lastVersionUserInstructedAbout");
 			}
 			
 			@Override
-			public void upgradeServiceProcessData(Context context, SharedPreferences prefs) {
-				super.upgradeServiceProcessData(context, prefs);
+			public void upgradeServiceProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
+				super.upgradeServiceProcessData(context, prefs, editor);
 				
 				// The service process no longer has direct access to user preferences, so we'll have to ask the UI process to send over a copy.
 				context.sendBroadcast(new Intent(context, SendConfigReceiver.class));
@@ -126,8 +110,6 @@ class Migrations {
 					Orientation.fromOffset(NumberUtilities.wrap(prefs.getInt("screenOrientationOffset", 0), 4))
 					:
 					null;
-				
-				SharedPreferences.Editor editor = prefs.edit();
 				
 				// We don't have access to the authoritative "enabled" setting from this process, so we'll just infer it.
 				boolean wasEnabled = prefs.contains("autoRotate") || prefs.contains("screenOrientationOffset");
@@ -158,8 +140,6 @@ class Migrations {
 				
 				editor.remove("autoRotate");
 				editor.remove("screenOrientationOffset");
-				
-				editor.apply();
 			}
 		});
 		

@@ -99,10 +99,16 @@ public class Upgrader {
 					if (migration != null) {
 						Log.i(Upgrader.class.getSimpleName(), "Running upgrade script for version " + version);
 						
+						SharedPreferences.Editor editor = prefs.edit();
+						
 						if (CurrentProcess.isServiceProcess(context))
-							migration.upgradeServiceProcessData(context, prefs);
+							migration.upgradeServiceProcessData(context, prefs, editor);
 						else
-							migration.upgradeUiProcessData(context, prefs);
+							migration.upgradeUiProcessData(context, prefs, editor);
+						
+						// Keeping the settings version in sync with the upgrade scripts in case the app crashes or is killed part-way through.
+						editor.putInt(settingsAppVersionKey, version);
+						editor.apply();
 					}
 				}
 			}
