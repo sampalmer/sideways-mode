@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 /**
  * Holds persistent service state. Not intended for backup or sync.
@@ -38,10 +37,5 @@ public abstract class ServiceSettings {
 	 * Used for upgrading settings data when upgrading to a newer version of the app.
 	 */
 	public static final String KEY_APP_VERSION = "appVersion";
-	
-	/**
-	 * Cached copy of {@link ApplicationSettings#KEY_FORCED_ORIENTATION_APP_PACKAGES} for use in the service process.
-	 */
-	public static final String KEY_FORCED_ORIENTATION_APP_PACKAGES = "forcedOrientationAppPackages";
 	
 }

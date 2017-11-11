@@ -7,9 +7,6 @@
 	<!-- To disable system rotation, set user rotation -->
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
-	<!-- For the screen orientation enforcement overlay -->
-	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
 	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
 	<uses-feature
@@ -78,32 +75,6 @@
 			android:name=".processes.ui.MessageDialogActivity"
 	        android:excludeFromRecents="true"
 			android:theme="@style/AppTheme.Dialog"/>
-
-		<activity
-			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
-			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
-			android:label="@string/preference_forced_apps_title"
-			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.MainSettingsActivity" />
-
-		</activity>
-
-		<activity
-			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsChooserActivity"
-			android:parentActivityName=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
-			android:label="@string/preference_forced_apps_title"
-			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
-
-		</activity>
 
 		<activity
 			android:name=".processes.ui.feedback.SendFeedbackActivity"
@@ -235,18 +206,6 @@
 			android:taskAffinity=""
 			android:process="@string/process_service"
 			/>
-
-		<service
-			android:name=".processes.service.WindowChangeDetectingService"
-			android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-			android:process="@string/process_service">
-			<intent-filter>
-				<action android:name="android.accessibilityservice.AccessibilityService"/>
-			</intent-filter>
-			<meta-data
-				android:name="android.accessibilityservice"
-				android:resource="@xml/accessibilityservice"/>
-		</service>
 
 		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
 	</application>

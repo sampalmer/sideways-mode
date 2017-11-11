@@ -95,7 +95,7 @@ public class CurrentProcess extends Application {
 			  Automatically pushes changes to user preferences from the UI process to the service process.
 			  This ensures preference changes made by the user appear to instantly take effect.
 			 */
-			ApplicationSettings.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+			ApplicationSettings.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(userPrefsChanged);
 			
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		}
@@ -110,13 +110,13 @@ public class CurrentProcess extends Application {
 		Log.i(TAG, "Process terminated");
 	}
 	
-	// Do not use. This is just used to prevent garbage collection of the listener.
-	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+	// Do not re-use. This is just stored in a field to prevent garbage collection of the listener.
+	private final SharedPreferences.OnSharedPreferenceChangeListener userPrefsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+			if (!s.equals(ApplicationSettings.KEY_APP_VERSION) && !s.equals(ApplicationSettings.KEY_USER_INSTRUCTED)) {
 				Log.i(TAG, "User preferences changed. Sending to service process.");
-				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync(CurrentProcess.this)).send(CurrentProcess.this);
+				new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync()).send(CurrentProcess.this);
 			}
 		}
 	};

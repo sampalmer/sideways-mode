@@ -143,6 +143,21 @@ class Migrations {
 			}
 		});
 		
+		migrations.put(60, new Migration() {
+			
+			@Override
+			public void upgradeUiProcessData(Context context, SharedPreferences applicationSettings, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, applicationSettings, editor);
+				editor.remove("forcedOrientationAppPackages");
+			}
+			
+			@Override
+			public void upgradeServiceProcessData(Context context, SharedPreferences serviceSettings, SharedPreferences.Editor editor) {
+				super.upgradeServiceProcessData(context, serviceSettings, editor);
+				editor.remove("forcedOrientationAppPackages");
+			}
+		});
+		
 		return migrations;
 	}
 	

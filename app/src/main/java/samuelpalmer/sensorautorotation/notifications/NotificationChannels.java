@@ -20,8 +20,7 @@ public abstract class NotificationChannels {
 	public static final String ID_CONTROLS = "controls";
 	public static final String ID_UPGRADES = "upgrades";
 	public static final String ID_ERRORS = "errors";
-	public static final String ID_PERMISSIONS = "permissions";
-
+	
 	@RequiresApi(api = Build.VERSION_CODES.O)
 	public static void setup(Context context) {
 		Log.i(NotificationChannels.class.getSimpleName(), "Configuring notification channels");
@@ -55,15 +54,10 @@ public abstract class NotificationChannels {
 		);
 		errors.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 		
-		NotificationChannel permission = new NotificationChannel(
-			ID_PERMISSIONS,
-			context.getText(R.string.notification_channel_permissions),
-			//Since these only need to be addressed for the overridden apps function to work
-			NotificationManager.IMPORTANCE_DEFAULT
-		);
-		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
+		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors);
+		
+		// TODO: REMOVE ANY CHANNELS NOT IN OUR LIST
+		
 		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).createNotificationChannels(channels);
 	}
 

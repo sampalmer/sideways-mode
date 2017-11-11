@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,24 +17,14 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
-import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.IntentExtensions;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
  * Hosts the main settings.
  */
 public class MainSettingsFragment extends PreferenceFragment {
-	
-	private Preference forcedAppsPreference;
-	private AccessibilityServiceEnabledStateMonitor accessibilityServiceEnabledStateMonitor;
-	private SharedPreferences prefs;
-	private boolean isStarted;
 	
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -135,10 +124,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 		PreferenceGroup controlsSection = (PreferenceGroup) findPreference("controls");
 		if (controlsSection.getPreferenceCount() == 0)
 			removePreference(controlsSection);
-		
-		prefs = ApplicationSettings.getSharedPreferences(getActivity());
-		forcedAppsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
-		accessibilityServiceEnabledStateMonitor = new AccessibilityServiceEnabledStateMonitor(getActivity(), WindowChangeDetectingService.class);
 	}
 	
 	private void removePreference(Preference preference) {
@@ -193,53 +178,6 @@ public class MainSettingsFragment extends PreferenceFragment {
 		} catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			Log.w(MainSettingsFragment.class.getSimpleName(), "Couldn't determine whether the device has a navigation bar", e);
 			return null;
-		}
-	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-		
-		accessibilityServiceEnabledStateMonitor.subscribe(accessibilityServiceChanged);
-		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
-		updateForcedApps();
-		
-		isStarted = true;
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		
-		isStarted = false;
-		
-		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
-		accessibilityServiceEnabledStateMonitor.unsubscribe(accessibilityServiceChanged);
-	}
-	
-	private final EventHandler accessibilityServiceChanged = new EventHandler() {
-		@Override
-		public void update() {
-			updateForcedApps();
-		}
-	};
-	
-	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (isStarted && s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
-				updateForcedApps();
-		}
-	};
-	
-	private void updateForcedApps() {
-		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.<String>emptySet()).size();
-
-		if (quantity > 0 && !(accessibilityServiceEnabledStateMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(getActivity())))
-			forcedAppsPreference.setSummary(R.string.permission_needed_summary);
-		else {
-			final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
-			forcedAppsPreference.setSummary(quantityString);
 		}
 	}
 	

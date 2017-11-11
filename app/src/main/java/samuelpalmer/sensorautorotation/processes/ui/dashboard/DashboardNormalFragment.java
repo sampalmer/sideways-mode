@@ -77,7 +77,7 @@ public class DashboardNormalFragment extends Fragment {
 		public void onClick(View view) {
 			if (!view.isSelected()) {
 				// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
-				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
+				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync()).send(getContext());
 				
 				//noinspection ConstantConditions
 				getActivity().finish();
