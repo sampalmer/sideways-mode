@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-	<!-- Putting this one first since it sends the developer the most useful info (logs, device info) -->
+
 	<item android:id="@+id/action_send"
 	      android:title="@string/report_problem_send"
 	      android:icon="@drawable/send"
 	      app:showAsAction="always"
 		/>
+
 </menu>
