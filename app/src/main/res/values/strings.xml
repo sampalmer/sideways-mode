@@ -4,7 +4,6 @@
 	<string name="app_name_full">Sideways Mode</string>
 	<string name="app_name_short">Sideways</string>
 
-	<string name="action_home">Home</string>
 	<string name="action_help">Help</string>
 	<string name="action_feedback">Send feedback</string>
 	<string name="action_feedback_review">Review</string>
@@ -40,12 +39,10 @@
 	<string name="preference_quick_setting_instructions">"To use the quick setting, just add this app's tile to your quick settings tray."</string>
 
 	<string name="preference_assist">Assist</string>
-	<string name="preference_assist_description">Control the screen using the home button</string>
 	<string name="preference_assist_instructions">If your device has a soft (not physical) home button, you can swipe up from the home button to control this app.\n\nIf swiping the home button doesn\'t work, your device may not support this feature. If swiping the home button opens a different app, first clear <b>that</b> app\'s defaults in the Android app settings, and then try again.</string>
 	<string name="preference_assist_instructions_lollipop">"You can long-press the home button to control this app. However, if your device uses the home button to take screenshots, you won't be able to take screenshots anymore.\n\nTo use this, set this app as Android's assist app. Do this now?"</string>
 
 	<string name="preference_small_app">Small app</string>
-	<string name="preference_small_app_description">Small app shortcut for Sony phones</string>
 	<string name="preference_small_app_instructions">You might be able to use this from the recents screen. You can also drag the icon from the small app drawer to the bottom of the recents screen to find it more quickly.</string>
 
 	<!-- Errors -->

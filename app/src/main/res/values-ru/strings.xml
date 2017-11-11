@@ -5,7 +5,6 @@
 
 <resources>
 
-	<string name="action_home">Домой</string>
 	<string name="action_help">Справка</string>
 	<string name="action_feedback">Отправить отзыв</string>
 	<string name="action_feedback_review">Обзор</string>

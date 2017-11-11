@@ -2,12 +2,25 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".processes.ui.preferences.MainSettingsActivity"
 	>
-	<group android:checkableBehavior="single">
+
+	<group android:id="@+id/menu_group_controls" android:checkableBehavior="single">
 		<item
-			android:id="@+id/action_home"
-			android:title="@string/action_home"
-			android:icon="@drawable/menu_home"
-			/>
+			android:id="@+id/action_quick_setting"
+			android:title="@string/preference_quick_setting"
+			android:icon="@drawable/preference_quick_settings" />
+
+		<item
+			android:id="@+id/action_assist"
+			android:title="@string/preference_assist"
+			android:icon="@drawable/preference_assist" />
+
+		<item
+			android:id="@+id/action_small_app"
+			android:title="@string/preference_small_app"
+			android:icon="@drawable/preference_small_app" />
+	</group>
+
+	<group android:id="@+id/menu_group_help" android:checkableBehavior="single">
 		<item
 			android:id="@+id/action_feedback"
 			android:title="@string/action_feedback"
@@ -17,8 +30,12 @@
 		      android:title="@string/action_help"
 		      android:icon="@drawable/menu_help"
 			/>
+	</group>
+
+	<group android:id="@+id/menu_group_uninstall" android:checkableBehavior="single">
 		<item android:id="@+id/action_uninstall"
 		      android:title="@string/action_uninstall"
-		      android:icon="@drawable/menu_delete"/>
+		      android:icon="@drawable/menu_delete"
+			/>
 	</group>
 </menu>
