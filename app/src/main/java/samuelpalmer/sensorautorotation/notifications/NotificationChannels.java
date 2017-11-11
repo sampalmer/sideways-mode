@@ -25,6 +25,15 @@ public abstract class NotificationChannels {
 	public static void setup(Context context) {
 		Log.i(NotificationChannels.class.getSimpleName(), "Configuring notification channels");
 		
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+		
+		List<NotificationChannel> targetChannels = buildTargetChannels(context);
+		notificationManager.createNotificationChannels(targetChannels);
+		deleteRemovedChannels(targetChannels, notificationManager);
+	}
+	
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	private static List<NotificationChannel> buildTargetChannels(Context context) {
 		NotificationChannel controls = new NotificationChannel(
 			ID_CONTROLS,
 			context.getText(R.string.notification_channel_controls),
@@ -54,11 +63,25 @@ public abstract class NotificationChannels {
 		);
 		errors.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 		
-		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors);
-		
-		// TODO: REMOVE ANY CHANNELS NOT IN OUR LIST
-		
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).createNotificationChannels(channels);
+		return Arrays.asList(controls, upgrades, errors);
 	}
-
+	
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	private static void deleteRemovedChannels(List<NotificationChannel> targetChannels, NotificationManager notificationManager) {
+		List<NotificationChannel> currentChannels = notificationManager.getNotificationChannels();
+		
+		for (NotificationChannel existingChannel : currentChannels) {
+			boolean isInTargetChannels = false;
+			
+			for (NotificationChannel targetChannel : targetChannels)
+				if (targetChannel.getId().equals(existingChannel.getId())) {
+					isInTargetChannels = true;
+					break;
+				}
+			
+			if (!isInTargetChannels)
+				notificationManager.deleteNotificationChannel(existingChannel.getId());
+		}
+	}
+	
 }
