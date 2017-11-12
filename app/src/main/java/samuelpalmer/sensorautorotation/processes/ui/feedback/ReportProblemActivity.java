@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -14,10 +13,10 @@ import android.widget.Toast;
 import java.util.Locale;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.processes.ui.FullScreenDialogActivity;
 import samuelpalmer.sensorautorotation.utilities.Email;
 
-public class ReportProblemActivity extends UiActivity {
+public class ReportProblemActivity extends FullScreenDialogActivity {
 	
 	private final static String PROBLEM_LOGS_KEY = "logcat";
 	
@@ -52,25 +51,16 @@ public class ReportProblemActivity extends UiActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.report_problem, menu);
-		
-		ActionBar supportActionBar = getSupportActionBar();
-		assert supportActionBar != null;
-		supportActionBar.setDisplayHomeAsUpEnabled(true);
-		supportActionBar.setHomeAsUpIndicator(R.drawable.close);
-		
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_send:
-				sendEmail();
-				return true;
-			case android.R.id.home: // User pressed action bar back/close button
-				finish();
-				return true;
+		if (item.getItemId() == R.id.action_send) {
+			sendEmail();
+			return true;
 		}
 		
 		return super.onOptionsItemSelected(item);

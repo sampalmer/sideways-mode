@@ -1,15 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class InstructionsActivity extends UiActivity {
+public class InstructionsActivity extends FullScreenDialogActivity {
 	
 	public static final String EXTRA_FIRST_RUN = "first_run";
 	
@@ -35,24 +32,9 @@ public class InstructionsActivity extends UiActivity {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		ActionBar supportActionBar = getSupportActionBar();
-		assert supportActionBar != null;
-		supportActionBar.setDisplayHomeAsUpEnabled(true);
-		supportActionBar.setHomeAsUpIndicator(R.drawable.close);
-		
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) { // User pressed action bar back/close button
-			completeInstructions();
-			finish();
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
+	protected void onFullScreenDialogCloseButtonPressed() {
+		completeInstructions();
+		super.onFullScreenDialogCloseButtonPressed();
 	}
 	
 	@Override
