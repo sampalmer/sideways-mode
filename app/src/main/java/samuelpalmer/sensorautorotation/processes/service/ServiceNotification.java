@@ -16,7 +16,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -33,16 +33,16 @@ class ServiceNotification {
 	public ServiceNotification(Context context) {
 		this.context = context;
 		
-		PendingIntent settingsActivityIntent = PendingIntent.getActivity(
+		PendingIntent dashboardIntent = PendingIntent.getActivity(
 		this.context,
 			PendingIntentIds.MAIN_NOTIFICATION_CLICK,
-			new Intent(this.context, MainSettingsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+			new Intent(this.context, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 			PendingIntentIds.PENDING_INTENT_FLAGS);
 		
 		//Caching and re-using the builder prevents the notification from disappearing and
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create(this.context)
-			.setContentIntent(settingsActivityIntent)
+			.setContentIntent(dashboardIntent)
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)

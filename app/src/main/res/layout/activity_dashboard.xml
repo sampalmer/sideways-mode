@@ -5,15 +5,15 @@
 	android:layout_height="wrap_content">
 
 	<ImageButton
-		android:id="@+id/dashboard_settings"
+		android:id="@+id/dashboard_menu"
 		android:layout_width="48dp"
 		android:layout_height="48dp"
 		android:layout_marginLeft="12dp"
 		android:layout_marginStart="12dp"
 		android:layout_marginTop="12dp"
 		style="@style/Widget.AppCompat.Button.Borderless"
-		app:srcCompat="@drawable/dashboard_settings"
-		android:contentDescription="@string/settings"
+		app:srcCompat="@drawable/dashboard_menu"
+		android:contentDescription="@string/action_menu"
 		/>
 
 	<LinearLayout

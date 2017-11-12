@@ -1,13 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".processes.ui.preferences.MainSettingsActivity"
+      tools:context=".processes.ui.dashboard.DashboardActivity"
 	>
 
-	<group android:id="@+id/menu_group_controls" android:checkableBehavior="single">
+	<group android:id="@+id/menu_group_controls" android:checkableBehavior="none">
 		<item
 			android:id="@+id/action_quick_setting"
 			android:title="@string/preference_quick_setting"
-			android:icon="@drawable/preference_quick_settings" />
+			android:icon="@drawable/preference_quick_settings"
+			/>
 
 		<item
 			android:id="@+id/action_assist"
@@ -20,19 +21,25 @@
 			android:icon="@drawable/preference_small_app" />
 	</group>
 
-	<group android:id="@+id/menu_group_help" android:checkableBehavior="single">
+	<group android:id="@+id/menu_group_help" android:checkableBehavior="none">
+		<!-- Putting this one before the "review" and "uninstall" items because users should first contact developers before getting complaining or uninstalling -->
+		<item android:id="@+id/action_report"
+		      android:title="@string/action_report"
+		      android:icon="@drawable/menu_report" />
+
 		<item
-			android:id="@+id/action_feedback"
-			android:title="@string/action_feedback"
-			android:icon="@drawable/menu_feedback"
+			android:id="@+id/action_review"
+			android:title="@string/action_feedback_review"
+			android:icon="@drawable/menu_review"
 			/>
+
 		<item android:id="@+id/action_help"
 		      android:title="@string/action_help"
 		      android:icon="@drawable/menu_help"
 			/>
 	</group>
 
-	<group android:id="@+id/menu_group_uninstall" android:checkableBehavior="single">
+	<group android:id="@+id/menu_group_uninstall" android:checkableBehavior="none">
 		<item android:id="@+id/action_uninstall"
 		      android:title="@string/action_uninstall"
 		      android:icon="@drawable/menu_delete"

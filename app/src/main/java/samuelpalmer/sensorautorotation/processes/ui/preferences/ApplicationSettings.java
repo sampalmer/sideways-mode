@@ -13,18 +13,10 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 public abstract class ApplicationSettings {
 	
 	public static SharedPreferences getSharedPreferences(Context context) {
-		String name = getFileName(context);
-		return context.getSharedPreferences(name, Context.MODE_PRIVATE);
-	}
-	
-	/**
-	 * Name of the {@link android.content.SharedPreferences} file containing these preferences.
-	 */
-	public static String getFileName(Context context) {
 		if (CurrentProcess.isServiceProcess(context))
 			throw new RuntimeException("Application settings accessed outside of the UI process");
 		
-		return context.getPackageName() + "_preferences";
+		return context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_PRIVATE);
 	}
 	
 	/*

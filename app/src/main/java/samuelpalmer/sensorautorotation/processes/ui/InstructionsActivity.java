@@ -39,9 +39,7 @@ public class InstructionsActivity extends UiActivity {
 		ActionBar supportActionBar = getSupportActionBar();
 		assert supportActionBar != null;
 		supportActionBar.setDisplayHomeAsUpEnabled(true);
-		
-		if (isFirstRun())
-			supportActionBar.setHomeAsUpIndicator(R.drawable.close);
+		supportActionBar.setHomeAsUpIndicator(R.drawable.close);
 		
 		return true;
 	}

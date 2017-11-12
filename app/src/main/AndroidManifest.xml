@@ -50,26 +50,9 @@
 
 		<!-- Main Process -->
 
-		<!-- Not specifying parent activity here since this activity can have a couple of different parents. -->
 		<activity
 			android:name=".processes.ui.InstructionsActivity"
-			android:label="@string/instructions_heading"
-			tools:ignore="UnusedAttribute" />
-
-		<activity
-			android:name=".processes.ui.preferences.MainSettingsActivity"
-			tools:ignore="UnusedAttribute">
-
-			<intent-filter>
-				<action android:name="android.intent.action.APPLICATION_PREFERENCES" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
-			</intent-filter>
-
-		</activity>
+			android:label="@string/instructions_heading"/>
 
 		<activity
 			android:name=".processes.ui.MessageDialogActivity"
@@ -77,31 +60,8 @@
 			android:theme="@style/AppTheme.Dialog"/>
 
 		<activity
-			android:name=".processes.ui.feedback.SendFeedbackActivity"
-			android:parentActivityName=".processes.ui.preferences.MainSettingsActivity"
-			android:label="@string/action_feedback"
-			android:theme="@style/AppTheme.Navigation"
-			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsActivity"/>
-
-		</activity>
-
-		<activity
 			android:name=".processes.ui.feedback.ReportProblemActivity"
-			android:label="@string/action_report"
-			android:parentActivityName=".processes.ui.feedback.SendFeedbackActivity"
-			tools:ignore="UnusedAttribute">
-
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.feedback.SendFeedbackActivity" />
-
-		</activity>
+			android:label="@string/action_report"/>
 
 		<!--suppress AndroidDomInspection -->
 		<service
