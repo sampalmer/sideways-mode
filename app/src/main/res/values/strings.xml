@@ -5,7 +5,6 @@
 	<string name="app_name_short">Sideways</string>
 
 	<string name="action_help">Help</string>
-	<string name="action_feedback_review">Review</string>
 	<string name="action_report">Report problem</string>
 	<string name="action_uninstall">Uninstall</string>
 	<string name="action_open_drawer">Open drawer</string>
@@ -40,8 +39,6 @@
 	<string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
 	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, turn this app back on.</string>
-
-	<string name="error_no_market_app">"Couldn't find App Market"</string>
 
 	<!-- Permissions -->
 	<string name="permission_needed_summary">Permission needed</string>

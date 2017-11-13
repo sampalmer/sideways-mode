@@ -2,28 +2,18 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".processes.ui.dashboard.DashboardActivity"
 	>
-	<group android:id="@+id/menu_group_help" android:checkableBehavior="none">
-		<!-- Putting this one before the "review" and "uninstall" items because users should first contact developers before getting complaining or uninstalling -->
-		<item android:id="@+id/action_report"
-		      android:title="@string/action_report"
-		      android:icon="@drawable/menu_report" />
+	<!-- Putting this one before the ""uninstall" item because users should first contact developers before complaining or uninstalling -->
+	<item android:id="@+id/action_report"
+	      android:title="@string/action_report"
+	      android:icon="@drawable/menu_report" />
 
-		<item
-			android:id="@+id/action_review"
-			android:title="@string/action_feedback_review"
-			android:icon="@drawable/menu_review"
-			/>
+	<item android:id="@+id/action_help"
+	      android:title="@string/action_help"
+	      android:icon="@drawable/menu_help"
+		/>
 
-		<item android:id="@+id/action_help"
-		      android:title="@string/action_help"
-		      android:icon="@drawable/menu_help"
-			/>
-	</group>
-
-	<group android:id="@+id/menu_group_uninstall" android:checkableBehavior="none">
-		<item android:id="@+id/action_uninstall"
-		      android:title="@string/action_uninstall"
-		      android:icon="@drawable/menu_delete"
-			/>
-	</group>
+	<item android:id="@+id/action_uninstall"
+	      android:title="@string/action_uninstall"
+	      android:icon="@drawable/menu_delete"
+		/>
 </menu>
