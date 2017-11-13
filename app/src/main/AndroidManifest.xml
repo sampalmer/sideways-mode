@@ -112,6 +112,10 @@
 
 			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist_orb" />
 
+			<intent-filter>
+				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+			</intent-filter>
+
 		</activity>
 
 		<activity
