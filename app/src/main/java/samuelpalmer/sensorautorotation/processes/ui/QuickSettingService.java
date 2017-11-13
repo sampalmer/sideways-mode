@@ -111,6 +111,7 @@ public class QuickSettingService extends TileService {
 		super.onStartListening();
 		isListening = true;
 		statusClient.subscribe();
+		status = null; // We must have been previously unsubscribed, so any status we had was out-of-date.
 		
 		/*
 		Not updating the tile here because
@@ -124,6 +125,7 @@ public class QuickSettingService extends TileService {
 		super.onStopListening();
 		isListening = false;
 		statusClient.unsubscribe();
+		status = null;
 	}
 	
 	private final ApplicationStatusClient.Listener statusListener = new ApplicationStatusClient.Listener() {
