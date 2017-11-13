@@ -16,8 +16,6 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 		setContentView(R.layout.activity_instructions);
 		
 		TextView uninstallingContents = findViewById(R.id.instructions_uninstalling_contents);
-		TextView helpContents = findViewById(R.id.instructions_help_contents);
-		
 		uninstallingContents.setText(
 			getResources().getString(
 				R.string.instructions_uninstalling_contents,
@@ -26,8 +24,12 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 			)
 		);
 		
-		helpContents.setText(
-			getResources().getString(R.string.instructions_help_contents)
+		TextView overriddenContents = findViewById(R.id.instructions_overridden_contents);
+		overriddenContents.setText(
+			getResources().getString(
+				R.string.instructions_overridden_contents,
+				getResources().getText(R.string.app_name_full)
+			)
 		);
 	}
 	
