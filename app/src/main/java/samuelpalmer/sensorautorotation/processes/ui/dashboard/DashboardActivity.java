@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
+import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
 public class DashboardActivity extends DialogActivity {
 	

@@ -20,10 +20,6 @@
 		<item name="windowNoTitle">true</item>
 	</style>
 
-	<style name="AppTheme.Navigation" parent="AppTheme">
-		<item name="android:windowBackground">@color/grey_300</item>
-	</style>
-
 	<style name="notification">
 		<item name="android:baselineAligned">false</item>
 	</style>
