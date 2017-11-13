@@ -23,15 +23,6 @@
 
 	<string name="app_disabled_view_error">Ошибка</string>
 
-	<!-- Preferences -->
-	<string name="preference_controls">Управление</string>
-
-	<string name="preference_quick_setting">Быстрые настройки</string>
-
-	<string name="preference_assist">Помощник</string>
-
-	<string name="preference_small_app">Маленькое приложение</string>
-
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 	<string name="environment_error_more">Больше</string>
