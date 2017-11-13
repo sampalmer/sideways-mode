@@ -5,21 +5,18 @@
 
 <resources>
 
+	<!-- Menu -->
 	<string name="action_help">Справка</string>
 	<string name="action_report">Отчет о проблемах</string>
 	<string name="action_uninstall">Удаление</string>
 
+	<!-- Upgrade -->
 	<string name="upgrade_summary">%1$s обновлен</string>
 	<string name="upgrade_notification_content">Нажмите для подробностей</string>
 
-	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
-	<string name="email_app_chooser_title">Отправить отзыв</string>
-
-	<!-- Notification -->
-
+	<!-- Dashboard -->
 	<string name="user_rotation_left_side">Левая сторона</string>
 	<string name="user_rotation_right_side">Правая сторона</string>
-
 	<string name="app_disabled_view_error">Ошибка</string>
 
 	<!-- Errors -->
@@ -52,6 +49,10 @@
 	<string name="instructions_help_contents">
 		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте кнопки в уведомлении, чтобы исправить это.
 	</string>
+
+	<!-- Enter feedback -->
+	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
+	<string name="email_app_chooser_title">Отправить отзыв</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Проблемы устройства</string>

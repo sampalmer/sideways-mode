@@ -4,27 +4,22 @@
 	<string name="app_name_full">Sideways Mode</string>
 	<string name="app_name_short">Sideways</string>
 
+	<!-- Menu -->
+	<string name="action_menu">Menu</string>
 	<string name="action_help">Help</string>
 	<string name="action_report">Report problem</string>
 	<string name="action_uninstall">Uninstall</string>
-	<string name="action_menu">Menu</string>
 
+	<!-- Upgrade -->
 	<string name="upgrade_summary">%1$s Upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
 	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications is no longer supported. If you have them blocked, please unblock them."</string>
 
-	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
-	<string name="email_app_chooser_title">Send feedback with</string>
-
-	<!-- Notification -->
-
+	<!-- Dashboard -->
 	<string name="user_rotation_left_side">Left side</string>
 	<string name="user_rotation_right_side">Right side</string>
-
 	<string name="app_disabled_view_error">View error</string>
-
 	<string name="status_waiting_sensor">Waiting for sensor</string>
-
 	<string name="action_turn_off">Turn off</string>
 
 	<!-- Errors -->
@@ -65,6 +60,8 @@
 	<string name="report_problem_field_missing">This is required</string>
 	<string name="report_problem_send">Send by email</string>
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
+	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
+	<string name="email_app_chooser_title">Send feedback with</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>
