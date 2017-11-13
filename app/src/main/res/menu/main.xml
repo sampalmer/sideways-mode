@@ -2,15 +2,15 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".processes.ui.dashboard.DashboardActivity"
 	>
-	<!-- Putting this one before the ""uninstall" item because users should first contact developers before complaining or uninstalling -->
-	<item android:id="@+id/action_report"
-	      android:title="@string/action_report"
-	      android:icon="@drawable/menu_report" />
-
+	<!-- The user should first read the instructions before contacting me -->
 	<item android:id="@+id/action_help"
 	      android:title="@string/action_help"
 	      android:icon="@drawable/menu_help"
 		/>
+
+	<item android:id="@+id/action_report"
+	      android:title="@string/action_report"
+	      android:icon="@drawable/menu_report" />
 
 	<item android:id="@+id/action_uninstall"
 	      android:title="@string/action_uninstall"
