@@ -1,0 +1,1 @@
+Removed "Overridden apps" setting as requested by Google.
