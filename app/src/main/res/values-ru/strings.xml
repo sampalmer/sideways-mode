@@ -51,11 +51,11 @@
 	</string>
 
 	<!-- Enter feedback -->
-	<string name="email_error_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
-	<string name="email_app_chooser_title">Отправить отзыв</string>
+	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
+	<string name="report_problem_send_with">Отправить отзыв</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Проблемы устройства</string>
-	<string name="request_uninstall">"Пожалуйста, удалите это приложение"</string>
+	<string name="device_problem_request_uninstall">"Пожалуйста, удалите это приложение"</string>
 
 </resources>

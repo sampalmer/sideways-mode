@@ -52,7 +52,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_horizontal"
 				android:gravity="center_horizontal"
-				android:text="@string/request_uninstall"
+				android:text="@string/device_problem_request_uninstall"
 				android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 				android:textAlignment="center"
 				/>

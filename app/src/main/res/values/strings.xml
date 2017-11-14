@@ -36,7 +36,6 @@
 	<!-- Permissions -->
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
-
 	<string name="permission_needed_system_settings">To control the screen rotation, this app needs permission to change system settings.</string>
 
 	<!-- Instructions -->
@@ -60,14 +59,14 @@
 	<string name="report_problem_field_missing">This is required</string>
 	<string name="report_problem_send">Send by email</string>
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
-	<string name="email_error_no_email_app">Couldn\'t find an email app with an email account to use</string>
-	<string name="email_app_chooser_title">Send feedback with</string>
+	<string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
+	<string name="report_problem_send_with">Send feedback with</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>
 	<string name="device_problem_explanation_sensor">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
 	<string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
-	<string name="request_uninstall">"Please uninstall this app."</string>
+	<string name="device_problem_request_uninstall">"Please uninstall this app."</string>
 
 	<!-- Notification channels -->
 	<string name="notification_channel_controls">Rotation controls</string>

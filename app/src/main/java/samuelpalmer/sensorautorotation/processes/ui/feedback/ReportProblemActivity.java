@@ -96,7 +96,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 			getText(R.string.app_name_full) + " <sampalmer4+androidautorotate@gmail.com>",
 			subject,
 			body
-		).getIntent(getText(R.string.email_app_chooser_title));
+		).getIntent(getText(R.string.report_problem_send_with));
 		
 		boolean intentStarted = false;
 		
@@ -112,7 +112,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 			finish();
 		}
 		else
-			Toast.makeText(getApplicationContext(), getResources().getText(R.string.email_error_no_email_app), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), getResources().getText(R.string.report_problem_no_email_app), Toast.LENGTH_SHORT).show();
 	}
 	
 	private boolean validateUserInput() {
