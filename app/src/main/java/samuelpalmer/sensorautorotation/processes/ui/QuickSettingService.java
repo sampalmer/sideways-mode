@@ -169,7 +169,7 @@ public class QuickSettingService extends TileService {
 		
 		tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.iconId : R.drawable.quick_setting_off));
 		
-		int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.app_name_full;
+		int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.quick_setting_mode_name;
 		tile.setLabel(getText(labelId));
 		tile.updateTile(); //Seems to subsequently cause loss of listening state.
 	}
