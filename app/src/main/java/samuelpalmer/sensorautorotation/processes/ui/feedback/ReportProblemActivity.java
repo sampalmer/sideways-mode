@@ -129,7 +129,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 				isValid = false;
 			}
 			else
-				steps.setError(null);
+				input.setError(null);
 		}
 		
 		return isValid;
