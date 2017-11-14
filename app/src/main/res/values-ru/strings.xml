@@ -52,7 +52,6 @@
 
 	<!-- Enter feedback -->
 	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
-	<string name="report_problem_send_with">Отправить отзыв</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Проблемы устройства</string>
