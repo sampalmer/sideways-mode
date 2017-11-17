@@ -34,13 +34,8 @@ public class ScreenOrientationUpdater extends State {
 		calculator.onAnythingChanged.unsubscribe(applyChange);
 		screen.ensureStopped();
 	}
-
-	private final EventHandler applyChange = new EventHandler() {
-		@Override
-		public void update() {
-			propose();
-		}
-	};
+	
+	private final EventHandler applyChange = this::propose;
 
 	private void propose() {
 		Orientation orientation = calculator.proposedScreenOrientation();

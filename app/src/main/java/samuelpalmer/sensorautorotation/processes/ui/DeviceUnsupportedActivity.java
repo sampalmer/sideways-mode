@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,12 +30,7 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 		explanationView.setText(explanationStringResource);
 		
 		Button uninstallButton = findViewById(R.id.device_unsupported_uninstall);
-		uninstallButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Uninstaller.uninstall(DeviceUnsupportedActivity.this);
-			}
-		});
+		uninstallButton.setOnClickListener(v -> Uninstaller.uninstall(DeviceUnsupportedActivity.this));
 	}
 	
 	@Override

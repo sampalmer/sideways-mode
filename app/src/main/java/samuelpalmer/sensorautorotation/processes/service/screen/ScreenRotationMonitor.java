@@ -22,7 +22,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 		this.context = context;
 		
 		try {
-			changeDetector = new RotationWatcherChangeDetector(callback, screen);
+			changeDetector = new RotationWatcherChangeDetector(this::report, screen);
 		} catch (RotationWatcherNotSupportedException e) {
 			fallback(e);
 		}
@@ -80,14 +80,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 
 	private void fallback(RotationWatcherNotSupportedException reason) {
 		Log.w(ScreenRotationMonitor.class.getSimpleName(), reason);
-		changeDetector = new ComponentCallbacksChangeDetector(context, callback, screen);
+		changeDetector = new ComponentCallbacksChangeDetector(context, this::report, screen);
 	}
-
-	private final Callback callback = new Callback() {
-		@Override
-		public void changed() {
-			report();
-		}
-	};
-
+	
 }

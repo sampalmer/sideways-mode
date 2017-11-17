@@ -24,23 +24,21 @@ public class DashboardPermissionFragment extends Fragment {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_permission, container, false);
 		
 		Button fixButton = layout.findViewById(R.id.dashboard_permission_fix);
-		
-		fixButton.setOnClickListener(new View.OnClickListener() {
-			@RequiresApi(api = Build.VERSION_CODES.M)
-			@Override
-			public void onClick(View view) {
-				Intent intent = SystemIntents.modifySystemSettings(getContext());
-				
-				try {
-					startActivity(intent);
-				}
-				catch (ActivityNotFoundException e) {
-					throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
-				}
-			}
-		});
+		fixButton.setOnClickListener(this::grantPermission);
 		
 		return layout;
+	}
+	
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void grantPermission(@SuppressWarnings("unused") View view) {
+		Intent intent = SystemIntents.modifySystemSettings(getContext());
+		
+		try {
+			startActivity(intent);
+		}
+		catch (ActivityNotFoundException e) {
+			throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
+		}
 	}
 	
 }

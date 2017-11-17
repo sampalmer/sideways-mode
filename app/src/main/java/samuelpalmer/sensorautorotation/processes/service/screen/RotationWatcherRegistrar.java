@@ -144,22 +144,19 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 				Log.d(RotationWatcherChangeDetector.class.getSimpleName(), "Got rotation change: " + rotation);
 
 			//We seem to get here in a different thread to the one in which we subscribed.
-			callerHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					if (
-						subscribed
-						&&
-						hasSubscriptions() //It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
-					) {
-						try {
-							currentRotation = AndroidSurfaceRotation.toOrientationClockwise(rotation);
-						} catch (IllegalArgumentException e) {
-							badRotationReceivedError = e;
-						}
-
-						report();
+			callerHandler.post(() -> {
+				if (
+					subscribed
+					&&
+					hasSubscriptions() //It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
+				) {
+					try {
+						currentRotation = AndroidSurfaceRotation.toOrientationClockwise(rotation);
+					} catch (IllegalArgumentException e) {
+						badRotationReceivedError = e;
 					}
+
+					report();
 				}
 			});
 		}

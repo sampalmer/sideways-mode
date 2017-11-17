@@ -52,15 +52,12 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 		ServiceRunningStateHolder.onStartedOrStopped.unsubscribe(enabledStateChanged);
 	}
 	
-	private final EventHandler enabledStateChanged = new EventHandler() {
-		@Override
-		public void update() {
-			syncRunningStateSubscription();
-			
-			// Not reporting a change if the app has just been turned on since we want to wait for the first running state update instead.
-			if (!ServiceRunningStateHolder.isServiceRunning())
-				report();
-		}
+	private final EventHandler enabledStateChanged = () -> {
+		syncRunningStateSubscription();
+		
+		// Not reporting a change if the app has just been turned on since we want to wait for the first running state update instead.
+		if (!ServiceRunningStateHolder.isServiceRunning())
+			report();
 	};
 	
 	private void syncRunningStateSubscription() {
@@ -83,19 +80,11 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 		}
 	}
 	
-	private final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (hasSubscriptions() && s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
-				enabledStateChanged.update();
-		}
+	private final SharedPreferences.OnSharedPreferenceChangeListener errorChanged = (sharedPreferences, s) -> {
+		if (hasSubscriptions() && s.equals(ServiceSettings.KEY_LAST_ERROR_JSON))
+			enabledStateChanged.update();
 	};
 	
-	private final EventHandler runningStateChanged = new EventHandler() {
-		@Override
-		public void update() {
-			report();
-		}
-	};
+	private final EventHandler runningStateChanged = this::report;
 	
 }

@@ -73,13 +73,8 @@ public class OrientationSensorHandler extends State {
 		}
 	};
 	
-	private final EventHandler screenUserOrAutoRotateChanged = new EventHandler() {
-		@Override
-		public void update() {
-			updateRotationBias();
-		}
-	};
-
+	private final EventHandler screenUserOrAutoRotateChanged = this::updateRotationBias;
+	
 	private void updateRotationBias() {
 		int newBias = deviceRotationBias();
 		if (oldBias == null || newBias != oldBias) {

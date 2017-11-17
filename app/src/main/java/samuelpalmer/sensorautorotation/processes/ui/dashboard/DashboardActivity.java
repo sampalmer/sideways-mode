@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -33,53 +31,15 @@ public class DashboardActivity extends DialogActivity {
 		dialog = new AlertDialog.Builder(this)
 			.setView(R.layout.activity_dashboard)
 			.create();
-		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-			@Override
-			public void onDismiss(DialogInterface dialogInterface) {
-				dialog = null;
-				finish();
-			}
+		dialog.setOnDismissListener(dialogInterface -> {
+			dialog = null;
+			finish();
 		});
 		dialog.show();
 		
 		ImageButton menuButton = dialog.findViewById(R.id.dashboard_menu);
 		assert menuButton != null;
-		menuButton.setOnClickListener(new View.OnClickListener() {
-			@SuppressLint("RestrictedApi")
-			@Override
-			public void onClick(View v) {
-				PopupMenu popup = new PopupMenu(DashboardActivity.this, v);
-				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						
-						switch (item.getItemId()) {
-							case R.id.action_help: {
-								Intent intent = new Intent(DashboardActivity.this, InstructionsActivity.class);
-								startActivity(intent);
-								break;
-							}
-							case R.id.action_report: {
-								Intent intent = new Intent(DashboardActivity.this, ReportProblemActivity.class)
-								.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
-								startActivity(intent);
-								
-								break;
-							}
-							case R.id.action_uninstall:
-								Uninstaller.uninstall(DashboardActivity.this);
-								break;
-							default:
-								throw new RuntimeException("Unknown navigation menu item: " + item.getItemId());
-						}
-						
-						return true;
-					}
-				});
-				popup.inflate(R.menu.main);
-				popup.show();
-			}
-		});
+		menuButton.setOnClickListener(this::showMenu);
 		
 		normalSection = dialog.findViewById(R.id.dashboard_normal_contents_container);
 		permissionSection = dialog.findViewById(R.id.dashboard_permission_contents_container);
@@ -102,6 +62,37 @@ public class DashboardActivity extends DialogActivity {
 		boolean hasPermission = SystemSettings.canWrite(this);
 		ViewUtilities.ensureVisibility(normalSection, hasPermission ? View.VISIBLE : View.GONE);
 		ViewUtilities.ensureVisibility(permissionSection, hasPermission ? View.GONE : View.VISIBLE);
+	}
+	
+	private void showMenu(View view) {
+		PopupMenu popup = new PopupMenu(DashboardActivity.this, view);
+		popup.setOnMenuItemClickListener(this::handleMenuItemClick);
+		popup.inflate(R.menu.main);
+		popup.show();
+	}
+	
+	private boolean handleMenuItemClick(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.action_help: {
+				Intent intent = new Intent(DashboardActivity.this, InstructionsActivity.class);
+				startActivity(intent);
+				break;
+			}
+			case R.id.action_report: {
+				Intent intent = new Intent(DashboardActivity.this, ReportProblemActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
+				startActivity(intent);
+				
+				break;
+			}
+			case R.id.action_uninstall:
+				Uninstaller.uninstall(DashboardActivity.this);
+				break;
+			default:
+				throw new RuntimeException("Unknown navigation menu item: " + menuItem.getItemId());
+		}
+		
+		return true;
 	}
 	
 }

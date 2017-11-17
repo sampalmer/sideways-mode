@@ -156,14 +156,11 @@ public class DashboardNormalFragment extends Fragment {
 			snackbar.dismiss();
 		else {
 			snackbar.setText(lastStatus.error.getSummary());
-			snackbar.setAction(R.string.environment_error_more, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					try {
-						lastStatus.error.showError(getContext()).send();
-					} catch (PendingIntent.CanceledException e) {
-						throw new RuntimeException(e);
-					}
+			snackbar.setAction(R.string.environment_error_more, v -> {
+				try {
+					lastStatus.error.showError(getContext()).send();
+				} catch (PendingIntent.CanceledException e) {
+					throw new RuntimeException(e);
 				}
 			});
 			snackbar.show();

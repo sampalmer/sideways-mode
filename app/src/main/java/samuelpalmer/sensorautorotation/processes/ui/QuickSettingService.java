@@ -58,15 +58,9 @@ public class QuickSettingService extends TileService {
 			new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(this);
 		else if (isLocked())
 			// On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
-			unlockAndRun(new Runnable() {
-				@Override
-				public void run() {
-					launchDashboard();
-				}
-			});
-		else {
+			unlockAndRun(this::launchDashboard);
+		else
 			launchDashboard();
-		}
 	}
 	
 	private void launchDashboard() {
