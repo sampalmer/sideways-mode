@@ -21,7 +21,7 @@ public abstract class FullScreenDialogActivity extends UiActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			onFullScreenDialogCloseButtonPressed();
+			onFullScreenDialogClosing();
 			return true;
 		}
 		
@@ -29,9 +29,20 @@ public abstract class FullScreenDialogActivity extends UiActivity {
 	}
 	
 	/**
-	 * Called when the "X" button in the top-left corner is pressed.
+	 * Default implementation calls {@link #onFullScreenDialogClosing()}.
 	 */
-	protected void onFullScreenDialogCloseButtonPressed() {
+	@Override
+	public void onBackPressed() {
+		onFullScreenDialogClosing();
+		// Not calling superclass implementation since that would finish the activity.
+	}
+	
+	/**
+	 * Called when the user tries to close the dialog by either pressing the "X" button in the
+	 * top-left corner or pressing the device's 'back' button.
+	 * The default implementation finishes the activity.
+	 */
+	protected void onFullScreenDialogClosing() {
 		finish();
 	}
 	

@@ -34,15 +34,9 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 	}
 	
 	@Override
-	protected void onFullScreenDialogCloseButtonPressed() {
+	protected void onFullScreenDialogClosing() {
 		completeInstructions();
-		super.onFullScreenDialogCloseButtonPressed();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		completeInstructions();
-		super.onBackPressed();
+		super.onFullScreenDialogClosing();
 	}
 	
 	/**

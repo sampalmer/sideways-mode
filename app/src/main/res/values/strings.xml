@@ -62,6 +62,8 @@
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
 	<string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="report_problem_send_with">Send report with</string>
+	<string name="report_problem_confirmation">Discard problem report?</string>
+	<string name="report_problem_discard">Discard</string>
 
 	<!-- Device problem -->
 	<string name="device_problem">Device problem</string>

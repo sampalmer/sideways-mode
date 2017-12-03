@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	private EditText steps;
 	private EditText problem;
 	private EditText expected;
+	private EditText[] inputs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,8 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		steps = findViewById(R.id.problem_steps);
 		problem = findViewById(R.id.problem_problem);
 		expected = findViewById(R.id.problem_expected);
-
+		inputs = new EditText[] { steps, problem, expected };
+		
 		// This activity saves the logs as soon as it's created.
 		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
 		if (savedInstanceState == null)
@@ -64,6 +67,30 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected void onFullScreenDialogClosing() {
+		boolean userHasEnteredText = false;
+		
+		for (EditText input : inputs) {
+			String text = input.getText().toString().trim();
+			
+			if (!text.isEmpty()) {
+				userHasEnteredText = true;
+				break;
+			}
+		}
+		
+		if (userHasEnteredText) {
+			new AlertDialog.Builder(this)
+				.setMessage(R.string.report_problem_confirmation)
+				.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {})
+				.setPositiveButton(R.string.report_problem_discard, (dialogInterface, i) -> finish())
+				.show();
+		}
+		else
+			finish();
 	}
 	
 	private void sendEmail() {
@@ -118,12 +145,12 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	private boolean validateUserInput() {
 		// Users have sent a lot of useless problem reports, so now they must fill out 3 mandatory fields.
 		
-		EditText[] inputs = new EditText[] { steps, problem, expected };
-		
 		boolean isValid = true;
 		
 		for (EditText input : inputs) {
-			if (input.getText().toString().trim().length() < 5) {
+			String text = input.getText().toString().trim();
+			
+			if (text.length() < 5) {
 				// Not using material design errors here because they result in a lot of visual clutter.
 				input.setError(getText(R.string.report_problem_field_missing));
 				isValid = false;
