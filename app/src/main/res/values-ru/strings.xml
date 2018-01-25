@@ -49,12 +49,6 @@
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране.</string>
 
 	<string name="instructions_overridden_heading">Несовместимые приложения</string>
-	<string name="instructions_overridden_contents">%1$s может не работать, если открыто другое приложение для управления ориентацией экрана, such as YouTube.</string>
-
-	<string name="instructions_help_heading">Исправление проблем</string>
-	<string name="instructions_help_contents">
-		Если экран направлен в неправильную сторону:\n1. Убедитесь, что приложение, которые вы используете, не контролирует экран.\n2. Используйте кнопки в уведомлении, чтобы исправить это.
-	</string>
 
 	<!-- Report problem -->
 	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>

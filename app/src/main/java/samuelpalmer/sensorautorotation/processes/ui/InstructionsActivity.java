@@ -28,7 +28,8 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 		overriddenContents.setText(
 			getResources().getString(
 				R.string.instructions_overridden_contents,
-				getResources().getText(R.string.app_name_full)
+				getResources().getText(R.string.app_name_full),
+				getResources().getText(R.string.preference_forced_apps_title)
 			)
 		);
 	}

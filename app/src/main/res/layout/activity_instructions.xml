@@ -61,31 +61,6 @@
 			tools:ignore="HardcodedText"
 			/>
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:text=""
-			android:layout_gravity="center"
-			/>
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="@string/instructions_help_heading"
-			android:layout_gravity="center_horizontal"
-			android:textAlignment="center"
-			tools:ignore="HardcodedText"
-			/>
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/instructions_help_contents"
-			tools:ignore="HardcodedText"
-			/>
-
 	</LinearLayout>
 
 </ScrollView>
