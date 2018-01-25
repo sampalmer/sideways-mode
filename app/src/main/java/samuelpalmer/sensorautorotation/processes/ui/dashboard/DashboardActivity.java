@@ -14,6 +14,7 @@ import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
@@ -75,6 +76,11 @@ public class DashboardActivity extends DialogActivity {
 		switch (menuItem.getItemId()) {
 			case R.id.action_help: {
 				Intent intent = new Intent(DashboardActivity.this, InstructionsActivity.class);
+				startActivity(intent);
+				break;
+			}
+			case R.id.action_overridden_apps: {
+				Intent intent = new Intent(DashboardActivity.this, ForcedAppsActivity.class);
 				startActivity(intent);
 				break;
 			}

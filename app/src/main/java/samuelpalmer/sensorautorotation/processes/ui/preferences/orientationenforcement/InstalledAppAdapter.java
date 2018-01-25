@@ -1,0 +1,28 @@
+package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+class InstalledAppAdapter extends ArrayAdapter<InstalledApp> {
+
+	public InstalledAppAdapter(Context context) {
+		super(context, 0);
+	}
+
+	@NonNull
+	@Override
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+		CheckedInstalledApp result = (CheckedInstalledApp) convertView;
+		if (result == null)
+			result = new CheckedInstalledApp(getContext());
+		
+		InstalledApp item = getItem(position);
+		result.setItem(item);
+
+		return result;
+	}
+
+}

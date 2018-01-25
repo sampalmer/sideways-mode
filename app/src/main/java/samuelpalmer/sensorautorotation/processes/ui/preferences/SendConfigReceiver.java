@@ -3,7 +3,9 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+
+import java.util.Collections;
+import java.util.Set;
 
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -29,12 +31,13 @@ public class SendConfigReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, getConfigToSync()).send(context);
+		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, getConfigToSync(context)).send(context);
 	}
 	
-	public static Bundle getConfigToSync() {
-		// This app doesn't have user preferences to sync at this stage.
-		return new Bundle();
+	public static Set<String> getConfigToSync(Context context) {
+		return ApplicationSettings
+			.getSharedPreferences(context)
+			.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
 	}
 	
 }

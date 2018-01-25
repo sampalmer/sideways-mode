@@ -2,11 +2,12 @@ package samuelpalmer.sensorautorotation.values;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
@@ -33,22 +34,32 @@ public class ApplicationCommand {
 	public final String action;
 	
 	@Nullable
-	public final Bundle config;
+	public final Set<String> forcedOrientationAppPackages;
 	
 	public ApplicationCommand(String action) {
 		this(action, null);
 	}
 	
-	public ApplicationCommand(String action, @Nullable Bundle config) {
+	public ApplicationCommand(String action, @Nullable Set<String> forcedOrientationAppPackages) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
 
 		this.action = action;
-		this.config = config;
+		this.forcedOrientationAppPackages = forcedOrientationAppPackages;
 	}
 	
 	public ApplicationCommand(Intent intent) {
-		this(intent.getAction(), intent.getBundleExtra(null));
+		this(intent.getAction(), getForcedOrientationAppPackages(intent));
+	}
+	
+	private static Set<String> getForcedOrientationAppPackages(Intent intent) {
+		String[] array = intent.getStringArrayExtra(null);
+		if (array == null)
+			return null;
+		
+		HashSet<String> result = new HashSet<>(array.length);
+		Collections.addAll(result, array);
+		return result;
 	}
 	
 	public void send(Context context) {
@@ -59,8 +70,8 @@ public class ApplicationCommand {
 	public Intent asIntent(Context context) {
 		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
-		if (config != null)
-			result.putExtra(null, new Bundle());
+		if (forcedOrientationAppPackages != null)
+			result.putExtra(null, forcedOrientationAppPackages.toArray(new String[forcedOrientationAppPackages.size()]));
 			
 		BroadcastKillFix.apply(result);
 		return result;

@@ -35,4 +35,6 @@ public abstract class ApplicationSettings {
 	 */
 	public static final String KEY_APP_VERSION = "appVersion";
 	
+	public static final String KEY_FORCED_ORIENTATION_APP_PACKAGES = "forcedOrientationAppPackages";
+	
 }

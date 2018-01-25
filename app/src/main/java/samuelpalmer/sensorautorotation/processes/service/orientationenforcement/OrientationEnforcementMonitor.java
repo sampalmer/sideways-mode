@@ -1,0 +1,93 @@
+package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.util.Collections;
+import java.util.Set;
+
+import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+/**
+ * Represents the "overridden apps" feature. Dynamically overrides the screen orientation
+ * depending on the currently open activity.
+ */
+public class OrientationEnforcementMonitor extends State {
+
+	private final ActivityMonitor activityMonitor;
+	private final PermissionNotificationManager permissionNotificationManager;
+	private final ScreenOrientationEnforcer orientationEnforcer;
+	private final SharedPreferences prefs;
+	private final Context context;
+	private Set<String> orientationEnforcedPackages;
+	
+	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
+		this.context = context;
+		this.activityMonitor = activityMonitor;
+		this.permissionNotificationManager = permissionNotificationManager;
+		orientationEnforcer = new ScreenOrientationEnforcer(this.context);
+		prefs = ServiceSettings.getSharedPreferences(this.context);
+	}
+
+	@Override
+	protected void start() {
+		activityMonitor.onChange.subscribe(enforcementUpdater);
+		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+
+		updatePackages();
+		tryToStartEnforcer();
+	}
+
+	private void tryToStartEnforcer() {
+		if (ScreenOrientationEnforcer.hasPermissionToStart(context)) {
+			orientationEnforcer.ensureStarted();
+			updateEnforcement();
+		}
+	}
+
+	@Override
+	protected void stop() {
+		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
+		activityMonitor.onChange.unsubscribe(enforcementUpdater);
+		orientationEnforcer.ensureStopped();
+	}
+
+	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = (sharedPreferences, s) -> {
+		if (isStarted() && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+			updatePackages();
+			updateEnforcement();
+		}
+	};
+
+	private void updatePackages() {
+		orientationEnforcedPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
+	}
+
+	private void updateEnforcement() {
+		if (orientationEnforcer.isStarted()) {
+			//Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag during activity switches.
+			orientationEnforcer.setEnforced(shouldEnforce());
+		}
+		else {
+			tryToStartEnforcer();
+			if (orientationEnforcer.isStarted())
+				permissionNotificationManager.check(); //Android doesn't tell us when the permission is granted, so we'll just keep checking it so the error notification can be cancelled
+		}
+	}
+
+	private boolean shouldEnforce() {
+		ComponentName currentActivity = activityMonitor.currentOrNull();
+
+		return
+			currentActivity != null
+			&&
+			orientationEnforcedPackages.contains(currentActivity.getPackageName());
+	}
+
+	private final EventHandler enforcementUpdater = this::updateEnforcement;
+
+}

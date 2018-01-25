@@ -17,6 +17,11 @@ public abstract class SystemIntents {
 		return new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, packageUri(context));
 	}
 	
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public static Intent drawOnTopOfApps(Context context) {
+		return new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri(context));
+	}
+	
 	public static Intent uninstall(Context context) {
 		return new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri(context));
 	}

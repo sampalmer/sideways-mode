@@ -22,12 +22,13 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		ApplicationCommand command = new ApplicationCommand(intent);
 		Log.i(TAG, "Received command: " + command.action);
 		
-		if (command.config != null) {
+		if (command.forcedOrientationAppPackages != null) {
 			Log.i(TAG, "Command included config. Applying new config.");
 			
-			// The app doesn't have any user preferences at this stage.
-			if (!command.config.isEmpty())
-				throw new RuntimeException("Config contained unrecognised data.");
+			ServiceSettings.getSharedPreferences(context)
+				.edit()
+				.putStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, command.forcedOrientationAppPackages)
+				.apply();
 		}
 		
 		switch (command.action) {
@@ -44,7 +45,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				EnvironmentErrorManager.clear(context);
 				break;
 			case ApplicationCommand.ACTION_SYNC_CONFIG:
-				if (command.config == null)
+				if (command.forcedOrientationAppPackages == null)
 					throw new RuntimeException("Received request to sync config, but no config was provided.");
 				
 				// No need to sync the config here; it is handled elsewhere.

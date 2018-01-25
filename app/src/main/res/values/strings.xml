@@ -3,6 +3,7 @@
 
 	<string name="app_name_full">Sideways Mode</string>
 	<string name="app_name_short">Sideways</string>
+	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' screen orientations can be overridden."</string>
 
 	<!-- Menu -->
 	<string name="action_menu">Menu</string>
@@ -23,6 +24,15 @@
 	<string name="action_turn_off">Turn off</string>
 	<string name="quick_setting_mode_name">Sideways mode</string> <!-- Note the different case to the app's name. This is for consistency with other quick setting tiles. -->
 
+	<string name="preference_forced_apps_title">Overridden apps</string>
+	<plurals name="preference_forced_apps_summary_enabled">
+		<item quantity="one">%d app overridden</item>
+		<item quantity="other">%d apps overridden</item>
+	</plurals>
+
+	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and lets you use home screen rotation. This might stop some apps from working correctly.</string>
+	<string name="preference_choose_apps">Choose apps</string>
+
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s has been turned off.</string>
 	<string name="environment_error_more">More</string>
@@ -37,7 +47,16 @@
 	<!-- Permissions -->
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
+
+	<string name="permission_needed_accessibility_service_summary">Accessibility service</string>
+	<string name="permission_needed_accessibility_service_description">"On the next screen, turn on '%1$s'.\n\n(If the switch doesn't work, try turning off all screen brightness and screen orientation apps.)"</string>
+
+	<string name="permission_needed_overlays_summary">Draw over other apps</string>
+	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, this app needs permission to draw over other apps. Please give this app permission on the next screen."</string>
+
 	<string name="permission_needed_system_settings">To control the screen rotation, this app needs permission to change system settings.</string>
+	<string name="permission_touch_to_fix">Touch to fix</string>
+	<string name="permissions_needed_tip">To use this feature, some permissions are needed.</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
@@ -75,5 +94,6 @@
 	<string name="notification_channel_controls">Rotation controls</string>
 	<string name="notification_channel_upgrades">Upgrade messages</string>
 	<string name="notification_channel_errors">Error messages</string>
+	<string name="notification_channel_permissions">Permission requests</string>
 
 </resources>
