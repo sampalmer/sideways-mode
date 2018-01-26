@@ -14,9 +14,9 @@
 			• In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
 			• For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
 	-->
-	<string name="accessibility_service_description">"Detects which app you have open. This is used for Sideways Mode's Overridden apps feature.\n\nAccessibility capabilities used:\n• Observe your actions: To see when you switch between apps"</string>
+	<string name="accessibility_service_description">"Observes when an overridden app is open while Sideways Mode is running.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an overridden app is open"</string>
 	<string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
-	<string name="permission_needed_accessibility_service_description">"The %1$s feature needs an accessibility service to see which app you have open so it knows when to override the screen orientation."</string>
+	<string name="permission_needed_accessibility_service_description">"To see when an overridden app is open, %1$s needs an accessibility service."</string>
 	<string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
 
 	<!-- Menu -->
@@ -62,8 +62,8 @@
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
 
-	<string name="permission_needed_overlays_summary">Draw over other apps</string>
-	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, this app needs permission to draw over other apps. Please give this app permission on the next screen."</string>
+	<string name="permission_needed_overlays_summary">Draw over other apps?</string>
+	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, %1$s needs permission to draw over other apps."</string>
 
 	<string name="permission_needed_system_settings">To control the screen rotation, this app needs permission to change system settings.</string>
 	<string name="permission_touch_to_fix">Touch to fix</string>

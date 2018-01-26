@@ -38,7 +38,7 @@
 	<string name="permission_needed_summary">Нужно разрешение</string>
 	<string name="permission_needed_allow">Pазрешить</string>
 
-	<string name="permission_needed_overlays_summary">Панель поверх других приложений</string>
+	<string name="permission_needed_overlays_summary">Панель поверх других приложений?</string>
 
 	<string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, это приложение требует доступ на изменение системных настроек.</string>
 

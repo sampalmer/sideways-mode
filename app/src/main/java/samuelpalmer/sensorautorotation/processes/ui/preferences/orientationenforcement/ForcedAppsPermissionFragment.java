@@ -61,7 +61,7 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_accessibility_service_summary)
-					.setMessage(getString(R.string.permission_needed_accessibility_service_description, getText(R.string.preference_forced_apps_title)))
+					.setMessage(getString(R.string.permission_needed_accessibility_service_description, getText(R.string.app_name_full)))
 					.setOnCancelListener(dialog -> {})
 					.setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
 					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
@@ -96,9 +96,9 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!ScreenOrientationEnforcer.hasPermissionToStart(context)) {
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_overlays_summary)
-					.setMessage(R.string.permission_needed_overlays_description)
+					.setMessage(getString(R.string.permission_needed_overlays_description, getText(R.string.app_name_full)))
 					.setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
-					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
 						Intent intent = SystemIntents.drawOnTopOfApps(getActivity());
 
 						//TODO: Apparently the activity isn't guaranteed to actually exist. Decide what to do here.
