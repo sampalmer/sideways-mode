@@ -14,7 +14,7 @@
 			• In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
 			• For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
 	-->
-	<string name="accessibility_service_description">"Detects which app you have open. This is used for Sideways Mode's Overridden apps feature.\n\nAccessibility capabilities used:\n• No capabilities required"</string>
+	<string name="accessibility_service_description">"Detects which app you have open. This is used for Sideways Mode's Overridden apps feature.\n\nAccessibility capabilities used:\n• Observe your actions: To see when you switch between apps"</string>
 	<string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
 	<string name="permission_needed_accessibility_service_description">"The %1$s feature needs an accessibility service to see which app you have open so it knows when to override the screen orientation."</string>
 	<string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
