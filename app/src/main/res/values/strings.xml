@@ -3,7 +3,7 @@
 
 	<string name="app_name_full">Sideways Mode</string>
 	<string name="app_name_short">Sideways</string>
-	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' scorientations can be overridden."</string>
+	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' screen orientations can be overridden."</string>
 
 	<!-- Menu -->
 	<string name="action_menu">Menu</string>
