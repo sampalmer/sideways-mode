@@ -1,9 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class InstructionsActivity extends FullScreenDialogActivity {
@@ -32,6 +36,16 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 				getResources().getText(R.string.preference_incompatible_apps_title)
 			)
 		);
+		
+		Button reportProblem = findViewById(R.id.instructions_report_problem);
+		reportProblem.setOnClickListener(v -> {
+			Intent intent = new Intent(InstructionsActivity.this, ReportProblemActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
+			startActivity(intent);
+		});
+		
+		if (isFirstRun())
+			reportProblem.setVisibility(View.GONE);
 	}
 	
 	@Override

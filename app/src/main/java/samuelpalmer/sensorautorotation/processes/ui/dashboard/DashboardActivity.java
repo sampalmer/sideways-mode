@@ -13,7 +13,6 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
-import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
@@ -82,13 +81,6 @@ public class DashboardActivity extends DialogActivity {
 			case R.id.action_incompatible_apps: {
 				Intent intent = new Intent(DashboardActivity.this, IncompatibleAppsActivity.class);
 				startActivity(intent);
-				break;
-			}
-			case R.id.action_report: {
-				Intent intent = new Intent(DashboardActivity.this, ReportProblemActivity.class)
-				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
-				startActivity(intent);
-				
 				break;
 			}
 			case R.id.action_uninstall:

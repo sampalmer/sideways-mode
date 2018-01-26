@@ -61,6 +61,22 @@
 			tools:ignore="HardcodedText"
 			/>
 
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text=""
+			android:layout_gravity="center"
+			/>
+
+		<Button
+			android:id="@+id/instructions_report_problem"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/action_report"
+		    android:layout_gravity="center"
+			/>
+
 	</LinearLayout>
 
 </ScrollView>
