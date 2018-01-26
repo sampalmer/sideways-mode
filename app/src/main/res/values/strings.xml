@@ -65,7 +65,7 @@
 	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen.</string>
 
 	<string name="instructions_overridden_heading">Incompatible Apps</string>
-	<string name="instructions_overridden_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature in %1$s."</string>
+	<string name="instructions_overridden_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature."</string>
 
 	<!-- Report problem -->
 	<string name="report_problem_reproduce">What did you do?</string>
