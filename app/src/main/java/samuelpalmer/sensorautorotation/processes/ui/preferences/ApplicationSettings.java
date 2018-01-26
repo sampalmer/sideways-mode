@@ -35,6 +35,6 @@ public abstract class ApplicationSettings {
 	 */
 	public static final String KEY_APP_VERSION = "appVersion";
 	
-	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "forcedOrientationAppPackages";
+	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 	
 }

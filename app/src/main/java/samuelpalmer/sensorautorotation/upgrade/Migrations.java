@@ -8,6 +8,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
@@ -140,6 +142,30 @@ class Migrations {
 				
 				editor.remove("autoRotate");
 				editor.remove("screenOrientationOffset");
+			}
+		});
+		
+		migrations.put(61, new Migration() {
+			@Override
+			public void upgradeServiceProcessData(Context context, SharedPreferences serviceSettings, SharedPreferences.Editor editor) {
+				super.upgradeServiceProcessData(context, serviceSettings, editor);
+				
+				Set<String> forcedOrientationAppPackages = serviceSettings.getStringSet("forcedOrientationAppPackages", null);
+				if (forcedOrientationAppPackages != null)
+					editor
+						.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, forcedOrientationAppPackages)
+						.remove("forcedOrientationAppPackages");
+			}
+			
+			@Override
+			public void upgradeUiProcessData(Context context, SharedPreferences applicationSettings, SharedPreferences.Editor editor) {
+				super.upgradeUiProcessData(context, applicationSettings, editor);
+				
+				Set<String> forcedOrientationAppPackages = applicationSettings.getStringSet("forcedOrientationAppPackages", null);
+				if (forcedOrientationAppPackages != null)
+					editor
+						.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, forcedOrientationAppPackages)
+						.remove("forcedOrientationAppPackages");
 			}
 		});
 		

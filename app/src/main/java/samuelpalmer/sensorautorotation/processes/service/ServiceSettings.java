@@ -42,6 +42,6 @@ public abstract class ServiceSettings {
 	/**
 	 * Cached copy of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
 	 */
-	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "forcedOrientationAppPackages";
+	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 	
 }

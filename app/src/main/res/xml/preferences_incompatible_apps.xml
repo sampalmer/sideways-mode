@@ -19,7 +19,7 @@
 		/>
 
 	<Preference
-		android:key="forcedOrientationAppPackages"
+		android:key="incompatibleAppPackages"
 		android:persistent="false"
 		android:title="@string/preference_choose_apps"
 		android:icon="@drawable/preference_apps"
