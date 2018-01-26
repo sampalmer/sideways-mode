@@ -22,12 +22,12 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		ApplicationCommand command = new ApplicationCommand(intent);
 		Log.i(TAG, "Received command: " + command.action);
 		
-		if (command.forcedOrientationAppPackages != null) {
+		if (command.incompatibleAppPackages != null) {
 			Log.i(TAG, "Command included config. Applying new config.");
 			
 			ServiceSettings.getSharedPreferences(context)
 				.edit()
-				.putStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, command.forcedOrientationAppPackages)
+				.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, command.incompatibleAppPackages)
 				.apply();
 		}
 		
@@ -45,7 +45,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				EnvironmentErrorManager.clear(context);
 				break;
 			case ApplicationCommand.ACTION_SYNC_CONFIG:
-				if (command.forcedOrientationAppPackages == null)
+				if (command.incompatibleAppPackages == null)
 					throw new RuntimeException("Received request to sync config, but no config was provided.");
 				
 				// No need to sync the config here; it is handled elsewhere.

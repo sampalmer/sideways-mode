@@ -19,7 +19,7 @@
 	<string name="user_rotation_right_side">Правая сторона</string>
 	<string name="app_disabled_view_error">Ошибка</string>
 
-	<string name="preference_forced_apps_title">Переопределить приложение</string>
+	<string name="preference_incompatible_apps_title">Переопределить приложение</string>
 
 	<string name="preference_choose_apps">Выберите приложение</string>
 
@@ -48,7 +48,7 @@
 	<string name="instructions_uninstalling_heading">Удаление</string>
 	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране</string>
 
-	<string name="instructions_overridden_heading">Несовместимые приложения</string>
+	<string name="instructions_incompatible_apps_heading">Несовместимые приложения</string>
 
 	<!-- Report problem -->
 	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>

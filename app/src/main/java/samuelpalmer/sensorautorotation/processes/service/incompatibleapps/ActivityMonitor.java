@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 
 import android.content.ComponentName;
 import android.util.Log;

@@ -1,8 +1,9 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -10,12 +11,12 @@ import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
-import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
-public class ForcedAppsPermissionFragment extends Fragment {
+public class IncompatibleAppsPermissionFragment extends Fragment {
 
 	private static final int REQUEST_CODE_ACCESSIBILITY_SERVICE = 1;
 
@@ -29,23 +30,26 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
 		accessibilityServiceChecker = new AccessibilityServiceEnabledStateMonitor(context, WindowChangeDetectingService.class);
-
-		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("forcedOrientationPermission");
+		
+		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("incompatibleAppsPermission");
 		tipView.setOnPreferenceClickListener(preference -> {
 			grantPermissions();
 			return true;
 		});
-
+		
 		updateTip(); //Updating the visibility of the tip in onStart() isn't early enough when switching between split and fullscreen on Android 7.1
 	}
-
+	
 	@Override
 	public void onStart() {
 		super.onStart();
 
 		if (preferenceScreen == null)
 			throw new IllegalStateException("Can't initialise because configure() hasn't been called");
-
+		
+		Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
+		description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
+		
 		accessibilityServiceChecker.subscribe(serviceChanged);
 		updateTip();
 	}

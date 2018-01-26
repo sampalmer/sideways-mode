@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.content.Context;
 import android.content.Intent;
@@ -89,10 +89,10 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		list.adapter.addAll(result);
 
 		//TODO: Maybe move all of this setting code somewhere else?
-		Set<String> forcedAppPackages = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
+		Set<String> incompatibleAppPackages = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 		for (int i = 0; i < result.size(); ++i) {
 			InstalledApp app = result.get(i);
-			if (forcedAppPackages.contains(app.packageName))
+			if (incompatibleAppPackages.contains(app.packageName))
 				list.list.setItemChecked(i, true);
 		}
 		
@@ -100,17 +100,17 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 			boolean checked = ((Checkable)view).isChecked();
 			String packageName = result.get(position).packageName;
 			
-			Set<String> forcedAppPackages1 = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
-			forcedAppPackages1 = new HashSet<>(forcedAppPackages1); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+			Set<String> incompatibleAppPackages1 = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+			incompatibleAppPackages1 = new HashSet<>(incompatibleAppPackages1); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
 			
 			if (checked)
-				forcedAppPackages1.add(packageName);
+				incompatibleAppPackages1.add(packageName);
 			else
-				forcedAppPackages1.remove(packageName);
+				incompatibleAppPackages1.remove(packageName);
 			
 			prefs
 				.edit()
-				.putStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, forcedAppPackages1)
+				.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages1)
 				.apply();
 		});
 

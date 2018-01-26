@@ -47,7 +47,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="@string/instructions_overridden_heading"
+			android:text="@string/instructions_incompatible_apps_heading"
 			android:layout_gravity="center_horizontal"
 			android:textAlignment="center"
 			tools:ignore="HardcodedText"
@@ -57,7 +57,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Contents"
-			android:id="@+id/instructions_overridden_contents"
+			android:id="@+id/instructions_incompatible_apps_contents"
 			tools:ignore="HardcodedText"
 			/>
 

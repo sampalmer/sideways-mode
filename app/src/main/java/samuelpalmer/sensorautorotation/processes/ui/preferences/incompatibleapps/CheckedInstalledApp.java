@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -59,16 +59,16 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 	private void init(Context context) {
 		packageManager = context.getPackageManager();
 		
-		LayoutInflater.from(context).inflate(R.layout.forced_apps_chooser_item, this);
+		LayoutInflater.from(context).inflate(R.layout.incompatible_apps_chooser_item, this);
 		setOrientation(HORIZONTAL);
 		setPadding(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0, getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0);
 		setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.list_item_min_height));
 		
-		icon = findViewById(R.id.forced_apps_item_icon);
-		iconProgress = findViewById(R.id.forced_apps_item_icon_progress);
-		label = findViewById(R.id.forced_apps_item_label);
-		packageName = findViewById(R.id.forced_apps_item_package);
-		checkbox = findViewById(R.id.forced_apps_item_checkbox);
+		icon = findViewById(R.id.incompatible_apps_item_icon);
+		iconProgress = findViewById(R.id.incompatible_item_icon_progress);
+		label = findViewById(R.id.incompatible_apps_item_label);
+		packageName = findViewById(R.id.incompatible_apps_item_package);
+		checkbox = findViewById(R.id.incompatible_apps_item_checkbox);
 	}
 	
 	@Override

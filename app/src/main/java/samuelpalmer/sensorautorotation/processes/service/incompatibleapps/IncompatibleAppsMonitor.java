@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,19 +13,19 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
- * Represents the "overridden apps" feature. Dynamically overrides the screen orientation
+ * Represents the "incompatible apps" feature. Dynamically overrides the screen orientation
  * depending on the currently open activity.
  */
-public class OrientationEnforcementMonitor extends State {
+public class IncompatibleAppsMonitor extends State {
 
 	private final ActivityMonitor activityMonitor;
 	private final PermissionNotificationManager permissionNotificationManager;
 	private final ScreenOrientationEnforcer orientationEnforcer;
 	private final SharedPreferences prefs;
 	private final Context context;
-	private Set<String> orientationEnforcedPackages;
+	private Set<String> incompatibleAppPackages;
 	
-	public OrientationEnforcementMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
+	public IncompatibleAppsMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
 		this.context = context;
 		this.activityMonitor = activityMonitor;
 		this.permissionNotificationManager = permissionNotificationManager;
@@ -36,7 +36,7 @@ public class OrientationEnforcementMonitor extends State {
 	@Override
 	protected void start() {
 		activityMonitor.onChange.subscribe(enforcementUpdater);
-		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 
 		updatePackages();
 		tryToStartEnforcer();
@@ -51,20 +51,20 @@ public class OrientationEnforcementMonitor extends State {
 
 	@Override
 	protected void stop() {
-		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
+		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 		activityMonitor.onChange.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}
 
-	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = (sharedPreferences, s) -> {
-		if (isStarted() && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES)) {
+	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
+		if (isStarted() && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
 			updatePackages();
 			updateEnforcement();
 		}
 	};
 
 	private void updatePackages() {
-		orientationEnforcedPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
+		incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 	}
 
 	private void updateEnforcement() {
@@ -85,7 +85,7 @@ public class OrientationEnforcementMonitor extends State {
 		return
 			currentActivity != null
 			&&
-			orientationEnforcedPackages.contains(currentActivity.getPackageName());
+			incompatibleAppPackages.contains(currentActivity.getPackageName());
 	}
 
 	private final EventHandler enforcementUpdater = this::updateEnforcement;

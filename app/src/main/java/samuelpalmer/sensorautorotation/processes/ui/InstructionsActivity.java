@@ -24,12 +24,12 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 			)
 		);
 		
-		TextView overriddenContents = findViewById(R.id.instructions_overridden_contents);
-		overriddenContents.setText(
+		TextView incompatibleAppsContents = findViewById(R.id.instructions_incompatible_apps_contents);
+		incompatibleAppsContents.setText(
 			getResources().getString(
-				R.string.instructions_overridden_contents,
+				R.string.instructions_incompatible_apps_contents,
 				getResources().getText(R.string.app_name_full),
-				getResources().getText(R.string.preference_forced_apps_title)
+				getResources().getText(R.string.preference_incompatible_apps_title)
 			)
 		);
 	}

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -36,7 +36,7 @@ public class PermissionTipViewPreference extends Preference {
 	}
 
 	private void setLayout() {
-		setWidgetLayoutResource(R.layout.forced_apps_permission_button);
+		setWidgetLayoutResource(R.layout.incompatible_apps_permission_button);
 	}
 
 	@Override

@@ -63,20 +63,20 @@
 			android:theme="@style/AppTheme.Dialog"/>
 
 		<activity
-			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
-			android:label="@string/preference_forced_apps_title"
+			android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+			android:label="@string/preference_incompatible_apps_title"
 			tools:ignore="UnusedAttribute" />
 
 		<activity
-			android:name=".processes.ui.preferences.orientationenforcement.ForcedAppsChooserActivity"
-			android:parentActivityName=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity"
-			android:label="@string/preference_forced_apps_title"
+			android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity"
+			android:parentActivityName=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+			android:label="@string/preference_incompatible_apps_title"
 			tools:ignore="UnusedAttribute">
 
 			<!-- Parent activity meta-data to support 4.0 and lower -->
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.orientationenforcement.ForcedAppsActivity" />
+				android:value=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity" />
 
 		</activity>
 

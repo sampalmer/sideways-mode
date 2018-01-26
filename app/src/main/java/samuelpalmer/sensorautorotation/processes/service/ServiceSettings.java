@@ -40,8 +40,8 @@ public abstract class ServiceSettings {
 	public static final String KEY_APP_VERSION = "appVersion";
 	
 	/**
-	 * Cached copy of {@link ApplicationSettings#KEY_FORCED_ORIENTATION_APP_PACKAGES} for use in the service process.
+	 * Cached copy of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
 	 */
-	public static final String KEY_FORCED_ORIENTATION_APP_PACKAGES = "forcedOrientationAppPackages";
+	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "forcedOrientationAppPackages";
 	
 }

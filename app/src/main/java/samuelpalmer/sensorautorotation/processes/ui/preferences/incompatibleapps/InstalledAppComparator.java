@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import java.text.Collator;
 import java.util.Comparator;

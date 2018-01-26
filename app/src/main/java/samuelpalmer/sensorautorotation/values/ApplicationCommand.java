@@ -34,25 +34,25 @@ public class ApplicationCommand {
 	public final String action;
 	
 	@Nullable
-	public final Set<String> forcedOrientationAppPackages;
+	public final Set<String> incompatibleAppPackages;
 	
 	public ApplicationCommand(String action) {
 		this(action, null);
 	}
 	
-	public ApplicationCommand(String action, @Nullable Set<String> forcedOrientationAppPackages) {
+	public ApplicationCommand(String action, @Nullable Set<String> incompatibleAppPackages) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
 
 		this.action = action;
-		this.forcedOrientationAppPackages = forcedOrientationAppPackages;
+		this.incompatibleAppPackages = incompatibleAppPackages;
 	}
 	
 	public ApplicationCommand(Intent intent) {
-		this(intent.getAction(), getForcedOrientationAppPackages(intent));
+		this(intent.getAction(), getIncompatibleAppPackages(intent));
 	}
 	
-	private static Set<String> getForcedOrientationAppPackages(Intent intent) {
+	private static Set<String> getIncompatibleAppPackages(Intent intent) {
 		String[] array = intent.getStringArrayExtra(null);
 		if (array == null)
 			return null;
@@ -70,8 +70,8 @@ public class ApplicationCommand {
 	public Intent asIntent(Context context) {
 		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
-		if (forcedOrientationAppPackages != null)
-			result.putExtra(null, forcedOrientationAppPackages.toArray(new String[forcedOrientationAppPackages.size()]));
+		if (incompatibleAppPackages != null)
+			result.putExtra(null, incompatibleAppPackages.toArray(new String[incompatibleAppPackages.size()]));
 			
 		BroadcastKillFix.apply(result);
 		return result;

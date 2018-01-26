@@ -58,7 +58,7 @@ public abstract class NotificationChannels {
 		NotificationChannel permission = new NotificationChannel(
 			ID_PERMISSIONS,
 			context.getText(R.string.notification_channel_permissions),
-			//Since these only need to be addressed for the overridden apps function to work
+			//Since these only need to be addressed for the incompatible apps function to work
 			NotificationManager.IMPORTANCE_DEFAULT
 		);
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);

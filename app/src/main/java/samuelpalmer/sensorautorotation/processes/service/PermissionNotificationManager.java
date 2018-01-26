@@ -16,8 +16,8 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ScreenOrientationEnforcer;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -44,7 +44,7 @@ public class PermissionNotificationManager extends State {
 
 	@Override
 	protected void start() {
-		prefs.registerOnSharedPreferenceChangeListener(forcedAppsChanged);
+		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 		accessibilityServiceMonitor.subscribe(subscriber);
 		
 		isRunning = true;
@@ -57,11 +57,11 @@ public class PermissionNotificationManager extends State {
 		check();
 		
 		accessibilityServiceMonitor.unsubscribe(subscriber);
-		prefs.unregisterOnSharedPreferenceChangeListener(forcedAppsChanged);
+		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 	}
 
-	private final SharedPreferences.OnSharedPreferenceChangeListener forcedAppsChanged = (sharedPreferences, s) -> {
-		if (isRunning && s.equals(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
+		if (isRunning && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
 			check();
 	};
 	
@@ -69,16 +69,16 @@ public class PermissionNotificationManager extends State {
 	
 	public void check() {
 		if (needsPermission()) {
-			PendingIntent forcedAppsIntent = PendingIntent.getActivity(
+			PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
 			context,
-				PendingIntentIds.FORCED_APPS_ACQUIRE_PERMISSION,
-				new Intent(context, ForcedAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+				PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
+				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
 			
 			Notification notification = NotificationBuilderFactory
 					.create(context)
 					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
-					.setContentIntent(forcedAppsIntent)
+					.setContentIntent(incompatibleAppsIntent)
 					.setContentTitle(context.getText(R.string.permission_needed_summary))
 					.setContentText(context.getText(R.string.permission_touch_to_fix))
 					.setSmallIcon(R.drawable.notification_error)
@@ -93,8 +93,8 @@ public class PermissionNotificationManager extends State {
 	
 	private boolean needsPermission() {
 		if (isRunning) {
-			Set<String> forcedAppPackages = prefs.getStringSet(ServiceSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
-			if (!forcedAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
+			Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+			if (!incompatibleAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
 				return true;
 		}
 		

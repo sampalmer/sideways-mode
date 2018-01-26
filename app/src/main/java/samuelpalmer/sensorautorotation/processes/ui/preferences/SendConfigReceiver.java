@@ -37,7 +37,7 @@ public class SendConfigReceiver extends BroadcastReceiver {
 	public static Set<String> getConfigToSync(Context context) {
 		return ApplicationSettings
 			.getSharedPreferences(context)
-			.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet());
+			.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 	}
 	
 }

@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/settings"
-        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsFragment"
+        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     />

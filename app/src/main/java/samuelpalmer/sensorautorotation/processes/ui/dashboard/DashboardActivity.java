@@ -14,7 +14,7 @@ import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
@@ -79,8 +79,8 @@ public class DashboardActivity extends DialogActivity {
 				startActivity(intent);
 				break;
 			}
-			case R.id.action_overridden_apps: {
-				Intent intent = new Intent(DashboardActivity.this, ForcedAppsActivity.class);
+			case R.id.action_incompatible_apps: {
+				Intent intent = new Intent(DashboardActivity.this, IncompatibleAppsActivity.class);
 				startActivity(intent);
 				break;
 			}

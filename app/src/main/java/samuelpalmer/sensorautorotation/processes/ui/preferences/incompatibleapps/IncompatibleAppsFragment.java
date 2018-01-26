@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement;
+package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 
-public class ForcedAppsFragment extends PreferenceFragment {
+public class IncompatibleAppsFragment extends PreferenceFragment {
 
 	private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
@@ -23,14 +23,14 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences_overridden_apps);
+		addPreferencesFromResource(R.xml.preferences_incompatible_apps);
 		
 		prefs = ApplicationSettings.getSharedPreferences(getActivity());
-		appsPreference = findPreference(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES);
+		appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
 
-		ForcedAppsPermissionFragment permissionFragment = (ForcedAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
+		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
 		if (permissionFragment == null) {
-		    permissionFragment = new ForcedAppsPermissionFragment();
+		    permissionFragment = new IncompatibleAppsPermissionFragment();
 
 			getFragmentManager()
 					.beginTransaction()
@@ -62,14 +62,14 @@ public class ForcedAppsFragment extends PreferenceFragment {
 	private final SharedPreferences.OnSharedPreferenceChangeListener appsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-			if (isStarted && s.equals(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES))
+			if (isStarted && s.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
 				updateAppsSummary();
 		}
 	};
 
 	private void updateAppsSummary() {
-		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_FORCED_ORIENTATION_APP_PACKAGES, Collections.emptySet()).size();
-		final String quantityString = getResources().getQuantityString(R.plurals.preference_forced_apps_summary_enabled, quantity, quantity);
+		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()).size();
+		final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
 		appsPreference.setSummary(quantityString);
 	}
 

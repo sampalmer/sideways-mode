@@ -15,7 +15,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:scaleType="centerInside"
-			android:id="@+id/forced_apps_item_icon"
+			android:id="@+id/incompatible_apps_item_icon"
 			tools:ignore="ContentDescription"/>
 
 		<ProgressBar
@@ -25,7 +25,7 @@
 			style="@style/Widget.AppCompat.ProgressBar"
 			android:visibility="gone"
 			android:indeterminate="true"
-			android:id="@+id/forced_apps_item_icon_progress"/>
+			android:id="@+id/incompatible_item_icon_progress"/>
 
 	</RelativeLayout>
 
@@ -43,7 +43,7 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:textColor="?android:attr/textColorPrimary"
-			android:id="@+id/forced_apps_item_label"
+			android:id="@+id/incompatible_apps_item_label"
 			/>
 
 		<TextView
@@ -51,7 +51,7 @@
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="?android:attr/textColorSecondary"
-			android:id="@+id/forced_apps_item_package"
+			android:id="@+id/incompatible_apps_item_package"
 			/>
 
 	</LinearLayout>
@@ -59,7 +59,7 @@
 	<CheckBox
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:id="@+id/forced_apps_item_checkbox"
+		android:id="@+id/incompatible_apps_item_checkbox"
 		android:clickable="false"
 		android:focusable="false"
 		android:focusableInTouchMode="false"

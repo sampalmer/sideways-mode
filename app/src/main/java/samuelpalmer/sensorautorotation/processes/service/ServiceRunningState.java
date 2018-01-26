@@ -3,8 +3,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
-import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.ActivityMonitor;
-import samuelpalmer.sensorautorotation.processes.service.orientationenforcement.OrientationEnforcementManager;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ActivityMonitor;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.DeviceInteractivityMonitor;
@@ -22,7 +22,7 @@ public class ServiceRunningState extends State {
 	private final LowMemoryDetector lowMemoryDetector;
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final SystemAutoRotationMonitor systemAutoRotationMonitor;
-	private final OrientationEnforcementManager orientationEnforcementManager;
+	private final IncompatibleAppsManager incompatibleAppsManager;
 	final ActivityMonitor activityMonitor;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final AppDisabler appDisabler;
@@ -39,7 +39,7 @@ public class ServiceRunningState extends State {
 		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
 		activityMonitor = new ActivityMonitor();
-		orientationEnforcementManager = new OrientationEnforcementManager(service, activityMonitor);
+		incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor);
 		appDisabler = new AppDisabler(service);
 		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
 	}
@@ -56,7 +56,7 @@ public class ServiceRunningState extends State {
 		screenUpdater.ensureStarted();
 		lowMemoryDetector.ensureStarted();
 		activityMonitor.ensureStarted();
-		orientationEnforcementManager.ensureStarted();
+		incompatibleAppsManager.ensureStarted();
 		appDisabler.ensureStarted();
 		
 		deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
@@ -74,7 +74,7 @@ public class ServiceRunningState extends State {
 		deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
 		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
-		orientationEnforcementManager.ensureStopped();
+		incompatibleAppsManager.ensureStopped();
 		activityMonitor.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenUpdater.ensureStopped();

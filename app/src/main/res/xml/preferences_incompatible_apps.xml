@@ -3,15 +3,16 @@
 
 	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
 	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
-	<samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.PermissionTipViewPreference
-		android:key="forcedOrientationPermission"
+	<samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.PermissionTipViewPreference
+		android:key="incompatibleAppsPermission"
 		android:title="@string/permissions_needed_tip"
 		android:persistent="false"
 		android:order="0"
 	/>
 
 	<Preference
-		android:summary="@string/preference_forced_apps_details"
+		android:key="incompatibleAppsDetails"
+		android:summary="@string/preference_incompatible_apps_details"
 		android:persistent="false"
 	    android:selectable="false"
 		android:order="1"
@@ -26,7 +27,7 @@
 
 		<intent
 			android:targetPackage="samuelpalmer.sensorautorotation"
-			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.orientationenforcement.ForcedAppsChooserActivity" />
+			android:targetClass="samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity" />
 
 	</Preference>
 
