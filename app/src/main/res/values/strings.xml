@@ -14,7 +14,7 @@
 			• In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
 			• For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
 	-->
-	<string name="accessibility_service_description">"Observes when an overridden app is open while Sideways Mode is running.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an overridden app is open"</string>
+	<string name="accessibility_service_description">"Observes when an overridden app is open while Sideways Mode is on.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an overridden app is open"</string>
 	<string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
 	<string name="permission_needed_accessibility_service_description">"To see when an overridden app is open, %1$s needs an accessibility service."</string>
 	<string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
@@ -26,9 +26,9 @@
 	<string name="action_uninstall">Uninstall</string>
 
 	<!-- Upgrade -->
-	<string name="upgrade_summary">%1$s Upgraded</string>
+	<string name="upgrade_summary">%1$s upgraded</string>
 	<string name="upgrade_notification_content">Touch for details</string>
-	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications is no longer supported. If you have them blocked, please unblock them."</string>
+	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications isn't supported anymore. If you have them blocked, please unblock them."</string>
 
 	<!-- Dashboard -->
 	<string name="user_rotation_left_side">Left side</string>
@@ -44,7 +44,7 @@
 		<item quantity="other">%d apps overridden</item>
 	</plurals>
 
-	<string name="preference_forced_apps_details">Stops apps from using their own screen orientation preferences. For example, this fixes YouTube auto-rotation and lets you use home screen rotation. This might stop some apps from working correctly.</string>
+	<string name="preference_forced_apps_details">Stops apps from using their own screen orientations. For example, this fixes YouTube auto-rotation and lets you use home screen rotation. This might stop some apps from working correctly.</string>
 	<string name="preference_choose_apps">Choose apps</string>
 
 	<!-- Errors -->
@@ -56,24 +56,24 @@
 
 	<string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
 	<string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
-	<string name="environment_error_system_setting_write_denied_message">This app doesn\'t have permission to change system settings. To fix this, turn this app back on.</string>
+	<string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings. To fix this, open %1$s.</string>
 
 	<!-- Permissions -->
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
 
 	<string name="permission_needed_overlays_summary">Draw over other apps?</string>
-	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, %1$s needs permission to draw over other apps."</string>
+	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, %1$s needs permission to draw over other apps"</string>
 
-	<string name="permission_needed_system_settings">To control the screen rotation, this app needs permission to change system settings.</string>
+	<string name="permission_needed_system_settings">To control the screen rotation, %1$s needs permission to change system settings</string>
 	<string name="permission_touch_to_fix">Touch to fix</string>
-	<string name="permissions_needed_tip">To use this feature, some permissions are needed.</string>
+	<string name="permissions_needed_tip">To use this feature, some permissions are needed</string>
 
 	<!-- Instructions -->
 	<string name="instructions_heading">Instructions</string>
 
 	<string name="instructions_uninstalling_heading">Uninstalling</string>
-	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen.</string>
+	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen</string>
 
 	<string name="instructions_overridden_heading">Incompatible Apps</string>
 	<string name="instructions_overridden_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature."</string>
@@ -84,7 +84,7 @@
 	<string name="report_problem_expected">What did you expect to happen?</string>
 	<string name="report_problem_field_missing">This is required</string>
 	<string name="report_problem_send">Send by email</string>
-	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem."</string>
+	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
 	<string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
 	<string name="report_problem_send_with">Send report with</string>
 	<string name="report_problem_confirmation">Discard problem report?</string>

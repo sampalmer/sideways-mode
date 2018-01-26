@@ -52,7 +52,7 @@ public class ScreenOrientationController extends State {
 	
 	private void setAndHandleErrors(String name, int newValue) {
 		if (!SystemSettings.canWrite(context)) {
-			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getText(R.string.environment_error_system_setting_write_denied_message));
+			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
 			EnvironmentErrorManager.report(context, error);
 		}
 		else {

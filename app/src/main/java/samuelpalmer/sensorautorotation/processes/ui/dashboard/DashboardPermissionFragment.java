@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
@@ -22,6 +23,9 @@ public class DashboardPermissionFragment extends Fragment {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View layout = inflater.inflate(R.layout.fragment_dashboard_permission, container, false);
+		
+		TextView description = layout.findViewById(R.id.dashboard_permission_description);
+		description.setText(getString(R.string.permission_needed_system_settings, getText(R.string.app_name_full)));
 		
 		Button fixButton = layout.findViewById(R.id.dashboard_permission_fix);
 		fixButton.setOnClickListener(this::grantPermission);

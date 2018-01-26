@@ -8,10 +8,10 @@
 	>
 
 	<TextView
+		android:id="@+id/dashboard_permission_description"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center_horizontal"
-		android:text="@string/permission_needed_system_settings"
 		/>
 
 	<Button
