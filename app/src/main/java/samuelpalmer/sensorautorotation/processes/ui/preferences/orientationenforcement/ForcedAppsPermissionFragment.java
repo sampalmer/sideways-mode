@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
@@ -60,10 +61,10 @@ public class ForcedAppsPermissionFragment extends Fragment {
 		if (!accessibilityServiceChecker.isEnabled())
 			new AlertDialog.Builder(context)
 					.setTitle(R.string.permission_needed_accessibility_service_summary)
-					.setMessage(getString(R.string.permission_needed_accessibility_service_description, getText(R.string.app_name_full)))
+					.setMessage(getString(R.string.permission_needed_accessibility_service_description, getText(R.string.preference_forced_apps_title)))
 					.setOnCancelListener(dialog -> {})
 					.setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
-					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
 						Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
 						//TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist. Decide what to do here.
@@ -78,8 +79,17 @@ public class ForcedAppsPermissionFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_CODE_ACCESSIBILITY_SERVICE)
-			grantOverlayPermission();
+		if (requestCode == REQUEST_CODE_ACCESSIBILITY_SERVICE) {
+			if (accessibilityServiceChecker.isEnabled())
+				grantOverlayPermission();
+			else {
+				// Maybe the user couldn't enable the accessibility service due to an overlay.
+				// On some versions of Android, the OS doesn't tell you why you can't turn it on.
+				Toast
+					.makeText(context, R.string.accessibility_service_cancelled, Toast.LENGTH_LONG)
+					.show();
+			}
+		}
 	}
 
 	private void grantOverlayPermission() {

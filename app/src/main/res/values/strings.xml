@@ -3,7 +3,21 @@
 
 	<string name="app_name_full">Sideways Mode</string>
 	<string name="app_name_short">Sideways</string>
-	<string name="accessibility_service_description">"Detects when you switch between apps so that individual apps' screen orientations can be overridden."</string>
+
+	<!-- Accessibility service -->
+	<!--
+		Requirements according to email from Google Play:
+
+		If your accessibility app uses accessibility privileges for both accessibility and non-accessibility purposes, you must instead fulfill the below criteria.
+
+		• If you use the BIND_ACCESSIBILITY_SERVICE permission in your app for any purpose not relating to, or in addition to, helping users with accessibility needs use Android devices and apps, you must update the android:description element in your accessibility service definition to provide user-facing disclosure of the Accessibility Service API: before asking the user to enable this permission within your app. Your disclosure must meet the following requirements:
+			• In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
+			• For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
+	-->
+	<string name="accessibility_service_description">"Detects which app you have open. This is used for Sideways Mode's Overridden apps feature.\n\nAccessibility capabilities used:\n• No capabilities required"</string>
+	<string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
+	<string name="permission_needed_accessibility_service_description">"The %1$s feature needs an accessibility service to see which app you have open so it knows when to override the screen orientation."</string>
+	<string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
 
 	<!-- Menu -->
 	<string name="action_menu">Menu</string>
@@ -47,9 +61,6 @@
 	<!-- Permissions -->
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
-
-	<string name="permission_needed_accessibility_service_summary">Accessibility service</string>
-	<string name="permission_needed_accessibility_service_description">"On the next screen, turn on '%1$s'.\n\n(If the switch doesn't work, try turning off all screen brightness and screen orientation apps.)"</string>
 
 	<string name="permission_needed_overlays_summary">Draw over other apps</string>
 	<string name="permission_needed_overlays_description">"To override other apps' screen orientations, this app needs permission to draw over other apps. Please give this app permission on the next screen."</string>
