@@ -42,6 +42,8 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 			Intent intent = new Intent(InstructionsActivity.this, ReportProblemActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
 			startActivity(intent);
+			
+			finish(); // This activity and the problem report one are both full screen dialogs. So we'll finish this one so we don't end up with a dialog on top of another dialog.
 		});
 		
 		if (isFirstRun())
