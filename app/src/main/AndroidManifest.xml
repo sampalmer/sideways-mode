@@ -119,7 +119,6 @@
 		          android:excludeFromRecents="true"
 		          android:taskAffinity=""
 		          android:theme="@style/AppTheme.Dialog"
-		          android:configChanges="orientation|screenSize|screenLayout"
 		          tools:ignore="UnusedAttribute">
 
 			<intent-filter>

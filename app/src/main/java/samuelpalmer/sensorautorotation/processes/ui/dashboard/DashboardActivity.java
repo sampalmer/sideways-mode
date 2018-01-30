@@ -31,7 +31,11 @@ public class DashboardActivity extends DialogActivity {
 		dialog = new AlertDialog.Builder(this)
 			.setView(R.layout.activity_dashboard)
 			.create();
-		dialog.setOnDismissListener(dialogInterface -> {
+		
+		// It's important that we finish the activity when the dialog is *cancelled*, not dismissed.
+		// This is because dismissal also occurs when the screen orientation or layout changes.
+		// Hence if we finished the activity on *dismiss*, the dialog would disappear each time the screen orientation changes.
+		dialog.setOnCancelListener(dialogInterface -> {
 			dialog = null;
 			finish();
 		});
