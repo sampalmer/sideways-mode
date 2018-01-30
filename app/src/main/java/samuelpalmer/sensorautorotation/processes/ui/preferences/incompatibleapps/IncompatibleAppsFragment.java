@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -27,7 +28,8 @@ public class IncompatibleAppsFragment extends PreferenceFragment {
 		
 		prefs = ApplicationSettings.getSharedPreferences(getActivity());
 		appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
-
+		appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
+		
 		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
 		if (permissionFragment == null) {
 		    permissionFragment = new IncompatibleAppsPermissionFragment();
