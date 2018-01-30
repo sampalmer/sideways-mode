@@ -28,6 +28,12 @@ android {
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
+		debug {
+			// The development version of the app must have a different application id so that
+			// Google Play Console doesn't associate dev crashes and ANRs with the production version of the app.
+			applicationIdSuffix ".dev"
+			versionNameSuffix " (Dev)"
+		}
 	}
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
