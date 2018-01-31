@@ -28,6 +28,8 @@ public class IncompatibleAppsFragment extends PreferenceFragment {
 		
 		prefs = ApplicationSettings.getSharedPreferences(getActivity());
 		appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+		
+		// Setting the intent here rather than in the XML since the XML-based one requires a hard-coded application id, which won't work since the application id differs based on the build type.
 		appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
 		
 		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
