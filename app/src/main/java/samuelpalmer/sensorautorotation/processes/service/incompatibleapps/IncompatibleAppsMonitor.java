@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -37,7 +39,8 @@ public class IncompatibleAppsMonitor extends State {
 	protected void start() {
 		activityMonitor.onChange.subscribe(enforcementUpdater);
 		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-
+		orientationEnforcer.onEnforcementChanged.subscribe(enforcementChanged);
+		
 		updatePackages();
 		tryToStartEnforcer();
 	}
@@ -51,11 +54,20 @@ public class IncompatibleAppsMonitor extends State {
 
 	@Override
 	protected void stop() {
+		orientationEnforcer.onEnforcementChanged.unsubscribe(enforcementChanged);
 		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 		activityMonitor.onChange.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}
-
+	
+	private final EventHandler enforcementChanged = new EventHandler() {
+		@Override
+		public void update() {
+			// This should show how often the feature is used.
+			FirebaseAnalytics.getInstance(context).logEvent(orientationEnforcer.isEnforced() ? "orientation_enforcement_start" : "orientation_enforcement_stop", null);
+		}
+	};
+	
 	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
 		if (isStarted() && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
 			updatePackages();

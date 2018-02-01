@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 
 /**
  * Forces the OS to use the {@link ActivityInfo#SCREEN_ORIENTATION_USER} screen orientation.
@@ -24,7 +25,9 @@ public class ScreenOrientationEnforcer extends State {
 	private final WindowManager windows;
 	private final LayoutParams layout;
 	private boolean isEnforced;
-
+	
+	public final UpdatingEventRegistrar onEnforcementChanged = new UpdatingEventRegistrar();
+	
 	public ScreenOrientationEnforcer(Context context) {
 		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
@@ -94,6 +97,7 @@ public class ScreenOrientationEnforcer extends State {
 		if (newEnforced != isEnforced) {
 			setEnforcedUnconditionally(newEnforced);
 			Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
+			onEnforcementChanged.report();
 		}
 	}
 
@@ -101,6 +105,10 @@ public class ScreenOrientationEnforcer extends State {
 		isEnforced = newEnforced;
 		int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
 		view.setVisibility(visibility);
+	}
+	
+	public boolean isEnforced() {
+		return isEnforced;
 	}
 
 }
