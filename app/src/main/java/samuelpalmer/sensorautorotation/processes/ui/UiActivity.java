@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
@@ -38,24 +36,8 @@ public abstract class UiActivity extends AppCompatActivity {
 				Intent intent = new Intent(this, InstructionsActivity.class)
 					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
 				startActivity(intent);
-				FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.TUTORIAL_BEGIN, null);
 			}
 		}
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		// Note that onResume() can apparently be called even if a system window,
-		// such as the keyguard, is over the top of the activity. An alternative callback to use
-		// is onWindowFocusChanged(), but the problem with that one is it isn't fired for dialog
-		// activities, such as the dashboard.
-		FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
-		
-		// Note that we will also end up here when the configuration changes, such as when the screen orientaiton changes.
-		// This will also fire each time the user changes activity while the app is open.
-		// This could be a bad thing, or maybe it won't matter.
 	}
 	
 }

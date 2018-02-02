@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -62,15 +60,12 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 	 * Indicates that the user has finished working through the instructions.
 	 */
 	private void completeInstructions() {
-		if (isFirstRun()) {
+		if (isFirstRun())
 			ApplicationSettings
 				.getSharedPreferences(this)
 				.edit()
 				.putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
 				.apply();
-			
-			FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.TUTORIAL_COMPLETE, null);
-		}
 	}
 	
 	private boolean isFirstRun() {
