@@ -19,10 +19,6 @@
 	<string name="user_rotation_right_side">Правая сторона</string>
 	<string name="app_disabled_view_error">Ошибка</string>
 
-	<string name="preference_incompatible_apps_title">Переопределить приложение</string>
-
-	<string name="preference_choose_apps">Выберите приложение</string>
-
 	<!-- Errors -->
 	<string name="environment_error_message">%1$s %2$s был отключен.</string>
 	<string name="environment_error_more">Больше</string>
