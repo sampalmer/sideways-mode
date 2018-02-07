@@ -9,6 +9,7 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
@@ -21,6 +22,7 @@ public class IncompatibleAppsMonitor extends State {
 	private final ActivityMonitor activityMonitor;
 	private final PermissionNotificationManager permissionNotificationManager;
 	private final ScreenOrientationEnforcer orientationEnforcer;
+	private final LockScreenMonitor lockScreenDetector;
 	private final SharedPreferences prefs;
 	private final Context context;
 	private Set<String> incompatibleAppPackages;
@@ -30,11 +32,13 @@ public class IncompatibleAppsMonitor extends State {
 		this.activityMonitor = activityMonitor;
 		this.permissionNotificationManager = permissionNotificationManager;
 		orientationEnforcer = new ScreenOrientationEnforcer(this.context);
+		this.lockScreenDetector = new LockScreenMonitor(this.context);
 		prefs = ServiceSettings.getSharedPreferences(this.context);
 	}
 
 	@Override
 	protected void start() {
+		lockScreenDetector.subscribe(enforcementUpdater);
 		activityMonitor.onChange.subscribe(enforcementUpdater);
 		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 
@@ -53,6 +57,7 @@ public class IncompatibleAppsMonitor extends State {
 	protected void stop() {
 		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 		activityMonitor.onChange.unsubscribe(enforcementUpdater);
+		lockScreenDetector.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}
 
@@ -69,8 +74,11 @@ public class IncompatibleAppsMonitor extends State {
 
 	private void updateEnforcement() {
 		if (orientationEnforcer.isStarted()) {
-			//Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag during activity switches.
-			orientationEnforcer.setEnforced(shouldEnforce());
+			//Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag.
+			
+			//Not allowing lock screen orientation enforcement just in case it breaks the lock screen
+			boolean shouldEnforce = isEnforced() && !lockScreenDetector.isOnLockScreen();
+			orientationEnforcer.setEnforced(shouldEnforce);
 		}
 		else {
 			tryToStartEnforcer();
@@ -79,7 +87,7 @@ public class IncompatibleAppsMonitor extends State {
 		}
 	}
 
-	private boolean shouldEnforce() {
+	private boolean isEnforced() {
 		ComponentName currentActivity = activityMonitor.currentOrNull();
 
 		return

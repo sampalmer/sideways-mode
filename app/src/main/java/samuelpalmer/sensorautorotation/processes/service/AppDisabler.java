@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 
@@ -60,7 +61,8 @@ public class AppDisabler extends State {
 				Don't want to turn the app off when the screen turns off because the screen might
 				have turned off due to inactivity while the user is actually still using the device.
 				 */
-				if (isOnLockScreen())
+				boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+				if (isOnLockScreen)
 					ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
 			}
 		}
@@ -82,12 +84,5 @@ public class AppDisabler extends State {
 			}
 		}
 	};
-	
-	private boolean isOnLockScreen() {
-		if (Build.VERSION.SDK_INT >= 16)
-			return keyguardManager.isKeyguardLocked();
-		else
-			return keyguardManager.inKeyguardRestrictedInputMode();
-	}
 	
 }
