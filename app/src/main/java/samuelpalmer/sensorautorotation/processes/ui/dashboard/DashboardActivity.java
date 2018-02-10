@@ -76,14 +76,20 @@ public class DashboardActivity extends DialogActivity {
 	}
 	
 	private boolean handleMenuItemClick(MenuItem menuItem) {
+		/*
+			The dashboard activity needs to run in its own task that does not show up in the recents screen so it feels like a dialog rather than a full activity.
+			However, the activities we launch from the dashboard should have normal activity behaviour, so we launch them into a separate task.
+		 */
+		int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK;
+		
 		switch (menuItem.getItemId()) {
 			case R.id.action_help: {
-				Intent intent = new Intent(DashboardActivity.this, InstructionsActivity.class);
+				Intent intent = new Intent(DashboardActivity.this, InstructionsActivity.class).addFlags(flags);
 				startActivity(intent);
 				break;
 			}
 			case R.id.action_incompatible_apps: {
-				Intent intent = new Intent(DashboardActivity.this, IncompatibleAppsActivity.class);
+				Intent intent = new Intent(DashboardActivity.this, IncompatibleAppsActivity.class).addFlags(flags);
 				startActivity(intent);
 				break;
 			}
