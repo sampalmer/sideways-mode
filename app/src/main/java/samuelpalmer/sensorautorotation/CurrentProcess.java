@@ -143,6 +143,7 @@ public class CurrentProcess extends Application {
 				toRemove.add(incompatibleAppPackage);
 		
 		if (!toRemove.isEmpty()) {
+			Log.i(getClass().getSimpleName(), "Some incompatible apps are no longer installed. Removing from the list.");
 			incompatibleAppPackages = new HashSet<>(incompatibleAppPackages);  // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
 			incompatibleAppPackages.removeAll(toRemove);
 			applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
