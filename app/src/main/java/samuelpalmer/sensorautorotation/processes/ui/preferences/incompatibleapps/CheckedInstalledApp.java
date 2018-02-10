@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -21,7 +20,7 @@ import java.lang.ref.WeakReference;
 import samuelpalmer.sensorautorotation.R;
 
 
-public class CheckedInstalledApp extends LinearLayout implements Checkable {
+public class CheckedInstalledApp extends LinearLayout {
 	
 	private PackageManager packageManager;
 	
@@ -71,21 +70,6 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 		checkbox = findViewById(R.id.incompatible_apps_item_checkbox);
 	}
 	
-	@Override
-	public void setChecked(boolean checked) {
-		checkbox.setChecked(checked);
-	}
-
-	@Override
-	public boolean isChecked() {
-		return checkbox.isChecked();
-	}
-
-	@Override
-	public void toggle() {
-		checkbox.toggle();
-	}
-
 	public void setItem(InstalledApp item) {
 		if (item != currentItem) {
 			if (currentLoader != null)
@@ -98,9 +82,11 @@ public class CheckedInstalledApp extends LinearLayout implements Checkable {
 			label.setText(item.label);
 			packageName.setText(item.packageName);
 			packageName.setVisibility(label.getText().equals(packageName.getText()) ? GONE : VISIBLE);
-
-			currentItem = item;
 		}
+		
+		// Even if we're changing to the same item, it's possible that the "isIncompatible" flag has since been changed.
+		checkbox.setChecked(item.isIncompatible);
+		currentItem = item;
 	}
 	
 	/**

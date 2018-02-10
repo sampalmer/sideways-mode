@@ -2,15 +2,12 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
-import android.widget.Checkable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,22 +15,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-
 public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
-	
-	private final SharedPreferences prefs;
 	
 	// Only for use in the background thread
 	private final PackageManager packageManager;
 	
-	// Only for use in the UI thread
-	private final ProgressListView list;
+	private final OnLoadedListener loadedListener;
 	
-	public LoadInstalledAppsTask(Context context, ProgressListView v) {
-		prefs = ApplicationSettings.getSharedPreferences(context);
+	public LoadInstalledAppsTask(Context context, OnLoadedListener loadedListener) {
 		packageManager = context.getPackageManager();
-		this.list = v;
+		this.loadedListener = loadedListener;
 	}
 	
 	@NonNull
@@ -54,13 +45,6 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 	}
 	
 	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-		list.list.setVisibility(View.GONE);
-		list.progressBar.setVisibility(View.VISIBLE);
-	}
-
-	@Override
 	protected ArrayList<InstalledApp> doInBackground(Void... params) {
 		if (isCancelled())
 			return null;
@@ -80,7 +64,7 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 				continue;
 			}
 
-			options.add(new InstalledApp(applicationInfo, packageManager));
+			options.add(new InstalledApp(applicationInfo, packageManager, false));
 		}
 
 		Collections.sort(options, new InstalledAppComparator());
@@ -90,41 +74,11 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 	@Override
 	protected void onPostExecute(final ArrayList<InstalledApp> result) {
 		super.onPostExecute(null);
-
-		list.adapter.addAll(result);
-
-		//TODO: Maybe move all of this setting code somewhere else?
-		Set<String> incompatibleAppPackages = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-		for (int i = 0; i < result.size(); ++i) {
-			InstalledApp app = result.get(i);
-			if (incompatibleAppPackages.contains(app.packageName))
-				list.list.setItemChecked(i, true);
-		}
-		
-		list.list.setOnItemClickListener((parent, view, position, id) -> {
-			boolean checked = ((Checkable)view).isChecked();
-			String packageName = result.get(position).packageName;
-			
-			Set<String> incompatibleAppPackages1 = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-			incompatibleAppPackages1 = new HashSet<>(incompatibleAppPackages1); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
-			
-			if (checked)
-				incompatibleAppPackages1.add(packageName);
-			else
-				incompatibleAppPackages1.remove(packageName);
-			
-			prefs
-				.edit()
-				.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages1)
-				.apply();
-		});
-
-		list.progressBar.setVisibility(View.GONE);
-		list.list.setVisibility(View.VISIBLE);
+		loadedListener.loaded(result);
 	}
-
-	@Override
-	protected void onCancelled(ArrayList<InstalledApp> installedApps) {
-		list.progressBar.setVisibility(View.GONE);
+	
+	public interface OnLoadedListener {
+		void loaded(ArrayList<InstalledApp> result);
 	}
+	
 }

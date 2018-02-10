@@ -8,11 +8,13 @@ class InstalledApp {
 
 	public final String packageName;
 	public final CharSequence label;
+	public boolean isIncompatible;
 	private final ApplicationInfo app;
-
-	public InstalledApp(ApplicationInfo app, PackageManager packageManager) {
+	
+	public InstalledApp(ApplicationInfo app, PackageManager packageManager, boolean isIncompatible) {
 		packageName = app.packageName;
 		label = app.loadLabel(packageManager);
+		this.isIncompatible = isIncompatible;
 		this.app = app;
 	}
 	
