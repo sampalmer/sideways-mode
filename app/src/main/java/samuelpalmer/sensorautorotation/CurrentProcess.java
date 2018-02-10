@@ -1,8 +1,11 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
@@ -105,6 +108,22 @@ public class CurrentProcess extends Application {
 			applicationSettings.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 			
 			/*
+				We need to remove apps from the incompatible apps list if they are disabled or uninstalled.
+				
+				Ideally, we would register broadcast receivers in the manifest so we get notified even when
+				the UI process isn't running. However, Android O's background execution limits
+				prevent us from picking up some relevant broadcasts. So we'll just have to make
+				do with what we've got.
+				
+				See https://developer.android.com/about/versions/oreo/background.html#broadcasts.
+			 */
+			IntentFilter appMaybeUninstalled = new IntentFilter();
+			appMaybeUninstalled.addAction(Intent.ACTION_PACKAGE_CHANGED);
+			appMaybeUninstalled.addAction(Intent.ACTION_PACKAGE_REMOVED);
+			appMaybeUninstalled.addDataScheme("package");
+			registerReceiver(appMaybeUninstalledReceiver, appMaybeUninstalled);
+			
+			/*
 				There might be some apps in the incompatible apps list that are not installed on this device.
 				For example:
 				* The user has done a config restore onto a different device, so a different set of apps is installed
@@ -133,6 +152,18 @@ public class CurrentProcess extends Application {
 		}
 	};
 	
+	private final BroadcastReceiver appMaybeUninstalledReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean isReplacement = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+			if (isReplacement)
+				return;
+			
+			SharedPreferences applicationSettings = ApplicationSettings.getSharedPreferences(CurrentProcess.this);
+			removeUninstalledIncompatibleApps(applicationSettings);
+		}
+	};
+	
 	private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
 		Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(getPackageManager(), null);
 		Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
@@ -144,7 +175,7 @@ public class CurrentProcess extends Application {
 		
 		if (!toRemove.isEmpty()) {
 			Log.i(getClass().getSimpleName(), "Some incompatible apps are no longer installed. Removing from the list.");
-			incompatibleAppPackages = new HashSet<>(incompatibleAppPackages);  // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+			incompatibleAppPackages = new HashSet<>(incompatibleAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
 			incompatibleAppPackages.removeAll(toRemove);
 			applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
 		}
