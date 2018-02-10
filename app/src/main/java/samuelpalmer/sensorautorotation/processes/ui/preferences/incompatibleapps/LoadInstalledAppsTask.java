@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Checkable;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
+public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
 	
 	private final SharedPreferences prefs;
 	
@@ -34,7 +35,24 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		packageManager = context.getPackageManager();
 		this.list = v;
 	}
-
+	
+	@NonNull
+	public static Set<String> getInstalledPackages(PackageManager packageManager) {
+		//Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
+		//http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
+		Set<String> installedPackageNames = new HashSet<>();
+		for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
+			Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+			mainIntent.addCategory(category);
+			
+			List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+			for (ResolveInfo resolveInfo : resolveInfos)
+				installedPackageNames.add(resolveInfo.activityInfo.packageName);
+		}
+		
+		return installedPackageNames;
+	}
+	
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
@@ -47,20 +65,7 @@ class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<Installed
 		if (isCancelled())
 			return null;
 
-		//Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
-		//http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
-		Set<String> installedPackageNames = new HashSet<>();
-		for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
-			if (isCancelled())
-				return null;
-
-			Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-			mainIntent.addCategory(category);
-
-			List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
-			for (ResolveInfo resolveInfo : resolveInfos)
-				installedPackageNames.add(resolveInfo.activityInfo.packageName);
-		}
+		Set<String> installedPackageNames = getInstalledPackages(packageManager);
 
 		ArrayList<InstalledApp> options = new ArrayList<>();
 		for (String installedPackage : installedPackageNames) {

@@ -10,9 +10,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
@@ -91,11 +96,21 @@ public class CurrentProcess extends Application {
 		Upgrader.upgradeIfNecessary(this);
 		
 		if (!isServiceProcess(this)) {
+			SharedPreferences applicationSettings = ApplicationSettings.getSharedPreferences(this);
+			
 			/*
 			  Automatically pushes changes to user preferences from the UI process to the service process.
 			  This ensures preference changes made by the user appear to instantly take effect.
 			 */
-			ApplicationSettings.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+			applicationSettings.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+			
+			/*
+				There might be some apps in the incompatible apps list that are not installed on this device.
+				For example:
+				* The user has done a config restore onto a different device, so a different set of apps is installed
+				* This app has just been re-installed and is using a backed-up config from the last time it was installed
+			 */
+			removeUninstalledIncompatibleApps(applicationSettings);
 			
 			AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 		}
@@ -117,5 +132,21 @@ public class CurrentProcess extends Application {
 			new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync(CurrentProcess.this)).send(CurrentProcess.this);
 		}
 	};
+	
+	private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
+		Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(getPackageManager());
+		Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+		
+		Set<String> toRemove = new HashSet<>();
+		for (String incompatibleAppPackage : incompatibleAppPackages)
+			if (!installedPackageNames.contains(incompatibleAppPackage))
+				toRemove.add(incompatibleAppPackage);
+		
+		if (!toRemove.isEmpty()) {
+			incompatibleAppPackages = new HashSet<>(incompatibleAppPackages);  // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+			incompatibleAppPackages.removeAll(toRemove);
+			applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
+		}
+	}
 	
 }
