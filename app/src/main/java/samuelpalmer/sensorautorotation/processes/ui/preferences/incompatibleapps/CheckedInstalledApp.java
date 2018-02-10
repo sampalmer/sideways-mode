@@ -138,6 +138,7 @@ public class CheckedInstalledApp extends LinearLayout {
 			
 			CheckedInstalledApp listItem = listItemReference.get();
 			if (listItem != null) {
+				// It's possible that this item has since been repurposed, which would make the loaded icon irrelevant
 				if (installedApp == listItem.currentItem) {
 					listItem.iconProgress.setVisibility(View.GONE);
 					listItem.icon.setImageDrawable(drawable);

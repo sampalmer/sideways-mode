@@ -13,7 +13,11 @@ class InstalledAppComparator implements Comparator<InstalledApp> {
 	
 	@Override
 	public int compare(InstalledApp lhs, InstalledApp rhs) {
-		return collator.compare(lhs.label.toString(), rhs.label.toString());
+		int result = collator.compare(lhs.label.toString(), rhs.label.toString());
+		if (result != 0)
+			return result;
+		
+		return lhs.packageName.compareTo(rhs.packageName);
 	}
 	
 }

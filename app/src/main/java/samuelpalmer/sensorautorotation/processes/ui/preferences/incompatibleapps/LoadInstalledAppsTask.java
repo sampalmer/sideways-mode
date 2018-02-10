@@ -7,10 +7,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,13 +27,16 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 		this.loadedListener = loadedListener;
 	}
 	
+	/**
+	 * @param packageName If set, will limit the results to this package only.
+	 */
 	@NonNull
-	public static Set<String> getInstalledPackages(PackageManager packageManager) {
+	public static Set<String> getInstalledPackages(PackageManager packageManager, @Nullable String packageName) {
 		//Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
 		//http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
 		Set<String> installedPackageNames = new HashSet<>();
 		for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
-			Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+			Intent mainIntent = new Intent(Intent.ACTION_MAIN, null).setPackage(packageName);
 			mainIntent.addCategory(category);
 			
 			List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
@@ -44,30 +47,39 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
 		return installedPackageNames;
 	}
 	
+	/**
+	 * @return {@code null} if the package isn't found.
+	 */
+	@Nullable
+	public static InstalledApp getInstalledApp(PackageManager packageManager, String packageName) {
+		ApplicationInfo applicationInfo;
+		try {
+			applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+		} catch (PackageManager.NameNotFoundException e) {
+			Log.w(LoadInstalledAppsTask.class.getSimpleName(), e);
+			return null;
+		}
+		
+		return  new InstalledApp(applicationInfo, packageManager, false);
+	}
+	
 	@Override
 	protected ArrayList<InstalledApp> doInBackground(Void... params) {
 		if (isCancelled())
 			return null;
 
-		Set<String> installedPackageNames = getInstalledPackages(packageManager);
+		Set<String> installedPackageNames = getInstalledPackages(packageManager, null);
 
 		ArrayList<InstalledApp> options = new ArrayList<>();
 		for (String installedPackage : installedPackageNames) {
 			if (isCancelled())
 				return null;
-
-			ApplicationInfo applicationInfo;
-			try {
-				applicationInfo = packageManager.getApplicationInfo(installedPackage, 0);
-			} catch (PackageManager.NameNotFoundException e) {
-				Log.w(LoadInstalledAppsTask.class.getSimpleName(), e);
-				continue;
-			}
-
-			options.add(new InstalledApp(applicationInfo, packageManager, false));
+			
+			InstalledApp installedApp = getInstalledApp(packageManager, installedPackage);
+			if (installedApp != null)
+				options.add(installedApp);
 		}
-
-		Collections.sort(options, new InstalledAppComparator());
+		
 		return options;
 	}
 
