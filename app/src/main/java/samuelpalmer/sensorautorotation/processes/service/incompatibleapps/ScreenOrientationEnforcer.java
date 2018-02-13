@@ -77,6 +77,15 @@ public class ScreenOrientationEnforcer extends State {
 		return layoutParams;
 	}
 
+	public void setEnforced(boolean newEnforced) {
+		verifyStarted();
+
+		if (newEnforced != isEnforced) {
+			setEnforcedUnconditionally(newEnforced);
+			Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
+		}
+	}
+	
 	/**
 	 * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
 	 * slower, and removing and adding the view is even slower again.
@@ -88,15 +97,6 @@ public class ScreenOrientationEnforcer extends State {
 	 *
 	 * Picking the middle option since it's the fastest one that doesn't have undesired side effects.
 	 */
-	public void setEnforced(boolean newEnforced) {
-		verifyStarted();
-
-		if (newEnforced != isEnforced) {
-			setEnforcedUnconditionally(newEnforced);
-			Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
-		}
-	}
-
 	private void setEnforcedUnconditionally(boolean newEnforced) {
 		isEnforced = newEnforced;
 		int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
