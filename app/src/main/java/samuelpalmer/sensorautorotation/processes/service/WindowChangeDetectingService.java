@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
+import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
@@ -16,7 +17,8 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 public class WindowChangeDetectingService extends AccessibilityService {
 
 	private static final String TAG = WindowChangeDetectingService.class.getSimpleName();
-
+	private boolean wasListening = false;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -76,15 +78,27 @@ public class WindowChangeDetectingService extends AccessibilityService {
 				//Just in case this helps
 				config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
 		}
-
+		
 		setServiceInfo(config);
-
 		Log.i(TAG, "Accessibility service " + ((config.eventTypes == 0) ? "un" : "") + "subscribed for events");
+		
+		if (ServiceRunningStateHolder.isServiceRunning() && !wasListening) {
+			// If we're just starting up, we'll launch a self-closing activity so we can detect which activity the user initially has open.
+			Intent intent = new Intent(this, DummyActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+		
+		wasListening = ServiceRunningStateHolder.isServiceRunning();
 	}
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		if (ServiceRunningStateHolder.isServiceRunning() && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+			if (BuildConfig.DEBUG)
+				// This can be useful for development, but we we skip this in Production since it could be a privacy violation.
+				Log.d(getClass().getSimpleName(), "Window state changed: " + event.getPackageName() + "/" + event.getClassName());
+			
 			ComponentName componentName = ComponentNameExtensions.tryMakeFrom(event);
 			if (componentName != null && isActivity(componentName))
 				ServiceRunningStateHolder.getServiceInstance().activityMonitor.setCurrentActivity(componentName);
