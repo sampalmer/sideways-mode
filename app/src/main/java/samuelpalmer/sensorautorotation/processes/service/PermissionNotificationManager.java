@@ -24,7 +24,15 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-//Note that it's possible that Samsung's app optimization feature might disable the accessibility service, although this might not occur since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272). Hopefully this notification will be sufficient for handling this.
+/**
+ * Issues a notification if the permissions needed for the "Incompatible apps" feature are
+ * missing but required.
+ *
+ * An example where this could be useful is:
+ * Samsung's app optimization feature might disable the accessibility service, although I don't
+ * know whether that is possible since this is a foreground app (https://lastpass.com/support.php?cmd=showfaq&id=9272).
+ * Hopefully this notification will be sufficient for handling that situation.
+ */
 public class PermissionNotificationManager extends State {
 
 	private final NotificationManager notificationManager;
