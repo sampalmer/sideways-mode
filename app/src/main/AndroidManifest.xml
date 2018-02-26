@@ -171,6 +171,9 @@
 		<receiver android:name=".processes.service.api.ApplicationCommandReceiver"
 		          android:process="@string/process_service" />
 
+		<receiver android:name=".processes.service.incompatibleapps.MarkAppAsIncompatibleReceiver"
+		          android:process="@string/process_service" />
+
 		<service
 			android:name=".processes.service.RotationService"
 			android:enabled="true"

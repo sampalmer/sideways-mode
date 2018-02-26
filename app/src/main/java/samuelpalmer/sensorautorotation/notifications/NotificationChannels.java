@@ -21,6 +21,7 @@ public abstract class NotificationChannels {
 	public static final String ID_UPGRADES = "upgrades";
 	public static final String ID_ERRORS = "errors";
 	public static final String ID_PERMISSIONS = "permissions";
+	public static final String ID_INCOMPATIBLE = "incompatible";
 
 	@RequiresApi(api = Build.VERSION_CODES.O)
 	public static void setup(Context context) {
@@ -62,8 +63,16 @@ public abstract class NotificationChannels {
 			NotificationManager.IMPORTANCE_DEFAULT
 		);
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
+		
+		NotificationChannel incompatibleApp = new NotificationChannel(
+			ID_INCOMPATIBLE,
+			context.getText(R.string.notification_channel_incompatible),
+			// Since the user needs to see these straight away to fix incompatibility with the app they're using
+			NotificationManager.IMPORTANCE_HIGH
+		);
+		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+		
+		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission, incompatibleApp);
 		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).createNotificationChannels(channels);
 	}
 	

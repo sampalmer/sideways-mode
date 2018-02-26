@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
@@ -16,6 +18,7 @@ import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
+import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 
 public class DashboardActivity extends DialogActivity {
 	
@@ -27,6 +30,8 @@ public class DashboardActivity extends DialogActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Toast.makeText(this, new FieldConstants<>(ActivityInfo.class, "SCREEN_ORIENTATION_").getName(getRequestedOrientation()), Toast.LENGTH_LONG).show();
 		
 		dialog = new AlertDialog.Builder(this)
 			.setView(R.layout.activity_dashboard)

@@ -27,12 +27,12 @@ public class IncompatibleAppsMonitor extends State {
 	private final Context context;
 	private Set<String> incompatibleAppPackages;
 	
-	public IncompatibleAppsMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
+	public IncompatibleAppsMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager, LockScreenMonitor lockScreenMonitor) {
 		this.context = context;
 		this.activityMonitor = activityMonitor;
 		this.permissionNotificationManager = permissionNotificationManager;
 		orientationEnforcer = new ScreenOrientationEnforcer(this.context);
-		this.lockScreenDetector = new LockScreenMonitor(this.context);
+		this.lockScreenDetector = lockScreenMonitor;
 		prefs = ServiceSettings.getSharedPreferences(this.context);
 	}
 

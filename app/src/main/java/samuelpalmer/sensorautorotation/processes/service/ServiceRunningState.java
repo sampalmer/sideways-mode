@@ -5,9 +5,11 @@ import android.util.Log;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsSuggester;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.DeviceInteractivityMonitor;
+import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -26,12 +28,16 @@ public class ServiceRunningState extends State {
 	final ActivityMonitor activityMonitor;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final AppDisabler appDisabler;
+	private final IncompatibleAppsSuggester incompatibleAppsSuggester;
+	
 	private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 	
 	public ServiceRunningState(RotationService service) {
 		this.service = service;
 		
 		ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
+		LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(service);
+		
 		calculator = new OrientationCalculator(service, screenRotationMonitor);
 		screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
 		runningStateUpdater = new RunningStateUpdater(service, calculator, service);
@@ -39,8 +45,10 @@ public class ServiceRunningState extends State {
 		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
 		activityMonitor = new ActivityMonitor();
-		incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor);
+		incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor, lockScreenMonitor);
 		appDisabler = new AppDisabler(service);
+		incompatibleAppsSuggester = new IncompatibleAppsSuggester(service, activityMonitor, screenRotationMonitor, lockScreenMonitor);
+		
 		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
 	}
 	
@@ -58,6 +66,7 @@ public class ServiceRunningState extends State {
 		activityMonitor.ensureStarted();
 		incompatibleAppsManager.ensureStarted();
 		appDisabler.ensureStarted();
+		incompatibleAppsSuggester.ensureStarted();
 		
 		deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
 		deviceInteractivityListener.update();
@@ -72,6 +81,8 @@ public class ServiceRunningState extends State {
 		ServiceRunningStateHolder.serviceStopped();
 		
 		deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
+		
+		incompatibleAppsSuggester.ensureStopped();
 		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
 		incompatibleAppsManager.ensureStopped();

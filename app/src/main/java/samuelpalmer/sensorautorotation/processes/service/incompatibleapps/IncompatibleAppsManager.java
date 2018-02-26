@@ -7,6 +7,7 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 /**
@@ -22,9 +23,9 @@ public class IncompatibleAppsManager extends State {
 	private final SharedPreferences prefs;
 	private final PermissionNotificationManager permissionNotificationManager;
 	
-	public IncompatibleAppsManager(Context context, ActivityMonitor activityMonitor) {
+	public IncompatibleAppsManager(Context context, ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
 		permissionNotificationManager = new PermissionNotificationManager(context);
-		monitor = new IncompatibleAppsMonitor(context, activityMonitor, permissionNotificationManager);
+		monitor = new IncompatibleAppsMonitor(context, activityMonitor, permissionNotificationManager, lockScreenMonitor);
 		prefs = ServiceSettings.getSharedPreferences(context);
 	}
 

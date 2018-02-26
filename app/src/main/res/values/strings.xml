@@ -101,5 +101,6 @@
 	<string name="notification_channel_upgrades">Upgrade messages</string>
 	<string name="notification_channel_errors">Error messages</string>
 	<string name="notification_channel_permissions">Permission requests</string>
+	<string name="notification_channel_incompatible">Incompatible apps</string>
 
 </resources>

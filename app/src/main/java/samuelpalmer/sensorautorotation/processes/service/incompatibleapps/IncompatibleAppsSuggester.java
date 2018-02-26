@@ -1,0 +1,145 @@
+package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
+
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
+
+import java.util.Collections;
+import java.util.Set;
+
+import samuelpalmer.sensorautorotation.PendingIntentIds;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
+import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
+import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+public class IncompatibleAppsSuggester extends State {
+	
+	private final Context context;
+	private final ActivityMonitor activityMonitor;
+	private final SharedPreferences preferences;
+	private final OverriddenOrientationDetector overriddenOrientationDetector;
+	private final SupportedOrientationsDetector supportedOrientationsDetector;
+	private final NotificationManager notificationManager;
+	
+	private Set<String> incompatibleAppPackages;
+	
+	public IncompatibleAppsSuggester(Context context, ActivityMonitor activityMonitor, ScreenRotationMonitor screenRotationMonitor, LockScreenMonitor lockScreenMonitor) {
+		this.context = context;
+		this.activityMonitor = activityMonitor;
+		preferences = ServiceSettings.getSharedPreferences(context);
+		overriddenOrientationDetector = new OverriddenOrientationDetector(context, screenRotationMonitor, lockScreenMonitor);
+		supportedOrientationsDetector = new SupportedOrientationsDetector(context);
+		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	}
+	
+	@Override
+	protected void start() {
+		preferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+		activityMonitor.onChange.subscribe(activityChanged);
+		overriddenOrientationDetector.subscribe(anythingChanged);
+		supportedOrientationsDetector.subscribe(anythingChanged);
+		
+		loadIncompatibleAppPackages();
+		
+		check();
+	}
+	
+	@Override
+	protected void stop() {
+		supportedOrientationsDetector.unsubscribe(anythingChanged);
+		overriddenOrientationDetector.unsubscribe(anythingChanged);
+		activityMonitor.onChange.unsubscribe(activityChanged);
+		preferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+	}
+	
+	private final SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = (sharedPreferences, key) -> {
+		if (isStarted() && key.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
+			loadIncompatibleAppPackages();
+			check();
+		}
+	};
+	
+	private void loadIncompatibleAppPackages() {
+		incompatibleAppPackages = preferences.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+	}
+	
+	private final EventHandler activityChanged = new EventHandler() {
+		@Override
+		public void update() {
+			overriddenOrientationDetector.reset();
+			supportedOrientationsDetector.reset();
+			check();
+		}
+	};
+	
+	private final EventHandler anythingChanged = this::check;
+	
+	private void check() {
+		if (
+			activityMonitor.currentOrNull() != null // We can't do anything if we don't know which activity is open
+			&&
+			!incompatibleAppPackages.contains(activityMonitor.currentOrNull().getPackageName()) // No point prompting if the app is already marked as incompatible
+			&&
+			overriddenOrientationDetector.overridesOrientation()
+			&&
+			supportedOrientationsDetector.supportsLandscape() && supportedOrientationsDetector.supportsPortrait() // Apps that are locked in the one orientation aren't a problem
+			&&
+			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // This app might looks like it's incompatible if it's open over the top of an incompatible app
+			// TODO: Don't prompt multiple times for the same app
+			// TODO: Don't prompt if the user has asked not to be prompted again for this app
+			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
+		) {
+			PackageManager packageManager = context.getPackageManager();
+			
+			try {
+				ApplicationInfo applicationInfo = packageManager.getApplicationInfo(activityMonitor.currentOrNull().getPackageName(), 0);
+				Intent intent = MarkAppAsIncompatibleReceiver.makeIntent(context, activityMonitor.currentOrNull().getPackageName());
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(context, PendingIntentIds.INCOMPATIBLE_APPS_SUGGESTION, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+				String summary = "Is " + applicationInfo.loadLabel(packageManager) + " incompatible?";
+				
+				// TODO: Stack/group multiple of these notifications so you get one for each incompatible app?
+				NotificationBuilderCompat builder = NotificationBuilderFactory
+					.create(context)
+					.setSmallIcon(R.drawable.notification_error) // TODO: Come up with a suitable icon
+					.setContentTitle(summary)
+					.setContentText("Tap to fix")
+					.setContentIntent(pendingIntent)
+					.setChannelId(NotificationChannels.ID_INCOMPATIBLE)
+//					.setDeleteIntent() // TODO: Don't ask again if user dismisses it?
+					.setTicker(summary) //Helps ensure the user actually notices notification. Only works on Android 4.
+					.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+//					.setCategory() // TODO: Pick a suitable category
+//					.addAction() // TODO: Provide button to not ask again? Not sure if this works on API 14
+					;
+				
+				// TODO: Add a sound and maybe a vibration since the user might be in the middle of a full screen video or something
+				
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
+					// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
+					// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
+					builder.setVibrate(new long[]{});
+				
+				notificationManager.notify(NotificationIds.INCOMPATIBLE, builder.build());
+			} catch (PackageManager.NameNotFoundException e) {
+				Log.w(getClass().getSimpleName(), e); // Don't really need to worry about this; maybe the app got uninstalled or something
+			}
+			
+			// TODO: Automatically cancel the notification if the user adds the app to the incompatible apps list
+			
+		}
+	}
+	
+}
