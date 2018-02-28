@@ -78,7 +78,7 @@ public class PermissionNotificationManager extends State {
 	public void check() {
 		if (needsPermission()) {
 			PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
-			context,
+				context,
 				PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
 				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
