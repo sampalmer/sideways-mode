@@ -80,7 +80,8 @@ public class PermissionNotificationManager extends State {
 			PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
 				context,
 				PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
-				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+				// The user might have opened a child activity, but we need to go to the activity specified here so that the user goes straight to the permission section
+				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
 			
 			Notification notification = NotificationBuilderFactory
