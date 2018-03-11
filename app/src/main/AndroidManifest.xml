@@ -194,7 +194,7 @@
 			/>
 
 		<activity android:name=".processes.service.WaitForActivityDetectionActivity"
-			android:theme="@style/AppTheme.NoDisplay"
+			android:theme="@style/AppTheme.Translucent"
 			android:enabled="true"
 			android:autoRemoveFromRecents="true"
 			android:allowTaskReparenting="true"

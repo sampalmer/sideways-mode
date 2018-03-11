@@ -21,12 +21,16 @@
 	</style>
 
 	<!-- Invisible; activity appears to not exist -->
-	<style name="AppTheme.NoDisplay" parent="android:Theme.Translucent.NoTitleBar">
-		<item name="android:windowContentOverlay">@null</item>
+	<style name="AppTheme.Translucent" parent="android:Theme.Translucent.NoTitleBar">
 		<item name="android:windowIsTranslucent">true</item>
 		<item name="android:windowAnimationStyle">@null</item>
 		<item name="android:windowDisablePreview">true</item>
-		<item name="android:windowNoDisplay">true</item>
+
+		<!-- This ensures the activity doesn't appear as solid-white while it loads. -->
+		<item name="android:windowBackground">@android:color/transparent</item>
+
+		<!-- This must be "false" to ensure the accessibility service picks up the activity on APIs 14 - 22. -->
+		<item name="android:windowNoDisplay">false</item>
 	</style>
 
 	<style name="notification">
