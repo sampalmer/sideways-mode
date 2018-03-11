@@ -181,6 +181,7 @@
 			android:name=".processes.service.DummyActivity"
 			android:theme="@android:style/Theme.NoDisplay"
 			android:enabled="true"
+			android:autoRemoveFromRecents="true"
 			android:allowTaskReparenting="true"
 			android:noHistory="true"
 			android:excludeFromRecents="true"
@@ -193,9 +194,9 @@
 			/>
 
 		<activity android:name=".processes.service.WaitForActivityDetectionActivity"
-			android:autoRemoveFromRecents="true"
 			android:theme="@style/AppTheme.NoDisplay"
 			android:enabled="true"
+			android:autoRemoveFromRecents="true"
 			android:allowTaskReparenting="true"
 			android:noHistory="true"
 			android:excludeFromRecents="true"
