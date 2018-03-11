@@ -48,8 +48,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	protected void onServiceConnected() {
 		super.onServiceConnected();
-		updateServiceInfo();
 		Log.i(TAG, "Accessibility service connected");
+		updateServiceInfo();
 	}
 
 	@Override
