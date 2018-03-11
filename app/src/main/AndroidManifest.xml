@@ -192,6 +192,21 @@
 			android:process="@string/process_service"
 			/>
 
+		<activity android:name=".processes.service.WaitForActivityDetectionActivity"
+			android:autoRemoveFromRecents="true"
+			android:theme="@style/AppTheme.NoDisplay"
+			android:enabled="true"
+			android:allowTaskReparenting="true"
+			android:noHistory="true"
+			android:excludeFromRecents="true"
+			android:alwaysRetainTaskState="false"
+			android:stateNotNeeded="true"
+			android:clearTaskOnLaunch="true"
+			android:finishOnTaskLaunch="true"
+			android:taskAffinity=""
+			android:process="@string/process_service"
+		/>
+
 		<!-- The description element is specified here since Google Play seems to require it for the accessibility services disclosure. -->
 		<service
 			android:name=".processes.service.WindowChangeDetectingService"
