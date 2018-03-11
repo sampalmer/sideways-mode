@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 
@@ -41,7 +42,11 @@ public class WaitForActivityDetectionActivity extends Activity {
 		
 		ServiceRunningStateHolder.onStartedOrStopped.subscribe(serviceStartedOrStopped);
 		
-		if (!ServiceRunningStateHolder.isServiceRunning()) {
+		if (!new AccessibilityServiceEnabledStateMonitor(this, WindowChangeDetectingService.class).isEnabled()) {
+			Log.w(TAG, "Accessibility service is turned off. Finishing activity.");
+			finish();
+		}
+		else if (!ServiceRunningStateHolder.isServiceRunning()) {
 			Log.w(TAG, "Service is not running. Finishing activity.");
 			finish();
 		}
