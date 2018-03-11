@@ -75,6 +75,7 @@ public class DashboardActivity extends DialogActivity {
 		popup.show();
 	}
 	
+	@SuppressWarnings("SameReturnValue")
 	private boolean handleMenuItemClick(MenuItem menuItem) {
 		/*
 			The dashboard activity needs to run in its own task that does not show up in the recents screen so it feels like a dialog rather than a full activity.
