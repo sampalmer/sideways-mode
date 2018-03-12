@@ -96,6 +96,14 @@ public class WaitForActivityDetectionActivity extends Activity {
 	}
 	
 	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		// This prevents the activity from animating out when it closes.
+		overridePendingTransition(0, 0);
+	}
+	
+	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (!isFinishing() && event.getAction() == MotionEvent.ACTION_DOWN) {
 			Log.w(TAG, "User touched screen. Finishing activity.");

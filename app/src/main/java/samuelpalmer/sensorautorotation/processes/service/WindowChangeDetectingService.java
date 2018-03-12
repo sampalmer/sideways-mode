@@ -85,7 +85,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		if (ServiceRunningStateHolder.isServiceRunning() && !wasListening) {
 			// If we're just starting up, we'll launch a self-closing activity so we can detect which activity the user initially has open.
 			Intent intent = new Intent(this, WaitForActivityDetectionActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // <!-- DO NOT use FLAG_ACTIVITY_NO_ANIMATION, since that causes a black flicker when the activity starts or finishes on API 27. -->
 			startActivity(intent);
 		}
 		

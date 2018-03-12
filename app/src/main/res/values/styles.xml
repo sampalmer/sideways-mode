@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 	<!-- Base application theme. -->
 	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -21,16 +21,27 @@
 	</style>
 
 	<!-- Invisible; activity appears to not exist -->
-	<style name="AppTheme.Translucent" parent="android:Theme.Translucent.NoTitleBar">
-		<item name="android:windowIsTranslucent">true</item>
-		<item name="android:windowAnimationStyle">@null</item>
-		<item name="android:windowDisablePreview">true</item>
+	<style name="AppTheme.Translucent">
+		<!-- This must be "false" to ensure the accessibility service picks up the the next activity once this one closes on API 27. -->
+		<item name="android:windowIsTranslucent">false</item>
+
+		<!-- *DO NOT* null out the window animation style, since that causes a black flicker when the activity starts or finishes on API 27. -->
+		<!-- <item name="android:windowAnimationStyle">@null</item> -->
+
+		<!-- This must be "false" to ensure the accessibility service picks up the the next activity once this one closes on API 27. -->
+		<item name="android:windowDisablePreview">false</item>
+
+		<!-- This prevents the status bar from animating out when this activity closes. -->
+		<item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
 
 		<!-- This ensures the activity doesn't appear as solid-white while it loads. -->
 		<item name="android:windowBackground">@android:color/transparent</item>
 
 		<!-- This must be "false" to ensure the accessibility service picks up the activity on APIs 14 - 22. -->
 		<item name="android:windowNoDisplay">false</item>
+
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowContentOverlay">@null</item>
 	</style>
 
 	<style name="notification">
