@@ -43,6 +43,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 		if (Build.VERSION.SDK_INT >= 16)
 			return keyguardManager.isKeyguardLocked();
 		else
+			//noinspection deprecation
 			return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 
