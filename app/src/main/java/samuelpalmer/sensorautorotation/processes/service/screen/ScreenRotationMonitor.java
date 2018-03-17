@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -11,6 +12,11 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 
 import static android.content.Context.WINDOW_SERVICE;
 
+/**
+ * Detects when the device's default display's screen rotation changes.
+ * Note that subscribers are not guaranteed to be notified of 180 degree changes
+ * due to OS limitations.
+ */
 public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	
 	private final Context context;
@@ -21,11 +27,16 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 		this.screen = ((WindowManager) context.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		this.context = context;
 		
-		try {
-			changeDetector = new RotationWatcherChangeDetector(this::report, screen);
-		} catch (RotationWatcherNotSupportedException e) {
-			fallback(e);
+		if (Build.VERSION.SDK_INT >= 28) {
+			// Android P doesn't support rotation watchers, so we'll just have to use component callbacks instead.
+			changeDetector = new ComponentCallbacksChangeDetector(context, this::report, screen);
 		}
+		else
+			try {
+				changeDetector = new RotationWatcherChangeDetector(this::report, screen);
+			} catch (RotationWatcherNotSupportedException e) {
+				fallback(e);
+			}
 	}
 
 	public Orientation currentRotation() {
