@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,7 +27,7 @@ public class ScreenOrientationEnforcer extends State {
 	private boolean isEnforced;
 
 	public ScreenOrientationEnforcer(Context context) {
-		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		windows = ContextCompat.getSystemService(context, WindowManager.class);
 		view = new View(context);
 		layout = generateLayout();
 	}

@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -9,8 +10,6 @@ import android.view.WindowManager;
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Detects when the device's default display's screen rotation changes.
@@ -24,7 +23,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	private ChangeDetector changeDetector;
 
 	public ScreenRotationMonitor(Context context) {
-		this.screen = ((WindowManager) context.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+		this.screen = ContextCompat.getSystemService(context, WindowManager.class).getDefaultDisplay();
 		this.context = context;
 		
 		if (Build.VERSION.SDK_INT >= 28) {

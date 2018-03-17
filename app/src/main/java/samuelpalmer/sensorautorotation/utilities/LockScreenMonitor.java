@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 
 	public LockScreenMonitor(Context context) {
 		this.context = context;
-		keyguardManager = (KeyguardManager) this.context.getSystemService(Context.KEYGUARD_SERVICE);
+		keyguardManager = ContextCompat.getSystemService(this.context, KeyguardManager.class);
 	}
 
 	private Boolean isOnLockScreen;
