@@ -3,6 +3,7 @@
 
 	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
 	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
+	<!--suppress AndroidElementNotAllowed -->
 	<samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.PermissionTipViewPreference
 		android:key="incompatibleAppsPermission"
 		android:title="@string/permissions_needed_tip"
