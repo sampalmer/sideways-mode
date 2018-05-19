@@ -43,7 +43,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
 		Class<?>[] watchRotationParameterTypes;
 		
-		if (Build.VERSION.SDK_INT >= 28)
+		if (Build.VERSION.SDK_INT >= 28 || (Build.VERSION.SDK_INT == 27 && Build.VERSION.PREVIEW_SDK_INT > 0))
 			throw new RuntimeException("Android P and higher don't support rotation watchers. Don't use rotation watchers on these versions.");
 		else if (Build.VERSION.SDK_INT >= 26) {
 			// Android O introduces the second parameter, "displayId"

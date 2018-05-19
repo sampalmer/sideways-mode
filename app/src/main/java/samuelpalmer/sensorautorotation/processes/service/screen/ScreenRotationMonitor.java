@@ -26,7 +26,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 		this.screen = ContextCompat.getSystemService(context, WindowManager.class).getDefaultDisplay();
 		this.context = context;
 		
-		if (Build.VERSION.SDK_INT >= 28) {
+		if (Build.VERSION.SDK_INT >= 28 || (Build.VERSION.SDK_INT == 27 && Build.VERSION.PREVIEW_SDK_INT > 0)) {
 			// Android P doesn't support rotation watchers, so we'll just have to use component callbacks instead.
 			changeDetector = new ComponentCallbacksChangeDetector(context, this::report, screen);
 		}
