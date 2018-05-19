@@ -28,6 +28,20 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		addPreferencesFromResource(R.xml.preferences_incompatible_apps);
 		appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+
+		//noinspection ConstantConditions
+		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
+		if (permissionFragment == null) {
+			permissionFragment = new IncompatibleAppsPermissionFragment();
+
+			getFragmentManager()
+					.beginTransaction()
+					.add(permissionFragment, TAG_PERMISSIONS_FRAGMENT)
+					.commit();
+		}
+
+		// This needs to be done before the activity is even created so the tip-view can be hidden without flickering.
+		permissionFragment.initialise(getPreferenceScreen());
 	}
 	
 	@Override
@@ -38,19 +52,6 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 		
 		// Setting the intent here rather than in the XML since the XML-based one requires a hard-coded application id, which won't work since the application id differs based on the build type.
 		appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
-		
-		//noinspection ConstantConditions
-		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
-		if (permissionFragment == null) {
-		    permissionFragment = new IncompatibleAppsPermissionFragment();
-
-			getFragmentManager()
-					.beginTransaction()
-					.add(permissionFragment, TAG_PERMISSIONS_FRAGMENT)
-					.commit();
-		}
-
-		permissionFragment.initialise(getPreferenceScreen());
 	}
 	
 	@Override
