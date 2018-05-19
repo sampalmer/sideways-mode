@@ -10,6 +10,9 @@
 	<!-- For the screen orientation enforcement overlay -->
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+	<!-- To prevent Android from stopping the app while it is running -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
 	<uses-feature
