@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Process;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
@@ -58,6 +59,18 @@ public class CurrentProcess extends Application {
 		// Application.onCreate() is called *after* ContentProvider.onCreate().
 		// However, attachBaseContext() is called before it, which is why this method is used here.
 		Log.i(TAG, "Process created");
+
+		/*
+		 * Sometimes Android makes two instances of Application and its components within the one process.
+		 * When this happens, the whole process is effectively corrupt and unusable, so we'll just kill it
+		 * so it doesn't crash and generate an error report.
+		 *
+		 * https://issuetracker.google.com/issues/36972466#comment14
+		 */
+		if (getResources() == null) {
+			Log.w(TAG, "Process is in a bad state. Killing process.");
+			Process.killProcess(Process.myPid());
+		}
 	}
 	
 	/**
@@ -83,7 +96,7 @@ public class CurrentProcess extends Application {
 				.build()
 			);
 		}
-		
+
 		super.onCreate();
 
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
@@ -94,7 +107,7 @@ public class CurrentProcess extends Application {
 		 */
 		if (Build.VERSION.SDK_INT >= 26)
 			NotificationChannels.setup(this);
-		
+
 		// Must upgrade settings before any settings-related code runs.
 		Upgrader.upgradeIfNecessary(this);
 		
