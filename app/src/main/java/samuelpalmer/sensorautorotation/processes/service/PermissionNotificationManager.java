@@ -43,7 +43,7 @@ public class PermissionNotificationManager extends State {
 	
 	public PermissionNotificationManager(Context context) {
 		this.context = context;
-		notificationManager = ContextCompat.getSystemService(this.context, NotificationManager.class);
+		notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		prefs = ServiceSettings.getSharedPreferences(this.context);
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(this.context, WindowChangeDetectingService.class);

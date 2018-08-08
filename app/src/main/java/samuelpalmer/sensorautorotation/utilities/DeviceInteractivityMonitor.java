@@ -42,7 +42,7 @@ public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
 	}
 	
 	private boolean poll() {
-		PowerManager powerManager = ContextCompat.getSystemService(context, PowerManager.class);
+		PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
 		
 		if (Build.VERSION.SDK_INT >= 20)
 			return powerManager.isInteractive();

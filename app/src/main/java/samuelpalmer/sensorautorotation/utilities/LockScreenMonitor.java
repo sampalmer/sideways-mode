@@ -24,7 +24,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 
 	public LockScreenMonitor(Context context) {
 		this.context = context;
-		keyguardManager = ContextCompat.getSystemService(this.context, KeyguardManager.class);
+		keyguardManager = (KeyguardManager)this.context.getSystemService(Context.KEYGUARD_SERVICE);
 	}
 
 	private Boolean isOnLockScreen;

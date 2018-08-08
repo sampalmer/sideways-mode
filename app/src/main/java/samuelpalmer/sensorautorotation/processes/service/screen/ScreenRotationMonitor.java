@@ -23,7 +23,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
 	private ChangeDetector changeDetector;
 
 	public ScreenRotationMonitor(Context context) {
-		this.screen = ContextCompat.getSystemService(context, WindowManager.class).getDefaultDisplay();
+		this.screen = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		this.context = context;
 		
         try {

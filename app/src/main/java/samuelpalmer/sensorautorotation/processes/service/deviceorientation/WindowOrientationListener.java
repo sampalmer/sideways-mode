@@ -204,7 +204,7 @@ public abstract class WindowOrientationListener {
 	private WindowOrientationListener(Context context, Handler handler, int rate) {
 		this.context = context;
 		mHandler = handler;
-		mSensorManager = ContextCompat.getSystemService(context, SensorManager.class);
+		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mRate = rate;
 		
 		mSensors = getSupportedSensors(mSensorManager);

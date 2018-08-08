@@ -96,7 +96,7 @@ class DiagnosticInfo {
 	public static String sensorDump(Context context) {
 		StringBuilder result = new StringBuilder();
 		
-		SensorManager sensorManager = ContextCompat.getSystemService(context, SensorManager.class);
+		SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 		
 		for (Sensor sensor : sensors) {

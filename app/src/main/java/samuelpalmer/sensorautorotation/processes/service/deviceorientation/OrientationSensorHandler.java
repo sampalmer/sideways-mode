@@ -32,7 +32,7 @@ public class OrientationSensorHandler extends State {
 	private Integer oldBias;
 
 	public static boolean canDetectOrientation(Context context) {
-		SensorManager sensorManager = ContextCompat.getSystemService(context, SensorManager.class);
+		SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		ArrayList<Sensor> supportedSensors = WindowOrientationListener.getSupportedSensors(sensorManager);
 		return !supportedSensors.isEmpty();
 	}

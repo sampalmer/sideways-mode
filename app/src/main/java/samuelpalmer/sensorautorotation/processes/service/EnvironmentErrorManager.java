@@ -35,7 +35,7 @@ public abstract class EnvironmentErrorManager {
 	}
 	
 	public static void clear(Context context) {
-		ContextCompat.getSystemService(context, NotificationManager.class).cancel(NotificationIds.ERROR);
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
 		
 		ServiceSettings
 			.getSharedPreferences(context)
@@ -70,7 +70,7 @@ public abstract class EnvironmentErrorManager {
 		
 		Notification notification = builder.build();
 		
-		ContextCompat.getSystemService(context, NotificationManager.class).notify(NotificationIds.ERROR, notification);
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
 	}
 	
 }

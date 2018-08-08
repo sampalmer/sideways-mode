@@ -69,7 +69,7 @@ public class CurrentProcessNameDetector {
 	private static String getNameFromActivityManager(Context context) {
 		int pid = getPid();
 		
-		for (RunningAppProcessInfo process :  ContextCompat.getSystemService(context, ActivityManager.class).getRunningAppProcesses())
+		for (RunningAppProcessInfo process : ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningAppProcesses())
 			if (process.pid == pid) {
 				String result = process.processName;
 				if (result == null)

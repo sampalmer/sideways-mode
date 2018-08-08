@@ -81,7 +81,7 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 			.setChannelId(NotificationChannels.ID_UPGRADES)
 			.build();
 
-		ContextCompat.getSystemService(context, NotificationManager.class).notify(NotificationIds.UPGRADE, notification);
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
 	}
 	
 }
