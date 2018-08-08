@@ -46,6 +46,7 @@ class ServiceNotification {
  			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)
+			.setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
 			.setPriority(NotificationBuilderCompat.PRIORITY_DEFAULT)
 		;
 		
