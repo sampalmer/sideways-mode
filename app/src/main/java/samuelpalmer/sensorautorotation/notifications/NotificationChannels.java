@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.Arrays;

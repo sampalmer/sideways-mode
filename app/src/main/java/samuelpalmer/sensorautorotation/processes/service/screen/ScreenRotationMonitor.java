@@ -1,8 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;

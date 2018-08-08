@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.utilities;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;

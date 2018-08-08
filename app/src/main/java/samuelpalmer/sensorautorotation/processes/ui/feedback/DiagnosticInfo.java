@@ -7,7 +7,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.LocaleList;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;

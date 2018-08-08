@@ -5,7 +5,8 @@
 		android:installLocation="internalOnly">
 
 	<!-- To disable system rotation, set user rotation -->
-	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS"
+		tools:ignore="ProtectedPermissions" />
 
 	<!-- For the screen orientation enforcement overlay -->
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
