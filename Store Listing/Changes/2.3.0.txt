@@ -1,0 +1,4 @@
+• Added support for Android Pie
+• Reduced app size
+• Fixed bug that caused the app to make a sound when it was started
+• Other minor fixes and improvements
