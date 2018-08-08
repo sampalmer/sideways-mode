@@ -4,6 +4,7 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/caches
 /*/build
 /build
 /.gradle

@@ -3,9 +3,9 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import java.util.Collections;
 
@@ -13,7 +13,10 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 
-public class IncompatibleAppsFragment extends PreferenceFragment {
+/**
+ * @implNote Using compat preferences since built-in ones are deprecated in Android P
+ */
+public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 
 	private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
@@ -22,19 +25,14 @@ public class IncompatibleAppsFragment extends PreferenceFragment {
 	private boolean isStarted;
 	
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		addPreferencesFromResource(R.xml.preferences_incompatible_apps);
-		
-		prefs = ApplicationSettings.getSharedPreferences(getActivity());
 		appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
-		
-		// Setting the intent here rather than in the XML since the XML-based one requires a hard-coded application id, which won't work since the application id differs based on the build type.
-		appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
-		
+
+		//noinspection ConstantConditions
 		IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
 		if (permissionFragment == null) {
-		    permissionFragment = new IncompatibleAppsPermissionFragment();
+			permissionFragment = new IncompatibleAppsPermissionFragment();
 
 			getFragmentManager()
 					.beginTransaction()
@@ -42,7 +40,18 @@ public class IncompatibleAppsFragment extends PreferenceFragment {
 					.commit();
 		}
 
+		// This needs to be done before the activity is even created so the tip-view can be hidden without flickering.
 		permissionFragment.initialise(getPreferenceScreen());
+	}
+	
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		prefs = ApplicationSettings.getSharedPreferences(getActivity());
+		
+		// Setting the intent here rather than in the XML since the XML-based one requires a hard-coded application id, which won't work since the application id differs based on the build type.
+		appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
 	}
 	
 	@Override

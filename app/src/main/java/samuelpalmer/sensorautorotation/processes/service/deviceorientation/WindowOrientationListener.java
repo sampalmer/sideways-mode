@@ -37,6 +37,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -203,7 +204,7 @@ public abstract class WindowOrientationListener {
 	private WindowOrientationListener(Context context, Handler handler, int rate) {
 		this.context = context;
 		mHandler = handler;
-		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+		mSensorManager = ContextCompat.getSystemService(context, SensorManager.class);
 		mRate = rate;
 		
 		mSensors = getSupportedSensors(mSensorManager);

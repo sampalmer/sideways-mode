@@ -6,14 +6,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
 
 import samuelpalmer.sensorautorotation.R;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 public abstract class NotificationChannels {
 
@@ -64,7 +63,7 @@ public abstract class NotificationChannels {
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
 		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).createNotificationChannels(channels);
+		ContextCompat.getSystemService(context, NotificationManager.class).createNotificationChannels(channels);
 	}
 	
 }

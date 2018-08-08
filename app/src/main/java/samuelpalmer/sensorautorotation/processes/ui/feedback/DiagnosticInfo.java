@@ -7,6 +7,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.LocaleList;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -95,7 +96,7 @@ class DiagnosticInfo {
 	public static String sensorDump(Context context) {
 		StringBuilder result = new StringBuilder();
 		
-		SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+		SensorManager sensorManager = ContextCompat.getSystemService(context, SensorManager.class);
 		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 		
 		for (Sensor sensor : sensors) {

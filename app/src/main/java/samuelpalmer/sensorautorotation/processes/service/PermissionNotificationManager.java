@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.ContextCompat;
 
 import java.util.Collections;
 import java.util.Set;
@@ -21,8 +22,6 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Issues a notification if the permissions needed for the "Incompatible apps" feature are
@@ -44,7 +43,7 @@ public class PermissionNotificationManager extends State {
 	
 	public PermissionNotificationManager(Context context) {
 		this.context = context;
-		notificationManager = (NotificationManager) this.context.getSystemService(NOTIFICATION_SERVICE);
+		notificationManager = ContextCompat.getSystemService(this.context, NotificationManager.class);
 		
 		prefs = ServiceSettings.getSharedPreferences(this.context);
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(this.context, WindowChangeDetectingService.class);

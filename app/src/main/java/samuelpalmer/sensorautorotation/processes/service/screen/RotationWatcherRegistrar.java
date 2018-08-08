@@ -42,7 +42,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	@SuppressLint("PrivateApi") // Use of private API is OK here since the code gracefully falls back to another approach on failure
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
 		Class<?>[] watchRotationParameterTypes;
-
+		
 		if (Build.VERSION.SDK_INT >= 26) {
 			// Android O introduces the second parameter, "displayId"
 			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class, int.class /* Cannot be Integer.class; that's different */};
