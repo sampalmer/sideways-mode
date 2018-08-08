@@ -83,6 +83,7 @@
 	<string name="report_problem_problem">What happened?</string>
 	<string name="report_problem_expected">What did you expect to happen?</string>
 	<string name="report_problem_field_missing">This is required</string>
+	<string name="report_problem_field_too_short">Please provide more information</string>
 	<string name="report_problem_send">Send by email</string>
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
 	<string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>

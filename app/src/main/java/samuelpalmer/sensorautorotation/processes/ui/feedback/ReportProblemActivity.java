@@ -149,10 +149,14 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		
 		for (EditText input : inputs) {
 			String text = input.getText().toString().trim();
-			
-			if (text.length() < 5) {
-				// Not using material design errors here because they result in a lot of visual clutter.
+
+			// Not using material design errors here because they result in a lot of visual clutter.
+			if (text.length() == 0) {
 				input.setError(getText(R.string.report_problem_field_missing));
+				isValid = false;
+			}
+			else if (text.length() < 5) {
+				input.setError(getText(R.string.report_problem_field_too_short));
 				isValid = false;
 			}
 			else
