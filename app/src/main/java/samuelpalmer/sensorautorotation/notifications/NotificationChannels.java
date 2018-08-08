@@ -29,15 +29,16 @@ public abstract class NotificationChannels {
 			ID_CONTROLS,
 			context.getText(R.string.notification_channel_controls),
 			/*
-			 * Using normal importance since the user needs to:
-			 * 1. Know that everything will be rotated sideways
-			 * 2. Have easy access to the controls in the notification
+			 * The notification helps keep the user aware that the display contents are sideways
+			 * while also allowing them to easily control the app. However, using an importance of
+			 * "default" or higher causes a sound to be played, which isn't appropriate for this
+			 * notification, so I've chosen the next best option, "low".
 			 */
-			NotificationManager.IMPORTANCE_DEFAULT
+			NotificationManager.IMPORTANCE_LOW
 		);
 		controls.setShowBadge(false); // This isn't needed, but it makes it clearer to the user that the service notification won't show as a badge.
 		controls.setLockscreenVisibility(Notification.VISIBILITY_SECRET); // Since this notification isn't really relevant on a typical lock screen
-		
+
 		NotificationChannel upgrades = new NotificationChannel(
 			ID_UPGRADES,
 			context.getText(R.string.notification_channel_upgrades),
