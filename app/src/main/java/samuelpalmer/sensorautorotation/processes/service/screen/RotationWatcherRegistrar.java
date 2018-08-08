@@ -43,9 +43,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	private RotationWatcherRegistrar() throws RotationWatcherNotSupportedException {
 		Class<?>[] watchRotationParameterTypes;
 		
-		if (Build.VERSION.SDK_INT >= 28)
-			throw new RuntimeException("Android P and higher don't support rotation watchers. Don't use rotation watchers on these versions.");
-		else if (Build.VERSION.SDK_INT >= 26) {
+		if (Build.VERSION.SDK_INT >= 26) {
 			// Android O introduces the second parameter, "displayId"
 			watchRotationParameterTypes = new Class<?>[]{IRotationWatcher.class, int.class /* Cannot be Integer.class; that's different */};
 			typedWatchRotationArguments = new Object[]{screenRotationChanged, Display.DEFAULT_DISPLAY};
