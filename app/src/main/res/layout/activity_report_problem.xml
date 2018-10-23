@@ -41,7 +41,8 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_reproduce"
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			/>
+			android:importantForAutofill="no"
+			tools:ignore="UnusedAttribute" />
 
 		<android.widget.Space
 			android:layout_width="match_parent"
@@ -53,7 +54,8 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_problem"
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			/>
+			android:importantForAutofill="no"
+			tools:ignore="UnusedAttribute" />
 
 		<android.widget.Space
 			android:layout_width="match_parent"
@@ -65,6 +67,8 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/report_problem_expected"
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+			android:importantForAutofill="no"
+			tools:ignore="UnusedAttribute"
 			/>
 
 		<android.widget.Space

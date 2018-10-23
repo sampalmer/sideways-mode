@@ -101,6 +101,9 @@ public class PermissionNotificationManager extends State {
 	private boolean needsPermission() {
 		if (isRunning) {
 			Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+			assert incompatibleAppPackages != null;
+
+			//noinspection RedundantIfStatement
 			if (!incompatibleAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
 				return true;
 		}

@@ -40,7 +40,7 @@ public class ScreenOrientationUpdater extends State {
 	private void propose() {
 		Orientation orientation = calculator.proposedScreenOrientation();
 		
-		if (lastProposed == null || !orientation.equals(lastProposed)) {
+		if (!orientation.equals(lastProposed)) {
 			lastProposed = orientation;
 			screen.propose(orientation);
 		}

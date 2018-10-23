@@ -59,7 +59,7 @@ public class Email {
 		// Needed to customise the chooser dialog title since it might default to "Share with"
 		// Note that the chooser will still be skipped if only one app is matched
 		return Intent.createChooser(emailAppIntents.remove(0), chooserTitle)
-			.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[emailAppIntents.size()]))
+			.putExtra(Intent.EXTRA_INITIAL_INTENTS, emailAppIntents.toArray(new Parcelable[0]))
 		;
 	}
 

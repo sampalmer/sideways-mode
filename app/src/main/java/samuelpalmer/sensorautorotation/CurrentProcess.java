@@ -180,7 +180,8 @@ public class CurrentProcess extends Application {
 	private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
 		Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(getPackageManager(), null);
 		Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-		
+		assert incompatibleAppPackages != null;
+
 		Set<String> toRemove = new HashSet<>();
 		for (String incompatibleAppPackage : incompatibleAppPackages)
 			if (!installedPackageNames.contains(incompatibleAppPackage))

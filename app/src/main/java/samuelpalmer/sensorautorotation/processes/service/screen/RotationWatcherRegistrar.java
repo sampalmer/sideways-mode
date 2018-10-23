@@ -72,9 +72,11 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		try {
 			return windowManagerService.getClass().getMethod("removeRotationWatcher", IRotationWatcher.class);
 		}
-		catch (NoSuchMethodException ignored) {
+		catch (NoSuchMethodException ex) {
 			if (Build.VERSION.SDK_INT >= 18)
-				Log.w(RotationWatcherRegistrar.class.getSimpleName(), ignored);
+				// The Android source code indicates that the method exists in these versions of the OS
+				// so it's odd that it wasn't found, so we'd better log it.
+				Log.w(RotationWatcherRegistrar.class.getSimpleName(), ex);
 
 			return null;
 		}
@@ -85,6 +87,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 		if (!subscribed) { //Might already be subscribed since unsubscription is impossible on older Android versions
 			Object watchResult;
 			try {
+				//noinspection JavaReflectionInvocation
 				watchResult = watchRotation.invoke(windowManagerService, typedWatchRotationArguments);
 			} catch (IllegalAccessException e) {
 				throw new RotationWatcherNotSupportedException(e);
@@ -139,7 +142,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 
 	private final IRotationWatcher screenRotationChanged = new IRotationWatcher.Stub() {
 		@Override
-		public void onRotationChanged(final int rotation) throws RemoteException {
+		public void onRotationChanged(final int rotation) {
 			if (BuildConfig.DEBUG)
 				Log.d(RotationWatcherChangeDetector.class.getSimpleName(), "Got rotation change: " + rotation);
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import androidx.core.content.pm.PackageInfoCompat;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.FullScreenDialogActivity;
 import samuelpalmer.sensorautorotation.utilities.Email;
@@ -105,8 +106,8 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		}
 		
 		String subject = getString(R.string.email_problem_subject, getText(R.string.app_name_full), appInfo.versionName);
-		
-		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
+
+		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, PackageInfoCompat.getLongVersionCode(appInfo));
 		String body = String.format(
 			"App version:\n%s\n\nWhat I did: %s\nWhat happened: %s\nWhat I expected: %s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
 			fullAppVersion,

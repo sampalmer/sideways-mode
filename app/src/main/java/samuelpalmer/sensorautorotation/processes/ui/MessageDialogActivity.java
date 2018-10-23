@@ -2,14 +2,16 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import androidx.fragment.app.DialogFragment;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -37,8 +39,8 @@ public class MessageDialogActivity extends DialogActivity {
 		if (extras == null)
 			throw new RuntimeException("No extras specified");
 
-		if (getFragmentManager().findFragmentByTag(TAG) == null)
-			MessageDialogFragment.newInstance(extras).show(getFragmentManager(), TAG);
+		if (getSupportFragmentManager().findFragmentByTag(TAG) == null)
+			MessageDialogFragment.newInstance(extras).show(getSupportFragmentManager(), TAG);
 	}
 
 	public static class MessageDialogFragment extends DialogFragment {
@@ -49,6 +51,7 @@ public class MessageDialogActivity extends DialogActivity {
 			return frag;
 		}
 
+		@NonNull
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			Dialog result = new AlertDialog.Builder(getActivity())

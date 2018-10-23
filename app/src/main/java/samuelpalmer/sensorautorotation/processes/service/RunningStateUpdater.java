@@ -38,7 +38,7 @@ public class RunningStateUpdater extends State {
 		public void update() {
 			ApplicationStatus.RunningState runningState = calculator.runningState();
 
-			if (lastRunningState == null || !runningState.equals(lastRunningState)) {
+			if (!runningState.equals(lastRunningState)) {
 				Notification notification = notificationBuilder.build(runningState);
 				
 				// Running the service in the foreground reduces the chance of the process being killed.

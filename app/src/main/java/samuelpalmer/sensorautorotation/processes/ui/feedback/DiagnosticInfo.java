@@ -84,8 +84,9 @@ class DiagnosticInfo {
 		finally {
 			try {
 				reader.close();
-			} catch (IOException ignored) {
-				Log.w(DiagnosticInfo.class.getSimpleName(), ignored);
+			} catch (IOException ex) {
+				// No big deal if we can't close the stream. At least we managed to get the data out of it.
+				Log.w(DiagnosticInfo.class.getSimpleName(), ex);
 			}
 		}
 

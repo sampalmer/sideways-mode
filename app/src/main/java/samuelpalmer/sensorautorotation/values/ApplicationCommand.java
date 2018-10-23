@@ -71,7 +71,7 @@ public class ApplicationCommand {
 		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
 		if (incompatibleAppPackages != null)
-			result.putExtra(null, incompatibleAppPackages.toArray(new String[incompatibleAppPackages.size()]));
+			result.putExtra(null, incompatibleAppPackages.toArray(new String[0]));
 			
 		BroadcastKillFix.apply(result);
 		return result;

@@ -8,6 +8,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import java.util.Collections;
+import java.util.Set;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -81,7 +82,9 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 	};
 
 	private void updateAppsSummary() {
-		final int quantity = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()).size();
+		Set<String> incompatibleApps = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+		assert incompatibleApps != null;
+		final int quantity = incompatibleApps.size();
 		final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
 		appsPreference.setSummary(quantityString);
 	}
