@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	>
 
 	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
 	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
+	<!-- Turning off "iconSpaceReserved" since it is on by default as of Support Library 28.0.0 -->
 	<!--suppress AndroidElementNotAllowed -->
 	<samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.PermissionTipViewPreference
 		android:key="incompatibleAppsPermission"
 		android:title="@string/permissions_needed_tip"
 		android:persistent="false"
 		android:order="0"
+		app:iconSpaceReserved="false"
 		/>
 
 	<Preference
@@ -17,6 +22,7 @@
 		android:persistent="false"
 	    android:selectable="false"
 		android:order="1"
+		app:iconSpaceReserved="false"
 		/>
 
 	<Preference
