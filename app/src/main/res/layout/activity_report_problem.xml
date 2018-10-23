@@ -43,7 +43,7 @@
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
 			/>
 
-		<androidx.legacy.widget.Space
+		<android.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
@@ -55,7 +55,7 @@
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
 			/>
 
-		<androidx.legacy.widget.Space
+		<android.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
@@ -67,7 +67,7 @@
 			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
 			/>
 
-		<androidx.legacy.widget.Space
+		<android.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
