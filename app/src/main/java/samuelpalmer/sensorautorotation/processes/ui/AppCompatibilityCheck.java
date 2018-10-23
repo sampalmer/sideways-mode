@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;

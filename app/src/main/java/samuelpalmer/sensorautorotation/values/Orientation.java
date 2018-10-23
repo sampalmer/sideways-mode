@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.values;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 

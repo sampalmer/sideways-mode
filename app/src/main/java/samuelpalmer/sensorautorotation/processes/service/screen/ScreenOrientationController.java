@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
 

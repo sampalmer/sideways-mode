@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.utilities.State;

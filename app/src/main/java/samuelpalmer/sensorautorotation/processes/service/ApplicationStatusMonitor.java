@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;

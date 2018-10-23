@@ -10,8 +10,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 
 import java.util.Collections;

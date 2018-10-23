@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.values;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
