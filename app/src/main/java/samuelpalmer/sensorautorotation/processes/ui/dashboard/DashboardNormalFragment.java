@@ -4,8 +4,11 @@ import android.app.PendingIntent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -37,7 +40,7 @@ import samuelpalmer.sensorautorotation.values.UserSide;
  * The main content of the dashboard. This fragment requires the application status to be available.
  */
 public class DashboardNormalFragment extends Fragment {
-	
+
 	private CoordinatorLayout snackbarContainer;
 	private ProgressBar progressBar;
 	private ViewGroup statusContainer;
@@ -152,7 +155,11 @@ public class DashboardNormalFragment extends Fragment {
 			// TODO: In each callback, check that everything is still in a valid state before proceeding
 
 			DashboardActivity activity = (DashboardActivity) getActivity();
-			TapTarget leftButtonTarget = TapTarget.forView(leftSideButton, "Getting started", "When you lie you on your side, tell Sideways Mode which side you're on");
+			TapTarget leftButtonTarget = TapTarget.forView(
+					leftSideButton,
+					"Lying down",
+					"When you lie down, tell Sideways Mode which side you're on.");
+
 			TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
 				@Override
 				public void onTargetCancel(TapTargetView view) {
@@ -172,22 +179,21 @@ public class DashboardNormalFragment extends Fragment {
 
 						// Wait for the popup menu to appear
 						new Handler().postDelayed(() -> {
-							View incompatibleAppsMenuItemText = getMenuItemText(activity, R.id.action_incompatible_apps);
-							View uninstallMenuItemText = getMenuItemText(activity, R.id.action_uninstall);
+							Menu menu = activity.popup.getMenu();
 
-							ViewGroup.LayoutParams layoutParams;
+							DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-							layoutParams = incompatibleAppsMenuItemText.getLayoutParams();
-							layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-							incompatibleAppsMenuItemText.setLayoutParams(layoutParams);
+							TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
+									menu.findItem(R.id.action_incompatible_apps),
+									displayMetrics,
+									"Use your favourite apps",
+									"If an app doesn't rotate correctly, add it here to fix it.");
 
-							layoutParams = uninstallMenuItemText.getLayoutParams();
-							layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-							uninstallMenuItemText.setLayoutParams(layoutParams);
-
-							TapTarget incompatibleAppsTarget = TapTarget.forView(incompatibleAppsMenuItemText, "Some apps don't work with Sideways Mode", "If an app doesn't rotate correctly, add it here to fix it")
-									.targetRadius(70);
-							TapTarget uninstallTarget = TapTarget.forView(uninstallMenuItemText, "Don't want Sideways Mode?", "If you decide to uninstall Sideways Mode, uninstall it here so the screen doesn't get stuck");
+							TapTarget uninstallTarget = makeMenuItemTapTarget(
+									menu.findItem(R.id.action_uninstall),
+									displayMetrics,
+									"Don't want Sideways Mode?",
+									"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
 
 							new TapTargetSequence(activity.dialog)
 									.continueOnCancel(true)
@@ -196,7 +202,7 @@ public class DashboardNormalFragment extends Fragment {
 										public void onSequenceFinish() {
 											new Handler().postDelayed(() -> {
 												activity.popup.dismiss();
-											}, 500);
+											}, 1000);
 										}
 
 										@Override
@@ -207,20 +213,40 @@ public class DashboardNormalFragment extends Fragment {
 									})
 									.targets(incompatibleAppsTarget, uninstallTarget)
 									.start();
-						}, 500);
+						}, 1000);
 					}, 500);
 				}
 			});
 		}
 	}
 
-	private View getMenuItemText(DashboardActivity activity, int menuItem) {
+	private TapTarget makeMenuItemTapTarget(MenuItem menuItem, DisplayMetrics displayMetrics, String title, String description) {
+		View textView = getMenuItemText(menuItem);
+
+		ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+		layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+		textView.setLayoutParams(layoutParams);
+
+		int textWidthPx = textView.getWidth();
+		float textWidthDp = textWidthPx / displayMetrics.density;
+		int textRadiusDp = (int) Math.ceil(textWidthDp / 2.0f);
+		int standardTapTargetRadiusDp = 44;
+		int targetRadius = Math.max(textRadiusDp, standardTapTargetRadiusDp);
+
+		// TODO: Get this to use the right radius for the "Uninstall" menu item, since it's currently too big. This is probably caused by the "wrap_content" change not having applied yet.
+		return TapTarget
+				.forView(textView, title, description)
+				.targetRadius(targetRadius);
+	}
+
+	private View getMenuItemText(MenuItem menuItem) {
 		View targetMenuItemText = null;
 
 		List<View> windowManagerViews = getWindowManagerViews();
 		for (View root : windowManagerViews) {
-			if (targetMenuItemText == null)
-				targetMenuItemText = findViewByText(root, activity.popup.getMenu().findItem(menuItem).getTitle());
+			if (targetMenuItemText == null) {
+				targetMenuItemText = findViewByText(root, menuItem.getTitle());
+			}
 		}
 		return targetMenuItemText;
 	}
