@@ -2,13 +2,13 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
@@ -19,11 +19,13 @@ import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
 public class DashboardActivity extends DialogActivity {
 	
-	private AlertDialog dialog;
+	public AlertDialog dialog;
 	
 	private ViewGroup normalSection;
 	private ViewGroup permissionSection;
-	
+    public ImageButton menuButton;
+	public PopupMenu popup;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,15 +42,19 @@ public class DashboardActivity extends DialogActivity {
 			finish();
 		});
 		dialog.show();
-		
-		ImageButton menuButton = dialog.findViewById(R.id.dashboard_menu);
+
+		menuButton = dialog.findViewById(R.id.dashboard_menu);
 		assert menuButton != null;
-		menuButton.setOnClickListener(this::showMenu);
-		
-		normalSection = dialog.findViewById(R.id.dashboard_normal_contents_container);
+		menuButton.setOnClickListener(v -> popup.show());
+
+		popup = new PopupMenu(this, menuButton);
+        popup.setOnMenuItemClickListener(this::handleMenuItemClick);
+        popup.inflate(R.menu.main);
+
+        normalSection = dialog.findViewById(R.id.dashboard_normal_contents_container);
 		permissionSection = dialog.findViewById(R.id.dashboard_permission_contents_container);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -67,14 +73,7 @@ public class DashboardActivity extends DialogActivity {
 		ViewUtilities.ensureVisibility(normalSection, hasPermission ? View.VISIBLE : View.GONE);
 		ViewUtilities.ensureVisibility(permissionSection, hasPermission ? View.GONE : View.VISIBLE);
 	}
-	
-	private void showMenu(View view) {
-		PopupMenu popup = new PopupMenu(DashboardActivity.this, view);
-		popup.setOnMenuItemClickListener(this::handleMenuItemClick);
-		popup.inflate(R.menu.main);
-		popup.show();
-	}
-	
+
 	@SuppressWarnings("SameReturnValue")
 	private boolean handleMenuItemClick(MenuItem menuItem) {
 		/*

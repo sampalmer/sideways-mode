@@ -1,17 +1,30 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.PendingIntent;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
@@ -132,9 +145,155 @@ public class DashboardNormalFragment extends Fragment {
 				rightSideButton.setSelected(true);
 			
 			updateSnackbar();
+
+			// TODO: Add a pause before launching the tutorial
+			// TODO: Make the entire UI non-interactive during the tutorial
+			// TODO: When locating the menu items, only match against *visible* views
+			// TODO: In each callback, check that everything is still in a valid state before proceeding
+
+			DashboardActivity activity = (DashboardActivity) getActivity();
+			TapTarget leftButtonTarget = TapTarget.forView(leftSideButton, "Get started", "Choose the side you're on to get started");
+			TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
+				@Override
+				public void onTargetCancel(TapTargetView view) {
+					super.onTargetCancel(view);
+					proceed();
+				}
+
+				@Override
+				public void onTargetClick(TapTargetView view) {
+					super.onTargetClick(view);
+					proceed();
+				}
+
+				private void proceed() {
+					new Handler().postDelayed(() -> {
+						activity.popup.show();
+
+						// Wait for the popup menu to appear
+						new Handler().postDelayed(() -> {
+							View incompatibleAppsMenuItemText = getMenuItemText(activity, R.id.action_incompatible_apps);
+							View uninstallMenuItemText = getMenuItemText(activity, R.id.action_uninstall);
+
+							ViewGroup.LayoutParams layoutParams;
+
+							layoutParams = incompatibleAppsMenuItemText.getLayoutParams();
+							layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+							incompatibleAppsMenuItemText.setLayoutParams(layoutParams);
+
+							layoutParams = uninstallMenuItemText.getLayoutParams();
+							layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+							uninstallMenuItemText.setLayoutParams(layoutParams);
+
+							TapTarget incompatibleAppsTarget = TapTarget.forView(incompatibleAppsMenuItemText, "App compatibility", "Some apps, such as YouTube, don't rotate the screen correctly while Sideways Mode is running. Mark them as incompatible to fix this.")
+									.targetRadius(70);
+							TapTarget uninstallTarget = TapTarget.forView(uninstallMenuItemText, "Don't want Sideways Mode?", "If you decide to uninstall Sideways Mode, uninstall it from here so the screen doesn't get stuck");
+
+							new TapTargetSequence(activity.dialog)
+									.continueOnCancel(true)
+									.listener(new TapTargetSequence.Listener() {
+										@Override
+										public void onSequenceFinish() {
+											new Handler().postDelayed(() -> {
+												activity.popup.dismiss();
+											}, 500);
+										}
+
+										@Override
+										public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {}
+
+										@Override
+										public void onSequenceCanceled(TapTarget lastTarget) {}
+									})
+									.targets(incompatibleAppsTarget, uninstallTarget)
+									.start();
+						}, 500);
+					}, 500);
+				}
+			});
 		}
 	}
-	
+
+	private View getMenuItemText(DashboardActivity activity, int menuItem) {
+		View targetMenuItemText = null;
+
+		List<View> windowManagerViews = getWindowManagerViews();
+		for (View root : windowManagerViews) {
+			if (targetMenuItemText == null)
+				targetMenuItemText = findViewByText(root, activity.popup.getMenu().findItem(menuItem).getTitle());
+		}
+		return targetMenuItemText;
+	}
+
+	public static List<View> getWindowManagerViews() {
+		try {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH &&
+					Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+				// get the list from WindowManagerImpl.mViews
+				Class wmiClass = Class.forName("android.view.WindowManagerImpl");
+				Object wmiInstance = wmiClass.getMethod("getDefault").invoke(null);
+
+				return viewsFromWM(wmiClass, wmiInstance);
+
+			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+				// get the list from WindowManagerGlobal.mViews
+				Class wmgClass = Class.forName("android.view.WindowManagerGlobal");
+				Object wmgInstance = wmgClass.getMethod("getInstance").invoke(null);
+
+				return viewsFromWM(wmgClass, wmgInstance);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace(); // TODO: Log this properly
+		}
+
+		return new ArrayList<View>();
+	}
+
+	private static List<View> viewsFromWM(Class wmClass, Object wmInstance) throws Exception {
+		Field viewsField = wmClass.getDeclaredField("mViews");
+		viewsField.setAccessible(true);
+		Object views = viewsField.get(wmInstance);
+
+		if (views instanceof List) {
+			return (List<View>) viewsField.get(wmInstance);
+		} else if (views instanceof View[]) {
+			return Arrays.asList((View[])viewsField.get(wmInstance));
+		}
+
+		return new ArrayList<View>();
+	}
+
+
+	private View findViewByText(View view, CharSequence targetText) {
+		Log.d(DashboardNormalFragment.class.getSimpleName(), view.getClass().getSimpleName());
+
+		if (view instanceof TextView)
+		{
+			TextView textView = (TextView) view;
+			CharSequence text = textView.getText();
+			Log.d(DashboardNormalFragment.class.getSimpleName(), "TEXT: " + text);
+
+			if (text.equals(targetText))
+				return view;
+		}
+		else if (view instanceof ViewGroup) {
+			ViewGroup viewGroup = (ViewGroup) view;
+
+			for (int i = 0; i < viewGroup.getChildCount(); ++i) {
+				View childView = viewGroup.getChildAt(i);
+				View result = findViewByText(childView, targetText);
+				if (result != null)
+					return result;
+			}
+		}
+
+		return null;
+	}
+
 	private void updateSnackbar() {
 		if (snackbar == null) {
 			snackbar = Snackbar.make(snackbarContainer, "", Snackbar.LENGTH_INDEFINITE);
