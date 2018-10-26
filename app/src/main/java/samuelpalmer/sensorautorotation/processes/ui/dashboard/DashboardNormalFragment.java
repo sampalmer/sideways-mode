@@ -1,10 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,9 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Field;
@@ -35,6 +32,10 @@ import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
+import uk.co.deanwild.materialshowcaseview.IShowcaseListener;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 /**
  * The main content of the dashboard. This fragment requires the application status to be available.
@@ -156,88 +157,77 @@ public class DashboardNormalFragment extends Fragment {
 			// TODO: See if you can come up with better wording for the "Use your favourite apps" tip
 
 			DashboardActivity activity = (DashboardActivity) getActivity();
-			TapTarget leftButtonTarget = TapTarget.forView(
-					leftSideButton,
-					"Lying down",
-					"When you lie down, tell Sideways Mode which side you're on.");
 
-			TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
-				@Override
-				public void onTargetCancel(TapTargetView view) {
-					super.onTargetCancel(view);
-					proceed();
-				}
+			new MaterialShowcaseView.Builder(activity)
+					.setTarget(leftSideButton)
+					.setDismissText("GOT IT")
+					.setTitleText("Lying down")
+					.setContentText("When you lie down, tell Sideways Mode which side you're on.")
+					.setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+					.singleUse("startButton") // provide a unique ID used to ensure it is only shown once
+					.setListener(new IShowcaseListener() {
+						@Override
+						public void onShowcaseDisplayed(MaterialShowcaseView materialShowcaseView) {
 
-				@Override
-				public void onTargetClick(TapTargetView view) {
-					super.onTargetClick(view);
-					proceed();
-				}
+						}
 
-				private void proceed() {
-					new Handler().postDelayed(() -> {
-						activity.popup.show();
+						@Override
+						public void onShowcaseDismissed(MaterialShowcaseView materialShowcaseView) {
+							new Handler().postDelayed(() -> {
+								activity.popup.show();
 
-						// Wait for the popup menu to appear
-						new Handler().postDelayed(() -> {
-							Menu menu = activity.popup.getMenu();
+								// Wait for the popup menu to appear
+								new Handler().postDelayed(() -> {
+									Menu menu = activity.popup.getMenu();
 
-							DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+									MaterialShowcaseView incompatibleAppsTarget = makeMenuItemTapTarget(
+											activity,
+											menu.findItem(R.id.action_incompatible_apps),
+											"Use your favourite apps",
+											"If an app doesn't rotate correctly, add it here to fix it.");
 
-							TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
-									menu.findItem(R.id.action_incompatible_apps),
-									displayMetrics,
-									"Use your favourite apps",
-									"If an app doesn't rotate correctly, add it here to fix it.");
+									MaterialShowcaseView uninstallTarget = makeMenuItemTapTarget(
+											activity,
+											menu.findItem(R.id.action_uninstall),
+											"Don't want Sideways Mode?",
+											"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
 
-							TapTarget uninstallTarget = makeMenuItemTapTarget(
-									menu.findItem(R.id.action_uninstall),
-									displayMetrics,
-									"Don't want Sideways Mode?",
-									"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
+									ShowcaseConfig config = new ShowcaseConfig();
+									config.setDelay(500); // half second between each showcase view
 
-							new TapTargetSequence(activity.dialog)
-									.continueOnCancel(true)
-									.listener(new TapTargetSequence.Listener() {
+									MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity, "startButton");
+									sequence.setConfig(config);
+									sequence.addSequenceItem(incompatibleAppsTarget);
+									sequence.addSequenceItem(uninstallTarget);
+									sequence.setOnItemDismissedListener(new MaterialShowcaseSequence.OnSequenceItemDismissedListener() {
 										@Override
-										public void onSequenceFinish() {
-											new Handler().postDelayed(() -> {
-												activity.popup.dismiss();
-											}, 1000);
+										public void onDismiss(MaterialShowcaseView materialShowcaseView, int i) {
+											if (materialShowcaseView == uninstallTarget) {
+												new Handler().postDelayed(() -> {
+													activity.popup.dismiss();
+												}, 1000);
+											}
 										}
-
-										@Override
-										public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {}
-
-										@Override
-										public void onSequenceCanceled(TapTarget lastTarget) {}
-									})
-									.targets(incompatibleAppsTarget, uninstallTarget)
-									.start();
-						}, 1000);
-					}, 500);
-				}
-			});
+									});
+									sequence.start();
+								}, 1000);
+							}, 500);
+						}
+					})
+					.show();
 		}
 	}
 
-	private TapTarget makeMenuItemTapTarget(MenuItem menuItem, DisplayMetrics displayMetrics, String title, String description) {
+	private MaterialShowcaseView makeMenuItemTapTarget(Activity activity, MenuItem menuItem, String title, String description) {
 		View textView = getMenuItemText(menuItem);
 
-		ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
-		layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-		textView.setLayoutParams(layoutParams);
-
-		int textWidthPx = textView.getWidth();
-		float textWidthDp = textWidthPx / displayMetrics.density;
-		int textRadiusDp = (int) Math.ceil(textWidthDp / 2.0f);
-		int standardTapTargetRadiusDp = 44;
-		int targetRadius = Math.max(textRadiusDp, standardTapTargetRadiusDp);
-
-		// TODO: Get this to use the right radius for the "Uninstall" menu item, since it's currently too big. This is probably caused by the "wrap_content" change not having applied yet.
-		return TapTarget
-				.forView(textView, title, description)
-				.targetRadius(targetRadius);
+		return new MaterialShowcaseView.Builder(activity)
+				.setTarget(textView)
+				.setDismissText("GOT IT")
+				.setTitleText(title)
+				.setContentText(description)
+				.singleUse("startButton")
+				.build();
 	}
 
 	private View getMenuItemText(MenuItem menuItem) {
