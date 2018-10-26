@@ -153,6 +153,7 @@ public class DashboardNormalFragment extends Fragment {
 			// TODO: Make the entire UI non-interactive during the tutorial
 			// TODO: When locating the menu items, only match against *visible* views
 			// TODO: In each callback, check that everything is still in a valid state before proceeding
+			// TODO: See if you can come up with better wording for the "Use your favourite apps" tip
 
 			DashboardActivity activity = (DashboardActivity) getActivity();
 			TapTarget leftButtonTarget = TapTarget.forView(
