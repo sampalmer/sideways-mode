@@ -152,7 +152,7 @@ public class DashboardNormalFragment extends Fragment {
 			// TODO: In each callback, check that everything is still in a valid state before proceeding
 
 			DashboardActivity activity = (DashboardActivity) getActivity();
-			TapTarget leftButtonTarget = TapTarget.forView(leftSideButton, "Getting started", "When you lie you on your side, choose the side you're on to start Sideways Mode");
+			TapTarget leftButtonTarget = TapTarget.forView(leftSideButton, "Getting started", "When you lie you on your side, tell Sideways Mode which side you're on");
 			TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
 				@Override
 				public void onTargetCancel(TapTargetView view) {
@@ -185,9 +185,9 @@ public class DashboardNormalFragment extends Fragment {
 							layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
 							uninstallMenuItemText.setLayoutParams(layoutParams);
 
-							TapTarget incompatibleAppsTarget = TapTarget.forView(incompatibleAppsMenuItemText, getString(R.string.preference_incompatible_apps_title), "Some apps, such as YouTube, don't rotate the screen correctly while Sideways Mode is on. Mark them as incompatible to fix this.")
+							TapTarget incompatibleAppsTarget = TapTarget.forView(incompatibleAppsMenuItemText, "Some apps don't work with Sideways Mode", "If an app doesn't rotate correctly, add it here to fix it")
 									.targetRadius(70);
-							TapTarget uninstallTarget = TapTarget.forView(uninstallMenuItemText, "Don't want Sideways Mode?", "If you decide to uninstall Sideways Mode, uninstall it from here so the screen doesn't get stuck");
+							TapTarget uninstallTarget = TapTarget.forView(uninstallMenuItemText, "Don't want Sideways Mode?", "If you decide to uninstall Sideways Mode, uninstall it here so the screen doesn't get stuck");
 
 							new TapTargetSequence(activity.dialog)
 									.continueOnCancel(true)
