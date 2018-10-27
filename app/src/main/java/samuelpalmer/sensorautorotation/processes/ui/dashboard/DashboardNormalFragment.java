@@ -148,9 +148,7 @@ public class DashboardNormalFragment extends Fragment {
 			
 			updateSnackbar();
 
-			// TODO: Add a pause before launching the tutorial
 			// TODO: Make the entire UI non-interactive during the tutorial
-			// TODO: When locating the menu items, only match against *visible* views
 			// TODO: In each callback, check that everything is still in a valid state before proceeding
 			// TODO: See if you can come up with better wording for the "Use your favourite apps" tip
 
@@ -280,11 +278,10 @@ public class DashboardNormalFragment extends Fragment {
 		View targetMenuItemText = null;
 
 		List<View> windowManagerViews = getWindowManagerViews();
-		for (View root : windowManagerViews) {
-			if (targetMenuItemText == null) {
+		for (View root : windowManagerViews)
+			if (targetMenuItemText == null)
 				targetMenuItemText = findViewByText(root, menuItem.getTitle());
-			}
-		}
+
 		return targetMenuItemText;
 	}
 
@@ -334,25 +331,26 @@ public class DashboardNormalFragment extends Fragment {
 	private View findViewByText(View view, CharSequence targetText) {
 		Log.d(DashboardNormalFragment.class.getSimpleName(), view.getClass().getSimpleName());
 
-		if (view instanceof TextView)
-		{
-			TextView textView = (TextView) view;
-			CharSequence text = textView.getText();
-			Log.d(DashboardNormalFragment.class.getSimpleName(), "TEXT: " + text);
+		if (view.getVisibility() == View.VISIBLE && view.getWidth() > 0 && view.getHeight() > 0) // Not interested in views that aren't displayed
+			if (view instanceof TextView)
+			{
+				TextView textView = (TextView) view;
+				CharSequence text = textView.getText();
+				Log.d(DashboardNormalFragment.class.getSimpleName(), "TEXT: " + text);
 
-			if (text.equals(targetText))
-				return view;
-		}
-		else if (view instanceof ViewGroup) {
-			ViewGroup viewGroup = (ViewGroup) view;
-
-			for (int i = 0; i < viewGroup.getChildCount(); ++i) {
-				View childView = viewGroup.getChildAt(i);
-				View result = findViewByText(childView, targetText);
-				if (result != null)
-					return result;
+				if (text.equals(targetText))
+					return view;
 			}
-		}
+			else if (view instanceof ViewGroup) {
+				ViewGroup viewGroup = (ViewGroup) view;
+
+				for (int i = 0; i < viewGroup.getChildCount(); ++i) {
+					View childView = viewGroup.getChildAt(i);
+					View result = findViewByText(childView, targetText);
+					if (result != null)
+						return result;
+				}
+			}
 
 		return null;
 	}
