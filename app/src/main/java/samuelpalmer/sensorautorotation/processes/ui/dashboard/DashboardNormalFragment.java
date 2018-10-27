@@ -155,69 +155,94 @@ public class DashboardNormalFragment extends Fragment {
 			// TODO: In each callback, check that everything is still in a valid state before proceeding
 			// TODO: See if you can come up with better wording for the "Use your favourite apps" tip
 
-			DashboardActivity activity = (DashboardActivity) getActivity();
-			TapTarget leftButtonTarget = TapTarget.forView(
-					leftSideButton,
-					"Lying down",
-					"When you lie down, tell Sideways Mode which side you're on.");
-
-			TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
+			new Handler().postDelayed(new Runnable() {
 				@Override
-				public void onTargetCancel(TapTargetView view) {
-					super.onTargetCancel(view);
-					proceed();
-				}
+				public void run() {
+					DashboardActivity activity = (DashboardActivity) getActivity();
+					TapTarget leftButtonTarget = TapTarget.forView(
+							leftSideButton,
+							"Lying down",
+							"When you lie down, tell Sideways Mode which side you're on.");
 
-				@Override
-				public void onTargetClick(TapTargetView view) {
-					super.onTargetClick(view);
-					proceed();
-				}
+					TapTargetView.showFor(activity.dialog, leftButtonTarget, new TapTargetView.Listener() {
+						@Override
+						public void onTargetCancel(TapTargetView view) {
+							super.onTargetCancel(view);
+							proceed();
+						}
 
-				private void proceed() {
-					new Handler().postDelayed(() -> {
-						activity.popup.show();
+						@Override
+						public void onTargetClick(TapTargetView view) {
+							super.onTargetClick(view);
+							proceed();
+						}
 
-						// Wait for the popup menu to appear
-						new Handler().postDelayed(() -> {
-							Menu menu = activity.popup.getMenu();
+						private void proceed() {
+							new Handler().postDelayed(() -> {
+								activity.popup.show();
 
-							DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+								// Wait for the popup menu to appear
+								new Handler().postDelayed(() -> {
+									Menu menu = activity.popup.getMenu();
 
-							TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
-									menu.findItem(R.id.action_incompatible_apps),
-									displayMetrics,
-									"Use your favourite apps",
-									"If an app doesn't rotate correctly, add it here to fix it.");
+									DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-							TapTarget uninstallTarget = makeMenuItemTapTarget(
-									menu.findItem(R.id.action_uninstall),
-									displayMetrics,
-									"Don't want Sideways Mode?",
-									"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
+									TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
+											menu.findItem(R.id.action_incompatible_apps),
+											displayMetrics,
+											"Use your favourite apps",
+											"If an app doesn't rotate correctly, add it here to fix it.");
 
-							new TapTargetSequence(activity.dialog)
-									.continueOnCancel(true)
-									.listener(new TapTargetSequence.Listener() {
-										@Override
-										public void onSequenceFinish() {
-											new Handler().postDelayed(() -> {
-												activity.popup.dismiss();
-											}, 1000);
+									TapTarget uninstallTarget = makeMenuItemTapTarget(
+											menu.findItem(R.id.action_uninstall),
+											displayMetrics,
+											"Don't want Sideways Mode?",
+											"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
+
+									TapTargetView.showFor(activity.dialog, incompatibleAppsTarget, new TapTargetView.Listener() {
+										public void onTargetCancel(TapTargetView view) {
+											super.onTargetCancel(view);
+											proceed();
 										}
 
 										@Override
-										public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {}
+										public void onTargetClick(TapTargetView view) {
+											super.onTargetClick(view);
+											proceed();
+										}
 
-										@Override
-										public void onSequenceCanceled(TapTarget lastTarget) {}
-									})
-									.targets(incompatibleAppsTarget, uninstallTarget)
-									.start();
-						}, 1000);
-					}, 500);
+										private void proceed() {
+											new Handler().postDelayed(new Runnable() {
+												@Override
+												public void run() {
+													TapTargetView.showFor(activity.dialog, uninstallTarget, new TapTargetView.Listener() {
+														public void onTargetCancel(TapTargetView view) {
+															super.onTargetCancel(view);
+															proceed();
+														}
+
+														@Override
+														public void onTargetClick(TapTargetView view) {
+															super.onTargetClick(view);
+															proceed();
+														}
+
+														private void proceed() {
+															new Handler().postDelayed(() -> {
+																activity.popup.dismiss();
+															}, 1000);
+														}
+													});
+												}
+											}, 1000);
+										}
+									});
+								}, 2000);
+							}, 500);
+						}
+					});
 				}
-			});
+			}, 2000);
 		}
 	}
 
