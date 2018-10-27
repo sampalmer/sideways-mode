@@ -237,7 +237,7 @@ public class DashboardNormalFragment extends Fragment {
 											}, 1000);
 										}
 									});
-								}, 2000);
+								}, 1500);
 							}, 500);
 						}
 					});
