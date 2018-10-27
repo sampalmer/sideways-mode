@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -187,54 +186,73 @@ public class DashboardNormalFragment extends Fragment {
 
 									DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-									TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
-											menu.findItem(R.id.action_incompatible_apps),
-											displayMetrics,
-											"Use your favourite apps",
-											"If an app doesn't rotate correctly, add it here to fix it.");
+									View incompatibleAppsTextView = getMenuItemText(menu.findItem(R.id.action_incompatible_apps));
+									View uninstallTextView = getMenuItemText(menu.findItem(R.id.action_uninstall));
 
-									TapTarget uninstallTarget = makeMenuItemTapTarget(
-											menu.findItem(R.id.action_uninstall),
-											displayMetrics,
-											"Don't want Sideways Mode?",
-											"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
+									// Shrinking menu item containers to fit so the tap target matches the text length
+									ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
+									layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+									incompatibleAppsTextView.setLayoutParams(layoutParams);
 
-									TapTargetView.showFor(activity.dialog, incompatibleAppsTarget, new TapTargetView.Listener() {
-										public void onTargetCancel(TapTargetView view) {
-											super.onTargetCancel(view);
-											proceed();
-										}
+									ViewGroup.LayoutParams layoutParams2 = uninstallTextView.getLayoutParams();
+									layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+									uninstallTextView.setLayoutParams(layoutParams2);
 
+									// Need to wait a bit for the above layout change to take effect
+									new Handler().post(new Runnable() {
 										@Override
-										public void onTargetClick(TapTargetView view) {
-											super.onTargetClick(view);
-											proceed();
-										}
+										public void run() {
+											TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
+													displayMetrics,
+													incompatibleAppsTextView,
+													"Use your favourite apps",
+													"If an app doesn't rotate correctly, add it here to fix it.");
 
-										private void proceed() {
-											new Handler().postDelayed(new Runnable() {
-												@Override
-												public void run() {
-													TapTargetView.showFor(activity.dialog, uninstallTarget, new TapTargetView.Listener() {
-														public void onTargetCancel(TapTargetView view) {
-															super.onTargetCancel(view);
-															proceed();
-														}
 
-														@Override
-														public void onTargetClick(TapTargetView view) {
-															super.onTargetClick(view);
-															proceed();
-														}
+											TapTarget uninstallTarget = makeMenuItemTapTarget(
+													displayMetrics,
+													uninstallTextView,
+													"Don't want Sideways Mode?",
+													"If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
 
-														private void proceed() {
-															new Handler().postDelayed(() -> {
-																activity.popup.dismiss();
-															}, 1000);
-														}
-													});
+											TapTargetView.showFor(activity.dialog, incompatibleAppsTarget, new TapTargetView.Listener() {
+												public void onTargetCancel(TapTargetView view) {
+													super.onTargetCancel(view);
+													proceed();
 												}
-											}, 1000);
+
+												@Override
+												public void onTargetClick(TapTargetView view) {
+													super.onTargetClick(view);
+													proceed();
+												}
+
+												private void proceed() {
+													new Handler().postDelayed(new Runnable() {
+														@Override
+														public void run() {
+															TapTargetView.showFor(activity.dialog, uninstallTarget, new TapTargetView.Listener() {
+																public void onTargetCancel(TapTargetView view) {
+																	super.onTargetCancel(view);
+																	proceed();
+																}
+
+																@Override
+																public void onTargetClick(TapTargetView view) {
+																	super.onTargetClick(view);
+																	proceed();
+																}
+
+																private void proceed() {
+																	new Handler().postDelayed(() -> {
+																		activity.popup.dismiss();
+																	}, 1000);
+																}
+															});
+														}
+													}, 1000);
+												}
+											});
 										}
 									});
 								}, 1500);
@@ -246,20 +264,13 @@ public class DashboardNormalFragment extends Fragment {
 		}
 	}
 
-	private TapTarget makeMenuItemTapTarget(MenuItem menuItem, DisplayMetrics displayMetrics, String title, String description) {
-		View textView = getMenuItemText(menuItem);
-
-		ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
-		layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-		textView.setLayoutParams(layoutParams);
-
+	private TapTarget makeMenuItemTapTarget(DisplayMetrics displayMetrics, View textView, String title, String description) {
 		int textWidthPx = textView.getWidth();
 		float textWidthDp = textWidthPx / displayMetrics.density;
-		int textRadiusDp = (int) Math.ceil(textWidthDp / 2.0f);
+		int textRadiusDp = (int) Math.ceil(textWidthDp / 2.0f) + 8;
 		int standardTapTargetRadiusDp = 44;
 		int targetRadius = Math.max(textRadiusDp, standardTapTargetRadiusDp);
 
-		// TODO: Get this to use the right radius for the "Uninstall" menu item, since it's currently too big. This is probably caused by the "wrap_content" change not having applied yet.
 		return TapTarget
 				.forView(textView, title, description)
 				.targetRadius(targetRadius);
