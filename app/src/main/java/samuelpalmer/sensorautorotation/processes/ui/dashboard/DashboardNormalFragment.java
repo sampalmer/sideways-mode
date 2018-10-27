@@ -180,8 +180,14 @@ public class DashboardNormalFragment extends Fragment {
 
 									DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
-									View incompatibleAppsTextView = getMenuItemText(menu.findItem(R.id.action_incompatible_apps));
-									View uninstallTextView = getMenuItemText(menu.findItem(R.id.action_uninstall));
+									List<View> rootViews = ViewUtilities.getRootViews();
+
+									// TODO: Do something if the root views can't be obtained (= null)
+
+									View incompatibleAppsTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_incompatible_apps));
+									View uninstallTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_uninstall));
+
+									// TODO: Do something if the menu items aren't found
 
 									// Shrinking menu item containers to fit so the tap target matches the text length
 									ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
@@ -270,11 +276,10 @@ public class DashboardNormalFragment extends Fragment {
 				.targetRadius(targetRadius);
 	}
 
-	private View getMenuItemText(MenuItem menuItem) {
+	private View getMenuItemText(List<View> rootViews, MenuItem menuItem) {
 		View targetMenuItemText = null;
 
-		List<View> windowManagerViews = ViewUtilities.getRootViews();
-		for (View root : windowManagerViews)
+		for (View root : rootViews)
 			if (targetMenuItemText == null)
 				targetMenuItemText = findViewByText(root, menuItem.getTitle());
 
