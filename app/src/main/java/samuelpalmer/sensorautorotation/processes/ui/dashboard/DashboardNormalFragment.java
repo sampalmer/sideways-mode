@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.PendingIntent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -18,9 +17,6 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -277,54 +273,12 @@ public class DashboardNormalFragment extends Fragment {
 	private View getMenuItemText(MenuItem menuItem) {
 		View targetMenuItemText = null;
 
-		List<View> windowManagerViews = getWindowManagerViews();
+		List<View> windowManagerViews = ViewUtilities.getRootViews();
 		for (View root : windowManagerViews)
 			if (targetMenuItemText == null)
 				targetMenuItemText = findViewByText(root, menuItem.getTitle());
 
 		return targetMenuItemText;
-	}
-
-	public static List<View> getWindowManagerViews() {
-		try {
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH &&
-					Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-
-				// get the list from WindowManagerImpl.mViews
-				Class wmiClass = Class.forName("android.view.WindowManagerImpl");
-				Object wmiInstance = wmiClass.getMethod("getDefault").invoke(null);
-
-				return viewsFromWM(wmiClass, wmiInstance);
-
-			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-
-				// get the list from WindowManagerGlobal.mViews
-				Class wmgClass = Class.forName("android.view.WindowManagerGlobal");
-				Object wmgInstance = wmgClass.getMethod("getInstance").invoke(null);
-
-				return viewsFromWM(wmgClass, wmgInstance);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace(); // TODO: Log this properly
-		}
-
-		return new ArrayList<View>();
-	}
-
-	private static List<View> viewsFromWM(Class wmClass, Object wmInstance) throws Exception {
-		Field viewsField = wmClass.getDeclaredField("mViews");
-		viewsField.setAccessible(true);
-		Object views = viewsField.get(wmInstance);
-
-		if (views instanceof List) {
-			return (List<View>) viewsField.get(wmInstance);
-		} else if (views instanceof View[]) {
-			return Arrays.asList((View[])viewsField.get(wmInstance));
-		}
-
-		return new ArrayList<View>();
 	}
 
 
