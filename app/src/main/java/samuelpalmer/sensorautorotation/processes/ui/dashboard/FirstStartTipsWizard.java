@@ -29,6 +29,7 @@ class FirstStartTipsWizard {
     private final DisplayMetrics displayMetrics;
     private final Dialog dialog;
     private final View sideButton;
+    private final View menuButton;
     private final PopupMenu popupMenu;
     private final Listener listener;
 
@@ -46,11 +47,12 @@ class FirstStartTipsWizard {
         void onCompleted();
     }
 
-    public FirstStartTipsWizard(Handler handler, DisplayMetrics displayMetrics, Dialog dialog, View sideButton, PopupMenu popupMenu, Listener listener) {
+    public FirstStartTipsWizard(Handler handler, DisplayMetrics displayMetrics, Dialog dialog, View sideButton, View menuButton, PopupMenu popupMenu, Listener listener) {
         this.handler = handler;
         this.displayMetrics = displayMetrics;
         this.dialog = dialog;
         this.sideButton = sideButton;
+        this.menuButton = menuButton;
         this.popupMenu = popupMenu;
         this.listener = listener;
 
@@ -136,23 +138,24 @@ class FirstStartTipsWizard {
 
             List<View> rootViews = ViewUtilities.getRootViews();
 
-            // TODO: Do something if the root views can't be obtained (= null)
+            if (rootViews != null) {
+                incompatibleAppsTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_incompatible_apps));
+                uninstallTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_uninstall));
+            }
 
-            incompatibleAppsTextView = FirstStartTipsWizard.this.getMenuItemText(rootViews, menu.findItem(R.id.action_incompatible_apps));
-            uninstallTextView = FirstStartTipsWizard.this.getMenuItemText(rootViews, menu.findItem(R.id.action_uninstall));
+            if (incompatibleAppsTextView != null) {
+                // Shrinking menu item containers to fit so the tap target matches the text length
+                ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                incompatibleAppsTextView.setLayoutParams(layoutParams);
+            }
 
-            // TODO: Do something if the menu items aren't found
+            if (uninstallTextView != null) {
+                ViewGroup.LayoutParams layoutParams2 = uninstallTextView.getLayoutParams();
+                layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                uninstallTextView.setLayoutParams(layoutParams2);
+            }
 
-            // Shrinking menu item containers to fit so the tap target matches the text length
-            ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
-            layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            incompatibleAppsTextView.setLayoutParams(layoutParams);
-
-            ViewGroup.LayoutParams layoutParams2 = uninstallTextView.getLayoutParams();
-            layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            uninstallTextView.setLayoutParams(layoutParams2);
-
-            // TODO: See if there's a way to bypass the need for this additional callback
             // Need to wait a bit for the above layout change to take effect
             queueStep(step4, 0);
         }
@@ -163,7 +166,7 @@ class FirstStartTipsWizard {
         public void run() {
             TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
                     displayMetrics,
-                    incompatibleAppsTextView,
+                    incompatibleAppsTextView != null ? incompatibleAppsTextView : menuButton,
                     "Use your favourite apps", // TODO: See if you can come up with better wording for the "Use your favourite apps" tip
                     "If an app doesn't rotate correctly, add it here to fix it."
             );
@@ -177,7 +180,7 @@ class FirstStartTipsWizard {
         public void run() {
             TapTarget uninstallTarget = makeMenuItemTapTarget(
                     displayMetrics,
-                    uninstallTextView,
+                    uninstallTextView != null ? uninstallTextView : menuButton,
                     "Don't want Sideways Mode?",
                     "If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
 

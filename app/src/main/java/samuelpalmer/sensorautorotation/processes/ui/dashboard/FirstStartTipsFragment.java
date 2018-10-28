@@ -23,6 +23,7 @@ public class FirstStartTipsFragment extends Fragment {
     private DisplayMetrics displayMetrics;
     private Dialog dialog;
     private View sideButton;
+    private View menuButton;
     private PopupMenu popupMenu;
     private Handler handler;
 
@@ -32,9 +33,10 @@ public class FirstStartTipsFragment extends Fragment {
         handler = new Handler();
     }
 
-    public void setTargets(Dialog dialog, View sideButton, PopupMenu popupMenu) {
+    public void setTargets(Dialog dialog, View sideButton, View menuButton, PopupMenu popupMenu) {
         this.dialog = dialog;
         this.sideButton = sideButton;
+        this.menuButton = menuButton;
         this.popupMenu = popupMenu;
         somethingChanged();
     }
@@ -84,6 +86,7 @@ public class FirstStartTipsFragment extends Fragment {
                     displayMetrics,
                     dialog,
                     sideButton,
+                    menuButton,
                     popupMenu,
                     () -> {
                         applicationSettings
@@ -112,7 +115,18 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     private boolean wizardCanExist() {
-        return handler != null && displayMetrics != null && dialog != null && sideButton != null && popupMenu != null;
+        return
+            handler != null
+            &&
+            displayMetrics != null
+            &&
+            dialog != null
+            &&
+            sideButton != null
+            &&
+            menuButton != null
+            &&
+            popupMenu != null;
     }
 
     private boolean shouldStart() {

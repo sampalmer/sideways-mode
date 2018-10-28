@@ -67,7 +67,7 @@ public class DashboardActivity extends DialogActivity {
 				.commit();
 		}
 
-		tipsFragment.setTargets(dialog, normalSection.getRightSideButton(), popup);
+		tipsFragment.setTargets(dialog, normalSection.getRightSideButton(), menuButton, popup);
 
 		tipsFragment.setStatus(normalSection.getStatus());
 		normalSection.setStatusChangeListener(status -> tipsFragment.setStatus(status));
