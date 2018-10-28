@@ -27,6 +27,7 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 public class DashboardNormalFragment extends Fragment {
 
 	private StatusChangeListener parentStatusListener;
+	private CommandSentListener commandSentListener;
 
 	private CoordinatorLayout snackbarContainer;
 	private ProgressBar progressBar;
@@ -37,7 +38,7 @@ public class DashboardNormalFragment extends Fragment {
 	private View leftSideButton;
 	private View turnOffButton;
 	private View rightSideButton;
-	
+
 	private ApplicationStatusClient statusClient;
 	private ApplicationStatus lastStatus;
 
@@ -45,7 +46,14 @@ public class DashboardNormalFragment extends Fragment {
 		void onStatusChange(ApplicationStatus status);
 	}
 
+	interface CommandSentListener {
+		void onCommandSent(boolean isStartCommand);
+	}
+
 	public View getRightSideButton() {
+		if (rightSideButton == null)
+			throw new IllegalStateException("Button is not yet available");
+
 		return rightSideButton;
 	}
 
@@ -55,6 +63,10 @@ public class DashboardNormalFragment extends Fragment {
 
 	public void setStatusChangeListener(StatusChangeListener statusChangeListener) {
 		parentStatusListener = statusChangeListener;
+	}
+
+	public void setCommandSentListener(CommandSentListener commandSentListener) {
+		this.commandSentListener = commandSentListener;
 	}
 
 	@Nullable
@@ -72,9 +84,9 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
 		
-		leftSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_LEFT_SIDE));
-		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
-		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
+		leftSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_LEFT_SIDE, true));
+		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF, false));
+		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE, true));
 		
 		return layout;
 	}
@@ -88,9 +100,11 @@ public class DashboardNormalFragment extends Fragment {
 	private class ActionClickListener implements View.OnClickListener {
 		
 		private final String action;
-		
-		public ActionClickListener(String action) {
+		private final boolean isStartCommand;
+
+		public ActionClickListener(String action, boolean isStartCommand) {
 			this.action = action;
+			this.isStartCommand = isStartCommand;
 		}
 		
 		@Override
@@ -98,14 +112,14 @@ public class DashboardNormalFragment extends Fragment {
 			if (!view.isSelected()) {
 				// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
 				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
-				
-				//noinspection ConstantConditions
-				getActivity().finish();
+
+				if (commandSentListener != null)
+					commandSentListener.onCommandSent(isStartCommand);
 			}
 		}
 		
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();

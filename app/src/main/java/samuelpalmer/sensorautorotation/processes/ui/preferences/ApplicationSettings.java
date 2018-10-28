@@ -36,5 +36,6 @@ public abstract class ApplicationSettings {
 	public static final String KEY_APP_VERSION = "appVersion";
 	
 	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
-	
+
+	public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";
 }

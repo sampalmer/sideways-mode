@@ -76,6 +76,10 @@ public class DashboardDialogFragment extends DialogFragment {
 		return view;
 	}
 
+	public void setCommandSentListener(DashboardNormalFragment.CommandSentListener commandSentListener) {
+		normalSection.setCommandSentListener(commandSentListener);
+	}
+
 	@Override
 	public void onCancel(DialogInterface dialog) {
 		super.onCancel(dialog);
