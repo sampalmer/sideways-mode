@@ -124,7 +124,7 @@ class FirstStartTipsWizard {
             TapTarget sideButtonTarget = TapTarget.forView(
                     sideButton,
                     context.getString(R.string.intro_tip_side_button_title),
-                    context.getString(R.string.intro_tip_side_button_description));
+                    context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full)));
 
             showTapTarget(sideButtonTarget, () -> queueStep(step2, 500));
         }
@@ -190,8 +190,8 @@ class FirstStartTipsWizard {
             TapTarget uninstallTarget = makeMenuItemTapTarget(
                     displayMetrics,
                     uninstallTextView != null ? uninstallTextView : menuButton,
-                    context.getString(R.string.intro_tip_uninstall_title),
-                    context.getString(R.string.intro_tip_uninstall_description));
+                    context.getString(R.string.intro_tip_uninstall_title, context.getText(R.string.app_name_full)),
+                    context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full)));
 
             showTapTarget(uninstallTarget, () -> {
                 listener.onCompleted();
