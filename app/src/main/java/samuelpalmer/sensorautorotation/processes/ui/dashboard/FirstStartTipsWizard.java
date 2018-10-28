@@ -70,6 +70,14 @@ class FirstStartTipsWizard {
         disableActivityViewParams.height = WindowManager.LayoutParams.MATCH_PARENT;
 
         disableActivityView = new View(context);
+
+        disableActivityView.setOnClickListener(v -> {
+            // The wizard feels completely unresponsive if you're in a hurry, so we'll skip any pauses whenever the user taps on the app.
+            if (tipsRunning && currentQueuedItem != null) {
+                handler.removeCallbacks(currentQueuedItem);
+                currentQueuedItem.run();
+            }
+        });
     }
 
     public void start() {
@@ -281,11 +289,16 @@ class FirstStartTipsWizard {
     }
 
     private void queueStep(Runnable step, long delayMillis) {
-        if (delayMillis == 0)
-            handler.post(step);
-        else
-            handler.postDelayed(step, delayMillis);
+        Runnable wrappedStep = () -> {
+            currentQueuedItem = null;
+            step.run();
+        };
 
-        currentQueuedItem = step;
+        if (delayMillis == 0)
+            handler.post(wrappedStep);
+        else
+            handler.postDelayed(wrappedStep, delayMillis);
+
+        currentQueuedItem = wrappedStep;
     }
 }
