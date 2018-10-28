@@ -123,8 +123,8 @@ class FirstStartTipsWizard {
         public void run() {
             TapTarget sideButtonTarget = TapTarget.forView(
                     sideButton,
-                    "Lying down",
-                    "When you lie down, tell Sideways Mode which side you're on.");
+                    context.getString(R.string.intro_tip_side_button_title),
+                    context.getString(R.string.intro_tip_side_button_description));
 
             showTapTarget(sideButtonTarget, () -> queueStep(step2, 500));
         }
@@ -176,8 +176,8 @@ class FirstStartTipsWizard {
             TapTarget incompatibleAppsTarget = makeMenuItemTapTarget(
                     displayMetrics,
                     incompatibleAppsTextView != null ? incompatibleAppsTextView : menuButton,
-                    "Use your favourite apps", // TODO: See if you can come up with better wording for the "Use your favourite apps" tip
-                    "If an app doesn't rotate correctly, add it here to fix it."
+                    context.getString(R.string.intro_tip_incompatible_apps_title),
+                    context.getString(R.string.intro_tip_incompatible_apps_description)
             );
 
             showTapTarget(incompatibleAppsTarget, ()-> queueStep(step5, 1000));
@@ -190,8 +190,8 @@ class FirstStartTipsWizard {
             TapTarget uninstallTarget = makeMenuItemTapTarget(
                     displayMetrics,
                     uninstallTextView != null ? uninstallTextView : menuButton,
-                    "Don't want Sideways Mode?",
-                    "If you decide to uninstall Sideways Mode, do it here so the screen doesn't get stuck.");
+                    context.getString(R.string.intro_tip_uninstall_title),
+                    context.getString(R.string.intro_tip_uninstall_description));
 
             showTapTarget(uninstallTarget, () -> {
                 listener.onCompleted();

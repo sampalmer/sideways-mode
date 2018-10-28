@@ -103,4 +103,12 @@
 	<string name="notification_channel_errors">Error messages</string>
 	<string name="notification_channel_permissions">Permission requests</string>
 
+	<!-- Introduction tips -->
+    <string name="intro_tip_side_button_title">Lying down</string>
+	<string name="intro_tip_side_button_description">When you lie down, tell Sideways Mode which side you\'re on.</string>
+	<string name="intro_tip_incompatible_apps_title">Use your favourite apps</string>
+	<string name="intro_tip_incompatible_apps_description">If an app doesn\'t rotate correctly, add it here to fix it.</string>
+	<string name="intro_tip_uninstall_title">Don\'t want Sideways Mode?</string>
+	<string name="intro_tip_uninstall_description">If you decide to uninstall Sideways Mode, do it here so the screen doesn\'t get stuck.</string>
+
 </resources>
