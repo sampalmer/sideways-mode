@@ -88,13 +88,22 @@ public class FirstStartTipsFragment extends Fragment {
                     sideButton,
                     menuButton,
                     popupMenu,
-                    () -> {
-                        applicationSettings
-                                .edit()
-                                .putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
-                                .apply();
+                    new FirstStartTipsWizard.Listener() {
+                        @Override
+                        public void onCompleted() {
+                            applicationSettings
+                                    .edit()
+                                    .putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
+                                    .apply();
 
-                        somethingChanged();
+                            somethingChanged();
+                        }
+
+                        @Override
+                        public void onCancelled() {
+                            //noinspection ConstantConditions
+                            getActivity().finish();
+                        }
                     }
             );
 

@@ -6,6 +6,7 @@ import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +48,7 @@ class FirstStartTipsWizard {
 
     public interface Listener {
         void onCompleted();
+        void onCancelled();
     }
 
     public FirstStartTipsWizard(Handler handler, DisplayMetrics displayMetrics, Dialog dialog, View sideButton, View menuButton, PopupMenu popupMenu, Listener listener) {
@@ -74,7 +76,30 @@ class FirstStartTipsWizard {
         disableActivityViewParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         disableActivityViewParams.height = WindowManager.LayoutParams.MATCH_PARENT;
 
-        disableActivityView = new View(context);
+        disableActivityView = new View(context) {
+
+            @Override
+            public boolean onKeyDown(int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    event.startTracking();
+                    return true;
+                }
+
+                return onKeyDown(keyCode, event);
+            }
+
+            @Override
+            public boolean onKeyUp(int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.isTracking() && !event.isCanceled()) {
+                    listener.onCancelled();
+                    return true;
+                }
+
+                return super.onKeyUp(keyCode, event);
+            }
+
+        };
+
         disableActivityView.setOnClickListener(v -> {
             // The wizard feels completely unresponsive if you're in a hurry, so we'll skip any pauses whenever the user taps on the app.
             if (tipsRunning && currentQueuedItem != null) {
