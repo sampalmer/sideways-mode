@@ -80,7 +80,7 @@ class FirstStartTipsWizard {
 
         windowManager.addView(disableActivityView, disableActivityViewParams);
 
-        step1.run();
+        step0.run();
     }
 
     public void stop() {
@@ -108,6 +108,15 @@ class FirstStartTipsWizard {
     public boolean isRunning() {
         return tipsRunning;
     }
+
+    private final Runnable step0 = new Runnable() {
+
+        @Override
+        public void run() {
+            queueStep(step1, 1000);
+        }
+
+    };
 
     private final Runnable step1 = new Runnable() {
         @Override
