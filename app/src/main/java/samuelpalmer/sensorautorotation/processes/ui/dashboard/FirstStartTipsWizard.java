@@ -33,6 +33,8 @@ class FirstStartTipsWizard {
     private final PopupMenu popupMenu;
     private final Listener listener;
 
+    private final float dialogOriginalDimAmount;
+
     private boolean tipsRunning;
     private TapTargetView currentTargetView;
     private Runnable currentQueuedItem;
@@ -56,6 +58,9 @@ class FirstStartTipsWizard {
         this.popupMenu = popupMenu;
         this.listener = listener;
 
+        //noinspection ConstantConditions
+        this.dialogOriginalDimAmount = dialog.getWindow().getAttributes().dimAmount;
+
         context = dialog.getContext();
         windowManager = ContextCompat.getSystemService(context, WindowManager.class);
 
@@ -70,7 +75,6 @@ class FirstStartTipsWizard {
         disableActivityViewParams.height = WindowManager.LayoutParams.MATCH_PARENT;
 
         disableActivityView = new View(context);
-
         disableActivityView.setOnClickListener(v -> {
             // The wizard feels completely unresponsive if you're in a hurry, so we'll skip any pauses whenever the user taps on the app.
             if (tipsRunning && currentQueuedItem != null) {
@@ -88,12 +92,18 @@ class FirstStartTipsWizard {
 
         windowManager.addView(disableActivityView, disableActivityViewParams);
 
+        //noinspection ConstantConditions
+        dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
+
         step0.run();
     }
 
     public void stop() {
         if (!tipsRunning)
             throw new RuntimeException("Already stopped");
+
+        //noinspection ConstantConditions
+        dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
 
         windowManager.removeView(disableActivityView);
 
