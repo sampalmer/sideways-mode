@@ -144,7 +144,7 @@ class FirstStartTipsWizard {
             popupMenu.show();
 
             // Wait for the popup menu to appear
-            queueStep(step3, 1500);
+            queueStep(step3, 1000);
         }
     };
 
@@ -188,7 +188,7 @@ class FirstStartTipsWizard {
                     context.getString(R.string.intro_tip_incompatible_apps_description)
             );
 
-            showTapTarget(incompatibleAppsTarget, ()-> queueStep(step5, 1000));
+            showTapTarget(incompatibleAppsTarget, ()-> queueStep(step5, 750));
         }
     };
 
@@ -203,7 +203,7 @@ class FirstStartTipsWizard {
 
             showTapTarget(uninstallTarget, () -> {
                 listener.onCompleted();
-                queueStep(step6, 1000);
+                queueStep(step6, 750);
             });
         }
     };
