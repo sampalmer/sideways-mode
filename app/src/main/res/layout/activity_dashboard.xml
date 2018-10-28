@@ -40,33 +40,19 @@
 			android:gravity="center"
 			>
 
-			<FrameLayout
-				android:id="@+id/dashboard_normal_contents_container"
+			<fragment
+				android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardNormalFragment"
+				android:id="@+id/dashboard_normal_contents"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				/>
 
-				<fragment
-					android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardNormalFragment"
-					android:id="@+id/dashboard_normal_contents"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					/>
-
-			</FrameLayout>
-
-			<FrameLayout
-				android:id="@+id/dashboard_permission_contents_container"
+			<fragment
+				android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionFragment"
+				android:id="@+id/dashboard_permission_contents"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
-				<fragment
-					android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionFragment"
-					android:id="@+id/dashboard_permission_contents"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					/>
-
-			</FrameLayout>
+				android:layout_height="wrap_content"
+				/>
 
 		</RelativeLayout>
 

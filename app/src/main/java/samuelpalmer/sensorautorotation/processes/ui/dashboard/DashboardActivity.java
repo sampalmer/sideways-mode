@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.FragmentManager;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
@@ -18,13 +18,15 @@ import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
 public class DashboardActivity extends DialogActivity {
-	
+
+	public static final String TAG_TIPS_FRAGMENT = "tips";
 	public AlertDialog dialog;
 	
-	private ViewGroup normalSection;
-	private ViewGroup permissionSection;
-    public ImageButton menuButton;
-	public PopupMenu popup;
+	private DashboardNormalFragment normalSection;
+	private DashboardPermissionFragment permissionSection;
+	private FirstStartTips tipsFragment;
+	private ImageButton menuButton;
+	private PopupMenu popup;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +53,26 @@ public class DashboardActivity extends DialogActivity {
         popup.setOnMenuItemClickListener(this::handleMenuItemClick);
         popup.inflate(R.menu.main);
 
-        normalSection = dialog.findViewById(R.id.dashboard_normal_contents_container);
-		permissionSection = dialog.findViewById(R.id.dashboard_permission_contents_container);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		normalSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
+		permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentById(R.id.dashboard_permission_contents);
+
+		tipsFragment = (FirstStartTips) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
+		if (tipsFragment == null) {
+			tipsFragment = new FirstStartTips();
+			fragmentManager
+				.beginTransaction()
+				.add(tipsFragment, TAG_TIPS_FRAGMENT)
+				.commit();
+		}
+
+		tipsFragment.setTargets(dialog, normalSection.getSideButton(), popup);
+
+		normalSection.setStatusChangeListener(status -> {
+			if (status != null)
+				tipsFragment.x();
+		});
 	}
 
 	@Override
@@ -70,8 +90,8 @@ public class DashboardActivity extends DialogActivity {
 		super.onStart();
 		
 		boolean hasPermission = SystemSettings.canWrite(this);
-		ViewUtilities.ensureVisibility(normalSection, hasPermission ? View.VISIBLE : View.GONE);
-		ViewUtilities.ensureVisibility(permissionSection, hasPermission ? View.GONE : View.VISIBLE);
+		ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
+		ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
 	}
 
 	@SuppressWarnings("SameReturnValue")
@@ -102,5 +122,5 @@ public class DashboardActivity extends DialogActivity {
 		
 		return true;
 	}
-	
+
 }
