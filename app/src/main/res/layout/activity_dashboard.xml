@@ -40,15 +40,12 @@
 			android:gravity="center"
 			>
 
-			<fragment
-				android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardNormalFragment"
+			<FrameLayout
 				android:id="@+id/dashboard_normal_contents"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				/>
+				android:layout_height="wrap_content" />
 
-			<fragment
-				android:name="samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardPermissionFragment"
+			<FrameLayout
 				android:id="@+id/dashboard_permission_contents"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

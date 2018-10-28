@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".processes.ui.dashboard.DashboardActivity"
+      tools:context=".processes.ui.dashboard.DashboardDialogFragment"
 	>
 	<!-- The user should first read the instructions before contacting me -->
 	<item android:id="@+id/action_help"
