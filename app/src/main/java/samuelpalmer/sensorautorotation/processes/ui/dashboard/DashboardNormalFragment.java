@@ -45,8 +45,8 @@ public class DashboardNormalFragment extends Fragment {
 		void onStatusChange(ApplicationStatus status);
 	}
 
-	public View getSideButton() {
-		return leftSideButton;
+	public View getRightSideButton() {
+		return rightSideButton;
 	}
 
 	public ApplicationStatus getStatus() {

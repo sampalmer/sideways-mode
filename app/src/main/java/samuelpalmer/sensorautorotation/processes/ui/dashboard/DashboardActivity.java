@@ -24,7 +24,7 @@ public class DashboardActivity extends DialogActivity {
 	
 	private DashboardNormalFragment normalSection;
 	private DashboardPermissionFragment permissionSection;
-	private FirstStartTips tipsFragment;
+	private FirstStartTipsFragment tipsFragment;
 	private ImageButton menuButton;
 	private PopupMenu popup;
 
@@ -58,21 +58,19 @@ public class DashboardActivity extends DialogActivity {
 		normalSection = (DashboardNormalFragment) fragmentManager.findFragmentById(R.id.dashboard_normal_contents);
 		permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentById(R.id.dashboard_permission_contents);
 
-		tipsFragment = (FirstStartTips) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
+		tipsFragment = (FirstStartTipsFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
 		if (tipsFragment == null) {
-			tipsFragment = new FirstStartTips();
+			tipsFragment = new FirstStartTipsFragment();
 			fragmentManager
 				.beginTransaction()
 				.add(tipsFragment, TAG_TIPS_FRAGMENT)
 				.commit();
 		}
 
-		tipsFragment.setTargets(dialog, normalSection.getSideButton(), popup);
+		tipsFragment.setTargets(dialog, normalSection.getRightSideButton(), popup);
 
-		normalSection.setStatusChangeListener(status -> {
-			if (status != null)
-				tipsFragment.x();
-		});
+		tipsFragment.setStatus(normalSection.getStatus());
+		normalSection.setStatusChangeListener(status -> tipsFragment.setStatus(status));
 	}
 
 	@Override
@@ -92,6 +90,7 @@ public class DashboardActivity extends DialogActivity {
 		boolean hasPermission = SystemSettings.canWrite(this);
 		ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
 		ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
+		tipsFragment.setNormalSectionVisibility(hasPermission);
 	}
 
 	@SuppressWarnings("SameReturnValue")
