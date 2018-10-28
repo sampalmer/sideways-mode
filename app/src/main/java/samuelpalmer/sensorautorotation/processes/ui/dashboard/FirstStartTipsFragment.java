@@ -131,11 +131,10 @@ public class FirstStartTipsFragment extends Fragment {
 
     private boolean shouldStart() {
         return
-            // TODO: Uncomment the following
-//            applicationSettings != null
-//            &&
-//            !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false)
-//            &&
+            applicationSettings != null
+            &&
+            !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false)
+            &&
             !wizard.isRunning()
             &&
             canRunTips()
