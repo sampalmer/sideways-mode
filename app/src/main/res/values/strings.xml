@@ -111,7 +111,7 @@
 	<string name="intro_tip_uninstall_title">Don\'t want %1$s?</string>
 	<string name="intro_tip_uninstall_description">If you decide to uninstall %1$s, do it here so the screen doesn\'t get stuck.</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
-	<string name="tip_running_in_background_description">Check the notification to change it or turn it off.</string>
+	<string name="tip_running_in_background_description">To control it, use the notification in your notification drawer.</string>
 	<string name="action_got_it">Got it</string>
 
 </resources>
