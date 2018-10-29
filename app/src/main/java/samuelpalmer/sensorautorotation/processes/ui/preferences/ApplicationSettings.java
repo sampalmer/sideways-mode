@@ -37,5 +37,9 @@ public abstract class ApplicationSettings {
 	
 	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 
+	/**
+	 * Whether the user has been told that the app is running in the background.
+	 */
 	public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";
+
 }
