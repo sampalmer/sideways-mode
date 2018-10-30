@@ -15,7 +15,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -111,7 +111,10 @@ public class DashboardNormalFragment extends Fragment {
 		public void onClick(View view) {
 			if (!view.isSelected()) {
 				// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
-				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
+				new ApplicationCommand(
+					action,
+					ApplicationSettings.getSharedPreferences(getContext())
+				).send(getContext());
 
 				if (commandSentListener != null)
 					commandSentListener.onCommandSent(isStartCommand);

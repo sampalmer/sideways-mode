@@ -42,4 +42,9 @@ public abstract class ApplicationSettings {
 	 */
 	public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";
 
+	/**
+	 * Whether the user has been told to turn off the app before uninstalling it.
+	 */
+	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
+
 }

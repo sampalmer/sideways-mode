@@ -10,17 +10,16 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
@@ -118,7 +117,7 @@ public class CurrentProcess extends Application {
 			  Automatically pushes changes to user preferences from the UI process to the service process.
 			  This ensures preference changes made by the user appear to instantly take effect.
 			 */
-			applicationSettings.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+			applicationSettings.registerOnSharedPreferenceChangeListener(applicationSettingsChanged);
 			
 			/*
 				We need to remove apps from the incompatible apps list if they are disabled or uninstalled.
@@ -158,10 +157,14 @@ public class CurrentProcess extends Application {
 	}
 	
 	// Do not re-use. This is just stored in a field to prevent garbage collection of the listener.
-	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
-		if (s.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
+	private final SharedPreferences.OnSharedPreferenceChangeListener applicationSettingsChanged = (sharedPreferences, s) -> {
+		if (ApplicationCommand.Config.isSyncableAppSetting(s)) {
 			Log.i(TAG, "User preferences changed. Sending to service process.");
-			new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync(CurrentProcess.this)).send(CurrentProcess.this);
+
+			new ApplicationCommand(
+				ApplicationCommand.ACTION_SYNC_CONFIG,
+				ApplicationSettings.getSharedPreferences(CurrentProcess.this)
+			).send(CurrentProcess.this);
 		}
 	};
 	

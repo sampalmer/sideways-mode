@@ -31,13 +31,10 @@ public class SendConfigReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, getConfigToSync(context)).send(context);
+		new ApplicationCommand(
+			ApplicationCommand.ACTION_SYNC_CONFIG,
+			ApplicationSettings.getSharedPreferences(context)
+		).send(context);
 	}
-	
-	public static Set<String> getConfigToSync(Context context) {
-		return ApplicationSettings
-			.getSharedPreferences(context)
-			.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-	}
-	
+
 }

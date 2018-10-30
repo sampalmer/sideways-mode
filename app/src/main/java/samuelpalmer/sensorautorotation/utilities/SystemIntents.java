@@ -22,7 +22,7 @@ public abstract class SystemIntents {
 		return new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri(context));
 	}
 
-	private static Uri packageUri(Context context) {
+	public static Uri packageUri(Context context) {
 		return Uri.fromParts("package", context.getPackageName(), null);
 	}
 	
