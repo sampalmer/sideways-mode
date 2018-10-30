@@ -23,7 +23,6 @@
 	<string name="action_menu">Menu</string>
 	<string name="action_help">Help</string>
 	<string name="action_report">Report problem</string>
-	<string name="action_uninstall">Uninstall</string>
 
 	<!-- Upgrade -->
 	<string name="upgrade_summary">%1$s upgraded</string>
@@ -73,7 +72,7 @@
 	<string name="instructions_heading">Instructions</string>
 
 	<string name="instructions_uninstalling_heading">Uninstalling</string>
-	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, use the \"%1$s\" menu item on %2$s\'s main screen</string>
+	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, turn off %1$s first</string>
 
 	<string name="instructions_incompatible_apps_heading">Incompatible Apps</string>
 	<string name="instructions_incompatible_apps_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature."</string>
@@ -95,7 +94,6 @@
 	<string name="device_problem">Device problem</string>
 	<string name="device_problem_explanation_sensor">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
 	<string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
-	<string name="device_problem_request_uninstall">"Please uninstall this app."</string>
 
 	<!-- Notification channels -->
 	<string name="notification_channel_controls">Rotation controls</string>
@@ -108,8 +106,6 @@
 	<string name="intro_tip_side_button_description">"When you lie down, tell %1$s which side you're on."</string>
 	<string name="intro_tip_incompatible_apps_title">Use your favourite apps</string>
 	<string name="intro_tip_incompatible_apps_description">"If an app doesn't rotate correctly, add it here to fix it."</string>
-	<string name="intro_tip_uninstall_title">Don\'t want it?</string>
-	<string name="intro_tip_uninstall_description">"If you decide to uninstall %1$s, do it here so the screen doesn't get stuck."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
 	<string name="tip_running_in_background_description">To control it, use the notification in your notification drawer.</string>
 	<string name="action_got_it">Got it</string>

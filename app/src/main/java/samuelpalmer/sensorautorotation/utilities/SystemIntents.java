@@ -21,11 +21,7 @@ public abstract class SystemIntents {
 	public static Intent drawOnTopOfApps(Context context) {
 		return new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri(context));
 	}
-	
-	public static Intent uninstall(Context context) {
-		return new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri(context));
-	}
-	
+
 	private static Uri packageUri(Context context) {
 		return Uri.fromParts("package", context.getPackageName(), null);
 	}

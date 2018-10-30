@@ -40,7 +40,6 @@ class FirstStartTipsWizard {
     private TapTargetView currentTargetView;
     private Runnable currentQueuedItem;
     private View incompatibleAppsTextView;
-    private View uninstallTextView;
     private View disableActivityView;
     private Context context;
     private WindowManager windowManager;
@@ -134,7 +133,6 @@ class FirstStartTipsWizard {
 
         tipsRunning = false;
         incompatibleAppsTextView = null;
-        uninstallTextView = null;
         popupMenu.dismiss();
 
         if (currentQueuedItem != null) {
@@ -192,22 +190,13 @@ class FirstStartTipsWizard {
 
             if (rootViews != null) {
                 incompatibleAppsTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_incompatible_apps));
-                uninstallTextView = getMenuItemText(rootViews, menu.findItem(R.id.action_uninstall));
+                if (incompatibleAppsTextView != null) {
+                    // Shrinking menu item containers to fit so the tap target matches the text length
+                    ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
+                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    incompatibleAppsTextView.setLayoutParams(layoutParams);
+                }
             }
-
-            if (incompatibleAppsTextView != null) {
-                // Shrinking menu item containers to fit so the tap target matches the text length
-                ViewGroup.LayoutParams layoutParams = incompatibleAppsTextView.getLayoutParams();
-                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                incompatibleAppsTextView.setLayoutParams(layoutParams);
-            }
-
-            if (uninstallTextView != null) {
-                ViewGroup.LayoutParams layoutParams2 = uninstallTextView.getLayoutParams();
-                layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                uninstallTextView.setLayoutParams(layoutParams2);
-            }
-
             // Need to wait a bit for the above layout change to take effect
             queueStep(step4, 0);
         }
@@ -223,27 +212,14 @@ class FirstStartTipsWizard {
                     context.getString(R.string.intro_tip_incompatible_apps_description)
             );
 
-            showTapTarget(incompatibleAppsTarget, ()-> queueStep(step5, 750));
-        }
-    };
-
-    private final Runnable step5 = new Runnable() {
-        @Override
-        public void run() {
-            TapTarget uninstallTarget = makeMenuItemTapTarget(
-                    displayMetrics,
-                    uninstallTextView != null ? uninstallTextView : menuButton,
-                    context.getString(R.string.intro_tip_uninstall_title, context.getText(R.string.app_name_full)),
-                    context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full)));
-
-            showTapTarget(uninstallTarget, () -> {
+            showTapTarget(incompatibleAppsTarget, () -> {
                 listener.onCompleted();
-                queueStep(step6, 750);
+                queueStep(step5, 750);
             });
         }
     };
 
-    private final Runnable step6 = new Runnable() {
+    private final Runnable step5 = new Runnable() {
         @Override
         public void run() {
             stop();

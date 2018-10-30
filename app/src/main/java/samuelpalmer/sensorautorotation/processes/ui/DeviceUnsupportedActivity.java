@@ -28,9 +28,6 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 		
 		TextView explanationView = findViewById(R.id.device_unsupported_explanation);
 		explanationView.setText(explanationStringResource);
-		
-		Button uninstallButton = findViewById(R.id.device_unsupported_uninstall);
-		uninstallButton.setOnClickListener(v -> Uninstaller.uninstall(DeviceUnsupportedActivity.this));
 	}
 	
 	@Override

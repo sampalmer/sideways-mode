@@ -19,7 +19,6 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 		uninstallingContents.setText(
 			getResources().getString(
 				R.string.instructions_uninstalling_contents,
-				getResources().getText(R.string.action_uninstall),
 				getResources().getText(R.string.app_name_full)
 			)
 		);

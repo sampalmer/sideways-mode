@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
-import samuelpalmer.sensorautorotation.processes.ui.Uninstaller;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
@@ -121,9 +120,6 @@ public class DashboardDialogFragment extends DialogFragment {
 				startActivity(intent);
 				break;
 			}
-			case R.id.action_uninstall:
-				Uninstaller.uninstall(getActivity());
-				break;
 			default:
 				throw new RuntimeException("Unknown navigation menu item: " + menuItem.getItemId());
 		}
