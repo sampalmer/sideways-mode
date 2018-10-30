@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Third Party Uninstaller</string>
+    <string name="activity_main">Main Activity (Not the uninstaller)</string>
+    <string name="activity_uninstaller">Uninstaller (This it the actual uninstaller)</string>
+</resources>
