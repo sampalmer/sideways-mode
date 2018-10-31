@@ -11,8 +11,8 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 
 public class DashboardActivity extends DialogActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
-    public static final String TAG_DASHBOARD_DIALOG = "dashboard";
-    public static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
+    private static final String TAG_DASHBOARD_DIALOG = "dashboard";
+    private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
     public DashboardDialogFragment dashboardDialog;
     private SharedPreferences applicationSettings;
