@@ -11,8 +11,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -36,7 +36,7 @@ public class UninstallTipActivity extends DialogActivity {
             new UninstallTipFragment().show(getSupportFragmentManager(), TAG);
     }
 
-    public static class UninstallTipFragment extends DialogFragment {
+    public static class UninstallTipFragment extends AppCompatDialogFragment {
 
         @NonNull
         @Override

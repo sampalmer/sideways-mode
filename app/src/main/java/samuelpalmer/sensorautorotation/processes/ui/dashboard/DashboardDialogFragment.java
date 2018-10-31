@@ -12,8 +12,8 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
@@ -22,7 +22,7 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 
-public class DashboardDialogFragment extends DialogFragment {
+public class DashboardDialogFragment extends AppCompatDialogFragment {
 
 	private static final String TAG_NORMAL_CONTENTS_FRAGMENT = "normalContents";
 	private static final String TAG_PERMISSION_CONTENTS_FRAGMENT = "permissionContents";
@@ -33,6 +33,10 @@ public class DashboardDialogFragment extends DialogFragment {
 	private FirstStartTipsFragment tipsFragment;
 	private ImageButton menuButton;
 	private PopupMenu popup;
+
+	public DashboardDialogFragment() {
+		setStyle(STYLE_NO_TITLE, 0);
+	}
 
 	@SuppressLint("ClickableViewAccessibility")
 	@Nullable

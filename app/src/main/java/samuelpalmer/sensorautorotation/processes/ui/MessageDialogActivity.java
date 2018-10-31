@@ -10,8 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-
-import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -43,7 +42,7 @@ public class MessageDialogActivity extends DialogActivity {
 			MessageDialogFragment.newInstance(extras).show(getSupportFragmentManager(), TAG);
 	}
 
-	public static class MessageDialogFragment extends DialogFragment {
+	public static class MessageDialogFragment extends AppCompatDialogFragment {
 
 		public static MessageDialogFragment newInstance(Bundle args) {
 			MessageDialogFragment frag = new MessageDialogFragment();
