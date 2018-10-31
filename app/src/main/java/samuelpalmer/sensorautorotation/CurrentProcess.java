@@ -87,11 +87,11 @@ public class CurrentProcess extends Application {
 				.penaltyDialog()
 				.build()
 			);
-			
+
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 				.detectAll()
 				.penaltyLog()
-				.penaltyDeath()
+				// Not using penaltyDeath since it makes it look like the app is malfunctioning
 				.build()
 			);
 		}
