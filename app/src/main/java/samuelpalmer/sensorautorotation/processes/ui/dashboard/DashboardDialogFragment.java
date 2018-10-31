@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class DashboardDialogFragment extends DialogFragment {
 	private ImageButton menuButton;
 	private PopupMenu popup;
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class DashboardDialogFragment extends DialogFragment {
 		popup = new PopupMenu(getActivity(), menuButton);
 		popup.setOnMenuItemClickListener(this::handleMenuItemClick);
 		popup.inflate(R.menu.main);
+		menuButton.setOnTouchListener(popup.getDragToOpenListener());
 
 		FragmentManager fragmentManager = getChildFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
