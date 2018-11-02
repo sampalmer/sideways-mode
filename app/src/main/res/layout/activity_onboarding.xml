@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/onboard_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/onboard_get_started"
+            android:text="@string/onboarding_get_started"
+            />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <com.pixelcan.inkpageindicator.InkPageIndicator
+                android:id="@+id/onboard_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:ipi_dotDiameter="8dp"
+                app:ipi_dotGap="8dp"
+                app:ipi_animationDuration="320"
+                app:ipi_pageIndicatorColor="@android:color/darker_gray"
+                app:ipi_currentPageIndicatorColor="@android:color/black"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -57,6 +57,9 @@
 
 		<!-- Main Process -->
 
+		<activity android:name=".processes.ui.onboarding.OnboardingActivity"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
 		<activity
 			android:name=".processes.ui.InstructionsActivity"
 			android:label="@string/instructions_heading"/>

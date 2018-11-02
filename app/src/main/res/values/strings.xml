@@ -113,4 +113,7 @@
 	<string name="tip_uninstalling_description">"To make sure the screen doesn't get stuck, turn off %1$s before uninstalling it."</string>
 	<string name="action_got_it">Got it</string>
 
+	<!-- Onboarding -->
+	<string name="onboarding_get_started">Get started</string>
+
 </resources>

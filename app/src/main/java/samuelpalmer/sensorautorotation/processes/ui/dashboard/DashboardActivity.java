@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -7,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
+import samuelpalmer.sensorautorotation.processes.ui.onboarding.OnboardingActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class DashboardActivity extends DialogActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
@@ -43,6 +45,8 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     @Override
     protected void onStart() {
         super.onStart();
+
+        startActivity(new Intent(this, OnboardingActivity.class));
 
         if (dashboardDialog != null)
             dashboardDialog.setCommandSentListener(this::onCommandSent);

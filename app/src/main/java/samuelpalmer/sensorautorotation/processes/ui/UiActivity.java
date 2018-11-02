@@ -1,9 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import samuelpalmer.sensorautorotation.processes.ui.onboarding.OnboardingActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public abstract class UiActivity extends AppCompatActivity {
 	
@@ -23,6 +26,17 @@ public abstract class UiActivity extends AppCompatActivity {
 			startActivity(intent);
 			
 			finish();
+			return;
+		}
+
+		if (!(this instanceof OnboardingActivity)) {
+			SharedPreferences applicationSettings = ApplicationSettings.getSharedPreferences(this);
+			boolean onboarded = applicationSettings.getBoolean(ApplicationSettings.KEY_USER_ONBOARDED, false);
+
+			if (!onboarded) {
+				Intent intent = new Intent(this, OnboardingActivity.class);
+				startActivity(intent);
+			}
 		}
 	}
 	
