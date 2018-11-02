@@ -1,9 +1,11 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,15 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 
 	public DashboardDialogFragment() {
 		setStyle(STYLE_NO_TITLE, 0);
+	}
+
+	@Override
+	public int getTheme() {
+		TypedValue outValue = new TypedValue();
+		Context context = getContext();
+		assert context != null;
+		context.getTheme().resolveAttribute(androidx.appcompat.R.attr.alertDialogTheme, outValue, true);
+		return outValue.resourceId;
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
