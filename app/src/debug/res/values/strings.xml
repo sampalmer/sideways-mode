@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Using a debug-specific app name to easily distinguish debug builds from release builds. -->
+    <string name="app_name_short">Sideways (Dev)</string>
+
+</resources>
