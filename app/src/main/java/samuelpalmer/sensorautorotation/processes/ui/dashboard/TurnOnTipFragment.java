@@ -188,7 +188,8 @@ public class TurnOnTipFragment extends Fragment {
             TapTarget sideButtonTarget = TapTarget.forView(
                     sideButton,
                     context.getString(R.string.tip_turning_on_title),
-                    context.getString(R.string.tip_turning_on_description, context.getText(R.string.app_name_full)));
+                    context.getString(R.string.tip_turning_on_description, context.getText(R.string.app_name_full)))
+                    .drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
 
             tip = TapTargetView.showFor(
                     dialog,
