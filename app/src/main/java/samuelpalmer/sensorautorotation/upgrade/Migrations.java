@@ -178,7 +178,8 @@ class Migrations {
                 if (userInstructed)
                     editor
                             .putBoolean(ApplicationSettings.KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN, true)
-                            .putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true);
+							.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true)
+							.putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true);
             }
         });
 

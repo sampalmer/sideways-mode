@@ -32,7 +32,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 
 	private DashboardNormalFragment normalSection;
 	private DashboardPermissionFragment permissionSection;
-	private FirstStartTipsFragment tipsFragment;
+	private TurnOnTipFragment tipsFragment;
 	private ImageButton menuButton;
 	private PopupMenu popup;
 
@@ -79,9 +79,9 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 			fragmentTransaction.add(R.id.dashboard_permission_contents, permissionSection, TAG_PERMISSION_CONTENTS_FRAGMENT);
 		}
 
-		tipsFragment = (FirstStartTipsFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
+		tipsFragment = (TurnOnTipFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
 		if (tipsFragment == null) {
-			tipsFragment = new FirstStartTipsFragment();
+			tipsFragment = new TurnOnTipFragment();
 			fragmentTransaction.add(tipsFragment, TAG_TIPS_FRAGMENT);
 		}
 
@@ -111,7 +111,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 	public void onStart() {
 		super.onStart();
 
-		tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, popup);
+		tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton());
 
 		boolean hasPermission = SystemSettings.canWrite(getContext());
 		ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);

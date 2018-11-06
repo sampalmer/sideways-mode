@@ -47,4 +47,9 @@ public abstract class ApplicationSettings {
 	 */
 	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
 
+	/**
+	 * Whether the user has been told how to start the app.
+	 */
+	public static final String KEY_TURNING_ON_TIP_SHOWN = "turningOnTipShown";
+
 }
