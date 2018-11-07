@@ -121,7 +121,6 @@ public class IncompatibleAppsSuggester extends State {
 //					.setDeleteIntent() // TODO: Don't ask again if user dismisses it?
 					.setTicker(summary) //Helps ensure the user actually notices notification. Only works on Android 4.
 					.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-//					.setCategory() // TODO: Pick a suitable category
 //					.addAction() // TODO: Provide button to not ask again? Not sure if this works on API 14
 					;
 				
