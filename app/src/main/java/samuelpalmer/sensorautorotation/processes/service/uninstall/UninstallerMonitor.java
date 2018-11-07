@@ -2,22 +2,11 @@ package samuelpalmer.sensorautorotation.processes.service.uninstall;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import androidx.core.content.ContextCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -31,6 +20,8 @@ import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+import java.util.*;
 
 /**
  * Detects when the user goes to uninstall an app, and then warns them that
@@ -140,7 +131,7 @@ class UninstallerMonitor extends State {
                         .setContentText(context.getString(R.string.tip_uninstalling_description, context.getText(R.string.app_name_full)))
                         .setTicker(title) //Helps ensure the user actually notices this. Only works on Android 4.
                         .setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-                        .setChannelId(NotificationChannels.ID_ERRORS);
+                        .setChannelId(NotificationChannels.ID_TIPS);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
                     // Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
