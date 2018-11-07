@@ -9,10 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
-
-import java.util.Collections;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -24,6 +20,9 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class IncompatibleAppsSuggester extends State {
 	
@@ -101,6 +100,7 @@ public class IncompatibleAppsSuggester extends State {
 			// TODO: Don't prompt multiple times for the same app
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
 			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
+			// TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube
 		) {
 			PackageManager packageManager = context.getPackageManager();
 			
