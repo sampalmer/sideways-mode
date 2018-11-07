@@ -96,7 +96,7 @@ public class IncompatibleAppsSuggester extends State {
 			&&
 			supportedOrientationsDetector.supportsLandscape() && supportedOrientationsDetector.supportsPortrait() // Apps that are locked in the one orientation aren't a problem
 			&&
-			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // This app might looks like it's incompatible if it's open over the top of an incompatible app
+			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
 			// TODO: Don't prompt multiple times for the same app
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
 			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
