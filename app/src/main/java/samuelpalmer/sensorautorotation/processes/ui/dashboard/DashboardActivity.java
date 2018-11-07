@@ -1,16 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 
 public class DashboardActivity extends DialogActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
@@ -23,8 +19,6 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toast.makeText(this, new FieldConstants<>(ActivityInfo.class, "SCREEN_ORIENTATION_").getName(getRequestedOrientation()), Toast.LENGTH_LONG).show();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         applicationSettings = ApplicationSettings.getSharedPreferences(this);
