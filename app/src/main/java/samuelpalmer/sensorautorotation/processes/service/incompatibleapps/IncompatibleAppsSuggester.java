@@ -97,7 +97,7 @@ public class IncompatibleAppsSuggester extends State {
 			supportedOrientationsDetector.supportsLandscape() && supportedOrientationsDetector.supportsPortrait() // Apps that are locked in the one orientation aren't a problem
 			&&
 			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
-			// TODO: Don't prompt multiple times for the same app
+			// TODO: Don't prompt if a notification already exists for this app
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
 			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
 			// TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube
