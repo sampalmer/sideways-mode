@@ -20,8 +20,9 @@ public abstract class PendingIntentIds {
 	public static final int QUICK_SETTING_CLICK = 13;
 	public static final int ENVIRONMENT_ERROR_NOTIFICATION_CLEAR = 14;
 	public static final int MAIN_NOTIFICATION_RIGHT_SIDE = 15;
-	public static final int INCOMPATIBLE_APPS_SUGGESTION = 16;
-	
+	public static final int UNINSTALL_TIP = 16;
+	public static final int INCOMPATIBLE_APPS_SUGGESTION = 17;
+
 	// Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
 	public static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_CANCEL_CURRENT;
 	

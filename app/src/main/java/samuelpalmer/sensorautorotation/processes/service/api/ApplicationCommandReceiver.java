@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.util.Collections;
+
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
@@ -22,13 +24,19 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 		ApplicationCommand command = new ApplicationCommand(intent);
 		Log.i(TAG, "Received command: " + command.action);
 		
-		if (command.incompatibleAppPackages != null) {
+		if (command.config != null) {
 			Log.i(TAG, "Command included config. Applying new config.");
-			
-			ServiceSettings.getSharedPreferences(context)
-				.edit()
-				.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, command.incompatibleAppPackages)
-				.apply();
+
+			SharedPreferences serviceSettings = ServiceSettings.getSharedPreferences(context);
+			SharedPreferences.Editor editor = serviceSettings.edit();
+
+			if (!command.config.incompatibleAppPackages.equals(serviceSettings.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())))
+				editor.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, command.config.incompatibleAppPackages);
+
+			if (command.config.uninstallingTipShown != serviceSettings.getBoolean(ServiceSettings.KEY_UNINSTALLING_TIP_SHOWN, false))
+				editor.putBoolean(ServiceSettings.KEY_UNINSTALLING_TIP_SHOWN, command.config.uninstallingTipShown);
+
+			editor.apply();
 		}
 		
 		switch (command.action) {
@@ -45,7 +53,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 				EnvironmentErrorManager.clear(context);
 				break;
 			case ApplicationCommand.ACTION_SYNC_CONFIG:
-				if (command.incompatibleAppPackages == null)
+				if (command.config == null)
 					throw new RuntimeException("Received request to sync config, but no config was provided.");
 				
 				// No need to sync the config here; it is handled elsewhere.

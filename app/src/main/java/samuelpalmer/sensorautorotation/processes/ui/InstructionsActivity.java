@@ -2,17 +2,13 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class InstructionsActivity extends FullScreenDialogActivity {
-	
-	public static final String EXTRA_FIRST_RUN = "first_run";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +19,6 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 		uninstallingContents.setText(
 			getResources().getString(
 				R.string.instructions_uninstalling_contents,
-				getResources().getText(R.string.action_uninstall),
 				getResources().getText(R.string.app_name_full)
 			)
 		);
@@ -45,31 +40,6 @@ public class InstructionsActivity extends FullScreenDialogActivity {
 			
 			finish(); // This activity and the problem report one are both full screen dialogs. So we'll finish this one so we don't end up with a dialog on top of another dialog.
 		});
-		
-		if (isFirstRun())
-			reportProblem.setVisibility(View.GONE);
-	}
-	
-	@Override
-	protected void onFullScreenDialogClosing() {
-		completeInstructions();
-		super.onFullScreenDialogClosing();
-	}
-	
-	/**
-	 * Indicates that the user has finished working through the instructions.
-	 */
-	private void completeInstructions() {
-		if (isFirstRun())
-			ApplicationSettings
-				.getSharedPreferences(this)
-				.edit()
-				.putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
-				.apply();
-	}
-	
-	private boolean isFirstRun() {
-		return getIntent().getBooleanExtra(EXTRA_FIRST_RUN, false);
 	}
 	
 }

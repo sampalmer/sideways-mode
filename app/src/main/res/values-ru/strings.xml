@@ -8,7 +8,6 @@
 	<!-- Menu -->
 	<string name="action_help">Справка</string>
 	<string name="action_report">Отчет о проблемах</string>
-	<string name="action_uninstall">Удаление</string>
 
 	<!-- Upgrade -->
 	<string name="upgrade_summary">%1$s обновлен</string>
@@ -42,7 +41,6 @@
 	<string name="instructions_heading">Инструкции</string>
 
 	<string name="instructions_uninstalling_heading">Удаление</string>
-	<string name="instructions_uninstalling_contents">Для предотвращении застревания ориентации экрана при удалении, используйте \"%1$s\" элементы меню на %2$s\'s главном экране</string>
 
 	<string name="instructions_incompatible_apps_heading">Несовместимые приложения</string>
 
@@ -51,6 +49,5 @@
 
 	<!-- Device problem -->
 	<string name="device_problem">Проблемы устройства</string>
-	<string name="device_problem_request_uninstall">"Пожалуйста, удалите это приложение"</string>
 
 </resources>

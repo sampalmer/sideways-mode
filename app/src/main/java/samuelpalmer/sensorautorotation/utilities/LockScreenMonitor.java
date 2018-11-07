@@ -23,7 +23,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 
 	public LockScreenMonitor(Context context) {
 		this.context = context;
-		keyguardManager = (KeyguardManager) this.context.getSystemService(Context.KEYGUARD_SERVICE);
+		keyguardManager = (KeyguardManager)this.context.getSystemService(Context.KEYGUARD_SERVICE);
 	}
 
 	private Boolean isOnLockScreen;
@@ -43,6 +43,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 		if (Build.VERSION.SDK_INT >= 16)
 			return keyguardManager.isKeyguardLocked();
 		else
+			//noinspection deprecation
 			return keyguardManager.inKeyguardRestrictedInputMode();
 	}
 

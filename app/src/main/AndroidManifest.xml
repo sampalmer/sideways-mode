@@ -5,10 +5,14 @@
 		android:installLocation="internalOnly">
 
 	<!-- To disable system rotation, set user rotation -->
-	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS"
+		tools:ignore="ProtectedPermissions" />
 
 	<!-- For the screen orientation enforcement overlay -->
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+	<!-- To prevent Android from stopping the app while it is running -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
@@ -59,6 +63,11 @@
 
 		<activity
 			android:name=".processes.ui.MessageDialogActivity"
+	        android:excludeFromRecents="true"
+			android:theme="@style/AppTheme.Dialog"/>
+
+		<activity
+			android:name=".processes.ui.UninstallTipActivity"
 	        android:excludeFromRecents="true"
 			android:theme="@style/AppTheme.Dialog"/>
 
@@ -184,6 +193,7 @@
 			android:name=".processes.service.DummyActivity"
 			android:theme="@android:style/Theme.NoDisplay"
 			android:enabled="true"
+			android:autoRemoveFromRecents="true"
 			android:allowTaskReparenting="true"
 			android:noHistory="true"
 			android:excludeFromRecents="true"
@@ -194,6 +204,22 @@
 			android:taskAffinity=""
 			android:process="@string/process_service"
 			/>
+
+		<activity android:name=".processes.service.WaitForActivityDetectionActivity"
+			android:theme="@style/AppTheme.Translucent"
+			android:enabled="true"
+			android:autoRemoveFromRecents="true"
+			android:allowTaskReparenting="true"
+			android:noHistory="true"
+			android:excludeFromRecents="true"
+			android:alwaysRetainTaskState="false"
+			android:stateNotNeeded="true"
+			android:clearTaskOnLaunch="true"
+			android:finishOnTaskLaunch="true"
+			android:taskAffinity=""
+			android:screenOrientation="behind"
+			android:process="@string/process_service"
+		/>
 
 		<!-- The description element is specified here since Google Play seems to require it for the accessibility services disclosure. -->
 		<service

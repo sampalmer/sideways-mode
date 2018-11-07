@@ -118,6 +118,11 @@ public class NotificationBuilderCompat {
 		return builder.getNotification();
 	}
 
+	public NotificationBuilderCompat setOnlyAlertOnce(boolean onlyAlertOnce) {
+		builder.setOnlyAlertOnce(onlyAlertOnce);
+		return this;
+	}
+
 	public NotificationBuilderCompat setPriority(int pri) {
 		return this;
 	}

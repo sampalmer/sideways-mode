@@ -13,5 +13,5 @@ public abstract class ViewUtilities {
 		if (currentVisibility != newVisibility)
 			control.setVisibility(newVisibility);
 	}
-	
+
 }

@@ -6,7 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -16,8 +16,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Posts a notification to inform the user about an upgrade from a previous version of this app.
@@ -81,8 +79,8 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
 			.setChannelId(NotificationChannels.ID_UPGRADES)
 			.build();
-		
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
+
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
 	}
 	
 }

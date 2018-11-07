@@ -1,1 +1,1 @@
-include ':app', ':com.sony.smallapp', ':loremipsum', ':memoryhog', ':screenorientations'
+include ':app', ':com.sony.smallapp', ':facedetectiontester', ':loremipsum', ':memoryhog', ':screenorientations', ':thirdpartyuninstaller'

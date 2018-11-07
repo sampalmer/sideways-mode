@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 27
+	compileSdkVersion 28
 
 
 
 	defaultConfig {
 		applicationId "samuelpalmer.loremipsum"
 		minSdkVersion 14
-		targetSdkVersion 27
+		targetSdkVersion 28
 		versionCode 1
 		versionName "1.0"
 	}
@@ -27,5 +27,5 @@ android {
 }
 
 dependencies {
-	implementation 'com.android.support:appcompat-v7:27.0.2'
+	implementation 'androidx.appcompat:appcompat:1.0.0'
 }

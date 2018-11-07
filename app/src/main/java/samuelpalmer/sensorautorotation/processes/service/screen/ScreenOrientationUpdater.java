@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -40,7 +40,7 @@ public class ScreenOrientationUpdater extends State {
 	private void propose() {
 		Orientation orientation = calculator.proposedScreenOrientation();
 		
-		if (lastProposed == null || !orientation.equals(lastProposed)) {
+		if (!orientation.equals(lastProposed)) {
 			lastProposed = orientation;
 			screen.propose(orientation);
 		}

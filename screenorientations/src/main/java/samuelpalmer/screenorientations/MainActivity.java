@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
                 results.add(result);
             }
 
-        return results.toArray(new ScreenOrientation[results.size()]);
+        return results.toArray(new ScreenOrientation[0]);
     }
 
     static class ScreenOrientation {
@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
         int value;
         String name;
 
+        @SuppressWarnings("NullableProblems")
         @Override
         public String toString() {
             return name;

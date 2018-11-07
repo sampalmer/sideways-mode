@@ -8,18 +8,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Process;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
@@ -58,6 +58,18 @@ public class CurrentProcess extends Application {
 		// Application.onCreate() is called *after* ContentProvider.onCreate().
 		// However, attachBaseContext() is called before it, which is why this method is used here.
 		Log.i(TAG, "Process created");
+
+		/*
+		 * Sometimes Android makes two instances of Application and its components within the one process.
+		 * When this happens, the whole process is effectively corrupt and unusable, so we'll just kill it
+		 * so it doesn't crash and generate an error report.
+		 *
+		 * https://issuetracker.google.com/issues/36972466#comment14
+		 */
+		if (getResources() == null) {
+			Log.w(TAG, "Process is in a bad state. Killing process.");
+			Process.killProcess(Process.myPid());
+		}
 	}
 	
 	/**
@@ -75,15 +87,15 @@ public class CurrentProcess extends Application {
 				.penaltyDialog()
 				.build()
 			);
-			
+
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 				.detectAll()
 				.penaltyLog()
-				.penaltyDeath()
+				// Not using penaltyDeath since it makes it look like the app is malfunctioning
 				.build()
 			);
 		}
-		
+
 		super.onCreate();
 
 		//Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
@@ -94,7 +106,7 @@ public class CurrentProcess extends Application {
 		 */
 		if (Build.VERSION.SDK_INT >= 26)
 			NotificationChannels.setup(this);
-		
+
 		// Must upgrade settings before any settings-related code runs.
 		Upgrader.upgradeIfNecessary(this);
 		
@@ -105,7 +117,7 @@ public class CurrentProcess extends Application {
 			  Automatically pushes changes to user preferences from the UI process to the service process.
 			  This ensures preference changes made by the user appear to instantly take effect.
 			 */
-			applicationSettings.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+			applicationSettings.registerOnSharedPreferenceChangeListener(applicationSettingsChanged);
 			
 			/*
 				We need to remove apps from the incompatible apps list if they are disabled or uninstalled.
@@ -145,10 +157,14 @@ public class CurrentProcess extends Application {
 	}
 	
 	// Do not re-use. This is just stored in a field to prevent garbage collection of the listener.
-	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
-		if (s.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
+	private final SharedPreferences.OnSharedPreferenceChangeListener applicationSettingsChanged = (sharedPreferences, s) -> {
+		if (ApplicationCommand.Config.isSyncableAppSetting(s)) {
 			Log.i(TAG, "User preferences changed. Sending to service process.");
-			new ApplicationCommand(ApplicationCommand.ACTION_SYNC_CONFIG, SendConfigReceiver.getConfigToSync(CurrentProcess.this)).send(CurrentProcess.this);
+
+			new ApplicationCommand(
+				ApplicationCommand.ACTION_SYNC_CONFIG,
+				ApplicationSettings.getSharedPreferences(CurrentProcess.this)
+			).send(CurrentProcess.this);
 		}
 	};
 	
@@ -167,7 +183,8 @@ public class CurrentProcess extends Application {
 	private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
 		Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(getPackageManager(), null);
 		Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-		
+		assert incompatibleAppPackages != null;
+
 		Set<String> toRemove = new HashSet<>();
 		for (String incompatibleAppPackage : incompatibleAppPackages)
 			if (!installedPackageNames.contains(incompatibleAppPackage))

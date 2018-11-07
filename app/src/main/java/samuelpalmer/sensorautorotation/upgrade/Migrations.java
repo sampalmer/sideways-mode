@@ -168,11 +168,25 @@ class Migrations {
 						.remove("forcedOrientationAppPackages");
 			}
 		});
-		
+
+        migrations.put(64, new Migration() {
+            @Override
+            public void upgradeUiProcessData(Context context, SharedPreferences applicationSettings, SharedPreferences.Editor editor) {
+                super.upgradeUiProcessData(context, applicationSettings, editor);
+
+                boolean userInstructed = applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
+                if (userInstructed)
+                    editor
+                            .putBoolean(ApplicationSettings.KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN, true)
+							.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true)
+							.putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true);
+            }
+        });
+
 		return migrations;
 	}
-	
-	private static void restoreSystemSettings(Context context, Boolean autoRotate) {
+
+    private static void restoreSystemSettings(Context context, Boolean autoRotate) {
 		if (!SystemSettings.canWrite(context))
 			Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.");
 		else {

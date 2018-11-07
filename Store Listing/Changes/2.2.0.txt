@@ -1,0 +1,2 @@
+• Brought back the "Overridden apps" feature since Google Play has given me permission to continue using the accessibility service for the time being. The feature is now called "Incompatible apps" to make its use clearer.
+• Minor fixes and improvements

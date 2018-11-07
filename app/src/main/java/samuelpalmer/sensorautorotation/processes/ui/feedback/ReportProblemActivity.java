@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import androidx.core.content.pm.PackageInfoCompat;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.FullScreenDialogActivity;
 import samuelpalmer.sensorautorotation.utilities.Email;
@@ -105,8 +106,8 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		}
 		
 		String subject = getString(R.string.email_problem_subject, getText(R.string.app_name_full), appInfo.versionName);
-		
-		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, appInfo.versionCode);
+
+		String fullAppVersion = String.format(Locale.ENGLISH, "%s (%d)", appInfo.versionName, PackageInfoCompat.getLongVersionCode(appInfo));
 		String body = String.format(
 			"App version:\n%s\n\nWhat I did: %s\nWhat happened: %s\nWhat I expected: %s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
 			fullAppVersion,
@@ -149,10 +150,14 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		
 		for (EditText input : inputs) {
 			String text = input.getText().toString().trim();
-			
-			if (text.length() < 5) {
-				// Not using material design errors here because they result in a lot of visual clutter.
+
+			// Not using material design errors here because they result in a lot of visual clutter.
+			if (text.length() == 0) {
 				input.setError(getText(R.string.report_problem_field_missing));
+				isValid = false;
+			}
+			else if (text.length() < 5) {
+				input.setError(getText(R.string.report_problem_field_too_short));
 				isValid = false;
 			}
 			else

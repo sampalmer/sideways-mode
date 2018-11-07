@@ -16,8 +16,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-
 public abstract class EnvironmentErrorManager {
 	
 	public static void report(Context context, EnvironmentError error) {
@@ -36,7 +34,7 @@ public abstract class EnvironmentErrorManager {
 	}
 	
 	public static void clear(Context context) {
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
 		
 		ServiceSettings
 			.getSharedPreferences(context)
@@ -71,7 +69,7 @@ public abstract class EnvironmentErrorManager {
 		
 		Notification notification = builder.build();
 		
-		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
+		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
 	}
 	
 }

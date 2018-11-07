@@ -1,10 +1,9 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class UiActivity extends AppCompatActivity {
 	
@@ -24,19 +23,6 @@ public abstract class UiActivity extends AppCompatActivity {
 			startActivity(intent);
 			
 			finish();
-			return;
-		}
-		
-		if (!(this instanceof InstructionsActivity)) {
-			boolean userInstructed = ApplicationSettings
-				.getSharedPreferences(this)
-				.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
-			
-			if (!userInstructed) {
-				Intent intent = new Intent(this, InstructionsActivity.class)
-					.putExtra(InstructionsActivity.EXTRA_FIRST_RUN, true);
-				startActivity(intent);
-			}
 		}
 	}
 	

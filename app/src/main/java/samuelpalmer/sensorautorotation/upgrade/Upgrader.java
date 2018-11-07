@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.upgrade;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.Surface;
 
 import java.util.Map;
 
+import androidx.core.content.pm.PackageInfoCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -35,14 +37,16 @@ public class Upgrader {
 	public static void upgradeIfNecessary(Context context) {
 		if (lastAppVersionSet)
 			throw new RuntimeException("This has already been called.");
-		
-		int newAppVersion;
+
+		PackageInfo packageInfo;
 		try {
-			newAppVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+			packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 		} catch (PackageManager.NameNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		
+
+		int newAppVersion = (int) PackageInfoCompat.getLongVersionCode(packageInfo);
+
 		SharedPreferences prefs;
 		String settingsAppVersionKey;
 		

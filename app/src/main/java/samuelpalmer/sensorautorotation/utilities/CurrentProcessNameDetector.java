@@ -10,8 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static android.content.Context.ACTIVITY_SERVICE;
-
 public class CurrentProcessNameDetector {
 	public static String currentProcessName(Context context) {
 		try {
@@ -70,7 +68,7 @@ public class CurrentProcessNameDetector {
 	private static String getNameFromActivityManager(Context context) {
 		int pid = getPid();
 		
-		for (RunningAppProcessInfo process :  ((ActivityManager) context.getSystemService(ACTIVITY_SERVICE)).getRunningAppProcesses())
+		for (RunningAppProcessInfo process : ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningAppProcesses())
 			if (process.pid == pid) {
 				String result = process.processName;
 				if (result == null)

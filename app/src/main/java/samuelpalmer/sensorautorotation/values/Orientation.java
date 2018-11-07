@@ -1,6 +1,6 @@
 package samuelpalmer.sensorautorotation.values;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 
@@ -46,6 +46,7 @@ public enum Orientation { // Using an enum to reduce heap allocation and garbage
 		return fromOffset(NumberUtilities.wrap(offset + change.offset, numberOfPossibleRotations));
 	}
 	
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public String toString() {
 		return name;

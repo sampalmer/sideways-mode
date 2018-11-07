@@ -84,8 +84,9 @@ class DiagnosticInfo {
 		finally {
 			try {
 				reader.close();
-			} catch (IOException ignored) {
-				Log.w(DiagnosticInfo.class.getSimpleName(), ignored);
+			} catch (IOException ex) {
+				// No big deal if we can't close the stream. At least we managed to get the data out of it.
+				Log.w(DiagnosticInfo.class.getSimpleName(), ex);
 			}
 		}
 
@@ -95,7 +96,7 @@ class DiagnosticInfo {
 	public static String sensorDump(Context context) {
 		StringBuilder result = new StringBuilder();
 		
-		SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+		SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 		
 		for (Sensor sensor : sensors) {

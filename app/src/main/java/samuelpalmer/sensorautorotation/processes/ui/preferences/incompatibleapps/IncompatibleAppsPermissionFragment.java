@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import samuelpalmer.sensorautorotation.R;

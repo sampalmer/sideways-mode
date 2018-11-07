@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public abstract class MemoryHoggingService extends Service {
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "FieldCanBeLocal"})
 	private MemoryHog memoryHog;
 
 	@Override

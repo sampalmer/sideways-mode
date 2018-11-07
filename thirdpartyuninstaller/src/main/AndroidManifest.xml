@@ -1,0 +1,31 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="samuelpalmer.thirdpartyuninstaller">
+
+    <application
+        android:allowBackup="false"
+        android:icon="@android:mipmap/sym_def_app_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name="samuelpalmer.thirdpartyuninstaller.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="samuelpalmer.thirdpartyuninstaller.UninstallerActivity">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.DELETE" />
+                <action android:name="android.intent.action.UNINSTALL_PACKAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>

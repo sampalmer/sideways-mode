@@ -2,19 +2,20 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.PendingIntent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -24,7 +25,10 @@ import samuelpalmer.sensorautorotation.values.UserSide;
  * The main content of the dashboard. This fragment requires the application status to be available.
  */
 public class DashboardNormalFragment extends Fragment {
-	
+
+	private StatusChangeListener parentStatusListener;
+	private CommandSentListener commandSentListener;
+
 	private CoordinatorLayout snackbarContainer;
 	private ProgressBar progressBar;
 	private ViewGroup statusContainer;
@@ -34,10 +38,37 @@ public class DashboardNormalFragment extends Fragment {
 	private View leftSideButton;
 	private View turnOffButton;
 	private View rightSideButton;
-	
+
 	private ApplicationStatusClient statusClient;
 	private ApplicationStatus lastStatus;
-	
+
+	interface StatusChangeListener {
+		void onStatusChange(ApplicationStatus status);
+	}
+
+	interface CommandSentListener {
+		void onCommandSent(boolean isStartCommand);
+	}
+
+	public View getRightSideButton() {
+		if (rightSideButton == null)
+			throw new IllegalStateException("Button is not yet available");
+
+		return rightSideButton;
+	}
+
+	public ApplicationStatus getStatus() {
+		return lastStatus;
+	}
+
+	public void setStatusChangeListener(StatusChangeListener statusChangeListener) {
+		parentStatusListener = statusChangeListener;
+	}
+
+	public void setCommandSentListener(CommandSentListener commandSentListener) {
+		this.commandSentListener = commandSentListener;
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,9 +84,9 @@ public class DashboardNormalFragment extends Fragment {
 		turnOffButton = layout.findViewById(R.id.dashboard_button_turn_off);
 		rightSideButton = layout.findViewById(R.id.dashboard_button_right_side);
 		
-		leftSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_LEFT_SIDE));
-		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF));
-		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE));
+		leftSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_LEFT_SIDE, true));
+		turnOffButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_TURN_OFF, false));
+		rightSideButton.setOnClickListener(new ActionClickListener(ApplicationCommand.ACTION_RIGHT_SIDE, true));
 		
 		return layout;
 	}
@@ -65,28 +96,33 @@ public class DashboardNormalFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		statusClient = new ApplicationStatusClient(getContext(), statusChanged);
 	}
-	
+
 	private class ActionClickListener implements View.OnClickListener {
 		
 		private final String action;
-		
-		public ActionClickListener(String action) {
+		private final boolean isStartCommand;
+
+		public ActionClickListener(String action, boolean isStartCommand) {
 			this.action = action;
+			this.isStartCommand = isStartCommand;
 		}
 		
 		@Override
 		public void onClick(View view) {
 			if (!view.isSelected()) {
 				// Including config in the command to ensure that the app is started with the latest copy of the user preferences, just in case it got out of sync.
-				new ApplicationCommand(action, SendConfigReceiver.getConfigToSync(getContext())).send(getContext());
-				
-				//noinspection ConstantConditions
-				getActivity().finish();
+				new ApplicationCommand(
+					action,
+					ApplicationSettings.getSharedPreferences(getContext())
+				).send(getContext());
+
+				if (commandSentListener != null)
+					commandSentListener.onCommandSent(isStartCommand);
 			}
 		}
 		
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -107,6 +143,9 @@ public class DashboardNormalFragment extends Fragment {
 			if (status != null) {
 				lastStatus = status;
 				showStatus();
+
+				if (parentStatusListener != null)
+					parentStatusListener.onStatusChange(status);
 			}
 		}
 		
@@ -134,7 +173,7 @@ public class DashboardNormalFragment extends Fragment {
 			updateSnackbar();
 		}
 	}
-	
+
 	private void updateSnackbar() {
 		if (snackbar == null) {
 			snackbar = Snackbar.make(snackbarContainer, "", Snackbar.LENGTH_INDEFINITE);

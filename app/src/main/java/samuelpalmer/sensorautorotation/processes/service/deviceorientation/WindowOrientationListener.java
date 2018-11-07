@@ -15,7 +15,7 @@
  */
 
 /*
- * Copied from commit bfa81a (https://github.com/android/platform_frameworks_base/blob/bfa81adfbe1819d55737dbbb2fb9157e50dbe022/services/core/java/com/android/server/policy/WindowOrientationListener.java)
+ * Copied from commit 6c6e9c (https://github.com/aosp-mirror/platform_frameworks_base/blob/6c6e9cab42bccb44ebb4b30e7eab7394c0dbb759/services/core/java/com/android/server/policy/WindowOrientationListener.java)
  *
  * Minor modifications made for this project:
  * -Package changed
@@ -23,7 +23,8 @@
  * -Suppression of lint checks and warnings
  * -Removed XML-based tilt tolerance config
  * -Reduced class accessibility
- * -Added support for device orientation sensors for reduced lag
+ * -Added support for custom device orientation sensors for reduced lag
+ * -Removed proto output since it isn't available to non-system apps
  */
 
 package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
@@ -47,6 +48,7 @@ import java.util.List;
 
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 
 /**
  * A special helper class used by the WindowManager
@@ -148,7 +150,35 @@ public abstract class WindowOrientationListener {
 		ArrayList<Sensor> result = new ArrayList<>();
 		
 		for (int type : prioritisedSensorTypes) {
-			Sensor sensor = sensorManager.getDefaultSensor(type);
+			Sensor sensor;
+
+			if (type == SENSOR_TYPE_DEVICE_ORIENTATION) {
+				List<Sensor> l = sensorManager.getSensorList(type);
+				Sensor wakeUpDeviceOrientationSensor = null;
+				Sensor nonWakeUpDeviceOrientationSensor = null;
+				/**
+				 *  Prefer the wakeup form of the sensor if implemented.
+				 *  It's OK to look for just two types of this sensor and use
+				 *  the last found. Typical devices will only have one sensor of
+				 *  this type.
+				 */
+				for (Sensor s : l) {
+					if (s.isWakeUpSensor()) {
+						wakeUpDeviceOrientationSensor = s;
+					} else {
+						nonWakeUpDeviceOrientationSensor = s;
+					}
+				}
+
+				if (wakeUpDeviceOrientationSensor != null) {
+					sensor = wakeUpDeviceOrientationSensor;
+				} else {
+					sensor = nonWakeUpDeviceOrientationSensor;
+				}
+			}
+			else
+				sensor = sensorManager.getDefaultSensor(type);
+
 			if (isSupported(sensor))
 				result.add(sensor);
 		}
@@ -377,7 +407,7 @@ public abstract class WindowOrientationListener {
 			pw.println(prefix + TAG);
 			prefix += "  ";
 			pw.println(prefix + "mEnabled=" + mEnabled);
-			pw.println(prefix + "mCurrentRotation=" + mCurrentRotation);
+			pw.println(prefix + "mCurrentRotation=" + AndroidSurfaceRotation.name(mCurrentRotation));
 			pw.println(prefix + "mSensorType=" + "(ignored)");
 			pw.println(prefix + "mSensors=" + mSensors);
 			pw.println(prefix + "mRate=" + mRate);
@@ -1251,8 +1281,8 @@ public abstract class WindowOrientationListener {
 		public void dumpLocked(PrintWriter pw, String prefix) {
 			pw.println(prefix + "OrientationSensorJudge");
 			prefix += "  ";
-			pw.println(prefix + "mDesiredRotation=" + mDesiredRotation);
-			pw.println(prefix + "mProposedRotation=" + mProposedRotation);
+			pw.println(prefix + "mDesiredRotation=" + AndroidSurfaceRotation.name(mDesiredRotation));
+			pw.println(prefix + "mProposedRotation=" + AndroidSurfaceRotation.name(mProposedRotation));
 			pw.println(prefix + "mTouching=" + mTouching);
 			pw.println(prefix + "mTouchEndedTimestampNanos=" + mTouchEndedTimestampNanos);
 		}

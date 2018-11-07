@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 27
+	compileSdkVersion 28
 
 	lintOptions{
 		disable 'MissingTranslation'
@@ -9,9 +9,9 @@ android {
 	defaultConfig {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
-		targetSdkVersion 27
-		versionCode 60
-		versionName "2.1.0"
+		targetSdkVersion 28 // Not using SDK 28 because the corresponding support library versions 1. aren't yet production-ready, and; 2. have a rendering bug affecting changes to checkboxes in the incompatible apps screen when run on Samsung Galaxy S5
+		versionCode 63
+		versionName "2.3.0"
 
 		/*
 		 * Strips out languages added through the support library so that:
@@ -43,6 +43,8 @@ android {
 
 dependencies {
 	compileOnly project(':com.sony.smallapp')
-	implementation 'com.android.support:appcompat-v7:27.0.2'
-	implementation 'com.android.support:design:27.0.2'
+	implementation 'androidx.appcompat:appcompat:1.0.0'
+	implementation 'androidx.preference:preference:1.0.0'
+	implementation 'com.google.android.material:material:1.0.0'
+	implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
 }

@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -22,10 +22,10 @@ public class ApplicationStatusClient {
 	private final Context context;
 	private final Listener listener;
 	private final Messenger clientMessenger;
-	
+
 	private boolean bound;
-	private @Nullable Messenger serviceMessenger; // Only available when the service both bound and connected.
-	
+	private @Nullable Messenger serviceMessenger; // Only available when the service is both bound and connected.
+
 	public ApplicationStatusClient(Context context, Listener listener) {
 		this.context = context;
 		this.listener = listener;
@@ -35,7 +35,7 @@ public class ApplicationStatusClient {
 	public void subscribe() {
 		if (bound)
 			throw new RuntimeException("Already subscribed");
-		
+
 		bound = context.bindService(
 			new Intent(context, ApplicationStatusService.class),
 			serviceConnection,
@@ -61,7 +61,7 @@ public class ApplicationStatusClient {
 			} catch (RemoteException ignored) {
 				// The service process died, but that doesn't matter since we're unsubscribing.
 			}
-			
+
 			disconnected();
 		}
 		
@@ -75,7 +75,7 @@ public class ApplicationStatusClient {
 		public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
 			if (bound) {
 				serviceMessenger = new Messenger(iBinder);
-				
+
 				try {
 					Message msg = Message.obtain(null, ApplicationStatusService.MSG_SUBSCRIBE);
 					msg.replyTo = clientMessenger;
@@ -109,7 +109,7 @@ public class ApplicationStatusClient {
 	private static class ClientHandler extends Handler {
 		
 		private final WeakReference<ApplicationStatusClient> clientReference;
-		
+
 		public ClientHandler(ApplicationStatusClient client) {
 			// Android Studio issued a warning saying that I must use weak references to outside of the handler, hence the use of weak references here
 			this.clientReference = new WeakReference<>(client);

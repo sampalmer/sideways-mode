@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;

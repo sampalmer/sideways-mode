@@ -22,8 +22,6 @@ import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStat
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-
 /**
  * Issues a notification if the permissions needed for the "Incompatible apps" feature are
  * missing but required.
@@ -44,7 +42,7 @@ public class PermissionNotificationManager extends State {
 	
 	public PermissionNotificationManager(Context context) {
 		this.context = context;
-		notificationManager = (NotificationManager) this.context.getSystemService(NOTIFICATION_SERVICE);
+		notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		prefs = ServiceSettings.getSharedPreferences(this.context);
 		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(this.context, WindowChangeDetectingService.class);
@@ -78,9 +76,10 @@ public class PermissionNotificationManager extends State {
 	public void check() {
 		if (needsPermission()) {
 			PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
-			context,
+				context,
 				PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
-				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+				// The user might have opened a child activity, but we need to go to the activity specified here so that the user goes straight to the permission section
+				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
 				PendingIntentIds.PENDING_INTENT_FLAGS);
 			
 			Notification notification = NotificationBuilderFactory
@@ -102,6 +101,9 @@ public class PermissionNotificationManager extends State {
 	private boolean needsPermission() {
 		if (isRunning) {
 			Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+			assert incompatibleAppPackages != null;
+
+			//noinspection RedundantIfStatement
 			if (!incompatibleAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
 				return true;
 		}

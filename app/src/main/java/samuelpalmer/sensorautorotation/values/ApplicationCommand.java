@@ -2,7 +2,10 @@ package samuelpalmer.sensorautorotation.values;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 /**
@@ -22,7 +26,9 @@ public class ApplicationCommand {
 	public static final String ACTION_TURN_OFF = "turn_off";
 	public static final String ACTION_CLEAR_ERROR = "clear_error";
 	public static final String ACTION_SYNC_CONFIG = "sync_config";
-	
+
+	private static final String EXTRA_CONFIG = "config";
+
 	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
 			ACTION_LEFT_SIDE,
 			ACTION_RIGHT_SIDE,
@@ -32,36 +38,37 @@ public class ApplicationCommand {
 	));
 	
 	public final String action;
-	
-	@Nullable
-	public final Set<String> incompatibleAppPackages;
-	
+	@Nullable public final Config config;
+
 	public ApplicationCommand(String action) {
-		this(action, null);
+		this(action, (Config)null);
 	}
-	
-	public ApplicationCommand(String action, @Nullable Set<String> incompatibleAppPackages) {
+
+	/**
+	 * @param applicationSettings If specified, the app setting values will be included in the command for synchronisation with the service settings.
+	 */
+	public ApplicationCommand(String action, SharedPreferences applicationSettings) {
+		this(
+			action,
+			new Config(applicationSettings)
+		);
+	}
+
+	private ApplicationCommand(String action, @Nullable Config config) {
 		if (action == null || !knownActions.contains(action))
 			throw new IllegalArgumentException("Unknown action: " + action);
 
 		this.action = action;
-		this.incompatibleAppPackages = incompatibleAppPackages;
+		this.config = config;
 	}
-	
+
 	public ApplicationCommand(Intent intent) {
-		this(intent.getAction(), getIncompatibleAppPackages(intent));
+		this(
+			intent.getAction(),
+			Config.fromBundle(intent.getBundleExtra(EXTRA_CONFIG))
+		);
 	}
-	
-	private static Set<String> getIncompatibleAppPackages(Intent intent) {
-		String[] array = intent.getStringArrayExtra(null);
-		if (array == null)
-			return null;
-		
-		HashSet<String> result = new HashSet<>(array.length);
-		Collections.addAll(result, array);
-		return result;
-	}
-	
+
 	public void send(Context context) {
 		Intent intent = asIntent(context);
 		context.sendBroadcast(intent);
@@ -70,11 +77,69 @@ public class ApplicationCommand {
 	public Intent asIntent(Context context) {
 		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
 		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
-		if (incompatibleAppPackages != null)
-			result.putExtra(null, incompatibleAppPackages.toArray(new String[incompatibleAppPackages.size()]));
-			
+		if (config != null)
+			result.putExtra(EXTRA_CONFIG, config.asBundle());
+
 		BroadcastKillFix.apply(result);
 		return result;
+	}
+
+	public static final class Config {
+		public final Set<String> incompatibleAppPackages;
+		public final boolean uninstallingTipShown;
+
+		public static boolean isSyncableAppSetting(String appSettingKey) {
+			return
+				appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)
+				||
+				appSettingKey.equals(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN)
+			;
+		}
+
+		public Config(SharedPreferences applicationSettings) {
+			this(
+				applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()),
+				applicationSettings.getBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, false)
+			);
+		}
+
+		private Config(Set<String> incompatibleAppPackages, boolean uninstallingTipShown) {
+			this.incompatibleAppPackages = incompatibleAppPackages;
+			if (incompatibleAppPackages == null)
+				throw new IllegalArgumentException("incompatibleAppPackages is null");
+
+			this.uninstallingTipShown = uninstallingTipShown;
+		}
+
+		public static @Nullable Config fromBundle(@Nullable Bundle bundle) {
+			if (bundle == null)
+				return null;
+
+			if (!bundle.containsKey(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN))
+				throw new IllegalArgumentException("Bundle doesn't contain " + ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN);
+
+			return new Config(
+				getIncompatibleAppPackages(bundle),
+				bundle.getBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, false)
+			);
+		}
+
+		private static Set<String> getIncompatibleAppPackages(Bundle bundle) {
+			String[] array = bundle.getStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+			if (array == null)
+				return null;
+
+			HashSet<String> result = new HashSet<>(array.length);
+			Collections.addAll(result, array);
+			return result;
+		}
+
+		public Bundle asBundle() {
+			Bundle result = new Bundle();
+			result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
+			result.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, uninstallingTipShown);
+			return result;
+		}
 	}
 	
 }

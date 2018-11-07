@@ -28,8 +28,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		Log.i(TAG, "Accessibility service created");
 	}
 
-	//So far, this only gets called when the user disables the service in the accessibility settings
-	//Stopping the service with stopService() doesn't trigger this, presumably because something has bound to it
+	//So far, this only gets called when the user disables the service in the accessibility settings.
+	//Stopping the service with stopService() doesn't trigger this, presumably because something has bound to it.
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -48,8 +48,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 	@Override
 	protected void onServiceConnected() {
 		super.onServiceConnected();
-		updateServiceInfo();
 		Log.i(TAG, "Accessibility service connected");
+		updateServiceInfo();
 	}
 
 	@Override
@@ -84,8 +84,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
 		
 		if (ServiceRunningStateHolder.isServiceRunning() && !wasListening) {
 			// If we're just starting up, we'll launch a self-closing activity so we can detect which activity the user initially has open.
-			Intent intent = new Intent(this, DummyActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			Intent intent = new Intent(this, WaitForActivityDetectionActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // <!-- DO NOT use FLAG_ACTIVITY_NO_ANIMATION, since that causes a black flicker when the activity starts or finishes on API 27. -->
 			startActivity(intent);
 		}
 		

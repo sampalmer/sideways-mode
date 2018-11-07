@@ -2,7 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -38,7 +38,7 @@ public class RunningStateUpdater extends State {
 		public void update() {
 			ApplicationStatus.RunningState runningState = calculator.runningState();
 
-			if (lastRunningState == null || !runningState.equals(lastRunningState)) {
+			if (!runningState.equals(lastRunningState)) {
 				Notification notification = notificationBuilder.build(runningState);
 				
 				// Running the service in the foreground reduces the chance of the process being killed.

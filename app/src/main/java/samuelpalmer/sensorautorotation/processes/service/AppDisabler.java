@@ -19,7 +19,7 @@ public class AppDisabler extends State {
 	
 	public AppDisabler(Context context) {
 		this.context = context;
-		keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+		keyguardManager = (KeyguardManager)context.getSystemService(Context.KEYGUARD_SERVICE);
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ public class ScreenOrientationEnforcer extends State {
 	private boolean isEnforced;
 
 	public ScreenOrientationEnforcer(Context context) {
-		windows = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 		view = new View(context);
 		layout = generateLayout();
 	}
