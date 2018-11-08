@@ -1,6 +1,8 @@
 package samuelpalmer.memoryhog;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,18 +14,26 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
-	
+
+	public static final String NOTIFICATION_CHANNEL_SERVICES = "services";
+
 	private static final int NUMBER_OF_PROCESSES = 8;
-	
+
 	@SuppressWarnings("unused")
 	private MemoryHog memoryHog;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
-		
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+			NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_SERVICES, "Services", NotificationManager.IMPORTANCE_LOW);
+			notificationManager.createNotificationChannel(channel);
+		}
+
 		Log.i(getClass().getSimpleName(), "Activity created. Consuming memory.");
 		memoryHog = new MemoryHog(this);
 		for (Class s : getServiceClasses())
