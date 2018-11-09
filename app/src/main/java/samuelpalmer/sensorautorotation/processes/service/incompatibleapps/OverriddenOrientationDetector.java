@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.Surface;
-
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -106,6 +105,10 @@ public class OverriddenOrientationDetector extends EventRegistrarAdaptor {
 			
 			handler.removeCallbacks(overrideHeld);
 			if (isOverridden)
+				/* TODO: Somehow prevent this from firing if the screen orientation mismatch is caused by the device running slowly
+					Maybe make this whole thing smarter about how to determine whether the orientation is overridden:
+					- Maybe measure how long it takes for a handler callback to be called back?
+				 */
 				handler.postDelayed(overrideHeld, 1000);
 		}
 	}
