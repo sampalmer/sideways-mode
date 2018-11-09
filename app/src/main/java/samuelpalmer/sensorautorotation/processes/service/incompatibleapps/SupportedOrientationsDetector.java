@@ -4,14 +4,19 @@ import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
-
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
  * Tracks which screen orientations get used.
  */
 public class SupportedOrientationsDetector extends EventRegistrarAdaptor {
-	
+
+	/**
+		We can only count a screen orientation if it is held for this long. This is needed to eliminate:
+		- The orientation changing as part of an activity change transition
+		- The orientation flicking back and forth due to {@link samuelpalmer.sensorautorotation.processes.service.WaitForActivityDetectionActivity}
+	 	- The orientation flicking back and forth when turning off screen orientation enforcement while switching to an activity that doesn't support rotation
+	 */
 	private static final int MIN_DURATION = 1000;
 	
 	private final Context context;
