@@ -16,27 +16,32 @@ package samuelpalmer.facedetectiontester.java;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.ToggleButton;
-
-import com.google.android.gms.common.annotation.KeepName;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.content.ContextCompat;
+import com.google.android.gms.common.annotation.KeepName;
 import samuelpalmer.facedetectiontester.R;
 import samuelpalmer.facedetectiontester.common.CameraSource;
 import samuelpalmer.facedetectiontester.common.CameraSourcePreview;
 import samuelpalmer.facedetectiontester.common.GraphicOverlay;
 import samuelpalmer.facedetectiontester.java.facedetection.FaceDetectionProcessor;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Demo app showing the various features of ML Kit for Firebase. This class is used to
@@ -52,6 +57,15 @@ public final class LivePreviewActivity extends AppCompatActivity
     private CameraSource cameraSource = null;
     private CameraSourcePreview preview;
     private GraphicOverlay graphicOverlay;
+    private SeekBar screenBrightnessSlider;
+    private SeekBar screenOverlaySlider;
+    private SeekBar isoSlider;
+    private SeekBar exposureCompensationSlider;
+    private SeekBar exposureTimeSlider;
+    private SeekBar imageBrightnessSlider;
+    private SeekBar imageContrastSlider;
+    private WindowManager windowManager;
+    private View overlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +86,42 @@ public final class LivePreviewActivity extends AppCompatActivity
         ToggleButton facingSwitch = findViewById(R.id.facingSwitch);
         facingSwitch.setOnCheckedChangeListener(this);
 
+        windowManager = ContextCompat.getSystemService(this, WindowManager.class);
+
+        overlay = new View(this);
+        overlay.setBackgroundColor(Color.WHITE);
+
+        WindowManager.LayoutParams overlayParams = new WindowManager.LayoutParams();
+        overlayParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
+        overlayParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+        overlayParams.format = PixelFormat.TRANSLUCENT;
+        overlayParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        overlayParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        windowManager.addView(overlay, overlayParams);
+
+        screenBrightnessSlider = findViewById(R.id.screenBrightness);
+        screenOverlaySlider = findViewById(R.id.screenOverlay);
+        isoSlider = findViewById(R.id.iso);
+        exposureCompensationSlider = findViewById(R.id.exposureCompensation);
+        exposureTimeSlider = findViewById(R.id.exposureTime);
+        imageBrightnessSlider = findViewById(R.id.imageBrightness);
+        imageContrastSlider = findViewById(R.id.imageContrast);
+
+        screenBrightnessSlider.setMax(Integer.MAX_VALUE);
+        screenBrightnessSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> setScreenBrightness((float) progress / Integer.MAX_VALUE)));
+        setScreenBrightness(0.5f);
+        screenBrightnessSlider.setProgress(screenBrightnessSlider.getMax() / 2);
+
+        screenOverlaySlider.setMax(Integer.MAX_VALUE);
+        screenOverlaySlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> overlay.setAlpha((float) progress / Integer.MAX_VALUE)));
+        overlay.setAlpha(0);
+        screenOverlaySlider.setProgress(0);
+
+        isoSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> cameraSource.setIso(cameraSource.getSupportedIsos()[progress])));
+        exposureCompensationSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> cameraSource.setExposureCompensation(progress + cameraSource.getMinExposureCompensation())));
+        exposureTimeSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> cameraSource.setExposureTime(progress == 0 ? null : (progress - 1) / 1000000.0 + cameraSource.getMinExposureTime())));
+
         createCameraSource();
 
         if (allPermissionsGranted()) {
@@ -79,6 +129,13 @@ public final class LivePreviewActivity extends AppCompatActivity
         } else {
             getRuntimePermissions();
         }
+    }
+
+    private void setScreenBrightness(float screenBrightness) {
+        Window window = getWindow();
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.screenBrightness = screenBrightness;
+        window.setAttributes(attributes);
     }
 
     @Override
@@ -101,6 +158,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
             cameraSource = new CameraSource(this, graphicOverlay);
+            cameraSource.setOnStateChangeListener(cameraStateChangeListener);
         }
 
         Log.i(TAG, "Using Face Detector Processor");
@@ -125,10 +183,34 @@ public final class LivePreviewActivity extends AppCompatActivity
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 cameraSource.release();
+                cameraSource.setOnStateChangeListener(null);
                 cameraSource = null;
             }
         }
     }
+
+    private final CameraSource.StateChangeListener cameraStateChangeListener = new CameraSource.StateChangeListener() {
+        @Override
+        public void onStateChanged() {
+            if (cameraSource.isStarted()) {
+                isoSlider.setMax(cameraSource.getSupportedIsos().length - 1);
+
+                int isoIndex = Arrays.asList(cameraSource.getSupportedIsos()).indexOf(cameraSource.getIso());
+                if (isoIndex == -1)
+                    throw new RuntimeException("Camera's ISO value is not in the supported list: " + cameraSource.getIso());
+
+                isoSlider.setProgress(isoIndex);
+
+                exposureCompensationSlider.setMax(cameraSource.getMaxExposureCompensation() - cameraSource.getMinExposureCompensation());
+                exposureCompensationSlider.setProgress(cameraSource.getExposureCompensation() - cameraSource.getMinExposureCompensation());
+
+                exposureTimeSlider.setMax((int)((cameraSource.getMaxExposureTime() - cameraSource.getMinExposureTime()) * 1000000 + 1));
+
+                Double exposureTime = cameraSource.getExposureTime();
+                exposureTimeSlider.setProgress(exposureTime == null ? 0 : (int) (exposureTime * 1000000 + 1));
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -154,6 +236,8 @@ public final class LivePreviewActivity extends AppCompatActivity
         if (cameraSource != null) {
             cameraSource.release();
         }
+
+        windowManager.removeView(overlay);
     }
 
     private String[] getRequiredPermissions() {

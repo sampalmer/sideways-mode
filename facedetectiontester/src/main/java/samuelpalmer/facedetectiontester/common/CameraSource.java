@@ -26,19 +26,17 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
-
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Manages the camera and allows UI updates on top of it (e.g. overlaying extra Graphics or
@@ -124,6 +122,7 @@ public class CameraSource {
      * identity ('==') check on the keys.
      */
     private final Map<byte[], ByteBuffer> bytesToByteBuffer = new IdentityHashMap<>();
+    private StateChangeListener stateChangeListener;
 
     public CameraSource(Activity activity, GraphicOverlay overlay) {
         this.activity = activity;
@@ -170,6 +169,9 @@ public class CameraSource {
         usingSurfaceTexture = true;
         camera.startPreview();
 
+        if (stateChangeListener != null)
+            stateChangeListener.onStateChanged();
+
         processingThread = new Thread(processingRunnable);
         processingRunnable.setActive(true);
         processingThread.start();
@@ -193,12 +195,19 @@ public class CameraSource {
         camera.setPreviewDisplay(surfaceHolder);
         camera.startPreview();
 
+        if (stateChangeListener != null)
+            stateChangeListener.onStateChanged();
+
         processingThread = new Thread(processingRunnable);
         processingRunnable.setActive(true);
         processingThread.start();
 
         usingSurfaceTexture = false;
         return this;
+    }
+
+    public boolean isStarted() {
+        return camera != null;
     }
 
     /**
@@ -238,6 +247,9 @@ public class CameraSource {
             }
             camera.release();
             camera = null;
+
+            if (stateChangeListener != null)
+                stateChangeListener.onStateChanged();
         }
 
         // Release the reference to any image buffers, since these will no longer be in use.
@@ -252,6 +264,115 @@ public class CameraSource {
             throw new IllegalArgumentException("Invalid camera: " + facing);
         }
         this.facing = facing;
+    }
+
+    private HashMap<String, String> getAllCameraParameters() {
+        String flattened = camera.getParameters().flatten();
+        String[] flattenedKeyValuePairs = flattened.split(";");
+        HashMap<String, String> keyValuePairs = new HashMap<>(flattenedKeyValuePairs.length);
+
+        for (String flattenedKeyValuePair : flattenedKeyValuePairs) {
+            String[] components = flattenedKeyValuePair.split("=");
+
+            String key = components[0];
+
+            String value;
+            if (components.length == 2)
+                value = components[1];
+            else if (components.length == 1)
+                value = null;
+            else
+                throw new RuntimeException(String.format("Found %d components for key-value pair: %s", components.length, flattenedKeyValuePair));
+
+            keyValuePairs.put(key, value);
+        }
+        return keyValuePairs;
+    }
+
+    public synchronized String[] getSupportedIsos() {
+        HashMap<String, String> params = getAllCameraParameters();
+        return params.get("iso-values").split(",");
+    }
+
+    public synchronized String getIso() {
+        return camera.getParameters().get("iso");
+    }
+
+    public synchronized void setIso(String iso) {
+        Camera.Parameters params = camera.getParameters();
+        params.set("iso", iso);
+        camera.setParameters(params);
+    }
+
+    public synchronized int getMinExposureCompensation() {
+        return camera.getParameters().getMinExposureCompensation();
+    }
+
+    public synchronized int getMaxExposureCompensation() {
+        return camera.getParameters().getMaxExposureCompensation();
+    }
+
+    public synchronized int getExposureCompensation() {
+        return camera.getParameters().getExposureCompensation();
+    }
+
+    public synchronized void setExposureCompensation(int exposureCompensation) {
+        Camera.Parameters params = camera.getParameters();
+        params.setExposureCompensation(exposureCompensation);
+        camera.setParameters(params);
+    }
+
+    public synchronized double getMinExposureTime() {
+        try {
+            return exposureTimeFormat().parse(getAllCameraParameters().get("min-exposure-time")).doubleValue();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public synchronized double getMaxExposureTime() {
+        double result;
+
+        try {
+            result = exposureTimeFormat().parse(getAllCameraParameters().get("max-exposure-time")).doubleValue();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Math.min(result, 530); // Higher values cause crashes in the camera daemon on my Moto G5 Plus for some reason.
+    }
+
+    public synchronized Double getExposureTime() {
+        String formatted = camera.getParameters().get("exposure-time");
+
+        if (formatted == null)
+            return null;
+        else {
+            try {
+                return exposureTimeFormat().parse(formatted).doubleValue();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public synchronized void setExposureTime(Double exposureTime) {
+        Camera.Parameters parameters = camera.getParameters();
+
+        if (exposureTime == null) {
+            parameters.remove("exposure-time");
+        }
+        else {
+            parameters.set("exposure-time", exposureTimeFormat().format(exposureTime));
+        }
+
+        camera.setParameters(parameters);
+    }
+
+    private DecimalFormat exposureTimeFormat() {
+        DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+        format.applyPattern("0.000000");
+        return format;
     }
 
     /**
@@ -405,6 +526,14 @@ public class CameraSource {
         }
 
         return selectedPair;
+    }
+
+    public void setOnStateChangeListener(StateChangeListener stateChangeListener) {
+        this.stateChangeListener = stateChangeListener;
+    }
+
+    public interface StateChangeListener {
+        void onStateChanged();
     }
 
     /**
