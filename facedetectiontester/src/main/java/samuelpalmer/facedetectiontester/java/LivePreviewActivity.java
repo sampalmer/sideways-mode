@@ -62,8 +62,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     private SeekBar isoSlider;
     private SeekBar exposureCompensationSlider;
     private SeekBar exposureTimeSlider;
-    private SeekBar imageBrightnessSlider;
-    private SeekBar imageContrastSlider;
+    private SeekBar autoLevelAmountSlider;
     private WindowManager windowManager;
     private View overlay;
 
@@ -105,8 +104,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         isoSlider = findViewById(R.id.iso);
         exposureCompensationSlider = findViewById(R.id.exposureCompensation);
         exposureTimeSlider = findViewById(R.id.exposureTime);
-        imageBrightnessSlider = findViewById(R.id.imageBrightness);
-        imageContrastSlider = findViewById(R.id.imageContrast);
+        autoLevelAmountSlider = findViewById(R.id.autoLevelAmount);
 
         screenBrightnessSlider.setMax(Integer.MAX_VALUE);
         screenBrightnessSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> setScreenBrightness((float) progress / Integer.MAX_VALUE)));
@@ -123,6 +121,11 @@ public final class LivePreviewActivity extends AppCompatActivity
         exposureTimeSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> cameraSource.setExposureTime(progress == 0 ? null : (progress - 1) / 1000000.0 + cameraSource.getMinExposureTime())));
 
         createCameraSource();
+
+        autoLevelAmountSlider.setMax(Integer.MAX_VALUE);
+        autoLevelAmountSlider.setOnSeekBarChangeListener(new SimpleSeekChangeListener(progress -> cameraSource.setAutoLevelAmount((float) progress / Integer.MAX_VALUE)));
+        cameraSource.setAutoLevelAmount(0.5f);
+        autoLevelAmountSlider.setProgress(autoLevelAmountSlider.getMax() / 2);
 
         if (allPermissionsGranted()) {
             startCameraSource();
@@ -193,21 +196,48 @@ public final class LivePreviewActivity extends AppCompatActivity
         @Override
         public void onStateChanged() {
             if (cameraSource.isStarted()) {
-                isoSlider.setMax(cameraSource.getSupportedIsos().length - 1);
+                String[] supportedIsos = cameraSource.getSupportedIsos();
 
-                int isoIndex = Arrays.asList(cameraSource.getSupportedIsos()).indexOf(cameraSource.getIso());
-                if (isoIndex == -1)
-                    throw new RuntimeException("Camera's ISO value is not in the supported list: " + cameraSource.getIso());
+                if (supportedIsos == null) {
+                    isoSlider.setEnabled(false);
+                }
+                else {
+                    isoSlider.setEnabled(true);
 
-                isoSlider.setProgress(isoIndex);
+                    isoSlider.setMax(supportedIsos.length - 1);
 
-                exposureCompensationSlider.setMax(cameraSource.getMaxExposureCompensation() - cameraSource.getMinExposureCompensation());
-                exposureCompensationSlider.setProgress(cameraSource.getExposureCompensation() - cameraSource.getMinExposureCompensation());
+                    int isoIndex = Arrays.asList(supportedIsos).indexOf(cameraSource.getIso());
+                    if (isoIndex == -1)
+                        throw new RuntimeException("Camera's ISO value is not in the supported list: " + cameraSource.getIso());
 
-                exposureTimeSlider.setMax((int)((cameraSource.getMaxExposureTime() - cameraSource.getMinExposureTime()) * 1000000 + 1));
+                    isoSlider.setProgress(isoIndex);
+                }
 
-                Double exposureTime = cameraSource.getExposureTime();
-                exposureTimeSlider.setProgress(exposureTime == null ? 0 : (int) (exposureTime * 1000000 + 1));
+                int maxExposureCompensation = cameraSource.getMaxExposureCompensation();
+                int minExposureCompensation = cameraSource.getMinExposureCompensation();
+
+                if (minExposureCompensation == 0 && maxExposureCompensation == 0) {
+                    exposureCompensationSlider.setEnabled(false);
+                }
+                else {
+                    exposureCompensationSlider.setEnabled(true);
+                    exposureCompensationSlider.setMax(maxExposureCompensation - minExposureCompensation);
+                    exposureCompensationSlider.setProgress(cameraSource.getExposureCompensation() - minExposureCompensation);
+                }
+
+                Double maxExposureTime = cameraSource.getMaxExposureTime();
+                Double minExposureTime = cameraSource.getMinExposureTime();
+
+                if (maxExposureTime == null || minExposureTime == null) {
+                    exposureTimeSlider.setEnabled(false);
+                }
+                else {
+                    exposureTimeSlider.setEnabled(true);
+                    exposureTimeSlider.setMax((int) ((maxExposureTime - minExposureTime) * 1000000 + 1));
+
+                    Double exposureTime = cameraSource.getExposureTime();
+                    exposureTimeSlider.setProgress(exposureTime == null ? 0 : (int) (exposureTime * 1000000 + 1));
+                }
             }
         }
     };

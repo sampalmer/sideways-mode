@@ -24,7 +24,6 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.util.Log;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
@@ -93,13 +92,6 @@ public class CameraSource {
     private SurfaceTexture dummySurfaceTexture;
     private final GraphicOverlay graphicOverlay;
 
-    // True if a SurfaceTexture is being used for the preview, false if a SurfaceHolder is being
-    // used for the preview.  We want to be compatible back to Gingerbread, but SurfaceTexture
-    // wasn't introduced until Honeycomb.  Since the interface cannot use a SurfaceTexture, if the
-    // developer wants to display a preview we must use a SurfaceHolder.  If the developer doesn't
-    // want to display a preview we use a SurfaceTexture if we are running at least Honeycomb.
-    private boolean usingSurfaceTexture;
-
     /**
      * Dedicated thread and associated runnable for calling into the detector with frames, as the
      * frames become available from the camera.
@@ -123,6 +115,7 @@ public class CameraSource {
      */
     private final Map<byte[], ByteBuffer> bytesToByteBuffer = new IdentityHashMap<>();
     private StateChangeListener stateChangeListener;
+    private float autoLevelAmount;
 
     public CameraSource(Activity activity, GraphicOverlay overlay) {
         this.activity = activity;
@@ -166,7 +159,6 @@ public class CameraSource {
         camera = createCamera();
         dummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
         camera.setPreviewTexture(dummySurfaceTexture);
-        usingSurfaceTexture = true;
         camera.startPreview();
 
         if (stateChangeListener != null)
@@ -175,34 +167,6 @@ public class CameraSource {
         processingThread = new Thread(processingRunnable);
         processingRunnable.setActive(true);
         processingThread.start();
-        return this;
-    }
-
-    /**
-     * Opens the camera and starts sending preview frames to the underlying detector. The supplied
-     * surface holder is used for the preview so frames can be displayed to the user.
-     *
-     * @param surfaceHolder the surface holder to use for the preview frames
-     * @throws IOException if the supplied surface holder could not be used as the preview display
-     */
-    @RequiresPermission(Manifest.permission.CAMERA)
-    public synchronized CameraSource start(SurfaceHolder surfaceHolder) throws IOException {
-        if (camera != null) {
-            return this;
-        }
-
-        camera = createCamera();
-        camera.setPreviewDisplay(surfaceHolder);
-        camera.startPreview();
-
-        if (stateChangeListener != null)
-            stateChangeListener.onStateChanged();
-
-        processingThread = new Thread(processingRunnable);
-        processingRunnable.setActive(true);
-        processingThread.start();
-
-        usingSurfaceTexture = false;
         return this;
     }
 
@@ -213,8 +177,7 @@ public class CameraSource {
     /**
      * Closes the camera and stops sending frames to the underlying frame detector.
      *
-     * <p>This camera source may be restarted again by calling {@link #start()} or {@link
-     * #start(SurfaceHolder)}.
+     * <p>This camera source may be restarted again by calling {@link #start()}.
      *
      * <p>Call {@link #release()} instead to completely shut down this camera source and release the
      * resources of the underlying detector.
@@ -237,11 +200,7 @@ public class CameraSource {
             camera.stopPreview();
             camera.setPreviewCallbackWithBuffer(null);
             try {
-                if (usingSurfaceTexture) {
-                    camera.setPreviewTexture(null);
-                } else {
-                    camera.setPreviewDisplay(null);
-                }
+                camera.setPreviewTexture(null);
             } catch (Exception e) {
                 Log.e(TAG, "Failed to clear camera preview: " + e);
             }
@@ -291,7 +250,12 @@ public class CameraSource {
 
     public synchronized String[] getSupportedIsos() {
         HashMap<String, String> params = getAllCameraParameters();
-        return params.get("iso-values").split(",");
+        String flattenedValues = params.get("iso-values");
+
+        if (flattenedValues == null)
+            return null; // ISO can't be changed for this camera
+        else
+            return flattenedValues.split(",");
     }
 
     public synchronized String getIso() {
@@ -322,31 +286,43 @@ public class CameraSource {
         camera.setParameters(params);
     }
 
-    public synchronized double getMinExposureTime() {
-        try {
-            return exposureTimeFormat().parse(getAllCameraParameters().get("min-exposure-time")).doubleValue();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    public synchronized Double getMinExposureTime() {
+        String formattedValue = getAllCameraParameters().get("min-exposure-time");
+
+        if (formattedValue == null)
+            return null; // The camera might not support changing the exposure time
+        else {
+            try {
+                return exposureTimeFormat().parse(formattedValue).doubleValue();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public synchronized double getMaxExposureTime() {
-        double result;
+    public synchronized Double getMaxExposureTime() {
+        String formattedValue = getAllCameraParameters().get("max-exposure-time");
 
-        try {
-            result = exposureTimeFormat().parse(getAllCameraParameters().get("max-exposure-time")).doubleValue();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+        if (formattedValue == null)
+            return null; // The camera might not support changing the exposure time
+        else {
+            double result;
+
+            try {
+                result = exposureTimeFormat().parse(formattedValue).doubleValue();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            return Math.min(result, 530); // Higher values cause crashes in the camera daemon on my Moto G5 Plus for some reason.
         }
-
-        return Math.min(result, 530); // Higher values cause crashes in the camera daemon on my Moto G5 Plus for some reason.
     }
 
     public synchronized Double getExposureTime() {
         String formatted = camera.getParameters().get("exposure-time");
 
         if (formatted == null)
-            return null;
+            return null; // The camera might not support setting the exposure time
         else {
             try {
                 return exposureTimeFormat().parse(formatted).doubleValue();
@@ -373,6 +349,10 @@ public class CameraSource {
         DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         format.applyPattern("0.000000");
         return format;
+    }
+
+    public synchronized void setAutoLevelAmount(float postProcessBrightness) {
+        this.autoLevelAmount = postProcessBrightness;
     }
 
     /**
@@ -448,11 +428,6 @@ public class CameraSource {
 
         String flatten = parameters.flatten();
         Log.i(TAG, flatten);
-
-//      parameters.set("horizontal-view-angle", "180.00");
-//      parameters.set("iso-values", "ISO3200");
-//      parameters.set("manual-exposure-modes", "iso-priority");
-//      parameters.set("manual-exposure-mode", "iso-priority");
 
         camera.setParameters(parameters);
 
@@ -729,6 +704,25 @@ public class CameraSource {
     private class CameraPreviewCallback implements Camera.PreviewCallback {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
+            int pixelCount = previewSize.getWidth() * previewSize.getHeight();
+
+            int lowLevel = 255;
+            int highLevel = 0;
+            for (int i = 0; i < pixelCount; ++i) {
+                int luminance = data[i] & 0xFF; // Changes the range from [-128, 127] to [0, 255]
+                lowLevel = Math.min(lowLevel, luminance);
+                highLevel = Math.max(highLevel, luminance);
+            }
+
+            int dynamicRange = highLevel - lowLevel;
+            if (dynamicRange > 0) // If there's no range, we would get a divide-by-zero
+                for (int i = 0; i < pixelCount; ++i) {
+                    int originalLuminance = data[i] & 0xFF; // Changes the range from [-128, 127] to [0, 255]
+                    int leveledLuminance = (originalLuminance - lowLevel) * 255 / dynamicRange;
+                    int mixedLeveledLuminance = (int) (leveledLuminance * autoLevelAmount + originalLuminance * (1.0f - autoLevelAmount));
+                    data[i] = (byte) mixedLeveledLuminance;
+                }
+
             processingRunnable.setNextFrame(data, camera);
         }
     }

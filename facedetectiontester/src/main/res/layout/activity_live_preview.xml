@@ -47,11 +47,8 @@
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Exposure time" android:textColor="@android:color/white"/>
         <SeekBar android:id="@+id/exposureTime" android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Image brightness" android:textColor="@android:color/white"/>
-        <SeekBar android:id="@+id/imageBrightness" android:layout_width="match_parent" android:layout_height="wrap_content" />
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Image contrast" android:textColor="@android:color/white"/>
-        <SeekBar android:id="@+id/imageContrast" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Auto level amount" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/autoLevelAmount" android:layout_width="match_parent" android:layout_height="wrap_content" />
 
     </LinearLayout>
 
