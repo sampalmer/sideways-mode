@@ -92,7 +92,7 @@ public final class LivePreviewActivity extends AppCompatActivity
 
         WindowManager.LayoutParams overlayParams = new WindowManager.LayoutParams();
         overlayParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
-        overlayParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+        overlayParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         overlayParams.format = PixelFormat.TRANSLUCENT;
         overlayParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         overlayParams.height = WindowManager.LayoutParams.MATCH_PARENT;
