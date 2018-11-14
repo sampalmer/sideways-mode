@@ -426,8 +426,11 @@ public class CameraSource {
             parameters.setAutoWhiteBalanceLock(false);
         }
 
+        // logcat seems to truncate log messages, so we need to split out the data into multiple messages to make sure everything is shown.
         String flatten = parameters.flatten();
-        Log.i(TAG, flatten);
+        String[] split = flatten.split(";");
+        for (String flattenedParameter : split)
+            Log.i(TAG, flattenedParameter);
 
         camera.setParameters(parameters);
 
