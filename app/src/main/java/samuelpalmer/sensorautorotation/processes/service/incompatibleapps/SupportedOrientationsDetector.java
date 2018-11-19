@@ -4,6 +4,8 @@ import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
+import android.util.Log;
+import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
@@ -15,9 +17,9 @@ public class SupportedOrientationsDetector extends EventRegistrarAdaptor {
 		We can only count a screen orientation if it is held for this long. This is needed to eliminate:
 		- The orientation changing as part of an activity change transition
 		- The orientation flicking back and forth due to {@link samuelpalmer.sensorautorotation.processes.service.WaitForActivityDetectionActivity}
-	 	- The orientation flicking back and forth when turning off screen orientation enforcement while switching to an activity that doesn't support rotation
+ 	 	- The orientation flicking back and forth when turning off screen orientation enforcement while switching to an activity that doesn't support rotation
 	 */
-	private static final int MIN_DURATION = 1000;
+	private static final int MIN_DURATION = 2000;
 	
 	private final Context context;
 	private final Handler handler;
@@ -96,9 +98,17 @@ public class SupportedOrientationsDetector extends EventRegistrarAdaptor {
 			if (hasSubscriptions()) {
 				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 					supportsPortrait = true;
+
+					if (BuildConfig.DEBUG)
+						Log.d(SupportedOrientationsDetector.class.getSimpleName(), "Detected portrait support");
+
 					report();
 				} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 					supportsLandscape = true;
+
+					if (BuildConfig.DEBUG)
+						Log.d(SupportedOrientationsDetector.class.getSimpleName(), "Detected landscape support");
+
 					report();
 				}
 			}

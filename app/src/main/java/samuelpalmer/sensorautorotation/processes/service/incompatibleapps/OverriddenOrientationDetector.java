@@ -6,7 +6,9 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Surface;
+import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -109,13 +111,17 @@ public class OverriddenOrientationDetector extends EventRegistrarAdaptor {
 					Maybe make this whole thing smarter about how to determine whether the orientation is overridden:
 					- Maybe measure how long it takes for a handler callback to be called back?
 				 */
-				handler.postDelayed(overrideHeld, 1000);
+				handler.postDelayed(overrideHeld, 2000);
 		}
 	}
 	
 	private final Runnable overrideHeld = () -> {
 		if (hasSubscriptions()) {
 			overridesOrientation = true;
+
+			if (BuildConfig.DEBUG)
+				Log.d(OverriddenOrientationDetector.class.getSimpleName(), "Detected orientation override");
+
 			report();
 		}
 	};
