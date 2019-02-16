@@ -5,28 +5,29 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import java.util.Locale;
-
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.pm.PackageInfoCompat;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.FullScreenDialogActivity;
 import samuelpalmer.sensorautorotation.utilities.Email;
+
+import java.util.Locale;
 
 public class ReportProblemActivity extends FullScreenDialogActivity {
 	
 	private final static String PROBLEM_LOGS_KEY = "logcat";
 	
 	private String problemLogs;
-	private EditText steps;
-	private EditText problem;
-	private EditText expected;
-	private EditText[] inputs;
+	private Field steps;
+	private Field problem;
+	private Field expected;
+	private Field[] fields;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,10 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 
 		setContentView(R.layout.activity_report_problem);
 		
-		steps = findViewById(R.id.problem_steps);
-		problem = findViewById(R.id.problem_problem);
-		expected = findViewById(R.id.problem_expected);
-		inputs = new EditText[] { steps, problem, expected };
+		steps = new Field(R.id.problem_steps);
+		problem = new Field(R.id.problem_problem);
+		expected = new Field(R.id.problem_expected);
+		fields = new Field[] {steps, problem, expected};
 		
 		// This activity saves the logs as soon as it's created.
 		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
@@ -74,8 +75,8 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	protected void onFullScreenDialogClosing() {
 		boolean userHasEnteredText = false;
 		
-		for (EditText input : inputs) {
-			String text = input.getText().toString().trim();
+		for (Field field : fields) {
+			String text = field.input.getText().toString().trim();
 			
 			if (!text.isEmpty()) {
 				userHasEnteredText = true;
@@ -111,9 +112,9 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		String body = String.format(
 			"App version:\n%s\n\nWhat I did: %s\nWhat happened: %s\nWhat I expected: %s\n\nDevice info:\n%s\n\nSensors:\n%s\n\nLogs:\n%s\n\n",
 			fullAppVersion,
-			steps.getText().toString(),
-			problem.getText().toString(),
-			expected.getText().toString(),
+			steps.input.getText().toString(),
+			problem.input.getText().toString(),
+			expected.input.getText().toString(),
 			DiagnosticInfo.deviceInfo(this),
 			DiagnosticInfo.sensorDump(this),
 			problemLogs
@@ -148,22 +149,32 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		
 		boolean isValid = true;
 		
-		for (EditText input : inputs) {
-			String text = input.getText().toString().trim();
+		for (Field field : fields) {
+			String text = field.input.getText().toString().trim();
 
 			// Not using material design errors here because they result in a lot of visual clutter.
 			if (text.length() == 0) {
-				input.setError(getText(R.string.report_problem_field_missing));
+				field.layout.setError(getText(R.string.report_problem_field_missing));
 				isValid = false;
 			}
 			else if (text.length() < 5) {
-				input.setError(getText(R.string.report_problem_field_too_short));
+				field.layout.setError(getText(R.string.report_problem_field_too_short));
 				isValid = false;
 			}
 			else
-				input.setError(null);
+				field.layout.setError(null);
 		}
 		
 		return isValid;
+	}
+
+	private class Field {
+		public TextInputLayout layout;
+		public TextInputEditText input;
+
+		public Field(@IdRes int fieldId) {
+			layout = findViewById(fieldId);
+			input = (TextInputEditText) layout.getEditText();
+		}
 	}
 }

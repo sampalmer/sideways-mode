@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fireTopLayout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000"
-    android:keepScreenOn="true">
+                android:id="@+id/fireTopLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000"
+                android:keepScreenOn="true">
 
     <samuelpalmer.facedetectiontester.common.CameraSourcePreview
         android:id="@+id/firePreview"
@@ -27,16 +26,31 @@
             android:layout_alignParentLeft="true" />
     </samuelpalmer.facedetectiontester.common.CameraSourcePreview>
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="80dp"
-        android:textColor="#FFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:paddingStart="80dp"
-        tools:ignore="RtlSymmetry" />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Screen brightness" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/screenBrightness" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Screen overlay" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/screenOverlay" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ISO" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/iso" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Exposure compensation" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/exposureCompensation" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Exposure time" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/exposureTime" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Auto level amount" android:textColor="@android:color/white"/>
+        <SeekBar android:id="@+id/autoLevelAmount" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/control"

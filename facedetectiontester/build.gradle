@@ -16,16 +16,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 
 // The docs say you need Firebase Core, but it seems to work ok without it
 //    implementation 'com.google.firebase:firebase-core:16.0.5'
 
-    implementation 'com.google.firebase:firebase-ml-vision:18.0.1'
+    implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
     implementation 'com.google.firebase:firebase-ml-vision-face-model:17.0.2'
 }
 

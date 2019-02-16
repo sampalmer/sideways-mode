@@ -4,6 +4,8 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 
+	<!-- TODO: Replace tip view with material design banner once it's available in Android: https://material.io/go/android-banner/ -->
+
 	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
 	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
 	<!-- Turning off "iconSpaceReserved" since it is on by default as of Support Library 28.0.0 -->

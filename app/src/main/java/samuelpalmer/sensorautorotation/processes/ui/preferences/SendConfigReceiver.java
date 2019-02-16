@@ -3,10 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import java.util.Collections;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
