@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 
 // The docs say you need Firebase Core, but it seems to work ok without it
 //    implementation 'com.google.firebase:firebase-core:16.0.5'
