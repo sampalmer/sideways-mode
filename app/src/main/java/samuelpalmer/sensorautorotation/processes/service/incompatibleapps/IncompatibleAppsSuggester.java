@@ -99,12 +99,14 @@ public class IncompatibleAppsSuggester extends State {
 			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
 			// TODO: Don't prompt if a notification already exists for this app
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
+			// TODO: Don't prompt if the user has already been asked and dismissed the notification
 			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
 			// TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube
 		) {
 			PackageManager packageManager = context.getPackageManager();
 			
 			try {
+				// TODO: We might have lost track of what the real current activity is. For example, the user might have opened the recents screen and returned to an app, but we might have only been notified about the recents screen.
 				ApplicationInfo applicationInfo = packageManager.getApplicationInfo(activityMonitor.currentOrNull().getPackageName(), 0);
 				Intent intent = MarkAppAsIncompatibleReceiver.makeIntent(context, activityMonitor.currentOrNull().getPackageName());
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(context, PendingIntentIds.INCOMPATIBLE_APPS_SUGGESTION, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
