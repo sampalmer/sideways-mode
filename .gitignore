@@ -14,4 +14,6 @@ Thumbs.db
 *.log
 *.iml
 *.apk
+*.aab
 output.json
+google-services.json

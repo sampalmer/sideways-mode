@@ -11,8 +11,8 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
  * other apps.
  */
 public abstract class ApplicationSettings {
-
-    public static SharedPreferences getSharedPreferences(Context context) {
+	
+	public static SharedPreferences getSharedPreferences(Context context) {
 		if (CurrentProcess.isServiceProcess(context))
 			throw new RuntimeException("Application settings accessed outside of the UI process");
 		
@@ -46,6 +46,11 @@ public abstract class ApplicationSettings {
 	 * Whether the user has been told to turn off the app before uninstalling it.
 	 */
 	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
+
+	/**
+	 * Whether the user has been told how to start the app.
+	 */
+	public static final String KEY_TURNING_ON_TIP_SHOWN = "turningOnTipShown";
 
 	/**
 	 * Whether the user has completed the onboarding screen shown when the app is first started.

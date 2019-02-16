@@ -1,10 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Button;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 

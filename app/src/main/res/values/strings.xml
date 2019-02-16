@@ -103,10 +103,8 @@
 	<string name="notification_channel_tips">Tips</string>
 
 	<!-- Introduction tips -->
-    <string name="intro_tip_side_button_title">Lying down</string>
-	<string name="intro_tip_side_button_description">"When you lie down, tell %1$s which side you're on."</string>
-	<string name="intro_tip_incompatible_apps_title">Use your favourite apps</string>
-	<string name="intro_tip_incompatible_apps_description">"If an app doesn't rotate correctly, add it here to fix it."</string>
+	<string name="tip_turning_on_title">Lying down</string>
+	<string name="tip_turning_on_description">"When you lie down, tell %1$s which side you're on."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
 	<string name="tip_running_in_background_description">To control it, use the notification in your notification drawer.</string>
 	<string name="tip_uninstalling_title">Uninstalling %1$s?</string>

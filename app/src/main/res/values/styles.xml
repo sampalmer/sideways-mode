@@ -51,6 +51,9 @@
 
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowContentOverlay">@null</item>
+
+		<!-- This prevents the navigation bar from flickering -->
+        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
 	</style>
 
 	<style name="notification">
