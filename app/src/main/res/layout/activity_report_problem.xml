@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-	android:id="@+id/activity_report_problem"
+<ScrollView android:id="@+id/activity_report_problem"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
@@ -35,41 +34,61 @@
 			4. No editor hint in full screen view (landscape)
 		-->
 
-		<EditText
+		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/problem_steps"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/report_problem_reproduce"
-			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			android:importantForAutofill="no"
-			tools:ignore="UnusedAttribute" />
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			android:hint="@string/report_problem_reproduce">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				android:importantForAutofill="no"
+				tools:ignore="UnusedAttribute" />
+
+		</com.google.android.material.textfield.TextInputLayout>
 
 		<android.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
-		<EditText
+		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/problem_problem"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/report_problem_problem"
-			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			android:importantForAutofill="no"
-			tools:ignore="UnusedAttribute" />
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			android:hint="@string/report_problem_problem">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				android:importantForAutofill="no"
+				tools:ignore="UnusedAttribute" />
+
+		</com.google.android.material.textfield.TextInputLayout>
 
 		<android.widget.Space
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
-		<EditText
+		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/problem_expected"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/report_problem_expected"
-			android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-			android:importantForAutofill="no"
-			tools:ignore="UnusedAttribute"
-			/>
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			android:hint="@string/report_problem_expected">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				android:importantForAutofill="no"
+				tools:ignore="UnusedAttribute" />
+
+		</com.google.android.material.textfield.TextInputLayout>
 
 		<android.widget.Space
 			android:layout_width="match_parent"
