@@ -9,7 +9,7 @@ android {
 	defaultConfig {
 		applicationId "samuelpalmer.sensorautorotation"
 		minSdkVersion 14
-		targetSdkVersion 28 // Not using SDK 28 because the corresponding support library versions 1. aren't yet production-ready, and; 2. have a rendering bug affecting changes to checkboxes in the incompatible apps screen when run on Samsung Galaxy S5
+		targetSdkVersion 28
 		versionCode 63
 		versionName "2.3.0"
 
