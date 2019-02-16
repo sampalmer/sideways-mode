@@ -11,7 +11,7 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 
-
+// TODO: Update the settings in both the UI and service config files.
 public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
 	
 	public static final String EXTRA_APP_PACKAGE = "app_package";
