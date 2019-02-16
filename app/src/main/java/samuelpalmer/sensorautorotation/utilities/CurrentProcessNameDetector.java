@@ -31,6 +31,7 @@ public class CurrentProcessNameDetector {
 	private static String getNameFromCommandLine() {
 		BufferedReader cmdlineReader = null;
 		try {
+			//noinspection CharsetObjectCanBeUsed because the Charset object is only available in API 19+
 			cmdlineReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream("/proc/" + getPid() + "/cmdline"), "iso-8859-1")
 			);

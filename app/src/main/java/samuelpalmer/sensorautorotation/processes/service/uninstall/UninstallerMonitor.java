@@ -87,7 +87,7 @@ class UninstallerMonitor extends State {
     // Older versions of Android let apps ship with their own uninstall activities,
     // so we'll need to monitor changes to the installed apps to make sure we're
     // always up-to-date on which uninstallers to detect.
-    private BroadcastReceiver installedAppsChanged = new BroadcastReceiver() {
+    private final BroadcastReceiver installedAppsChanged = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!isStarted())
