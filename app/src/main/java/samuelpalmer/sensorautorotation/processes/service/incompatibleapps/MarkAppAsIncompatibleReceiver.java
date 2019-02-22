@@ -4,14 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
-
-// TODO: Update the settings in both the UI and service config files.
 public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
 	
 	public static final String EXTRA_APP_PACKAGE = "app_package";
@@ -26,12 +24,12 @@ public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
 		if (appPackageName == null)
 			throw new RuntimeException("No app package specified");
 		
-		SharedPreferences preferences = ServiceSettings.getSharedPreferences(context);
-		Set<String> incompatibleAppPackages = new HashSet<>(preferences.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
+		SharedPreferences preferences = ApplicationSettings.getSharedPreferences(context);
+		Set<String> incompatibleAppPackages = new HashSet<>(preferences.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
 		if (incompatibleAppPackages.add(appPackageName)) {
 			preferences
 				.edit()
-				.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
+				.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
 				.apply();
 		}
 	}
