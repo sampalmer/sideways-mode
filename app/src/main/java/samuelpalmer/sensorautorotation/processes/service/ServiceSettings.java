@@ -40,12 +40,12 @@ public abstract class ServiceSettings {
 	public static final String KEY_APP_VERSION = "appVersion";
 	
 	/**
-	 * Cached copy of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
+	 * <b>Cached copy</b> of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
 	 */
 	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 
 	/**
-	 * Cached copy of {@link ApplicationSettings#KEY_UNINSTALLING_TIP_SHOWN} for use in the service process.
+	 * <b>Cached copy</b> of {@link ApplicationSettings#KEY_UNINSTALLING_TIP_SHOWN} for use in the service process.
 	 */
 	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
 
