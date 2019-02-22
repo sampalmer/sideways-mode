@@ -94,6 +94,26 @@
 			android:layout_width="match_parent"
 			android:layout_height="16dp"/>
 
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/problem_english_test"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			android:hint="@string/report_problem_english_test">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+				android:importantForAutofill="no"
+				tools:ignore="UnusedAttribute" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<android.widget.Space
+			android:layout_width="match_parent"
+			android:layout_height="16dp"/>
+
 		<!-- This notice is required by Google Play (https://play.google.com/about/privacy-security/user-data/) -->
 		<TextView
 			android:id="@+id/feedback_disclosure"
