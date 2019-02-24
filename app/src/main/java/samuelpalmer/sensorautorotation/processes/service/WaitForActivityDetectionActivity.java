@@ -5,16 +5,15 @@ import android.content.ComponentName;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
-
+import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 
 /**
- * Stays open until the service detects what the currently-open activity is.
+ * Stays open until the accessibility service detects what the currently-open activity is.
  * We can't just stop the activity as soon as it starts because sometimes it takes
  * a bit more time for the OS to notify the accessibility service.
  * (Stopping the activity too soon results in the accessibility service missing it altogether.)
@@ -50,12 +49,12 @@ public class WaitForActivityDetectionActivity extends Activity {
 			Log.w(TAG, "Service is not running. Finishing activity.");
 			finish();
 		}
-		else if (ServiceRunningStateHolder.getServiceInstance().activityMonitor.currentOrNull() != null) {
+		else if (WindowChangeDetectingService.getCurrentActivity() != null) {
 			Log.i(TAG, "Detected activity change. Finishing activity.");
 			finish();
 		}
 		else {
-			ServiceRunningStateHolder.getServiceInstance().activityMonitor.onChange.subscribe(onActivityChanged);
+			WindowChangeDetectingService.onActivityChange().subscribe(onActivityChanged);
 			isSubscribed = true;
 			
 			handler.postDelayed(onTimeout, TIMEOUT_SECONDS * 1000);
@@ -69,7 +68,7 @@ public class WaitForActivityDetectionActivity extends Activity {
 		handler.removeCallbacks(onTimeout);
 		
 		if (isSubscribed && ServiceRunningStateHolder.isServiceRunning()) {
-			ServiceRunningStateHolder.getServiceInstance().activityMonitor.onChange.unsubscribe(onActivityChanged);
+			WindowChangeDetectingService.onActivityChange().unsubscribe(onActivityChanged);
 			isSubscribed = false;
 		}
 		
@@ -124,7 +123,7 @@ public class WaitForActivityDetectionActivity extends Activity {
 	
 	private final EventHandler onActivityChanged = () -> {
 		if (!isFinishing()) {
-			ComponentName currentActivity = ServiceRunningStateHolder.getServiceInstance().activityMonitor.currentOrNull();
+			ComponentName currentActivity = WindowChangeDetectingService.getCurrentActivity();
 			if (currentActivity != null) {
 				// Doesn't matter which activity was detected; main thing is that *some* change was detected, so now our job is done.
 				Log.i(TAG, "Detected activity change. Finishing activity.");

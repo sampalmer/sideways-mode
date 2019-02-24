@@ -1,0 +1,81 @@
+package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import androidx.annotation.NonNull;
+import samuelpalmer.sensorautorotation.BuildConfig;
+import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
+
+public abstract class ActivityMonitor extends EventRegistrarAdaptor {
+	
+	private static final String TAG = ActivityMonitor.class.getSimpleName();
+
+	final Context context;
+	ComponentName lastActivity;
+
+	ActivityMonitor(Context context) {
+		if (context == null)
+			throw new IllegalArgumentException();
+
+		this.context = context;
+	}
+
+	/**
+	 * @return The top-most activity or <code>null</code> if unknown.
+	 */
+	public ComponentName currentOrNull() {
+		if (!hasSubscriptions())
+			throw new IllegalStateException("Can't detect the activity when not started");
+
+		return lastActivity;
+	}
+
+	public abstract boolean hasPermission();
+
+	/**
+	 * @implNote Make sure to always return the same instance here so subscription & unsubscription works properly.
+	 */
+	@NonNull
+	public abstract EventRegistrarAdaptor onPermissionChange();
+	public abstract Intent makeAcquirePermissionIntent();
+	public abstract String makeAcquirePermissionQuestion();
+	public abstract String makeAcquirePermissionExplanation();
+
+	void setTopActivity(ComponentName activityOrNull) {
+		if (!ObjectExtensions.areEqual(activityOrNull, lastActivity)) {
+			// Not logging specific activity in Production builds since that would be a privacy violation since logs are included in error reports.
+			Log.i(TAG, "Activity changed" + (BuildConfig.DEBUG ? " to " + activityOrNull : ""));
+			lastActivity = activityOrNull;
+			report();
+		}
+	}
+
+	/**
+	 * Make sure to call {@link #setTopActivity(ComponentName)} with the current activity if possible.
+	 */
+	@Override
+	protected void subscribeToAdaptee() {
+		Log.i(TAG, "Using " + getClass().getSimpleName()); // This could be useful for troubleshooting
+	}
+
+	@Override
+	protected void unsubscribeFromAdaptee() {
+		lastActivity = null; // We no longer know if this is the current activity since we're now unsubscribed
+	}
+
+	public static ActivityMonitor create(Context context) {
+		if (RunningTasksActivityMonitor.isSupported())
+			// getRunningTasks() is pretty-much the closest thing we can get to a purpose-built API for this, so it's the first preference
+			return new RunningTasksActivityMonitor(context);
+		else if (UsageStatsActivityMonitor.isSupported(context))
+			// This is out next-best bet since it uses polling, which is more reliable than callbacks
+			return new UsageStatsActivityMonitor(context);
+		else
+			// This is our last resort since it relies on callbacks which can sometimes not occur or occur out-of-order
+			return new AccessibilityServiceActivityMonitor(context);
+	}
+
+}
