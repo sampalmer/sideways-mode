@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
@@ -14,6 +15,8 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
 	private static final String TAG = ActivityMonitor.class.getSimpleName();
 
 	final Context context;
+
+	@Nullable
 	ComponentName lastActivity;
 
 	ActivityMonitor(Context context) {
@@ -26,6 +29,7 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
 	/**
 	 * @return The top-most activity or <code>null</code> if unknown.
 	 */
+	@Nullable
 	public ComponentName currentOrNull() {
 		if (!hasSubscriptions())
 			throw new IllegalStateException("Can't detect the activity when not started");
@@ -44,17 +48,23 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
 	public abstract String makeAcquirePermissionQuestion();
 	public abstract String makeAcquirePermissionExplanation();
 
-	void setTopActivity(ComponentName activityOrNull) {
+	void setTopActivity(@Nullable ComponentName activityOrNull, boolean sendUpdate) {
 		if (!ObjectExtensions.areEqual(activityOrNull, lastActivity)) {
 			// Not logging specific activity in Production builds since that would be a privacy violation since logs are included in error reports.
-			Log.i(TAG, "Activity changed" + (BuildConfig.DEBUG ? " to " + activityOrNull : ""));
+			String logMessage = "Activity changed";
+			if (BuildConfig.DEBUG)
+				logMessage += " to " + (activityOrNull == null ? null : activityOrNull.flattenToShortString());
+			Log.i(TAG, logMessage);
+
 			lastActivity = activityOrNull;
-			report();
+
+			if (sendUpdate)
+				report();
 		}
 	}
 
 	/**
-	 * Make sure to call {@link #setTopActivity(ComponentName)} with the current activity if possible.
+	 * Make sure to call {@link #setTopActivity(ComponentName, boolean)} with the current activity if possible.
 	 */
 	@Override
 	protected void subscribeToAdaptee() {

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.R;
@@ -23,14 +24,28 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
         if (Build.VERSION.SDK_INT < 21)
             return false;
 
+        return makeAcquirePermissionIntent(context) != null;
+    }
+
+    @Nullable
+    private static Intent makeAcquirePermissionIntent(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+
+        Intent actionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        if (packageManager.resolveActivity(actionIntent, 0) != null)
+            return actionIntent;
+
+        // This was provided by someone on StackOverflow as a workaround for Samsung Galaxy S5: https://stackoverflow.com/questions/27330339/android-lollipop-know-if-app-as-usage-stats-access?noredirect=1&lq=1#comment54250337_29732133
+        // TODO: Test whether this is actually needed. Maybe the built-in intent action works just as well on these devices.
+        Intent componentNameIntent = new Intent();
+        componentNameIntent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$UsageAccessSettingsActivity"));
+        if (packageManager.resolveActivity(componentNameIntent, 0) != null)
+            return componentNameIntent;
+
         // Apparently some devices don't actually have the usage access settings screen.
         // So these users won't have any way to grant the permission and hence can't use this feature.
         // See https://stackoverflow.com/questions/27874224/android-content-activitynotfoundexception-no-activity-found-to-handle-intent
-        // TODO: Test out this workaround: https://stackoverflow.com/questions/27330339/android-lollipop-know-if-app-as-usage-stats-access?noredirect=1&lq=1#comment54250337_29732133
-        PackageManager packageManager = context.getPackageManager();
-        // TODO: Consolidate the intent action with the one returned from makeAcquirePermissionIntent()
-        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        return packageManager.resolveActivity(intent, 0) != null;
+        return null;
     }
 
     private final UsageStatsManager usageStatsManager;
@@ -76,13 +91,6 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
             }
         }
 
-        if (!gotEvents) {
-            // Apparently some devices report that permission is granted when it's actually not, resulting in this situation.
-            // See https://stackoverflow.com/a/43583005/238753.
-            Log.w(getClass().getSimpleName(), "Didn't get any usage events. Usage permission is probably missing.");
-            // TODO: Bubble up a permission error since the user might have revoke the permission while the app was running
-        }
-
         if (latestEventTime > lastActivityTime)
             lastActivityTime = latestEventTime;
 
@@ -96,10 +104,23 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
             return new ComponentName(latestEventPackage, className);
         }
         else {
-            // We couldn't find the last-opened activity. This shouldn't be possible.
-            // It's probably safe to assume that the last known activity is still the current one.
-            Log.w(getClass().getSimpleName(), "Didn't find the top activity. Re-using last known activity.");
-            return lastActivity;
+            if (!gotEvents) {
+                if (lastActivity != null) {
+                    // Only logging this if we previously knew the activity.
+                    // This is to prevent the log message from repeating every time this is polled.
+
+                    // Apparently some devices report that permission is granted when it's actually not, resulting in this situation.
+                    // See https://stackoverflow.com/a/43583005/238753.
+                    Log.w(getClass().getSimpleName(), "Didn't get any usage events. Usage permission is probably missing.");
+                }
+
+                return null; // We're in the dark about which app is on top since polling isn't working at te moment
+            }
+            else {
+                // We got some data but couldn't find the last-opened activity. This shouldn't happen.
+                // It's probably safe to assume that the last known activity is still the current one.
+                return lastActivity;
+            }
         }
     }
 
@@ -116,7 +137,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
     @Override
     public Intent makeAcquirePermissionIntent() {
-        return new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        return makeAcquirePermissionIntent(context);
     }
 
     @Override

@@ -18,26 +18,25 @@ abstract class PollingActivityMonitor extends ActivityMonitor {
     @Override
     protected void subscribeToAdaptee() {
         super.subscribeToAdaptee();
-        // We have a subscription at this point, so we're good to poll straight away
-        pollAndSchedule.run();
+        pollAndSchedule(false); // Not sending an update since this is not a *change*, just the initial value
     }
 
     @Override
     protected void unsubscribeFromAdaptee() {
         super.unsubscribeFromAdaptee();
-        handler.removeCallbacks(pollAndSchedule);
+        handler.removeCallbacks(poller);
     }
 
-    private final Runnable pollAndSchedule = new Runnable() {
-        @Override
-        public void run() {
-            if (hasSubscriptions()) {
-                ComponentName topActivity = poll();
-                setTopActivity(topActivity);
-                handler.postDelayed(pollAndSchedule, POLL_INTERVAL_MILLIS);
-            }
-        }
+    private final Runnable poller = () -> {
+        if (hasSubscriptions())
+            pollAndSchedule(true);
     };
+
+    private void pollAndSchedule(boolean sendUpdate) {
+        ComponentName topActivity = poll();
+        setTopActivity(topActivity, sendUpdate);
+        handler.postDelayed(poller, POLL_INTERVAL_MILLIS);
+    }
 
     abstract ComponentName poll();
 

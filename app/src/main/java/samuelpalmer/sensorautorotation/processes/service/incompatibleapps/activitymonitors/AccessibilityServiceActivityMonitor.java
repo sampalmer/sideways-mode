@@ -26,7 +26,7 @@ public final class AccessibilityServiceActivityMonitor extends ActivityMonitor {
         WindowChangeDetectingService.onActivityChange().subscribe(subscriber);
 
         // There's a chance that the accessibility service was already monitoring, so we'll check it just in case
-        update();
+        update(false); // Not sending an update since this is not a *change*, just the initial value
     }
 
     @Override
@@ -35,11 +35,11 @@ public final class AccessibilityServiceActivityMonitor extends ActivityMonitor {
         WindowChangeDetectingService.onActivityChange().unsubscribe(subscriber);
     }
 
-    private final EventHandler subscriber = this::update;
+    private final EventHandler subscriber = () -> update(true);
 
-    private void update() {
+    private void update(boolean sendUpdate) {
         ComponentName currentActivity = WindowChangeDetectingService.getCurrentActivity();
-        setTopActivity(currentActivity);
+        setTopActivity(currentActivity, sendUpdate);
     }
 
     @Override
