@@ -75,8 +75,10 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 			ActivityMonitor activityMonitor = ActivityMonitor.create(this);
 
-			if (!(activityMonitor instanceof AccessibilityServiceActivityMonitor))
+			if (!(activityMonitor instanceof AccessibilityServiceActivityMonitor)) {
 				disableSelf();
+				Log.i(TAG, "Turned off accessibility service since it's not needed.");
+			}
 		}
 	}
 
