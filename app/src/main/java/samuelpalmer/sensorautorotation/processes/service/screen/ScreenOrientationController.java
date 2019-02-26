@@ -18,6 +18,8 @@ import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
@@ -27,12 +29,7 @@ public class ScreenOrientationController extends State {
 	private final Context context;
 	private final ScreenRotationMonitor screen;
 	private final ContentResolver contentResolver;
-
-	/**
-	 * Will be <code>null</code> if not needed.
-	 */
-	@Nullable
-	private final AppOpMonitor systemSettingPermissionMonitor;
+	private final EventRegistrar systemSettingPermissionMonitor;
 
 	@Nullable
 	private Orientation lastProposed;
@@ -45,7 +42,7 @@ public class ScreenOrientationController extends State {
 		if (Build.VERSION.SDK_INT >= 23)
 			systemSettingPermissionMonitor = new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
 		else
-			systemSettingPermissionMonitor = null;
+			systemSettingPermissionMonitor = new NullEventRegistrarAdaptor();
 	}
 
 	@Override
@@ -61,16 +58,12 @@ public class ScreenOrientationController extends State {
 		}
 		
 		contentResolver.registerContentObserver(Settings.System.getUriFor(Settings.System.USER_ROTATION), false, onUserRotationChanged);
-
-		if (systemSettingPermissionMonitor != null)
-			systemSettingPermissionMonitor.subscribe(systemSettingPermissionChanged);
+		systemSettingPermissionMonitor.subscribe(systemSettingPermissionChanged);
 	}
 
 	@Override
 	protected void stop() {
-		if (systemSettingPermissionMonitor != null)
-			systemSettingPermissionMonitor.unsubscribe(systemSettingPermissionChanged);
-
+		systemSettingPermissionMonitor.unsubscribe(systemSettingPermissionChanged);
 		contentResolver.unregisterContentObserver(onUserRotationChanged);
 		setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
 		propose(Orientation.NATURAL);
