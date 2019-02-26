@@ -6,12 +6,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.Nullable;
 import android.util.Log;
-
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -75,8 +74,8 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 			.setContentTitle(messageTitle)
 			.setContentText(context.getText(R.string.upgrade_notification_content))
 			.setAutoCancel(true)
-			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
+			.setPriority(NotificationCompat.PRIORITY_HIGH)
+			.setCategory(NotificationCompat.CATEGORY_STATUS)
 			.setChannelId(NotificationChannels.ID_UPGRADES)
 			.build();
 

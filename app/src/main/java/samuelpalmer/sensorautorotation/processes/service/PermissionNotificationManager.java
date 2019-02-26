@@ -6,9 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -88,7 +88,7 @@ public class PermissionNotificationManager extends State {
 			
 			Notification notification = NotificationBuilderFactory
 					.create(context)
-					.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
+					.setCategory(NotificationCompat.CATEGORY_ERROR)
 					.setContentIntent(incompatibleAppsIntent)
 					.setContentTitle(context.getText(R.string.permission_needed_summary))
 					.setContentText(context.getText(R.string.permission_touch_to_fix))
