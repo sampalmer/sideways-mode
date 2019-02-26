@@ -11,7 +11,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.R;
@@ -20,32 +19,18 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
+    private static final Intent acquirePermissionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+
     static boolean isSupported(Context context) {
         if (Build.VERSION.SDK_INT < 21)
             return false;
 
-        return makeAcquirePermissionIntent(context) != null;
-    }
-
-    @Nullable
-    private static Intent makeAcquirePermissionIntent(Context context) {
         PackageManager packageManager = context.getPackageManager();
 
-        Intent actionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        if (packageManager.resolveActivity(actionIntent, 0) != null)
-            return actionIntent;
-
-        // This was provided by someone on StackOverflow as a workaround for Samsung Galaxy S5: https://stackoverflow.com/questions/27330339/android-lollipop-know-if-app-as-usage-stats-access?noredirect=1&lq=1#comment54250337_29732133
-        // TODO: Test whether this is actually needed. Maybe the built-in intent action works just as well on these devices.
-        Intent componentNameIntent = new Intent();
-        componentNameIntent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$UsageAccessSettingsActivity"));
-        if (packageManager.resolveActivity(componentNameIntent, 0) != null)
-            return componentNameIntent;
-
-        // Apparently some devices don't actually have the usage access settings screen.
-        // So these users won't have any way to grant the permission and hence can't use this feature.
-        // See https://stackoverflow.com/questions/27874224/android-content-activitynotfoundexception-no-activity-found-to-handle-intent
-        return null;
+        // Some devices don't have the usage access settings screen or don't have an intent to go there.
+        // For example, Samsung Galaxy S5 SM-G900I running G900IZTU1BOA1 firmware has the screen but the intent doesn't work.
+        // So these users won't have any easy way to grant the permission and hence can't use this feature.
+        return packageManager.resolveActivity(acquirePermissionIntent, 0) != null;
     }
 
     private final UsageStatsManager usageStatsManager;
@@ -137,7 +122,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
     @Override
     public Intent makeAcquirePermissionIntent() {
-        return makeAcquirePermissionIntent(context);
+        return acquirePermissionIntent;
     }
 
     @Override
