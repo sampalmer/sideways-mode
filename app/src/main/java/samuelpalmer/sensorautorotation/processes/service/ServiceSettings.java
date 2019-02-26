@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 

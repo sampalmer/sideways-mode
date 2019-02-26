@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -16,6 +18,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -47,7 +50,7 @@ public class IncompatibleAppsSuggester extends State {
 	@Override
 	protected void start() {
 		preferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-		activityMonitor.onChange.subscribe(activityChanged);
+		activityMonitor.subscribe(activityChanged);
 		overriddenOrientationDetector.subscribe(anythingChanged);
 		supportedOrientationsDetector.subscribe(anythingChanged);
 		
@@ -60,7 +63,7 @@ public class IncompatibleAppsSuggester extends State {
 	protected void stop() {
 		supportedOrientationsDetector.unsubscribe(anythingChanged);
 		overriddenOrientationDetector.unsubscribe(anythingChanged);
-		activityMonitor.onChange.unsubscribe(activityChanged);
+		activityMonitor.unsubscribe(activityChanged);
 		preferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
 	}
 	
@@ -87,16 +90,18 @@ public class IncompatibleAppsSuggester extends State {
 	private final EventHandler anythingChanged = this::check;
 	
 	private void check() {
+		ComponentName currentActivity = activityMonitor.currentOrNull();
+
 		if (
-			activityMonitor.currentOrNull() != null // We can't do anything if we don't know which activity is open
+			currentActivity != null // We can't do anything if we don't know which activity is open
 			&&
-			!incompatibleAppPackages.contains(activityMonitor.currentOrNull().getPackageName()) // No point prompting if the app is already marked as incompatible
+			!incompatibleAppPackages.contains(currentActivity.getPackageName()) // No point prompting if the app is already marked as incompatible
 			&&
 			overriddenOrientationDetector.overridesOrientation()
 			&&
 			supportedOrientationsDetector.supportsLandscape() && supportedOrientationsDetector.supportsPortrait() // Apps that are locked in the one orientation aren't a problem
 			&&
-			!activityMonitor.currentOrNull().getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
+			!currentActivity.getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
 			// TODO: Don't prompt if a notification already exists for this app
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
 			// TODO: Don't prompt if the user has already been asked and dismissed the notification
@@ -107,8 +112,8 @@ public class IncompatibleAppsSuggester extends State {
 			
 			try {
 				// TODO: We might have lost track of what the real current activity is. For example, the user might have opened the recents screen and returned to an app, but we might have only been notified about the recents screen.
-				ApplicationInfo applicationInfo = packageManager.getApplicationInfo(activityMonitor.currentOrNull().getPackageName(), 0);
-				Intent intent = MarkAppAsIncompatibleReceiver.makeIntent(context, activityMonitor.currentOrNull().getPackageName());
+				ApplicationInfo applicationInfo = packageManager.getApplicationInfo(currentActivity.getPackageName(), 0);
+				Intent intent = MarkAppAsIncompatibleReceiver.makeIntent(context, currentActivity.getPackageName());
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(context, PendingIntentIds.INCOMPATIBLE_APPS_SUGGESTION, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
 				String summary = "Is " + applicationInfo.loadLabel(packageManager) + " incompatible?";
 				
@@ -122,7 +127,7 @@ public class IncompatibleAppsSuggester extends State {
 					.setChannelId(NotificationChannels.ID_INCOMPATIBLE)
 //					.setDeleteIntent() // TODO: Don't ask again if user dismisses it?
 					.setTicker(summary) //Helps ensure the user actually notices notification. Only works on Android 4.
-					.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+					.setPriority(NotificationCompat.PRIORITY_HIGH)
 //					.addAction() // TODO: Provide button to not ask again? Not sure if this works on API 14
 					;
 				
