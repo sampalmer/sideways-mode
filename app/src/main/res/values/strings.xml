@@ -61,6 +61,9 @@
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
 
+	<string name="permission_needed_usage_summary">Check app usage?</string>
+	<string name="permission_needed_usage_description">"To see when an incompatible app is open, %1$s needs usage access"</string>
+
 	<string name="permission_needed_overlays_summary">Draw over other apps?</string>
 	<string name="permission_needed_overlays_description">"To change other apps' screen orientations, %1$s needs permission to draw over other apps"</string>
 

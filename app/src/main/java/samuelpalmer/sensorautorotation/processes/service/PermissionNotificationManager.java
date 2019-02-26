@@ -6,10 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import java.util.Collections;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -17,10 +13,13 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
-import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Issues a notification if the permissions needed for the "Incompatible apps" feature are
@@ -33,25 +32,25 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
  */
 public class PermissionNotificationManager extends State {
 
+	private final Context context;
+	private final ActivityMonitor activityMonitor;
 	private final NotificationManager notificationManager;
 	private final SharedPreferences prefs;
-	private final AccessibilityServiceEnabledStateMonitor accessibilityServiceMonitor;
-	private final Context context;
-	
+
 	private boolean isRunning = false;
 	
-	public PermissionNotificationManager(Context context) {
+	public PermissionNotificationManager(Context context, ActivityMonitor activityMonitor) {
 		this.context = context;
+		this.activityMonitor = activityMonitor;
+
 		notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
-		
 		prefs = ServiceSettings.getSharedPreferences(this.context);
-		accessibilityServiceMonitor = new AccessibilityServiceEnabledStateMonitor(this.context, WindowChangeDetectingService.class);
 	}
 
 	@Override
 	protected void start() {
 		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		accessibilityServiceMonitor.subscribe(subscriber);
+		activityMonitor.onPermissionChange().subscribe(activityMonitorPermissionChanged);
 		
 		isRunning = true;
 		check();
@@ -61,8 +60,8 @@ public class PermissionNotificationManager extends State {
 	protected void stop() {
 		isRunning = false;
 		check();
-		
-		accessibilityServiceMonitor.unsubscribe(subscriber);
+
+		activityMonitor.onPermissionChange().unsubscribe(activityMonitorPermissionChanged);
 		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 	}
 
@@ -71,7 +70,7 @@ public class PermissionNotificationManager extends State {
 			check();
 	};
 	
-	private final EventHandler subscriber = this::check;
+	private final EventHandler activityMonitorPermissionChanged = this::check;
 	
 	public void check() {
 		if (needsPermission()) {
@@ -104,7 +103,7 @@ public class PermissionNotificationManager extends State {
 			assert incompatibleAppPackages != null;
 
 			//noinspection RedundantIfStatement
-			if (!incompatibleAppPackages.isEmpty() && !(accessibilityServiceMonitor.isEnabled() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
+			if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
 				return true;
 		}
 		

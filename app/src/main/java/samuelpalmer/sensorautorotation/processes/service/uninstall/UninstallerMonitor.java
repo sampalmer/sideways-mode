@@ -14,7 +14,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ActivityMonitor;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.ui.UninstallTipActivity;
 import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -66,12 +66,12 @@ class UninstallerMonitor extends State {
         for (Intent uninstallerIntent : uninstallerIntents)
             addUninstallerActivitiesFor(uninstallerIntent);
 
-        activityMonitor.onChange.subscribe(activityChanged);
+        activityMonitor.subscribe(activityChanged);
     }
 
     @Override
     protected void stop() {
-        activityMonitor.onChange.unsubscribe(activityChanged);
+        activityMonitor.unsubscribe(activityChanged);
         context.unregisterReceiver(installedAppsChanged);
     }
 
