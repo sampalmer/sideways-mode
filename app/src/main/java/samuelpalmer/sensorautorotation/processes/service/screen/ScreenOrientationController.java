@@ -1,20 +1,23 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
-
+import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
+import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
@@ -24,14 +27,25 @@ public class ScreenOrientationController extends State {
 	private final Context context;
 	private final ScreenRotationMonitor screen;
 	private final ContentResolver contentResolver;
-	
+
+	/**
+	 * Will be <code>null</code> if not needed.
+	 */
+	@Nullable
+	private final AppOpMonitor systemSettingPermissionMonitor;
+
 	@Nullable
 	private Orientation lastProposed;
-	
+
 	public ScreenOrientationController(Context context, ScreenRotationMonitor screen) {
 		this.context = context;
 		this.screen = screen;
 		contentResolver = context.getContentResolver();
+
+		if (Build.VERSION.SDK_INT >= 23)
+			systemSettingPermissionMonitor = new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
+		else
+			systemSettingPermissionMonitor = null;
 	}
 
 	@Override
@@ -47,10 +61,16 @@ public class ScreenOrientationController extends State {
 		}
 		
 		contentResolver.registerContentObserver(Settings.System.getUriFor(Settings.System.USER_ROTATION), false, onUserRotationChanged);
+
+		if (systemSettingPermissionMonitor != null)
+			systemSettingPermissionMonitor.subscribe(systemSettingPermissionChanged);
 	}
 
 	@Override
 	protected void stop() {
+		if (systemSettingPermissionMonitor != null)
+			systemSettingPermissionMonitor.unsubscribe(systemSettingPermissionChanged);
+
 		contentResolver.unregisterContentObserver(onUserRotationChanged);
 		setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
 		propose(Orientation.NATURAL);
@@ -68,12 +88,9 @@ public class ScreenOrientationController extends State {
 	}
 	
 	private boolean setAndHandleErrors(String name, int newValue) {
-		if (!SystemSettings.canWrite(context)) {
-			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
-			EnvironmentErrorManager.report(context, error);
+		if (!validateSystemSettingsPermission())
 			return false;
-		}
-		
+
 		boolean worked = Settings.System.putInt(contentResolver, name, newValue);
 		if (!worked) {
 			//Because the developer can't do anything about this; it seems to be a problem on the device.
@@ -84,7 +101,7 @@ public class ScreenOrientationController extends State {
 		
 		return true;
 	}
-	
+
 	private final ContentObserver onUserRotationChanged = new ContentObserver(new Handler()) {
 		@Override
 		public void onChange(boolean selfChange) {
@@ -107,5 +124,21 @@ public class ScreenOrientationController extends State {
 			}
 		}
 	};
-	
+
+	private final EventHandler systemSettingPermissionChanged = this::validateSystemSettingsPermission;
+
+	/**
+	 * Raises an {@link samuelpalmer.sensorautorotation.errors.EnvironmentError} if system settings permission is missing.
+	 * @return Whether the permission is granted
+	 */
+	private boolean validateSystemSettingsPermission() {
+		if (!SystemSettings.canWrite(context)) {
+			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
+			EnvironmentErrorManager.report(context, error);
+			return false;
+		}
+		else
+			return true;
+	}
+
 }

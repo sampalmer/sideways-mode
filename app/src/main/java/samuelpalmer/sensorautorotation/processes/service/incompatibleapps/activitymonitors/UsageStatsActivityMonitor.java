@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -34,7 +36,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
     }
 
     private final UsageStatsManager usageStatsManager;
-    private final UsageStatsPermissionMonitor permissionMonitor;
+    private final AppOpMonitor permissionMonitor;
 
     private long lastActivityTime;
 
@@ -44,7 +46,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
         // Not using ContextCompat.getSystemService since it returns null on API 21
         usageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-        permissionMonitor = new UsageStatsPermissionMonitor(context);
+        permissionMonitor = new AppOpMonitor(context, AppOpsManager.OPSTR_GET_USAGE_STATS);
     }
 
     @Override

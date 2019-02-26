@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors;
+package samuelpalmer.sensorautorotation.utilities;
 
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -8,26 +8,35 @@ import android.os.Process;
 import androidx.annotation.RequiresApi;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class UsageStatsPermissionMonitor extends EventRegistrarAdaptor {
+/**
+ * Monitors changes to a particular app op.
+ * @see AppOpsManager
+ */
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+public class AppOpMonitor extends EventRegistrarAdaptor {
 
     private final AppOpsManager appOps;
     private final int uid;
     private final String packageName;
     private final Handler handler;
+    private final String op;
 
     private boolean isUpToDate = false;
     private boolean hadPermission;
 
-    UsageStatsPermissionMonitor(Context context) {
-        // This permission check is taken from https://medium.com/@quiro91/show-app-usage-with-usagestatsmanager-d47294537dab
+    /**
+     * @param op The <code>OPSTR_</code> constant from {@link AppOpsManager} for the op you want to monitor
+     */
+    public AppOpMonitor(Context context, String op) {
+        // Not using ContextCompat.getSystemService() because it doesn't work on older versions of Android (as far as I recall)
         appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         uid = Process.myUid();
         packageName = context.getPackageName();
         handler = new Handler();
+        this.op = op;
     }
 
-    boolean hasPermission() {
+    public boolean hasPermission() {
         if (isUpToDate)
             return hadPermission;
         else
@@ -36,7 +45,7 @@ class UsageStatsPermissionMonitor extends EventRegistrarAdaptor {
 
     @Override
     protected void subscribeToAdaptee() {
-        appOps.startWatchingMode(AppOpsManager.OPSTR_GET_USAGE_STATS, packageName, usageOpListener);
+        appOps.startWatchingMode(op, packageName, usageOpListener);
     }
 
     @Override
@@ -69,7 +78,7 @@ class UsageStatsPermissionMonitor extends EventRegistrarAdaptor {
     };
 
     private boolean poll() {
-        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, uid, packageName);
+        int mode = appOps.checkOpNoThrow(op, uid, packageName);
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 
