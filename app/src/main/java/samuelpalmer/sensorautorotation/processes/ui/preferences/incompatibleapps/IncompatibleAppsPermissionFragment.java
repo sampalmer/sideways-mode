@@ -47,7 +47,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
 		description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
 		
-		activityMonitor.onPermissionChange().subscribe(serviceChanged);
+		activityMonitor.onPermissionChange().subscribe(permissionChanged);
 		updateTip();
 	}
 
@@ -55,7 +55,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 
-		activityMonitor.onPermissionChange().unsubscribe(serviceChanged);
+		activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
 	}
 
 	private void grantPermissions() {
@@ -105,7 +105,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		}
 	}
 
-	private final EventHandler serviceChanged = this::updateTip;
+	private final EventHandler permissionChanged = this::updateTip;
 
 	private void updateTip() {
 		if (activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context))
