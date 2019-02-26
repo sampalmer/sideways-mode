@@ -47,7 +47,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
 		description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
 		
-		activityMonitor.subscribe(serviceChanged);
+		activityMonitor.onPermissionChange().subscribe(serviceChanged);
 		updateTip();
 	}
 
@@ -55,7 +55,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 
-		activityMonitor.unsubscribe(serviceChanged);
+		activityMonitor.onPermissionChange().unsubscribe(serviceChanged);
 	}
 
 	private void grantPermissions() {
