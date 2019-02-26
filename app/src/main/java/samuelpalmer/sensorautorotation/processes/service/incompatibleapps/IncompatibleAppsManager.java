@@ -2,13 +2,13 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
+
+import java.util.Set;
 
 /**
  * Turns the incompatible apps feature on and off as needed.
@@ -24,7 +24,7 @@ public class IncompatibleAppsManager extends State {
 	private final PermissionNotificationManager permissionNotificationManager;
 	
 	public IncompatibleAppsManager(Context context, ActivityMonitor activityMonitor, LockScreenMonitor lockScreenMonitor) {
-		permissionNotificationManager = new PermissionNotificationManager(context);
+		permissionNotificationManager = new PermissionNotificationManager(context, activityMonitor);
 		monitor = new IncompatibleAppsMonitor(context, activityMonitor, permissionNotificationManager, lockScreenMonitor);
 		prefs = ServiceSettings.getSharedPreferences(context);
 	}

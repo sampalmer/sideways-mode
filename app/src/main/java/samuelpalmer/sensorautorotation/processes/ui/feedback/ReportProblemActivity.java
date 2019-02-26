@@ -27,8 +27,9 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	private Field steps;
 	private Field problem;
 	private Field expected;
-	private Field[] fields;
-	
+	private Field englishTest;
+	private Field[] reportFields;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,8 +39,9 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		steps = new Field(R.id.problem_steps);
 		problem = new Field(R.id.problem_problem);
 		expected = new Field(R.id.problem_expected);
-		fields = new Field[] {steps, problem, expected};
-		
+		reportFields = new Field[] {steps, problem, expected};
+		englishTest = new Field(R.id.problem_english_test);
+
 		// This activity saves the logs as soon as it's created.
 		// This is to ensure the logs that get submitted reflect the state of things when the user first went to report a problem.
 		if (savedInstanceState == null)
@@ -75,7 +77,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	protected void onFullScreenDialogClosing() {
 		boolean userHasEnteredText = false;
 		
-		for (Field field : fields) {
+		for (Field field : reportFields) {
 			String text = field.input.getText().toString().trim();
 			
 			if (!text.isEmpty()) {
@@ -149,7 +151,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 		
 		boolean isValid = true;
 		
-		for (Field field : fields) {
+		for (Field field : reportFields) {
 			String text = field.input.getText().toString().trim();
 
 			// Not using material design errors here because they result in a lot of visual clutter.
@@ -164,7 +166,26 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 			else
 				field.layout.setError(null);
 		}
-		
+
+		/*
+			Most invalid problem reports come from users who don't speak English.
+			This question helps check that the user can read what the app is saying
+			and can communicate with the developer, who only speaks English.
+		 */
+		String englishTestUserText = englishTest.input.getText().toString().trim();
+		String englishTestExpectedAnswerNumber = getText(R.string.report_problem_english_test_answer_number).toString();
+		String englishTestExpectedAnswerWord = getText(R.string.report_problem_english_test_answer_word).toString();
+		if (englishTestUserText.length() == 0) {
+			englishTest.layout.setError(getText(R.string.report_problem_field_missing));
+			isValid = false;
+		}
+		else if (!englishTestUserText.equalsIgnoreCase(englishTestExpectedAnswerNumber) && !englishTestUserText.equalsIgnoreCase(englishTestExpectedAnswerWord)) {
+			englishTest.layout.setError(getText(R.string.report_problem_field_wrong));
+			isValid = false;
+		}
+		else
+			englishTest.layout.setError(null);
+
 		return isValid;
 	}
 

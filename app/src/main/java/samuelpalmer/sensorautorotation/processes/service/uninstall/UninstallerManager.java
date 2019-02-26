@@ -2,9 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service.uninstall;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
-import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ActivityMonitor;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 
 /**

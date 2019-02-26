@@ -3,15 +3,15 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import java.util.Collections;
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Represents the "incompatible apps" feature. Dynamically overrides the screen orientation
@@ -39,7 +39,7 @@ public class IncompatibleAppsMonitor extends State {
 	@Override
 	protected void start() {
 		lockScreenDetector.subscribe(enforcementUpdater);
-		activityMonitor.onChange.subscribe(enforcementUpdater);
+		activityMonitor.subscribe(enforcementUpdater);
 		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 
 		updatePackages();
@@ -56,7 +56,7 @@ public class IncompatibleAppsMonitor extends State {
 	@Override
 	protected void stop() {
 		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		activityMonitor.onChange.unsubscribe(enforcementUpdater);
+		activityMonitor.unsubscribe(enforcementUpdater);
 		lockScreenDetector.unsubscribe(enforcementUpdater);
 		orientationEnforcer.ensureStopped();
 	}

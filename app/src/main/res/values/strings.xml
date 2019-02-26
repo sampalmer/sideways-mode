@@ -61,6 +61,9 @@
 	<string name="permission_needed_summary">Permission needed</string>
 	<string name="permission_needed_allow">Allow</string>
 
+	<string name="permission_needed_usage_summary">Check app usage?</string>
+	<string name="permission_needed_usage_description">"To see when an incompatible app is open, %1$s needs usage access"</string>
+
 	<string name="permission_needed_overlays_summary">Draw over other apps?</string>
 	<string name="permission_needed_overlays_description">"To change other apps' screen orientations, %1$s needs permission to draw over other apps"</string>
 
@@ -82,6 +85,7 @@
 	<string name="report_problem_problem">What happened?</string>
 	<string name="report_problem_expected">What did you expect to happen?</string>
 	<string name="report_problem_field_missing">This is required</string>
+	<string name="report_problem_field_wrong">Wrong answer</string>
 	<string name="report_problem_field_too_short">Please provide more information</string>
 	<string name="report_problem_send">Send by email</string>
 	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
@@ -107,7 +111,7 @@
 	<string name="tip_turning_on_title">Lying down</string>
 	<string name="tip_turning_on_description">"When you lie down, tell %1$s which side you're on."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
-	<string name="tip_running_in_background_description">To control it, use the notification in your notification drawer.</string>
+	<string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
 	<string name="tip_uninstalling_title">Uninstalling %1$s?</string>
 	<string name="tip_uninstalling_description">"To make sure the screen doesn't get stuck, turn off %1$s before uninstalling it."</string>
 	<string name="action_got_it">Got it</string>

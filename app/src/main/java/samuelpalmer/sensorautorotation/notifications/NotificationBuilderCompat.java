@@ -16,32 +16,8 @@ import android.widget.RemoteViews;
  * - setShowWhen() not working on API 17 & 18 (https://issuetracker.google.com/issues/37048073)
  * - createContentView() and createBigContentView() missing (https://issuetracker.google.com/issues/37609039)
  */
-@SuppressWarnings({"UnusedDeclaration", "UnusedReturnValue", "ClassWithTooManyMethods"})
+@SuppressWarnings({"UnusedReturnValue", "ClassWithTooManyMethods"})
 public class NotificationBuilderCompat {
-	public static final int PRIORITY_DEFAULT = 0;
-	public static final int PRIORITY_LOW = -1;
-	public static final int PRIORITY_MIN = -2;
-	public static final int PRIORITY_HIGH = 1;
-	public static final int PRIORITY_MAX = 2;
-
-	public static final int VISIBILITY_PUBLIC = 1;
-	public static final int VISIBILITY_PRIVATE = 0;
-	public static final int VISIBILITY_SECRET = -1;
-
-	public static final String CATEGORY_CALL = "call";
-	public static final String CATEGORY_MESSAGE = "msg";
-	public static final String CATEGORY_EMAIL = "email";
-	public static final String CATEGORY_EVENT = "event";
-	public static final String CATEGORY_PROMO = "promo";
-	public static final String CATEGORY_ALARM = "alarm";
-	public static final String CATEGORY_PROGRESS = "progress";
-	public static final String CATEGORY_SOCIAL = "social";
-	public static final String CATEGORY_ERROR = "err";
-	public static final String CATEGORY_TRANSPORT = "transport";
-	public static final String CATEGORY_SYSTEM = "sys";
-	public static final String CATEGORY_SERVICE = "service";
-	public static final String CATEGORY_RECOMMENDATION = "recommendation";
-	public static final String CATEGORY_STATUS = "status";
 
 	public static NotificationBuilderCompat create(Context context) {
 		NotificationBuilderCompat result;
