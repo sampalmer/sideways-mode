@@ -32,6 +32,8 @@ public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
 				.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
 				.apply();
 		}
+
+		// TODO: If this is the first time the user has added an incompatible app, explain to them how to undo the change
 	}
 	
 }
