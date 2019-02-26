@@ -17,6 +17,7 @@ import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activi
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 import java.util.Collections;
 import java.util.Set;
@@ -34,14 +35,16 @@ public class PermissionNotificationManager extends State {
 
 	private final Context context;
 	private final ActivityMonitor activityMonitor;
+	private final EventRegistrar enforcementPermissionMonitor;
 	private final NotificationManager notificationManager;
 	private final SharedPreferences prefs;
 
 	private boolean isRunning = false;
-	
+
 	public PermissionNotificationManager(Context context, ActivityMonitor activityMonitor) {
 		this.context = context;
 		this.activityMonitor = activityMonitor;
+		enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
 
 		notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
 		prefs = ServiceSettings.getSharedPreferences(this.context);
@@ -50,8 +53,9 @@ public class PermissionNotificationManager extends State {
 	@Override
 	protected void start() {
 		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		activityMonitor.onPermissionChange().subscribe(activityMonitorPermissionChanged);
-		
+		activityMonitor.onPermissionChange().subscribe(permissionChanged);
+		enforcementPermissionMonitor.subscribe(permissionChanged);
+
 		isRunning = true;
 		check();
 }
@@ -61,7 +65,8 @@ public class PermissionNotificationManager extends State {
 		isRunning = false;
 		check();
 
-		activityMonitor.onPermissionChange().unsubscribe(activityMonitorPermissionChanged);
+		enforcementPermissionMonitor.unsubscribe(permissionChanged);
+		activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
 		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
 	}
 
@@ -70,7 +75,7 @@ public class PermissionNotificationManager extends State {
 			check();
 	};
 	
-	private final EventHandler activityMonitorPermissionChanged = this::check;
+	private final EventHandler permissionChanged = this::check;
 	
 	public void check() {
 		if (needsPermission()) {

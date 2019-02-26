@@ -12,12 +12,14 @@ import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.Screen
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class IncompatibleAppsPermissionFragment extends Fragment {
 
 	private static final int REQUEST_CODE_ACCESSIBILITY_SERVICE = 1;
 
 	private ActivityMonitor activityMonitor;
+	private EventRegistrar enforcementPermissionMonitor;
 
 	private PreferenceScreen preferenceScreen;
 	private Context context; //Must use this context instead of getActivity() since the latter isn't always available soon enough
@@ -27,6 +29,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
 		activityMonitor = ActivityMonitor.create(context);
+		enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
 		
 		tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("incompatibleAppsPermission");
 		tipView.setOnPreferenceClickListener(preference -> {
@@ -48,6 +51,8 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
 		
 		activityMonitor.onPermissionChange().subscribe(permissionChanged);
+		enforcementPermissionMonitor.subscribe(permissionChanged);
+
 		updateTip();
 	}
 
@@ -55,6 +60,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 
+		enforcementPermissionMonitor.unsubscribe(permissionChanged);
 		activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
 	}
 
