@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import samuelpalmer.sensorautorotation.processes.ui.RemovingIncompatibleAppsTipActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
@@ -33,7 +34,12 @@ public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
 				.apply();
 		}
 
-		// TODO: If this is the first time the user has added an incompatible app, explain to them how to undo the change
+		if (!preferences.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
+			Intent tipIntent = new Intent(context, RemovingIncompatibleAppsTipActivity.class)
+					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			context.startActivity(tipIntent);
+		}
 	}
 	
 }

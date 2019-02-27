@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
@@ -51,5 +50,10 @@ public abstract class ApplicationSettings {
 	 * Whether the user has been told how to start the app.
 	 */
 	public static final String KEY_TURNING_ON_TIP_SHOWN = "turningOnTipShown";
+
+	/**
+	 * Whether the user has been told how to remove an app from the incompatible apps list.
+	 */
+	public static final String KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN = "removeIncompatibleApps";
 
 }

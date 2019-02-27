@@ -1,23 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class IncompatibleAppsChooserActivity extends UiActivity {
 	
@@ -136,6 +131,14 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 		markIncompatibleAppPackages(); // Just in case they changed while the app was in the background
 		
 		started = true;
+
+		// The user is already in the incompatible apps screen, so we don't need to tell them about the screen later on
+		if (!prefs.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
+			prefs
+				.edit()
+				.putBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, true)
+				.apply();
+		}
 	}
 	
 	@Override
