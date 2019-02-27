@@ -6,10 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.Log;
+import android.util.TypedValue;
 import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -23,6 +27,7 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMo
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 
 import java.util.Collections;
 import java.util.Set;
@@ -82,6 +87,7 @@ public class IncompatibleAppsSuggester extends State {
 	private final EventHandler activityChanged = new EventHandler() {
 		@Override
 		public void update() {
+			isCurrentActivityADialog(); // TODO: Remove this!
 			overriddenOrientationDetector.reset();
 			supportedOrientationsDetector.reset();
 			check();
@@ -152,5 +158,77 @@ public class IncompatibleAppsSuggester extends State {
 	    for (String incompatibleAppPackage : incompatibleAppPackages)
 	        notificationManager.cancel(incompatibleAppPackage, NotificationIds.INCOMPATIBLE_APP);
     }
-	
+
+    private boolean isCurrentActivityADialog() {
+		ComponentName currentActivity = activityMonitor.currentOrNull();
+
+		if (currentActivity == null)
+			return false;
+
+		Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "Checking activity: " + currentActivity.flattenToShortString());
+
+		PackageManager packageManager = context.getPackageManager();
+		try {
+			ActivityInfo activityInfo = packageManager.getActivityInfo(currentActivity, 0);
+			String orientation = new FieldConstants(ActivityInfo.class, "SCREEN_ORIENTATION_").getName(activityInfo.screenOrientation);
+			Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "Activity orientation: " + orientation);
+
+			int activityThemeResource = activityInfo.getThemeResource();
+
+			TypedArray typedArray = context.obtainStyledAttributes(activityThemeResource, new int[]{android.R.attr.windowIsFloating});
+			try {
+				boolean windowIsFloatingHasValue = typedArray.hasValue(0);
+				String windowIsFloating = typedArray.getString(0);
+				Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "windowIsFloating: " + windowIsFloating + ", has value: " + windowIsFloatingHasValue);
+			}
+			finally {
+				typedArray.recycle();
+			}
+
+			typedArray = context.obtainStyledAttributes(activityThemeResource, new int[]{android.R.attr.windowIsTranslucent});
+			try {
+				boolean windowIsTranslucentHasValue = typedArray.hasValue(0);
+				String windowIsTranslucent = typedArray.getString(0);
+				Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "windowIsTranslucent: " + windowIsTranslucent + ", has value: " + windowIsTranslucentHasValue);
+			}
+			finally {
+				typedArray.recycle();
+			}
+
+			typedArray = context.obtainStyledAttributes(activityThemeResource, new int[]{android.R.attr.windowBackground});
+			try {
+				TypedValue value = new TypedValue();
+				if (!typedArray.getValue(0, value))
+					throw new RuntimeException("Couldn't read value");
+
+				Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "windowBackground: " + value + ", type: " + new FieldConstants(TypedValue.class, "TYPE_").getName(value.type));
+			}
+			finally {
+				typedArray.recycle();
+			}
+
+
+//			Resources activityResources = packageManager.getResourcesForActivity(currentActivity);
+//			activityResources.
+
+
+			Resources resources = packageManager.getResourcesForApplication(currentActivity.getPackageName());
+			TypedValue themeValue = new TypedValue();
+			resources.getValue(activityThemeResource, themeValue, true);
+			Log.i(IncompatibleAppsSuggester.class.getSimpleName(), "Theme: " + themeValue);
+
+			// TODO: Figure out if the activity's theme contains "windowIsFloating"
+			/* Or maybe one of these:
+			        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+			 */
+
+		} catch (PackageManager.NameNotFoundException e) {
+			Log.w(IncompatibleAppsSuggester.class.getSimpleName(), "Couldn't find info for current activity");
+			return false;
+		}
+
+		return false; // TODO: Do this properly!
+	}
+
 }
