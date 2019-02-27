@@ -71,6 +71,7 @@ public class IncompatibleAppsSuggester extends State {
 		if (isStarted() && key.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES)) {
 			loadIncompatibleAppPackages();
 			check();
+			cancelObsoleteNotifications();
 		}
 	};
 	
@@ -106,7 +107,7 @@ public class IncompatibleAppsSuggester extends State {
 			// TODO: Don't prompt if the user has asked not to be prompted again for this app
 			// TODO: Don't prompt if the user has already been asked and dismissed the notification
 			// TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
-			// TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube
+			// TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube. This might be a timing-related issue caused by the accessibility service. If that's the case, then the issue no longer applies since the accessibility service has been replaced with polling.
 		) {
 			PackageManager packageManager = context.getPackageManager();
 			
@@ -137,15 +138,19 @@ public class IncompatibleAppsSuggester extends State {
 					// Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be
 					// the closest equivalent. Providing a sound or vibration seems necessary to trigger them.
 					builder.setVibrate(new long[]{});
-				
-				notificationManager.notify(NotificationIds.INCOMPATIBLE, builder.build());
+
+				notificationManager.notify(currentActivity.getPackageName(), NotificationIds.INCOMPATIBLE_APP, builder.build());
 			} catch (PackageManager.NameNotFoundException e) {
 				Log.w(getClass().getSimpleName(), e); // Don't really need to worry about this; maybe the app got uninstalled or something
 			}
-			
-			// TODO: Automatically cancel the notification if the user adds the app to the incompatible apps list
-			
 		}
 	}
+
+	private void cancelObsoleteNotifications() {
+	    // The user might have added a suggested app to the incompatible apps list,
+        // so we'd better cancel the corresponding notification.
+	    for (String incompatibleAppPackage : incompatibleAppPackages)
+	        notificationManager.cancel(incompatibleAppPackage, NotificationIds.INCOMPATIBLE_APP);
+    }
 	
 }

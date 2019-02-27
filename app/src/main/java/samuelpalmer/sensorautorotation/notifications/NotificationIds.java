@@ -6,5 +6,5 @@ public class NotificationIds {
 	public static final int ERROR = 3;
 	public static final int PERMISSION = 4;
 	public static final int UNINSTALL = 5;
-	public static final int INCOMPATIBLE = 6;
+	public static final int INCOMPATIBLE_APP = 6;
 }
