@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   fill="#000000"
-   height="24"
-   viewBox="0 0 24 24"
-   width="24"
-   id="svg2"
-   version="1.1"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="notification_app.svg"
-   inkscape:export-filename="C:\Users\Sam\Desktop\Auto Rotate\Icon Sketches\Front on\notification_app.png"
-   inkscape:export-xdpi="135"
-   inkscape:export-ydpi="135">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" fill="#000000" height="24" viewBox="0 0 24 24" width="24"
+    id="svg2" version="1.1" inkscape:version="0.92.2 (5c3e80d, 2017-08-06)" sodipodi:docname="app_right_side.svg"
+    inkscape:export-filename="C:\Users\Sam\Desktop\Auto Rotate\Icon Sketches\Front on\notification_app.png"
+    inkscape:export-xdpi="135" inkscape:export-ydpi="135">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -26,7 +13,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,7 +45,7 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:zoom="19.666668"
-     inkscape:cx="1.6856639"
+     inkscape:cx="-6.983827"
      inkscape:cy="8.8615884"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
@@ -66,7 +53,8 @@
      inkscape:current-layer="svg2"
      inkscape:object-paths="false"
      inkscape:snap-intersection-paths="true"
-     inkscape:object-nodes="true">
+     inkscape:object-nodes="true"
+     inkscape:pagecheckerboard="true">
     <inkscape:grid
        type="xygrid"
        id="grid4140" />

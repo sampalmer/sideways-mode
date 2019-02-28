@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-
+import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 
 /**
  * Forces the OS to use the {@link ActivityInfo#SCREEN_ORIENTATION_USER} screen orientation.
@@ -34,7 +37,14 @@ public class ScreenOrientationEnforcer extends State {
 	public static boolean hasPermissionToStart(Context context) {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
 	}
-	
+
+	public static EventRegistrar makePermissionMonitor(Context context) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			return new AppOpMonitor(context, AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW);
+		else
+			return new NullEventRegistrarAdaptor();
+	}
+
 	@Override
 	protected void start() {
 		setEnforcedUnconditionally(false);

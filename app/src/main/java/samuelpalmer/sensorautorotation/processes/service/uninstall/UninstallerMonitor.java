@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -14,7 +15,7 @@ import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ActivityMonitor;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.ui.UninstallTipActivity;
 import samuelpalmer.sensorautorotation.utilities.ComponentNameExtensions;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -66,12 +67,12 @@ class UninstallerMonitor extends State {
         for (Intent uninstallerIntent : uninstallerIntents)
             addUninstallerActivitiesFor(uninstallerIntent);
 
-        activityMonitor.onChange.subscribe(activityChanged);
+        activityMonitor.subscribe(activityChanged);
     }
 
     @Override
     protected void stop() {
-        activityMonitor.onChange.unsubscribe(activityChanged);
+        activityMonitor.unsubscribe(activityChanged);
         context.unregisterReceiver(installedAppsChanged);
     }
 
@@ -130,7 +131,7 @@ class UninstallerMonitor extends State {
                         .setContentTitle(title)
                         .setContentText(context.getString(R.string.tip_uninstalling_description, context.getText(R.string.app_name_full)))
                         .setTicker(title) //Helps ensure the user actually notices this. Only works on Android 4.
-                        .setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setChannelId(NotificationChannels.ID_TIPS);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)

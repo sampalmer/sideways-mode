@@ -6,16 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
-
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
-import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
-import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
+import samuelpalmer.sensorautorotation.notifications.*;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -43,11 +39,11 @@ class ServiceNotification {
 		// reappearing each time it is updated on my Sony Xperia M (Android 4.3).
 		builder = NotificationBuilderFactory.create(this.context)
 			.setContentIntent(dashboardIntent)
- 			.setCategory(NotificationBuilderCompat.CATEGORY_STATUS)
-			.setVisibility(NotificationBuilderCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
+ 			.setCategory(NotificationCompat.CATEGORY_STATUS)
+			.setVisibility(NotificationCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
 			.setChannelId(NotificationChannels.ID_CONTROLS)
 			.setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
-			.setPriority(NotificationBuilderCompat.PRIORITY_DEFAULT)
+			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 		;
 		
 		hideTimestamp();

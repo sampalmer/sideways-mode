@@ -6,7 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
+import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
@@ -58,8 +58,8 @@ public abstract class EnvironmentErrorManager {
 			.setContentText(context.getText(R.string.app_disabled_view_error))
 			.setDeleteIntent(clearIntentIntent)
 			.setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
-			.setPriority(NotificationBuilderCompat.PRIORITY_HIGH)
-			.setCategory(NotificationBuilderCompat.CATEGORY_ERROR)
+			.setPriority(NotificationCompat.PRIORITY_HIGH)
+			.setCategory(NotificationCompat.CATEGORY_ERROR)
 			.setChannelId(NotificationChannels.ID_ERRORS);
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
