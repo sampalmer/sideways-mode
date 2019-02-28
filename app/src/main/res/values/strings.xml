@@ -100,7 +100,7 @@
 	<string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
 
 	<!-- Notification channels -->
-	<string name="notification_channel_controls">Rotation controls</string>
+	<string name="notification_channel_controls">Controls</string>
 	<string name="notification_channel_upgrades">Upgrade messages</string>
 	<string name="notification_channel_errors">Error messages</string>
 	<string name="notification_channel_permissions">Permission requests</string>
