@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
+import samuelpalmer.sensorautorotation.utilities.ActivityUtils;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -25,6 +27,8 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 	private Context context; //Must use this context instead of getActivity() since the latter isn't always available soon enough
 	private PermissionTipViewPreference tipView;
 
+	private boolean isGrantingPermission;
+
 	public void initialise(PreferenceScreen preferenceScreen) {
 		this.preferenceScreen = preferenceScreen;
 		this.context = preferenceScreen.getContext();
@@ -36,7 +40,10 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 			grantPermissions();
 			return true;
 		});
-		
+
+		activityMonitor.onPermissionChange().subscribe(activityMonitorPermissionChanged);
+		enforcementPermissionMonitor.subscribe(enforcementPermissionChanged);
+
 		updateTip(); //Updating the visibility of the tip in onStart() isn't early enough when switching between split and fullscreen on Android 7.1
 	}
 	
@@ -50,18 +57,14 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 		Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
 		description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
 		
-		activityMonitor.onPermissionChange().subscribe(permissionChanged);
-		enforcementPermissionMonitor.subscribe(permissionChanged);
-
 		updateTip();
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-
-		enforcementPermissionMonitor.unsubscribe(permissionChanged);
-		activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
+	public void onDestroy() {
+		super.onDestroy();
+		enforcementPermissionMonitor.unsubscribe(enforcementPermissionChanged);
+		activityMonitor.onPermissionChange().unsubscribe(activityMonitorPermissionChanged);
 	}
 
 	private void grantPermissions() {
@@ -74,6 +77,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
 						Intent intent = activityMonitor.makeAcquirePermissionIntent();
 						startActivityForResult(intent, REQUEST_CODE_ACCESSIBILITY_SERVICE);
+						isGrantingPermission = true;
 					})
 					.show();
 		else
@@ -106,12 +110,35 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
 						Intent intent = SystemIntents.drawOnTopOfApps(getActivity());
 						startActivity(intent);
+						isGrantingPermission = true;
 					})
 					.show();
 		}
 	}
 
-	private final EventHandler permissionChanged = this::updateTip;
+	private final EventHandler activityMonitorPermissionChanged = () -> {
+		updateTip();
+
+		if (activityMonitor.hasPermission())
+			onPermissionGranted();
+	};
+
+	private final EventHandler enforcementPermissionChanged = () -> {
+		updateTip();
+
+		if (ScreenOrientationEnforcer.hasPermissionToStart(context))
+			onPermissionGranted();
+	};
+
+	private void onPermissionGranted() {
+		if (isGrantingPermission) {
+			FragmentActivity activity = getActivity();
+			if (activity != null)
+				ActivityUtils.finishActivitiesOnTopOf(activity);
+
+			isGrantingPermission = false;
+		}
+	}
 
 	private void updateTip() {
 		if (activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context))
