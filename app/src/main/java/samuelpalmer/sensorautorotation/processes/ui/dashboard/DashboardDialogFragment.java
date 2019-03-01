@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -32,7 +31,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 
 	private DashboardNormalFragment normalSection;
 	private DashboardPermissionFragment permissionSection;
-	private TurnOnTipFragment tipsFragment;
+	private FirstStartTipsFragment tipsFragment;
 	private ImageButton menuButton;
 	private PopupMenu popup;
 
@@ -79,9 +78,9 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 			fragmentTransaction.add(R.id.dashboard_permission_contents, permissionSection, TAG_PERMISSION_CONTENTS_FRAGMENT);
 		}
 
-		tipsFragment = (TurnOnTipFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
+		tipsFragment = (FirstStartTipsFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
 		if (tipsFragment == null) {
-			tipsFragment = new TurnOnTipFragment();
+			tipsFragment = new FirstStartTipsFragment();
 			fragmentTransaction.add(tipsFragment, TAG_TIPS_FRAGMENT);
 		}
 
@@ -111,7 +110,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 	public void onStart() {
 		super.onStart();
 
-		tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton());
+		tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
 
 		boolean hasPermission = SystemSettings.canWrite(getContext());
 		ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);

@@ -7,29 +7,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
-/**
- * Shows the user how to turn on the app if needed.
- */
-public class TurnOnTipFragment extends Fragment {
+public class FirstStartTipsFragment extends Fragment {
 
     private static final String STATE_DIALOG_TOUCHED = "dialogTouched";
-    private static final String STATE_SHOWING_TIP = "showingTip";
+    private static final String STATE_SHOWING_TIPS = "showingTips";
 
     private Handler handler;
     private Dialog dialog;
     private View sideButton;
+    private View menuButton;
+    private View offButton;
 
     private ApplicationStatus status;
     private SharedPreferences applicationSettings;
@@ -38,8 +32,8 @@ public class TurnOnTipFragment extends Fragment {
     private boolean dialogTouched;
     private boolean isActiveActivity;
     private boolean waiting;
-    private boolean showingTip;
-    private TapTargetView tip;
+    private boolean showingTips;
+    private FirstStartTipsWizard tips;
     private boolean started;
 
     @Override
@@ -49,7 +43,7 @@ public class TurnOnTipFragment extends Fragment {
 
         if (savedInstanceState != null) {
             dialogTouched = savedInstanceState.getBoolean(STATE_DIALOG_TOUCHED);
-            showingTip = savedInstanceState.getBoolean(STATE_SHOWING_TIP);
+            showingTips = savedInstanceState.getBoolean(STATE_SHOWING_TIPS);
         }
 
         somethingChanged();
@@ -68,15 +62,16 @@ public class TurnOnTipFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_DIALOG_TOUCHED, dialogTouched);
-        outState.putBoolean(STATE_SHOWING_TIP, showingTip);
+        outState.putBoolean(STATE_SHOWING_TIPS, showingTips);
     }
 
-    public void setTargets(Dialog dialog, View sideButton) {
+    public void setTargets(Dialog dialog, View sideButton, View menuButton, View offButton) {
         this.dialog = dialog;
         this.sideButton = sideButton;
+        this.menuButton = menuButton;
+        this.offButton = offButton;
 
         dialog.getWindow().setCallback(new WindowCallbackWrapper(dialog) {
-
             @Override
             public boolean dispatchTouchEvent(MotionEvent event) {
                 if (status != null && normalSectionVisible)
@@ -142,10 +137,14 @@ public class TurnOnTipFragment extends Fragment {
     }
 
     private void somethingChanged() {
-        boolean canShowTip =
+        boolean canShowTips =
                 dialog != null
                         &&
                         sideButton != null
+                        &&
+                        menuButton != null
+                        &&
+                        offButton != null
                         &&
                         status != null
                         &&
@@ -153,75 +152,69 @@ public class TurnOnTipFragment extends Fragment {
                         &&
                         applicationSettings != null
                         &&
-                        !applicationSettings.getBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, false);
+                        !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
 
         boolean shouldWait =
-                canShowTip
+                canShowTips
                         &&
                         isActiveActivity
                         &&
-                        !showingTip
+                        !showingTips
                         &&
                         !dialogTouched;
 
         if (shouldWait != waiting) {
             if (shouldWait) {
-                handler.postDelayed(showTip, 3000);
+                handler.postDelayed(showTips, 3000);
                 waiting = true;
             } else {
-                handler.removeCallbacks(showTip);
+                handler.removeCallbacks(showTips);
                 waiting = false;
             }
         }
 
-        if (showingTip && canShowTip && started && tip == null)
-            // The fragment might have been destroyed, in which case we'll need to recreate the tip.
-            showTip.run();
+        if (showingTips && canShowTips && started && tips == null)
+            // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
+            showTips.run();
     }
 
-    private final Runnable showTip = new Runnable() {
+    private final Runnable showTips = new Runnable() {
         @Override
         public void run() {
-            Context context = getContext();
-            assert context != null;
-
-            TapTarget sideButtonTarget = TapTarget.forView(
-                    sideButton,
-                    context.getString(R.string.tip_turning_on_title),
-                    context.getString(R.string.tip_turning_on_description, context.getText(R.string.app_name_full)))
-                    .drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
-
-            tip = TapTargetView.showFor(
+            tips = new FirstStartTipsWizard(
+                    handler,
                     dialog,
-                    sideButtonTarget,
-                    new TapTargetView.Listener() {
-
+                    sideButton,
+                    menuButton,
+                    offButton,
+                    new FirstStartTipsWizard.Listener() {
                         @Override
-                        public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);
+                        public void onCompleted() {
                             proceed();
                         }
 
                         @Override
-                        public void onTargetCancel(TapTargetView view) {
-                            super.onTargetCancel(view);
+                        public void onCancelled() {
                             proceed();
                         }
 
                         private void proceed() {
                             applicationSettings
                                     .edit()
-                                    .putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true)
+                                    .putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
                                     .apply();
 
-                            tip = null;
-                            showingTip = false;
+                            tips = null;
+                            showingTips = false;
                         }
 
                     }
             );
 
-            showingTip = true;
+            tips.start();
+
+            showingTips = true;
         }
     };
+
 }

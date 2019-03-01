@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
@@ -46,10 +45,5 @@ public abstract class ApplicationSettings {
 	 * Whether the user has been told to turn off the app before uninstalling it.
 	 */
 	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
-
-	/**
-	 * Whether the user has been told how to start the app.
-	 */
-	public static final String KEY_TURNING_ON_TIP_SHOWN = "turningOnTipShown";
 
 }

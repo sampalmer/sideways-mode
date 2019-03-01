@@ -7,9 +7,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
-
-import java.util.Set;
-
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
@@ -17,6 +14,8 @@ import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
+
+import java.util.Set;
 
 class Migrations {
 	static SparseArray<Migration> buildMap() {
@@ -178,8 +177,7 @@ class Migrations {
                 if (userInstructed)
                     editor
                             .putBoolean(ApplicationSettings.KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN, true)
-							.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true)
-							.putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true);
+                            .putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true);
             }
         });
 

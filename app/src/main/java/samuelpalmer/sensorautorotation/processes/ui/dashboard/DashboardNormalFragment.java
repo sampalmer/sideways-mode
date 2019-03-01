@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.snackbar.Snackbar;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -55,6 +53,13 @@ public class DashboardNormalFragment extends Fragment {
 			throw new IllegalStateException("Button is not yet available");
 
 		return rightSideButton;
+	}
+
+	public View getOffButton() {
+		if (turnOffButton == null)
+			throw new IllegalStateException("Button is not yet available");
+
+		return turnOffButton;
 	}
 
 	public ApplicationStatus getStatus() {
