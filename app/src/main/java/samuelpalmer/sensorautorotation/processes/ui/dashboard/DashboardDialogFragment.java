@@ -18,10 +18,12 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.InstructionsActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class DashboardDialogFragment extends AppCompatDialogFragment {
 
@@ -34,6 +36,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 	private FirstStartTipsFragment tipsFragment;
 	private ImageButton menuButton;
 	private PopupMenu popup;
+	private EventRegistrar permissionMonitor;
 
 	public DashboardDialogFragment() {
 		setStyle(STYLE_NO_TITLE, 0);
@@ -107,12 +110,37 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 	}
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		permissionMonitor = ScreenOrientationController.makePermissionMonitor(getContext());
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		permissionMonitor = null;
+	}
+
+	@Override
 	public void onStart() {
 		super.onStart();
 
 		tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
 
-		boolean hasPermission = SystemSettings.canWrite(getContext());
+		permissionMonitor.subscribe(permissionChanged);
+		checkPermission();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		permissionMonitor.unsubscribe(permissionChanged);
+	}
+
+	private final EventHandler permissionChanged = this::checkPermission;
+
+	private void checkPermission() {
+		boolean hasPermission = ScreenOrientationController.hasPermissionToStart(getContext());
 		ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
 		ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
 		tipsFragment.setNormalSectionVisibility(hasPermission);

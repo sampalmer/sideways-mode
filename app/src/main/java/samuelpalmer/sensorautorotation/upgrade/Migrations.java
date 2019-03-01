@@ -8,10 +8,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiver;
 import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
@@ -185,7 +185,7 @@ class Migrations {
 	}
 
     private static void restoreSystemSettings(Context context, Boolean autoRotate) {
-		if (!SystemSettings.canWrite(context))
+        if (!ScreenOrientationController.hasPermissionToStart(context))
 			Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.");
 		else {
 			if (autoRotate != null)

@@ -8,14 +8,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
-
-import java.util.Map;
-
 import androidx.core.content.pm.PackageInfoCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
+
+import java.util.Map;
 
 public class Upgrader {
 	
@@ -88,7 +87,7 @@ public class Upgrader {
 				prefs.edit().clear().apply();
 				
 				if (CurrentProcess.isServiceProcess(context)) {
-					if (!SystemSettings.canWrite(context))
+                    if (!ScreenOrientationController.hasPermissionToStart(context))
 						Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
 					else {
 						Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);

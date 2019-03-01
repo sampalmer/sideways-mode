@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.AppOpsManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -17,14 +16,15 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.utilities.ActivityUtils;
-import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class DashboardPermissionFragment extends Fragment {
 
-	private AppOpMonitor permissionMonitor;
+	private EventRegistrar permissionMonitor;
 
 	@Nullable
 	@Override
@@ -50,7 +50,7 @@ public class DashboardPermissionFragment extends Fragment {
 		try {
 			startActivity(intent);
 
-			permissionMonitor = new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
+			permissionMonitor = ScreenOrientationController.makePermissionMonitor(context);
 			permissionMonitor.subscribe(permissionChanged);
 		}
 		catch (ActivityNotFoundException e) {
@@ -73,7 +73,7 @@ public class DashboardPermissionFragment extends Fragment {
 	private final EventHandler permissionChanged = new EventHandler() {
 		@Override
 		public void update() {
-			if (permissionMonitor.hasPermission()) {
+			if (ScreenOrientationController.hasPermissionToStart(getContext())) {
 				FragmentActivity activity = getActivity();
 				if (activity != null)
 					ActivityUtils.finishActivitiesOnTopOf(activity);

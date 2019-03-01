@@ -16,7 +16,6 @@ import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.utilities.SystemSettings;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
@@ -25,7 +24,18 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 public class ScreenOrientationController extends State {
 	
 	private static final String TAG = ScreenOrientationController.class.getSimpleName();
-	
+
+	public static boolean hasPermissionToStart(Context context) {
+		return Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(context);
+	}
+
+	public static EventRegistrar makePermissionMonitor(Context context) {
+		if (Build.VERSION.SDK_INT >= 23)
+			return new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
+		else
+			return new NullEventRegistrarAdaptor();
+	}
+
 	private final Context context;
 	private final ScreenRotationMonitor screen;
 	private final ContentResolver contentResolver;
@@ -39,10 +49,7 @@ public class ScreenOrientationController extends State {
 		this.screen = screen;
 		contentResolver = context.getContentResolver();
 
-		if (Build.VERSION.SDK_INT >= 23)
-			systemSettingPermissionMonitor = new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
-		else
-			systemSettingPermissionMonitor = new NullEventRegistrarAdaptor();
+		systemSettingPermissionMonitor = makePermissionMonitor(context);
 	}
 
 	@Override
@@ -125,7 +132,7 @@ public class ScreenOrientationController extends State {
 	 * @return Whether the permission is granted
 	 */
 	private boolean validateSystemSettingsPermission() {
-		if (!SystemSettings.canWrite(context)) {
+		if (!hasPermissionToStart(context)) {
 			GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
 			EnvironmentErrorManager.report(context, error);
 			return false;
