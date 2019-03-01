@@ -18,6 +18,7 @@ public class FirstStartTipsFragment extends Fragment {
 
     private static final String STATE_DIALOG_TOUCHED = "dialogTouched";
     private static final String STATE_SHOWING_TIPS = "showingTips";
+    private static final String STATE_CURRENT_TIP_INDEX = "currentTipIndex";
 
     private Handler handler;
     private Dialog dialog;
@@ -33,6 +34,7 @@ public class FirstStartTipsFragment extends Fragment {
     private boolean isActiveActivity;
     private boolean waiting;
     private boolean showingTips;
+    private int currentTipIndex;
     private FirstStartTipsWizard tips;
     private boolean started;
 
@@ -44,6 +46,7 @@ public class FirstStartTipsFragment extends Fragment {
         if (savedInstanceState != null) {
             dialogTouched = savedInstanceState.getBoolean(STATE_DIALOG_TOUCHED);
             showingTips = savedInstanceState.getBoolean(STATE_SHOWING_TIPS);
+            currentTipIndex = savedInstanceState.getInt(STATE_CURRENT_TIP_INDEX);
         }
 
         somethingChanged();
@@ -63,6 +66,7 @@ public class FirstStartTipsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_DIALOG_TOUCHED, dialogTouched);
         outState.putBoolean(STATE_SHOWING_TIPS, showingTips);
+        outState.putInt(STATE_CURRENT_TIP_INDEX, tips == null ? currentTipIndex : tips.getCurrentTipIndex());
     }
 
     public void setTargets(Dialog dialog, View sideButton, View menuButton, View offButton) {
@@ -137,7 +141,7 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     private void somethingChanged() {
-        boolean canShowTips =
+        boolean shouldShowTips =
                 dialog != null
                         &&
                         sideButton != null
@@ -155,7 +159,7 @@ public class FirstStartTipsFragment extends Fragment {
                         !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
 
         boolean shouldWait =
-                canShowTips
+                shouldShowTips
                         &&
                         isActiveActivity
                         &&
@@ -173,7 +177,7 @@ public class FirstStartTipsFragment extends Fragment {
             }
         }
 
-        if (showingTips && canShowTips && started && tips == null)
+        if (showingTips && shouldShowTips && started && tips == null)
             // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
             showTips.run();
     }
@@ -182,11 +186,11 @@ public class FirstStartTipsFragment extends Fragment {
         @Override
         public void run() {
             tips = new FirstStartTipsWizard(
-                    handler,
                     dialog,
                     sideButton,
                     menuButton,
                     offButton,
+                    currentTipIndex,
                     new FirstStartTipsWizard.Listener() {
                         @Override
                         public void onCompleted() {

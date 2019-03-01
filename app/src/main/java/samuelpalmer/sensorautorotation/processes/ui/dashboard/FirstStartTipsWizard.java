@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.view.*;
 import android.widget.ImageView;
 import androidx.core.content.ContextCompat;
@@ -14,18 +13,16 @@ import samuelpalmer.sensorautorotation.R;
 
 class FirstStartTipsWizard {
 
-    private final Handler handler;
     private final Dialog dialog;
-    private final View sideButton;
-    private final View menuButton;
-    private final View offButton;
     private final Listener listener;
 
     private final float dialogOriginalDimAmount;
+    private final TapTarget[] tips;
 
     private boolean tipsRunning;
     private TapTargetView currentTargetView;
-    private Runnable currentQueuedItem;
+    private int currentTipIndex;
+
     private View disableActivityView;
     private Context context;
     private WindowManager windowManager;
@@ -36,12 +33,8 @@ class FirstStartTipsWizard {
         void onCancelled();
     }
 
-    public FirstStartTipsWizard(Handler handler, Dialog dialog, View sideButton, View menuButton, View offButton, Listener listener) {
-        this.handler = handler;
+    public FirstStartTipsWizard(Dialog dialog, View sideButton, View menuButton, View offButton, int startAtTipIndex, Listener listener) {
         this.dialog = dialog;
-        this.sideButton = sideButton;
-        this.menuButton = menuButton;
-        this.offButton = offButton;
         this.listener = listener;
 
         //noinspection ConstantConditions
@@ -84,13 +77,38 @@ class FirstStartTipsWizard {
 
         };
 
-        disableActivityView.setOnClickListener(v -> {
-            // The wizard feels completely unresponsive if you're in a hurry, so we'll skip any pauses whenever the user taps on the app.
-            if (tipsRunning && currentQueuedItem != null) {
-                handler.removeCallbacks(currentQueuedItem);
-                currentQueuedItem.run();
-            }
-        });
+        tips = new TapTarget[] {
+                TapTarget
+                        .forView(
+                                sideButton,
+                                context.getString(R.string.intro_tip_side_button_title),
+                                context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full))
+                        )
+                        .icon(getDrawable(sideButton))
+                        .drawShadow(true), // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+
+                TapTarget
+                        .forView(
+                                menuButton,
+                                context.getString(R.string.intro_tip_incompatible_apps_title),
+                                context.getString(R.string.intro_tip_incompatible_apps_description)
+                        )
+                        .drawShadow(true), // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+
+                TapTarget
+                        .forView(
+                                offButton,
+                                context.getString(R.string.intro_tip_uninstall_title),
+                                context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full))
+                        )
+                        .icon(getDrawable(offButton))
+                        .drawShadow(true) // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+        };
+
+        if (startAtTipIndex < 0 || startAtTipIndex >= tips.length)
+            throw new IllegalArgumentException("Tip index out of bounds");
+
+        this.currentTipIndex = startAtTipIndex;
     }
 
     public void start() {
@@ -104,7 +122,7 @@ class FirstStartTipsWizard {
         //noinspection ConstantConditions
         dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
 
-        step1.run();
+        showCurrentTip();
     }
 
     public void stop() {
@@ -118,11 +136,6 @@ class FirstStartTipsWizard {
 
         tipsRunning = false;
 
-        if (currentQueuedItem != null) {
-            handler.removeCallbacks(currentQueuedItem);
-            currentQueuedItem = null;
-        }
-
         if (currentTargetView != null) {
             currentTargetView.dismiss(false);
             currentTargetView = null;
@@ -133,52 +146,9 @@ class FirstStartTipsWizard {
         return tipsRunning;
     }
 
-    private final Runnable step1 = new Runnable() {
-        @Override
-        public void run() {
-            TapTarget sideButtonTarget = TapTarget.forView(
-                    sideButton,
-                    context.getString(R.string.intro_tip_side_button_title),
-                    context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full))
-            )
-                .icon(getDrawable(sideButton))
-                .drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
-
-            showTapTarget(sideButtonTarget, () -> queueStep(step2, 0));
-        }
-    };
-
-    private final Runnable step2 = new Runnable() {
-        @Override
-        public void run() {
-            TapTarget incompatibleAppsTarget = TapTarget.forView(
-                    menuButton,
-                    context.getString(R.string.intro_tip_incompatible_apps_title),
-                    context.getString(R.string.intro_tip_incompatible_apps_description)
-            )
-                .drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
-
-            showTapTarget(incompatibleAppsTarget, () -> queueStep(step3, 0));
-        }
-    };
-
-    private final Runnable step3 = new Runnable() {
-        @Override
-        public void run() {
-            TapTarget incompatibleAppsTarget = TapTarget.forView(
-                    offButton,
-                    context.getString(R.string.intro_tip_uninstall_title),
-                    context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full))
-            )
-                .icon(getDrawable(offButton))
-                .drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
-
-            showTapTarget(incompatibleAppsTarget, () -> {
-                listener.onCompleted();
-                queueStep(step4, 0);
-            });
-        }
-    };
+    public int getCurrentTipIndex() {
+        return currentTipIndex;
+    }
 
     /**
      * Gets the first drawable that can be found in the given view hierarchy.
@@ -204,12 +174,19 @@ class FirstStartTipsWizard {
         return null;
     }
 
-    private final Runnable step4 = this::stop;
+    private void showCurrentTip() {
+        if (currentTipIndex >= tips.length) {
+            currentTipIndex = 0; // Just in case this gets re-used
+            listener.onCompleted();
+            stop();
+            return;
+        }
 
-    private void showTapTarget(TapTarget target, Runnable onDismiss) {
+        TapTarget currentTip = tips[currentTipIndex];
+
         currentTargetView = TapTargetView.showFor(
                 dialog,
-                target,
+                currentTip,
                 new TapTargetView.Listener() {
 
                     @Override
@@ -226,24 +203,12 @@ class FirstStartTipsWizard {
 
                     private void proceed() {
                         currentTargetView = null;
-                        onDismiss.run();
+                        ++currentTipIndex;
+                        showCurrentTip();
                     }
 
                 }
         );
     }
 
-    private void queueStep(Runnable step, long delayMillis) {
-        Runnable wrappedStep = () -> {
-            currentQueuedItem = null;
-            step.run();
-        };
-
-        if (delayMillis == 0)
-            handler.post(wrappedStep);
-        else
-            handler.postDelayed(wrappedStep, delayMillis);
-
-        currentQueuedItem = wrappedStep;
-    }
 }
