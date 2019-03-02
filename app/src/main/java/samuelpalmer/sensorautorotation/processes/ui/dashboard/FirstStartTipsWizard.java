@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.view.*;
@@ -10,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 class FirstStartTipsWizard {
 
@@ -17,14 +19,14 @@ class FirstStartTipsWizard {
     private final Listener listener;
 
     private final float dialogOriginalDimAmount;
-    private final TapTarget[] tips;
+    private final Tip[] tips;
+    private final SharedPreferences sharedPreferences;
 
     private boolean tipsRunning;
     private TapTargetView currentTargetView;
     private int currentTipIndex;
 
     private View disableActivityView;
-    private Context context;
     private WindowManager windowManager;
     private final WindowManager.LayoutParams disableActivityViewParams;
 
@@ -33,14 +35,16 @@ class FirstStartTipsWizard {
         void onCancelled();
     }
 
-    public FirstStartTipsWizard(Dialog dialog, View sideButton, View menuButton, View offButton, int startAtTipIndex, Listener listener) {
+    public FirstStartTipsWizard(Dialog dialog, View sideButton, View menuButton, View offButton, Listener listener) {
         this.dialog = dialog;
         this.listener = listener;
 
         //noinspection ConstantConditions
         this.dialogOriginalDimAmount = dialog.getWindow().getAttributes().dimAmount;
 
-        context = dialog.getContext();
+        Context context = dialog.getContext();
+
+        sharedPreferences = ApplicationSettings.getSharedPreferences(context);
         windowManager = ContextCompat.getSystemService(context, WindowManager.class);
 
         disableActivityViewParams = new WindowManager.LayoutParams();
@@ -77,43 +81,47 @@ class FirstStartTipsWizard {
 
         };
 
-        tips = new TapTarget[] {
-                TapTarget
+        tips = new Tip[] {
+                new Tip(TapTarget
                         .forView(
                                 sideButton,
                                 context.getString(R.string.intro_tip_side_button_title),
                                 context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full))
                         )
-                        .icon(getDrawable(sideButton))
-                        .drawShadow(true), // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+                        .icon(getDrawable(sideButton)),
+                        ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN
+                ),
 
-                TapTarget
+                new Tip(TapTarget
                         .forView(
                                 menuButton,
                                 context.getString(R.string.intro_tip_incompatible_apps_title),
                                 context.getString(R.string.intro_tip_incompatible_apps_description)
-                        )
-                        .drawShadow(true), // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+                        ),
+                        ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN
+                ),
 
-                TapTarget
+                new Tip(TapTarget
                         .forView(
                                 offButton,
                                 context.getString(R.string.intro_tip_uninstall_title),
                                 context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full))
                         )
-                        .icon(getDrawable(offButton))
-                        .drawShadow(true) // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+                        .icon(getDrawable(offButton)),
+                        ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN
+                ),
         };
-
-        if (startAtTipIndex < 0 || startAtTipIndex >= tips.length)
-            throw new IllegalArgumentException("Tip index out of bounds");
-
-        this.currentTipIndex = startAtTipIndex;
     }
 
     public void start() {
         if (tipsRunning)
             throw new RuntimeException("Already started");
+
+        if (!hasTipsToShow()) {
+            // This is needed to prevent UI lag during user interaction
+            listener.onCompleted();
+            return;
+        }
 
         tipsRunning = true;
 
@@ -142,12 +150,16 @@ class FirstStartTipsWizard {
         }
     }
 
-    public boolean isRunning() {
-        return tipsRunning;
+    private boolean hasTipsToShow() {
+        for (Tip tip : tips)
+            if (!tip.isShown())
+                return true;
+
+        return false;
     }
 
-    public int getCurrentTipIndex() {
-        return currentTipIndex;
+    public boolean isRunning() {
+        return tipsRunning;
     }
 
     /**
@@ -182,11 +194,17 @@ class FirstStartTipsWizard {
             return;
         }
 
-        TapTarget currentTip = tips[currentTipIndex];
+        Tip currentTip = tips[currentTipIndex];
+
+        if (currentTip.isShown()) {
+            ++currentTipIndex;
+            showCurrentTip();
+            return;
+        }
 
         currentTargetView = TapTargetView.showFor(
                 dialog,
-                currentTip,
+                currentTip.tapTarget,
                 new TapTargetView.Listener() {
 
                     @Override
@@ -202,6 +220,7 @@ class FirstStartTipsWizard {
                     }
 
                     private void proceed() {
+                        currentTip.markAsShown();
                         currentTargetView = null;
                         ++currentTipIndex;
                         showCurrentTip();
@@ -209,6 +228,30 @@ class FirstStartTipsWizard {
 
                 }
         );
+    }
+
+    private class Tip {
+
+        private final TapTarget tapTarget;
+        private final String shownPreferenceKey;
+
+        public Tip(TapTarget tapTarget, String shownPreferenceKey) {
+            this.tapTarget = tapTarget;
+            this.shownPreferenceKey = shownPreferenceKey;
+
+            tapTarget.drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+        }
+
+        private boolean isShown() {
+            return sharedPreferences.getBoolean(shownPreferenceKey, false);
+        }
+
+        private void markAsShown() {
+            sharedPreferences
+                    .edit()
+                    .putBoolean(shownPreferenceKey, true)
+                    .apply();
+        }
     }
 
 }

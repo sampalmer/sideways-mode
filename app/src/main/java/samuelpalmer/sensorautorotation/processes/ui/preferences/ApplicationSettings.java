@@ -25,11 +25,6 @@ public abstract class ApplicationSettings {
 	 */
 	
 	/**
-	 * Whether the user has viewed the startup instructions screen.
-	 */
-	public static final String KEY_USER_INSTRUCTED = "userInstructed"; // Defaults to false
-	
-	/**
 	 * Used for upgrading settings data when upgrading to a newer version of the app.
 	 */
 	public static final String KEY_APP_VERSION = "appVersion";
@@ -40,6 +35,16 @@ public abstract class ApplicationSettings {
 	 * Whether the user has been told that the app is running in the background.
 	 */
 	public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";
+
+	/**
+	 * Whether the user has been told how to start the app.
+	 */
+	public static final String KEY_TURNING_ON_TIP_SHOWN = "turningOnTipShown";
+
+	/**
+	 * Whether the user has been told when to use the incompatible apps feature.
+	 */
+	public static final String KEY_INCOMPATIBLE_APPS_TIP_SHOWN = "incompatibleAppsTipShown";
 
 	/**
 	 * Whether the user has been told to turn off the app before uninstalling it.

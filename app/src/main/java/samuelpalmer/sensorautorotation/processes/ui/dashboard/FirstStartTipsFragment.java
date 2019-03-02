@@ -1,8 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -10,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
@@ -18,23 +15,17 @@ public class FirstStartTipsFragment extends Fragment {
 
     private static final String STATE_DIALOG_TOUCHED = "dialogTouched";
     private static final String STATE_SHOWING_TIPS = "showingTips";
-    private static final String STATE_CURRENT_TIP_INDEX = "currentTipIndex";
 
     private Handler handler;
     private Dialog dialog;
-    private View sideButton;
-    private View menuButton;
-    private View offButton;
 
     private ApplicationStatus status;
-    private SharedPreferences applicationSettings;
     private boolean normalSectionVisible;
 
     private boolean dialogTouched;
     private boolean isActiveActivity;
     private boolean waiting;
     private boolean showingTips;
-    private int currentTipIndex;
     private FirstStartTipsWizard tips;
     private boolean started;
 
@@ -46,7 +37,6 @@ public class FirstStartTipsFragment extends Fragment {
         if (savedInstanceState != null) {
             dialogTouched = savedInstanceState.getBoolean(STATE_DIALOG_TOUCHED);
             showingTips = savedInstanceState.getBoolean(STATE_SHOWING_TIPS);
-            currentTipIndex = savedInstanceState.getInt(STATE_CURRENT_TIP_INDEX);
         }
 
         somethingChanged();
@@ -66,14 +56,10 @@ public class FirstStartTipsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_DIALOG_TOUCHED, dialogTouched);
         outState.putBoolean(STATE_SHOWING_TIPS, showingTips);
-        outState.putInt(STATE_CURRENT_TIP_INDEX, tips == null ? currentTipIndex : tips.getCurrentTipIndex());
     }
 
     public void setTargets(Dialog dialog, View sideButton, View menuButton, View offButton) {
         this.dialog = dialog;
-        this.sideButton = sideButton;
-        this.menuButton = menuButton;
-        this.offButton = offButton;
 
         dialog.getWindow().setCallback(new WindowCallbackWrapper(dialog) {
             @Override
@@ -87,6 +73,28 @@ public class FirstStartTipsFragment extends Fragment {
             }
         });
 
+        tips = new FirstStartTipsWizard(
+                dialog,
+                sideButton,
+                menuButton,
+                offButton,
+                new FirstStartTipsWizard.Listener() {
+                    @Override
+                    public void onCompleted() {
+                        proceed();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        proceed();
+                    }
+
+                    private void proceed() {
+                        showingTips = false;
+                    }
+                }
+        );
+
         somethingChanged();
     }
 
@@ -97,20 +105,6 @@ public class FirstStartTipsFragment extends Fragment {
 
     public void setNormalSectionVisibility(boolean isVisible) {
         this.normalSectionVisible = isVisible;
-        somethingChanged();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        applicationSettings = ApplicationSettings.getSharedPreferences(context);
-        somethingChanged();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        applicationSettings = null;
         somethingChanged();
     }
 
@@ -144,19 +138,11 @@ public class FirstStartTipsFragment extends Fragment {
         boolean canShowTips =
                 dialog != null
                         &&
-                        sideButton != null
-                        &&
-                        menuButton != null
-                        &&
-                        offButton != null
+                        tips != null
                         &&
                         status != null
                         &&
-                        normalSectionVisible
-                        &&
-                        applicationSettings != null
-                        &&
-                        !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
+                        normalSectionVisible;
 
         boolean shouldWait =
                 canShowTips
@@ -179,13 +165,13 @@ public class FirstStartTipsFragment extends Fragment {
 
         if (showingTips)
             if (canShowTips) {
-                if (started && tips == null) {
+                if (started && !tips.isRunning()) {
                     // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
                     showTips.run();
                 }
             }
             else {
-                if (tips != null) {
+                if (tips != null && tips.isRunning()) {
                     // In rare cases, something might change mid-way through the wizard.
                     // For example, in split-screen view, the user could revoke the app's permissions.
                     // In these cases, we need to abort the wizard since it will be showing out-of-context.
@@ -199,38 +185,7 @@ public class FirstStartTipsFragment extends Fragment {
     private final Runnable showTips = new Runnable() {
         @Override
         public void run() {
-            tips = new FirstStartTipsWizard(
-                    dialog,
-                    sideButton,
-                    menuButton,
-                    offButton,
-                    currentTipIndex,
-                    new FirstStartTipsWizard.Listener() {
-                        @Override
-                        public void onCompleted() {
-                            proceed();
-                        }
-
-                        @Override
-                        public void onCancelled() {
-                            proceed();
-                        }
-
-                        private void proceed() {
-                            applicationSettings
-                                    .edit()
-                                    .putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, true)
-                                    .apply();
-
-                            tips = null;
-                            showingTips = false;
-                        }
-
-                    }
-            );
-
             tips.start();
-
             showingTips = true;
         }
     };

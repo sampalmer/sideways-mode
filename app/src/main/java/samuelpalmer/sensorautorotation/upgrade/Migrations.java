@@ -90,7 +90,7 @@ class Migrations {
 				super.upgradeUiProcessData(context, prefs, editor);
 				
 				editor
-					.putBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, prefs.contains("lastVersionUserInstructedAbout"))
+					.putBoolean("userInstructed", prefs.contains("lastVersionUserInstructedAbout"))
 					.remove("allowUpsideDownScreen")
 					.remove("notificationPriority")
 					.remove("enabled") // This is now determined by the service process.
@@ -173,11 +173,13 @@ class Migrations {
             public void upgradeUiProcessData(Context context, SharedPreferences applicationSettings, SharedPreferences.Editor editor) {
                 super.upgradeUiProcessData(context, applicationSettings, editor);
 
-                boolean userInstructed = applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
+                boolean userInstructed = applicationSettings.getBoolean("userInstructed", false);
                 if (userInstructed)
                     editor
                             .putBoolean(ApplicationSettings.KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN, true)
-                            .putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true);
+							.putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true)
+							.putBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, true)
+							.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true);
             }
         });
 

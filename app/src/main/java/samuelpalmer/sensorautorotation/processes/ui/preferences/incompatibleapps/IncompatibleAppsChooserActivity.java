@@ -1,23 +1,18 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class IncompatibleAppsChooserActivity extends UiActivity {
 	
@@ -161,18 +156,25 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 	
 	private final AdapterView.OnItemClickListener onItemClickListener = (parent, view, position, id) -> {
 		InstalledApp item = list.adapter.getItem(position);
-		
+
+		SharedPreferences.Editor editor = prefs.edit();
+
 		// Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
 		Set<String> incompatibleAppPackages = new HashSet<>(prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
 		
 		//noinspection ConstantConditions
 		if (item.isIncompatible)
 			incompatibleAppPackages.remove(item.packageName);
-		else
+		else {
+			if (!prefs.getBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, false))
+				// The user hasn't been shown the tip about this feature, but they're trying the feature out for themselves,
+				// so no need to show them the tip anymore.
+				editor.putBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, true);
+
 			incompatibleAppPackages.add(item.packageName);
-		
-		prefs
-			.edit()
+		}
+
+		editor
 			.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
 			.apply();
 	};
