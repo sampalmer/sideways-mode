@@ -97,7 +97,7 @@ class FirstStartTipsWizard {
                         .forView(
                                 menuButton,
                                 context.getString(R.string.intro_tip_incompatible_apps_title),
-                                context.getString(R.string.intro_tip_incompatible_apps_description)
+                                context.getString(R.string.intro_tip_incompatible_apps_description, context.getString(R.string.preference_incompatible_apps_title))
                         ),
                         ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN
                 ),
