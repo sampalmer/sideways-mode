@@ -104,7 +104,6 @@
 	<string name="notification_channel_upgrades">Upgrade messages</string>
 	<string name="notification_channel_errors">Error messages</string>
 	<string name="notification_channel_permissions">Permission requests</string>
-	<string name="notification_channel_tips">Tips</string>
 
 	<!-- Introduction tips -->
     <string name="intro_tip_side_button_title">Lying down</string>
@@ -115,8 +114,6 @@
 	<string name="intro_tip_uninstall_description">"Turn off %1$s before you uninstall it. Otherwise the screen might get stuck."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
 	<string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
-	<string name="tip_uninstalling_title">Uninstalling %1$s?</string>
-	<string name="tip_uninstalling_description">"To make sure the screen doesn't get stuck, turn off %1$s before uninstalling it."</string>
 	<string name="action_got_it">Got it</string>
 
 </resources>

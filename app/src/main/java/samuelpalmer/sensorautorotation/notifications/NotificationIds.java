@@ -5,5 +5,4 @@ public class NotificationIds {
 	public static final int UPGRADE = 2;
 	public static final int ERROR = 3;
 	public static final int PERMISSION = 4;
-	public static final int UNINSTALL = 5;
 }

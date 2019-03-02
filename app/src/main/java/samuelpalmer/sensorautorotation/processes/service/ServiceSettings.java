@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -43,10 +42,5 @@ public abstract class ServiceSettings {
 	 * <b>Cached copy</b> of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
 	 */
 	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
-
-	/**
-	 * <b>Cached copy</b> of {@link ApplicationSettings#KEY_UNINSTALLING_TIP_SHOWN} for use in the service process.
-	 */
-	public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
 
 }

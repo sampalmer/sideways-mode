@@ -6,7 +6,6 @@ import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.Incomp
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
-import samuelpalmer.sensorautorotation.processes.service.uninstall.UninstallerManager;
 import samuelpalmer.sensorautorotation.utilities.DeviceInteractivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -23,7 +22,6 @@ public class ServiceRunningState extends State {
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private final IncompatibleAppsManager incompatibleAppsManager;
-	private final UninstallerManager uninstallerManager;
 	private final ActivityMonitor activityMonitor;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final AppDisabler appDisabler;
@@ -41,7 +39,6 @@ public class ServiceRunningState extends State {
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
 		activityMonitor = ActivityMonitor.create(service);
 		incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor);
-		uninstallerManager = new UninstallerManager(service, activityMonitor);
 		appDisabler = new AppDisabler(service);
 		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
 	}
@@ -58,7 +55,6 @@ public class ServiceRunningState extends State {
 		screenUpdater.ensureStarted();
 		lowMemoryDetector.ensureStarted();
 		incompatibleAppsManager.ensureStarted();
-		uninstallerManager.ensureStarted();
 		appDisabler.ensureStarted();
 
 		deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
@@ -76,7 +72,6 @@ public class ServiceRunningState extends State {
 		deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
 		appDisabler.ensureStopped();
 		orientationSensorHandler.ensureStopped();
-		uninstallerManager.ensureStopped();
 		incompatibleAppsManager.ensureStopped();
 		systemAutoRotationMonitor.ensureStopped();
 		screenUpdater.ensureStopped();

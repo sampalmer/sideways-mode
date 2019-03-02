@@ -4,17 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 /**
  * Provides a way to remotely communicate with the back-end.
@@ -86,41 +84,29 @@ public class ApplicationCommand {
 
 	public static final class Config {
 		public final Set<String> incompatibleAppPackages;
-		public final boolean uninstallingTipShown;
 
 		public static boolean isSyncableAppSetting(String appSettingKey) {
-			return
-				appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)
-				||
-				appSettingKey.equals(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN)
-			;
+			return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
 		}
 
 		public Config(SharedPreferences applicationSettings) {
 			this(
-				applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()),
-				applicationSettings.getBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, false)
+				applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
 			);
 		}
 
-		private Config(Set<String> incompatibleAppPackages, boolean uninstallingTipShown) {
+		private Config(Set<String> incompatibleAppPackages) {
 			this.incompatibleAppPackages = incompatibleAppPackages;
 			if (incompatibleAppPackages == null)
 				throw new IllegalArgumentException("incompatibleAppPackages is null");
-
-			this.uninstallingTipShown = uninstallingTipShown;
 		}
 
 		public static @Nullable Config fromBundle(@Nullable Bundle bundle) {
 			if (bundle == null)
 				return null;
 
-			if (!bundle.containsKey(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN))
-				throw new IllegalArgumentException("Bundle doesn't contain " + ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN);
-
 			return new Config(
-				getIncompatibleAppPackages(bundle),
-				bundle.getBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, false)
+				getIncompatibleAppPackages(bundle)
 			);
 		}
 
@@ -137,7 +123,6 @@ public class ApplicationCommand {
 		public Bundle asBundle() {
 			Bundle result = new Bundle();
 			result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
-			result.putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, uninstallingTipShown);
 			return result;
 		}
 	}

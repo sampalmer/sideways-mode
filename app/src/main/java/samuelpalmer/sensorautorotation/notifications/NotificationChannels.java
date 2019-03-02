@@ -5,13 +5,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
+import androidx.annotation.RequiresApi;
+import samuelpalmer.sensorautorotation.R;
 
 import java.util.Arrays;
 import java.util.List;
-
-import samuelpalmer.sensorautorotation.R;
 
 public abstract class NotificationChannels {
 
@@ -19,7 +18,6 @@ public abstract class NotificationChannels {
 	public static final String ID_UPGRADES = "upgrades";
 	public static final String ID_ERRORS = "errors";
 	public static final String ID_PERMISSIONS = "permissions";
-	public static final String ID_TIPS = "tips";
 
 	@RequiresApi(api = Build.VERSION_CODES.O)
 	public static void setup(Context context) {
@@ -63,17 +61,7 @@ public abstract class NotificationChannels {
 		);
 		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-		NotificationChannel tips = new NotificationChannel(
-			ID_TIPS,
-            context.getText(R.string.notification_channel_tips),
-            //We might need to interrupt the user to point out important stuff such as:
-            // - That they must turn off the app before uninstalling
-            // - That the app they're currently using might need to be added to the incompatible apps list
-            NotificationManager.IMPORTANCE_HIGH
-		);
-		permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission, tips);
+		List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
 		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannels(channels);
 	}
 	

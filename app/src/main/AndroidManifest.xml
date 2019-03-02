@@ -72,11 +72,6 @@
 			android:theme="@style/AppTheme.Dialog"/>
 
 		<activity
-			android:name=".processes.ui.UninstallTipActivity"
-	        android:excludeFromRecents="true"
-			android:theme="@style/AppTheme.Dialog"/>
-
-		<activity
 			android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
 			android:label="@string/preference_incompatible_apps_title"
 			tools:ignore="UnusedAttribute" />

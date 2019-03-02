@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import java.util.Collections;
-
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceController;
 import samuelpalmer.sensorautorotation.processes.service.ServiceRunningStateHolder;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.UserSide;
+
+import java.util.Collections;
 
 public class ApplicationCommandReceiver extends BroadcastReceiver {
 	
@@ -32,9 +31,6 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 
 			if (!command.config.incompatibleAppPackages.equals(serviceSettings.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())))
 				editor.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, command.config.incompatibleAppPackages);
-
-			if (command.config.uninstallingTipShown != serviceSettings.getBoolean(ServiceSettings.KEY_UNINSTALLING_TIP_SHOWN, false))
-				editor.putBoolean(ServiceSettings.KEY_UNINSTALLING_TIP_SHOWN, command.config.uninstallingTipShown);
 
 			editor.apply();
 		}
