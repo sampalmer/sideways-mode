@@ -141,7 +141,7 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     private void somethingChanged() {
-        boolean shouldShowTips =
+        boolean canShowTips =
                 dialog != null
                         &&
                         sideButton != null
@@ -159,7 +159,7 @@ public class FirstStartTipsFragment extends Fragment {
                         !applicationSettings.getBoolean(ApplicationSettings.KEY_USER_INSTRUCTED, false);
 
         boolean shouldWait =
-                shouldShowTips
+                canShowTips
                         &&
                         isActiveActivity
                         &&
@@ -177,9 +177,23 @@ public class FirstStartTipsFragment extends Fragment {
             }
         }
 
-        if (showingTips && shouldShowTips && started && tips == null)
-            // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
-            showTips.run();
+        if (showingTips)
+            if (canShowTips) {
+                if (started && tips == null) {
+                    // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
+                    showTips.run();
+                }
+            }
+            else {
+                if (tips != null) {
+                    // In rare cases, something might change mid-way through the wizard.
+                    // For example, in split-screen view, the user could revoke the app's permissions.
+                    // In these cases, we need to abort the wizard since it will be showing out-of-context.
+                    tips.stop();
+                    tips = null;
+                    showingTips = false;
+                }
+            }
     }
 
     private final Runnable showTips = new Runnable() {
