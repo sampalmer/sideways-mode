@@ -63,10 +63,6 @@
 		<!-- Main Process -->
 
 		<activity
-			android:name=".processes.ui.InstructionsActivity"
-			android:label="@string/instructions_heading"/>
-
-		<activity
 			android:name=".processes.ui.MessageDialogActivity"
 	        android:excludeFromRecents="true"
 			android:theme="@style/AppTheme.Dialog"/>

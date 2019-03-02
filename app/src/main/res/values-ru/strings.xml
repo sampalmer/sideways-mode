@@ -37,13 +37,6 @@
 
 	<string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, %1$s требует доступ на изменение системных настроек</string>
 
-	<!-- Instructions -->
-	<string name="instructions_heading">Инструкции</string>
-
-	<string name="instructions_uninstalling_heading">Удаление</string>
-
-	<string name="instructions_incompatible_apps_heading">Несовместимые приложения</string>
-
 	<!-- Report problem -->
 	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class FirstStartTipsFragment extends Fragment {
@@ -28,6 +29,8 @@ public class FirstStartTipsFragment extends Fragment {
     private boolean showingTips;
     private FirstStartTipsWizard tips;
     private boolean started;
+
+    public final UpdatingEventRegistrar onCanShowTipsChanged = new UpdatingEventRegistrar();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,23 +138,13 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     private void somethingChanged() {
-        boolean canShowTips =
-                dialog != null
-                        &&
-                        tips != null
-                        &&
-                        status != null
-                        &&
-                        normalSectionVisible;
-
-        boolean shouldWait =
-                canShowTips
-                        &&
-                        isActiveActivity
-                        &&
-                        !showingTips
-                        &&
-                        !dialogTouched;
+        boolean shouldWait = canShowTips()
+                &&
+                isActiveActivity
+                &&
+                !showingTips
+                &&
+                !dialogTouched;
 
         if (shouldWait != waiting) {
             if (shouldWait) {
@@ -164,7 +157,7 @@ public class FirstStartTipsFragment extends Fragment {
         }
 
         if (showingTips)
-            if (canShowTips) {
+            if (canShowTips()) {
                 if (started && !tips.isRunning()) {
                     // The fragment might have been destroyed, in which case we'll need to recreate the wizard.
                     showTips.run();
@@ -180,14 +173,32 @@ public class FirstStartTipsFragment extends Fragment {
                     showingTips = false;
                 }
             }
+
+        onCanShowTipsChanged.report();
     }
 
-    private final Runnable showTips = new Runnable() {
-        @Override
-        public void run() {
-            tips.start();
-            showingTips = true;
-        }
-    };
+    public boolean canShowTips() {
+        return dialog != null
+                &&
+                tips != null
+                &&
+                status != null
+                &&
+                normalSectionVisible;
+    }
+
+    private final Runnable showTips = () -> showTips(false);
+
+    public void showAllTips() {
+        if (!canShowTips())
+            throw new IllegalStateException("Cannot show tips at this time");
+
+        showTips(true);
+    }
+
+    private void showTips(boolean showAll) {
+        tips.start(showAll);
+        showingTips = true;
+    }
 
 }

@@ -22,6 +22,7 @@
 	<!-- Menu -->
 	<string name="action_menu">Menu</string>
 	<string name="action_help">Help</string>
+	<string name="action_tips">Tips</string>
 	<string name="action_report">Report problem</string>
 
 	<!-- Upgrade -->
@@ -70,15 +71,6 @@
 	<string name="permission_needed_system_settings">To control the screen rotation, %1$s needs permission to change system settings</string>
 	<string name="permission_touch_to_fix">Touch to fix</string>
 	<string name="permissions_needed_tip">To use this feature, some permissions are needed</string>
-
-	<!-- Instructions -->
-	<string name="instructions_heading">Instructions</string>
-
-	<string name="instructions_uninstalling_heading">Uninstalling</string>
-	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, turn off %1$s first</string>
-
-	<string name="instructions_incompatible_apps_heading">Incompatible Apps</string>
-	<string name="instructions_incompatible_apps_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature."</string>
 
 	<!-- Report problem -->
 	<string name="report_problem_reproduce">What did you do?</string>

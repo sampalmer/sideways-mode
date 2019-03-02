@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 class FirstStartTipsWizard {
 
     private final Dialog dialog;
+    private boolean showAllTips;
     private final Listener listener;
 
     private final float dialogOriginalDimAmount;
@@ -113,9 +114,11 @@ class FirstStartTipsWizard {
         };
     }
 
-    public void start() {
+    public void start(boolean showAll) {
         if (tipsRunning)
             throw new RuntimeException("Already started");
+
+        this.showAllTips = showAll;
 
         if (!hasTipsToShow()) {
             // This is needed to prevent UI lag during user interaction
@@ -243,7 +246,7 @@ class FirstStartTipsWizard {
         }
 
         private boolean isShown() {
-            return sharedPreferences.getBoolean(shownPreferenceKey, false);
+            return !showAllTips && sharedPreferences.getBoolean(shownPreferenceKey, false);
         }
 
         private void markAsShown() {
