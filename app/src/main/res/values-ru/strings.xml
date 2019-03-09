@@ -5,42 +5,42 @@
 
 <resources>
 
-	<!-- Menu -->
-	<string name="action_help">Справка</string>
-	<string name="action_report">Отчет о проблемах</string>
+    <!-- Menu -->
+    <string name="action_help">Справка</string>
+    <string name="action_report">Отчет о проблемах</string>
 
-	<!-- Upgrade -->
-	<string name="upgrade_summary">%1$s обновлен</string>
-	<string name="upgrade_notification_content">Нажмите для подробностей</string>
+    <!-- Upgrade -->
+    <string name="upgrade_summary">%1$s обновлен</string>
+    <string name="upgrade_notification_content">Нажмите для подробностей</string>
 
-	<!-- Dashboard -->
-	<string name="user_rotation_left_side">Левая сторона</string>
-	<string name="user_rotation_right_side">Правая сторона</string>
-	<string name="app_disabled_view_error">Ошибка</string>
+    <!-- Dashboard -->
+    <string name="user_rotation_left_side">Левая сторона</string>
+    <string name="user_rotation_right_side">Правая сторона</string>
+    <string name="app_disabled_view_error">Ошибка</string>
 
-	<!-- Errors -->
-	<string name="environment_error_message">%1$s %2$s был отключен.</string>
-	<string name="environment_error_more">Больше</string>
+    <!-- Errors -->
+    <string name="environment_error_message">%1$s %2$s был отключен.</string>
+    <string name="environment_error_more">Больше</string>
 
-	<string name="environment_error_system_rotation_enabled_summary">Вращение системы включено</string>
-	<string name="environment_error_system_rotation_enabled_message">В устройстве был включен встроенный автоповорот экрана.</string>
+    <string name="environment_error_system_rotation_enabled_summary">Вращение системы включено</string>
+    <string name="environment_error_system_rotation_enabled_message">В устройстве был включен встроенный автоповорот экрана.</string>
 
-	<string name="environment_error_system_setting_write_failure_summary">Невозможно вписать настройки</string>
-	<string name="environment_error_system_setting_write_failure_message">Не удалось задать настройки \'%1$s\' для \'%2$s\'.</string>
-	<string name="environment_error_system_setting_write_denied_message">%1$s не имеет разрешения на изменение настроек системы. Чтобы это исправить, повторно включите приложение.</string>
+    <string name="environment_error_system_setting_write_failure_summary">Невозможно вписать настройки</string>
+    <string name="environment_error_system_setting_write_failure_message">Не удалось задать настройки \'%1$s\' для \'%2$s\'.</string>
+    <string name="environment_error_system_setting_write_denied_message">%1$s не имеет разрешения на изменение настроек системы. Чтобы это исправить, повторно включите приложение.</string>
 
-	<!-- Permissions -->
-	<string name="permission_needed_summary">Нужно разрешение</string>
-	<string name="permission_needed_allow">Pазрешить</string>
+    <!-- Permissions -->
+    <string name="permission_needed_summary">Нужно разрешение</string>
+    <string name="permission_needed_allow">Pазрешить</string>
 
-	<string name="permission_needed_overlays_summary">Панель поверх других приложений?</string>
+    <string name="permission_needed_overlays_summary">Панель поверх других приложений?</string>
 
-	<string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, %1$s требует доступ на изменение системных настроек</string>
+    <string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, %1$s требует доступ на изменение системных настроек</string>
 
-	<!-- Report problem -->
-	<string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
+    <!-- Report problem -->
+    <string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 
-	<!-- Device problem -->
-	<string name="device_problem">Проблемы устройства</string>
+    <!-- Device problem -->
+    <string name="device_problem">Проблемы устройства</string>
 
 </resources>

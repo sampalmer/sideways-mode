@@ -19,139 +19,139 @@ import android.widget.TextView;
 
 public final class NotificationStyles {
 
-	private final StyleType title = new StyleType("TITLE");
-	private final StyleType actionButton = new StyleType("ACTION");
-	private final Context context;
-	private final int exampleIconResource;
-	private final int colourArgb;
+    private final StyleType title = new StyleType("TITLE");
+    private final StyleType actionButton = new StyleType("ACTION");
+    private final Context context;
+    private final int exampleIconResource;
+    private final int colourArgb;
 
-	/**
-	 * You might want to cache the result for performance & memory.
-	 */
-	public NotificationStyles(Context context, int exampleActionIconResource, int colourArgb) {
-		this.context = context;
-		this.exampleIconResource = exampleActionIconResource;
-		this.colourArgb = colourArgb;
-		extractColors();
-	}
-	
-	public int getActionButtonColour() {
-		int result;
+    /**
+     * You might want to cache the result for performance & memory.
+     */
+    public NotificationStyles(Context context, int exampleActionIconResource, int colourArgb) {
+        this.context = context;
+        this.exampleIconResource = exampleActionIconResource;
+        this.colourArgb = colourArgb;
+        extractColors();
+    }
+    
+    public int getActionButtonColour() {
+        int result;
 
-		if (actionButton.colour != null)
-			result = actionButton.colour;
-		else { //Android 4.0 doesn't have notification actions
-			if (title.colour != null)
-				result = Color.rgb(Color.red(title.colour), Color.green(title.colour), Color.blue(title.colour));
-			else
-				result = Color.BLACK;
+        if (actionButton.colour != null)
+            result = actionButton.colour;
+        else { //Android 4.0 doesn't have notification actions
+            if (title.colour != null)
+                result = Color.rgb(Color.red(title.colour), Color.green(title.colour), Color.blue(title.colour));
+            else
+                result = Color.BLACK;
 
-			result = Color.argb((int) (255 * .8), Color.red(result), Color.green(result), Color.blue(result));
-		}
+            result = Color.argb((int) (255 * .8), Color.red(result), Color.green(result), Color.blue(result));
+        }
 
-		return result;
-	}
-	
-	public int getUnselectedButtonBackground() {
-		int[] attrs = { android.R.attr.background };
-		
-		TypedArray ta = context.obtainStyledAttributes(android.R.style.Widget_DeviceDefault_Button_Borderless_Small, attrs);
-		try {
-			return ta.getResourceId(0, 0);
-		}
-		finally {
-			ta.recycle();
-		}
-	}
-	
-	private void extractColors()
-	{
-		NotificationBuilderCompat builder = NotificationBuilderCompat.create(context)
-			.setContentTitle(title.searchTip)
-			.setColor(colourArgb); //Android N seems to use the colour on the action buttons
+        return result;
+    }
+    
+    public int getUnselectedButtonBackground() {
+        int[] attrs = { android.R.attr.background };
+        
+        TypedArray ta = context.obtainStyledAttributes(android.R.style.Widget_DeviceDefault_Button_Borderless_Small, attrs);
+        try {
+            return ta.getResourceId(0, 0);
+        }
+        finally {
+            ta.recycle();
+        }
+    }
+    
+    private void extractColors()
+    {
+        NotificationBuilderCompat builder = NotificationBuilderCompat.create(context)
+            .setContentTitle(title.searchTip)
+            .setColor(colourArgb); //Android N seems to use the colour on the action buttons
 
-		//Add action button
-		String actionTitle = actionButton.searchTip;
-		PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
-		builder.addAction(exampleIconResource, actionTitle, intent);
+        //Add action button
+        String actionTitle = actionButton.searchTip;
+        PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+        builder.addAction(exampleIconResource, actionTitle, intent);
 
-		//Build
-		RemoteViews contentView = getContentView(builder);
+        //Build
+        RemoteViews contentView = getContentView(builder);
 
-		LinearLayout group = new LinearLayout(context);
-		ViewGroup event = (ViewGroup) contentView.apply(context, group);
-		extractColours(event);
-		group.removeAllViews();
+        LinearLayout group = new LinearLayout(context);
+        ViewGroup event = (ViewGroup) contentView.apply(context, group);
+        extractColours(event);
+        group.removeAllViews();
 
-		if (title.colour == null)
-			Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification title colour");
-		if (VERSION.SDK_INT >= 16 && actionButton.colour == null)
-			Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification action colour");
-	}
+        if (title.colour == null)
+            Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification title colour");
+        if (VERSION.SDK_INT >= 16 && actionButton.colour == null)
+            Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification action colour");
+    }
 
-	private RemoteViews getContentView(NotificationBuilderCompat builder) {
-		RemoteViews result = builder.createBigContentView();
-		return result == null ? builder.createContentView() : result;
-	}
+    private RemoteViews getContentView(NotificationBuilderCompat builder) {
+        RemoteViews result = builder.createBigContentView();
+        return result == null ? builder.createContentView() : result;
+    }
 
-	private void extractColours(ViewGroup viewGroup)
-	{
-		for (int i = 0; i < viewGroup.getChildCount(); ++i)
-		{
-			View view = viewGroup.getChildAt(i);
-			
-			if (view instanceof TextView)
-			{
-				TextView textView = (TextView) view;
-				String text = textView.getText().toString();
+    private void extractColours(ViewGroup viewGroup)
+    {
+        for (int i = 0; i < viewGroup.getChildCount(); ++i)
+        {
+            View view = viewGroup.getChildAt(i);
+            
+            if (view instanceof TextView)
+            {
+                TextView textView = (TextView) view;
+                String text = textView.getText().toString();
 
-				if (text.equals(title.searchTip))
-					title.colour = extractTitleColour(textView);
-				
-				if (text.equals(actionButton.searchTip))
-					actionButton.colour = extractActionColour(textView);
-			}
-			else if (view instanceof ViewGroup)
-				extractColours((ViewGroup) view);
-		}
-	}
-	
-	private Integer extractTitleColour(TextView textView) {
-		return extractTextColour(textView);
-	}
-	
-	private Integer extractActionColour(TextView textView) {
-		if (Build.VERSION.SDK_INT < 21)
-			// These versions of Android didn't recolour the icon, so it should be the same as the source image, which should be white.
-			return Color.WHITE;
-		
-		Drawable[] drawables = textView.getCompoundDrawables();
-		if (drawables.length > 0) {
-			Drawable actionIcon = drawables[0];
-			if (actionIcon != null) {
-				ColorFilter colorFilter = actionIcon.getColorFilter();
-				if (colorFilter instanceof PorterDuffColorFilter)
-					try {
-						return (int) colorFilter.getClass().getMethod("getColor").invoke(colorFilter);
-					} catch (ReflectiveOperationException | ClassCastException ignored) {
-					}
-			}
-		}
-		
-		// We didn't find the action icon colour, but the text colour should be a good enough approximation
-		return extractTextColour(textView);
-	}
-	
-	private int extractTextColour(TextView textView) {
-		return textView.getTextColors().getDefaultColor();
-	}
-	
-	private static class StyleType {
-		private Integer colour;
-		private final String searchTip;
+                if (text.equals(title.searchTip))
+                    title.colour = extractTitleColour(textView);
+                
+                if (text.equals(actionButton.searchTip))
+                    actionButton.colour = extractActionColour(textView);
+            }
+            else if (view instanceof ViewGroup)
+                extractColours((ViewGroup) view);
+        }
+    }
+    
+    private Integer extractTitleColour(TextView textView) {
+        return extractTextColour(textView);
+    }
+    
+    private Integer extractActionColour(TextView textView) {
+        if (Build.VERSION.SDK_INT < 21)
+            // These versions of Android didn't recolour the icon, so it should be the same as the source image, which should be white.
+            return Color.WHITE;
+        
+        Drawable[] drawables = textView.getCompoundDrawables();
+        if (drawables.length > 0) {
+            Drawable actionIcon = drawables[0];
+            if (actionIcon != null) {
+                ColorFilter colorFilter = actionIcon.getColorFilter();
+                if (colorFilter instanceof PorterDuffColorFilter)
+                    try {
+                        return (int) colorFilter.getClass().getMethod("getColor").invoke(colorFilter);
+                    } catch (ReflectiveOperationException | ClassCastException ignored) {
+                    }
+            }
+        }
+        
+        // We didn't find the action icon colour, but the text colour should be a good enough approximation
+        return extractTextColour(textView);
+    }
+    
+    private int extractTextColour(TextView textView) {
+        return textView.getTextColors().getDefaultColor();
+    }
+    
+    private static class StyleType {
+        private Integer colour;
+        private final String searchTip;
 
-		private StyleType(String tip) {
-			searchTip = tip;
-		}
-	}
+        private StyleType(String tip) {
+            searchTip = tip;
+        }
+    }
 }

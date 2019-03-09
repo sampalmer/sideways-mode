@@ -13,34 +13,34 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
  * other apps.
  */
 public abstract class ServiceSettings {
-	
-	public static SharedPreferences getSharedPreferences(Context context) {
-		if (!CurrentProcess.isServiceProcess(context))
-			throw new RuntimeException("Service settings accessed outside of the service process");
-		
-		return context.getSharedPreferences("service", Context.MODE_PRIVATE);
-	}
-	
-	// NOTE: If you change preference config, add a migration to the "Migrations" class
-	
-	/**
-	 * Has no value if the service is off. Otherwise set to the side the user is on.
-	 */
-	public static final String KEY_PERSISTENT_STATE = "persistentState";
-	
-	/**
-	 * The error, if any, that occurred when the service was last running.
-	 */
-	public static final String KEY_LAST_ERROR_JSON = "lastError";
-	
-	/**
-	 * Used for upgrading settings data when upgrading to a newer version of the app.
-	 */
-	public static final String KEY_APP_VERSION = "appVersion";
-	
-	/**
-	 * <b>Cached copy</b> of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
-	 */
-	public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
+    
+    public static SharedPreferences getSharedPreferences(Context context) {
+        if (!CurrentProcess.isServiceProcess(context))
+            throw new RuntimeException("Service settings accessed outside of the service process");
+        
+        return context.getSharedPreferences("service", Context.MODE_PRIVATE);
+    }
+    
+    // NOTE: If you change preference config, add a migration to the "Migrations" class
+    
+    /**
+     * Has no value if the service is off. Otherwise set to the side the user is on.
+     */
+    public static final String KEY_PERSISTENT_STATE = "persistentState";
+    
+    /**
+     * The error, if any, that occurred when the service was last running.
+     */
+    public static final String KEY_LAST_ERROR_JSON = "lastError";
+    
+    /**
+     * Used for upgrading settings data when upgrading to a newer version of the app.
+     */
+    public static final String KEY_APP_VERSION = "appVersion";
+    
+    /**
+     * <b>Cached copy</b> of {@link ApplicationSettings#KEY_INCOMPATIBLE_APP_PACKAGES} for use in the service process.
+     */
+    public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 
 }

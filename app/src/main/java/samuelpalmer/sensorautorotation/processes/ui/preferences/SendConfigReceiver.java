@@ -24,13 +24,13 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
  * might not be guaranteed by the OS, but ime will tell whether this is a good option.
  */
 public class SendConfigReceiver extends BroadcastReceiver {
-	
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		new ApplicationCommand(
-			ApplicationCommand.ACTION_SYNC_CONFIG,
-			ApplicationSettings.getSharedPreferences(context)
-		).send(context);
-	}
+    
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        new ApplicationCommand(
+            ApplicationCommand.ACTION_SYNC_CONFIG,
+            ApplicationSettings.getSharedPreferences(context)
+        ).send(context);
+    }
 
 }

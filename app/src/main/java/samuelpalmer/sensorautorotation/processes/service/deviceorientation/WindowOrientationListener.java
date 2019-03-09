@@ -40,15 +40,14 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+import samuelpalmer.sensorautorotation.errors.SensorError;
+import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import samuelpalmer.sensorautorotation.errors.SensorError;
-import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
-import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 
 /**
  * A special helper class used by the WindowManager
@@ -65,1315 +64,1315 @@ import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 @SuppressWarnings("ALL") // Suppressing everything since this is mostly AOSP code and I want to keep it close to the original.
 @SuppressLint("all")
 public abstract class WindowOrientationListener {
-	private static final int SENSOR_TYPE_DEVICE_ORIENTATION = 27 /* Sensor.TYPE_DEVICE_ORIENTATION */;
-	private static final int SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION = 65558;
-	
-	private static final String TAG = "WindowOrientationListener";
-	private static final boolean LOG = false;
-	
-	private static final boolean USE_GRAVITY_SENSOR = false;
-	private static final int DEFAULT_BATCH_LATENCY = 100000;
-	
-	private final Context context;
-	private Handler mHandler;
-	private SensorManager mSensorManager;
-	private boolean mEnabled;
-	private int mRate;
-	private ArrayList<Sensor> mSensors;
-	private OrientationJudge mOrientationJudge;
-	private int mCurrentRotation = -1;
-	
-	private final Object mLock = new Object();
-	
-	private boolean mGotSensorEvent;
-	
-	//5000ms wasn't enough time for these devices in the Google Cloud Test Lab, but 15000ms was.
-	// * Moto G (2nd Gen) (titan_umts)
-	// * Moto X (2nd Gen) (victara)
-	// 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
-	private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
-	
-	static {
-		ArrayList<Integer> result = new ArrayList<>();
-		
-		// Android 7 introduced a hidden device orientation sensor dedicated to this purpose.
-		// It produces more reliable results than the gravity and rotation vector sensors on my Motorola Moto G5 Plus.
-		// It might be more battery efficient since it only sends data when the device orientation changes (eg portrait to landscape).
-		// It could also have less latency than the accelerometer since it might take advantage of the gyroscope to eliminate the need for low-pass filtering.
-		if (Build.VERSION.SDK_INT >= 24)
-			result.add(SENSOR_TYPE_DEVICE_ORIENTATION);
-		
-		/*
-		 * Samsung has its own custom device orientation sensor. It doesn't suffer from any of
-		 * gravity sensor or rotation vector sensor problems problems I've seen on my Samsung Galaxy S5,
-		 * so this custom sensor is preferred.
-		 */
-		result.add(SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION);
-		
-		/*
-		 * Not listening to gravity or rotation vector sensors since their output is unreliable.
-		 * Examples:
-		 *     Samsung Galaxy S5
-		 *         Using a delay of 55000us or higher caused the sensor values to go bad each time the device was swung.
-		 *         Once these sensors started producing inverted output, and the only fix was to restart the phone.
-		 *         The device's built-in screen orientation functionality was unaffected by these problems.
-		 *     Samsung Galaxy A5 2017
-		 *         The game rotation vector sensor didn't report any changes when the user rotated the phone. The problem later on unexplainedly fixed itself.
-		 *         The device's built-in screen orientation functionality was unaffected by these problems.
-		 *     Motorola Moto G5 Plus
+    private static final int SENSOR_TYPE_DEVICE_ORIENTATION = 27 /* Sensor.TYPE_DEVICE_ORIENTATION */;
+    private static final int SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION = 65558;
+    
+    private static final String TAG = "WindowOrientationListener";
+    private static final boolean LOG = false;
+    
+    private static final boolean USE_GRAVITY_SENSOR = false;
+    private static final int DEFAULT_BATCH_LATENCY = 100000;
+    
+    private final Context context;
+    private Handler mHandler;
+    private SensorManager mSensorManager;
+    private boolean mEnabled;
+    private int mRate;
+    private ArrayList<Sensor> mSensors;
+    private OrientationJudge mOrientationJudge;
+    private int mCurrentRotation = -1;
+    
+    private final Object mLock = new Object();
+    
+    private boolean mGotSensorEvent;
+    
+    //5000ms wasn't enough time for these devices in the Google Cloud Test Lab, but 15000ms was.
+    // * Moto G (2nd Gen) (titan_umts)
+    // * Moto X (2nd Gen) (victara)
+    // 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
+    private static final int EXPECTED_EVENT_WINDOW_MS = 30000;
+    
+    static {
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        // Android 7 introduced a hidden device orientation sensor dedicated to this purpose.
+        // It produces more reliable results than the gravity and rotation vector sensors on my Motorola Moto G5 Plus.
+        // It might be more battery efficient since it only sends data when the device orientation changes (eg portrait to landscape).
+        // It could also have less latency than the accelerometer since it might take advantage of the gyroscope to eliminate the need for low-pass filtering.
+        if (Build.VERSION.SDK_INT >= 24)
+            result.add(SENSOR_TYPE_DEVICE_ORIENTATION);
+        
+        /*
+         * Samsung has its own custom device orientation sensor. It doesn't suffer from any of
+         * gravity sensor or rotation vector sensor problems problems I've seen on my Samsung Galaxy S5,
+         * so this custom sensor is preferred.
+         */
+        result.add(SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION);
+        
+        /*
+         * Not listening to gravity or rotation vector sensors since their output is unreliable.
+         * Examples:
+         *     Samsung Galaxy S5
+         *         Using a delay of 55000us or higher caused the sensor values to go bad each time the device was swung.
+         *         Once these sensors started producing inverted output, and the only fix was to restart the phone.
+         *         The device's built-in screen orientation functionality was unaffected by these problems.
+         *     Samsung Galaxy A5 2017
+         *         The game rotation vector sensor didn't report any changes when the user rotated the phone. The problem later on unexplainedly fixed itself.
+         *         The device's built-in screen orientation functionality was unaffected by these problems.
+         *     Motorola Moto G5 Plus
          *         These sensors start off with incorrect readings and then correct themselves after a few seconds.
-		 *         The device's built-in screen orientation functionality was unaffected by these problems.
-		 */
-		
-		// This is the standard and most reliable way of determining device orientation.
-		result.add(Sensor.TYPE_ACCELEROMETER);
-		
-		prioritisedSensorTypes = result;
-	}
-	
-	private static final List<Integer> prioritisedSensorTypes;
-	private int mLastSensorType;
-	
-	private final Runnable checkForSensorEvent = new Runnable() {
-		@Override
-		public void run() {
-			synchronized (mLock) {
-				if (mEnabled && !mGotSensorEvent) {
-					Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
-					EnvironmentErrorManager.report(context, new SensorError(context, SensorError.Type.NO_DATA));
-				}
-			}
-		}
-	};
-	
-	public static ArrayList<Sensor> getSupportedSensors(SensorManager sensorManager) {
-		ArrayList<Sensor> result = new ArrayList<>();
-		
-		for (int type : prioritisedSensorTypes) {
-			Sensor sensor;
+         *         The device's built-in screen orientation functionality was unaffected by these problems.
+         */
+        
+        // This is the standard and most reliable way of determining device orientation.
+        result.add(Sensor.TYPE_ACCELEROMETER);
+        
+        prioritisedSensorTypes = result;
+    }
+    
+    private static final List<Integer> prioritisedSensorTypes;
+    private int mLastSensorType;
+    
+    private final Runnable checkForSensorEvent = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (mLock) {
+                if (mEnabled && !mGotSensorEvent) {
+                    Log.w(WindowOrientationListener.TAG, "Didn't get a sensor event after " + EXPECTED_EVENT_WINDOW_MS + "ms.");
+                    EnvironmentErrorManager.report(context, new SensorError(context, SensorError.Type.NO_DATA));
+                }
+            }
+        }
+    };
+    
+    public static ArrayList<Sensor> getSupportedSensors(SensorManager sensorManager) {
+        ArrayList<Sensor> result = new ArrayList<>();
+        
+        for (int type : prioritisedSensorTypes) {
+            Sensor sensor;
 
-			if (type == SENSOR_TYPE_DEVICE_ORIENTATION) {
-				List<Sensor> l = sensorManager.getSensorList(type);
-				Sensor wakeUpDeviceOrientationSensor = null;
-				Sensor nonWakeUpDeviceOrientationSensor = null;
-				/**
-				 *  Prefer the wakeup form of the sensor if implemented.
-				 *  It's OK to look for just two types of this sensor and use
-				 *  the last found. Typical devices will only have one sensor of
-				 *  this type.
-				 */
-				for (Sensor s : l) {
-					if (s.isWakeUpSensor()) {
-						wakeUpDeviceOrientationSensor = s;
-					} else {
-						nonWakeUpDeviceOrientationSensor = s;
-					}
-				}
+            if (type == SENSOR_TYPE_DEVICE_ORIENTATION) {
+                List<Sensor> l = sensorManager.getSensorList(type);
+                Sensor wakeUpDeviceOrientationSensor = null;
+                Sensor nonWakeUpDeviceOrientationSensor = null;
+                /**
+                 *  Prefer the wakeup form of the sensor if implemented.
+                 *  It's OK to look for just two types of this sensor and use
+                 *  the last found. Typical devices will only have one sensor of
+                 *  this type.
+                 */
+                for (Sensor s : l) {
+                    if (s.isWakeUpSensor()) {
+                        wakeUpDeviceOrientationSensor = s;
+                    } else {
+                        nonWakeUpDeviceOrientationSensor = s;
+                    }
+                }
 
-				if (wakeUpDeviceOrientationSensor != null) {
-					sensor = wakeUpDeviceOrientationSensor;
-				} else {
-					sensor = nonWakeUpDeviceOrientationSensor;
-				}
-			}
-			else
-				sensor = sensorManager.getDefaultSensor(type);
+                if (wakeUpDeviceOrientationSensor != null) {
+                    sensor = wakeUpDeviceOrientationSensor;
+                } else {
+                    sensor = nonWakeUpDeviceOrientationSensor;
+                }
+            }
+            else
+                sensor = sensorManager.getDefaultSensor(type);
 
-			if (isSupported(sensor))
-				result.add(sensor);
-		}
-		
-		return result;
-	}
-	
-	private static boolean isSupported(Sensor sensor) {
-		if (sensor == null)
-			return false;
-		
-		// The Samsung sensor is a custom one, so we need to make sure
-		// we're not looking at another vendor's custom sensor that uses the same type number.
-		if (
-			sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION
-				&&
-				!(
-					sensor.getVendor().toLowerCase().contains("samsung")
-					&&
-					sensor.getName().toLowerCase().contains("screen orientation")
-					&&
-					sensor.getMaximumRange() == 255f
-				)
-			)
-			return false;
-		
-		return true;
-	}
-	
-	/**
-	 * Creates a new WindowOrientationListener.
-	 *
-	 * @param context for the WindowOrientationListener.
-	 * @param handler Provides the Looper for receiving sensor updates.
-	 */
-	public WindowOrientationListener(Context context, Handler handler) {
-		this(context, handler, SensorManager.SENSOR_DELAY_UI);
-	}
-	
-	/**
-	 * Creates a new WindowOrientationListener.
-	 *
-	 * @param context for the WindowOrientationListener.
-	 * @param handler Provides the Looper for receiving sensor updates.
-	 * @param rate at which sensor events are processed (see also
-	 * {@link android.hardware.SensorManager SensorManager}). Use the default
-	 * value of {@link android.hardware.SensorManager#SENSOR_DELAY_NORMAL
-	 * SENSOR_DELAY_NORMAL} for simple screen orientation change detection.
-	 *
-	 * This constructor is private since no one uses it.
-	 */
-	private WindowOrientationListener(Context context, Handler handler, int rate) {
-		this.context = context;
-		mHandler = handler;
-		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-		mRate = rate;
-		
-		mSensors = getSupportedSensors(mSensorManager);
-		
-		String[] formattedSensors = new String[mSensors.size()];
-		for (int i = 0; i < mSensors.size(); ++i)
-			formattedSensors[i] = stringify(mSensors.get(i));
-		Log.i(WindowOrientationListener.TAG, "Using sensors: [" + TextUtils.join(", ", formattedSensors) + "]");
-		
-		mOrientationJudge = new AccelSensorJudge(context);
-	}
-	
-	/**
-	 * Equivalent of {@link android.hardware.Sensor#toString()} in API 23 SDK since not all devices implement it.
-	 */
-	public static String stringify(Sensor sensor) {
-		return "{Sensor name=\"" + sensor.getName() + "\", vendor=\"" + sensor.getVendor() + "\", version=" + sensor.getVersion()
-			+ ", type=" + sensor.getType() + ", maxRange=" + sensor.getMaximumRange() + ", resolution=" + sensor.getResolution()
-			+ ", power=" + sensor.getPower() + ", minDelay=" + sensor.getMinDelay() + "}";
-	}
-	
-	/**
-	 * Enables the WindowOrientationListener so it will monitor the sensor and call
-	 * {@link #onProposedRotationChanged(int)} when the device orientation changes.
-	 */
-	public void enable() {
-		enable(true /* clearCurrentRotation */);
-	}
-	
-	/**
-	 * Enables the WindowOrientationListener so it will monitor the sensor and call
-	 * {@link #onProposedRotationChanged(int)} when the device orientation changes.
-	 *
-	 * @param clearCurrentRotation True if the current proposed sensor rotation should be cleared as
-	 *                             part of the reset.
-	 */
-	public void enable(boolean clearCurrentRotation) {
-		synchronized (mLock) {
-			if (mSensors.isEmpty()) {
-				Slog.w(TAG, "Cannot detect sensors. Not enabled");
-				return;
-			}
-			if (mEnabled) {
-				return;
-			}
-			if (LOG) {
-				Slog.d(TAG, "WindowOrientationListener enabled clearCurrentRotation="
-					+ clearCurrentRotation);
-			}
-			mOrientationJudge.resetLocked(clearCurrentRotation);
-			
-			for (Sensor sensor : mSensors) {
-				boolean registered;
-				if (Build.VERSION.SDK_INT >= 19 && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-					registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
-				} else {
-					registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, mHandler);
-				}
-				
-				if (!registered) {
-					Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
-					/*
-					 * Even though registration failed, we're not giving up on the sensor just yet because:
-					 * 1. It's possible for registration to fail but without any further problems: http://stackoverflow.com/questions/18602261/unexpected-false-return-value-from-android-hardware-sensormanager-registerlisten
-					 * 2. The official Android WindowOrientationListener implementation ignores the return value
-					 * 3. Seven users have submitted error reports when sensor registration failed, so maybe they were onto something
-					 */
-				}
-			}
-			
-			mEnabled = true;
-			
-			// Apparently it's possible to successfully register for gravity events but not receive any:
-			// http://stackoverflow.com/a/10447302/238753
-			mGotSensorEvent = false;
-			mHandler.postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
-			
-			mLastSensorType = Sensor.TYPE_ALL;
-		}
-	}
-	
-	/**
-	 * Disables the WindowOrientationListener.
-	 */
-	public void disable() {
-		synchronized (mLock) {
-			if (mEnabled == true) {
-				if (LOG) {
-					Slog.d(TAG, "WindowOrientationListener disabled");
-				}
-				for (Sensor sensor : mSensors)
-					mSensorManager.unregisterListener(mOrientationJudge, sensor);
-				mEnabled = false;
-				
-				mHandler.removeCallbacks(checkForSensorEvent);
-			}
-		}
-	}
-	
-	public void onTouchStart() {
-		synchronized (mLock) {
-			if (mOrientationJudge != null) {
-				mOrientationJudge.onTouchStartLocked();
-			}
-		}
-	}
-	
-	public void onTouchEnd() {
-		long whenElapsedNanos = SystemClock.elapsedRealtimeNanos();
-		
-		synchronized (mLock) {
-			if (mOrientationJudge != null) {
-				mOrientationJudge.onTouchEndLocked(whenElapsedNanos);
-			}
-		}
-	}
-	
-	/**
-	 * Sets the current rotation.
-	 *
-	 * @param rotation The current rotation.
-	 */
-	public void setCurrentRotation(int rotation) {
-		synchronized (mLock) {
-			mCurrentRotation = rotation;
-		}
-	}
-	
-	/**
-	 * Gets the proposed rotation.
-	 *
-	 * This method only returns a rotation if the orientation listener is certain
-	 * of its proposal.  If the rotation is indeterminate, returns -1.
-	 *
-	 * @return The proposed rotation, or -1 if unknown.
-	 */
-	public int getProposedRotation() {
-		synchronized (mLock) {
-			if (mEnabled) {
-				return mOrientationJudge.getProposedRotationLocked();
-			}
-			return -1;
-		}
-	}
-	
-	/**
-	 * Returns true if sensor is enabled and false otherwise
-	 */
-	public boolean canDetectOrientation() {
-		synchronized (mLock) {
-			return !mSensors.isEmpty();
-		}
-	}
-	
-	/**
-	 * Called when the rotation view of the device has changed.
-	 *
-	 * This method is called whenever the orientation becomes certain of an orientation.
-	 * It is called each time the orientation determination transitions from being
-	 * uncertain to being certain again, even if it is the same orientation as before.
-	 *
-	 * This should only be called on the Handler thread.
-	 *
-	 * @param rotation The new orientation of the device, one of the Surface.ROTATION_* constants.
-	 * @see android.view.Surface
-	 */
-	public abstract void onProposedRotationChanged(int rotation);
-	
-	public void dump(PrintWriter pw, String prefix) {
-		synchronized (mLock) {
-			pw.println(prefix + TAG);
-			prefix += "  ";
-			pw.println(prefix + "mEnabled=" + mEnabled);
-			pw.println(prefix + "mCurrentRotation=" + AndroidSurfaceRotation.name(mCurrentRotation));
-			pw.println(prefix + "mSensorType=" + "(ignored)");
-			pw.println(prefix + "mSensors=" + mSensors);
-			pw.println(prefix + "mRate=" + mRate);
-			
-			if (mOrientationJudge != null) {
-				mOrientationJudge.dumpLocked(pw, prefix);
-			}
-		}
-	}
-	
-	abstract class OrientationJudge implements SensorEventListener {
-		// Number of nanoseconds per millisecond.
-		protected static final long NANOS_PER_MS = 1000000;
-		
-		// Number of milliseconds per nano second.
-		protected static final float MILLIS_PER_NANO = 0.000001f;
-		
-		// The minimum amount of time that must have elapsed since the screen was last touched
-		// before the proposed rotation can change.
-		protected static final long PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS =
-			500 * NANOS_PER_MS;
-		
-		/**
-		 * Gets the proposed rotation.
-		 *
-		 * This method only returns a rotation if the orientation listener is certain
-		 * of its proposal.  If the rotation is indeterminate, returns -1.
-		 *
-		 * Should only be called when holding WindowOrientationListener lock.
-		 *
-		 * @return The proposed rotation, or -1 if unknown.
-		 */
-		public abstract int getProposedRotationLocked();
-		
-		/**
-		 * Notifies the orientation judge that the screen is being touched.
-		 *
-		 * Should only be called when holding WindowOrientationListener lock.
-		 */
-		public abstract void onTouchStartLocked();
-		
-		/**
-		 * Notifies the orientation judge that the screen is no longer being touched.
-		 *
-		 * Should only be called when holding WindowOrientationListener lock.
-		 *
-		 * @param whenElapsedNanos Given in the elapsed realtime nanos time base.
-		 */
-		public abstract void onTouchEndLocked(long whenElapsedNanos);
-		
-		/**
-		 * Resets the state of the judge.
-		 *
-		 * Should only be called when holding WindowOrientationListener lock.
-		 *
-		 * @param clearCurrentRotation True if the current proposed sensor rotation should be
-		 *                             cleared as part of the reset.
-		 */
-		public abstract void resetLocked(boolean clearCurrentRotation);
-		
-		/**
-		 * Dumps internal state of the orientation judge.
-		 *
-		 * Should only be called when holding WindowOrientationListener lock.
-		 */
-		public abstract void dumpLocked(PrintWriter pw, String prefix);
-		
-		@Override
-		public abstract void onAccuracyChanged(Sensor sensor, int accuracy);
-		
-		@Override
-		public abstract void onSensorChanged(SensorEvent event);
-	}
-	
-	/**
-	 * This class filters the raw accelerometer data and tries to detect actual changes in
-	 * orientation. This is a very ill-defined problem so there are a lot of tweakable parameters,
-	 * but here's the outline:
-	 *
-	 *  - Low-pass filter the accelerometer vector in cartesian coordinates.  We do it in
-	 *    cartesian space because the orientation calculations are sensitive to the
-	 *    absolute magnitude of the acceleration.  In particular, there are singularities
-	 *    in the calculation as the magnitude approaches 0.  By performing the low-pass
-	 *    filtering early, we can eliminate most spurious high-frequency impulses due to noise.
-	 *
-	 *  - Convert the acceleromter vector from cartesian to spherical coordinates.
-	 *    Since we're dealing with rotation of the device, this is the sensible coordinate
-	 *    system to work in.  The zenith direction is the Z-axis, the direction the screen
-	 *    is facing.  The radial distance is referred to as the magnitude below.
-	 *    The elevation angle is referred to as the "tilt" below.
-	 *    The azimuth angle is referred to as the "orientation" below (and the azimuth axis is
-	 *    the Y-axis).
-	 *    See http://en.wikipedia.org/wiki/Spherical_coordinate_system for reference.
-	 *
-	 *  - If the tilt angle is too close to horizontal (near 90 or -90 degrees), do nothing.
-	 *    The orientation angle is not meaningful when the device is nearly horizontal.
-	 *    The tilt angle thresholds are set differently for each orientation and different
-	 *    limits are applied when the device is facing down as opposed to when it is facing
-	 *    forward or facing up.
-	 *
-	 *  - When the orientation angle reaches a certain threshold, consider transitioning
-	 *    to the corresponding orientation.  These thresholds have some hysteresis built-in
-	 *    to avoid oscillations between adjacent orientations.
-	 *
-	 *  - Wait for the device to settle for a little bit.  Once that happens, issue the
-	 *    new orientation proposal.
-	 *
-	 * Details are explained inline.
-	 *
-	 * See http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization for
-	 * signal processing background.
-	 */
-	final class AccelSensorJudge extends OrientationJudge {
-		// We work with all angles in degrees in this class.
-		private static final float RADIANS_TO_DEGREES = (float) (180 / Math.PI);
-		
-		// Indices into SensorEvent.values for the accelerometer sensor.
-		private static final int ACCELEROMETER_DATA_X = 0;
-		private static final int ACCELEROMETER_DATA_Y = 1;
-		private static final int ACCELEROMETER_DATA_Z = 2;
-		
-		// The minimum amount of time that a predicted rotation must be stable before it
-		// is accepted as a valid rotation proposal.  This value can be quite small because
-		// the low-pass filter already suppresses most of the noise so we're really just
-		// looking for quick confirmation that the last few samples are in agreement as to
-		// the desired orientation.
-		private static final long PROPOSAL_SETTLE_TIME_NANOS = 40 * NANOS_PER_MS;
-		
-		// The minimum amount of time that must have elapsed since the device last exited
-		// the flat state (time since it was picked up) before the proposed rotation
-		// can change.
-		private static final long PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS = 500 * NANOS_PER_MS;
-		
-		// The minimum amount of time that must have elapsed since the device stopped
-		// swinging (time since device appeared to be in the process of being put down
-		// or put away into a pocket) before the proposed rotation can change.
-		private static final long PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS = 300 * NANOS_PER_MS;
-		
-		// The minimum amount of time that must have elapsed since the device stopped
-		// undergoing external acceleration before the proposed rotation can change.
-		private static final long PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS =
-			500 * NANOS_PER_MS;
-		
-		// If the tilt angle remains greater than the specified angle for a minimum of
-		// the specified time, then the device is deemed to be lying flat
-		// (just chillin' on a table).
-		private static final float FLAT_ANGLE = 80;
-		private static final long FLAT_TIME_NANOS = 1000 * NANOS_PER_MS;
-		
-		// If the tilt angle has increased by at least delta degrees within the specified amount
-		// of time, then the device is deemed to be swinging away from the user
-		// down towards flat (tilt = 90).
-		private static final float SWING_AWAY_ANGLE_DELTA = 20;
-		private static final long SWING_TIME_NANOS = 300 * NANOS_PER_MS;
-		
-		// The maximum sample inter-arrival time in milliseconds.
-		// If the acceleration samples are further apart than this amount in time, we reset the
-		// state of the low-pass filter and orientation properties.  This helps to handle
-		// boundary conditions when the device is turned on, wakes from suspend or there is
-		// a significant gap in samples.
-		private static final long MAX_FILTER_DELTA_TIME_NANOS = 1000 * NANOS_PER_MS;
-		
-		// The acceleration filter time constant.
-		//
-		// This time constant is used to tune the acceleration filter such that
-		// impulses and vibrational noise (think car dock) is suppressed before we
-		// try to calculate the tilt and orientation angles.
-		//
-		// The filter time constant is related to the filter cutoff frequency, which is the
-		// frequency at which signals are attenuated by 3dB (half the passband power).
-		// Each successive octave beyond this frequency is attenuated by an additional 6dB.
-		//
-		// Given a time constant t in seconds, the filter cutoff frequency Fc in Hertz
-		// is given by Fc = 1 / (2pi * t).
-		//
-		// The higher the time constant, the lower the cutoff frequency, so more noise
-		// will be suppressed.
-		//
-		// Filtering adds latency proportional the time constant (inversely proportional
-		// to the cutoff frequency) so we don't want to make the time constant too
-		// large or we can lose responsiveness.  Likewise we don't want to make it too
-		// small or we do a poor job suppressing acceleration spikes.
-		// Empirically, 100ms seems to be too small and 500ms is too large.
-		private static final float FILTER_TIME_CONSTANT_MS = 200.0f;
+            if (isSupported(sensor))
+                result.add(sensor);
+        }
+        
+        return result;
+    }
+    
+    private static boolean isSupported(Sensor sensor) {
+        if (sensor == null)
+            return false;
+        
+        // The Samsung sensor is a custom one, so we need to make sure
+        // we're not looking at another vendor's custom sensor that uses the same type number.
+        if (
+            sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION
+                &&
+                !(
+                    sensor.getVendor().toLowerCase().contains("samsung")
+                    &&
+                    sensor.getName().toLowerCase().contains("screen orientation")
+                    &&
+                    sensor.getMaximumRange() == 255f
+                )
+            )
+            return false;
+        
+        return true;
+    }
+    
+    /**
+     * Creates a new WindowOrientationListener.
+     *
+     * @param context for the WindowOrientationListener.
+     * @param handler Provides the Looper for receiving sensor updates.
+     */
+    public WindowOrientationListener(Context context, Handler handler) {
+        this(context, handler, SensorManager.SENSOR_DELAY_UI);
+    }
+    
+    /**
+     * Creates a new WindowOrientationListener.
+     *
+     * @param context for the WindowOrientationListener.
+     * @param handler Provides the Looper for receiving sensor updates.
+     * @param rate at which sensor events are processed (see also
+     * {@link android.hardware.SensorManager SensorManager}). Use the default
+     * value of {@link android.hardware.SensorManager#SENSOR_DELAY_NORMAL
+     * SENSOR_DELAY_NORMAL} for simple screen orientation change detection.
+     *
+     * This constructor is private since no one uses it.
+     */
+    private WindowOrientationListener(Context context, Handler handler, int rate) {
+        this.context = context;
+        mHandler = handler;
+        mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+        mRate = rate;
+        
+        mSensors = getSupportedSensors(mSensorManager);
+        
+        String[] formattedSensors = new String[mSensors.size()];
+        for (int i = 0; i < mSensors.size(); ++i)
+            formattedSensors[i] = stringify(mSensors.get(i));
+        Log.i(WindowOrientationListener.TAG, "Using sensors: [" + TextUtils.join(", ", formattedSensors) + "]");
+        
+        mOrientationJudge = new AccelSensorJudge(context);
+    }
+    
+    /**
+     * Equivalent of {@link android.hardware.Sensor#toString()} in API 23 SDK since not all devices implement it.
+     */
+    public static String stringify(Sensor sensor) {
+        return "{Sensor name=\"" + sensor.getName() + "\", vendor=\"" + sensor.getVendor() + "\", version=" + sensor.getVersion()
+            + ", type=" + sensor.getType() + ", maxRange=" + sensor.getMaximumRange() + ", resolution=" + sensor.getResolution()
+            + ", power=" + sensor.getPower() + ", minDelay=" + sensor.getMinDelay() + "}";
+    }
+    
+    /**
+     * Enables the WindowOrientationListener so it will monitor the sensor and call
+     * {@link #onProposedRotationChanged(int)} when the device orientation changes.
+     */
+    public void enable() {
+        enable(true /* clearCurrentRotation */);
+    }
+    
+    /**
+     * Enables the WindowOrientationListener so it will monitor the sensor and call
+     * {@link #onProposedRotationChanged(int)} when the device orientation changes.
+     *
+     * @param clearCurrentRotation True if the current proposed sensor rotation should be cleared as
+     *                             part of the reset.
+     */
+    public void enable(boolean clearCurrentRotation) {
+        synchronized (mLock) {
+            if (mSensors.isEmpty()) {
+                Slog.w(TAG, "Cannot detect sensors. Not enabled");
+                return;
+            }
+            if (mEnabled) {
+                return;
+            }
+            if (LOG) {
+                Slog.d(TAG, "WindowOrientationListener enabled clearCurrentRotation="
+                    + clearCurrentRotation);
+            }
+            mOrientationJudge.resetLocked(clearCurrentRotation);
+            
+            for (Sensor sensor : mSensors) {
+                boolean registered;
+                if (Build.VERSION.SDK_INT >= 19 && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, DEFAULT_BATCH_LATENCY, mHandler);
+                } else {
+                    registered = mSensorManager.registerListener(mOrientationJudge, sensor, mRate, mHandler);
+                }
+                
+                if (!registered) {
+                    Log.w(WindowOrientationListener.TAG, "Sensor registration failed for " + stringify(sensor));
+                    /*
+                     * Even though registration failed, we're not giving up on the sensor just yet because:
+                     * 1. It's possible for registration to fail but without any further problems: http://stackoverflow.com/questions/18602261/unexpected-false-return-value-from-android-hardware-sensormanager-registerlisten
+                     * 2. The official Android WindowOrientationListener implementation ignores the return value
+                     * 3. Seven users have submitted error reports when sensor registration failed, so maybe they were onto something
+                     */
+                }
+            }
+            
+            mEnabled = true;
+            
+            // Apparently it's possible to successfully register for gravity events but not receive any:
+            // http://stackoverflow.com/a/10447302/238753
+            mGotSensorEvent = false;
+            mHandler.postDelayed(checkForSensorEvent, EXPECTED_EVENT_WINDOW_MS);
+            
+            mLastSensorType = Sensor.TYPE_ALL;
+        }
+    }
+    
+    /**
+     * Disables the WindowOrientationListener.
+     */
+    public void disable() {
+        synchronized (mLock) {
+            if (mEnabled == true) {
+                if (LOG) {
+                    Slog.d(TAG, "WindowOrientationListener disabled");
+                }
+                for (Sensor sensor : mSensors)
+                    mSensorManager.unregisterListener(mOrientationJudge, sensor);
+                mEnabled = false;
+                
+                mHandler.removeCallbacks(checkForSensorEvent);
+            }
+        }
+    }
+    
+    public void onTouchStart() {
+        synchronized (mLock) {
+            if (mOrientationJudge != null) {
+                mOrientationJudge.onTouchStartLocked();
+            }
+        }
+    }
+    
+    public void onTouchEnd() {
+        long whenElapsedNanos = SystemClock.elapsedRealtimeNanos();
+        
+        synchronized (mLock) {
+            if (mOrientationJudge != null) {
+                mOrientationJudge.onTouchEndLocked(whenElapsedNanos);
+            }
+        }
+    }
+    
+    /**
+     * Sets the current rotation.
+     *
+     * @param rotation The current rotation.
+     */
+    public void setCurrentRotation(int rotation) {
+        synchronized (mLock) {
+            mCurrentRotation = rotation;
+        }
+    }
+    
+    /**
+     * Gets the proposed rotation.
+     *
+     * This method only returns a rotation if the orientation listener is certain
+     * of its proposal.  If the rotation is indeterminate, returns -1.
+     *
+     * @return The proposed rotation, or -1 if unknown.
+     */
+    public int getProposedRotation() {
+        synchronized (mLock) {
+            if (mEnabled) {
+                return mOrientationJudge.getProposedRotationLocked();
+            }
+            return -1;
+        }
+    }
+    
+    /**
+     * Returns true if sensor is enabled and false otherwise
+     */
+    public boolean canDetectOrientation() {
+        synchronized (mLock) {
+            return !mSensors.isEmpty();
+        }
+    }
+    
+    /**
+     * Called when the rotation view of the device has changed.
+     *
+     * This method is called whenever the orientation becomes certain of an orientation.
+     * It is called each time the orientation determination transitions from being
+     * uncertain to being certain again, even if it is the same orientation as before.
+     *
+     * This should only be called on the Handler thread.
+     *
+     * @param rotation The new orientation of the device, one of the Surface.ROTATION_* constants.
+     * @see android.view.Surface
+     */
+    public abstract void onProposedRotationChanged(int rotation);
+    
+    public void dump(PrintWriter pw, String prefix) {
+        synchronized (mLock) {
+            pw.println(prefix + TAG);
+            prefix += "  ";
+            pw.println(prefix + "mEnabled=" + mEnabled);
+            pw.println(prefix + "mCurrentRotation=" + AndroidSurfaceRotation.name(mCurrentRotation));
+            pw.println(prefix + "mSensorType=" + "(ignored)");
+            pw.println(prefix + "mSensors=" + mSensors);
+            pw.println(prefix + "mRate=" + mRate);
+            
+            if (mOrientationJudge != null) {
+                mOrientationJudge.dumpLocked(pw, prefix);
+            }
+        }
+    }
+    
+    abstract class OrientationJudge implements SensorEventListener {
+        // Number of nanoseconds per millisecond.
+        protected static final long NANOS_PER_MS = 1000000;
+        
+        // Number of milliseconds per nano second.
+        protected static final float MILLIS_PER_NANO = 0.000001f;
+        
+        // The minimum amount of time that must have elapsed since the screen was last touched
+        // before the proposed rotation can change.
+        protected static final long PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS =
+            500 * NANOS_PER_MS;
+        
+        /**
+         * Gets the proposed rotation.
+         *
+         * This method only returns a rotation if the orientation listener is certain
+         * of its proposal.  If the rotation is indeterminate, returns -1.
+         *
+         * Should only be called when holding WindowOrientationListener lock.
+         *
+         * @return The proposed rotation, or -1 if unknown.
+         */
+        public abstract int getProposedRotationLocked();
+        
+        /**
+         * Notifies the orientation judge that the screen is being touched.
+         *
+         * Should only be called when holding WindowOrientationListener lock.
+         */
+        public abstract void onTouchStartLocked();
+        
+        /**
+         * Notifies the orientation judge that the screen is no longer being touched.
+         *
+         * Should only be called when holding WindowOrientationListener lock.
+         *
+         * @param whenElapsedNanos Given in the elapsed realtime nanos time base.
+         */
+        public abstract void onTouchEndLocked(long whenElapsedNanos);
+        
+        /**
+         * Resets the state of the judge.
+         *
+         * Should only be called when holding WindowOrientationListener lock.
+         *
+         * @param clearCurrentRotation True if the current proposed sensor rotation should be
+         *                             cleared as part of the reset.
+         */
+        public abstract void resetLocked(boolean clearCurrentRotation);
+        
+        /**
+         * Dumps internal state of the orientation judge.
+         *
+         * Should only be called when holding WindowOrientationListener lock.
+         */
+        public abstract void dumpLocked(PrintWriter pw, String prefix);
+        
+        @Override
+        public abstract void onAccuracyChanged(Sensor sensor, int accuracy);
+        
+        @Override
+        public abstract void onSensorChanged(SensorEvent event);
+    }
+    
+    /**
+     * This class filters the raw accelerometer data and tries to detect actual changes in
+     * orientation. This is a very ill-defined problem so there are a lot of tweakable parameters,
+     * but here's the outline:
+     *
+     *  - Low-pass filter the accelerometer vector in cartesian coordinates.  We do it in
+     *    cartesian space because the orientation calculations are sensitive to the
+     *    absolute magnitude of the acceleration.  In particular, there are singularities
+     *    in the calculation as the magnitude approaches 0.  By performing the low-pass
+     *    filtering early, we can eliminate most spurious high-frequency impulses due to noise.
+     *
+     *  - Convert the acceleromter vector from cartesian to spherical coordinates.
+     *    Since we're dealing with rotation of the device, this is the sensible coordinate
+     *    system to work in.  The zenith direction is the Z-axis, the direction the screen
+     *    is facing.  The radial distance is referred to as the magnitude below.
+     *    The elevation angle is referred to as the "tilt" below.
+     *    The azimuth angle is referred to as the "orientation" below (and the azimuth axis is
+     *    the Y-axis).
+     *    See http://en.wikipedia.org/wiki/Spherical_coordinate_system for reference.
+     *
+     *  - If the tilt angle is too close to horizontal (near 90 or -90 degrees), do nothing.
+     *    The orientation angle is not meaningful when the device is nearly horizontal.
+     *    The tilt angle thresholds are set differently for each orientation and different
+     *    limits are applied when the device is facing down as opposed to when it is facing
+     *    forward or facing up.
+     *
+     *  - When the orientation angle reaches a certain threshold, consider transitioning
+     *    to the corresponding orientation.  These thresholds have some hysteresis built-in
+     *    to avoid oscillations between adjacent orientations.
+     *
+     *  - Wait for the device to settle for a little bit.  Once that happens, issue the
+     *    new orientation proposal.
+     *
+     * Details are explained inline.
+     *
+     * See http://en.wikipedia.org/wiki/Low-pass_filter#Discrete-time_realization for
+     * signal processing background.
+     */
+    final class AccelSensorJudge extends OrientationJudge {
+        // We work with all angles in degrees in this class.
+        private static final float RADIANS_TO_DEGREES = (float) (180 / Math.PI);
+        
+        // Indices into SensorEvent.values for the accelerometer sensor.
+        private static final int ACCELEROMETER_DATA_X = 0;
+        private static final int ACCELEROMETER_DATA_Y = 1;
+        private static final int ACCELEROMETER_DATA_Z = 2;
+        
+        // The minimum amount of time that a predicted rotation must be stable before it
+        // is accepted as a valid rotation proposal.  This value can be quite small because
+        // the low-pass filter already suppresses most of the noise so we're really just
+        // looking for quick confirmation that the last few samples are in agreement as to
+        // the desired orientation.
+        private static final long PROPOSAL_SETTLE_TIME_NANOS = 40 * NANOS_PER_MS;
+        
+        // The minimum amount of time that must have elapsed since the device last exited
+        // the flat state (time since it was picked up) before the proposed rotation
+        // can change.
+        private static final long PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS = 500 * NANOS_PER_MS;
+        
+        // The minimum amount of time that must have elapsed since the device stopped
+        // swinging (time since device appeared to be in the process of being put down
+        // or put away into a pocket) before the proposed rotation can change.
+        private static final long PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS = 300 * NANOS_PER_MS;
+        
+        // The minimum amount of time that must have elapsed since the device stopped
+        // undergoing external acceleration before the proposed rotation can change.
+        private static final long PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS =
+            500 * NANOS_PER_MS;
+        
+        // If the tilt angle remains greater than the specified angle for a minimum of
+        // the specified time, then the device is deemed to be lying flat
+        // (just chillin' on a table).
+        private static final float FLAT_ANGLE = 80;
+        private static final long FLAT_TIME_NANOS = 1000 * NANOS_PER_MS;
+        
+        // If the tilt angle has increased by at least delta degrees within the specified amount
+        // of time, then the device is deemed to be swinging away from the user
+        // down towards flat (tilt = 90).
+        private static final float SWING_AWAY_ANGLE_DELTA = 20;
+        private static final long SWING_TIME_NANOS = 300 * NANOS_PER_MS;
+        
+        // The maximum sample inter-arrival time in milliseconds.
+        // If the acceleration samples are further apart than this amount in time, we reset the
+        // state of the low-pass filter and orientation properties.  This helps to handle
+        // boundary conditions when the device is turned on, wakes from suspend or there is
+        // a significant gap in samples.
+        private static final long MAX_FILTER_DELTA_TIME_NANOS = 1000 * NANOS_PER_MS;
+        
+        // The acceleration filter time constant.
+        //
+        // This time constant is used to tune the acceleration filter such that
+        // impulses and vibrational noise (think car dock) is suppressed before we
+        // try to calculate the tilt and orientation angles.
+        //
+        // The filter time constant is related to the filter cutoff frequency, which is the
+        // frequency at which signals are attenuated by 3dB (half the passband power).
+        // Each successive octave beyond this frequency is attenuated by an additional 6dB.
+        //
+        // Given a time constant t in seconds, the filter cutoff frequency Fc in Hertz
+        // is given by Fc = 1 / (2pi * t).
+        //
+        // The higher the time constant, the lower the cutoff frequency, so more noise
+        // will be suppressed.
+        //
+        // Filtering adds latency proportional the time constant (inversely proportional
+        // to the cutoff frequency) so we don't want to make the time constant too
+        // large or we can lose responsiveness.  Likewise we don't want to make it too
+        // small or we do a poor job suppressing acceleration spikes.
+        // Empirically, 100ms seems to be too small and 500ms is too large.
+        private static final float FILTER_TIME_CONSTANT_MS = 200.0f;
 
         /* State for orientation detection. */
-		
-		// Thresholds for minimum and maximum allowable deviation from gravity.
-		//
-		// If the device is undergoing external acceleration (being bumped, in a car
-		// that is turning around a corner or a plane taking off) then the magnitude
-		// may be substantially more or less than gravity.  This can skew our orientation
-		// detection by making us think that up is pointed in a different direction.
-		//
-		// Conversely, if the device is in freefall, then there will be no gravity to
-		// measure at all.  This is problematic because we cannot detect the orientation
-		// without gravity to tell us which way is up.  A magnitude near 0 produces
-		// singularities in the tilt and orientation calculations.
-		//
-		// In both cases, we postpone choosing an orientation.
-		//
-		// However, we need to tolerate some acceleration because the angular momentum
-		// of turning the device can skew the observed acceleration for a short period of time.
-		private static final float NEAR_ZERO_MAGNITUDE = 1; // m/s^2
-		private static final float ACCELERATION_TOLERANCE = 4; // m/s^2
-		private static final float MIN_ACCELERATION_MAGNITUDE =
-			SensorManager.STANDARD_GRAVITY - ACCELERATION_TOLERANCE;
-		private static final float MAX_ACCELERATION_MAGNITUDE =
-			SensorManager.STANDARD_GRAVITY + ACCELERATION_TOLERANCE;
-		
-		// Maximum absolute tilt angle at which to consider orientation data.  Beyond this (i.e.
-		// when screen is facing the sky or ground), we completely ignore orientation data
-		// because it's too unstable.
-		private static final int MAX_TILT = 80;
-		
-		// The tilt angle below which we conclude that the user is holding the device
-		// overhead reading in bed and lock into that state.
-		private static final int TILT_OVERHEAD_ENTER = -40;
-		
-		// The tilt angle above which we conclude that the user would like a rotation
-		// change to occur and unlock from the overhead state.
-		private static final int TILT_OVERHEAD_EXIT = -15;
-		
-		// The gap angle in degrees between adjacent orientation angles for hysteresis.
-		// This creates a "dead zone" between the current orientation and a proposed
-		// adjacent orientation.  No orientation proposal is made when the orientation
-		// angle is within the gap between the current orientation and the adjacent
-		// orientation.
-		private static final int ADJACENT_ORIENTATION_ANGLE_GAP = 45;
-		
-		// The tilt angle range in degrees for each orientation.
-		// Beyond these tilt angles, we don't even consider transitioning into the
-		// specified orientation.  We place more stringent requirements on unnatural
-		// orientations than natural ones to make it less likely to accidentally transition
-		// into those states.
-		// The first value of each pair is negative so it applies a limit when the device is
-		// facing down (overhead reading in bed).
-		// The second value of each pair is positive so it applies a limit when the device is
-		// facing up (resting on a table).
-		// The ideal tilt angle is 0 (when the device is vertical) so the limits establish
-		// how close to vertical the device must be in order to change orientation.
-		private final int[][] mTiltToleranceConfig = new int[][] {
+        
+        // Thresholds for minimum and maximum allowable deviation from gravity.
+        //
+        // If the device is undergoing external acceleration (being bumped, in a car
+        // that is turning around a corner or a plane taking off) then the magnitude
+        // may be substantially more or less than gravity.  This can skew our orientation
+        // detection by making us think that up is pointed in a different direction.
+        //
+        // Conversely, if the device is in freefall, then there will be no gravity to
+        // measure at all.  This is problematic because we cannot detect the orientation
+        // without gravity to tell us which way is up.  A magnitude near 0 produces
+        // singularities in the tilt and orientation calculations.
+        //
+        // In both cases, we postpone choosing an orientation.
+        //
+        // However, we need to tolerate some acceleration because the angular momentum
+        // of turning the device can skew the observed acceleration for a short period of time.
+        private static final float NEAR_ZERO_MAGNITUDE = 1; // m/s^2
+        private static final float ACCELERATION_TOLERANCE = 4; // m/s^2
+        private static final float MIN_ACCELERATION_MAGNITUDE =
+            SensorManager.STANDARD_GRAVITY - ACCELERATION_TOLERANCE;
+        private static final float MAX_ACCELERATION_MAGNITUDE =
+            SensorManager.STANDARD_GRAVITY + ACCELERATION_TOLERANCE;
+        
+        // Maximum absolute tilt angle at which to consider orientation data.  Beyond this (i.e.
+        // when screen is facing the sky or ground), we completely ignore orientation data
+        // because it's too unstable.
+        private static final int MAX_TILT = 80;
+        
+        // The tilt angle below which we conclude that the user is holding the device
+        // overhead reading in bed and lock into that state.
+        private static final int TILT_OVERHEAD_ENTER = -40;
+        
+        // The tilt angle above which we conclude that the user would like a rotation
+        // change to occur and unlock from the overhead state.
+        private static final int TILT_OVERHEAD_EXIT = -15;
+        
+        // The gap angle in degrees between adjacent orientation angles for hysteresis.
+        // This creates a "dead zone" between the current orientation and a proposed
+        // adjacent orientation.  No orientation proposal is made when the orientation
+        // angle is within the gap between the current orientation and the adjacent
+        // orientation.
+        private static final int ADJACENT_ORIENTATION_ANGLE_GAP = 45;
+        
+        // The tilt angle range in degrees for each orientation.
+        // Beyond these tilt angles, we don't even consider transitioning into the
+        // specified orientation.  We place more stringent requirements on unnatural
+        // orientations than natural ones to make it less likely to accidentally transition
+        // into those states.
+        // The first value of each pair is negative so it applies a limit when the device is
+        // facing down (overhead reading in bed).
+        // The second value of each pair is positive so it applies a limit when the device is
+        // facing up (resting on a table).
+        // The ideal tilt angle is 0 (when the device is vertical) so the limits establish
+        // how close to vertical the device must be in order to change orientation.
+        private final int[][] mTiltToleranceConfig = new int[][] {
             /* ROTATION_0   */ { -25, 70 }, // note: these are overridden by config.xml
             /* ROTATION_90  */ { -25, 65 },
             /* ROTATION_180 */ { -25, 60 },
             /* ROTATION_270 */ { -25, 65 }
-		};
-		
-		// Timestamp and value of the last accelerometer sample.
-		private long mLastFilteredTimestampNanos;
-		private float mLastFilteredX, mLastFilteredY, mLastFilteredZ;
-		
-		// The last proposed rotation, -2 if never proposed, -1 if unknown.
-		private int mProposedRotation;
-		
-		// Value of the current predicted rotation, -1 if unknown.
-		private int mPredictedRotation;
-		
-		// Timestamp of when the predicted rotation most recently changed.
-		private long mPredictedRotationTimestampNanos;
-		
-		// Timestamp when the device last appeared to be flat for sure (the flat delay elapsed).
-		private long mFlatTimestampNanos;
-		private boolean mFlat;
-		
-		// Timestamp when the device last appeared to be swinging.
-		private long mSwingTimestampNanos;
-		private boolean mSwinging;
-		
-		// Timestamp when the device last appeared to be undergoing external acceleration.
-		private long mAccelerationTimestampNanos;
-		private boolean mAccelerating;
-		
-		// Timestamp when the last touch to the touch screen ended
-		private long mTouchEndedTimestampNanos = Long.MIN_VALUE;
-		private boolean mTouched;
-		
-		// Whether we are locked into an overhead usage mode.
-		private boolean mOverhead;
-		
-		// History of observed tilt angles.
-		private static final int TILT_HISTORY_SIZE = 200;
-		private float[] mTiltHistory = new float[TILT_HISTORY_SIZE];
-		private long[] mTiltHistoryTimestampNanos = new long[TILT_HISTORY_SIZE];
-		private int mTiltHistoryIndex;
-		
-		public AccelSensorJudge(Context context) {
-			
-			// Load tilt tolerance configuration.
-			return; //Don't have access to system config
-		}
-		
-		@Override
-		public int getProposedRotationLocked() {
-			return mProposedRotation;
-		}
-		
-		@Override
-		public void dumpLocked(PrintWriter pw, String prefix) {
-			pw.println(prefix + "AccelSensorJudge");
-			prefix += "  ";
-			pw.println(prefix + "mProposedRotation=" + mProposedRotation);
-			pw.println(prefix + "mPredictedRotation=" + mPredictedRotation);
-			pw.println(prefix + "mLastFilteredX=" + mLastFilteredX);
-			pw.println(prefix + "mLastFilteredY=" + mLastFilteredY);
-			pw.println(prefix + "mLastFilteredZ=" + mLastFilteredZ);
-			final long delta = SystemClock.elapsedRealtimeNanos() - mLastFilteredTimestampNanos;
-			pw.println(prefix + "mLastFilteredTimestampNanos=" + mLastFilteredTimestampNanos
-				+ " (" + (delta * 0.000001f) + "ms ago)");
-			pw.println(prefix + "mTiltHistory={last: " + getLastTiltLocked() + "}");
-			pw.println(prefix + "mFlat=" + mFlat);
-			pw.println(prefix + "mSwinging=" + mSwinging);
-			pw.println(prefix + "mAccelerating=" + mAccelerating);
-			pw.println(prefix + "mOverhead=" + mOverhead);
-			pw.println(prefix + "mTouched=" + mTouched);
-			pw.print(prefix + "mTiltToleranceConfig=[");
-			for (int i = 0; i < 4; i++) {
-				if (i != 0) {
-					pw.print(", ");
-				}
-				pw.print("[");
-				pw.print(mTiltToleranceConfig[i][0]);
-				pw.print(", ");
-				pw.print(mTiltToleranceConfig[i][1]);
-				pw.print("]");
-			}
-			pw.println("]");
-		}
-		
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		}
-		
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			if (!mEnabled)
-				return;
-			
-			// Somehow a couple of devices have crashed due to either event or event.sensor being null.
-			// The below error handling code will hopefully provide enough information to fix the crashes.
-			if (event == null)
-				throw new RuntimeException("Sensor event is null");
-			if (event.sensor == null) {
-				StringBuilder error = new StringBuilder("Event didn't specify which sensor it was for.\n");
-				
-				error.append("timestamp = ");
-				error.append(event.timestamp);
-				error.append("\n");
-				
-				error.append("values = ");
-				if (event.values == null)
-					error.append("null");
-				else
-					for (int i = 0; i < event.values.length; ++i) {
-						error.append(event.values[i]);
-						if (i != event.values.length - 1)
-							error.append(", ");
-					}
-				
-				throw new RuntimeException(error.toString());
-			}
-			
-			//This method will be called a lot, so we only want to do this stuff when necessary.
-			if (event.sensor.getType() != mLastSensorType) {
-				Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
-				
-				if (mSensors.size() > 1) {
-					int currentSensorPriority = prioritisedSensorTypes.indexOf(event.sensor.getType());
-					
-					Iterator<Sensor> iterator = mSensors.iterator();
-					while (iterator.hasNext()) {
-						Sensor registeredSensor = iterator.next();
-						int registeredSensorPriority = prioritisedSensorTypes.indexOf(registeredSensor.getType());
-						
-						if (registeredSensorPriority > currentSensorPriority) {
-							Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + stringify(registeredSensor));
-							mSensorManager.unregisterListener(mOrientationJudge, registeredSensor);
-							iterator.remove();
-						}
-					}
-				}
-				
-				mLastSensorType = event.sensor.getType();
-			}
-			
-			boolean gotBadSensorData = false;
-			int proposedRotation;
-			int oldProposedRotation;
-			
-			synchronized (mLock) {
-				mGotSensorEvent = true;
-				
-				if (event.sensor.getType() == SENSOR_TYPE_DEVICE_ORIENTATION) {
-					int sensorValue = (int) event.values[0];
-					
-					// This sensor isn't exposed through the Android SDK, so it's possible its implementation will change in the future.
-					if (sensorValue < -1 || sensorValue > 3) {
-						Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from device orientation sensor: " + sensorValue);
-						gotBadSensorData = true;
-						oldProposedRotation = mProposedRotation;
-						proposedRotation = mProposedRotation;
-					}
-					else {
-						oldProposedRotation = mProposedRotation;
-						mProposedRotation = sensorValue;
-						proposedRotation = mProposedRotation;
-					}
-				}
-				else if (event.sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION) {
-					int sensorValue = (int) event.values[0];
-					
-					// This is a custom vendor-specific, so we can't guarantee it will work the way we expect.
-					if ((sensorValue < 0 || sensorValue > 3) && sensorValue != 255) {
-						Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from Samsung device orientation sensor: " + sensorValue);
-						gotBadSensorData = true;
-						oldProposedRotation = mProposedRotation;
-						proposedRotation = mProposedRotation;
-					}
-					else {
-						oldProposedRotation = mProposedRotation;
-						// The Samsung device orientation sensor uses 255 for "unknown".
-						mProposedRotation = sensorValue == 255 ? -1 : sensorValue;
-						proposedRotation = mProposedRotation;
-					}
-				}
-				else {
-					// The vector given in the SensorEvent points straight up (towards the sky) under
-					// ideal conditions (the phone is not accelerating).  I'll call this up vector
-					// elsewhere.
-					float x = event.values[ACCELEROMETER_DATA_X];
-					float y = event.values[ACCELEROMETER_DATA_Y];
-					float z = event.values[ACCELEROMETER_DATA_Z];
-					
-					if (LOG) {
-						Slog.v(TAG, "Raw acceleration vector: "
-							+ "x=" + x + ", y=" + y + ", z=" + z
-							+ ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
-					}
-					
-					// Apply a low-pass filter to the acceleration up vector in cartesian space.
-					// Reset the orientation listener state if the samples are too far apart in time
-					// or when we see values of (0, 0, 0) which indicates that we polled the
-					// accelerometer too soon after turning it on and we don't have any data yet.
-					final long now = event.timestamp;
-					final long then = mLastFilteredTimestampNanos;
-					final float timeDeltaMS = (now - then) * 0.000001f;
-					final boolean skipSample;
-					if (now < then
-						|| now > then + MAX_FILTER_DELTA_TIME_NANOS
-						|| (x == 0 && y == 0 && z == 0)) {
-						if (LOG) {
-							Slog.v(TAG, "Resetting orientation listener.");
-						}
-						resetLocked(true /* clearCurrentRotation */);
-						skipSample = true;
-					} else {
-						final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
-						x = alpha * (x - mLastFilteredX) + mLastFilteredX;
-						y = alpha * (y - mLastFilteredY) + mLastFilteredY;
-						z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
-						if (LOG) {
-							Slog.v(TAG, "Filtered acceleration vector: "
-								+ "x=" + x + ", y=" + y + ", z=" + z
-								+ ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
-						}
-						skipSample = false;
-					}
-					mLastFilteredTimestampNanos = now;
-					mLastFilteredX = x;
-					mLastFilteredY = y;
-					mLastFilteredZ = z;
-					
-					boolean isAccelerating = false;
-					boolean isFlat = false;
-					boolean isSwinging = false;
-					if (!skipSample) {
-						// Calculate the magnitude of the acceleration vector.
-						final float magnitude = (float) Math.sqrt(x * x + y * y + z * z);
-						if (magnitude < NEAR_ZERO_MAGNITUDE) {
-							if (LOG) {
-								Slog.v(TAG, "Ignoring sensor data, magnitude too close to zero.");
-							}
-							clearPredictedRotationLocked();
-						} else {
-							// Determine whether the device appears to be undergoing external
-							// acceleration.
-							if (isAcceleratingLocked(magnitude)) {
-								isAccelerating = true;
-								mAccelerationTimestampNanos = now;
-							}
-							
-							// Calculate the tilt angle.
-							// This is the angle between the up vector and the x-y plane (the plane of
-							// the screen) in a range of [-90, 90] degrees.
-							//   -90 degrees: screen horizontal and facing the ground (overhead)
-							//     0 degrees: screen vertical
-							//    90 degrees: screen horizontal and facing the sky (on table)
-							final int tiltAngle = (int) Math.round(
-								Math.asin(z / magnitude) * RADIANS_TO_DEGREES);
-							addTiltHistoryEntryLocked(now, tiltAngle);
-							
-							// Determine whether the device appears to be flat or swinging.
-							if (isFlatLocked(now)) {
-								isFlat = true;
-								mFlatTimestampNanos = now;
-							}
-							if (isSwingingLocked(now, tiltAngle)) {
-								isSwinging = true;
-								mSwingTimestampNanos = now;
-							}
-							
-							// If the tilt angle is too close to horizontal then we cannot determine
-							// the orientation angle of the screen.
-							if (tiltAngle <= TILT_OVERHEAD_ENTER) {
-								mOverhead = true;
-							} else if (tiltAngle >= TILT_OVERHEAD_EXIT) {
-								mOverhead = false;
-							}
-							if (mOverhead) {
-								if (LOG) {
-									Slog.v(TAG, "Ignoring sensor data, device is overhead: "
-										+ "tiltAngle=" + tiltAngle);
-								}
-								clearPredictedRotationLocked();
-							} else if (Math.abs(tiltAngle) > MAX_TILT) {
-								if (LOG) {
-									Slog.v(TAG, "Ignoring sensor data, tilt angle too high: "
-										+ "tiltAngle=" + tiltAngle);
-								}
-								clearPredictedRotationLocked();
-							} else {
-								// Calculate the orientation angle.
-								// This is the angle between the x-y projection of the up vector onto
-								// the +y-axis, increasing clockwise in a range of [0, 360] degrees.
-								int orientationAngle = (int) Math.round(
-									-Math.atan2(-x, y) * RADIANS_TO_DEGREES);
-								if (orientationAngle < 0) {
-									// atan2 returns [-180, 180]; normalize to [0, 360]
-									orientationAngle += 360;
-								}
-								
-								// Find the nearest rotation.
-								int nearestRotation = (orientationAngle + 45) / 90;
-								if (nearestRotation == 4) {
-									nearestRotation = 0;
-								}
-								
-								// Determine the predicted orientation.
-								if (isTiltAngleAcceptableLocked(nearestRotation, tiltAngle)
-									&& isOrientationAngleAcceptableLocked(nearestRotation,
-									orientationAngle)) {
-									updatePredictedRotationLocked(now, nearestRotation);
-									if (LOG) {
-										Slog.v(TAG, "Predicted: "
-											+ "tiltAngle=" + tiltAngle
-											+ ", orientationAngle=" + orientationAngle
-											+ ", predictedRotation=" + mPredictedRotation
-											+ ", predictedRotationAgeMS="
-											+ ((now - mPredictedRotationTimestampNanos)
-											* 0.000001f));
-									}
-								} else {
-									if (LOG) {
-										Slog.v(TAG, "Ignoring sensor data, no predicted rotation: "
-											+ "tiltAngle=" + tiltAngle
-											+ ", orientationAngle=" + orientationAngle);
-									}
-									clearPredictedRotationLocked();
-								}
-							}
-						}
-					}
-					mFlat = isFlat;
-					mSwinging = isSwinging;
-					mAccelerating = isAccelerating;
-					
-					// Determine new proposed rotation.
-					oldProposedRotation = mProposedRotation;
-					if (mPredictedRotation < 0 || isPredictedRotationAcceptableLocked(now)) {
-						mProposedRotation = mPredictedRotation;
-					}
-					proposedRotation = mProposedRotation;
-					
-					// Write final statistics about where we are in the orientation detection process.
-					if (LOG) {
-						Slog.v(TAG, "Result: currentRotation=" + mCurrentRotation
-							+ ", proposedRotation=" + proposedRotation
-							+ ", predictedRotation=" + mPredictedRotation
-							+ ", timeDeltaMS=" + timeDeltaMS
-							+ ", isAccelerating=" + isAccelerating
-							+ ", isFlat=" + isFlat
-							+ ", isSwinging=" + isSwinging
-							+ ", isOverhead=" + mOverhead
-							+ ", isTouched=" + mTouched
-							+ ", timeUntilSettledMS=" + remainingMS(now,
-							mPredictedRotationTimestampNanos + PROPOSAL_SETTLE_TIME_NANOS)
-							+ ", timeUntilAccelerationDelayExpiredMS=" + remainingMS(now,
-							mAccelerationTimestampNanos + PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS)
-							+ ", timeUntilFlatDelayExpiredMS=" + remainingMS(now,
-							mFlatTimestampNanos + PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS)
-							+ ", timeUntilSwingDelayExpiredMS=" + remainingMS(now,
-							mSwingTimestampNanos + PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS)
-							+ ", timeUntilTouchDelayExpiredMS=" + remainingMS(now,
-							mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS));
-					}
-				}
-			}
-			
-			if (gotBadSensorData) {
-				Log.w(WindowOrientationListener.class.getSimpleName(), "Forgetting this sensor and restarting since it produced bad data: " + stringify(event.sensor));
-				disable();
-				
-				if (!prioritisedSensorTypes.remove((Object) event.sensor.getType()))
-					throw new RuntimeException("Couldn't remove bad sensor type");
-				
-				mSensors = getSupportedSensors(mSensorManager);
-				enable();
-				return;
-			}
-			
-			// Tell the listener.
-			if (proposedRotation != oldProposedRotation) {
-				if (LOG) {
-					Slog.v(TAG, "Proposed rotation changed!  proposedRotation=" + proposedRotation
-						+ ", oldProposedRotation=" + oldProposedRotation);
-				}
-				onProposedRotationChanged(proposedRotation);
-			}
-		}
-		
-		@Override
-		public void onTouchStartLocked() {
-			mTouched = true;
-		}
-		
-		@Override
-		public void onTouchEndLocked(long whenElapsedNanos) {
-			mTouched = false;
-			mTouchEndedTimestampNanos = whenElapsedNanos;
-		}
-		
-		@Override
-		public void resetLocked(boolean clearCurrentRotation) {
-			mLastFilteredTimestampNanos = Long.MIN_VALUE;
-			if (clearCurrentRotation) {
-				mProposedRotation = -2;
-			}
-			mFlatTimestampNanos = Long.MIN_VALUE;
-			mFlat = false;
-			mSwingTimestampNanos = Long.MIN_VALUE;
-			mSwinging = false;
-			mAccelerationTimestampNanos = Long.MIN_VALUE;
-			mAccelerating = false;
-			mOverhead = false;
-			clearPredictedRotationLocked();
-			clearTiltHistoryLocked();
-		}
-		
-		
-		/**
-		 * Returns true if the tilt angle is acceptable for a given predicted rotation.
-		 */
-		private boolean isTiltAngleAcceptableLocked(int rotation, int tiltAngle) {
-			return tiltAngle >= mTiltToleranceConfig[rotation][0]
-				&& tiltAngle <= mTiltToleranceConfig[rotation][1];
-		}
-		
-		/**
-		 * Returns true if the orientation angle is acceptable for a given predicted rotation.
-		 *
-		 * This function takes into account the gap between adjacent orientations
-		 * for hysteresis.
-		 */
-		private boolean isOrientationAngleAcceptableLocked(int rotation, int orientationAngle) {
-			// If there is no current rotation, then there is no gap.
-			// The gap is used only to introduce hysteresis among advertised orientation
-			// changes to avoid flapping.
-			final int currentRotation = mCurrentRotation;
-			if (currentRotation >= 0) {
-				// If the specified rotation is the same or is counter-clockwise adjacent
-				// to the current rotation, then we set a lower bound on the orientation angle.
-				// For example, if currentRotation is ROTATION_0 and proposed is ROTATION_90,
-				// then we want to check orientationAngle > 45 + GAP / 2.
-				if (rotation == currentRotation
-					|| rotation == (currentRotation + 1) % 4) {
-					int lowerBound = rotation * 90 - 45
-						+ ADJACENT_ORIENTATION_ANGLE_GAP / 2;
-					if (rotation == 0) {
-						if (orientationAngle >= 315 && orientationAngle < lowerBound + 360) {
-							return false;
-						}
-					} else {
-						if (orientationAngle < lowerBound) {
-							return false;
-						}
-					}
-				}
-				
-				// If the specified rotation is the same or is clockwise adjacent,
-				// then we set an upper bound on the orientation angle.
-				// For example, if currentRotation is ROTATION_0 and rotation is ROTATION_270,
-				// then we want to check orientationAngle < 315 - GAP / 2.
-				if (rotation == currentRotation
-					|| rotation == (currentRotation + 3) % 4) {
-					int upperBound = rotation * 90 + 45
-						- ADJACENT_ORIENTATION_ANGLE_GAP / 2;
-					if (rotation == 0) {
-						if (orientationAngle <= 45 && orientationAngle > upperBound) {
-							return false;
-						}
-					} else {
-						if (orientationAngle > upperBound) {
-							return false;
-						}
-					}
-				}
-			}
-			return true;
-		}
-		
-		/**
-		 * Returns true if the predicted rotation is ready to be advertised as a
-		 * proposed rotation.
-		 */
-		private boolean isPredictedRotationAcceptableLocked(long now) {
-			// The predicted rotation must have settled long enough.
-			if (now < mPredictedRotationTimestampNanos + PROPOSAL_SETTLE_TIME_NANOS) {
-				return false;
-			}
-			
-			// The last flat state (time since picked up) must have been sufficiently long ago.
-			if (now < mFlatTimestampNanos + PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS) {
-				return false;
-			}
-			
-			// The last swing state (time since last movement to put down) must have been
-			// sufficiently long ago.
-			if (now < mSwingTimestampNanos + PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS) {
-				return false;
-			}
-			
-			// The last acceleration state must have been sufficiently long ago.
-			if (now < mAccelerationTimestampNanos
-				+ PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS) {
-				return false;
-			}
-			
-			// The last touch must have ended sufficiently long ago.
-			if (mTouched || now < mTouchEndedTimestampNanos
-				+ PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS) {
-				return false;
-			}
-			
-			// Looks good!
-			return true;
-		}
-		
-		private void clearPredictedRotationLocked() {
-			mPredictedRotation = -1;
-			mPredictedRotationTimestampNanos = Long.MIN_VALUE;
-		}
-		
-		private void updatePredictedRotationLocked(long now, int rotation) {
-			if (mPredictedRotation != rotation) {
-				mPredictedRotation = rotation;
-				mPredictedRotationTimestampNanos = now;
-			}
-		}
-		
-		private boolean isAcceleratingLocked(float magnitude) {
-			return magnitude < MIN_ACCELERATION_MAGNITUDE
-				|| magnitude > MAX_ACCELERATION_MAGNITUDE;
-		}
-		
-		private void clearTiltHistoryLocked() {
-			mTiltHistoryTimestampNanos[0] = Long.MIN_VALUE;
-			mTiltHistoryIndex = 1;
-		}
-		
-		private void addTiltHistoryEntryLocked(long now, float tilt) {
-			mTiltHistory[mTiltHistoryIndex] = tilt;
-			mTiltHistoryTimestampNanos[mTiltHistoryIndex] = now;
-			mTiltHistoryIndex = (mTiltHistoryIndex + 1) % TILT_HISTORY_SIZE;
-			mTiltHistoryTimestampNanos[mTiltHistoryIndex] = Long.MIN_VALUE;
-		}
-		
-		private boolean isFlatLocked(long now) {
-			for (int i = mTiltHistoryIndex; (i = nextTiltHistoryIndexLocked(i)) >= 0; ) {
-				if (mTiltHistory[i] < FLAT_ANGLE) {
-					break;
-				}
-				if (mTiltHistoryTimestampNanos[i] + FLAT_TIME_NANOS <= now) {
-					// Tilt has remained greater than FLAT_TILT_ANGLE for FLAT_TIME_NANOS.
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		private boolean isSwingingLocked(long now, float tilt) {
-			for (int i = mTiltHistoryIndex; (i = nextTiltHistoryIndexLocked(i)) >= 0; ) {
-				if (mTiltHistoryTimestampNanos[i] + SWING_TIME_NANOS < now) {
-					break;
-				}
-				if (mTiltHistory[i] + SWING_AWAY_ANGLE_DELTA <= tilt) {
-					// Tilted away by SWING_AWAY_ANGLE_DELTA within SWING_TIME_NANOS.
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		private int nextTiltHistoryIndexLocked(int index) {
-			index = (index == 0 ? TILT_HISTORY_SIZE : index) - 1;
-			return mTiltHistoryTimestampNanos[index] != Long.MIN_VALUE ? index : -1;
-		}
-		
-		private float getLastTiltLocked() {
-			int index = nextTiltHistoryIndexLocked(mTiltHistoryIndex);
-			return index >= 0 ? mTiltHistory[index] : Float.NaN;
-		}
-		
-		private float remainingMS(long now, long until) {
-			return now >= until ? 0 : (until - now) * 0.000001f;
-		}
-	}
-	
-	final class OrientationSensorJudge extends OrientationJudge {
-		private boolean mTouching;
-		private long mTouchEndedTimestampNanos = Long.MIN_VALUE;
-		private int mProposedRotation = -1;
-		private int mDesiredRotation = -1;
-		private boolean mRotationEvaluationScheduled;
-		
-		@Override
-		public int getProposedRotationLocked() {
-			return mProposedRotation;
-		}
-		
-		@Override
-		public void onTouchStartLocked() {
-			mTouching = true;
-		}
-		
-		@Override
-		public void onTouchEndLocked(long whenElapsedNanos) {
-			mTouching = false;
-			mTouchEndedTimestampNanos = whenElapsedNanos;
-			if (mDesiredRotation != mProposedRotation) {
-				final long now = SystemClock.elapsedRealtimeNanos();
-				scheduleRotationEvaluationIfNecessaryLocked(now);
-			}
-		}
-		
-		
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			int newRotation;
-			synchronized (mLock) {
-				mDesiredRotation = (int) event.values[0];
-				newRotation = evaluateRotationChangeLocked();
-			}
-			
-			onProposedRotationChanged(newRotation);
-		}
-		
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) { }
-		
-		@Override
-		public void dumpLocked(PrintWriter pw, String prefix) {
-			pw.println(prefix + "OrientationSensorJudge");
-			prefix += "  ";
-			pw.println(prefix + "mDesiredRotation=" + AndroidSurfaceRotation.name(mDesiredRotation));
-			pw.println(prefix + "mProposedRotation=" + AndroidSurfaceRotation.name(mProposedRotation));
-			pw.println(prefix + "mTouching=" + mTouching);
-			pw.println(prefix + "mTouchEndedTimestampNanos=" + mTouchEndedTimestampNanos);
-		}
-		
-		@Override
-		public void resetLocked(boolean clearCurrentRotation) {
-			if (clearCurrentRotation) {
-				mProposedRotation = -1;
-				mDesiredRotation = -1;
-			}
-			mTouching = false;
-			mTouchEndedTimestampNanos = Long.MIN_VALUE;
-			unscheduleRotationEvaluationLocked();
-		}
-		
-		public int evaluateRotationChangeLocked() {
-			unscheduleRotationEvaluationLocked();
-			if (mDesiredRotation == mProposedRotation) {
-				return -1;
-			}
-			final long now = SystemClock.elapsedRealtimeNanos();
-			if (isDesiredRotationAcceptableLocked(now)) {
-				mProposedRotation = mDesiredRotation;
-				return mProposedRotation;
-			} else {
-				scheduleRotationEvaluationIfNecessaryLocked(now);
-			}
-			return -1;
-		}
-		
-		private boolean isDesiredRotationAcceptableLocked(long now) {
-			if (mTouching) {
-				return false;
-			}
-			if (now < mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS) {
-				return false;
-			}
-			return true;
-		}
-		
-		private void scheduleRotationEvaluationIfNecessaryLocked(long now) {
-			if (mRotationEvaluationScheduled || mDesiredRotation == mProposedRotation) {
-				if (LOG) {
-					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
-						"ignoring, an evaluation is already scheduled or is unnecessary.");
-				}
-				return;
-			}
-			if (mTouching) {
-				if (LOG) {
-					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
-						"ignoring, user is still touching the screen.");
-				}
-				return;
-			}
-			long timeOfNextPossibleRotationNanos =
-				mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS;
-			if (now >= timeOfNextPossibleRotationNanos) {
-				if (LOG) {
-					Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
-						"ignoring, already past the next possible time of rotation.");
-				}
-				return;
-			}
-			// Use a delay instead of an absolute time since handlers are in uptime millis and we
-			// use elapsed realtime.
-			final long delayMs =
-				(long) Math.ceil((timeOfNextPossibleRotationNanos - now) * MILLIS_PER_NANO);
-			mHandler.postDelayed(mRotationEvaluator, delayMs);
-			mRotationEvaluationScheduled = true;
-		}
-		
-		private void unscheduleRotationEvaluationLocked() {
-			if (!mRotationEvaluationScheduled) {
-				return;
-			}
-			mHandler.removeCallbacks(mRotationEvaluator);
-			mRotationEvaluationScheduled = false;
-		}
-		
-		private Runnable mRotationEvaluator = new Runnable() {
-			@Override
-			public void run() {
-				int newRotation;
-				synchronized (mLock) {
-					mRotationEvaluationScheduled = false;
-					newRotation = evaluateRotationChangeLocked();
-				}
-				
-				onProposedRotationChanged(newRotation);
-			}
-		};
-	}
+        };
+        
+        // Timestamp and value of the last accelerometer sample.
+        private long mLastFilteredTimestampNanos;
+        private float mLastFilteredX, mLastFilteredY, mLastFilteredZ;
+        
+        // The last proposed rotation, -2 if never proposed, -1 if unknown.
+        private int mProposedRotation;
+        
+        // Value of the current predicted rotation, -1 if unknown.
+        private int mPredictedRotation;
+        
+        // Timestamp of when the predicted rotation most recently changed.
+        private long mPredictedRotationTimestampNanos;
+        
+        // Timestamp when the device last appeared to be flat for sure (the flat delay elapsed).
+        private long mFlatTimestampNanos;
+        private boolean mFlat;
+        
+        // Timestamp when the device last appeared to be swinging.
+        private long mSwingTimestampNanos;
+        private boolean mSwinging;
+        
+        // Timestamp when the device last appeared to be undergoing external acceleration.
+        private long mAccelerationTimestampNanos;
+        private boolean mAccelerating;
+        
+        // Timestamp when the last touch to the touch screen ended
+        private long mTouchEndedTimestampNanos = Long.MIN_VALUE;
+        private boolean mTouched;
+        
+        // Whether we are locked into an overhead usage mode.
+        private boolean mOverhead;
+        
+        // History of observed tilt angles.
+        private static final int TILT_HISTORY_SIZE = 200;
+        private float[] mTiltHistory = new float[TILT_HISTORY_SIZE];
+        private long[] mTiltHistoryTimestampNanos = new long[TILT_HISTORY_SIZE];
+        private int mTiltHistoryIndex;
+        
+        public AccelSensorJudge(Context context) {
+            
+            // Load tilt tolerance configuration.
+            return; //Don't have access to system config
+        }
+        
+        @Override
+        public int getProposedRotationLocked() {
+            return mProposedRotation;
+        }
+        
+        @Override
+        public void dumpLocked(PrintWriter pw, String prefix) {
+            pw.println(prefix + "AccelSensorJudge");
+            prefix += "  ";
+            pw.println(prefix + "mProposedRotation=" + mProposedRotation);
+            pw.println(prefix + "mPredictedRotation=" + mPredictedRotation);
+            pw.println(prefix + "mLastFilteredX=" + mLastFilteredX);
+            pw.println(prefix + "mLastFilteredY=" + mLastFilteredY);
+            pw.println(prefix + "mLastFilteredZ=" + mLastFilteredZ);
+            final long delta = SystemClock.elapsedRealtimeNanos() - mLastFilteredTimestampNanos;
+            pw.println(prefix + "mLastFilteredTimestampNanos=" + mLastFilteredTimestampNanos
+                + " (" + (delta * 0.000001f) + "ms ago)");
+            pw.println(prefix + "mTiltHistory={last: " + getLastTiltLocked() + "}");
+            pw.println(prefix + "mFlat=" + mFlat);
+            pw.println(prefix + "mSwinging=" + mSwinging);
+            pw.println(prefix + "mAccelerating=" + mAccelerating);
+            pw.println(prefix + "mOverhead=" + mOverhead);
+            pw.println(prefix + "mTouched=" + mTouched);
+            pw.print(prefix + "mTiltToleranceConfig=[");
+            for (int i = 0; i < 4; i++) {
+                if (i != 0) {
+                    pw.print(", ");
+                }
+                pw.print("[");
+                pw.print(mTiltToleranceConfig[i][0]);
+                pw.print(", ");
+                pw.print(mTiltToleranceConfig[i][1]);
+                pw.print("]");
+            }
+            pw.println("]");
+        }
+        
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+        
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (!mEnabled)
+                return;
+            
+            // Somehow a couple of devices have crashed due to either event or event.sensor being null.
+            // The below error handling code will hopefully provide enough information to fix the crashes.
+            if (event == null)
+                throw new RuntimeException("Sensor event is null");
+            if (event.sensor == null) {
+                StringBuilder error = new StringBuilder("Event didn't specify which sensor it was for.\n");
+                
+                error.append("timestamp = ");
+                error.append(event.timestamp);
+                error.append("\n");
+                
+                error.append("values = ");
+                if (event.values == null)
+                    error.append("null");
+                else
+                    for (int i = 0; i < event.values.length; ++i) {
+                        error.append(event.values[i]);
+                        if (i != event.values.length - 1)
+                            error.append(", ");
+                    }
+                
+                throw new RuntimeException(error.toString());
+            }
+            
+            //This method will be called a lot, so we only want to do this stuff when necessary.
+            if (event.sensor.getType() != mLastSensorType) {
+                Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
+                
+                if (mSensors.size() > 1) {
+                    int currentSensorPriority = prioritisedSensorTypes.indexOf(event.sensor.getType());
+                    
+                    Iterator<Sensor> iterator = mSensors.iterator();
+                    while (iterator.hasNext()) {
+                        Sensor registeredSensor = iterator.next();
+                        int registeredSensorPriority = prioritisedSensorTypes.indexOf(registeredSensor.getType());
+                        
+                        if (registeredSensorPriority > currentSensorPriority) {
+                            Log.i(WindowOrientationListener.TAG, "Unregistering lower priority sensor: " + stringify(registeredSensor));
+                            mSensorManager.unregisterListener(mOrientationJudge, registeredSensor);
+                            iterator.remove();
+                        }
+                    }
+                }
+                
+                mLastSensorType = event.sensor.getType();
+            }
+            
+            boolean gotBadSensorData = false;
+            int proposedRotation;
+            int oldProposedRotation;
+            
+            synchronized (mLock) {
+                mGotSensorEvent = true;
+                
+                if (event.sensor.getType() == SENSOR_TYPE_DEVICE_ORIENTATION) {
+                    int sensorValue = (int) event.values[0];
+                    
+                    // This sensor isn't exposed through the Android SDK, so it's possible its implementation will change in the future.
+                    if (sensorValue < -1 || sensorValue > 3) {
+                        Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from device orientation sensor: " + sensorValue);
+                        gotBadSensorData = true;
+                        oldProposedRotation = mProposedRotation;
+                        proposedRotation = mProposedRotation;
+                    }
+                    else {
+                        oldProposedRotation = mProposedRotation;
+                        mProposedRotation = sensorValue;
+                        proposedRotation = mProposedRotation;
+                    }
+                }
+                else if (event.sensor.getType() == SENSOR_TYPE_SAMSUNG_DEVICE_ORIENTATION) {
+                    int sensorValue = (int) event.values[0];
+                    
+                    // This is a custom vendor-specific, so we can't guarantee it will work the way we expect.
+                    if ((sensorValue < 0 || sensorValue > 3) && sensorValue != 255) {
+                        Log.w(WindowOrientationListener.class.getSimpleName(), "Got unrecognised sensor value from Samsung device orientation sensor: " + sensorValue);
+                        gotBadSensorData = true;
+                        oldProposedRotation = mProposedRotation;
+                        proposedRotation = mProposedRotation;
+                    }
+                    else {
+                        oldProposedRotation = mProposedRotation;
+                        // The Samsung device orientation sensor uses 255 for "unknown".
+                        mProposedRotation = sensorValue == 255 ? -1 : sensorValue;
+                        proposedRotation = mProposedRotation;
+                    }
+                }
+                else {
+                    // The vector given in the SensorEvent points straight up (towards the sky) under
+                    // ideal conditions (the phone is not accelerating).  I'll call this up vector
+                    // elsewhere.
+                    float x = event.values[ACCELEROMETER_DATA_X];
+                    float y = event.values[ACCELEROMETER_DATA_Y];
+                    float z = event.values[ACCELEROMETER_DATA_Z];
+                    
+                    if (LOG) {
+                        Slog.v(TAG, "Raw acceleration vector: "
+                            + "x=" + x + ", y=" + y + ", z=" + z
+                            + ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
+                    }
+                    
+                    // Apply a low-pass filter to the acceleration up vector in cartesian space.
+                    // Reset the orientation listener state if the samples are too far apart in time
+                    // or when we see values of (0, 0, 0) which indicates that we polled the
+                    // accelerometer too soon after turning it on and we don't have any data yet.
+                    final long now = event.timestamp;
+                    final long then = mLastFilteredTimestampNanos;
+                    final float timeDeltaMS = (now - then) * 0.000001f;
+                    final boolean skipSample;
+                    if (now < then
+                        || now > then + MAX_FILTER_DELTA_TIME_NANOS
+                        || (x == 0 && y == 0 && z == 0)) {
+                        if (LOG) {
+                            Slog.v(TAG, "Resetting orientation listener.");
+                        }
+                        resetLocked(true /* clearCurrentRotation */);
+                        skipSample = true;
+                    } else {
+                        final float alpha = timeDeltaMS / (FILTER_TIME_CONSTANT_MS + timeDeltaMS);
+                        x = alpha * (x - mLastFilteredX) + mLastFilteredX;
+                        y = alpha * (y - mLastFilteredY) + mLastFilteredY;
+                        z = alpha * (z - mLastFilteredZ) + mLastFilteredZ;
+                        if (LOG) {
+                            Slog.v(TAG, "Filtered acceleration vector: "
+                                + "x=" + x + ", y=" + y + ", z=" + z
+                                + ", magnitude=" + Math.sqrt(x * x + y * y + z * z));
+                        }
+                        skipSample = false;
+                    }
+                    mLastFilteredTimestampNanos = now;
+                    mLastFilteredX = x;
+                    mLastFilteredY = y;
+                    mLastFilteredZ = z;
+                    
+                    boolean isAccelerating = false;
+                    boolean isFlat = false;
+                    boolean isSwinging = false;
+                    if (!skipSample) {
+                        // Calculate the magnitude of the acceleration vector.
+                        final float magnitude = (float) Math.sqrt(x * x + y * y + z * z);
+                        if (magnitude < NEAR_ZERO_MAGNITUDE) {
+                            if (LOG) {
+                                Slog.v(TAG, "Ignoring sensor data, magnitude too close to zero.");
+                            }
+                            clearPredictedRotationLocked();
+                        } else {
+                            // Determine whether the device appears to be undergoing external
+                            // acceleration.
+                            if (isAcceleratingLocked(magnitude)) {
+                                isAccelerating = true;
+                                mAccelerationTimestampNanos = now;
+                            }
+                            
+                            // Calculate the tilt angle.
+                            // This is the angle between the up vector and the x-y plane (the plane of
+                            // the screen) in a range of [-90, 90] degrees.
+                            //   -90 degrees: screen horizontal and facing the ground (overhead)
+                            //     0 degrees: screen vertical
+                            //    90 degrees: screen horizontal and facing the sky (on table)
+                            final int tiltAngle = (int) Math.round(
+                                Math.asin(z / magnitude) * RADIANS_TO_DEGREES);
+                            addTiltHistoryEntryLocked(now, tiltAngle);
+                            
+                            // Determine whether the device appears to be flat or swinging.
+                            if (isFlatLocked(now)) {
+                                isFlat = true;
+                                mFlatTimestampNanos = now;
+                            }
+                            if (isSwingingLocked(now, tiltAngle)) {
+                                isSwinging = true;
+                                mSwingTimestampNanos = now;
+                            }
+                            
+                            // If the tilt angle is too close to horizontal then we cannot determine
+                            // the orientation angle of the screen.
+                            if (tiltAngle <= TILT_OVERHEAD_ENTER) {
+                                mOverhead = true;
+                            } else if (tiltAngle >= TILT_OVERHEAD_EXIT) {
+                                mOverhead = false;
+                            }
+                            if (mOverhead) {
+                                if (LOG) {
+                                    Slog.v(TAG, "Ignoring sensor data, device is overhead: "
+                                        + "tiltAngle=" + tiltAngle);
+                                }
+                                clearPredictedRotationLocked();
+                            } else if (Math.abs(tiltAngle) > MAX_TILT) {
+                                if (LOG) {
+                                    Slog.v(TAG, "Ignoring sensor data, tilt angle too high: "
+                                        + "tiltAngle=" + tiltAngle);
+                                }
+                                clearPredictedRotationLocked();
+                            } else {
+                                // Calculate the orientation angle.
+                                // This is the angle between the x-y projection of the up vector onto
+                                // the +y-axis, increasing clockwise in a range of [0, 360] degrees.
+                                int orientationAngle = (int) Math.round(
+                                    -Math.atan2(-x, y) * RADIANS_TO_DEGREES);
+                                if (orientationAngle < 0) {
+                                    // atan2 returns [-180, 180]; normalize to [0, 360]
+                                    orientationAngle += 360;
+                                }
+                                
+                                // Find the nearest rotation.
+                                int nearestRotation = (orientationAngle + 45) / 90;
+                                if (nearestRotation == 4) {
+                                    nearestRotation = 0;
+                                }
+                                
+                                // Determine the predicted orientation.
+                                if (isTiltAngleAcceptableLocked(nearestRotation, tiltAngle)
+                                    && isOrientationAngleAcceptableLocked(nearestRotation,
+                                    orientationAngle)) {
+                                    updatePredictedRotationLocked(now, nearestRotation);
+                                    if (LOG) {
+                                        Slog.v(TAG, "Predicted: "
+                                            + "tiltAngle=" + tiltAngle
+                                            + ", orientationAngle=" + orientationAngle
+                                            + ", predictedRotation=" + mPredictedRotation
+                                            + ", predictedRotationAgeMS="
+                                            + ((now - mPredictedRotationTimestampNanos)
+                                            * 0.000001f));
+                                    }
+                                } else {
+                                    if (LOG) {
+                                        Slog.v(TAG, "Ignoring sensor data, no predicted rotation: "
+                                            + "tiltAngle=" + tiltAngle
+                                            + ", orientationAngle=" + orientationAngle);
+                                    }
+                                    clearPredictedRotationLocked();
+                                }
+                            }
+                        }
+                    }
+                    mFlat = isFlat;
+                    mSwinging = isSwinging;
+                    mAccelerating = isAccelerating;
+                    
+                    // Determine new proposed rotation.
+                    oldProposedRotation = mProposedRotation;
+                    if (mPredictedRotation < 0 || isPredictedRotationAcceptableLocked(now)) {
+                        mProposedRotation = mPredictedRotation;
+                    }
+                    proposedRotation = mProposedRotation;
+                    
+                    // Write final statistics about where we are in the orientation detection process.
+                    if (LOG) {
+                        Slog.v(TAG, "Result: currentRotation=" + mCurrentRotation
+                            + ", proposedRotation=" + proposedRotation
+                            + ", predictedRotation=" + mPredictedRotation
+                            + ", timeDeltaMS=" + timeDeltaMS
+                            + ", isAccelerating=" + isAccelerating
+                            + ", isFlat=" + isFlat
+                            + ", isSwinging=" + isSwinging
+                            + ", isOverhead=" + mOverhead
+                            + ", isTouched=" + mTouched
+                            + ", timeUntilSettledMS=" + remainingMS(now,
+                            mPredictedRotationTimestampNanos + PROPOSAL_SETTLE_TIME_NANOS)
+                            + ", timeUntilAccelerationDelayExpiredMS=" + remainingMS(now,
+                            mAccelerationTimestampNanos + PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS)
+                            + ", timeUntilFlatDelayExpiredMS=" + remainingMS(now,
+                            mFlatTimestampNanos + PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS)
+                            + ", timeUntilSwingDelayExpiredMS=" + remainingMS(now,
+                            mSwingTimestampNanos + PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS)
+                            + ", timeUntilTouchDelayExpiredMS=" + remainingMS(now,
+                            mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS));
+                    }
+                }
+            }
+            
+            if (gotBadSensorData) {
+                Log.w(WindowOrientationListener.class.getSimpleName(), "Forgetting this sensor and restarting since it produced bad data: " + stringify(event.sensor));
+                disable();
+                
+                if (!prioritisedSensorTypes.remove((Object) event.sensor.getType()))
+                    throw new RuntimeException("Couldn't remove bad sensor type");
+                
+                mSensors = getSupportedSensors(mSensorManager);
+                enable();
+                return;
+            }
+            
+            // Tell the listener.
+            if (proposedRotation != oldProposedRotation) {
+                if (LOG) {
+                    Slog.v(TAG, "Proposed rotation changed!  proposedRotation=" + proposedRotation
+                        + ", oldProposedRotation=" + oldProposedRotation);
+                }
+                onProposedRotationChanged(proposedRotation);
+            }
+        }
+        
+        @Override
+        public void onTouchStartLocked() {
+            mTouched = true;
+        }
+        
+        @Override
+        public void onTouchEndLocked(long whenElapsedNanos) {
+            mTouched = false;
+            mTouchEndedTimestampNanos = whenElapsedNanos;
+        }
+        
+        @Override
+        public void resetLocked(boolean clearCurrentRotation) {
+            mLastFilteredTimestampNanos = Long.MIN_VALUE;
+            if (clearCurrentRotation) {
+                mProposedRotation = -2;
+            }
+            mFlatTimestampNanos = Long.MIN_VALUE;
+            mFlat = false;
+            mSwingTimestampNanos = Long.MIN_VALUE;
+            mSwinging = false;
+            mAccelerationTimestampNanos = Long.MIN_VALUE;
+            mAccelerating = false;
+            mOverhead = false;
+            clearPredictedRotationLocked();
+            clearTiltHistoryLocked();
+        }
+        
+        
+        /**
+         * Returns true if the tilt angle is acceptable for a given predicted rotation.
+         */
+        private boolean isTiltAngleAcceptableLocked(int rotation, int tiltAngle) {
+            return tiltAngle >= mTiltToleranceConfig[rotation][0]
+                && tiltAngle <= mTiltToleranceConfig[rotation][1];
+        }
+        
+        /**
+         * Returns true if the orientation angle is acceptable for a given predicted rotation.
+         *
+         * This function takes into account the gap between adjacent orientations
+         * for hysteresis.
+         */
+        private boolean isOrientationAngleAcceptableLocked(int rotation, int orientationAngle) {
+            // If there is no current rotation, then there is no gap.
+            // The gap is used only to introduce hysteresis among advertised orientation
+            // changes to avoid flapping.
+            final int currentRotation = mCurrentRotation;
+            if (currentRotation >= 0) {
+                // If the specified rotation is the same or is counter-clockwise adjacent
+                // to the current rotation, then we set a lower bound on the orientation angle.
+                // For example, if currentRotation is ROTATION_0 and proposed is ROTATION_90,
+                // then we want to check orientationAngle > 45 + GAP / 2.
+                if (rotation == currentRotation
+                    || rotation == (currentRotation + 1) % 4) {
+                    int lowerBound = rotation * 90 - 45
+                        + ADJACENT_ORIENTATION_ANGLE_GAP / 2;
+                    if (rotation == 0) {
+                        if (orientationAngle >= 315 && orientationAngle < lowerBound + 360) {
+                            return false;
+                        }
+                    } else {
+                        if (orientationAngle < lowerBound) {
+                            return false;
+                        }
+                    }
+                }
+                
+                // If the specified rotation is the same or is clockwise adjacent,
+                // then we set an upper bound on the orientation angle.
+                // For example, if currentRotation is ROTATION_0 and rotation is ROTATION_270,
+                // then we want to check orientationAngle < 315 - GAP / 2.
+                if (rotation == currentRotation
+                    || rotation == (currentRotation + 3) % 4) {
+                    int upperBound = rotation * 90 + 45
+                        - ADJACENT_ORIENTATION_ANGLE_GAP / 2;
+                    if (rotation == 0) {
+                        if (orientationAngle <= 45 && orientationAngle > upperBound) {
+                            return false;
+                        }
+                    } else {
+                        if (orientationAngle > upperBound) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        
+        /**
+         * Returns true if the predicted rotation is ready to be advertised as a
+         * proposed rotation.
+         */
+        private boolean isPredictedRotationAcceptableLocked(long now) {
+            // The predicted rotation must have settled long enough.
+            if (now < mPredictedRotationTimestampNanos + PROPOSAL_SETTLE_TIME_NANOS) {
+                return false;
+            }
+            
+            // The last flat state (time since picked up) must have been sufficiently long ago.
+            if (now < mFlatTimestampNanos + PROPOSAL_MIN_TIME_SINCE_FLAT_ENDED_NANOS) {
+                return false;
+            }
+            
+            // The last swing state (time since last movement to put down) must have been
+            // sufficiently long ago.
+            if (now < mSwingTimestampNanos + PROPOSAL_MIN_TIME_SINCE_SWING_ENDED_NANOS) {
+                return false;
+            }
+            
+            // The last acceleration state must have been sufficiently long ago.
+            if (now < mAccelerationTimestampNanos
+                + PROPOSAL_MIN_TIME_SINCE_ACCELERATION_ENDED_NANOS) {
+                return false;
+            }
+            
+            // The last touch must have ended sufficiently long ago.
+            if (mTouched || now < mTouchEndedTimestampNanos
+                + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS) {
+                return false;
+            }
+            
+            // Looks good!
+            return true;
+        }
+        
+        private void clearPredictedRotationLocked() {
+            mPredictedRotation = -1;
+            mPredictedRotationTimestampNanos = Long.MIN_VALUE;
+        }
+        
+        private void updatePredictedRotationLocked(long now, int rotation) {
+            if (mPredictedRotation != rotation) {
+                mPredictedRotation = rotation;
+                mPredictedRotationTimestampNanos = now;
+            }
+        }
+        
+        private boolean isAcceleratingLocked(float magnitude) {
+            return magnitude < MIN_ACCELERATION_MAGNITUDE
+                || magnitude > MAX_ACCELERATION_MAGNITUDE;
+        }
+        
+        private void clearTiltHistoryLocked() {
+            mTiltHistoryTimestampNanos[0] = Long.MIN_VALUE;
+            mTiltHistoryIndex = 1;
+        }
+        
+        private void addTiltHistoryEntryLocked(long now, float tilt) {
+            mTiltHistory[mTiltHistoryIndex] = tilt;
+            mTiltHistoryTimestampNanos[mTiltHistoryIndex] = now;
+            mTiltHistoryIndex = (mTiltHistoryIndex + 1) % TILT_HISTORY_SIZE;
+            mTiltHistoryTimestampNanos[mTiltHistoryIndex] = Long.MIN_VALUE;
+        }
+        
+        private boolean isFlatLocked(long now) {
+            for (int i = mTiltHistoryIndex; (i = nextTiltHistoryIndexLocked(i)) >= 0; ) {
+                if (mTiltHistory[i] < FLAT_ANGLE) {
+                    break;
+                }
+                if (mTiltHistoryTimestampNanos[i] + FLAT_TIME_NANOS <= now) {
+                    // Tilt has remained greater than FLAT_TILT_ANGLE for FLAT_TIME_NANOS.
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private boolean isSwingingLocked(long now, float tilt) {
+            for (int i = mTiltHistoryIndex; (i = nextTiltHistoryIndexLocked(i)) >= 0; ) {
+                if (mTiltHistoryTimestampNanos[i] + SWING_TIME_NANOS < now) {
+                    break;
+                }
+                if (mTiltHistory[i] + SWING_AWAY_ANGLE_DELTA <= tilt) {
+                    // Tilted away by SWING_AWAY_ANGLE_DELTA within SWING_TIME_NANOS.
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private int nextTiltHistoryIndexLocked(int index) {
+            index = (index == 0 ? TILT_HISTORY_SIZE : index) - 1;
+            return mTiltHistoryTimestampNanos[index] != Long.MIN_VALUE ? index : -1;
+        }
+        
+        private float getLastTiltLocked() {
+            int index = nextTiltHistoryIndexLocked(mTiltHistoryIndex);
+            return index >= 0 ? mTiltHistory[index] : Float.NaN;
+        }
+        
+        private float remainingMS(long now, long until) {
+            return now >= until ? 0 : (until - now) * 0.000001f;
+        }
+    }
+    
+    final class OrientationSensorJudge extends OrientationJudge {
+        private boolean mTouching;
+        private long mTouchEndedTimestampNanos = Long.MIN_VALUE;
+        private int mProposedRotation = -1;
+        private int mDesiredRotation = -1;
+        private boolean mRotationEvaluationScheduled;
+        
+        @Override
+        public int getProposedRotationLocked() {
+            return mProposedRotation;
+        }
+        
+        @Override
+        public void onTouchStartLocked() {
+            mTouching = true;
+        }
+        
+        @Override
+        public void onTouchEndLocked(long whenElapsedNanos) {
+            mTouching = false;
+            mTouchEndedTimestampNanos = whenElapsedNanos;
+            if (mDesiredRotation != mProposedRotation) {
+                final long now = SystemClock.elapsedRealtimeNanos();
+                scheduleRotationEvaluationIfNecessaryLocked(now);
+            }
+        }
+        
+        
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int newRotation;
+            synchronized (mLock) {
+                mDesiredRotation = (int) event.values[0];
+                newRotation = evaluateRotationChangeLocked();
+            }
+            
+            onProposedRotationChanged(newRotation);
+        }
+        
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+        
+        @Override
+        public void dumpLocked(PrintWriter pw, String prefix) {
+            pw.println(prefix + "OrientationSensorJudge");
+            prefix += "  ";
+            pw.println(prefix + "mDesiredRotation=" + AndroidSurfaceRotation.name(mDesiredRotation));
+            pw.println(prefix + "mProposedRotation=" + AndroidSurfaceRotation.name(mProposedRotation));
+            pw.println(prefix + "mTouching=" + mTouching);
+            pw.println(prefix + "mTouchEndedTimestampNanos=" + mTouchEndedTimestampNanos);
+        }
+        
+        @Override
+        public void resetLocked(boolean clearCurrentRotation) {
+            if (clearCurrentRotation) {
+                mProposedRotation = -1;
+                mDesiredRotation = -1;
+            }
+            mTouching = false;
+            mTouchEndedTimestampNanos = Long.MIN_VALUE;
+            unscheduleRotationEvaluationLocked();
+        }
+        
+        public int evaluateRotationChangeLocked() {
+            unscheduleRotationEvaluationLocked();
+            if (mDesiredRotation == mProposedRotation) {
+                return -1;
+            }
+            final long now = SystemClock.elapsedRealtimeNanos();
+            if (isDesiredRotationAcceptableLocked(now)) {
+                mProposedRotation = mDesiredRotation;
+                return mProposedRotation;
+            } else {
+                scheduleRotationEvaluationIfNecessaryLocked(now);
+            }
+            return -1;
+        }
+        
+        private boolean isDesiredRotationAcceptableLocked(long now) {
+            if (mTouching) {
+                return false;
+            }
+            if (now < mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS) {
+                return false;
+            }
+            return true;
+        }
+        
+        private void scheduleRotationEvaluationIfNecessaryLocked(long now) {
+            if (mRotationEvaluationScheduled || mDesiredRotation == mProposedRotation) {
+                if (LOG) {
+                    Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+                        "ignoring, an evaluation is already scheduled or is unnecessary.");
+                }
+                return;
+            }
+            if (mTouching) {
+                if (LOG) {
+                    Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+                        "ignoring, user is still touching the screen.");
+                }
+                return;
+            }
+            long timeOfNextPossibleRotationNanos =
+                mTouchEndedTimestampNanos + PROPOSAL_MIN_TIME_SINCE_TOUCH_END_NANOS;
+            if (now >= timeOfNextPossibleRotationNanos) {
+                if (LOG) {
+                    Slog.d(TAG, "scheduleRotationEvaluationLocked: " +
+                        "ignoring, already past the next possible time of rotation.");
+                }
+                return;
+            }
+            // Use a delay instead of an absolute time since handlers are in uptime millis and we
+            // use elapsed realtime.
+            final long delayMs =
+                (long) Math.ceil((timeOfNextPossibleRotationNanos - now) * MILLIS_PER_NANO);
+            mHandler.postDelayed(mRotationEvaluator, delayMs);
+            mRotationEvaluationScheduled = true;
+        }
+        
+        private void unscheduleRotationEvaluationLocked() {
+            if (!mRotationEvaluationScheduled) {
+                return;
+            }
+            mHandler.removeCallbacks(mRotationEvaluator);
+            mRotationEvaluationScheduled = false;
+        }
+        
+        private Runnable mRotationEvaluator = new Runnable() {
+            @Override
+            public void run() {
+                int newRotation;
+                synchronized (mLock) {
+                    mRotationEvaluationScheduled = false;
+                    newRotation = evaluateRotationChangeLocked();
+                }
+                
+                onProposedRotationChanged(newRotation);
+            }
+        };
+    }
 }

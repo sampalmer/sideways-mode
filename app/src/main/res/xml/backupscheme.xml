@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-	<include domain="sharedpref" path="samuelpalmer.sensorautorotation_preferences.xml"/>
+    <include domain="sharedpref" path="samuelpalmer.sensorautorotation_preferences.xml"/>
 </full-backup-content>

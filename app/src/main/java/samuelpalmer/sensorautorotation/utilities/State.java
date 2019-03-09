@@ -2,35 +2,35 @@ package samuelpalmer.sensorautorotation.utilities;
 
 
 public abstract class State {
-	private boolean started;
+    private boolean started;
 
-	public void ensureStarted() {
-		if (!started) {
-			start();
-			started = true;
-		}
-	}
+    public void ensureStarted() {
+        if (!started) {
+            start();
+            started = true;
+        }
+    }
 
-	public void ensureStopped() {
-		if (started) {
-			stop();
-			started = false;
-		}
-	}
+    public void ensureStopped() {
+        if (started) {
+            stop();
+            started = false;
+        }
+    }
 
-	public boolean isStarted() {
-		return started;
-	}
+    public boolean isStarted() {
+        return started;
+    }
 
-	/**
-	 * Throws an exception if {@link #isStarted()} is {@code false}
-	 */
-	protected void verifyStarted() {
-		if (!isStarted())
-			throw new RuntimeException("Not started");
-	}
+    /**
+     * Throws an exception if {@link #isStarted()} is {@code false}
+     */
+    protected void verifyStarted() {
+        if (!isStarted())
+            throw new RuntimeException("Not started");
+    }
 
-	protected abstract void start();
+    protected abstract void start();
 
-	protected abstract void stop();
+    protected abstract void stop();
 }

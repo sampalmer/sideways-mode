@@ -19,112 +19,112 @@ import java.util.Set;
  */
 public class ApplicationCommand {
 
-	public static final String ACTION_LEFT_SIDE = "left_side";
-	public static final String ACTION_RIGHT_SIDE = "right_side";
-	public static final String ACTION_TURN_OFF = "turn_off";
-	public static final String ACTION_CLEAR_ERROR = "clear_error";
-	public static final String ACTION_SYNC_CONFIG = "sync_config";
+    public static final String ACTION_LEFT_SIDE = "left_side";
+    public static final String ACTION_RIGHT_SIDE = "right_side";
+    public static final String ACTION_TURN_OFF = "turn_off";
+    public static final String ACTION_CLEAR_ERROR = "clear_error";
+    public static final String ACTION_SYNC_CONFIG = "sync_config";
 
-	private static final String EXTRA_CONFIG = "config";
+    private static final String EXTRA_CONFIG = "config";
 
-	private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
-			ACTION_LEFT_SIDE,
-			ACTION_RIGHT_SIDE,
-			ACTION_TURN_OFF,
-			ACTION_CLEAR_ERROR,
-			ACTION_SYNC_CONFIG
-	));
-	
-	public final String action;
-	@Nullable public final Config config;
+    private static final HashSet<String> knownActions = new HashSet<>(Arrays.asList(
+            ACTION_LEFT_SIDE,
+            ACTION_RIGHT_SIDE,
+            ACTION_TURN_OFF,
+            ACTION_CLEAR_ERROR,
+            ACTION_SYNC_CONFIG
+    ));
+    
+    public final String action;
+    @Nullable public final Config config;
 
-	public ApplicationCommand(String action) {
-		this(action, (Config)null);
-	}
+    public ApplicationCommand(String action) {
+        this(action, (Config)null);
+    }
 
-	/**
-	 * @param applicationSettings If specified, the app setting values will be included in the command for synchronisation with the service settings.
-	 */
-	public ApplicationCommand(String action, SharedPreferences applicationSettings) {
-		this(
-			action,
-			new Config(applicationSettings)
-		);
-	}
+    /**
+     * @param applicationSettings If specified, the app setting values will be included in the command for synchronisation with the service settings.
+     */
+    public ApplicationCommand(String action, SharedPreferences applicationSettings) {
+        this(
+            action,
+            new Config(applicationSettings)
+        );
+    }
 
-	private ApplicationCommand(String action, @Nullable Config config) {
-		if (action == null || !knownActions.contains(action))
-			throw new IllegalArgumentException("Unknown action: " + action);
+    private ApplicationCommand(String action, @Nullable Config config) {
+        if (action == null || !knownActions.contains(action))
+            throw new IllegalArgumentException("Unknown action: " + action);
 
-		this.action = action;
-		this.config = config;
-	}
+        this.action = action;
+        this.config = config;
+    }
 
-	public ApplicationCommand(Intent intent) {
-		this(
-			intent.getAction(),
-			Config.fromBundle(intent.getBundleExtra(EXTRA_CONFIG))
-		);
-	}
+    public ApplicationCommand(Intent intent) {
+        this(
+            intent.getAction(),
+            Config.fromBundle(intent.getBundleExtra(EXTRA_CONFIG))
+        );
+    }
 
-	public void send(Context context) {
-		Intent intent = asIntent(context);
-		context.sendBroadcast(intent);
-	}
-	
-	public Intent asIntent(Context context) {
-		// Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
-		Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
-		if (config != null)
-			result.putExtra(EXTRA_CONFIG, config.asBundle());
+    public void send(Context context) {
+        Intent intent = asIntent(context);
+        context.sendBroadcast(intent);
+    }
+    
+    public Intent asIntent(Context context) {
+        // Not using startService() to deliver commands in case that was the cause of Android having multiple simultaneous instances of the service.
+        Intent result = new Intent(context, ApplicationCommandReceiver.class).setAction(action);
+        if (config != null)
+            result.putExtra(EXTRA_CONFIG, config.asBundle());
 
-		BroadcastKillFix.apply(result);
-		return result;
-	}
+        BroadcastKillFix.apply(result);
+        return result;
+    }
 
-	public static final class Config {
-		public final Set<String> incompatibleAppPackages;
+    public static final class Config {
+        public final Set<String> incompatibleAppPackages;
 
-		public static boolean isSyncableAppSetting(String appSettingKey) {
-			return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
-		}
+        public static boolean isSyncableAppSetting(String appSettingKey) {
+            return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+        }
 
-		private Config(SharedPreferences applicationSettings) {
-			this(
-				applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
-			);
-		}
+        private Config(SharedPreferences applicationSettings) {
+            this(
+                applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
+            );
+        }
 
-		private Config(Set<String> incompatibleAppPackages) {
-			this.incompatibleAppPackages = incompatibleAppPackages;
-			if (incompatibleAppPackages == null)
-				throw new IllegalArgumentException("incompatibleAppPackages is null");
-		}
+        private Config(Set<String> incompatibleAppPackages) {
+            this.incompatibleAppPackages = incompatibleAppPackages;
+            if (incompatibleAppPackages == null)
+                throw new IllegalArgumentException("incompatibleAppPackages is null");
+        }
 
-		private static @Nullable Config fromBundle(@Nullable Bundle bundle) {
-			if (bundle == null)
-				return null;
+        private static @Nullable Config fromBundle(@Nullable Bundle bundle) {
+            if (bundle == null)
+                return null;
 
-			return new Config(
-				getIncompatibleAppPackages(bundle)
-			);
-		}
+            return new Config(
+                getIncompatibleAppPackages(bundle)
+            );
+        }
 
-		private static Set<String> getIncompatibleAppPackages(Bundle bundle) {
-			String[] array = bundle.getStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
-			if (array == null)
-				return null;
+        private static Set<String> getIncompatibleAppPackages(Bundle bundle) {
+            String[] array = bundle.getStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+            if (array == null)
+                return null;
 
-			HashSet<String> result = new HashSet<>(array.length);
-			Collections.addAll(result, array);
-			return result;
-		}
+            HashSet<String> result = new HashSet<>(array.length);
+            Collections.addAll(result, array);
+            return result;
+        }
 
-		private Bundle asBundle() {
-			Bundle result = new Bundle();
-			result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
-			return result;
-		}
-	}
-	
+        private Bundle asBundle() {
+            Bundle result = new Bundle();
+            result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
+            return result;
+        }
+    }
+    
 }

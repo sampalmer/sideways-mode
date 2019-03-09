@@ -19,257 +19,257 @@ import android.widget.RemoteViews;
 @SuppressWarnings({"UnusedReturnValue", "ClassWithTooManyMethods", "WeakerAccess"})
 public class NotificationBuilderCompat {
 
-	public static NotificationBuilderCompat create(Context context) {
-		NotificationBuilderCompat result;
+    public static NotificationBuilderCompat create(Context context) {
+        NotificationBuilderCompat result;
 
-		if (Build.VERSION.SDK_INT >= 26)
-			result = new V26();
-		else if (VERSION.SDK_INT >= 24)
-			result = new V24();
-		else if (Build.VERSION.SDK_INT >= 23)
-			result = new V23();
-		else if (Build.VERSION.SDK_INT >= 21)
-			result = new V21();
-		else if (Build.VERSION.SDK_INT >= 17)
-			result = new V17();
-		else if (Build.VERSION.SDK_INT >= 16)
-			result = new V16();
-		else
-			result = new NotificationBuilderCompat();
-		
-		result.setContext(context);
-		
-		return result;
-	}
-	
-	protected Context context;
-	protected Notification.Builder builder;
-	
-	protected void setContext(Context context) {
-		this.context = context;
-		
-		//noinspection deprecation
-		this.builder = new Notification.Builder(context);
-	}
+        if (Build.VERSION.SDK_INT >= 26)
+            result = new V26();
+        else if (VERSION.SDK_INT >= 24)
+            result = new V24();
+        else if (Build.VERSION.SDK_INT >= 23)
+            result = new V23();
+        else if (Build.VERSION.SDK_INT >= 21)
+            result = new V21();
+        else if (Build.VERSION.SDK_INT >= 17)
+            result = new V17();
+        else if (Build.VERSION.SDK_INT >= 16)
+            result = new V16();
+        else
+            result = new NotificationBuilderCompat();
+        
+        result.setContext(context);
+        
+        return result;
+    }
+    
+    protected Context context;
+    protected Notification.Builder builder;
+    
+    protected void setContext(Context context) {
+        this.context = context;
+        
+        //noinspection deprecation
+        this.builder = new Notification.Builder(context);
+    }
 
-	public NotificationBuilderCompat setSmallIcon(int icon) {
-		builder.setSmallIcon(icon);
-		return this;
-	}
+    public NotificationBuilderCompat setSmallIcon(int icon) {
+        builder.setSmallIcon(icon);
+        return this;
+    }
 
-	public NotificationBuilderCompat setContentIntent(PendingIntent intent) {
-		builder.setContentIntent(intent);
-		return this;
-	}
+    public NotificationBuilderCompat setContentIntent(PendingIntent intent) {
+        builder.setContentIntent(intent);
+        return this;
+    }
 
-	public NotificationBuilderCompat setContentTitle(CharSequence title) {
-		builder.setContentTitle(title);
-		return this;
-	}
+    public NotificationBuilderCompat setContentTitle(CharSequence title) {
+        builder.setContentTitle(title);
+        return this;
+    }
 
-	public NotificationBuilderCompat setContentText(CharSequence text) {
-		builder.setContentText(text);
-		return this;
-	}
+    public NotificationBuilderCompat setContentText(CharSequence text) {
+        builder.setContentText(text);
+        return this;
+    }
 
-	public NotificationBuilderCompat setCategory(String category) {
-		return this;
-	}
+    public NotificationBuilderCompat setCategory(String category) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setColor(int argb) {
-		return this;
-	}
+    public NotificationBuilderCompat setColor(int argb) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setVisibility(int visibility) {
-		return this;
-	}
+    public NotificationBuilderCompat setVisibility(int visibility) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setWhen(long when) {
-		builder.setWhen(when);
-		return this;
-	}
+    public NotificationBuilderCompat setWhen(long when) {
+        builder.setWhen(when);
+        return this;
+    }
 
-	public Notification build() {
-		//noinspection deprecation
-		return builder.getNotification();
-	}
+    public Notification build() {
+        //noinspection deprecation
+        return builder.getNotification();
+    }
 
-	public NotificationBuilderCompat setOnlyAlertOnce(boolean onlyAlertOnce) {
-		builder.setOnlyAlertOnce(onlyAlertOnce);
-		return this;
-	}
+    public NotificationBuilderCompat setOnlyAlertOnce(boolean onlyAlertOnce) {
+        builder.setOnlyAlertOnce(onlyAlertOnce);
+        return this;
+    }
 
-	public NotificationBuilderCompat setPriority(int pri) {
-		return this;
-	}
+    public NotificationBuilderCompat setPriority(int pri) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setShowWhen(boolean show) {
-		return this;
-	}
+    public NotificationBuilderCompat setShowWhen(boolean show) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setAutoCancel(boolean autoCancel) {
-		builder.setAutoCancel(autoCancel);
-		return this;
-	}
-	
-	public NotificationBuilderCompat setDeleteIntent(PendingIntent intent) {
-		builder.setDeleteIntent(intent);
-		return this;
-	}
+    public NotificationBuilderCompat setAutoCancel(boolean autoCancel) {
+        builder.setAutoCancel(autoCancel);
+        return this;
+    }
+    
+    public NotificationBuilderCompat setDeleteIntent(PendingIntent intent) {
+        builder.setDeleteIntent(intent);
+        return this;
+    }
 
-	public NotificationBuilderCompat setTicker(CharSequence tickerText) {
-		builder.setTicker(tickerText);
-		return this;
-	}
+    public NotificationBuilderCompat setTicker(CharSequence tickerText) {
+        builder.setTicker(tickerText);
+        return this;
+    }
 
-	public NotificationBuilderCompat setVibrate(long[] pattern) {
-		//noinspection deprecation
-		builder.setVibrate(pattern);
-		return this;
-	}
+    public NotificationBuilderCompat setVibrate(long[] pattern) {
+        //noinspection deprecation
+        builder.setVibrate(pattern);
+        return this;
+    }
 
-	public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
-		return this;
-	}
+    public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+        return this;
+    }
 
-	public NotificationBuilderCompat setCustomContentView(RemoteViews view) {
-		//noinspection deprecation
-		builder.setContent(view);
-		return this;
-	}
+    public NotificationBuilderCompat setCustomContentView(RemoteViews view) {
+        //noinspection deprecation
+        builder.setContent(view);
+        return this;
+    }
 
-	public RemoteViews createBigContentView() {
-		return null;
-	}
+    public RemoteViews createBigContentView() {
+        return null;
+    }
 
-	public RemoteViews createContentView() {
-		//noinspection deprecation
-		return build().contentView;
-	}
-	
-	public NotificationBuilderCompat setProgress(int max, int progress, boolean indeterminate) {
-		builder.setProgress(max, progress, indeterminate);
-		return this;
-	}
+    public RemoteViews createContentView() {
+        //noinspection deprecation
+        return build().contentView;
+    }
+    
+    public NotificationBuilderCompat setProgress(int max, int progress, boolean indeterminate) {
+        builder.setProgress(max, progress, indeterminate);
+        return this;
+    }
 
-	public NotificationBuilderCompat setChannelId(String channelId) {
-		return this;
-	}
+    public NotificationBuilderCompat setChannelId(String channelId) {
+        return this;
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private static class V16 extends NotificationBuilderCompat
-	{
-		@Override
-		public Notification build() {
-			return builder.build();
-		}
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static class V16 extends NotificationBuilderCompat
+    {
+        @Override
+        public Notification build() {
+            return builder.build();
+        }
 
-		@Override
-		public NotificationBuilderCompat setPriority(int pri) {
-			//noinspection deprecation
-			builder.setPriority(pri);
-			return this;
-		}
+        @Override
+        public NotificationBuilderCompat setPriority(int pri) {
+            //noinspection deprecation
+            builder.setPriority(pri);
+            return this;
+        }
 
-		@Override
-		public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
-			//noinspection deprecation
-			builder.addAction(icon, title, intent);
-			return this;
-		}
+        @Override
+        public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+            //noinspection deprecation
+            builder.addAction(icon, title, intent);
+            return this;
+        }
 
-		@Override
-		public RemoteViews createBigContentView() {
-			//noinspection deprecation
-			return build().bigContentView;
-		}
-	}
+        @Override
+        public RemoteViews createBigContentView() {
+            //noinspection deprecation
+            return build().bigContentView;
+        }
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private static class V17 extends V16
-	{
-		@Override
-		public NotificationBuilderCompat setShowWhen(boolean show) {
-			builder.setShowWhen(show);
-			return this;
-		}
-	}
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private static class V17 extends V16
+    {
+        @Override
+        public NotificationBuilderCompat setShowWhen(boolean show) {
+            builder.setShowWhen(show);
+            return this;
+        }
+    }
 
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	private static class V21 extends V17
-	{
-		@Override
-		public NotificationBuilderCompat setCategory(String category) {
-			builder.setCategory(category);
-			return this;
-		}
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static class V21 extends V17
+    {
+        @Override
+        public NotificationBuilderCompat setCategory(String category) {
+            builder.setCategory(category);
+            return this;
+        }
 
-		@Override
-		public NotificationBuilderCompat setColor(int argb) {
-			builder.setColor(argb);
-			return this;
-		}
+        @Override
+        public NotificationBuilderCompat setColor(int argb) {
+            builder.setColor(argb);
+            return this;
+        }
 
-		@Override
-		public NotificationBuilderCompat setVisibility(int visibility) {
-			builder.setVisibility(visibility);
-			return this;
-		}
-	}
+        @Override
+        public NotificationBuilderCompat setVisibility(int visibility) {
+            builder.setVisibility(visibility);
+            return this;
+        }
+    }
 
-	@TargetApi(VERSION_CODES.M)
-	private static class V23 extends V21
-	{
-		@Override
-		public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
-			builder.addAction(new Action.Builder(Icon.createWithResource(context, icon), title, intent).build());
-			return this;
-		}
-	}
+    @TargetApi(VERSION_CODES.M)
+    private static class V23 extends V21
+    {
+        @Override
+        public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
+            builder.addAction(new Action.Builder(Icon.createWithResource(context, icon), title, intent).build());
+            return this;
+        }
+    }
 
-	@TargetApi(VERSION_CODES.N)
-	private static class V24 extends V23
-	{
-		@Override
-		public NotificationBuilderCompat setCustomContentView(RemoteViews contentView) {
-			builder.setCustomContentView(contentView);
-			return this;
-		}
+    @TargetApi(VERSION_CODES.N)
+    private static class V24 extends V23
+    {
+        @Override
+        public NotificationBuilderCompat setCustomContentView(RemoteViews contentView) {
+            builder.setCustomContentView(contentView);
+            return this;
+        }
 
-		@Override
-		public RemoteViews createBigContentView() {
-			return builder.createBigContentView();
-		}
+        @Override
+        public RemoteViews createBigContentView() {
+            return builder.createBigContentView();
+        }
 
-		@Override
-		public RemoteViews createContentView() {
-			return builder.createContentView();
-		}
-	}
+        @Override
+        public RemoteViews createContentView() {
+            return builder.createContentView();
+        }
+    }
 
-	@TargetApi(VERSION_CODES.O)
-	private static class V26 extends V24
-	{
-		@Override
-		protected void setContext(Context context) {
-			this.context = context;
-			this.builder = new Notification.Builder(context, null);
-		}
-		
-		@Override
-		public NotificationBuilderCompat setVibrate(long[] pattern) {
-			return this;
-		}
-		
-		@Override
-		public NotificationBuilderCompat setPriority(int pri) {
-			return this;
-		}
-		
-		@Override
-		public NotificationBuilderCompat setChannelId(String channelId) {
-			builder.setChannelId(channelId);
-			return this;
-		}
-	}
+    @TargetApi(VERSION_CODES.O)
+    private static class V26 extends V24
+    {
+        @Override
+        protected void setContext(Context context) {
+            this.context = context;
+            this.builder = new Notification.Builder(context, null);
+        }
+        
+        @Override
+        public NotificationBuilderCompat setVibrate(long[] pattern) {
+            return this;
+        }
+        
+        @Override
+        public NotificationBuilderCompat setPriority(int pri) {
+            return this;
+        }
+        
+        @Override
+        public NotificationBuilderCompat setChannelId(String channelId) {
+            builder.setChannelId(channelId);
+            return this;
+        }
+    }
 }

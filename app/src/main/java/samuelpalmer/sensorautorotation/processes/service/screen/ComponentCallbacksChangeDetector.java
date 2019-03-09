@@ -4,7 +4,6 @@ import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.view.Display;
-
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
@@ -14,45 +13,45 @@ import samuelpalmer.sensorautorotation.values.Orientation;
  * due to limitations of {@link ComponentCallbacks}.
  */
 class ComponentCallbacksChangeDetector implements ScreenRotationMonitor.ChangeDetector {
-	
-	private final Context context;
-	private final ScreenRotationMonitor.Callback callback;
-	private final Display screen;
-	
-	private boolean started;
-	
-	public ComponentCallbacksChangeDetector(Context context, ScreenRotationMonitor.Callback callback, Display screen) {
-		this.context = context;
-		this.callback = callback;
-		this.screen = screen;
-	}
+    
+    private final Context context;
+    private final ScreenRotationMonitor.Callback callback;
+    private final Display screen;
+    
+    private boolean started;
+    
+    public ComponentCallbacksChangeDetector(Context context, ScreenRotationMonitor.Callback callback, Display screen) {
+        this.context = context;
+        this.callback = callback;
+        this.screen = screen;
+    }
 
-	@Override
-	public void start() {
-		started = true;
-		context.registerComponentCallbacks(componentCallbacks);
-	}
+    @Override
+    public void start() {
+        started = true;
+        context.registerComponentCallbacks(componentCallbacks);
+    }
 
-	@Override
-	public void stop() {
-		started = false;
-		context.unregisterComponentCallbacks(componentCallbacks);
-	}
+    @Override
+    public void stop() {
+        started = false;
+        context.unregisterComponentCallbacks(componentCallbacks);
+    }
 
-	@Override
-	public Orientation currentRotation() {
-		return AndroidSurfaceRotation.toOrientationClockwise(screen.getRotation());
-	}
+    @Override
+    public Orientation currentRotation() {
+        return AndroidSurfaceRotation.toOrientationClockwise(screen.getRotation());
+    }
 
-	private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {
-		@Override
-		public void onConfigurationChanged(Configuration newConfig) {
-			if (started)
-				callback.changed();
-		}
+    private final ComponentCallbacks componentCallbacks = new ComponentCallbacks() {
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {
+            if (started)
+                callback.changed();
+        }
 
-		@Override
-		public void onLowMemory() {
-		}
-	};
+        @Override
+        public void onLowMemory() {
+        }
+    };
 }
