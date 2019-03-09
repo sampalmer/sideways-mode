@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class IncompatibleAppsPermissionFragment extends Fragment {
 
-	private static final int REQUEST_CODE_ACCESSIBILITY_SERVICE = 1;
+	private static final int REQUEST_CODE_ACTIVITY_MONITOR = 1;
 
 	private ActivityMonitor activityMonitor;
 	private EventRegistrar enforcementPermissionMonitor;
@@ -76,7 +76,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 					.setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
 					.setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
 						Intent intent = activityMonitor.makeAcquirePermissionIntent();
-						startActivityForResult(intent, REQUEST_CODE_ACCESSIBILITY_SERVICE);
+						startActivityForResult(intent, REQUEST_CODE_ACTIVITY_MONITOR);
 						isGrantingPermission = true;
 					})
 					.show();
@@ -88,7 +88,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_CODE_ACCESSIBILITY_SERVICE) {
+		if (requestCode == REQUEST_CODE_ACTIVITY_MONITOR) {
 			if (activityMonitor.hasPermission())
 				grantOverlayPermission();
 			else {
