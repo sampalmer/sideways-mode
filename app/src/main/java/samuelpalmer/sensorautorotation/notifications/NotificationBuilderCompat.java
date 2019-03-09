@@ -16,7 +16,7 @@ import android.widget.RemoteViews;
  * - setShowWhen() not working on API 17 & 18 (https://issuetracker.google.com/issues/37048073)
  * - createContentView() and createBigContentView() missing (https://issuetracker.google.com/issues/37609039)
  */
-@SuppressWarnings({"UnusedReturnValue", "ClassWithTooManyMethods"})
+@SuppressWarnings({"UnusedReturnValue", "ClassWithTooManyMethods", "WeakerAccess"})
 public class NotificationBuilderCompat {
 
 	public static NotificationBuilderCompat create(Context context) {

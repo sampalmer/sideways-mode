@@ -2,21 +2,16 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import androidx.annotation.Nullable;
+import android.os.*;
 import android.util.Log;
+import androidx.annotation.Nullable;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 /**
  * Provides access to remotely monitor the state of the service.
@@ -36,7 +31,7 @@ public class ApplicationStatusService extends Service {
 		// Using a WeakReference because Android Studio said to do so
 		private final WeakReference<ApplicationStatusService> serviceReference;
 		
-		public ServerHandler(WeakReference<ApplicationStatusService> serviceReference) {
+		private ServerHandler(WeakReference<ApplicationStatusService> serviceReference) {
 			this.serviceReference = serviceReference;
 		}
 		

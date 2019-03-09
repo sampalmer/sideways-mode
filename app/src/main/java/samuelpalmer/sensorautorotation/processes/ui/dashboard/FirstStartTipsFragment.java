@@ -12,6 +12,7 @@ import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+@SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class FirstStartTipsFragment extends Fragment {
 
     private static final String STATE_DIALOG_TOUCHED = "dialogTouched";

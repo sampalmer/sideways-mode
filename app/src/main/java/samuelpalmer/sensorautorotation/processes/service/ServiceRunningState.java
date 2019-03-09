@@ -22,7 +22,6 @@ public class ServiceRunningState extends State {
 	private final OrientationSensorHandler orientationSensorHandler;
 	private final SystemAutoRotationMonitor systemAutoRotationMonitor;
 	private final IncompatibleAppsManager incompatibleAppsManager;
-	private final ActivityMonitor activityMonitor;
 	private final ScreenOrientationUpdater screenUpdater;
 	private final AppDisabler appDisabler;
 	private final DeviceInteractivityMonitor deviceInteractivityMonitor;
@@ -37,7 +36,7 @@ public class ServiceRunningState extends State {
 		lowMemoryDetector = new LowMemoryDetector(service);
 		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
 		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
-		activityMonitor = ActivityMonitor.create(service);
+		ActivityMonitor activityMonitor = ActivityMonitor.create(service);
 		incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor);
 		appDisabler = new AppDisabler(service);
 		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);

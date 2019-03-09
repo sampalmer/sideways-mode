@@ -190,10 +190,10 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	}
 
 	private class Field {
-		public TextInputLayout layout;
-		public TextInputEditText input;
+		private final TextInputLayout layout;
+		private final TextInputEditText input;
 
-		public Field(@IdRes int fieldId) {
+		private Field(@IdRes int fieldId) {
 			layout = findViewById(fieldId);
 			input = (TextInputEditText) layout.getEditText();
 		}

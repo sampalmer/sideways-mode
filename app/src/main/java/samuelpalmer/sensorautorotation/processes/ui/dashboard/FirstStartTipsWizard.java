@@ -27,8 +27,8 @@ class FirstStartTipsWizard {
     private TapTargetView currentTargetView;
     private int currentTipIndex;
 
-    private View disableActivityView;
-    private WindowManager windowManager;
+    private final View disableActivityView;
+    private final WindowManager windowManager;
     private final WindowManager.LayoutParams disableActivityViewParams;
 
     public interface Listener {
@@ -238,7 +238,7 @@ class FirstStartTipsWizard {
         private final TapTarget tapTarget;
         private final String shownPreferenceKey;
 
-        public Tip(TapTarget tapTarget, String shownPreferenceKey) {
+        private Tip(TapTarget tapTarget, String shownPreferenceKey) {
             this.tapTarget = tapTarget;
             this.shownPreferenceKey = shownPreferenceKey;
 

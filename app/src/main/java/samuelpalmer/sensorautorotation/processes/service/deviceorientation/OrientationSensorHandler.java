@@ -6,9 +6,6 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-
-import java.util.ArrayList;
-
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -17,6 +14,8 @@ import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
+
+import java.util.ArrayList;
 
 
 public class OrientationSensorHandler extends State {
@@ -86,7 +85,7 @@ public class OrientationSensorHandler extends State {
 	}
 	
 	private class MyWindowOrientationListener extends WindowOrientationListener {
-		public MyWindowOrientationListener(Context context) {
+		private MyWindowOrientationListener(Context context) {
 			super(context, new Handler(Looper.getMainLooper()));
 		}
 		

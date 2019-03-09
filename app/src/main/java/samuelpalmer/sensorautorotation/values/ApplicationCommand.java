@@ -89,7 +89,7 @@ public class ApplicationCommand {
 			return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
 		}
 
-		public Config(SharedPreferences applicationSettings) {
+		private Config(SharedPreferences applicationSettings) {
 			this(
 				applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
 			);
@@ -101,7 +101,7 @@ public class ApplicationCommand {
 				throw new IllegalArgumentException("incompatibleAppPackages is null");
 		}
 
-		public static @Nullable Config fromBundle(@Nullable Bundle bundle) {
+		private static @Nullable Config fromBundle(@Nullable Bundle bundle) {
 			if (bundle == null)
 				return null;
 
@@ -120,7 +120,7 @@ public class ApplicationCommand {
 			return result;
 		}
 
-		public Bundle asBundle() {
+		private Bundle asBundle() {
 			Bundle result = new Bundle();
 			result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
 			return result;

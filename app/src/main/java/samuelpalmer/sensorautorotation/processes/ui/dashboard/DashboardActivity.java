@@ -13,7 +13,7 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
-    public DashboardDialogFragment dashboardDialog;
+    private DashboardDialogFragment dashboardDialog;
     private SharedPreferences applicationSettings;
 
     @Override

@@ -22,6 +22,7 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 /**
  * The main content of the dashboard. This fragment requires the application status to be available.
  */
+@SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardNormalFragment extends Fragment {
 
 	private StatusChangeListener parentStatusListener;
@@ -107,7 +108,7 @@ public class DashboardNormalFragment extends Fragment {
 		private final String action;
 		private final boolean isStartCommand;
 
-		public ActionClickListener(String action, boolean isStartCommand) {
+		private ActionClickListener(String action, boolean isStartCommand) {
 			this.action = action;
 			this.isStartCommand = isStartCommand;
 		}

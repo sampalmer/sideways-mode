@@ -5,19 +5,14 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.*;
+import androidx.annotation.RequiresApi;
+import samuelpalmer.sensorautorotation.R;
 
 import java.lang.ref.WeakReference;
-
-import samuelpalmer.sensorautorotation.R;
 
 
 public class CheckedInstalledApp extends LinearLayout {
@@ -100,7 +95,7 @@ public class CheckedInstalledApp extends LinearLayout {
 		// So using a weak reference to get around that.
 		private final WeakReference<CheckedInstalledApp> listItemReference;
 		
-		public ImageLoader(InstalledApp installedApp, WeakReference<CheckedInstalledApp> listItemReference) {
+		private ImageLoader(InstalledApp installedApp, WeakReference<CheckedInstalledApp> listItemReference) {
 			this.installedApp = installedApp;
 			this.listItemReference = listItemReference;
 		}

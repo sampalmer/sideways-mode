@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -42,9 +41,10 @@ public class MessageDialogActivity extends DialogActivity {
 			MessageDialogFragment.newInstance(extras).show(getSupportFragmentManager(), TAG);
 	}
 
+	@SuppressWarnings("WeakerAccess") // Because fragments must be public
 	public static class MessageDialogFragment extends AppCompatDialogFragment {
 
-		public static MessageDialogFragment newInstance(Bundle args) {
+		private static MessageDialogFragment newInstance(Bundle args) {
 			MessageDialogFragment frag = new MessageDialogFragment();
 			frag.setArguments(args);
 			return frag;

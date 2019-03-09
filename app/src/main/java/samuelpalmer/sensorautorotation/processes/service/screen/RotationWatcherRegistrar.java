@@ -175,7 +175,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 	
 	public static class RotationWatcherNotSupportedException extends RuntimeException {
 
-		public RotationWatcherNotSupportedException(Exception inner) {
+		private RotationWatcherNotSupportedException(Exception inner) {
 			super(inner);
 		}
 		public RotationWatcherNotSupportedException(String message) {

@@ -22,6 +22,7 @@ import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
+@SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
 
 	private EventRegistrar permissionMonitor;

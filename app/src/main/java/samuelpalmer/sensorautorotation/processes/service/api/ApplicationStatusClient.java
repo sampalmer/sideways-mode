@@ -4,18 +4,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import androidx.annotation.Nullable;
+import android.os.*;
 import android.util.Log;
-
-import java.lang.ref.WeakReference;
-
+import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+
+import java.lang.ref.WeakReference;
 
 public class ApplicationStatusClient {
 	
@@ -110,7 +105,7 @@ public class ApplicationStatusClient {
 		
 		private final WeakReference<ApplicationStatusClient> clientReference;
 
-		public ClientHandler(ApplicationStatusClient client) {
+		private ClientHandler(ApplicationStatusClient client) {
 			// Android Studio issued a warning saying that I must use weak references to outside of the handler, hence the use of weak references here
 			this.clientReference = new WeakReference<>(client);
 		}

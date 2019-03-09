@@ -147,10 +147,10 @@ public final class NotificationStyles {
 	}
 	
 	private static class StyleType {
-		public Integer colour;
+		private Integer colour;
 		private final String searchTip;
 
-		public StyleType(String tip) {
+		private StyleType(String tip) {
 			searchTip = tip;
 		}
 	}

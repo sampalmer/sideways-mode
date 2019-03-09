@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.values;
 import android.os.Bundle;
 import android.os.Message;
 import androidx.annotation.Nullable;
-
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
@@ -84,7 +83,7 @@ public class ApplicationStatus {
 			this.waitingForSensor = waitingForSensor;
 		}
 		
-		RunningState(int serialised) {
+		private RunningState(int serialised) {
 			this.userSide = (serialised & 0x1) == 0 ? UserSide.LEFT : UserSide.RIGHT;
 			this.waitingForSensor = (serialised & 0x2) != 0;
 			
@@ -92,7 +91,7 @@ public class ApplicationStatus {
 				throw new IllegalArgumentException("Unknown serialised value: " + serialised);
 		}
 		
-		int serialise() {
+		private int serialise() {
 			return
 				(userSide.equals(UserSide.LEFT) ? 0 : 1)
 				|
