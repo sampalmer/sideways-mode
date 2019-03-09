@@ -1,0 +1,6 @@
+• Improved incompatible app detection by switching from accessibility service to usage data
+• Improved first-run experience
+• Removed uninstall function since it requires an extra permission in Android P
+• Minor improvements to look and feel
+• Upgraded to AndroidX (formerly Android Support Library)
+• Other minor fixes and improvements

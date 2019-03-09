@@ -3,8 +3,10 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activ
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
@@ -70,4 +72,19 @@ public final class AccessibilityServiceActivityMonitor extends ActivityMonitor {
         return context.getString(R.string.permission_needed_accessibility_service_description, appNameFull);
     }
 
+    @Nullable
+    @Override
+    public String makeAcquirePermissionCancelledMessage() {
+        /*
+            On some Android versions, the settings screen won't allow users to enable the accessibility service:
+            On Android 4, the settings screen doesn't care about overlays.
+            On Android 5, it blocks the button press with no explanation.
+            On Android 6, it blocks the button press with a confusing message.
+            On Android 7, it temporarily removes the overlay so the user can press the button.
+         */
+        if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 24)
+            return context.getString(R.string.accessibility_service_cancelled);
+        else
+            return null;
+    }
 }

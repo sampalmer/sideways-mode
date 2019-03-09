@@ -1,7 +1,6 @@
 package android.view;
 
 import android.annotation.SuppressLint;
-
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 
 /**
@@ -12,28 +11,28 @@ import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherR
 @SuppressLint("all")
 public interface IRotationWatcher extends android.os.IInterface
 {
-	public static abstract class Stub extends android.os.Binder implements IRotationWatcher
-	{
-		public Stub()
-		{
-			throw new RotationWatcherNotSupportedException("Didn't load the system implementation");
-		}
+    public static abstract class Stub extends android.os.Binder implements IRotationWatcher
+    {
+        public Stub()
+        {
+            throw new RotationWatcherNotSupportedException("Didn't load the system implementation");
+        }
 
-		public static IRotationWatcher asInterface(android.os.IBinder obj)
-		{
-			return null;
-		}
+        public static IRotationWatcher asInterface(android.os.IBinder obj)
+        {
+            return null;
+        }
 
-		@Override public android.os.IBinder asBinder()
-		{
-			return this;
-		}
+        @Override public android.os.IBinder asBinder()
+        {
+            return this;
+        }
 
-		@Override public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException
-		{
-			return false;
-		}
-	}
+        @Override public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException
+        {
+            return false;
+        }
+    }
 
-	public void onRotationChanged(int rotation) throws android.os.RemoteException;
+    public void onRotationChanged(int rotation) throws android.os.RemoteException;
 }

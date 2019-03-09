@@ -6,31 +6,31 @@ package samuelpalmer.sensorautorotation.utilities.eventhandling;
  */
 public abstract class EventRegistrarAdaptor extends EventRegistrar {
 
-	@Override
-	public void subscribe(EventHandler subscriber) {
-		boolean wasEmpty = !hasSubscriptions();
-		super.subscribe(subscriber);
-		if (wasEmpty)
-			try {
-				subscribeToAdaptee();
-			}
-			catch (Exception ex) {
-				super.unsubscribe(subscriber);
-				throw ex;
-			}
-	}
+    @Override
+    public void subscribe(EventHandler subscriber) {
+        boolean wasEmpty = !hasSubscriptions();
+        super.subscribe(subscriber);
+        if (wasEmpty)
+            try {
+                subscribeToAdaptee();
+            }
+            catch (Exception ex) {
+                super.unsubscribe(subscriber);
+                throw ex;
+            }
+    }
 
-	@Override
-	public void unsubscribe(EventHandler subscriber) {
-		super.unsubscribe(subscriber);
-		if (!hasSubscriptions())
-			unsubscribeFromAdaptee();
-	}
-	
-	/**
-	 * Call {@link #report()} when the adaptee is triggered.
-	 */
-	protected abstract void subscribeToAdaptee();
-	protected abstract void unsubscribeFromAdaptee();
+    @Override
+    public void unsubscribe(EventHandler subscriber) {
+        super.unsubscribe(subscriber);
+        if (!hasSubscriptions())
+            unsubscribeFromAdaptee();
+    }
+    
+    /**
+     * Call {@link #report()} when the adaptee is triggered.
+     */
+    protected abstract void subscribeToAdaptee();
+    protected abstract void unsubscribeFromAdaptee();
 
 }

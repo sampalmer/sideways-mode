@@ -2,9 +2,9 @@
 <!-- These options MUST be specified here in order for the events to be received on first
  start in Android 4.1.1 -->
 <accessibility-service
-	android:accessibilityEventTypes="typeWindowStateChanged"
-	android:accessibilityFeedbackType="feedbackGeneric"
-	android:accessibilityFlags="flagIncludeNotImportantViews"
-	android:description="@string/accessibility_service_description"
-	android:settingsActivity=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-	xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagIncludeNotImportantViews"
+    android:description="@string/accessibility_service_description"
+    android:settingsActivity=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

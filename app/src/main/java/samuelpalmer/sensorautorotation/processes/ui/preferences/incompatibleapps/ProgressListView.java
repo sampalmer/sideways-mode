@@ -5,7 +5,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 class ProgressListView {
-	public ArrayAdapter<InstalledApp> adapter;
-	public ListView list;
-	public ProgressBar progressBar;
+    public ArrayAdapter<InstalledApp> adapter;
+    public ListView list;
+    public ProgressBar progressBar;
 }

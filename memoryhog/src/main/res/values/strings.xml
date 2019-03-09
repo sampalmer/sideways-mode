@@ -1,4 +1,4 @@
 <resources>
-	<string name="app_name">Memory Hog</string>
-	<string name="hogging_memory">Hogging memory</string>
+    <string name="app_name">Memory Hog</string>
+    <string name="hogging_memory">Hogging memory</string>
 </resources>

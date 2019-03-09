@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,7 +15,7 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
-    public DashboardDialogFragment dashboardDialog;
+    private DashboardDialogFragment dashboardDialog;
     private SharedPreferences applicationSettings;
 
     @Override
@@ -63,13 +62,15 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     }
 
     private void onCommandSent(boolean isStartCommand) {
-        // No need to show the user how to turn on the app if they've already done so.
-        boolean turningOnTipShown = applicationSettings.getBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, false);
-        if (!turningOnTipShown)
-            applicationSettings
-                    .edit()
-                    .putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true)
-                    .apply();
+        if (isStartCommand) {
+            // No need to show the user how to turn on the app if they've already done so.
+            boolean turningOnTipShown = applicationSettings.getBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, false);
+            if (!turningOnTipShown)
+                applicationSettings
+                        .edit()
+                        .putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true)
+                        .apply();
+        }
 
         boolean runningInBackgroundTipShown = applicationSettings.getBoolean(ApplicationSettings.KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN, false);
         if (isStartCommand && !runningInBackgroundTipShown) {

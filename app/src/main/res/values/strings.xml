@@ -1,119 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name_full">Sideways Mode</string>
-	<string name="app_name_short">Sideways</string>
+    <string name="app_name_full">Sideways Mode</string>
+    <string name="app_name_short">Sideways</string>
 
-	<!-- Accessibility service -->
-	<!--
-		Requirements according to email from Google Play:
+    <!-- Accessibility service -->
+    <!--
+        Requirements according to email from Google Play:
 
-		If your accessibility app uses accessibility privileges for both accessibility and non-accessibility purposes, you must instead fulfill the below criteria.
+        If your accessibility app uses accessibility privileges for both accessibility and non-accessibility purposes, you must instead fulfill the below criteria.
 
-		• If you use the BIND_ACCESSIBILITY_SERVICE permission in your app for any purpose not relating to, or in addition to, helping users with accessibility needs use Android devices and apps, you must update the android:description element in your accessibility service definition to provide user-facing disclosure of the Accessibility Service API: before asking the user to enable this permission within your app. Your disclosure must meet the following requirements:
-			• In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
-			• For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
-	-->
-	<string name="accessibility_service_description">"Observes when an incompatible app is open while Sideways Mode is on.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an incompatible app is open"</string>
-	<string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
-	<string name="permission_needed_accessibility_service_description">"To see when an incompatible app is open, %1$s needs an accessibility service"</string>
-	<string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
+        • If you use the BIND_ACCESSIBILITY_SERVICE permission in your app for any purpose not relating to, or in addition to, helping users with accessibility needs use Android devices and apps, you must update the android:description element in your accessibility service definition to provide user-facing disclosure of the Accessibility Service API: before asking the user to enable this permission within your app. Your disclosure must meet the following requirements:
+            • In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
+            • For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
+    -->
+    <string name="accessibility_service_description">"Observes when an incompatible app is open while Sideways Mode is on.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an incompatible app is open"</string>
+    <string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
+    <string name="permission_needed_accessibility_service_description">"To see when an incompatible app is open, %1$s needs an accessibility service"</string>
+    <string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
 
-	<!-- Menu -->
-	<string name="action_menu">Menu</string>
-	<string name="action_help">Help</string>
-	<string name="action_report">Report problem</string>
+    <!-- Menu -->
+    <string name="action_menu">Menu</string>
+    <string name="action_help">Help</string>
+    <string name="action_tips">Tips</string>
+    <string name="action_report">Report problem</string>
 
-	<!-- Upgrade -->
-	<string name="upgrade_summary">%1$s upgraded</string>
-	<string name="upgrade_notification_content">Touch for details</string>
-	<string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications isn't supported anymore. If you have them blocked, please unblock them."</string>
+    <!-- Upgrade -->
+    <string name="upgrade_summary">%1$s upgraded</string>
+    <string name="upgrade_notification_content">Touch for details</string>
+    <string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications isn't supported anymore. If you have them blocked, please unblock them."</string>
 
-	<!-- Dashboard -->
-	<string name="user_rotation_left_side">Left side</string>
-	<string name="user_rotation_right_side">Right side</string>
-	<string name="app_disabled_view_error">View error</string>
-	<string name="status_waiting_sensor">Waiting for sensor</string>
-	<string name="action_turn_off">Turn off</string>
-	<string name="quick_setting_mode_name">Sideways mode</string> <!-- Note the different case to the app's name. This is for consistency with other quick setting tiles. -->
+    <!-- Dashboard -->
+    <string name="user_rotation_left_side">Left side</string>
+    <string name="user_rotation_right_side">Right side</string>
+    <string name="app_disabled_view_error">View error</string>
+    <string name="status_waiting_sensor">Waiting for sensor</string>
+    <string name="action_turn_off">Turn off</string>
+    <string name="quick_setting_mode_name">Sideways mode</string> <!-- Note the different case to the app's name. This is for consistency with other quick setting tiles. -->
 
-	<string name="preference_incompatible_apps_title">Incompatible apps</string>
-	<plurals name="preference_incompatible_apps_summary_enabled">
-		<item quantity="one">%d incompatible app</item>
-		<item quantity="other">%d incompatible apps</item>
-	</plurals>
+    <string name="preference_incompatible_apps_title">Incompatible apps</string>
+    <plurals name="preference_incompatible_apps_summary_enabled">
+        <item quantity="one">%d incompatible app</item>
+        <item quantity="other">%d incompatible apps</item>
+    </plurals>
 
-	<string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
-	<string name="preference_choose_apps">Choose incompatible apps</string>
+    <string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
+    <string name="preference_choose_apps">Choose incompatible apps</string>
 
-	<!-- Errors -->
-	<string name="environment_error_message">%1$s %2$s has been turned off.</string>
-	<string name="environment_error_more">More</string>
+    <!-- Errors -->
+    <string name="environment_error_message">%1$s %2$s has been turned off.</string>
+    <string name="environment_error_more">More</string>
 
-	<string name="environment_error_system_rotation_enabled_summary">System rotation turned on</string>
-	<string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was turned on.</string>
+    <string name="environment_error_system_rotation_enabled_summary">System rotation turned on</string>
+    <string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was turned on.</string>
 
-	<string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
-	<string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
-	<string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings. To fix this, open %1$s.</string>
+    <string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
+    <string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
+    <string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings. To fix this, open %1$s.</string>
 
-	<!-- Permissions -->
-	<string name="permission_needed_summary">Permission needed</string>
-	<string name="permission_needed_allow">Allow</string>
+    <!-- Permissions -->
+    <string name="permission_needed_summary">Permission needed</string>
+    <string name="permission_needed_allow">Allow</string>
 
-	<string name="permission_needed_usage_summary">Check app usage?</string>
-	<string name="permission_needed_usage_description">"To see when an incompatible app is open, %1$s needs usage access"</string>
+    <string name="permission_needed_usage_summary">Check app usage?</string>
+    <string name="permission_needed_usage_description">"To see when an incompatible app is open, %1$s needs usage access"</string>
 
-	<string name="permission_needed_overlays_summary">Draw over other apps?</string>
-	<string name="permission_needed_overlays_description">"To change other apps' screen orientations, %1$s needs permission to draw over other apps"</string>
+    <string name="permission_needed_overlays_summary">Draw over other apps?</string>
+    <string name="permission_needed_overlays_description">"To change other apps' screen orientations, %1$s needs permission to draw over other apps"</string>
 
-	<string name="permission_needed_system_settings">To control the screen rotation, %1$s needs permission to change system settings</string>
-	<string name="permission_touch_to_fix">Touch to fix</string>
-	<string name="permissions_needed_tip">To use this feature, some permissions are needed</string>
+    <string name="permission_needed_system_settings">To control the screen rotation, %1$s needs permission to change system settings</string>
+    <string name="permission_touch_to_fix">Touch to fix</string>
+    <string name="permissions_needed_tip">To use this feature, some permissions are needed</string>
 
-	<!-- Instructions -->
-	<string name="instructions_heading">Instructions</string>
+    <!-- Report problem -->
+    <string name="report_problem_reproduce">What did you do?</string>
+    <string name="report_problem_problem">What happened?</string>
+    <string name="report_problem_expected">What did you expect to happen?</string>
+    <string name="report_problem_field_missing">This is required</string>
+    <string name="report_problem_field_wrong">Wrong answer</string>
+    <string name="report_problem_field_too_short">Please provide more information</string>
+    <string name="report_problem_send">Send by email</string>
+    <string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
+    <string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
+    <string name="report_problem_send_with">Send report with</string>
+    <string name="report_problem_confirmation">Discard problem report?</string>
+    <string name="report_problem_discard">Discard</string>
 
-	<string name="instructions_uninstalling_heading">Uninstalling</string>
-	<string name="instructions_uninstalling_contents">To prevent the screen orientation being stuck when you uninstall, turn off %1$s first</string>
+    <!-- Device problem -->
+    <string name="device_problem">Device problem</string>
+    <string name="device_problem_explanation_sensor">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
+    <string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
 
-	<string name="instructions_incompatible_apps_heading">Incompatible Apps</string>
-	<string name="instructions_incompatible_apps_contents">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, use the %2$s feature."</string>
+    <!-- Notification channels -->
+    <string name="notification_channel_controls">Controls</string>
+    <string name="notification_channel_upgrades">Upgrade messages</string>
+    <string name="notification_channel_errors">Error messages</string>
+    <string name="notification_channel_permissions">Permission requests</string>
 
-	<!-- Report problem -->
-	<string name="report_problem_reproduce">What did you do?</string>
-	<string name="report_problem_problem">What happened?</string>
-	<string name="report_problem_expected">What did you expect to happen?</string>
-	<string name="report_problem_field_missing">This is required</string>
-	<string name="report_problem_field_wrong">Wrong answer</string>
-	<string name="report_problem_field_too_short">Please provide more information</string>
-	<string name="report_problem_send">Send by email</string>
-	<string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
-	<string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
-	<string name="report_problem_send_with">Send report with</string>
-	<string name="report_problem_confirmation">Discard problem report?</string>
-	<string name="report_problem_discard">Discard</string>
-
-	<!-- Device problem -->
-	<string name="device_problem">Device problem</string>
-	<string name="device_problem_explanation_sensor">"There's something wrong with your device. It doesn't have a working sensor, so this app won't work."</string>
-	<string name="device_problem_explanation_permission">"This app needs permission to change system settings. Your device doesn't support this, so this app won't work."</string>
-
-	<!-- Notification channels -->
-	<string name="notification_channel_controls">Controls</string>
-	<string name="notification_channel_upgrades">Upgrade messages</string>
-	<string name="notification_channel_errors">Error messages</string>
-	<string name="notification_channel_permissions">Permission requests</string>
-	<string name="notification_channel_tips">Tips</string>
-
-	<!-- Introduction tips -->
-	<string name="tip_turning_on_title">Lying down</string>
-	<string name="tip_turning_on_description">"When you lie down, tell %1$s which side you're on."</string>
+    <!-- Introduction tips -->
+    <string name="intro_tip_side_button_title">Lying down</string>
+    <string name="intro_tip_side_button_description">"When you lie down, tell %1$s which side you're on."</string>
+    <string name="intro_tip_incompatible_apps_title">Use your favourite apps</string>
+    <string name="intro_tip_incompatible_apps_description">"If an app doesn't rotate correctly, add it to %1$s to fix it."</string>
+    <string name="intro_tip_uninstall_title">Don\'t want it?</string>
+    <string name="intro_tip_uninstall_description">"Turn off %1$s before you uninstall it. Otherwise the screen might get stuck."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
-	<string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
-	<string name="tip_uninstalling_title">Uninstalling %1$s?</string>
-	<string name="tip_uninstalling_description">"To make sure the screen doesn't get stuck, turn off %1$s before uninstalling it."</string>
-	<string name="action_got_it">Got it</string>
+    <string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
+    <string name="action_got_it">Got it</string>
 
 	<!-- Onboarding -->
 	<string name="onboarding_get_started">Get started</string>

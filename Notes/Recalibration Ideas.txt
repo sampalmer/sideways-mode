@@ -1,30 +1,30 @@
 Trigger
-	Notification
-		No accidental triggering
-		Requires user to get to notification while screen sideways if already in wrong orientation
-	Small App
-		Doesn't depend on order of notifications
-		Doesn't consume status bar space
-	Hold proximity sensor
-		Accidental triggering
-		Good even when screen and user orientations are mismatched
-	Multiple waves
-		Lowers accidental triggering
-		Could still trigger when scrolling while in landscape
-	Key press (might be possible thanks to Accessibility Service)
+    Notification
+        No accidental triggering
+        Requires user to get to notification while screen sideways if already in wrong orientation
+    Small App
+        Doesn't depend on order of notifications
+        Doesn't consume status bar space
+    Hold proximity sensor
+        Accidental triggering
+        Good even when screen and user orientations are mismatched
+    Multiple waves
+        Lowers accidental triggering
+        Could still trigger when scrolling while in landscape
+    Key press (might be possible thanks to Accessibility Service)
 Release
-	Release proximity sensor
-		Can be awkward to keep sensor covered during phone/user movement
-	Tap screen
-		Less awkward; doesn't require proximity sensor held during recalibration
-		Increases intrusiveness of accidental recalibrations
+    Release proximity sensor
+        Can be awkward to keep sensor covered during phone/user movement
+    Tap screen
+        Less awkward; doesn't require proximity sensor held during recalibration
+        Increases intrusiveness of accidental recalibrations
 Mechanism
-	User-rotatable screenshot (1 finger, pivot about centre)
-		Pros
-			Doesn't rely on accelerometer
-			Works pre- or post-rotate
-		Cons
-			Can only work with own activity or image (not system screenshot)
-	Rotate counterclockwise & clockwise buttons
-		Cons
-			Confusing and unintuitive; some users have trouble thinking this way
+    User-rotatable screenshot (1 finger, pivot about centre)
+        Pros
+            Doesn't rely on accelerometer
+            Works pre- or post-rotate
+        Cons
+            Can only work with own activity or image (not system screenshot)
+    Rotate counterclockwise & clockwise buttons
+        Cons
+            Confusing and unintuitive; some users have trouble thinking this way

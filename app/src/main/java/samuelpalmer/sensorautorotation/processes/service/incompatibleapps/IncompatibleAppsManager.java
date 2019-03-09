@@ -18,44 +18,44 @@ import java.util.Set;
  */
 public class IncompatibleAppsManager extends State {
 
-	private final IncompatibleAppsMonitor monitor;
-	private final SharedPreferences prefs;
-	private final PermissionNotificationManager permissionNotificationManager;
-	
-	public IncompatibleAppsManager(Context context, ActivityMonitor activityMonitor) {
-		permissionNotificationManager = new PermissionNotificationManager(context, activityMonitor);
-		monitor = new IncompatibleAppsMonitor(context, activityMonitor, permissionNotificationManager);
-		prefs = ServiceSettings.getSharedPreferences(context);
-	}
+    private final IncompatibleAppsMonitor monitor;
+    private final SharedPreferences prefs;
+    private final PermissionNotificationManager permissionNotificationManager;
+    
+    public IncompatibleAppsManager(Context context, ActivityMonitor activityMonitor) {
+        permissionNotificationManager = new PermissionNotificationManager(context, activityMonitor);
+        monitor = new IncompatibleAppsMonitor(context, activityMonitor, permissionNotificationManager);
+        prefs = ServiceSettings.getSharedPreferences(context);
+    }
 
-	@Override
-	protected void start() {
-		permissionNotificationManager.ensureStarted();
-		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		
-		updateMonitorState();
-	}
+    @Override
+    protected void start() {
+        permissionNotificationManager.ensureStarted();
+        prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+        
+        updateMonitorState();
+    }
 
-	@Override
-	protected void stop() {
-		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		monitor.ensureStopped();
-		permissionNotificationManager.ensureStopped();
-	}
-	
-	// This must be stored in a field to prevent garbage collection.
-	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
-		if (isStarted() && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
-			updateMonitorState();
-	};
-	
-	private void updateMonitorState() {
-		Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, null);
-		
-		if (incompatibleAppPackages != null && !incompatibleAppPackages.isEmpty())
-			monitor.ensureStarted();
-		else
-			monitor.ensureStopped();
-	}
+    @Override
+    protected void stop() {
+        prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+        monitor.ensureStopped();
+        permissionNotificationManager.ensureStopped();
+    }
+    
+    // This must be stored in a field to prevent garbage collection.
+    private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
+        if (isStarted() && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
+            updateMonitorState();
+    };
+    
+    private void updateMonitorState() {
+        Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, null);
+        
+        if (incompatibleAppPackages != null && !incompatibleAppPackages.isEmpty())
+            monitor.ensureStarted();
+        else
+            monitor.ensureStopped();
+    }
 
 }

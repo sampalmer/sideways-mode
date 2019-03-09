@@ -12,15 +12,15 @@
 # Add any project specific keep options here:
 
 -keepclassmembers interface android.view.IRotationWatcher {
-	public *;
+    public *;
 }
 
 -keepclassmembers class android.view.IRotationWatcher$Stub {
-	public *;
+    public *;
 }
 
 -keepclassmembers class android.support.v7.view.menu.MenuBuilder {
-	void setOptionalIconsVisible(boolean);
+    void setOptionalIconsVisible(boolean);
 }
 
 # If your project uses WebView with JS, uncomment the following

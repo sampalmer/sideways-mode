@@ -2,245 +2,230 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="samuelpalmer.sensorautorotation"
-		android:installLocation="internalOnly">
+        android:installLocation="internalOnly">
 
-	<!-- To disable system rotation, set user rotation -->
-	<uses-permission android:name="android.permission.WRITE_SETTINGS"
-		tools:ignore="ProtectedPermissions" />
+    <!-- To disable system rotation, set user rotation -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
-	<!-- For the screen orientation enforcement overlay -->
-	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- For the screen orientation enforcement overlay -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-	<!-- To prevent Android from stopping the app while it is running -->
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- To prevent Android from stopping the app while it is running -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-	<!-- To detect the currently open app for the app compatibility feature -->
-	<!--suppress DeprecatedClassUsageInspection -->
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
+    <!-- To detect the currently open app for the app compatibility feature -->
+    <!--suppress DeprecatedClassUsageInspection -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
 
-	<uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
+    <uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
-	<uses-feature
-		android:name="android.hardware.sensor.accelerometer"
-		android:required="true" />
-	<uses-feature
-		android:name="android.hardware.sensor.gyroscope"
-	    android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="false" />
 
-	<uses-feature
-		android:name="android.hardware.screen.landscape"
-		android:required="true" />
-	<uses-feature
-		android:name="android.hardware.screen.portrait"
-		android:required="true" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="true" />
 
-	<!--
-		Not sure if the below will work correctly, but I'm trying to declare to Google Play Store
-		that this app is designed for both low-RAM and normal devices.
-	-->
-	<uses-feature
-		android:name="android.hardware.ram.low"
-	    android:required="false" />
-	<uses-feature
-		android:name="android.hardware.ram.normal"
-	    android:required="false" />
+    <!--
+        Not sure if the below will work correctly, but I'm trying to declare to Google Play Store
+        that this app is designed for both low-RAM and normal devices.
+    -->
+    <uses-feature
+        android:name="android.hardware.ram.low"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.ram.normal"
+        android:required="false" />
 
 
-	<application
-		android:name=".CurrentProcess"
-		android:allowBackup="true"
-		android:icon="@mipmap/launcher"
-		android:label="@string/app_name_full"
-		android:theme="@style/AppTheme"
-		android:fullBackupContent="@xml/backupscheme"
-		android:supportsRtl="true"
-		android:appCategory="productivity"
-		android:process="@string/process_ui"
-		tools:ignore="GoogleAppIndexingWarning"
-		tools:targetApi="o">
+    <application
+        android:name=".CurrentProcess"
+        android:allowBackup="true"
+        android:icon="@mipmap/launcher"
+        android:label="@string/app_name_full"
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backupscheme"
+        android:supportsRtl="true"
+        android:appCategory="productivity"
+        android:process="@string/process_ui"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="o">
 
-		<!-- Main Process -->
+        <!-- Main Process -->
 
-		<activity android:name=".processes.ui.onboarding.OnboardingActivity"
+        <activity android:name=".processes.ui.onboarding.OnboardingActivity"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
 		<activity
-			android:name=".processes.ui.InstructionsActivity"
-			android:label="@string/instructions_heading"/>
+            android:name=".processes.ui.MessageDialogActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.Dialog"/>
 
-		<activity
-			android:name=".processes.ui.MessageDialogActivity"
-	        android:excludeFromRecents="true"
-			android:theme="@style/AppTheme.Dialog"/>
+        <activity
+            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+            tools:ignore="UnusedAttribute" />
 
-		<activity
-			android:name=".processes.ui.UninstallTipActivity"
-	        android:excludeFromRecents="true"
-			android:theme="@style/AppTheme.Dialog"/>
+        <activity
+            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity"
+            android:parentActivityName=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+            tools:ignore="UnusedAttribute">
 
-		<activity
-			android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-			android:label="@string/preference_incompatible_apps_title"
-			tools:ignore="UnusedAttribute" />
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity" />
 
-		<activity
-			android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity"
-			android:parentActivityName=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-			android:label="@string/preference_incompatible_apps_title"
-			tools:ignore="UnusedAttribute">
+        </activity>
 
-			<!-- Parent activity meta-data to support 4.0 and lower -->
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity" />
+        <activity android:name=".processes.ui.feedback.ReportProblemActivity" />
 
-		</activity>
+        <!--suppress AndroidDomInspection -->
+        <service
+            android:name=".processes.ui.DashboardSmallApp"
+            android:label="@string/app_name_short"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.sony.smallapp.intent.action.MAIN" />
+                <category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
+            </intent-filter>
+        </service>
 
-		<activity
-			android:name=".processes.ui.feedback.ReportProblemActivity"
-			android:label="@string/action_report"/>
+        <!--
+            This is in the UI process since its popup dialog uses a fair bit of RAM, and we can't use
+            the activity as an alternative since Android blocks activity launches for 5 seconds after
+            the last home button press.
+         -->
+        <service
+            android:name=".processes.ui.QuickSettingService"
+            android:label="@string/quick_setting_mode_name"
+            android:icon="@drawable/app_right_side"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            >
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
-		<!--suppress AndroidDomInspection -->
-		<service
-			android:name=".processes.ui.DashboardSmallApp"
-			android:label="@string/app_name_short"
-			android:exported="true"
-			tools:ignore="ExportedService">
-			<intent-filter>
-				<action android:name="com.sony.smallapp.intent.action.MAIN" />
-				<category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
-			</intent-filter>
-		</service>
+        <!-- Intentionally allowing history on this activity so you can return to it after granting permission -->
+        <activity android:name=".processes.ui.dashboard.DashboardActivity"
+                  android:label="@string/app_name_short"
+                  android:launchMode="singleTask"
+                  android:excludeFromRecents="true"
+                  android:taskAffinity=""
+                  android:theme="@style/AppTheme.Dialog"
+                  tools:ignore="UnusedAttribute">
 
-		<!--
-			This is in the UI process since its popup dialog uses a fair bit of RAM, and we can't use
-			the activity as an alternative since Android blocks activity launches for 5 seconds after
-			the last home button press.
-		 -->
-		<service
-			android:name=".processes.ui.QuickSettingService"
-			android:label="@string/quick_setting_mode_name"
-			android:icon="@drawable/app_right_side"
-			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-			>
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE" />
-			</intent-filter>
-		</service>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-		<!-- Intentionally allowing history on this activity so you can return to it after granting permission -->
-		<activity android:name=".processes.ui.dashboard.DashboardActivity"
-		          android:label="@string/app_name_short"
-		          android:launchMode="singleTask"
-		          android:excludeFromRecents="true"
-		          android:taskAffinity=""
-		          android:theme="@style/AppTheme.Dialog"
-		          tools:ignore="UnusedAttribute">
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
 
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+            <meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist_orb" />
 
-			<intent-filter>
-				<action android:name="android.intent.action.ASSIST" />
-				<category android:name="android.intent.category.DEFAULT"/>
-			</intent-filter>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
 
-			<meta-data android:name="com.android.systemui.action_assist_icon" android:resource="@drawable/assist_orb" />
+        </activity>
 
-			<intent-filter>
-				<action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
-			</intent-filter>
+        <activity android:name=".processes.ui.DeviceUnsupportedActivity" />
 
-		</activity>
+        <receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
-		<activity
-			android:name=".processes.ui.DeviceUnsupportedActivity"
-			android:label="@string/device_problem" />
+        <receiver android:name=".processes.ui.ShowUpgradeMessageReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
-		<receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
+        <!-- Service Process -->
 
-		<receiver android:name=".processes.ui.ShowUpgradeMessageReceiver">
-			<intent-filter>
-				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-			</intent-filter>
-		</receiver>
+        <service
+            android:name=".processes.service.ApplicationStatusService"
+            android:exported="false"
+            android:process="@string/process_service" />
 
-		<!-- Service Process -->
+        <receiver android:name=".processes.service.UpgradeReceiver"
+                  android:process="@string/process_service">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
-		<service
-			android:name=".processes.service.ApplicationStatusService"
-			android:exported="false"
-			android:process="@string/process_service" />
+        <receiver android:name=".processes.service.DummyReceiver"
+                  android:process="@string/process_service" />
 
-		<receiver android:name=".processes.service.UpgradeReceiver"
-		          android:process="@string/process_service">
-			<intent-filter>
-				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-			</intent-filter>
-		</receiver>
+        <receiver android:name=".processes.service.api.ApplicationCommandReceiver"
+                  android:process="@string/process_service" />
 
-		<receiver android:name=".processes.service.DummyReceiver"
-		          android:process="@string/process_service" />
+        <service
+            android:name=".processes.service.RotationService"
+            android:enabled="true"
+            android:exported="false"
+            android:process="@string/process_service" />
 
-		<receiver android:name=".processes.service.api.ApplicationCommandReceiver"
-		          android:process="@string/process_service" />
+        <activity
+            android:name=".processes.service.DummyActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:enabled="true"
+            android:autoRemoveFromRecents="true"
+            android:allowTaskReparenting="true"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:alwaysRetainTaskState="false"
+            android:stateNotNeeded="true"
+            android:clearTaskOnLaunch="true"
+            android:finishOnTaskLaunch="true"
+            android:taskAffinity=""
+            android:process="@string/process_service"
+            />
 
-		<service
-			android:name=".processes.service.RotationService"
-			android:enabled="true"
-			android:exported="false"
-			android:process="@string/process_service" />
+        <activity android:name=".processes.service.WaitForActivityDetectionActivity"
+            android:theme="@style/AppTheme.Translucent"
+            android:enabled="true"
+            android:autoRemoveFromRecents="true"
+            android:allowTaskReparenting="true"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:alwaysRetainTaskState="false"
+            android:stateNotNeeded="true"
+            android:clearTaskOnLaunch="true"
+            android:finishOnTaskLaunch="true"
+            android:taskAffinity=""
+            android:screenOrientation="behind"
+            android:process="@string/process_service"
+        />
 
-		<activity
-			android:name=".processes.service.DummyActivity"
-			android:theme="@android:style/Theme.NoDisplay"
-			android:enabled="true"
-			android:autoRemoveFromRecents="true"
-			android:allowTaskReparenting="true"
-			android:noHistory="true"
-			android:excludeFromRecents="true"
-			android:alwaysRetainTaskState="false"
-			android:stateNotNeeded="true"
-			android:clearTaskOnLaunch="true"
-			android:finishOnTaskLaunch="true"
-			android:taskAffinity=""
-			android:process="@string/process_service"
-			/>
+        <!-- The description element is specified here since Google Play seems to require it for the accessibility services disclosure. -->
+        <service
+            android:name=".processes.service.WindowChangeDetectingService"
+            android:description="@string/accessibility_service_description"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:process="@string/process_service">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibilityservice"/>
+        </service>
 
-		<activity android:name=".processes.service.WaitForActivityDetectionActivity"
-			android:theme="@style/AppTheme.Translucent"
-			android:enabled="true"
-			android:autoRemoveFromRecents="true"
-			android:allowTaskReparenting="true"
-			android:noHistory="true"
-			android:excludeFromRecents="true"
-			android:alwaysRetainTaskState="false"
-			android:stateNotNeeded="true"
-			android:clearTaskOnLaunch="true"
-			android:finishOnTaskLaunch="true"
-			android:taskAffinity=""
-			android:screenOrientation="behind"
-			android:process="@string/process_service"
-		/>
-
-		<!-- The description element is specified here since Google Play seems to require it for the accessibility services disclosure. -->
-		<service
-			android:name=".processes.service.WindowChangeDetectingService"
-			android:description="@string/accessibility_service_description"
-			android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-			android:process="@string/process_service">
-			<intent-filter>
-				<action android:name="android.accessibilityservice.AccessibilityService"/>
-			</intent-filter>
-			<meta-data
-				android:name="android.accessibilityservice"
-				android:resource="@xml/accessibilityservice"/>
-		</service>
-
-		<uses-library android:name="com.sony.smallapp.framework" android:required="false" />
-	</application>
+        <uses-library android:name="com.sony.smallapp.framework" android:required="false" />
+    </application>
 
 </manifest>
