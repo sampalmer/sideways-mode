@@ -88,4 +88,6 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
 			return new AccessibilityServiceActivityMonitor(context);
 	}
 
+    @Nullable
+	public String makeAcquirePermissionCancelledMessage() { return null; }
 }

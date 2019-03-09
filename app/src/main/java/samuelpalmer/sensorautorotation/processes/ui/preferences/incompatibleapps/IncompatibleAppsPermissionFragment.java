@@ -92,11 +92,12 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 			if (activityMonitor.hasPermission())
 				grantOverlayPermission();
 			else {
-				// Maybe the user couldn't enable the accessibility service due to an overlay.
-				// On some versions of Android, the OS doesn't tell you why you can't turn it on.
-				Toast
-					.makeText(context, R.string.accessibility_service_cancelled, Toast.LENGTH_LONG)
-					.show();
+				String cancelledMessage = activityMonitor.makeAcquirePermissionCancelledMessage();
+
+				if (cancelledMessage != null)
+					Toast
+						.makeText(context, cancelledMessage, Toast.LENGTH_LONG)
+						.show();
 			}
 		}
 	}
