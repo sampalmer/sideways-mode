@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 public abstract class EnvironmentErrorManager {
     
     public static void report(Context context, EnvironmentError error) {
-        //This is useful when checking log output from Cloud Test Lab on Google Play Store.
+        //This is useful when checking log output from Pre-launch report on Google Play Store.
         Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
         
         postNotification(context, error);
