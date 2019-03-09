@@ -1,13 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
-import android.app.ActivityManager;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -22,15 +19,6 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setTitle(R.string.app_name_full);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // In the manifest, the activity name is set to the *short* name.
-            // Unfortunately, this also changes the task name, which is inconsistent with the other activities.
-            // So using this hack to change the task name back to the full name.
-            ActivityManager.TaskDescription taskDescription = new ActivityManager.TaskDescription(getString(R.string.app_name_full));
-            setTaskDescription(taskDescription);
-        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         applicationSettings = ApplicationSettings.getSharedPreferences(this);
