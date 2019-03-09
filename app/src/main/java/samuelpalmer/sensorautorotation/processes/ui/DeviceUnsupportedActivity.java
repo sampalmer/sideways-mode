@@ -18,6 +18,7 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.device_problem);
 		setContentView(R.layout.activity_device_unsupported);
 		
 		int explanationStringResource = getIntent().getIntExtra(EXTRA_EXPLANATION, 0);

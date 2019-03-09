@@ -27,8 +27,9 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.preference_incompatible_apps_title);
 		setContentView(R.layout.activity_incompatible_apps_chooser);
-		
+
 		prefs = ApplicationSettings.getSharedPreferences(this);
 		installedAppComparator = new InstalledAppComparator();
 		

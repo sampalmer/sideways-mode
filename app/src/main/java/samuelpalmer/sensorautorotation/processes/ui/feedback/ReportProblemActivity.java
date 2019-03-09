@@ -33,7 +33,7 @@ public class ReportProblemActivity extends FullScreenDialogActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setTitle(R.string.action_report);
 		setContentView(R.layout.activity_report_problem);
 		
 		steps = new Field(R.id.problem_steps);
