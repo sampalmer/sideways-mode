@@ -1,21 +1,11 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.ContentProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
 import android.util.Log;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
@@ -24,6 +14,10 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Performs process startup logic, tracks the application context, and identifies which process the calling code is running in.
@@ -36,21 +30,12 @@ public class CurrentProcess extends Application {
 	private static Boolean isServiceProcess;
 	
 	public static boolean isServiceProcess(Context context) {
-		if (isServiceProcess == null) {
-			String currentProcessName = CurrentProcessNameDetector.currentProcessName(context);
-			String packageName = context.getPackageName();
-			
-			if (currentProcessName.equals(packageName + context.getText(R.string.process_service)))
-				isServiceProcess = true; // Service process
-			else if (currentProcessName.equals(packageName + context.getText(R.string.process_ui)))
-				isServiceProcess = false; // UI process
-			else
-				throw new RuntimeException("Current process has unrecognised name: " + currentProcessName);
-		}
-		
+		if (isServiceProcess == null)
+			isServiceProcess = CurrentProcessNameDetector.isServiceProcess(context);
+
 		return isServiceProcess;
 	}
-	
+
 	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
