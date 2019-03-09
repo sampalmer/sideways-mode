@@ -68,11 +68,11 @@
             android:theme="@style/AppTheme.Dialog"/>
 
         <activity
-			android:name=".processes.ui.RemovingIncompatibleAppsTipActivity"
-	        android:excludeFromRecents="true"
-			android:theme="@style/AppTheme.Dialog"/>
+            android:name=".processes.ui.RemovingIncompatibleAppsTipActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.Dialog"/>
 
-		<activity
+        <activity
             android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
             tools:ignore="UnusedAttribute" />
 
@@ -156,9 +156,9 @@
         </receiver>
 
         <!-- This one's in the UI process since it modifies user preferences, which are owned by that process. -->
-		<receiver android:name=".processes.service.incompatibleapps.MarkAppAsIncompatibleReceiver" />
+        <receiver android:name=".processes.service.incompatibleapps.MarkAppAsIncompatibleReceiver" />
 
-		<!-- Service Process -->
+        <!-- Service Process -->
 
         <service
             android:name=".processes.service.ApplicationStatusService"

@@ -28,7 +28,7 @@ public class ServiceRunningState extends State {
     private final AppDisabler appDisabler;
     private final IncompatibleAppsSuggester incompatibleAppsSuggester;
 
-	private final DeviceInteractivityMonitor deviceInteractivityMonitor;
+    private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 
     public ServiceRunningState(RotationService service) {
         this.service = service;
@@ -36,50 +36,50 @@ public class ServiceRunningState extends State {
         ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
         LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(service);
 
-		calculator = new OrientationCalculator(service, screenRotationMonitor);
-		screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
-		runningStateUpdater = new RunningStateUpdater(service, calculator, service);
-		lowMemoryDetector = new LowMemoryDetector(service);
-		orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
-		systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
-		ActivityMonitor activityMonitor = ActivityMonitor.create(service);
+        calculator = new OrientationCalculator(service, screenRotationMonitor);
+        screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
+        runningStateUpdater = new RunningStateUpdater(service, calculator, service);
+        lowMemoryDetector = new LowMemoryDetector(service);
+        orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
+        systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
+        ActivityMonitor activityMonitor = ActivityMonitor.create(service);
         incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor, lockScreenMonitor);
         appDisabler = new AppDisabler(service);
         incompatibleAppsSuggester = new IncompatibleAppsSuggester(service, activityMonitor, screenRotationMonitor, lockScreenMonitor);
 
-		deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
-	}
+        deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
+    }
 
-	@Override
-	protected void start() {
-		Log.i(TAG, "App is turning on");
+    @Override
+    protected void start() {
+        Log.i(TAG, "App is turning on");
 
-		//This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-		EnvironmentErrorManager.clear(service);
+        //This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
+        EnvironmentErrorManager.clear(service);
 
-		systemAutoRotationMonitor.ensureStarted();
-		runningStateUpdater.ensureStarted();
-		screenUpdater.ensureStarted();
-		lowMemoryDetector.ensureStarted();
-		incompatibleAppsManager.ensureStarted();
+        systemAutoRotationMonitor.ensureStarted();
+        runningStateUpdater.ensureStarted();
+        screenUpdater.ensureStarted();
+        lowMemoryDetector.ensureStarted();
+        incompatibleAppsManager.ensureStarted();
 
-		appDisabler.ensureStarted();
-		incompatibleAppsSuggester.ensureStarted();
-		deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
-		deviceInteractivityListener.update();
+        appDisabler.ensureStarted();
+        incompatibleAppsSuggester.ensureStarted();
+        deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
+        deviceInteractivityListener.update();
 
-		ServiceRunningStateHolder.serviceStarted(this);
-	}
+        ServiceRunningStateHolder.serviceStarted(this);
+    }
 
-	@Override
-	protected void stop() {
-		Log.i(TAG, "App is turning off");
+    @Override
+    protected void stop() {
+        Log.i(TAG, "App is turning off");
 
-		ServiceRunningStateHolder.serviceStopped();
+        ServiceRunningStateHolder.serviceStopped();
 
-		deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
+        deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
 
-		incompatibleAppsSuggester.ensureStopped();
+        incompatibleAppsSuggester.ensureStopped();
         appDisabler.ensureStopped();
         orientationSensorHandler.ensureStopped();
         incompatibleAppsManager.ensureStopped();

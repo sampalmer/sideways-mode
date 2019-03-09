@@ -12,34 +12,34 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MarkAppAsIncompatibleReceiver extends BroadcastReceiver {
-	
-	public static final String EXTRA_APP_PACKAGE = "app_package";
-	
-	public static Intent makeIntent(Context context, String appPackageName) {
-		return new Intent(context, MarkAppAsIncompatibleReceiver.class).putExtra(EXTRA_APP_PACKAGE, appPackageName);
-	}
-	
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		String appPackageName = intent.getStringExtra(EXTRA_APP_PACKAGE);
-		if (appPackageName == null)
-			throw new RuntimeException("No app package specified");
-		
-		SharedPreferences preferences = ApplicationSettings.getSharedPreferences(context);
-		Set<String> incompatibleAppPackages = new HashSet<>(preferences.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
-		if (incompatibleAppPackages.add(appPackageName)) {
-			preferences
-				.edit()
-				.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
-				.apply();
-		}
+    
+    public static final String EXTRA_APP_PACKAGE = "app_package";
+    
+    public static Intent makeIntent(Context context, String appPackageName) {
+        return new Intent(context, MarkAppAsIncompatibleReceiver.class).putExtra(EXTRA_APP_PACKAGE, appPackageName);
+    }
+    
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String appPackageName = intent.getStringExtra(EXTRA_APP_PACKAGE);
+        if (appPackageName == null)
+            throw new RuntimeException("No app package specified");
+        
+        SharedPreferences preferences = ApplicationSettings.getSharedPreferences(context);
+        Set<String> incompatibleAppPackages = new HashSet<>(preferences.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
+        if (incompatibleAppPackages.add(appPackageName)) {
+            preferences
+                .edit()
+                .putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
+                .apply();
+        }
 
-		if (!preferences.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
-			Intent tipIntent = new Intent(context, RemovingIncompatibleAppsTipActivity.class)
-					.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (!preferences.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
+            Intent tipIntent = new Intent(context, RemovingIncompatibleAppsTipActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-			context.startActivity(tipIntent);
-		}
-	}
-	
+            context.startActivity(tipIntent);
+        }
+    }
+    
 }

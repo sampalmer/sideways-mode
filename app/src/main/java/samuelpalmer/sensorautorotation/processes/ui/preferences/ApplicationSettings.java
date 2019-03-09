@@ -51,9 +51,9 @@ public abstract class ApplicationSettings {
      */
     public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
 
-	/**
-	 * Whether the user has been told how to remove an app from the incompatible apps list.
-	 */
-	public static final String KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN = "removeIncompatibleApps";
+    /**
+     * Whether the user has been told how to remove an app from the incompatible apps list.
+     */
+    public static final String KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN = "removeIncompatibleApps";
 
 }
