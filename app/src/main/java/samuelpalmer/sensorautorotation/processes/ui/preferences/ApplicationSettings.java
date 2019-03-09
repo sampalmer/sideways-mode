@@ -51,9 +51,9 @@ public abstract class ApplicationSettings {
      */
     public static final String KEY_UNINSTALLING_TIP_SHOWN = "uninstallingTipShown";
 
-	/**
-	 * Whether the user has completed the onboarding screen shown when the app is first started.
-	 */
-	public static final String KEY_USER_ONBOARDED = "onboarded";
+    /**
+     * Whether the user has completed the onboarding screen shown when the app is first started.
+     */
+    public static final String KEY_USER_ONBOARDED = "onboarded";
 
 }

@@ -108,7 +108,7 @@
     <string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
     <string name="action_got_it">Got it</string>
 
-	<!-- Onboarding -->
-	<string name="onboarding_get_started">Get started</string>
+    <!-- Onboarding -->
+    <string name="onboarding_get_started">Get started</string>
 
 </resources>
