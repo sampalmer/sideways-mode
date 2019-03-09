@@ -5,9 +5,9 @@ package samuelpalmer.sensorautorotation.utilities.eventhandling;
  */
 public class UpdatingEventRegistrar extends EventRegistrar {
 
-	@Override
-	public void report() {
-		super.report();
-	}
+    @Override
+    public void report() {
+        super.report();
+    }
 
 }

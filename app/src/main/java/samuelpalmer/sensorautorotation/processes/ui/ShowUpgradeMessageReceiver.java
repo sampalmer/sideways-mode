@@ -36,50 +36,50 @@ import samuelpalmer.sensorautorotation.upgrade.Upgrader;
  */
 public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.i(ShowUpgradeMessageReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
-		
-		if (!Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-			Log.w(ShowUpgradeMessageReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
-			return;
-		}
-		
-		Integer lastAppVersion = Upgrader.getLastAppVersion();
-		if (lastAppVersion == null) {
-			// This is the first time the app has been run, so there's no need to show an upgrade message.
-			return;
-		}
-		
-		String upgradeMessage = makeUpgradeMessage(context, lastAppVersion);
-		if (upgradeMessage != null)
-			postUpgradeNotification(context, upgradeMessage);
-	}
-	
-	@Nullable
-	private String makeUpgradeMessage(Context context, int lastAppVersion) {
-		if (lastAppVersion < 57)
-			return context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
-		else
-			return null;
-	}
-	
-	private static void postUpgradeNotification(Context context, String upgradeMessage) {
-		String messageTitle = context.getString(R.string.upgrade_summary, context.getText(R.string.app_name_full));
-		PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(context, messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
-		
-		Notification notification = NotificationBuilderFactory.create(context)
-			.setSmallIcon(R.drawable.notification_update)
-			.setContentIntent(viewMessageIntent)
-			.setContentTitle(messageTitle)
-			.setContentText(context.getText(R.string.upgrade_notification_content))
-			.setAutoCancel(true)
-			.setPriority(NotificationCompat.PRIORITY_HIGH)
-			.setCategory(NotificationCompat.CATEGORY_STATUS)
-			.setChannelId(NotificationChannels.ID_UPGRADES)
-			.build();
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.i(ShowUpgradeMessageReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
+        
+        if (!Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
+            Log.w(ShowUpgradeMessageReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
+            return;
+        }
+        
+        Integer lastAppVersion = Upgrader.getLastAppVersion();
+        if (lastAppVersion == null) {
+            // This is the first time the app has been run, so there's no need to show an upgrade message.
+            return;
+        }
+        
+        String upgradeMessage = makeUpgradeMessage(context, lastAppVersion);
+        if (upgradeMessage != null)
+            postUpgradeNotification(context, upgradeMessage);
+    }
+    
+    @Nullable
+    private String makeUpgradeMessage(Context context, int lastAppVersion) {
+        if (lastAppVersion < 57)
+            return context.getString(R.string.upgrade_v57, context.getText(R.string.app_name_full));
+        else
+            return null;
+    }
+    
+    private static void postUpgradeNotification(Context context, String upgradeMessage) {
+        String messageTitle = context.getString(R.string.upgrade_summary, context.getText(R.string.app_name_full));
+        PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(context, messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
+        
+        Notification notification = NotificationBuilderFactory.create(context)
+            .setSmallIcon(R.drawable.notification_update)
+            .setContentIntent(viewMessageIntent)
+            .setContentTitle(messageTitle)
+            .setContentText(context.getText(R.string.upgrade_notification_content))
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setChannelId(NotificationChannels.ID_UPGRADES)
+            .build();
 
-		((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
-	}
-	
+        ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.UPGRADE, notification);
+    }
+    
 }

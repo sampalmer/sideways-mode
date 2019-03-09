@@ -8,20 +8,20 @@ import android.util.Log;
  * against the AOSP code.
  */
 class Slog {
-	public static void d(String tag, String msg) {
-		Log.d(tag, msg);
-	}
+    public static void d(String tag, String msg) {
+        Log.d(tag, msg);
+    }
 
-	public static void v(String tag, String msg) {
-		Log.v(tag, msg);
-	}
+    public static void v(String tag, String msg) {
+        Log.v(tag, msg);
+    }
 
-	public static void w(String tag, String msg) {
-		Log.w(tag, msg);
-	}
+    public static void w(String tag, String msg) {
+        Log.w(tag, msg);
+    }
 
-	@SuppressWarnings("unused")
-	public static void wtf(String tag, String msg) {
-		Log.wtf(tag, msg);
-	}
+    @SuppressWarnings("unused")
+    public static void wtf(String tag, String msg) {
+        Log.wtf(tag, msg);
+    }
 }

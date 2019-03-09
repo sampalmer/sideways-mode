@@ -27,6 +27,7 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        setTitle(R.string.preference_incompatible_apps_title);
 		setContentView(R.layout.activity_incompatible_apps_chooser);
 		
 		prefs = ApplicationSettings.getSharedPreferences(this);
@@ -129,17 +130,16 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 			needsReload = false;
 		}
 		markIncompatibleAppPackages(); // Just in case they changed while the app was in the background
-		
-		started = true;
 
-		// The user is already in the incompatible apps screen, so we don't need to tell them about the screen later on
-		if (!prefs.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
-			prefs
-				.edit()
-				.putBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, true)
-				.apply();
-		}
-	}
+        started = true;
+
+        // The user is already in the incompatible apps screen, so we don't need to tell them about the screen later on
+        if (!prefs.getBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, false)) {
+            prefs
+                    .edit()
+                    .putBoolean(ApplicationSettings.KEY_REMOVE_INCOMPATIBLE_APPS_TIP_SHOWN, true)
+                    .apply();
+        }	}
 	
 	@Override
 	protected void onStop() {
@@ -161,24 +161,31 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 		list.progressBar.setVisibility(View.GONE);
 		list.list.setVisibility(View.VISIBLE);
 	};
-	
-	private final AdapterView.OnItemClickListener onItemClickListener = (parent, view, position, id) -> {
-		InstalledApp item = list.adapter.getItem(position);
-		
-		// Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
-		Set<String> incompatibleAppPackages = new HashSet<>(prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
-		
-		//noinspection ConstantConditions
-		if (item.isIncompatible)
-			incompatibleAppPackages.remove(item.packageName);
-		else
-			incompatibleAppPackages.add(item.packageName);
-		
-		prefs
-			.edit()
-			.putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
-			.apply();
-	};
+
+    private final AdapterView.OnItemClickListener onItemClickListener = (parent, view, position, id) -> {
+        InstalledApp item = list.adapter.getItem(position);
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+        Set<String> incompatibleAppPackages = new HashSet<>(prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
+
+        //noinspection ConstantConditions
+        if (item.isIncompatible)
+            incompatibleAppPackages.remove(item.packageName);
+        else {
+            if (!prefs.getBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, false))
+                // The user hasn't been shown the tip about this feature, but they're trying the feature out for themselves,
+                // so no need to show them the tip anymore.
+                editor.putBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, true);
+
+            incompatibleAppPackages.add(item.packageName);
+        }
+
+        editor
+                .putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages)
+                .apply();
+    };
 	
 	private final SharedPreferences.OnSharedPreferenceChangeListener onApplicationSettingsChanged = (sharedPreferences, key) -> {
 		if (key.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
@@ -189,13 +196,13 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
 		Set<String> incompatibleAppPackages = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 		assert incompatibleAppPackages != null;
 
-		for (int i = 0; i < list.adapter.getCount(); ++i) {
-			InstalledApp item = list.adapter.getItem(i);
-			assert item != null;
-			item.isIncompatible = incompatibleAppPackages.contains(item.packageName);
-		}
-		
-		list.adapter.notifyDataSetChanged();
-	}
-	
+        for (int i = 0; i < list.adapter.getCount(); ++i) {
+            InstalledApp item = list.adapter.getItem(i);
+            assert item != null;
+            item.isIncompatible = incompatibleAppPackages.contains(item.packageName);
+        }
+
+        list.adapter.notifyDataSetChanged();
+    }
+
 }

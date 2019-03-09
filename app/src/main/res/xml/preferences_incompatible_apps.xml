@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
-	<!-- TODO: Replace tip view with material design banner once it's available in Android: https://material.io/go/android-banner/ -->
+    <!-- TODO: Replace tip view with material design banner once it's available in Android: https://material.io/go/android-banner/ -->
 
-	<!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
-	<!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
-	<!-- Turning off "iconSpaceReserved" since it is on by default as of Support Library 28.0.0 -->
-	<!--suppress AndroidElementNotAllowed -->
-	<samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.PermissionTipViewPreference
-		android:key="incompatibleAppsPermission"
-		android:title="@string/permissions_needed_tip"
-		android:persistent="false"
-		android:order="0"
-		app:iconSpaceReserved="false"
-		/>
+    <!-- Using hard-coded order since the permission preference can be dynamically removed and re-added. -->
+    <!-- The permission prompt is a preference rather than normal layout content to ensure that it scrolls with the rest of the content on small screen sizes. -->
+    <!-- Turning off "iconSpaceReserved" since it is on by default as of Support Library 28.0.0 -->
+    <!--suppress AndroidElementNotAllowed -->
+    <samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.PermissionTipViewPreference
+        android:key="incompatibleAppsPermission"
+        android:title="@string/permissions_needed_tip"
+        android:persistent="false"
+        android:order="0"
+        app:iconSpaceReserved="false"
+        />
 
-	<Preference
-		android:key="incompatibleAppsDetails"
-		android:summary="@string/preference_incompatible_apps_details"
-		android:persistent="false"
-	    android:selectable="false"
-		android:order="1"
-		app:iconSpaceReserved="false"
-		/>
+    <Preference
+        android:key="incompatibleAppsDetails"
+        android:summary="@string/preference_incompatible_apps_details"
+        android:persistent="false"
+        android:selectable="false"
+        android:order="1"
+        app:iconSpaceReserved="false"
+        />
 
-	<Preference
-		android:key="incompatibleAppPackages"
-		android:persistent="false"
-		android:title="@string/preference_choose_apps"
-		android:icon="@drawable/preference_apps"
-		android:order="2"
-		/>
+    <Preference
+        android:key="incompatibleAppPackages"
+        android:persistent="false"
+        android:title="@string/preference_choose_apps"
+        android:icon="@drawable/preference_apps"
+        android:order="2"
+        />
 
 </PreferenceScreen>

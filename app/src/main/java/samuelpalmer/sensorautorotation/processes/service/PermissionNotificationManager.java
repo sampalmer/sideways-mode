@@ -33,86 +33,86 @@ import java.util.Set;
  */
 public class PermissionNotificationManager extends State {
 
-	private final Context context;
-	private final ActivityMonitor activityMonitor;
-	private final EventRegistrar enforcementPermissionMonitor;
-	private final NotificationManager notificationManager;
-	private final SharedPreferences prefs;
+    private final Context context;
+    private final ActivityMonitor activityMonitor;
+    private final EventRegistrar enforcementPermissionMonitor;
+    private final NotificationManager notificationManager;
+    private final SharedPreferences prefs;
 
-	private boolean isRunning = false;
+    private boolean isRunning = false;
 
-	public PermissionNotificationManager(Context context, ActivityMonitor activityMonitor) {
-		this.context = context;
-		this.activityMonitor = activityMonitor;
-		enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
+    public PermissionNotificationManager(Context context, ActivityMonitor activityMonitor) {
+        this.context = context;
+        this.activityMonitor = activityMonitor;
+        enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
 
-		notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
-		prefs = ServiceSettings.getSharedPreferences(this.context);
-	}
+        notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        prefs = ServiceSettings.getSharedPreferences(this.context);
+    }
 
-	@Override
-	protected void start() {
-		prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-		activityMonitor.onPermissionChange().subscribe(permissionChanged);
-		enforcementPermissionMonitor.subscribe(permissionChanged);
+    @Override
+    protected void start() {
+        prefs.registerOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+        activityMonitor.onPermissionChange().subscribe(permissionChanged);
+        enforcementPermissionMonitor.subscribe(permissionChanged);
 
-		isRunning = true;
-		check();
+        isRunning = true;
+        check();
 }
-	
-	@Override
-	protected void stop() {
-		isRunning = false;
-		check();
+    
+    @Override
+    protected void stop() {
+        isRunning = false;
+        check();
 
-		enforcementPermissionMonitor.unsubscribe(permissionChanged);
-		activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
-		prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
-	}
+        enforcementPermissionMonitor.unsubscribe(permissionChanged);
+        activityMonitor.onPermissionChange().unsubscribe(permissionChanged);
+        prefs.unregisterOnSharedPreferenceChangeListener(incompatibleAppsChanged);
+    }
 
-	private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
-		if (isRunning && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
-			check();
-	};
-	
-	private final EventHandler permissionChanged = this::check;
-	
-	public void check() {
-		if (needsPermission()) {
-			PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
-				context,
-				PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
-				// The user might have opened a child activity, but we need to go to the activity specified here so that the user goes straight to the permission section
-				new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
-				PendingIntentIds.PENDING_INTENT_FLAGS);
-			
-			Notification notification = NotificationBuilderFactory
-					.create(context)
-					.setCategory(NotificationCompat.CATEGORY_ERROR)
-					.setContentIntent(incompatibleAppsIntent)
-					.setContentTitle(context.getText(R.string.permission_needed_summary))
-					.setContentText(context.getText(R.string.permission_touch_to_fix))
-					.setSmallIcon(R.drawable.notification_error)
-					.setChannelId(NotificationChannels.ID_PERMISSIONS)
-					.build();
+    private final SharedPreferences.OnSharedPreferenceChangeListener incompatibleAppsChanged = (sharedPreferences, s) -> {
+        if (isRunning && s.equals(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
+            check();
+    };
+    
+    private final EventHandler permissionChanged = this::check;
+    
+    public void check() {
+        if (needsPermission()) {
+            PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
+                context,
+                PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
+                // The user might have opened a child activity, but we need to go to the activity specified here so that the user goes straight to the permission section
+                new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
+                PendingIntentIds.PENDING_INTENT_FLAGS);
+            
+            Notification notification = NotificationBuilderFactory
+                    .create(context)
+                    .setCategory(NotificationCompat.CATEGORY_ERROR)
+                    .setContentIntent(incompatibleAppsIntent)
+                    .setContentTitle(context.getText(R.string.permission_needed_summary))
+                    .setContentText(context.getText(R.string.permission_touch_to_fix))
+                    .setSmallIcon(R.drawable.notification_error)
+                    .setChannelId(NotificationChannels.ID_PERMISSIONS)
+                    .build();
 
-			notificationManager.notify(NotificationIds.PERMISSION, notification);
-		}
-		else
-			notificationManager.cancel(NotificationIds.PERMISSION);
-	}
-	
-	private boolean needsPermission() {
-		if (isRunning) {
-			Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-			assert incompatibleAppPackages != null;
+            notificationManager.notify(NotificationIds.PERMISSION, notification);
+        }
+        else
+            notificationManager.cancel(NotificationIds.PERMISSION);
+    }
+    
+    private boolean needsPermission() {
+        if (isRunning) {
+            Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+            assert incompatibleAppPackages != null;
 
-			//noinspection RedundantIfStatement
-			if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
-				return true;
-		}
-		
-		return false;
-	}
-	
+            //noinspection RedundantIfStatement
+            if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
+                return true;
+        }
+        
+        return false;
+    }
+    
 }

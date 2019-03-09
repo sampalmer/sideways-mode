@@ -1,50 +1,50 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 28
+    compileSdkVersion 28
 
-	lintOptions{
-		disable 'MissingTranslation'
-	}
-	defaultConfig {
-		applicationId "samuelpalmer.sensorautorotation"
-		minSdkVersion 14
-		targetSdkVersion 28
-		versionCode 63
-		versionName "2.3.0"
+    lintOptions{
+        disable 'MissingTranslation'
+    }
+    defaultConfig {
+        applicationId "samuelpalmer.sensorautorotation"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 64
+        versionName "2.4.0"
 
-		/*
-		 * Strips out languages added through the support library so that:
-		 * - The resulting APK is smaller
-		 * - Google Play doesn't think the app supports all languages
-		 * - Users with unsupported languages don't see English text in RTL layouts
-		 */
-		resConfigs "en", "ru"
-		vectorDrawables.useSupportLibrary = true
-	}
-	buildTypes {
-		release {
-			minifyEnabled true
-			shrinkResources true
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-		}
-		debug {
-			// The development version of the app must have a different application id so that
-			// Google Play Console doesn't associate dev crashes and ANRs with the production version of the app.
-			applicationIdSuffix ".dev"
-			versionNameSuffix " (Dev)"
-		}
-	}
-	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_1_8
-		targetCompatibility JavaVersion.VERSION_1_8
-	}
+        /*
+         * Strips out languages added through the support library so that:
+         * - The resulting APK is smaller
+         * - Google Play doesn't think the app supports all languages
+         * - Users with unsupported languages don't see English text in RTL layouts
+         */
+        resConfigs "en", "ru"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // The development version of the app must have a different application id so that
+            // Google Play Console doesn't associate dev crashes and ANRs with the production version of the app.
+            applicationIdSuffix ".dev"
+            versionNameSuffix " (Dev)"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-	compileOnly project(':com.sony.smallapp')
-	implementation 'androidx.appcompat:appcompat:1.0.2'
-	implementation 'androidx.preference:preference:1.0.0'
-	implementation 'com.google.android.material:material:1.0.0'
-	implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
+    compileOnly project(':com.sony.smallapp')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
 }
