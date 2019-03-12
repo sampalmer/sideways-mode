@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.processes.ui.feedback.ReportProblemActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -167,18 +166,8 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK;
         
         switch (menuItem.getItemId()) {
-            case R.id.action_help: {
-                // This is a submenu, so no need to do anything
-                break;
-            }
             case R.id.action_tips: {
                 tipsFragment.showAllTips();
-                break;
-            }
-            case R.id.action_report: {
-                Intent intent = new Intent(getActivity(), ReportProblemActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //Don't want the user to lose what they've typed into the problem report when a different activity starts
-                startActivity(intent);
                 break;
             }
             case R.id.action_incompatible_apps: {

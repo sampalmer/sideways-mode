@@ -3,11 +3,4 @@
     <!-- The processes have simple, easy-to-read names since the user can see them in the Android memory usage screen. -->
     <string name="process_ui" translatable="false">:UI</string>
     <string name="process_service" translatable="false">:Service</string>
-
-    <string name="email_problem_subject" translatable="false">"Error report for %1$s %2$s"</string>
-
-    <!-- Don't translate these. These are part of an English test so must remain in English. -->
-    <string name="report_problem_english_test" translatable="false">"What's eight plus four?"</string>
-    <string name="report_problem_english_test_answer_word" translatable="false">Twelve</string>
-    <string name="report_problem_english_test_answer_number" translatable="false">12</string>
 </resources>

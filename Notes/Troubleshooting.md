@@ -6,7 +6,7 @@ Auto-rotate uses your phone's accelerometer sensor to detect which way you're ho
 
 Sideways Mode is an enhancement to auto-rotate, so you can't use Sideways Mode either. If you are trying to use Sideways Mode for something other than auto-rotate, then you will need to look elsewhere.
 
-If your phone's built-in auto-rotate feature is working but Sideways Mode still says the sensor isn't working, then there might be an issue in Sideways Mode. Use the "Report Problem" button in Sideways Mode's help screen to send me a problem report so I can investigate.
+If your phone's built-in auto-rotate feature is working but Sideways Mode still says the sensor isn't working, then there might be an issue in Sideways Mode.
 
 ### The app doesn't rotate my launcher / lock screen / {some app}
 
@@ -20,7 +20,6 @@ Try the following:
 1. Make sure you're using an app that supports rotation
 1. If the phone's built-in rotation also doesn't work, then there's a problem with your phone
 1. Restart the phone
-1. Otherwise, report the problem from Sideways Mode's help screen
 
 ### I uninstalled the app, and now the screen won't rotate anymore
 

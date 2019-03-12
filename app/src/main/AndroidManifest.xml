@@ -83,8 +83,6 @@
 
         </activity>
 
-        <activity android:name=".processes.ui.feedback.ReportProblemActivity" />
-
         <!--suppress AndroidDomInspection -->
         <service
             android:name=".processes.ui.DashboardSmallApp"

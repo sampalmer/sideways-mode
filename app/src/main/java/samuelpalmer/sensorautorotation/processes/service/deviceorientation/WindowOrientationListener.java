@@ -248,7 +248,7 @@ public abstract class WindowOrientationListener {
     /**
      * Equivalent of {@link android.hardware.Sensor#toString()} in API 23 SDK since not all devices implement it.
      */
-    public static String stringify(Sensor sensor) {
+    private static String stringify(Sensor sensor) {
         return "{Sensor name=\"" + sensor.getName() + "\", vendor=\"" + sensor.getVendor() + "\", version=" + sensor.getVersion()
             + ", type=" + sensor.getType() + ", maxRange=" + sensor.getMaximumRange() + ", resolution=" + sensor.getResolution()
             + ", power=" + sensor.getPower() + ", minDelay=" + sensor.getMinDelay() + "}";
