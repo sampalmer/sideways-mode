@@ -12,7 +12,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
-import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 import java.util.Collections;

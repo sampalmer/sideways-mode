@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.utilities;
+package samuelpalmer.sensorautorotation;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Process;
 import android.util.Log;
 import androidx.annotation.Nullable;
-import samuelpalmer.sensorautorotation.R;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
