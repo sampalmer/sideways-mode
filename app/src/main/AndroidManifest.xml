@@ -172,7 +172,9 @@
             android:name=".processes.service.RotationService"
             android:enabled="true"
             android:exported="false"
-            android:process="@string/process_service" />
+            android:process="@string/process_service"
+            android:foregroundServiceType=""
+            tools:targetApi="p" />
 
         <activity
             android:name=".processes.service.DummyActivity"
