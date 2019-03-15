@@ -22,6 +22,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
 class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
     private static final Intent acquirePermissionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+    private static final int ACTIVITY_IN_FOREGROUND = Build.VERSION.SDK_INT == 28 && Build.VERSION.PREVIEW_SDK_INT == 1 ? UsageEvents.Event.ACTIVITY_RESUMED : UsageEvents.Event.MOVE_TO_FOREGROUND;
 
     static boolean isSupported(Context context) {
         if (Build.VERSION.SDK_INT < 21)
@@ -69,7 +70,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
                 // Apparently you need to always loop through all available events to avoid a crash: https://stackoverflow.com/a/50896301/238753
                 usageEvents.getNextEvent(event);
 
-                if (event.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND && event.getTimeStamp() > latestEventTime) {
+                if (event.getEventType() == ACTIVITY_IN_FOREGROUND && event.getTimeStamp() > latestEventTime) {
                     // It looks safe to assume that MOVE_TO_FOREGROUND is for an activity: https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/master/services/core/java/com/android/server/am/ActivityManagerService.java
                     latestEventPackage = event.getPackageName();
                     latestEventClassName = event.getClassName();
