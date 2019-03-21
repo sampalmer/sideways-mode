@@ -58,8 +58,11 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
     private final AppOpsManager.OnOpChangedListener usageOpListener = new AppOpsManager.OnOpChangedListener() {
         @Override
         public void onOpChanged(String op, String packageName) {
-            // Not in main thread, so post to main thread queue
-            handler.post(checkUsagePermission);
+            // We get callbacks for op changes across *all* apps
+            if (AppOpMonitor.this.packageName.equals(packageName)) {
+                // Not in main thread, so post to main thread queue
+                handler.post(checkUsagePermission);
+            }
         }
     };
 
