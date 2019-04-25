@@ -26,7 +26,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
 
-    private static int REQUEST_CODE_GRANT_PERMISSION = 1;
+    private static final int REQUEST_CODE_GRANT_PERMISSION = 1;
 
     private EventRegistrar permissionMonitor;
 

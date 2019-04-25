@@ -7,7 +7,7 @@ import android.os.Build;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public abstract class CurrentProcessNameDetector {
+abstract class CurrentProcessNameDetector {
 
     public static String getName() {
         if (Build.VERSION.SDK_INT >= 28)

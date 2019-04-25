@@ -57,7 +57,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         assert menuButton != null;
         menuButton.setOnClickListener(v -> popup.show());
 
-        popup = new PopupMenu(getActivity(), menuButton);
+        popup = new PopupMenu(requireActivity(), menuButton);
         popup.setOnMenuItemClickListener(this::handleMenuItemClick);
         popup.inflate(R.menu.main);
         menuButton.setOnTouchListener(popup.getDragToOpenListener());
@@ -102,7 +102,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         // It's important that we finish the activity when the dialog is *cancelled*, not dismissed.
         // This is because dismissal also occurs when the screen orientation or layout changes.
         // Hence if we finished the activity on *dismiss*, the dialog would disappear each time the screen orientation changes.
-        getActivity().finish();
+        requireActivity().finish();
     }
 
     @Override
