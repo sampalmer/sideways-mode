@@ -33,6 +33,11 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     public void initialise(PreferenceScreen preferenceScreen) {
         this.preferenceScreen = preferenceScreen;
         this.context = preferenceScreen.getContext();
+
+        Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
+        String newSummary = context.getString(R.string.preference_incompatible_apps_details, context.getText(R.string.app_name_full));
+        description.setSummary(newSummary);
+
         activityMonitor = ActivityMonitor.create(context);
         enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
         
@@ -47,17 +52,14 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 
         updateTip(); //Updating the visibility of the tip in onStart() isn't early enough when switching between split and fullscreen on Android 7.1
     }
-    
+
     @Override
     public void onStart() {
         super.onStart();
 
         if (preferenceScreen == null)
-            throw new IllegalStateException("Can't initialise because configure() hasn't been called");
-        
-        Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
-        description.setSummary(getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full)));
-        
+            throw new IllegalStateException("Can't initialise because initialise() hasn't been called");
+
         updateTip();
     }
 
