@@ -170,7 +170,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
                 tipsFragment.showAllTips();
                 break;
             }
-            case R.id.action_incompatible_apps: {
+            case R.id.action_settings: {
                 startActivity(new Intent(requireContext(), SettingsActivity.class).addFlags(flags));
                 break;
             }
