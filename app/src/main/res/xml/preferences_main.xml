@@ -10,4 +10,11 @@
         android:icon="@drawable/preference_incompatible_apps"
         />
 
+    <SwitchPreference
+        android:key="turnOffWhenLocked"
+        android:title="@string/preference_turn_off_when_locked"
+        android:icon="@drawable/menu_power"
+        android:defaultValue="true"
+        />
+
 </PreferenceScreen>

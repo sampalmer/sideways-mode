@@ -46,6 +46,7 @@
 
     <string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
     <string name="preference_choose_apps">Choose incompatible apps</string>
+    <string name="preference_turn_off_when_locked">Turn off when locked</string>
 
     <!-- Errors -->
     <string name="environment_error_message">%1$s %2$s has been turned off.</string>

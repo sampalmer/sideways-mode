@@ -22,15 +22,19 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ApplicationCommand command = new ApplicationCommand(intent);
         Log.i(TAG, "Received command: " + command.action);
-        
-        if (command.config != null) {
+
+        ApplicationCommand.Config config = command.config;
+        if (config != null) {
             Log.i(TAG, "Command included config. Applying new config.");
 
             SharedPreferences serviceSettings = ServiceSettings.getSharedPreferences(context);
             SharedPreferences.Editor editor = serviceSettings.edit();
 
-            if (!command.config.incompatibleAppPackages.equals(serviceSettings.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())))
-                editor.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, command.config.incompatibleAppPackages);
+            if (!config.incompatibleAppPackages.equals(serviceSettings.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())))
+                editor.putStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, config.incompatibleAppPackages);
+
+            if (config.turnOffWhenLocked != serviceSettings.getBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, true))
+                editor.putBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, config.turnOffWhenLocked);
 
             editor.apply();
         }
@@ -49,7 +53,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
                 EnvironmentErrorManager.clear(context);
                 break;
             case ApplicationCommand.ACTION_SYNC_CONFIG:
-                if (command.config == null)
+                if (config == null)
                     throw new RuntimeException("Received request to sync config, but no config was provided.");
                 
                 // No need to sync the config here; it is handled elsewhere.

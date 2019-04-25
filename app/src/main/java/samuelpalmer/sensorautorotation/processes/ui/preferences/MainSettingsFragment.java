@@ -11,6 +11,14 @@ import samuelpalmer.sensorautorotation.R;
 public class MainSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        String prefsName = ApplicationSettings.getSharedPreferencesName(requireContext());
+        getPreferenceManager().setSharedPreferencesName(prefsName);
+    }
+
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_main);
 

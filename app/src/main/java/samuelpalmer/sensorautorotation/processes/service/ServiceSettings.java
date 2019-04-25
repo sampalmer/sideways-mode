@@ -43,4 +43,9 @@ public abstract class ServiceSettings {
      */
     public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
 
+    /**
+     * <b>Cached copy</b> of {@link ApplicationSettings#KEY_TURN_OFF_WHEN_LOCKED} for use in the service process.
+     */
+    public static final String KEY_TURN_OFF_WHEN_LOCKED = "turnOffWhenLocked";
+
 }

@@ -1,10 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.KeyguardManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.Build;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -15,14 +12,21 @@ public class AppDisabler extends State {
     
     private final KeyguardManager keyguardManager;
     private final Context context;
-    
+    private final SharedPreferences prefs;
+
+    private boolean turnOffWhenLocked;
+
     public AppDisabler(Context context) {
         this.context = context;
         keyguardManager = (KeyguardManager)context.getSystemService(Context.KEYGUARD_SERVICE);
+        prefs = ServiceSettings.getSharedPreferences(context);
     }
     
     @Override
     protected void start() {
+        prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        syncPrefs();
+
         context.registerReceiver(shutdownReceiver, new IntentFilter(Intent.ACTION_SHUTDOWN));
         context.registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
         context.registerReceiver(screenChangedReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
@@ -40,8 +44,19 @@ public class AppDisabler extends State {
         context.unregisterReceiver(unlockReceiver);
         context.unregisterReceiver(screenChangedReceiver);
         context.unregisterReceiver(shutdownReceiver);
+
+        prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
-    
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = (sharedPreferences, key) -> {
+        if (ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED.equals(key))
+            syncPrefs();
+    };
+
+    private void syncPrefs() {
+        turnOffWhenLocked = prefs.getBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, true);
+    }
+
     private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
         
         @Override
@@ -55,7 +70,7 @@ public class AppDisabler extends State {
     private final BroadcastReceiver screenChangedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isStarted()) {
+            if (isStarted() && turnOffWhenLocked) {
                 /*
                 Don't want to turn the app off when the screen turns off because the screen might
                 have turned off due to inactivity while the user is actually still using the device.
@@ -70,7 +85,7 @@ public class AppDisabler extends State {
     private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isStarted()) {
+            if (isStarted() && turnOffWhenLocked) {
                 /*
                 We receive this broadcast after the device gets unlocked.
                 This implies that the device was locked, so the app shouldn't be on.
