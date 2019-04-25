@@ -29,8 +29,17 @@ public class CurrentProcess extends Application {
     private static Boolean isServiceProcess;
     
     public static boolean isServiceProcess(Context context) {
-        if (isServiceProcess == null)
-            isServiceProcess = CurrentProcessNameDetector.isServiceProcess(context);
+        if (isServiceProcess == null) {
+            String processName = CurrentProcessNameDetector.getName();
+
+            String packageName = context.getPackageName();
+            if (processName.equals(packageName + context.getText(R.string.process_service)))
+                isServiceProcess = true;
+            else if (processName.equals(packageName + context.getText(R.string.process_ui)))
+                isServiceProcess = false;
+            else
+                throw new RuntimeException("Unrecognised process name: " + processName);
+        }
 
         return isServiceProcess;
     }
@@ -38,7 +47,7 @@ public class CurrentProcess extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        
+
         // Application.onCreate() is called *after* ContentProvider.onCreate().
         // However, attachBaseContext() is called before it, which is why this method is used here.
         Log.i(TAG, "Process created");
