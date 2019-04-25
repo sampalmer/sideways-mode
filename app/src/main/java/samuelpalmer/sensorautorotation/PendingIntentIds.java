@@ -7,12 +7,12 @@ public abstract class PendingIntentIds {
     
     public static final int MAIN_NOTIFICATION_CLICK = 1;
     public static final int UNUSED1 = 2;
-    public static final int INCOMPATIBLE_APPS_ACQUIRE_PERMISSION = 3;
-    public static final int UNUSED2 = 4;
-    public static final int UNUSED3 = 5;
-    public static final int UNUSED4 = 6;
-    public static final int UNUSED5 = 7;
-    public static final int UNUSED6 = 8;
+    public static final int UNUSED2 = 3;
+    public static final int UNUSED3 = 4;
+    public static final int UNUSED4 = 5;
+    public static final int UNUSED5 = 6;
+    public static final int UNUSED6 = 7;
+    public static final int UNUSED7 = 8;
     public static final int ENVIRONMENT_ERROR_MESSAGE = 9;
     public static final int UPGRADE_MESSAGE = 10;
     public static final int MAIN_NOTIFICATION_LEFT_SIDE = 11;

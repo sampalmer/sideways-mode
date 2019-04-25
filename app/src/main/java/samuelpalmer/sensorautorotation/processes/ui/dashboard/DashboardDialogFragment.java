@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -171,8 +171,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
                 break;
             }
             case R.id.action_incompatible_apps: {
-                Intent intent = new Intent(getActivity(), IncompatibleAppsActivity.class).addFlags(flags);
-                startActivity(intent);
+                startActivity(new Intent(requireContext(), SettingsActivity.class).addFlags(flags));
                 break;
             }
             default:

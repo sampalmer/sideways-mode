@@ -1,11 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -47,11 +49,15 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
+
         prefs = ApplicationSettings.getSharedPreferences(getActivity());
         
-        // Setting the intent here rather than in the XML since the XML-based one requires a hard-coded application id, which won't work since the application id differs based on the build type.
-        appsPreference.setIntent(new Intent(getActivity(), IncompatibleAppsChooserActivity.class));
+        appsPreference.setOnPreferenceClickListener(preference -> {
+            RecyclerView prefsList = IncompatibleAppsFragment.super.getListView();
+            NavController navController = Navigation.findNavController(prefsList);
+            navController.navigate(R.id.action_incompatibleAppsFragment_to_incompatibleAppsChooserFragment);
+            return true;
+        });
     }
     
     @Override

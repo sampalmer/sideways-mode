@@ -4,17 +4,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.core.app.NotificationCompat;
-import samuelpalmer.sensorautorotation.PendingIntentIds;
+import androidx.navigation.NavDeepLinkBuilder;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -79,13 +78,12 @@ public class PermissionNotificationManager extends State {
     
     public void check() {
         if (needsPermission()) {
-            PendingIntent incompatibleAppsIntent = PendingIntent.getActivity(
-                context,
-                PendingIntentIds.INCOMPATIBLE_APPS_ACQUIRE_PERMISSION,
-                // The user might have opened a child activity, but we need to go to the activity specified here so that the user goes straight to the permission section
-                new Intent(context, IncompatibleAppsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK),
-                PendingIntentIds.PENDING_INTENT_FLAGS);
-            
+            PendingIntent incompatibleAppsIntent = new NavDeepLinkBuilder(context)
+                    .setComponentName(SettingsActivity.class)
+                    .setGraph(R.navigation.settings)
+                    .setDestination(R.id.incompatibleAppsFragment)
+                    .createPendingIntent();
+
             Notification notification = NotificationBuilderFactory
                     .create(context)
                     .setCategory(NotificationCompat.CATEGORY_ERROR)
