@@ -54,11 +54,23 @@ public class WhenLockedPreference extends DropDownPreference {
 
     @Override
     protected String getPersistedString(String defaultReturnValue) {
-        if (defaultReturnValue == null)
-            throw new IllegalArgumentException("Cannot convert default value 'null' to boolean value");
+        boolean booleanValue;
 
-        boolean booleanDefaultReturnValue = stringToBoolean(defaultReturnValue);
-        boolean booleanValue = getPersistedBoolean(booleanDefaultReturnValue);
+        if (defaultReturnValue != null) {
+            boolean booleanDefaultReturnValue = stringToBoolean(defaultReturnValue);
+            booleanValue = getPersistedBoolean(booleanDefaultReturnValue);
+        } else {
+            // We haven't been given a default return value, but we need to specify one when retrieving the boolean
+
+            if (getPersistedBoolean(true) == getPersistedBoolean(false)) {
+                // The default value is being ignored, so we're good to go
+                booleanValue = getPersistedBoolean(true);
+            } else {
+                // We need a default value but haven't been given one, so we're stuck
+                throw new IllegalStateException("Cannot get a boolean without a default return value");
+            }
+        }
+
         return booleanToString(booleanValue);
     }
 
