@@ -54,8 +54,10 @@ public class WhenLockedPreference extends DropDownPreference {
 
     @Override
     protected String getPersistedString(String defaultReturnValue) {
-        //noinspection SimplifiableConditionalExpression Since I like the way this reads
-        boolean booleanDefaultReturnValue = defaultReturnValue == null ? false : stringToBoolean(defaultReturnValue);
+        if (defaultReturnValue == null)
+            throw new IllegalArgumentException("Cannot convert default value 'null' to boolean value");
+
+        boolean booleanDefaultReturnValue = stringToBoolean(defaultReturnValue);
         boolean booleanValue = getPersistedBoolean(booleanDefaultReturnValue);
         return booleanToString(booleanValue);
     }
