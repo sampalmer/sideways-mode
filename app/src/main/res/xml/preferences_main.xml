@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Using legacy PreferenceScreen declaration to keep auto-completion working -->
+<!--suppress AndroidElementNotAllowed -->
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
@@ -10,11 +13,6 @@
         android:icon="@drawable/preference_incompatible_apps"
         />
 
-    <SwitchPreference
-        android:key="turnOffWhenLocked"
-        android:title="@string/preference_turn_off_when_locked"
-        android:icon="@drawable/menu_power"
-        android:defaultValue="true"
-        />
+    <samuelpalmer.sensorautorotation.processes.ui.preferences.WhenLockedPreference />
 
 </PreferenceScreen>
