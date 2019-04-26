@@ -121,7 +121,8 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     public void onStart() {
         super.onStart();
 
-        tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
+        if (!tipsFragment.targetsSet())
+            tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
 
         permissionMonitor.subscribe(permissionChanged);
         checkPermission();

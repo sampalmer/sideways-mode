@@ -63,6 +63,11 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     public void setTargets(Dialog dialog, View sideButton, View menuButton, View offButton) {
+        if (targetsSet()) {
+            // We cannot allow the targets to be set multiple times because then we will lose track of the current wizard and end up making a new one on top of it.
+            throw new IllegalStateException("Targets already set");
+        }
+
         this.dialog = dialog;
 
         dialog.getWindow().setCallback(new WindowCallbackWrapper(dialog) {
@@ -100,6 +105,10 @@ public class FirstStartTipsFragment extends Fragment {
         );
 
         somethingChanged();
+    }
+
+    public boolean targetsSet() {
+        return this.tips != null;
     }
 
     public void setStatus(ApplicationStatus status) {
