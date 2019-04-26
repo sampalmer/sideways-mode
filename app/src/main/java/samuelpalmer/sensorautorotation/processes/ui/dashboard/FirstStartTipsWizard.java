@@ -130,6 +130,7 @@ class FirstStartTipsWizard {
 
         windowManager.addView(disableActivityView, disableActivityViewParams);
 
+        // Unfortunately, changing the dim doesn't work prior to Android 4.3 since the OS doesn't support changing it after it's already been initialised
         //noinspection ConstantConditions
         dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
 
