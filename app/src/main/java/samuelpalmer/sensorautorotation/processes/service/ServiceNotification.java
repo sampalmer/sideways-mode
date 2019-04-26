@@ -39,7 +39,7 @@ class ServiceNotification {
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
         builder = NotificationBuilderFactory.create(this.context)
             .setContentIntent(dashboardIntent)
-             .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
             .setChannelId(NotificationChannels.ID_CONTROLS)
             .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
