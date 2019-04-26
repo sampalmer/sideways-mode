@@ -35,7 +35,7 @@ public abstract class NotificationChannels {
             NotificationManager.IMPORTANCE_LOW
         );
         controls.setShowBadge(false); // This isn't needed, but it makes it clearer to the user that the service notification won't show as a badge.
-        controls.setLockscreenVisibility(Notification.VISIBILITY_SECRET); // Since this notification isn't really relevant on a typical lock screen
+        controls.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); // So when the user unlocks the phone, they can see if they've left the app on
 
         NotificationChannel upgrades = new NotificationChannel(
             ID_UPGRADES,
