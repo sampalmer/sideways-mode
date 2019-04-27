@@ -1,7 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,6 +36,12 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences_incompatible_apps);
 
         appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+        appsPreference.setOnPreferenceClickListener(preference -> {
+            RecyclerView prefsList = IncompatibleAppsFragment.super.getListView();
+            NavController navController = Navigation.findNavController(prefsList);
+            navController.navigate(R.id.action_incompatibleAppsFragment_to_incompatibleAppsChooserFragment);
+            return true;
+        });
 
         Preference description = findPreference("incompatibleAppsDetails");
         String newSummary = getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full));
@@ -57,16 +62,4 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
         permissionFragment.initialise(getPreferenceScreen());
     }
     
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        appsPreference.setOnPreferenceClickListener(preference -> {
-            RecyclerView prefsList = IncompatibleAppsFragment.super.getListView();
-            NavController navController = Navigation.findNavController(prefsList);
-            navController.navigate(R.id.action_incompatibleAppsFragment_to_incompatibleAppsChooserFragment);
-            return true;
-        });
-    }
-
 }
