@@ -1,8 +1,8 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.preference.Preference;
@@ -10,9 +10,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-
-import java.util.Collections;
-import java.util.Set;
 
 
 /**
@@ -22,10 +19,21 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 
     private static final String TAG_PERMISSIONS_FRAGMENT = "permissions";
 
-    private SharedPreferences prefs;
     private Preference appsPreference;
-    private boolean isStarted;
-    
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IncompatibleAppsViewModel viewModel = ViewModelProviders.of(this).get(IncompatibleAppsViewModel.class);
+
+        viewModel.getIncompatibleAppCount().observe(this, integer -> {
+            Integer quantity = viewModel.getIncompatibleAppCount().getValue();
+            assert quantity != null;
+            final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
+            appsPreference.setSummary(quantityString);
+        });
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_incompatible_apps);
@@ -50,48 +58,12 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        prefs = ApplicationSettings.getSharedPreferences(getActivity());
-        
         appsPreference.setOnPreferenceClickListener(preference -> {
             RecyclerView prefsList = IncompatibleAppsFragment.super.getListView();
             NavController navController = Navigation.findNavController(prefsList);
             navController.navigate(R.id.action_incompatibleAppsFragment_to_incompatibleAppsChooserFragment);
             return true;
         });
-    }
-    
-    @Override
-    public void onStart() {
-        super.onStart();
-        prefs.registerOnSharedPreferenceChangeListener(appsChanged);
-        updateAppsSummary();
-        
-        isStarted = true;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        
-        isStarted = false;
-        
-        prefs.unregisterOnSharedPreferenceChangeListener(appsChanged);
-    }
-
-    private final SharedPreferences.OnSharedPreferenceChangeListener appsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (isStarted && s.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
-                updateAppsSummary();
-        }
-    };
-
-    private void updateAppsSummary() {
-        Set<String> incompatibleApps = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-        assert incompatibleApps != null;
-        final int quantity = incompatibleApps.size();
-        final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
-        appsPreference.setSummary(quantityString);
     }
 
 }
