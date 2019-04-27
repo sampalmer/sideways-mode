@@ -48,7 +48,6 @@ public class WhenLockedPreference extends DropDownPreference {
     @Override
     protected boolean persistString(String value) {
         boolean booleanValue = stringToBoolean(value);
-
         return persistBoolean(booleanValue);
     }
 
@@ -67,7 +66,7 @@ public class WhenLockedPreference extends DropDownPreference {
                 booleanValue = getPersistedBoolean(true);
             } else {
                 // We need a default value but haven't been given one, so we're stuck
-                throw new IllegalStateException("Cannot get a boolean without a default return value");
+                throw new IllegalArgumentException("Cannot get a boolean without a default return value");
             }
         }
 
