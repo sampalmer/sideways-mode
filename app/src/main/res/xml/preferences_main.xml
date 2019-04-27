@@ -13,6 +13,6 @@
         android:icon="@drawable/preference_incompatible_apps"
         />
 
-    <samuelpalmer.sensorautorotation.processes.ui.preferences.WhenLockedPreference />
+    <samuelpalmer.sensorautorotation.processes.ui.preferences.custompreferences.WhenLockedPreference />
 
 </PreferenceScreen>
