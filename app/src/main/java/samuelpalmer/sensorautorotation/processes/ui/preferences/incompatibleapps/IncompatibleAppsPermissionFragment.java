@@ -6,7 +6,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
@@ -33,10 +32,6 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     public void initialise(PreferenceScreen preferenceScreen) {
         this.preferenceScreen = preferenceScreen;
         this.context = preferenceScreen.getContext();
-
-        Preference description = preferenceScreen.findPreference("incompatibleAppsDetails");
-        String newSummary = context.getString(R.string.preference_incompatible_apps_details, context.getText(R.string.app_name_full));
-        description.setSummary(newSummary);
 
         activityMonitor = ActivityMonitor.create(context);
         enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);

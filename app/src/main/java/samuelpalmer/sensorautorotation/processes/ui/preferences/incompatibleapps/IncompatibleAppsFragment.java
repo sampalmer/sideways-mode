@@ -26,9 +26,7 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
         super.onCreate(savedInstanceState);
         IncompatibleAppsViewModel viewModel = ViewModelProviders.of(this).get(IncompatibleAppsViewModel.class);
 
-        viewModel.getIncompatibleAppCount().observe(this, integer -> {
-            Integer quantity = viewModel.getIncompatibleAppCount().getValue();
-            assert quantity != null;
+        viewModel.getIncompatibleAppCount().observe(this, quantity -> {
             final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
             appsPreference.setSummary(quantityString);
         });
@@ -37,7 +35,12 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_incompatible_apps);
+
         appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+
+        Preference description = findPreference("incompatibleAppsDetails");
+        String newSummary = getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full));
+        description.setSummary(newSummary);
 
         //noinspection ConstantConditions
         IncompatibleAppsPermissionFragment permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
