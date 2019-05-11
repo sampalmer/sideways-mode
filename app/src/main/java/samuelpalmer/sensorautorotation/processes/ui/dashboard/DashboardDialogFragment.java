@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -57,7 +57,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         assert menuButton != null;
         menuButton.setOnClickListener(v -> popup.show());
 
-        popup = new PopupMenu(getActivity(), menuButton);
+        popup = new PopupMenu(requireActivity(), menuButton);
         popup.setOnMenuItemClickListener(this::handleMenuItemClick);
         popup.inflate(R.menu.main);
         menuButton.setOnTouchListener(popup.getDragToOpenListener());
@@ -102,7 +102,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         // It's important that we finish the activity when the dialog is *cancelled*, not dismissed.
         // This is because dismissal also occurs when the screen orientation or layout changes.
         // Hence if we finished the activity on *dismiss*, the dialog would disappear each time the screen orientation changes.
-        getActivity().finish();
+        requireActivity().finish();
     }
 
     @Override
@@ -121,7 +121,8 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     public void onStart() {
         super.onStart();
 
-        tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
+        if (!tipsFragment.targetsSet())
+            tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
 
         permissionMonitor.subscribe(permissionChanged);
         checkPermission();
@@ -170,9 +171,8 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
                 tipsFragment.showAllTips();
                 break;
             }
-            case R.id.action_incompatible_apps: {
-                Intent intent = new Intent(getActivity(), IncompatibleAppsActivity.class).addFlags(flags);
-                startActivity(intent);
+            case R.id.action_settings: {
+                startActivity(new Intent(requireContext(), SettingsActivity.class).addFlags(flags));
                 break;
             }
             default:

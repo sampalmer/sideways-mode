@@ -10,14 +10,21 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
  * other apps.
  */
 public abstract class ApplicationSettings {
-    
+
     public static SharedPreferences getSharedPreferences(Context context) {
         if (CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Application settings accessed outside of the UI process");
         
-        return context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_PRIVATE);
+        return context.getSharedPreferences(getSharedPreferencesName(context), Context.MODE_PRIVATE);
     }
-    
+
+    public static String getSharedPreferencesName(Context context) {
+        if (CurrentProcess.isServiceProcess(context))
+            throw new RuntimeException("Application settings accessed outside of the UI process");
+
+        return context.getPackageName() + "_preferences";
+    }
+
     /*
      * NOTE: If you change preference config:
      * 1. Add a migration to the "Migrations" class
@@ -30,6 +37,12 @@ public abstract class ApplicationSettings {
     public static final String KEY_APP_VERSION = "appVersion";
     
     public static final String KEY_INCOMPATIBLE_APP_PACKAGES = "incompatibleAppPackages";
+
+    /**
+     * Whether the app should stop running each time the user locks the device.
+     * The user will need to manually turn it back on if they want to use it again.
+     */
+    public static final String KEY_TURN_OFF_WHEN_LOCKED = "turnOffWhenLocked";
 
     /**
      * Whether the user has been told that the app is running in the background.

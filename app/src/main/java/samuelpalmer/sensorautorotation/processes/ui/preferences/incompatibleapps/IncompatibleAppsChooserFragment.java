@@ -4,17 +4,21 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class IncompatibleAppsChooserActivity extends UiActivity {
+public class IncompatibleAppsChooserFragment extends Fragment {
     
     private SharedPreferences prefs;
     private InstalledAppComparator installedAppComparator;
@@ -23,47 +27,54 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
     
     private boolean needsReload = false;
     private boolean started = false;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTitle(R.string.preference_incompatible_apps_title);
-        setContentView(R.layout.activity_incompatible_apps_chooser);
 
-        prefs = ApplicationSettings.getSharedPreferences(this);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_incompatible_apps_chooser, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        prefs = ApplicationSettings.getSharedPreferences(requireContext());
         installedAppComparator = new InstalledAppComparator();
-        
+
+        View root = getView();
+        assert root != null; // Since onActivityCreated() is called after onCreateView()
+
         list = new ProgressListView();
-        list.adapter = new InstalledAppAdapter(this);
-        list.list = findViewById(R.id.incompatible_apps_list);
+        list.adapter = new InstalledAppAdapter(requireContext());
+        list.list = root.findViewById(R.id.incompatible_apps_list);
         list.list.setAdapter(list.adapter);
         list.list.setItemsCanFocus(false); //Don't know if this is needed
-        list.progressBar = findViewById(R.id.incompatible_apps_progress);
-        
+        list.progressBar = root.findViewById(R.id.incompatible_apps_progress);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addDataScheme("package");
-        
-        registerReceiver(installedAppsChanged, intentFilter);
-        
+
+        requireContext().registerReceiver(installedAppsChanged, intentFilter);
+
         beginLoadInstalledApps();
-        
+
         list.list.setOnItemClickListener(onItemClickListener);
     }
-    
+
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         loader.cancel(true);
         loader = null;
-        
-        unregisterReceiver(installedAppsChanged);
+
+        requireContext().unregisterReceiver(installedAppsChanged);
     }
     
     private void beginLoadInstalledApps() {
-        loader = new LoadInstalledAppsTask(this, onLoadedListener);
+        loader = new LoadInstalledAppsTask(requireContext(), onLoadedListener);
         list.list.setVisibility(View.GONE);
         list.progressBar.setVisibility(View.VISIBLE);
         loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -77,7 +88,7 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
                 return;
             
             if (started) {
-                PackageManager packageManager = getPackageManager();
+                PackageManager packageManager = requireContext().getPackageManager();
                 
                 //noinspection ConstantConditions
                 String packageName = intent.getData().getSchemeSpecificPart();
@@ -120,7 +131,7 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
     };
     
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         prefs.registerOnSharedPreferenceChangeListener(onApplicationSettingsChanged);
         
@@ -135,7 +146,7 @@ public class IncompatibleAppsChooserActivity extends UiActivity {
     }
     
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         prefs.unregisterOnSharedPreferenceChangeListener(onApplicationSettingsChanged);
         

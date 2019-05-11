@@ -45,6 +45,15 @@ dependencies {
     compileOnly project(':com.sony.smallapp')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.preference:preference:1.0.0'
+
+    def nav_version = "2.0.0"
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+    def lifecycle_version = "2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
 }

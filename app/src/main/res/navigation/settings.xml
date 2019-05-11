@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/mainSettingsFragment">
+
+    <fragment
+        android:id="@+id/incompatibleAppsFragment"
+        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsFragment"
+        android:label="@string/preference_incompatible_apps_title" >
+        <action
+            android:id="@+id/action_incompatibleAppsFragment_to_incompatibleAppsChooserFragment"
+            app:destination="@+id/incompatibleAppsChooserFragment"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/pop_enter"
+            app:popExitAnim="@anim/pop_exit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/incompatibleAppsChooserFragment"
+        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserFragment"
+        android:label="@string/preference_incompatible_apps_title" />
+
+    <fragment
+        android:id="@+id/mainSettingsFragment"
+        android:name="samuelpalmer.sensorautorotation.processes.ui.preferences.MainSettingsFragment"
+        android:label="@string/action_settings" >
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_incompatibleAppsFragment"
+            app:destination="@id/incompatibleAppsFragment"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/pop_enter"
+            app:popExitAnim="@anim/pop_exit" />
+    </fragment>
+
+</navigation>

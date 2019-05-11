@@ -68,19 +68,12 @@
             android:theme="@style/AppTheme.Dialog"/>
 
         <activity
-            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-            tools:ignore="UnusedAttribute" />
-
-        <activity
-            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity"
-            android:parentActivityName=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-            tools:ignore="UnusedAttribute">
-
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity" />
-
+            android:name=".processes.ui.preferences.SettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+            </intent-filter>
         </activity>
 
         <!--suppress AndroidDomInspection -->

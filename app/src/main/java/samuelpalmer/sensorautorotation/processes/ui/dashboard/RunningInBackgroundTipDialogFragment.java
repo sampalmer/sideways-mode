@@ -34,7 +34,7 @@ public class RunningInBackgroundTipDialogFragment extends AppCompatDialogFragmen
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(requireActivity())
                 .setTitle(getString(R.string.tip_running_in_background_title, getText(R.string.app_name_full)))
                 .setMessage(getString(R.string.tip_running_in_background_description))
                 .setPositiveButton(getString(R.string.action_got_it), (dialog, which) -> complete())

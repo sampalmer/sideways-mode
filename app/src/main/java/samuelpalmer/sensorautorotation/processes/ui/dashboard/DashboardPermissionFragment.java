@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
+
+    private static final int REQUEST_CODE_GRANT_PERMISSION = 1;
 
     private EventRegistrar permissionMonitor;
 
@@ -49,10 +52,12 @@ public class DashboardPermissionFragment extends Fragment {
         Intent intent = SystemIntents.modifySystemSettings(context);
         
         try {
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_GRANT_PERMISSION);
 
-            permissionMonitor = ScreenOrientationController.makePermissionMonitor(context);
-            permissionMonitor.subscribe(permissionChanged);
+            if (permissionMonitor == null) {
+                permissionMonitor = ScreenOrientationController.makePermissionMonitor(context);
+                permissionMonitor.subscribe(permissionChanged);
+            }
         }
         catch (ActivityNotFoundException e) {
             throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
@@ -63,7 +68,22 @@ public class DashboardPermissionFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unsubscribePermissionMonitor();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private final EventHandler permissionChanged = () -> {
+        if (ScreenOrientationController.hasPermissionToStart(getContext())) {
+            FragmentActivity activity = getActivity();
+            if (activity != null)
+                ActivityUtils.finishActivitiesOnTopOf(activity);
+
+            unsubscribePermissionMonitor();
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void unsubscribePermissionMonitor() {
         if (permissionMonitor != null) {
             permissionMonitor.unsubscribe(permissionChanged);
             permissionMonitor = null;
@@ -71,18 +91,13 @@ public class DashboardPermissionFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private final EventHandler permissionChanged = new EventHandler() {
-        @Override
-        public void update() {
-            if (ScreenOrientationController.hasPermissionToStart(getContext())) {
-                FragmentActivity activity = getActivity();
-                if (activity != null)
-                    ActivityUtils.finishActivitiesOnTopOf(activity);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-                permissionMonitor.unsubscribe(permissionChanged);
-                permissionMonitor = null;
-            }
-        }
-    };
-
+        if (requestCode == REQUEST_CODE_GRANT_PERMISSION)
+            unsubscribePermissionMonitor();
+        else
+            Log.w(DashboardPermissionFragment.class.getSimpleName(), "Got back unknown request code: " + requestCode);
+    }
 }

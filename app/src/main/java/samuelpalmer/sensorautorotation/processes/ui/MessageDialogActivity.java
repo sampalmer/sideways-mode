@@ -53,7 +53,7 @@ public class MessageDialogActivity extends DialogActivity {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Dialog result = new AlertDialog.Builder(getActivity())
+            Dialog result = new AlertDialog.Builder(requireActivity())
                     .setMessage(getArguments().getCharSequence(INTENT_EXTRA_MESSAGE))
                     .setTitle(getArguments().getCharSequence(INTENT_EXTRA_TITLE))
                     .create();

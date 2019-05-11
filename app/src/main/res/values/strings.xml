@@ -23,6 +23,7 @@
     <string name="action_menu">Menu</string>
     <string name="action_help">Help</string>
     <string name="action_tips">Tips</string>
+    <string name="action_settings">Settings</string>
 
     <!-- Upgrade -->
     <string name="upgrade_summary">%1$s upgraded</string>
@@ -46,6 +47,11 @@
 
     <string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
     <string name="preference_choose_apps">Choose incompatible apps</string>
+
+    <string name="preference_when_screen_locked">When screen locked</string>
+    <string name="preference_when_screen_locked_do_nothing">Do nothing</string>
+    <string name="preference_when_screen_locked_turn_off">Turn off %1$s</string>
+
 
     <!-- Errors -->
     <string name="environment_error_message">%1$s %2$s has been turned off.</string>

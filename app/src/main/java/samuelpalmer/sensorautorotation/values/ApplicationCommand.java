@@ -84,30 +84,39 @@ public class ApplicationCommand {
 
     public static final class Config {
         public final Set<String> incompatibleAppPackages;
+        public final boolean turnOffWhenLocked;
 
         public static boolean isSyncableAppSetting(String appSettingKey) {
-            return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+            return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)
+                    || appSettingKey.equals(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
         }
 
         private Config(SharedPreferences applicationSettings) {
             this(
-                applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
+                applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()),
+                applicationSettings.getBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, true)
             );
         }
 
-        private Config(Set<String> incompatibleAppPackages) {
+        private Config(Set<String> incompatibleAppPackages, boolean turnOffWhenLocked) {
             this.incompatibleAppPackages = incompatibleAppPackages;
             if (incompatibleAppPackages == null)
                 throw new IllegalArgumentException("incompatibleAppPackages is null");
+
+            this.turnOffWhenLocked = turnOffWhenLocked;
         }
 
         private static @Nullable Config fromBundle(@Nullable Bundle bundle) {
             if (bundle == null)
                 return null;
 
-            return new Config(
-                getIncompatibleAppPackages(bundle)
-            );
+            Set<String> incompatibleAppPackages = getIncompatibleAppPackages(bundle);
+
+            if (!bundle.containsKey(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED))
+                throw new IllegalArgumentException("Bundle is missing value for " + ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
+            boolean turnOffWhenLocked = bundle.getBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
+
+            return new Config(incompatibleAppPackages, turnOffWhenLocked);
         }
 
         private static Set<String> getIncompatibleAppPackages(Bundle bundle) {
@@ -123,6 +132,7 @@ public class ApplicationCommand {
         private Bundle asBundle() {
             Bundle result = new Bundle();
             result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
+            result.putBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, turnOffWhenLocked);
             return result;
         }
     }
