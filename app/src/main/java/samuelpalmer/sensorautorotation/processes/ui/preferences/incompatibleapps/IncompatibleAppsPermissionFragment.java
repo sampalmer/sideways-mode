@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceScreen;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
@@ -15,6 +15,9 @@ import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
+/**
+ * Provides UI and logic to help user grant permissions for the incompatible apps feature.
+ */
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class IncompatibleAppsPermissionFragment extends Fragment {
 
@@ -23,39 +26,17 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     private ActivityMonitor activityMonitor;
     private EventRegistrar enforcementPermissionMonitor;
 
-    private PreferenceScreen preferenceScreen;
-    private Context context; //Must use this context instead of getActivity() since the latter isn't always available soon enough
-    private PermissionTipViewPreference tipView;
-
     private boolean isGrantingPermission;
 
-    public void initialise(PreferenceScreen preferenceScreen) {
-        this.preferenceScreen = preferenceScreen;
-        this.context = preferenceScreen.getContext();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        activityMonitor = ActivityMonitor.create(context);
-        enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
-        
-        tipView = (PermissionTipViewPreference) preferenceScreen.findPreference("incompatibleAppsPermission");
-        tipView.setOnPreferenceClickListener(preference -> {
-            grantPermissions();
-            return true;
-        });
+        activityMonitor = ActivityMonitor.create(requireContext());
+        enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(requireContext());
 
         activityMonitor.onPermissionChange().subscribe(activityMonitorPermissionChanged);
         enforcementPermissionMonitor.subscribe(enforcementPermissionChanged);
-
-        updateTip(); //Updating the visibility of the tip in onStart() isn't early enough when switching between split and fullscreen on Android 7.1
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (preferenceScreen == null)
-            throw new IllegalStateException("Can't initialise because initialise() hasn't been called");
-
-        updateTip();
     }
 
     @Override
@@ -65,9 +46,9 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
         activityMonitor.onPermissionChange().unsubscribe(activityMonitorPermissionChanged);
     }
 
-    private void grantPermissions() {
+    public void grantPermissions() {
         if (!activityMonitor.hasPermission())
-            new AlertDialog.Builder(context)
+            new AlertDialog.Builder(requireActivity())
                     .setTitle(activityMonitor.makeAcquirePermissionQuestion())
                     .setMessage(activityMonitor.makeAcquirePermissionExplanation())
                     .setOnCancelListener(dialog -> {})
@@ -94,15 +75,15 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 
                 if (cancelledMessage != null)
                     Toast
-                        .makeText(context, cancelledMessage, Toast.LENGTH_LONG)
+                        .makeText(requireActivity(), cancelledMessage, Toast.LENGTH_LONG)
                         .show();
             }
         }
     }
 
     private void grantOverlayPermission() {
-        if (!ScreenOrientationEnforcer.hasPermissionToStart(context)) {
-            new AlertDialog.Builder(context)
+        if (!ScreenOrientationEnforcer.hasPermissionToStart(requireContext())) {
+            new AlertDialog.Builder(requireActivity())
                     .setTitle(R.string.permission_needed_overlays_summary)
                     .setMessage(getString(R.string.permission_needed_overlays_description, getText(R.string.app_name_full)))
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
@@ -116,16 +97,12 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     }
 
     private final EventHandler activityMonitorPermissionChanged = () -> {
-        updateTip();
-
         if (activityMonitor.hasPermission())
             onPermissionGranted();
     };
 
     private final EventHandler enforcementPermissionChanged = () -> {
-        updateTip();
-
-        if (ScreenOrientationEnforcer.hasPermissionToStart(context))
+        if (ScreenOrientationEnforcer.hasPermissionToStart(requireContext()))
             onPermissionGranted();
     };
 
@@ -137,13 +114,6 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
 
             isGrantingPermission = false;
         }
-    }
-
-    private void updateTip() {
-        if (activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context))
-            preferenceScreen.removePreference(tipView);
-        else
-            preferenceScreen.addPreference(tipView);
     }
 
 }
