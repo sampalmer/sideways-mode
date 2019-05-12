@@ -59,6 +59,9 @@
     <string name="environment_error_system_rotation_enabled_summary">System rotation turned on</string>
     <string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was turned on.</string>
 
+    <string name="environment_error_screen_orientation_changed_summary">Screen orientation changed</string>
+    <string name="environment_error_screen_orientation_changed_message">Another app is controlling the screen orientation.</string>
+
     <string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
     <string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
     <string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings. To fix this, open %1$s.</string>

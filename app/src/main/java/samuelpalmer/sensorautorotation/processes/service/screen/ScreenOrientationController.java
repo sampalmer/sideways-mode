@@ -22,8 +22,12 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistra
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
-    
+
     private static final String TAG = ScreenOrientationController.class.getSimpleName();
+
+    // Keeping this pretty low since Android P could theoretically change the screen orientation quite quickly if the
+    // user mashes the Recents button to rapidly switch between a landscape app and a portrait app
+    private static final float MAX_EXTERNAL_ROTATIONS_PER_SECOND = .5f;
 
     public static boolean hasPermissionToStart(Context context) {
         return Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(context);
@@ -44,17 +48,19 @@ public class ScreenOrientationController extends State {
     @Nullable
     private Orientation lastProposed;
 
+    private ExternalRotationChangeRateLimiter rateLimiter;
+
     public ScreenOrientationController(Context context, ScreenRotationMonitor screen) {
         this.context = context;
         this.screen = screen;
         contentResolver = context.getContentResolver();
-
         systemSettingPermissionMonitor = makePermissionMonitor(context);
     }
 
     @Override
     protected void start() {
         lastProposed = null;
+        rateLimiter = new ExternalRotationChangeRateLimiter();
         
         if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1) {
             Orientation realOrientation = screen.currentRotation();
@@ -111,15 +117,24 @@ public class ScreenOrientationController extends State {
                 int newUserRotation = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, Surface.ROTATION_0);
                 Orientation newOrientation = AndroidSurfaceRotation.toOrientationClockwise(newUserRotation);
                 if (!newOrientation.equals(lastProposed)) {
-                    /*
-                     * Android P sometimes changes the value of USER_ROTATION to match the current screen orientation.
-                     * This can be problematic, since the current screen orientation might be the result of an open app's
-                     * orientation preferences. For example, when the launcher is open, the screen orientation is usually portrait.
-                     *
-                     * That breaks this app, so we'll just have to fight with the OS and change it back.
-                     */
-                    Log.i(TAG, "Something proposed orientation " + newOrientation + ". Reverting to " + lastProposed + ".");
-                    setAndHandleErrors(Settings.System.USER_ROTATION, AndroidSurfaceRotation.fromOrientationClockwise(lastProposed));
+                    rateLimiter.registerExternalRotationChange();
+                    Float externalRotationChangesPerSecond = rateLimiter.getExternalRotationChangesPerSecond();
+
+                    if (externalRotationChangesPerSecond != null && externalRotationChangesPerSecond >= MAX_EXTERNAL_ROTATIONS_PER_SECOND) {
+                        // Something external is changing the screen orientation too quickly, so apps are probably fighting over the screen orientation
+                        GenericError error = new GenericError(context, R.string.environment_error_screen_orientation_changed_summary, context.getText(R.string.environment_error_screen_orientation_changed_message));
+                        EnvironmentErrorManager.report(context, error);
+                    } else {
+                        /*
+                         * Android P sometimes changes the value of USER_ROTATION to match the current screen orientation.
+                         * This can be problematic, since the current screen orientation might be the result of an open app's
+                         * orientation preferences. For example, when the launcher is open, the screen orientation is usually portrait.
+                         *
+                         * That breaks this app, so we'll just have to fight with the OS and change it back.
+                         */
+                        Log.i(TAG, "Something proposed orientation " + newOrientation + ". Reverting to " + lastProposed + ".");
+                        setAndHandleErrors(Settings.System.USER_ROTATION, AndroidSurfaceRotation.fromOrientationClockwise(lastProposed));
+                    }
                 }
             }
         }
