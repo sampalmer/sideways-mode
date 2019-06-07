@@ -44,7 +44,7 @@ public class RunningStateUpdater extends State {
 
                 // Running the service in the foreground reduces the chance of the process being killed.
                 // This is important, since the process being killed would result in the screen no longer rotating.
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P && Build.VERSION.PREVIEW_SDK_INT == 3)
+                if (Build.VERSION.SDK_INT >= 29)
                     service.startForeground(NotificationIds.SERVICE, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST);
                 else
                     service.startForeground(NotificationIds.SERVICE, notification);

@@ -22,7 +22,16 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
 class UsageStatsActivityMonitor extends PollingActivityMonitor {
 
     private static final Intent acquirePermissionIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-    private static final int ACTIVITY_IN_FOREGROUND = Build.VERSION.SDK_INT == 28 && Build.VERSION.PREVIEW_SDK_INT == 3 ? UsageEvents.Event.ACTIVITY_RESUMED : UsageEvents.Event.MOVE_TO_FOREGROUND;
+    private static final int ACTIVITY_IN_FOREGROUND;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 29)
+            ACTIVITY_IN_FOREGROUND = UsageEvents.Event.ACTIVITY_RESUMED;
+        else {
+            //noinspection deprecation
+            ACTIVITY_IN_FOREGROUND = UsageEvents.Event.MOVE_TO_FOREGROUND;
+        }
+    }
 
     static boolean isSupported(Context context) {
         if (Build.VERSION.SDK_INT < 21)

@@ -83,10 +83,12 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
     private boolean poll() {
         int mode;
 
-        if (Build.VERSION.SDK_INT == 28 && Build.VERSION.PREVIEW_SDK_INT == 3)
+        if (Build.VERSION.SDK_INT >= 29)
             mode = appOps.unsafeCheckOpNoThrow(op, uid, packageName);
-        else
+        else {
+            //noinspection deprecation
             mode = appOps.checkOpNoThrow(op, uid, packageName);
+        }
 
         return mode == AppOpsManager.MODE_ALLOWED;
     }

@@ -162,7 +162,7 @@ public class QuickSettingService extends TileService {
         
         tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.iconId : R.drawable.quick_setting_off));
 
-        if (Build.VERSION.SDK_INT == 28 && Build.VERSION.PREVIEW_SDK_INT == 3) {
+        if (Build.VERSION.SDK_INT >= 29) {
             // Android Q lets you specify the subtitle, so we'll use that to show the status
             tile.setLabel(getText(R.string.quick_setting_mode_name));
 
