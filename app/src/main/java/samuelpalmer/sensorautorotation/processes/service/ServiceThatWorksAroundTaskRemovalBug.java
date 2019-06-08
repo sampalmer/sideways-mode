@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
@@ -37,6 +38,11 @@ abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
      * https://code.google.com/p/android/issues/detail?id=104308
      */
     private void clearPendingDeath() {
+        if (Build.VERSION.SDK_INT >= 29) {
+            // Background activity starts are blocked in Android Q and above
+            return;
+        }
+
         Intent intent = new Intent(this, DummyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

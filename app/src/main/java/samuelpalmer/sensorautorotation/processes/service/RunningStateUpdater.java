@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -39,11 +41,14 @@ public class RunningStateUpdater extends State {
 
             if (!runningState.equals(lastRunningState)) {
                 Notification notification = notificationBuilder.build(runningState);
-                
+
                 // Running the service in the foreground reduces the chance of the process being killed.
                 // This is important, since the process being killed would result in the screen no longer rotating.
-                service.startForeground(NotificationIds.SERVICE, notification);
-                
+                if (Build.VERSION.SDK_INT >= 29)
+                    service.startForeground(NotificationIds.SERVICE, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST);
+                else
+                    service.startForeground(NotificationIds.SERVICE, notification);
+
                 lastRunningState = runningState;
                 onStateChanged.report();
             }
