@@ -1,1 +1,8 @@
+• Added option to leave Sideways Mode on when device locked
+• Added support for Android Q
 • Removed error report feature since it wasn't GDPR-compliant
+• Added Android Navigation library
+• Fixed crashes when granting permissions
+• Fixed issue where start-up tips were duplicated
+• Removed support for Android 4.0 - 4.0.2
+• Other minor improvements and fixes
