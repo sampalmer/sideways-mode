@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.*;
 import android.widget.ImageView;
 import androidx.core.content.ContextCompat;
@@ -131,8 +132,10 @@ class FirstStartTipsWizard {
         windowManager.addView(disableActivityView, disableActivityViewParams);
 
         // Unfortunately, changing the dim doesn't work prior to Android 4.3 since the OS doesn't support changing it after it's already been initialised
-        //noinspection ConstantConditions
-        dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
+        if (Build.VERSION.SDK_INT >= 18) {
+            //noinspection ConstantConditions
+            dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
+        }
 
         showCurrentTip();
     }
@@ -141,8 +144,10 @@ class FirstStartTipsWizard {
         if (!tipsRunning)
             throw new RuntimeException("Already stopped");
 
-        //noinspection ConstantConditions
-        dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
+        if (Build.VERSION.SDK_INT >= 18) {
+            //noinspection ConstantConditions
+            dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
+        }
 
         windowManager.removeView(disableActivityView);
 
