@@ -45,17 +45,17 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
 
     @Override
     protected void subscribeToAdaptee() {
-        appOps.startWatchingMode(op, packageName, usageOpListener);
+        appOps.startWatchingMode(op, packageName, opListener);
     }
 
     @Override
     protected void unsubscribeFromAdaptee() {
-        appOps.stopWatchingMode(usageOpListener);
-        handler.removeCallbacks(checkUsagePermission);
+        appOps.stopWatchingMode(opListener);
+        handler.removeCallbacks(checkPermission);
         isUpToDate = false;
     }
 
-    private final AppOpsManager.OnOpChangedListener usageOpListener = new AppOpsManager.OnOpChangedListener() {
+    private final AppOpsManager.OnOpChangedListener opListener = new AppOpsManager.OnOpChangedListener() {
         @Override
         public void onOpChanged(String op, String packageName) {
             /*
@@ -73,13 +73,13 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
                 // Android actually notifies us of changes to ops other than the one we registered for, so filtering them out
                 if (AppOpMonitor.this.op.equals(op)) {
                     // We're not in main thread, so post to main thread queue
-                    handler.post(checkUsagePermission);
+                    handler.post(checkPermission);
                 }
             }
         }
     };
 
-    private final Runnable checkUsagePermission = new Runnable() {
+    private final Runnable checkPermission = new Runnable() {
         @Override
         public void run() {
             if (hasSubscriptions()) {
