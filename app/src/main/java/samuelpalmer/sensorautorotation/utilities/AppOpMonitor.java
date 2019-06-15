@@ -58,9 +58,19 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
     private final AppOpsManager.OnOpChangedListener usageOpListener = new AppOpsManager.OnOpChangedListener() {
         @Override
         public void onOpChanged(String op, String packageName) {
-            // We get callbacks for op changes across *all* apps
-            if (AppOpMonitor.this.packageName.equals(packageName)) {
-                // Not in main thread, so post to main thread queue
+            /*
+             * We op change notifications for *all* apps, not just this app.
+             * Normally we would ignore ones that aren't for this ap.
+             * But there's a weird bug in the Android 8.0 emulator when granting the
+             * "display over other apps" permission that causes the OS to incorrectly
+             * report the op as _not_ granted when it in fact is. The OS then
+             * sends out a notification with a null packageName after the permission
+             * activity is closed, and the OS reports the correct op status at this point.
+             * So we need to check the op even if the notification isn't for this app.
+             */
+
+            if (packageName == null || AppOpMonitor.this.packageName.equals(packageName)) {
+                // We're not in main thread, so post to main thread queue
                 handler.post(checkUsagePermission);
             }
         }
