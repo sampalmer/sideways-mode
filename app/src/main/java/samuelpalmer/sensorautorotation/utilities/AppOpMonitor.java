@@ -70,8 +70,11 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
              */
 
             if (packageName == null || AppOpMonitor.this.packageName.equals(packageName)) {
-                // We're not in main thread, so post to main thread queue
-                handler.post(checkUsagePermission);
+                // Android actually notifies us of changes to ops other than the one we registered for, so filtering them out
+                if (AppOpMonitor.this.op.equals(op)) {
+                    // We're not in main thread, so post to main thread queue
+                    handler.post(checkUsagePermission);
+                }
             }
         }
     };
