@@ -2,14 +2,16 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 
 import android.app.Application;
 import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.Set;
+
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class IncompatibleAppsViewModel extends AndroidViewModel {
 
@@ -45,7 +47,6 @@ public class IncompatibleAppsViewModel extends AndroidViewModel {
 
     private void updateCount() {
         Set<String> incompatibleApps = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-        assert incompatibleApps != null;
         int quantity = incompatibleApps.size();
         incompatibleAppCount.setValue(quantity);
     }

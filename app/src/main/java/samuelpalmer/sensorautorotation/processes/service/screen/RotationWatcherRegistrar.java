@@ -57,6 +57,9 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
             IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
             Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
             windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
+            if (windowManagerService == null)
+                throw new RotationWatcherNotSupportedException("Window manager service is null");
+
             watchRotation = windowManagerService.getClass().getMethod("watchRotation", watchRotationParameterTypes);
             removeRotationWatcher = tryFindRemoveMethod();
         } catch (ClassNotFoundException | ClassCastException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {

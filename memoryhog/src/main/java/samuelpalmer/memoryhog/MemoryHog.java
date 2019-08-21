@@ -14,7 +14,7 @@ public class MemoryHog {
 
     private static final String TAG = MemoryHog.class.getSimpleName();
 
-    @SuppressWarnings("FieldCanBeLocal")
+    @SuppressWarnings({"FieldCanBeLocal", "MismatchedReadAndWriteOfArray"})
     private final long[] data;
 
     public MemoryHog(Context context) {

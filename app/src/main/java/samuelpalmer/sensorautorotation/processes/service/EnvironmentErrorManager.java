@@ -36,7 +36,9 @@ public abstract class EnvironmentErrorManager {
     }
     
     public static void clear(Context context) {
-        ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        notificationManager.cancel(NotificationIds.ERROR);
         
         ServiceSettings
             .getSharedPreferences(context)
@@ -70,8 +72,10 @@ public abstract class EnvironmentErrorManager {
             builder.setVibrate(new long[]{});
         
         Notification notification = builder.build();
-        
-        ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        notificationManager.notify(NotificationIds.ERROR, notification);
     }
     
 }

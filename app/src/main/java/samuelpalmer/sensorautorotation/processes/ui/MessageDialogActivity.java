@@ -55,6 +55,9 @@ public class MessageDialogActivity extends DialogActivity {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            if (getArguments() == null)
+                throw new NullPointerException("Arguments were not provided");
+
             Dialog result = new AlertDialog.Builder(requireActivity())
                     .setMessage(getArguments().getCharSequence(INTENT_EXTRA_MESSAGE))
                     .setTitle(getArguments().getCharSequence(INTENT_EXTRA_TITLE))

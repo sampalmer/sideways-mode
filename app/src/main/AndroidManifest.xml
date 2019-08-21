@@ -167,7 +167,7 @@
             android:exported="false"
             android:process="@string/process_service"
             android:foregroundServiceType=""
-            tools:targetApi="p" />
+            tools:ignore="UnusedAttribute" />
 
         <activity
             android:name=".processes.service.DummyActivity"

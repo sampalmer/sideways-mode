@@ -16,8 +16,8 @@ public class IncompatibleAppsPermissionViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> shouldShowTip = new MutableLiveData<>();
 
-    private ActivityMonitor activityMonitor;
-    private EventRegistrar enforcementPermissionMonitor;
+    private final ActivityMonitor activityMonitor;
+    private final EventRegistrar enforcementPermissionMonitor;
 
     public LiveData<Boolean > getShouldShowTip() {
         return shouldShowTip;

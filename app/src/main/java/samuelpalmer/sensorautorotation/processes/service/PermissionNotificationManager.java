@@ -5,8 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.core.app.NotificationCompat;
 import androidx.navigation.NavDeepLinkBuilder;
+
+import java.util.Collections;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
@@ -17,9 +22,6 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Issues a notification if the permissions needed for the "Incompatible apps" feature are
@@ -103,7 +105,6 @@ public class PermissionNotificationManager extends State {
     private boolean needsPermission() {
         if (isRunning) {
             Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-            assert incompatibleAppPackages != null;
 
             //noinspection RedundantIfStatement
             if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context)))

@@ -24,7 +24,10 @@ public class FieldConstants<TClass> {
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
-                
+
+                if (currentFieldValue == null)
+                    throw new IllegalStateException(String.format("Field %s is null, but all constant fields are expected to have a value", field.getName()));
+
                 if (currentFieldValue.equals(value))
                     return field.getName();
             }

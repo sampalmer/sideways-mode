@@ -3,10 +3,10 @@
 <!-- Translation by Евгений Черник -->
 <!-- Can contact translator for minor fixes -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Menu -->
-    <string name="action_help">Справка</string>
+    <string name="action_help" tools:keep="@string/action_help">Справка</string>
     <string name="action_settings">Настройки</string>
 
     <!-- Upgrade -->

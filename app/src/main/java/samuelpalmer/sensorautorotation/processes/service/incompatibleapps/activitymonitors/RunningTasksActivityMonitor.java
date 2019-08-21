@@ -1,17 +1,20 @@
 package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 
 import java.util.List;
+
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 
 class RunningTasksActivityMonitor extends PollingActivityMonitor {
 
@@ -28,9 +31,9 @@ class RunningTasksActivityMonitor extends PollingActivityMonitor {
         onPermissionChange = new NullEventRegistrarAdaptor();
     }
 
+    @SuppressLint("NewApi") // The SDK thinks the topActivity field is an API 29 field, when in fact it has been available since API 14 and maybe earlier
     @Override
     protected ComponentName poll() {
-        @SuppressWarnings("deprecation")
         List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
         if (runningTasks != null && !runningTasks.isEmpty()) {
             ActivityManager.RunningTaskInfo currentTask = runningTasks.get(0);

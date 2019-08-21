@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import java.lang.reflect.InvocationTargetException;
+
 public final class NotificationStyles {
 
     private final StyleType title = new StyleType("TITLE");
@@ -133,7 +135,7 @@ public final class NotificationStyles {
                 if (colorFilter instanceof PorterDuffColorFilter)
                     try {
                         return (int) colorFilter.getClass().getMethod("getColor").invoke(colorFilter);
-                    } catch (ReflectiveOperationException | ClassCastException ignored) {
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassCastException ignored) {
                     }
             }
         }

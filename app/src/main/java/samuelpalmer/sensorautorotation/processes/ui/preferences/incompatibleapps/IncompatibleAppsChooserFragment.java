@@ -204,7 +204,6 @@ public class IncompatibleAppsChooserFragment extends Fragment {
     
     private void markIncompatibleAppPackages() {
         Set<String> incompatibleAppPackages = prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-        assert incompatibleAppPackages != null;
 
         for (int i = 0; i < list.adapter.getCount(); ++i) {
             InstalledApp item = list.adapter.getItem(i);
