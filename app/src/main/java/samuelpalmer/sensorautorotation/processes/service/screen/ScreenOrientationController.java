@@ -3,16 +3,20 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Surface;
+
 import androidx.annotation.Nullable;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
+import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -44,6 +48,7 @@ public class ScreenOrientationController extends State {
     private final ScreenRotationMonitor screen;
     private final ContentResolver contentResolver;
     private final EventRegistrar systemSettingPermissionMonitor;
+    private final SharedPreferences prefs;
 
     @Nullable
     private Orientation lastProposed;
@@ -55,18 +60,31 @@ public class ScreenOrientationController extends State {
         this.screen = screen;
         contentResolver = context.getContentResolver();
         systemSettingPermissionMonitor = makePermissionMonitor(context);
+        prefs = ServiceSettings.getSharedPreferences(context);
     }
 
     @Override
     protected void start() {
         lastProposed = null;
         rateLimiter = new ExternalRotationChangeRateLimiter();
-        
-        if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1) {
+
+        boolean wasAutoRotationOn = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1;
+
+        if (!prefs.contains(ServiceSettings.KEY_SYSTEM_ROTATION)) {
+            //It's possible that we previously crashed and already have the value.
+            //In this case, we don't want to re-fetch it since this app will have already turned system auto rotation off and we won't be able to determine the setting's original state.
+            //Storing this value so we can restore the original value when this app is stopped.
+            prefs
+                    .edit()
+                    .putBoolean(ServiceSettings.KEY_SYSTEM_ROTATION, wasAutoRotationOn)
+                    .apply();
+        }
+
+        if (wasAutoRotationOn) {
             Orientation realOrientation = screen.currentRotation();
-            propose(realOrientation);
+            propose(realOrientation); //To prevent the screen orientation from switching after we turn off auto-rotation
             
-            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 0);
+            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 0); //Since it's incompatible with this app
             propose(realOrientation); //Just in case disabling system rotation reset this.
         }
         
@@ -78,8 +96,20 @@ public class ScreenOrientationController extends State {
     protected void stop() {
         systemSettingPermissionMonitor.unsubscribe(systemSettingPermissionChanged);
         contentResolver.unregisterContentObserver(onUserRotationChanged);
-        setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
-        propose(Orientation.NATURAL);
+
+        if (Build.VERSION.SDK_INT >= 28) {
+            // Android P lets the user manually change the screen orientation even if auto-rotation is off,
+            // so we'll assume they want to keep using the mode they were originally in.
+            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, wasSystemRotationOn() ? 1 : 0);
+        } else {
+            // Since this is an auto-rotation app, it's safe to assume that the user wants to use auto-rotation.
+            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
+
+            // The OS practically always has this set to natural orientation, so we'll follow that convention to keep things in a clean state.
+            propose(Orientation.NATURAL);
+        }
+
+        prefs.edit().remove(ServiceSettings.KEY_SYSTEM_ROTATION).apply();
     }
 
     public void propose(Orientation value) {
@@ -92,7 +122,14 @@ public class ScreenOrientationController extends State {
         if (worked)
             lastProposed = value;
     }
-    
+
+    public boolean wasSystemRotationOn() {
+        if (!prefs.contains(ServiceSettings.KEY_SYSTEM_ROTATION))
+            throw new IllegalStateException("This setting is not available in this state.");
+
+        return prefs.getBoolean(ServiceSettings.KEY_SYSTEM_ROTATION, true);
+    }
+
     private boolean setAndHandleErrors(String name, int newValue) {
         if (!validateSystemSettingsPermission())
             return false;
@@ -155,5 +192,4 @@ public class ScreenOrientationController extends State {
         else
             return true;
     }
-
 }

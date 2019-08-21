@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -13,7 +14,7 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
  * other apps.
  */
 public abstract class ServiceSettings {
-    
+
     public static SharedPreferences getSharedPreferences(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Service settings accessed outside of the service process");
@@ -27,7 +28,13 @@ public abstract class ServiceSettings {
      * Has no value if the service is off. Otherwise set to the side the user is on.
      */
     public static final String KEY_PERSISTENT_STATE = "persistentState";
-    
+
+    /**
+     * Whether the OS's auto-rotation setting was on at the time this app was started. Used
+     * to return the OS setting to its previous state when this app is stopped.
+     */
+    public static final String KEY_SYSTEM_ROTATION = "systemRotation";
+
     /**
      * The error, if any, that occurred when the service was last running.
      */
