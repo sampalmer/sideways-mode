@@ -2,11 +2,13 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.os.Bundle;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
-//Intentionally not inheriting from custom activity base classes since we don't want any extra behaviour for this activity since it's an error message intended to guide the user away from using the app.
+// Intentionally not inheriting from custom activity base classes since we don't want any extra behaviour for this activity since it's an error message intended to guide the user away from using the app.
 public class DeviceUnsupportedActivity extends AppCompatActivity {
     
     /**

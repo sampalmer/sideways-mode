@@ -40,14 +40,15 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
-import samuelpalmer.sensorautorotation.errors.SensorError;
-import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
-import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import samuelpalmer.sensorautorotation.errors.SensorError;
+import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
+import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 
 /**
  * A special helper class used by the WindowManager
@@ -86,7 +87,7 @@ public abstract class WindowOrientationListener {
     
     private boolean mGotSensorEvent;
     
-    //5000ms wasn't enough time for these devices in the Google Cloud Test Lab, but 15000ms was.
+    // 5000ms wasn't enough time for these devices in the Google Cloud Test Lab, but 15000ms was.
     // * Moto G (2nd Gen) (titan_umts)
     // * Moto X (2nd Gen) (victara)
     // 15000ms wasn't enough for a Sony Xperia M on Android 4.1. Occasionally it tripped.
@@ -696,7 +697,7 @@ public abstract class WindowOrientationListener {
         public AccelSensorJudge(Context context) {
             
             // Load tilt tolerance configuration.
-            return; //Don't have access to system config
+            return; // Don't have access to system config
         }
         
         @Override
@@ -769,7 +770,7 @@ public abstract class WindowOrientationListener {
                 throw new RuntimeException(error.toString());
             }
             
-            //This method will be called a lot, so we only want to do this stuff when necessary.
+            // This method will be called a lot, so we only want to do this stuff when necessary.
             if (event.sensor.getType() != mLastSensorType) {
                 Log.i(WindowOrientationListener.TAG, "Got first sensor event from " + stringify(event.sensor));
                 

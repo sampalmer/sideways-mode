@@ -3,15 +3,16 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import java.util.Collections;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Represents the "incompatible apps" feature. Dynamically overrides the screen orientation
@@ -74,13 +75,13 @@ public class IncompatibleAppsMonitor extends State {
 
     private void updateEnforcement() {
         if (orientationEnforcer.isStarted()) {
-            //Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag.
+            // Note that the permission may have been revoked at this point, but it doesn't cause a crash. Not checking it here since it could introduce lag.
             orientationEnforcer.setEnforced(shouldEnforce());
         }
         else {
             tryToStartEnforcer();
             if (orientationEnforcer.isStarted())
-                permissionNotificationManager.check(); //Android doesn't tell us when the permission is granted, so we'll just keep checking it so the error notification can be cancelled
+                permissionNotificationManager.check(); // Android doesn't tell us when the permission is granted, so we'll just keep checking it so the error notification can be cancelled
         }
     }
 
@@ -92,7 +93,7 @@ public class IncompatibleAppsMonitor extends State {
             &&
             incompatibleAppPackages.contains(currentActivity.getPackageName())
             &&
-            //Not allowing orientation enforcement on the lock screen in case it breaks it and makes it hard to unlock the device
+            // Not allowing orientation enforcement on the lock screen in case it breaks it and makes it hard to unlock the device
             !lockScreenDetector.isOnLockScreen();
     }
 

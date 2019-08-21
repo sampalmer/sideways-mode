@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -191,7 +194,7 @@ public class DashboardNormalFragment extends Fragment {
                     if (event == DISMISS_EVENT_SWIPE)
                         new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR).send(getContext());
                     
-                    //If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
+                    // If the user swipes away the snackbar, it can't be shown anymore, so this one is effectively dead
                     DashboardNormalFragment.this.snackbar = null;
                 }
             });

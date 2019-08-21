@@ -1,22 +1,29 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ContentProvider;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Performs process startup logic, tracks the application context, and identifies which process the calling code is running in.
@@ -91,7 +98,7 @@ public class CurrentProcess extends Application {
 
         super.onCreate();
 
-        //Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
+        // Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
         
         /*
          * Must setup notification channels before doing anything else so channels will exist when notifications are posted.

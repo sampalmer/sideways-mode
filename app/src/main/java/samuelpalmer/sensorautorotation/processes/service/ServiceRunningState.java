@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
+
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
@@ -46,7 +47,7 @@ public class ServiceRunningState extends State {
     protected void start() {
         Log.i(TAG, "App is turning on");
         
-        //This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
+        // This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
         EnvironmentErrorManager.clear(service);
         
         systemAutoRotationMonitor.ensureStarted();

@@ -1,6 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,15 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class IncompatibleAppsChooserFragment extends Fragment {
     
@@ -48,7 +54,7 @@ public class IncompatibleAppsChooserFragment extends Fragment {
         list.adapter = new InstalledAppAdapter(requireContext());
         list.list = root.findViewById(R.id.incompatible_apps_list);
         list.list.setAdapter(list.adapter);
-        list.list.setItemsCanFocus(false); //Don't know if this is needed
+        list.list.setItemsCanFocus(false); // Don't know if this is needed
         list.progressBar = root.findViewById(R.id.incompatible_apps_progress);
 
         IntentFilter intentFilter = new IntentFilter();

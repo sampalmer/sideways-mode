@@ -49,7 +49,7 @@ class Migrations {
                 editor.remove("userOrientation");
                 
                 if (prefs.contains("autoRotate") && prefs.contains("userOrientation") && prefs.getBoolean("autoRotate", true))
-                    //Not migrating this value when in locked orientation mode since it depends on the device orientation,
+                    // Not migrating this value when in locked orientation mode since it depends on the device orientation,
                     // which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
                     editor.putInt("screenOrientationOffset", Orientation.NATURAL.minus(Orientation.fromOffset(prefs.getInt("userOrientation", 0))).offset);
             }
@@ -69,7 +69,7 @@ class Migrations {
             public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
                 super.upgradeUiProcessData(context, prefs, editor);
                 
-                //The format of this setting has changed.
+                // The format of this setting has changed.
                 editor.remove("lastError");
             }
         });

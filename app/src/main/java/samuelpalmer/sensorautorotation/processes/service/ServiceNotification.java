@@ -7,11 +7,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.*;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -22,7 +28,7 @@ class ServiceNotification {
     private final Context context;
     private final NotificationBuilderCompat builder;
     
-    //Cached for RAM & CPU efficiency
+    // Cached for RAM & CPU efficiency
     private final int actionButtonColour;
     private final int unselectedButtonBackground;
     
@@ -35,7 +41,7 @@ class ServiceNotification {
             new Intent(this.context, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntentIds.PENDING_INTENT_FLAGS);
         
-        //Caching and re-using the builder prevents the notification from disappearing and
+        // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
         builder = NotificationBuilderFactory.create(this.context)
             .setContentIntent(dashboardIntent)
@@ -70,7 +76,7 @@ class ServiceNotification {
         CharSequence statusText = context.getText(statusTextResource);
 
         if (VERSION.SDK_INT >= 24) {
-            //In Android N, the app name is already shown in the notification's header section, so we can skip it here.
+            // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
             builder.setContentTitle(statusText);
         }
         else {
@@ -84,7 +90,7 @@ class ServiceNotification {
     }
     
     private void applyButtons(UserSide userSide) {
-        builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
+        builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
         NotificationButtons notificationButtons = new NotificationButtons(
         context,

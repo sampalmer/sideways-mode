@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,8 +33,8 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
      */
     @NonNull
     public static Set<String> getInstalledPackages(PackageManager packageManager, @Nullable String packageName) {
-        //Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
-        //http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
+        // Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
+        // http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
         Set<String> installedPackageNames = new HashSet<>();
         for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null).setPackage(packageName);

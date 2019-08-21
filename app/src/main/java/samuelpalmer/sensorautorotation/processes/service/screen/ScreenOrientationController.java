@@ -71,9 +71,9 @@ public class ScreenOrientationController extends State {
         boolean wasAutoRotationOn = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1;
 
         if (!prefs.contains(ServiceSettings.KEY_SYSTEM_ROTATION)) {
-            //It's possible that we previously crashed and already have the value.
-            //In this case, we don't want to re-fetch it since this app will have already turned system auto rotation off and we won't be able to determine the setting's original state.
-            //Storing this value so we can restore the original value when this app is stopped.
+            // It's possible that we previously crashed and already have the value.
+            // In this case, we don't want to re-fetch it since this app will have already turned system auto rotation off and we won't be able to determine the setting's original state.
+            // Storing this value so we can restore the original value when this app is stopped.
             prefs
                     .edit()
                     .putBoolean(ServiceSettings.KEY_SYSTEM_ROTATION, wasAutoRotationOn)
@@ -82,10 +82,10 @@ public class ScreenOrientationController extends State {
 
         if (wasAutoRotationOn) {
             Orientation realOrientation = screen.currentRotation();
-            propose(realOrientation); //To prevent the screen orientation from switching after we turn off auto-rotation
+            propose(realOrientation); // To prevent the screen orientation from switching after we turn off auto-rotation
             
-            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 0); //Since it's incompatible with this app
-            propose(realOrientation); //Just in case disabling system rotation reset this.
+            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 0); // Since it's incompatible with this app
+            propose(realOrientation); // Just in case disabling system rotation reset this.
         }
         
         contentResolver.registerContentObserver(Settings.System.getUriFor(Settings.System.USER_ROTATION), false, onUserRotationChanged);
@@ -136,7 +136,7 @@ public class ScreenOrientationController extends State {
 
         boolean worked = Settings.System.putInt(contentResolver, name, newValue);
         if (!worked) {
-            //Because the developer can't do anything about this; it seems to be a problem on the device.
+            // Because the developer can't do anything about this; it seems to be a problem on the device.
             GenericError error = new GenericError(context, R.string.environment_error_system_setting_write_failure_summary, context.getString(R.string.environment_error_system_setting_write_failure_message, name, Integer.toString(newValue)));
             EnvironmentErrorManager.report(context, error);
             return false;

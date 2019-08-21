@@ -8,6 +8,7 @@ import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
@@ -175,7 +176,7 @@ public class QuickSettingService extends TileService {
             tile.setLabel(getText(labelId));
         }
 
-        tile.updateTile(); //Seems to subsequently cause loss of listening state.
+        tile.updateTile(); // Seems to subsequently cause loss of listening state.
     }
 
 }

@@ -6,11 +6,13 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+
 import androidx.annotation.RequiresApi;
-import samuelpalmer.sensorautorotation.R;
 
 import java.util.Arrays;
 import java.util.List;
+
+import samuelpalmer.sensorautorotation.R;
 
 public abstract class NotificationChannels {
 
@@ -40,7 +42,7 @@ public abstract class NotificationChannels {
         NotificationChannel upgrades = new NotificationChannel(
             ID_UPGRADES,
             context.getText(R.string.notification_channel_upgrades),
-            //Don't want to interrupt the user for release notes; they're not important.
+            // Don't want to interrupt the user for release notes; they're not important.
             NotificationManager.IMPORTANCE_LOW
         );
         upgrades.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
@@ -48,7 +50,7 @@ public abstract class NotificationChannels {
         NotificationChannel errors = new NotificationChannel(
             ID_ERRORS,
             context.getText(R.string.notification_channel_errors),
-            //Since the user will probably want to know why auto rotation suddenly stopped working!
+            // Since the user will probably want to know why auto rotation suddenly stopped working!
             NotificationManager.IMPORTANCE_HIGH
         );
         errors.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
@@ -56,7 +58,7 @@ public abstract class NotificationChannels {
         NotificationChannel permission = new NotificationChannel(
             ID_PERMISSIONS,
             context.getText(R.string.notification_channel_permissions),
-            //Since these only need to be addressed for the incompatible apps function to work
+            // Since these only need to be addressed for the incompatible apps function to work
             NotificationManager.IMPORTANCE_DEFAULT
         );
         permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);

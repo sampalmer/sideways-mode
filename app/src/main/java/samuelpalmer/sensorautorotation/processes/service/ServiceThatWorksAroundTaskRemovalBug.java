@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
@@ -26,7 +27,7 @@ abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
         Intent intent = new Intent(this, DummyReceiver.class);
         BroadcastKillFix.apply(intent);
         
-        //This seems to be timing-related; the more times we do this, the less likely the process gets killed
+        // This seems to be timing-related; the more times we do this, the less likely the process gets killed
         for (int i = 0; i < 50; ++i)
             sendBroadcast(intent);
     }

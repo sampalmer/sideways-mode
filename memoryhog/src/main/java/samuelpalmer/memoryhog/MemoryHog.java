@@ -33,7 +33,7 @@ public class MemoryHog {
             throw new RuntimeException("Not enough memory available to allocate " + maxMemoryMegabytes + "MB. Try reducing the amount you request.", ex);
         }
 
-        //This seems to be needed to make it actually consume the RAM
+        // This seems to be needed to make it actually consume the RAM
         for (int i = 0; i < data.length; ++i)
             data[i] = i;
     }

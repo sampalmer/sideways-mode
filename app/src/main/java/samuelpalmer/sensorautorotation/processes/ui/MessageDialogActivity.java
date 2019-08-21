@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -68,7 +70,7 @@ public class MessageDialogActivity extends DialogActivity {
         public void onDismiss(DialogInterface dialog) {
             Activity activity = getActivity();
 
-            //For some reason the activity is null when the screen orientation changes
+            // For some reason the activity is null when the screen orientation changes
             if (activity != null)
                 activity.finish();
         }

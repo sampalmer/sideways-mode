@@ -40,7 +40,7 @@ public final class NotificationStyles {
 
         if (actionButton.colour != null)
             result = actionButton.colour;
-        else { //Android 4.0 doesn't have notification actions
+        else { // Android 4.0 doesn't have notification actions
             if (title.colour != null)
                 result = Color.rgb(Color.red(title.colour), Color.green(title.colour), Color.blue(title.colour));
             else
@@ -68,14 +68,14 @@ public final class NotificationStyles {
     {
         NotificationBuilderCompat builder = NotificationBuilderCompat.create(context)
             .setContentTitle(title.searchTip)
-            .setColor(colourArgb); //Android N seems to use the colour on the action buttons
+            .setColor(colourArgb); // Android N seems to use the colour on the action buttons
 
-        //Add action button
+        // Add action button
         String actionTitle = actionButton.searchTip;
         PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
         builder.addAction(exampleIconResource, actionTitle, intent);
 
-        //Build
+        // Build
         RemoteViews contentView = getContentView(builder);
 
         LinearLayout group = new LinearLayout(context);

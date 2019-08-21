@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
@@ -38,7 +39,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
                 try {
                     changeDetector.stop();
                 } catch (RotationWatcherNotSupportedException ignored) {
-                    //All good; we're already handling this
+                    // All good; we're already handling this
                 }
             }
 

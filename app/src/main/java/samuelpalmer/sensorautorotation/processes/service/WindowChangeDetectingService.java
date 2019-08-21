@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.AccessibilityServiceActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
@@ -45,8 +46,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
         Log.i(TAG, "Accessibility service created");
     }
 
-    //So far, this only gets called when the user disables the service in the accessibility settings.
-    //Stopping the service with stopService() doesn't trigger this, presumably because something has bound to it.
+    // So far, this only gets called when the user disables the service in the accessibility settings.
+    // Stopping the service with stopService() doesn't trigger this, presumably because something has bound to it.
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -103,7 +104,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
             config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 
             if (Build.VERSION.SDK_INT >= 16)
-                //Just in case this helps
+                // Just in case this helps
                 config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
         }
         
@@ -134,9 +135,9 @@ public class WindowChangeDetectingService extends AccessibilityService {
     }
 
     private boolean isActivity(ComponentName componentName) {
-        //I'm using exceptions for control flow here because I didn't find a faster approach
+        // I'm using exceptions for control flow here because I didn't find a faster approach
         try {
-            //It'd be nice to optimise this away, but the only other option I can think of is caching the results, which could waste RAM...
+            // It'd be nice to optimise this away, but the only other option I can think of is caching the results, which could waste RAM...
             getPackageManager().getActivityInfo(componentName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException ignored) {

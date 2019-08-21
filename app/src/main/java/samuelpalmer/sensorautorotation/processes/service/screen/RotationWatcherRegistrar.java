@@ -8,13 +8,14 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Display;
 import android.view.IRotationWatcher;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * Single point of entry to RotationWatcher. Protects against duplicate subscriptions and handles
@@ -82,7 +83,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
 
     @Override
     protected void subscribeToAdaptee() throws RotationWatcherNotSupportedException {
-        if (!subscribed) { //Might already be subscribed since unsubscription is impossible on older Android versions
+        if (!subscribed) { // Might already be subscribed since unsubscription is impossible on older Android versions
             Object watchResult;
             try {
                 //noinspection JavaReflectionInvocation
@@ -116,7 +117,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
                     Log.w(RotationWatcherRegistrar.class.getSimpleName(), unsubscribeError);
                 }
 
-                throw e; //Must preserve e rather than wrapping it since it might contain an exception that will be caught higher up.
+                throw e; // Must preserve e rather than wrapping it since it might contain an exception that will be caught higher up.
             }
         }
     }
@@ -144,12 +145,12 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
             if (BuildConfig.DEBUG)
                 Log.d(RotationWatcherChangeDetector.class.getSimpleName(), "Got rotation change: " + rotation);
 
-            //We seem to get here in a different thread to the one in which we subscribed.
+            // We seem to get here in a different thread to the one in which we subscribed.
             callerHandler.post(() -> {
                 if (
                     subscribed
                     &&
-                    hasSubscriptions() //It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
+                    hasSubscriptions() // It's possible that we have tried to unsubscribe but been unable to, in which case we'll just discard any further updates we receive.
                 ) {
                     try {
                         currentRotation = AndroidSurfaceRotation.toOrientationClockwise(rotation);
