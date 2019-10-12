@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--
-        TODO: The only reason for these custom animations is AndroidX Navigation 2.0.0 uses animations that are too slow by default.
-        This will be fixed in 2.1.0, so remove all this once that release is out.
-        See https://issuetracker.google.com/issues/130055522
-    -->
-    <integer name="config_navAnimTime">220</integer>
-</resources>
