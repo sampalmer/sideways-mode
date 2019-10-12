@@ -97,18 +97,16 @@ public class ScreenOrientationController extends State {
         systemSettingPermissionMonitor.unsubscribe(systemSettingPermissionChanged);
         contentResolver.unregisterContentObserver(onUserRotationChanged);
 
-        if (Build.VERSION.SDK_INT >= 28) {
-            // Android P lets the user manually change the screen orientation even if auto-rotation is off,
-            // so we'll assume they want to keep using the mode they were originally in.
-            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, wasSystemRotationOn() ? 1 : 0);
-        } else {
-            // Since this is an auto-rotation app, it's safe to assume that the user wants to use auto-rotation.
-            setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, 1);
+        // Because the user is using this app, we can assume that they want to control the screen orientation.
+        // Before Android P, the user can only change the screen orientation in auto-rotate mode, so we'll assume they want that mode.
+        // Starting from Android P, both rotation lock mode and auto-rotate mode let the user control the screen orientation,
+        // so we'll restore the mode that they were using when they started this app.
+        boolean useSystemRotation = Build.VERSION.SDK_INT < 28 || wasSystemRotationOn();
+        setAndHandleErrors(Settings.System.ACCELEROMETER_ROTATION, useSystemRotation ? 1 : 0);
 
-            // The OS practically always has this set to natural orientation, so we'll follow that convention to keep things in a clean state.
-            propose(Orientation.NATURAL);
-        }
-
+        // The OS usually has this set to natural orientation, so we'll follow that convention to keep things in a clean state.
+        // This also ensures that, if the user is in locked screen rotation mode, it goes back to the device's natural orientation.
+        propose(Orientation.NATURAL);
         prefs.edit().remove(ServiceSettings.KEY_SYSTEM_ROTATION).apply();
     }
 
