@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
@@ -27,13 +28,15 @@ class ServiceNotification {
     
     private final Context context;
     private final NotificationBuilderCompat builder;
-    
+    private final SharedPreferences serviceSettings;
+
     // Cached for RAM & CPU efficiency
     private final int actionButtonColour;
     private final int unselectedButtonBackground;
-    
+
     public ServiceNotification(Context context) {
         this.context = context;
+        this.serviceSettings = ServiceSettings.getSharedPreferences(context);
         
         PendingIntent dashboardIntent = PendingIntent.getActivity(
         this.context,
@@ -108,14 +111,19 @@ class ServiceNotification {
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_left_side),
-                userSide.equals(UserSide.LEFT))
+                userSide.equals(UserSide.LEFT));
+
+        boolean closeNotificationWhenUpright = serviceSettings.getBoolean(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, true);
+        notificationButtons
             .configureButton(
                 R.id.notification_turn_off_button,
-                R.drawable.action_turn_off,
+                closeNotificationWhenUpright ? R.drawable.action_turn_off : R.drawable.app_upright,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
-                context.getText(R.string.action_turn_off),
-                false)
+                context.getText(closeNotificationWhenUpright ? R.string.action_turn_off : R.string.user_rotation_upright),
+                false);
+
+        notificationButtons
             .configureButton(
                 R.id.notification_right_side_button,
                 R.drawable.app_right_side,
@@ -123,8 +131,7 @@ class ServiceNotification {
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_right_side),
-                userSide.equals(UserSide.RIGHT))
-        ;
+                userSide.equals(UserSide.RIGHT));
 
         builder.setCustomContentView(notificationButtons.getContentView());
     }

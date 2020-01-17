@@ -16,6 +16,7 @@
     <!-- Dashboard -->
     <string name="user_rotation_left_side">Левая сторона</string>
     <string name="user_rotation_right_side">Правая сторона</string>
+    <string name="user_rotation_upright">Портретный</string>
     <string name="app_disabled_view_error">Ошибка</string>
 
     <!-- Errors -->
