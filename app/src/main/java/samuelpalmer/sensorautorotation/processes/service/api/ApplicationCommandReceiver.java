@@ -23,6 +23,7 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
         ApplicationCommand command = new ApplicationCommand(intent);
         Log.i(TAG, "Received command: " + command.action);
 
+        // Sync config if available
         ApplicationCommand.Config config = command.config;
         if (config != null) {
             Log.i(TAG, "Command included config. Applying new config.");
@@ -35,6 +36,9 @@ public class ApplicationCommandReceiver extends BroadcastReceiver {
 
             if (config.turnOffWhenLocked != serviceSettings.getBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, true))
                 editor.putBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, config.turnOffWhenLocked);
+
+            if (config.closeNotificationWhenUpright != serviceSettings.getBoolean(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, true))
+                editor.putBoolean(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, config.closeNotificationWhenUpright);
 
             editor.apply();
         }

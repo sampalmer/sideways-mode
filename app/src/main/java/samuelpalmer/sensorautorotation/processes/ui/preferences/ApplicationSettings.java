@@ -45,6 +45,12 @@ public abstract class ApplicationSettings {
     public static final String KEY_TURN_OFF_WHEN_LOCKED = "turnOffWhenLocked";
 
     /**
+     * Whether the notification should show when the app is in the "off" state.
+     * This provides faster access to the app at the expense of space in the OS notification shade.
+     */
+    public static final String KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT = "closeNotificationWhenUpright";
+
+    /**
      * Whether the user has been told that the app is running in the background.
      */
     public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";

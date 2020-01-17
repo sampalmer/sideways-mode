@@ -15,4 +15,6 @@
 
     <samuelpalmer.sensorautorotation.processes.ui.preferences.custompreferences.WhenLockedPreference />
 
+    <samuelpalmer.sensorautorotation.processes.ui.preferences.custompreferences.WhenUprightPreference />
+
 </PreferenceScreen>

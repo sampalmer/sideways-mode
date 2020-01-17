@@ -55,4 +55,9 @@ public abstract class ServiceSettings {
      */
     public static final String KEY_TURN_OFF_WHEN_LOCKED = "turnOffWhenLocked";
 
+    /**
+     * <b>Cached copy</b> of {@link ApplicationSettings#KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT} for use in the service process.
+     */
+    public static final String KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT = "closeNotificationWhenUpright";
+
 }
