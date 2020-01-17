@@ -58,8 +58,8 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:zoom="16"
-     inkscape:cx="7.9351992"
-     inkscape:cy="11.820704"
+     inkscape:cx="30.360886"
+     inkscape:cy="4.8796392"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -73,7 +73,7 @@
        id="grid4140" />
   </sodipodi:namedview>
   <path
-     id="path19-2"
+     id="path11"
      style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.77952743;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="m 12,13.666016 c -3.337512,0 -10,1.259007 -10,4.583984 V 22 h 10 z m 5,-6.6660163 c 0,2.7624881 -2.237512,4.9999993 -5,4.9999993 -2.7624882,0 -5.0000002,-2.2375112 -5.0000002,-4.9999993 0,-2.762488 2.237512,-5 5.0000002,-5 2.762488,0 5,2.237512 5,5 z M 12,13.666016 V 22 h 10 v -3.75 c 0,-3.324977 -6.662488,-4.583984 -10,-4.583984 z" />
+     d="m 17,6.9999997 c 0,2.7624881 -2.237512,4.9999993 -5,4.9999993 -2.7624882,0 -5.0000002,-2.2375112 -5.0000002,-4.9999993 0,-2.762488 2.237512,-5 5.0000002,-5 2.762488,0 5,2.237512 5,5 z m -5,6.6660163 c -3.337512,0 -10,1.259007 -10,4.583984 V 22 h 10 10 v -3.75 c 0,-3.324977 -6.662488,-4.583984 -10,-4.583984 z" />
 </svg>
