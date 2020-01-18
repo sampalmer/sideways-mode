@@ -156,6 +156,11 @@ public class NotificationBuilderCompat {
         return this;
     }
 
+    public NotificationBuilderCompat setOngoing(boolean ongoing) {
+        builder.setOngoing(ongoing);
+        return this;
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static class V16 extends NotificationBuilderCompat
     {

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
+
 public abstract class ServiceController {
     
     public static void ensureStarted(Context context) {
@@ -35,6 +37,17 @@ public abstract class ServiceController {
     }
     
     public static void ensureStopped(Context context) {
+        if (!CurrentProcess.isServiceProcess(context))
+            throw new RuntimeException("Cannot control the service from outside the service process");
+
+        if (ServiceRunningStateHolder.isServiceRunning()) {
+            // The service automatically stops its running state when it is destroyed.
+            // But if we let this happen then the service notification will be removed by the OS, even if we tell it to preserve the notification.
+            // So we need to stop the running state earlier so it can detach from the notification before the OS begins shutting down the service.
+            // See https://stackoverflow.com/questions/53302511/service-stopforegroundfalse-remove-notification-when-should-not
+            ServiceRunningStateHolder.getServiceInstance().ensureStopped();
+        }
+
         Intent intent = new Intent(context, RotationService.class);
         
         // It's important that we try to stop the service even if it doesn't look like it's running

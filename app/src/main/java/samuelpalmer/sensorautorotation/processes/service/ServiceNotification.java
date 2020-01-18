@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -50,8 +51,9 @@ class ServiceNotification {
             .setChannelId(NotificationChannels.ID_CONTROLS)
             .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
         ;
-        
+
         hideTimestamp();
         
         NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
@@ -61,17 +63,22 @@ class ServiceNotification {
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
     }
 
-    public Notification build(ApplicationStatus.RunningState runningState) {
+    /**
+     * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
+     */
+    public Notification build(@Nullable ApplicationStatus.RunningState runningState) {
         builder
-            .setSmallIcon(runningState.userSide.iconId)
-            .setProgress(0, 0, runningState.waitingForSensor);
+            .setSmallIcon(runningState == null ? R.drawable.app_upright : runningState.userSide.iconId)
+            .setProgress(0, 0, runningState != null && runningState.waitingForSensor);
 
-        int statusTextResource =
-            runningState.waitingForSensor
-            ?
-            R.string.status_waiting_sensor
-            :
-            runningState.userSide.descriptionId;
+        int statusTextResource;
+
+        if (runningState == null)
+            statusTextResource = R.string.user_rotation_upright;
+        else if (runningState.waitingForSensor)
+            statusTextResource = R.string.status_waiting_sensor;
+        else
+            statusTextResource = runningState.userSide.descriptionId;
         
         CharSequence statusText = context.getText(statusTextResource);
 
@@ -84,12 +91,22 @@ class ServiceNotification {
             builder.setContentText(statusText);
         }
         
-        applyButtons(runningState.userSide);
+        applyButtons(runningState == null ? null : runningState.userSide);
 
-        return builder.build();
+        Notification notification = builder.build();
+
+        // The OS sets these flags when the notification is attached to a foreground service,
+        // so we're also adding them here to ensure we get the same behaviour when the service isn't running.
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+
+        return notification;
     }
-    
-    private void applyButtons(UserSide userSide) {
+
+    /**
+     * @param userSide set to {@code null} if the app isn't running (and the user is hence upright)
+     */
+    private void applyButtons(@Nullable UserSide userSide) {
         builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
         NotificationButtons notificationButtons = new NotificationButtons(
@@ -106,24 +123,24 @@ class ServiceNotification {
                 R.drawable.app_left_side,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-                userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
+                userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_left_side),
-                userSide.equals(UserSide.LEFT))
+                UserSide.LEFT.equals(userSide))
             .configureButton(
                 R.id.notification_turn_off_button,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
                 context.getText(R.string.action_turn_off),
-                false)
+                userSide == null)
             .configureButton(
                 R.id.notification_right_side_button,
                 R.drawable.app_right_side,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-                userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
+                userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_right_side),
-                userSide.equals(UserSide.RIGHT))
+                UserSide.RIGHT.equals(userSide))
         ;
 
         builder.setCustomContentView(notificationButtons.getContentView());
