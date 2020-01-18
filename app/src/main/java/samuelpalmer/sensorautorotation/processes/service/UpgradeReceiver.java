@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
@@ -16,7 +17,8 @@ public class UpgradeReceiver extends BroadcastReceiver {
         Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
         
         if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-            boolean wasRunning = ServiceSettings.getSharedPreferences(context).contains(ServiceSettings.KEY_PERSISTENT_STATE);
+            SharedPreferences prefs = ServiceSettings.getSharedPreferences(context);
+            boolean wasRunning = prefs.contains(ServiceSettings.KEY_PERSISTENT_STATE);
             
             // Only starting the service when absolutely necessary in case this is the cause of Android occasionally creating multiple simultaneous instances of the service.
             if (wasRunning) {
@@ -29,6 +31,9 @@ public class UpgradeReceiver extends BroadcastReceiver {
                 */
                 ServiceController.ensureStarted(context);
             }
+
+            // Each time an app is upgraded, the OS removes all its notifications, so we need to re-create them if necessary
+            PersistentNotification.sync(context);
         }
         else
             Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());

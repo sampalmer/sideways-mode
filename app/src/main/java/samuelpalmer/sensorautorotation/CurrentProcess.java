@@ -1,8 +1,6 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.Context;
@@ -16,15 +14,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.processes.service.ServiceNotification;
+import samuelpalmer.sensorautorotation.processes.service.PersistentNotification;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
@@ -209,26 +205,7 @@ public class CurrentProcess extends Application {
     private final SharedPreferences.OnSharedPreferenceChangeListener serviceSettingsChanged = (sharedPreferences, key) -> {
         if (ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT.equals(key)) {
             // The persistent notification setting changed, so we might need to update the service notification
-
-            SharedPreferences serviceSettings = ServiceSettings.getSharedPreferences(this);
-            boolean isAppOn = serviceSettings.contains(ServiceSettings.KEY_PERSISTENT_STATE);
-
-            if (!isAppOn) {
-                // The app is currently off, so we need to manage the notification here.
-                // (When the app is running, then it manages the notification internally, so no need to worry about the notification from out here.)
-                NotificationManager notificationManager = ContextCompat.getSystemService(this, NotificationManager.class);
-                assert notificationManager != null;
-
-                boolean closeNotificationWhenUpright = serviceSettings.getBoolean(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, true);
-                if (closeNotificationWhenUpright) {
-                    // The user has just turned off the persistent notification, so we'll ensure the notification is gone
-                    notificationManager.cancel(NotificationIds.SERVICE);
-                } else {
-                    // The user has just turned on the persistent notification, so we'll ensure the notification is present
-                    Notification notification = new ServiceNotification(this).build(null);
-                    notificationManager.notify(NotificationIds.SERVICE, notification);
-                }
-            }
+            PersistentNotification.sync(this);
         }
     };
 
