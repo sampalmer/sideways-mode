@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
- * This receiver ensure the service process will be created when the app is upgraded.
- * This allows the process to restart the service straight away since the OS has killed it.
+ * This receiver ensures the service process will be created when the app is upgraded.
+ * This allows the process to restart the service and persistent notification straight away since the OS has killed them.
  */
 public class UpgradeReceiver extends BroadcastReceiver {
 
