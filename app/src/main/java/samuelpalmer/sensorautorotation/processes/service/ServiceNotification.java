@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
@@ -24,7 +25,7 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
-class ServiceNotification {
+public class ServiceNotification {
     
     private final Context context;
     private final NotificationBuilderCompat builder;
@@ -34,6 +35,9 @@ class ServiceNotification {
     private final int unselectedButtonBackground;
     
     public ServiceNotification(Context context) {
+        if (!CurrentProcess.isServiceProcess(context))
+            throw new RuntimeException("Cannot use service notification from outside of service process");
+
         this.context = context;
         
         PendingIntent dashboardIntent = PendingIntent.getActivity(
@@ -98,7 +102,9 @@ class ServiceNotification {
         // The OS sets these flags when the notification is attached to a foreground service,
         // so we're also adding them here to ensure we get the same behaviour when the service isn't running.
         notification.flags |= Notification.FLAG_NO_CLEAR;
-        notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+
+        // Not adding FLAG_FOREGROUND_SERVICE since that makes it impossible to remove the
+        // notification with .cancel() when the user turns off the "keep notification" option
 
         return notification;
     }
