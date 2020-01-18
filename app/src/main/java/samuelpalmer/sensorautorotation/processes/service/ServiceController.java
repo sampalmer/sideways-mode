@@ -42,7 +42,7 @@ public abstract class ServiceController {
 
         if (ServiceRunningStateHolder.isServiceRunning()) {
             // The service automatically stops its running state when it is destroyed.
-            // But if we let this happen then the service notification will be removed by the OS, even if we tell it to preserve the notification.
+            // But if we let this happen then the service notification will be removed by the OS, even if we tell it to preserve the notification, particularly in Android 10.
             // So we need to stop the running state earlier so it can detach from the notification before the OS begins shutting down the service.
             // See https://stackoverflow.com/questions/53302511/service-stopforegroundfalse-remove-notification-when-should-not
             ServiceRunningStateHolder.getServiceInstance().ensureStopped();
