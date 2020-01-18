@@ -6,11 +6,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
+import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.ServiceCompat;
 import androidx.core.content.ContextCompat;
 
+import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -18,7 +22,8 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegi
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class RunningStateUpdater extends State {
-    
+
+    private final Context context;
     private final OrientationCalculator calculator;
     private final RotationService service;
     private final ServiceNotification notificationBuilder;
@@ -26,6 +31,7 @@ public class RunningStateUpdater extends State {
     private final NotificationManager notificationManager;
 
     public RunningStateUpdater(Context context, OrientationCalculator calculator, RotationService service) {
+        this.context = context;
         this.calculator = calculator;
         this.service = service;
         notificationBuilder = new ServiceNotification(context);
@@ -46,21 +52,32 @@ public class RunningStateUpdater extends State {
         // Detach notification from service
         boolean closeNotificationWhenUpright = prefs.getBoolean(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, true);
 
-        // TODO: If prior to Android N, then post a dummy notification to keep the notification drawer open
-
         // Prior to Android N, the OS will *always* remove the notification when the service is stopped, even if we tried to detach it from the service.
         // So in those OS versions, our best option is to completely remove the notification and re-post it straight away.
         boolean removeNotification = closeNotificationWhenUpright || Build.VERSION.SDK_INT <= 23;
+
+        // If all notifications in the OS notification shade are removed, then the OS closes the notification shade.
+        // The problem with this is we are only *temporarily* removing the notification, so from the user's perspective, it's not really being removed.
+        // So we need to trick the OS into leaving the notification shade open.
+        // We do this by briefly posting a dummy notification to ensure there is at least one notification in the shade while we re-post the service notification.
+        boolean postDummyNotification = removeNotification && !closeNotificationWhenUpright;
+
+        if (postDummyNotification) {
+            Notification dummyNotification = buildDummyNotification();
+            notificationManager.notify(NotificationIds.DUMMY, dummyNotification);
+        }
 
         ServiceCompat.stopForeground(service, removeNotification ? ServiceCompat.STOP_FOREGROUND_REMOVE : ServiceCompat.STOP_FOREGROUND_DETACH);
 
         if (!closeNotificationWhenUpright){
             // Update notification to "upright" / "off" state
+            // This also re-posts the notification if we needed to remove it above
             Notification notification = notificationBuilder.build(null);
             notificationManager.notify(NotificationIds.SERVICE, notification);
         }
 
-        // TODO: If prior to Android N, then remove the dummy notification
+        if (postDummyNotification)
+            notificationManager.cancel(NotificationIds.DUMMY);
     }
 
     private final EventHandler updateDisplays = new EventHandler() {
@@ -83,7 +100,18 @@ public class RunningStateUpdater extends State {
             }
         }
     };
-    
+
+    private Notification buildDummyNotification() {
+        return NotificationBuilderFactory.create(context)
+                .setSmallIcon(R.drawable.app_empty) // So the user doesn't see the icon in the status bar
+                .setCustomContentView(new RemoteViews(context.getPackageName(), R.layout.notification_dummy))
+                .setPriority(NotificationCompat.PRIORITY_MIN) // To move the notification near the bottom of the list
+                .setShowWhen(false) // Not really needed, but just-in-case
+                .setWhen(1) // To move the notification below other notifications of equal priority
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET) // To hide the notification from the lock screen
+                .build();
+    }
+
     @Nullable
     public ApplicationStatus.RunningState getLastStatusRunningState() {
         return lastRunningState;
