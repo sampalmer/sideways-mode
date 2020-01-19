@@ -6,6 +6,7 @@ import android.app.Notification.Action;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -161,6 +162,11 @@ public class NotificationBuilderCompat {
         return this;
     }
 
+    public NotificationBuilderCompat setSound(Uri sound) {
+        builder.setSound(sound);
+        return this;
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static class V16 extends NotificationBuilderCompat
     {
@@ -274,6 +280,11 @@ public class NotificationBuilderCompat {
         @Override
         public NotificationBuilderCompat setChannelId(String channelId) {
             builder.setChannelId(channelId);
+            return this;
+        }
+
+        @Override
+        public NotificationBuilderCompat setSound(Uri sound) {
             return this;
         }
     }

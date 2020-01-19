@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.os.Build;
 import android.util.Log;
 
@@ -38,6 +39,9 @@ public abstract class NotificationChannels {
         );
         controls.setShowBadge(false); // This isn't needed, but it makes it clearer to the user that the service notification won't show as a badge.
         controls.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); // So when the user unlocks the phone, they can see if they've left the app on
+        controls.enableVibration(false); // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+        controls.setVibrationPattern(null); // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+        controls.setSound(null, new AudioAttributes.Builder().build()); // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
 
         NotificationChannel upgrades = new NotificationChannel(
             ID_UPGRADES,

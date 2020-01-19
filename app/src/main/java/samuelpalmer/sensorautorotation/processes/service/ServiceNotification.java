@@ -56,6 +56,8 @@ public class ServiceNotification {
             .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
+            .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+            .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
 
         hideTimestamp();
