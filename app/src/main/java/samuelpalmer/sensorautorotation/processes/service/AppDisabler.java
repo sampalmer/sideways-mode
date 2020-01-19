@@ -15,6 +15,7 @@ public class AppDisabler extends State {
     private final SharedPreferences prefs;
 
     private boolean turnOffWhenLocked;
+    private boolean isOnLockScreen;
 
     public AppDisabler(Context context) {
         this.context = context;
@@ -24,6 +25,8 @@ public class AppDisabler extends State {
     
     @Override
     protected void start() {
+        isOnLockScreen = false;
+
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
         syncPrefs();
 
@@ -55,6 +58,11 @@ public class AppDisabler extends State {
 
     private void syncPrefs() {
         turnOffWhenLocked = prefs.getBoolean(ServiceSettings.KEY_TURN_OFF_WHEN_LOCKED, true);
+
+        // If we're going to keep the app running when the device is locked, then we'd better reset the lock screen state
+        // so, if the setting is toggled, we aren't out of sync.
+        if (!turnOffWhenLocked)
+            isOnLockScreen = false;
     }
 
     private final BroadcastReceiver shutdownReceiver = new BroadcastReceiver() {
@@ -74,8 +82,12 @@ public class AppDisabler extends State {
                 /*
                 Don't want to turn the app off when the screen turns off because the screen might
                 have turned off due to inactivity while the user is actually still using the device.
+
+                Not subscribing to LockScreenMonitor because it doesn't give us enough control to:
+                1. Detect that the screen was locked if the user turns on the screen when the OS lock screen is configured to "none"
+                2. Detect that the screen was locked if the user unlocks the phone by fingerprint
                  */
-                boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+                isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
                 if (isOnLockScreen)
                     ApplicationCommandReceiver.turnOffApp(context, "Device is locked");
             }
@@ -85,7 +97,14 @@ public class AppDisabler extends State {
     private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isStarted() && turnOffWhenLocked) {
+            // Not that we don't get here on API 15 when the screen lock is set to "None". Not much we can do about that.
+
+            /*
+             Only proceeding if the user wasn't on the lock screen, because if they were, then:
+             1. We would have already turned off the ap, and;
+             2. The user might have turned *on* the app from the lock screen (eg by using the persistent notification or quick setting)
+             */
+            if (isStarted() && turnOffWhenLocked && !isOnLockScreen) {
                 /*
                 We receive this broadcast after the device gets unlocked.
                 This implies that the device was locked, so the app shouldn't be on.
