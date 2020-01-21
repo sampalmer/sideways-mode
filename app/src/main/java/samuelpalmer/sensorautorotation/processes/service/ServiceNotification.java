@@ -74,7 +74,7 @@ public class ServiceNotification {
      */
     public Notification build(@Nullable ApplicationStatus.RunningState runningState) {
         builder
-            .setSmallIcon(runningState == null ? R.drawable.app_upright : runningState.userSide.iconId)
+            .setSmallIcon(runningState == null ? R.drawable.app_upright_filled : runningState.userSide.notificationIconId)
             .setProgress(0, 0, runningState != null && runningState.waitingForSensor);
 
         int statusTextResource;
@@ -128,7 +128,7 @@ public class ServiceNotification {
         notificationButtons
             .configureButton(
                 R.id.notification_left_side_button,
-                R.drawable.app_left_side,
+                R.drawable.app_left_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
@@ -143,7 +143,7 @@ public class ServiceNotification {
                 userSide == null)
             .configureButton(
                 R.id.notification_right_side_button,
-                R.drawable.app_right_side,
+                R.drawable.app_right_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
