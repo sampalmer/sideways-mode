@@ -30,7 +30,7 @@ public class WhenLockedPreference extends BooleanDropDownPreference {
     private void initialise(Context context) {
         setKey(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
         setTitle(R.string.preference_when_screen_locked);
-        setIcon(R.drawable.menu_device_locked);
+        setIcon(R.drawable.preference_device_locked);
 
         setDefaultValue(booleanToString(true));
 
