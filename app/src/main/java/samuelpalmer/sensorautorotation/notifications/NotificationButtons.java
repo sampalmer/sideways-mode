@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.widget.RemoteViews;
+
+import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 
@@ -12,7 +15,7 @@ public class NotificationButtons {
 
     private final RemoteViews content;
     private final int buttonColourArgb;
-    private final int unselectedBackgroundResource;
+    private final int unselectedBackgroundResource; // TODO: Remove this or use it
     private final Context context;
     
     /**
@@ -35,9 +38,9 @@ public class NotificationButtons {
      */
     public NotificationButtons configureButton(int id, int icon, int pendingIntentCode, Intent onClickIntent, CharSequence contentDescription, boolean selected) {
         content.setImageViewResource(id, icon);
-        content.setInt(id, "setColorFilter", buttonColourArgb);
+        content.setInt(id, "setColorFilter", selected ? buttonColourArgb : ContextCompat.getColor(context, R.color.not_active));
         content.setOnClickPendingIntent(id, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
-        content.setInt(id, "setBackgroundResource", selected ? R.drawable.button_selectable_selected : unselectedBackgroundResource);
+        content.setInt(id, "setBackgroundResource", selected ? R.color.primary_500_background_active : android.R.color.transparent);
         
         if (VERSION.SDK_INT >= 15)
             content.setContentDescription(id, contentDescription);
