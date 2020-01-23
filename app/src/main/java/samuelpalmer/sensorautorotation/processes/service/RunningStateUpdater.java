@@ -109,6 +109,7 @@ public class RunningStateUpdater extends State {
                 .setShowWhen(false) // Not really needed, but just-in-case
                 .setWhen(1) // To move the notification below other notifications of equal priority
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET) // To hide the notification from the lock screen
+                .setOngoing(true) // Prevents the "dismiss all" button from briefly appearing in the OS notification shade while this notification is visible
                 .build();
     }
 
