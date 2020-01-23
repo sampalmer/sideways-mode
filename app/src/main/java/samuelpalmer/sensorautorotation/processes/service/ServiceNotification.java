@@ -118,7 +118,7 @@ public class ServiceNotification {
         builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
         NotificationButtons notificationButtons = new NotificationButtons(
-        context,
+            context,
             R.layout.notification,
             builder.createContentView(),
             actionButtonColour,
