@@ -89,8 +89,7 @@ class FirstStartTipsWizard {
                                 sideButton,
                                 context.getString(R.string.intro_tip_side_button_title),
                                 context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full))
-                        )
-                        .icon(getDrawable(sideButton)),
+                        ),
                         ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN
                 ),
 
@@ -108,8 +107,7 @@ class FirstStartTipsWizard {
                                 offButton,
                                 context.getString(R.string.intro_tip_uninstall_title),
                                 context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full))
-                        )
-                        .icon(getDrawable(offButton)),
+                        ),
                         ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN
                 ),
         };
@@ -169,30 +167,6 @@ class FirstStartTipsWizard {
 
     public boolean isRunning() {
         return tipsRunning;
-    }
-
-    /**
-     * Gets the first drawable that can be found in the given view hierarchy.
-     * This is needed because a selected dashboard button has an underline,
-     * which I don't want to include in the popup since it looks weird.
-     */
-    private Drawable getDrawable(View button) {
-        if (button instanceof ImageView) {
-            ImageView imageView = (ImageView) button;
-            return imageView.getDrawable();
-        }
-        else if (button instanceof ViewGroup) {
-            ViewGroup container = (ViewGroup) button;
-
-            for (int i = 0; i < container.getChildCount(); ++i) {
-                View child = container.getChildAt(i);
-                Drawable childDrawable = getDrawable(child);
-                if (childDrawable != null)
-                    return childDrawable;
-            }
-        }
-
-        return null;
     }
 
     private void showCurrentTip() {
