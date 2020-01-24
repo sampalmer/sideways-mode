@@ -2,15 +2,11 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
@@ -21,11 +17,10 @@ import androidx.core.widget.ImageViewCompat;
 
 import samuelpalmer.sensorautorotation.R;
 
-public class DashboardButtonView extends LinearLayout {
+public class DashboardButtonView extends FrameLayout {
 
-    private AppCompatImageView imageView;
-    private int preferredWidth;
-    private int preferredHeight;
+    private View container;
+    private AppCompatImageView icon;
 
     public DashboardButtonView(Context context) {
         super(context);
@@ -50,6 +45,18 @@ public class DashboardButtonView extends LinearLayout {
     }
 
     private void init(@Nullable AttributeSet attrs) {
+        int src = getSource(attrs);
+
+        container = inflate(getContext(), R.layout.dashboard_button, null);
+        icon = container.findViewById(R.id.dashboard_button_icon);
+        icon.setImageResource(src);
+
+        syncState();
+        addView(container);
+    }
+
+    @DrawableRes
+    private int getSource(@Nullable AttributeSet attrs) {
         if (attrs == null)
             throw new RuntimeException("No attributes supplied");
 
@@ -65,90 +72,18 @@ public class DashboardButtonView extends LinearLayout {
         if (src == -1)
             throw new RuntimeException("Source image not specified");
 
-        initSelf();
-        initImage(src);
-        syncState();
-    }
-
-    private void initSelf() {
-        // Set size
-        preferredWidth = dpToPx(64);
-
-        TypedValue listPreferredItemHeight = new TypedValue();
-        Resources.Theme theme = getContext().getTheme();
-        boolean foundAttribute = theme.resolveAttribute(android.R.attr.listPreferredItemHeight, listPreferredItemHeight, true);
-        if (!foundAttribute)
-            throw new RuntimeException("Didn't find listPreferredItemHeight theme attribute");
-        preferredHeight = (int) listPreferredItemHeight.getDimension(getResources().getDisplayMetrics());
-
-        // Other
-        setFocusable(true);
-        setGravity(Gravity.CENTER_HORIZONTAL);
-    }
-
-    private void initImage(int src) {
-        imageView = new AppCompatImageView(getContext());
-
-        // Set size
-        int width = dpToPx(48);
-        int height = ViewGroup.LayoutParams.MATCH_PARENT;
-        LayoutParams params = new LayoutParams(width, height);
-        params.gravity = Gravity.CENTER;
-        params.setMargins(dpToPx(8), dpToPx(6), dpToPx(8), dpToPx(6));
-        imageView.setLayoutParams(params);
-
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setDuplicateParentStateEnabled(true);
-
-        imageView.setImageResource(src);
-
-        addView(imageView);
-    }
-
-    private int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+        return src;
     }
 
     private void syncState() {
-        setBackgroundColor(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500_background_active : android.R.color.transparent));
-        ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500 : R.color.not_active)));
+        container.setBackgroundColor(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500_background_active : android.R.color.transparent));
+        ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500 : R.color.not_active)));
     }
 
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
         syncState();
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int measuredWidth = getMeasuredDimension(widthMeasureSpec, preferredWidth);
-        int measuredHeight = getMeasuredDimension(heightMeasureSpec, preferredHeight);
-
-        setMeasuredDimension(measuredWidth, measuredHeight);
-    }
-
-    private int getMeasuredDimension(int measureSpec, int preferredSize) {
-        int size;
-        int mode = MeasureSpec.getMode(measureSpec);
-        switch (mode) {
-            case MeasureSpec.UNSPECIFIED:
-                size = preferredSize;
-                break;
-            case MeasureSpec.EXACTLY:
-                size = MeasureSpec.getSize(measureSpec);
-                break;
-            case MeasureSpec.AT_MOST:
-                size = Math.min(preferredSize, MeasureSpec.getSize(measureSpec));
-                break;
-            default:
-                throw new RuntimeException("Got unknown measure spec mode: " + mode);
-        }
-
-        boolean isTooSmall = size < preferredSize;
-        return (size & MEASURED_SIZE_MASK) | (MEASURED_STATE_MASK & (isTooSmall ? MEASURED_STATE_TOO_SMALL : 0));
     }
 
 }
