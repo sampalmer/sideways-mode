@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -31,9 +32,13 @@ public class ServiceNotification {
     private final NotificationBuilderCompat builder;
     
     // Cached for RAM & CPU efficiency
+    @ColorInt
+    private final int textColour;
+
+    // Cached for RAM & CPU efficiency
+    @ColorInt
     private final int actionButtonColour;
-    private final int unselectedButtonBackground;
-    
+
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Cannot use service notification from outside of service process");
@@ -63,9 +68,10 @@ public class ServiceNotification {
         hideTimestamp();
         
         NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
+        textColour = styles.getTextColour();
         actionButtonColour = styles.getActionButtonColour();
-        unselectedButtonBackground = styles.getUnselectedButtonBackground();
-        
+
+        Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(textColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
     }
 
@@ -121,12 +127,13 @@ public class ServiceNotification {
             context,
             R.layout.notification,
             builder.createContentView(),
-            actionButtonColour,
-            unselectedButtonBackground
+            textColour,
+            actionButtonColour
         );
         
         notificationButtons
             .configureButton(
+                R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
                 R.drawable.app_left_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
@@ -135,6 +142,7 @@ public class ServiceNotification {
                 context.getText(R.string.user_rotation_left_side),
                 UserSide.LEFT.equals(userSide))
             .configureButton(
+                R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_button,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
@@ -142,6 +150,7 @@ public class ServiceNotification {
                 context.getText(R.string.action_turn_off),
                 userSide == null)
             .configureButton(
+                R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
                 R.drawable.app_right_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
