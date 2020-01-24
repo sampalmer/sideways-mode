@@ -46,12 +46,11 @@ public class DashboardButtonView extends FrameLayout {
     private void init(@Nullable AttributeSet attrs) {
         int src = getSource(attrs);
 
-        container = inflate(getContext(), R.layout.dashboard_button, null);
+        container = inflate(getContext(), R.layout.dashboard_button, this);
         icon = container.findViewById(R.id.dashboard_button_icon);
         icon.setImageResource(src);
 
         syncState();
-        addView(container);
     }
 
     @DrawableRes
