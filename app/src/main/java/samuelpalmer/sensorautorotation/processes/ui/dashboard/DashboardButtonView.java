@@ -24,7 +24,6 @@ public class DashboardButtonView extends FrameLayout {
 
     public DashboardButtonView(Context context) {
         super(context);
-        //noinspection ConstantConditions
         init(null);
     }
 
@@ -76,7 +75,7 @@ public class DashboardButtonView extends FrameLayout {
     }
 
     private void syncState() {
-        container.setBackgroundColor(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500_background_active : android.R.color.transparent));
+        setBackgroundColor(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500_background_active : android.R.color.transparent));
         ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(ContextCompat.getColor(getContext(), isSelected() ? R.color.primary_500 : R.color.not_active)));
     }
 

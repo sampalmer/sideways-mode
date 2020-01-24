@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_width="64dp"
     android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground"
     android:focusable="true"
     android:gravity="center_horizontal"
     >
