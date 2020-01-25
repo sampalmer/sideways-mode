@@ -12,6 +12,9 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.widget.RemoteViews;
 
+import androidx.annotation.ColorInt;
+import androidx.core.app.NotificationCompat;
+
 /**
  * A reinvented clone of NotificationCompat.Builder that fixes the following issues:
  * - setShowWhen() not working on API 17 & 18 (https://issuetracker.google.com/issues/37048073)
@@ -53,115 +56,187 @@ public class NotificationBuilderCompat {
         this.builder = new Notification.Builder(context);
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setSmallIcon(int)}
+     */
     public NotificationBuilderCompat setSmallIcon(int icon) {
         builder.setSmallIcon(icon);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setContentIntent(PendingIntent)}
+     */
     public NotificationBuilderCompat setContentIntent(PendingIntent intent) {
         builder.setContentIntent(intent);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setContentTitle(CharSequence)}
+     */
     public NotificationBuilderCompat setContentTitle(CharSequence title) {
         builder.setContentTitle(title);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setContentText(CharSequence)}
+     */
     public NotificationBuilderCompat setContentText(CharSequence text) {
         builder.setContentText(text);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setCategory(String)}
+     */
     public NotificationBuilderCompat setCategory(String category) {
         return this;
     }
 
-    public NotificationBuilderCompat setColor(int argb) {
+    /**
+     * See {@link NotificationCompat.Builder#setColor(int)}
+     */
+    public NotificationBuilderCompat setColor(@ColorInt int argb) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setVisibility(int)}
+     */
     public NotificationBuilderCompat setVisibility(int visibility) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setWhen(long)}
+     */
     public NotificationBuilderCompat setWhen(long when) {
         builder.setWhen(when);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#build()}
+     */
     public Notification build() {
         //noinspection deprecation
         return builder.getNotification();
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setOnlyAlertOnce(boolean)}
+     */
     public NotificationBuilderCompat setOnlyAlertOnce(boolean onlyAlertOnce) {
         builder.setOnlyAlertOnce(onlyAlertOnce);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setPriority(int)}
+     */
     public NotificationBuilderCompat setPriority(int pri) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setShowWhen(boolean)}
+     */
     public NotificationBuilderCompat setShowWhen(boolean show) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setAutoCancel(boolean)}
+     */
     public NotificationBuilderCompat setAutoCancel(boolean autoCancel) {
         builder.setAutoCancel(autoCancel);
         return this;
     }
-    
+
+    /**
+     * See {@link NotificationCompat.Builder#setDeleteIntent(PendingIntent)}
+     */
     public NotificationBuilderCompat setDeleteIntent(PendingIntent intent) {
         builder.setDeleteIntent(intent);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setTicker(CharSequence)}
+     */
     public NotificationBuilderCompat setTicker(CharSequence tickerText) {
         builder.setTicker(tickerText);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setVibrate(long[])}
+     */
     public NotificationBuilderCompat setVibrate(long[] pattern) {
         //noinspection deprecation
         builder.setVibrate(pattern);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#addAction(int, CharSequence, PendingIntent)}
+     */
     public NotificationBuilderCompat addAction(int icon, CharSequence title, PendingIntent intent) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setCustomContentView(RemoteViews)}
+     */
     public NotificationBuilderCompat setCustomContentView(RemoteViews view) {
         //noinspection deprecation
         builder.setContent(view);
         return this;
     }
 
+    /**
+     * See {@link Notification.Builder#createBigContentView()}
+     */
     public RemoteViews createBigContentView() {
         return null;
     }
 
+    /**
+     * See {@link Notification.Builder#createContentView()}
+     */
     public RemoteViews createContentView() {
         //noinspection deprecation
         return build().contentView;
     }
-    
+
+    /**
+     * See {@link NotificationCompat.Builder#setProgress(int, int, boolean)}
+     */
     public NotificationBuilderCompat setProgress(int max, int progress, boolean indeterminate) {
         builder.setProgress(max, progress, indeterminate);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setChannelId(String)}
+     */
     public NotificationBuilderCompat setChannelId(String channelId) {
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setOngoing(boolean)}
+     */
     public NotificationBuilderCompat setOngoing(boolean ongoing) {
         builder.setOngoing(ongoing);
         return this;
     }
 
+    /**
+     * See {@link NotificationCompat.Builder#setSound(Uri)}
+     */
     public NotificationBuilderCompat setSound(Uri sound) {
         builder.setSound(sound);
         return this;
