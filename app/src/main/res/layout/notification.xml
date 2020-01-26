@@ -16,7 +16,7 @@
         tools:ignore="MergeRootFrame"/>
 
     <LinearLayout
-        style="@style/AppTheme.NotificationButtonsBase"
+        style="@style/AppTheme.NotificationButtons"
         android:layoutDirection="ltr"
         tools:ignore="UnusedAttribute"
         android:baselineAligned="false">
