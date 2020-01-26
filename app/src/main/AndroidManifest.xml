@@ -72,7 +72,6 @@
 
         <activity
             android:name=".processes.ui.preferences.SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             >
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />

@@ -1,12 +1,15 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.transition.TransitionManager;
+
+import com.google.android.material.appbar.MaterialToolbar;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
@@ -19,7 +22,7 @@ public class SettingsActivity extends UiActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar appBar = findViewById(R.id.toolbar);
+        MaterialToolbar appBar = findViewById(R.id.toolbar);
         setSupportActionBar(appBar);
 
         // Hook up the app bar with the navigation

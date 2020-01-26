@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
@@ -22,7 +24,10 @@ public class DeviceUnsupportedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.device_problem);
         setContentView(R.layout.activity_device_unsupported);
-        
+
+        MaterialToolbar appBar = findViewById(R.id.toolbar);
+        setSupportActionBar(appBar);
+
         int explanationStringResource = getIntent().getIntExtra(EXTRA_EXPLANATION, 0);
         if (explanationStringResource == 0)
             throw new RuntimeException("Explanation not provided");
