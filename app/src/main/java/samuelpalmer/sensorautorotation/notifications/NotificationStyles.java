@@ -40,11 +40,11 @@ public final class NotificationStyles {
     }
 
     /**
-     * Gets the colour of the text from {@link NotificationBuilderCompat#setContentText(CharSequence)}
+     * Gets the colour of the title from {@link NotificationBuilderCompat#setContentTitle(CharSequence)}
      */
     @ColorInt
-    public int getTextColour() {
-        return text.colour;
+    public int getTitleColour() {
+        return title.colour;
     }
 
     @ColorInt

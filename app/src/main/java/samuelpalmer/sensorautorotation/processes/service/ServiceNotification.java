@@ -33,7 +33,7 @@ public class ServiceNotification {
     
     // Cached for RAM & CPU efficiency
     @ColorInt
-    private final int textColour;
+    private final int titleColour;
 
     // Cached for RAM & CPU efficiency
     @ColorInt
@@ -68,10 +68,10 @@ public class ServiceNotification {
         hideTimestamp();
         
         NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
-        textColour = styles.getTextColour();
+        titleColour = styles.getTitleColour();
         actionButtonColour = styles.getActionButtonColour();
 
-        Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(textColour));
+        Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
     }
 
@@ -127,7 +127,7 @@ public class ServiceNotification {
             context,
             R.layout.notification,
             builder.createContentView(),
-            textColour,
+            titleColour,
             actionButtonColour
         );
         
