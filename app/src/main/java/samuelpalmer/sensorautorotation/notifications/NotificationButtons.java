@@ -8,19 +8,18 @@ import android.os.Build.VERSION;
 import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
 import androidx.core.graphics.ColorUtils;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 
+/**
+ * Assembles a custom notification layout that includes inline buttons in the main notification
+ * content. This is more convenient for the user than stock notification actions because the
+ * buttons are always visible and don't increase the height of the notification.
+ */
 public class NotificationButtons {
-
-    // Opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability
-    // For API 28 - 29, they were reverse-engineered from the emulator images
-    private static final float OPACITY_DARK_ICON_ACTIVE = 0.54f;
-    private static final float OPACITY_DARK_ICON_INACTIVE = VERSION.SDK_INT >= 28 ? 0.54f : 0.38f;
-    private static final float OPACITY_LIGHT_ICON_ACTIVE = 1.00f;
-    private static final float OPACITY_LIGHT_ICON_INACTIVE = VERSION.SDK_INT >= 28 ? 0.70f : 0.50f;
 
     private final RemoteViews content;
 
@@ -28,8 +27,25 @@ public class NotificationButtons {
     private final int buttonColour;
 
     private final Context context;
-    private final boolean isGreyscale;
-    private final boolean isDarkTheme;
+
+    /**
+     * Whether the notification is dark-themed or light-themed. We need this to figure out how to
+     * colour the inline notification buttons.
+     *
+     * Notifications are generally dark-themed in API 15 - 19, and also in API 29 if dark theme is
+     * enabled in the system settings.
+     */
+    private final Theme theme;
+
+    /**
+     * Whether the OS colours the stock notification action buttons. This is a useful guideline for
+     * whether to colour our custom inline buttons.
+     *
+     * Notifications were mostly monochrome until API 21, when the notification icon was coloured.
+     * Notification buttons were mostly monochrome until API 24, when they were coloured to match
+     * the colour supplied by the app.
+     */
+    private final boolean isColour;
 
     /**
      * @param originalNotification Get this from the notification builder.
@@ -45,65 +61,20 @@ public class NotificationButtons {
 
         this.buttonColour = buttonColour;
 
-        isGreyscale = Color.red(buttonColour) == Color.green(buttonColour) && Color.red(buttonColour) == Color.blue(buttonColour);
+        isColour = Color.red(buttonColour) != Color.green(buttonColour) || Color.red(buttonColour) != Color.blue(buttonColour);
 
         // If the title text is bright then the background must be dark
-        isDarkTheme = ColorUtils.calculateLuminance(titleColour) >= 0.5;
+        theme = ColorUtils.calculateLuminance(titleColour) >= 0.5 ? Theme.DARK : Theme.LIGHT;
     }
 
     /**
      * @param icon 32 dip x 32 dip (including padding), white
      */
     public NotificationButtons configureButton(int containerId, int buttonId, int icon, int pendingIntentCode, Intent onClickIntent, CharSequence contentDescription, boolean selected) {
-        @ColorInt int backgroundColour;
-        @ColorInt int iconColour;
+        @ColorInt int backgroundColour = getButtonBackgroundColour(selected);
+        @ColorInt int iconColour = getIconColour(selected);
 
-        if (isGreyscale) {
-            if (isDarkTheme) {
-                // API 15 - 19 stock
-                if (selected) {
-                    // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states
-                    backgroundColour = ColorUtils.setAlphaComponent(Color.WHITE, Math.round(0xFF * 0.12f));
-                    iconColour = ColorUtils.setAlphaComponent(Color.WHITE, Math.round(0xFF * OPACITY_LIGHT_ICON_ACTIVE));
-                } else { // Not selected
-                    backgroundColour = Color.TRANSPARENT;
-                    iconColour = ColorUtils.setAlphaComponent(Color.WHITE, Math.round(0xFF * OPACITY_LIGHT_ICON_INACTIVE));
-                }
-            } else { // Light theme
-                // API 21 - 23 stock
-                if (selected) {
-                    // Using 12% of the primary colour as suggested by https://material.io/design/interaction/states.html#activated
-                    backgroundColour = ColorUtils.setAlphaComponent(Color.BLACK, Math.round(0xFF * 0.12f));
-                    iconColour = ColorUtils.setAlphaComponent(Color.BLACK, Math.round(0xFF * OPACITY_DARK_ICON_ACTIVE));
-                } else { // Not selected
-                    backgroundColour = Color.TRANSPARENT;
-                    iconColour = ColorUtils.setAlphaComponent(Color.BLACK, Math.round(0xFF * OPACITY_DARK_ICON_INACTIVE));
-                }
-            }
-        } else { // Colour
-            if (isDarkTheme) {
-                // API 29
-                if (selected) {
-                    // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states
-                    // TODO: The selected item doesn't stand out much in this situation. Investigate other options.
-                    backgroundColour = ColorUtils.setAlphaComponent(buttonColour, Math.round(Color.alpha(buttonColour) * 0.12f));
-                    iconColour = buttonColour;
-                } else { // Not selected
-                    backgroundColour = Color.TRANSPARENT;
-                    iconColour = ColorUtils.setAlphaComponent(Color.WHITE, Math.round(0xFF * OPACITY_LIGHT_ICON_INACTIVE));
-                }
-            } else { // Light theme
-                // API 24 - 29
-                if (selected) {
-                    // Using 12% of the primary colour as suggested by https://material.io/design/interaction/states.html#activated
-                    backgroundColour = ColorUtils.setAlphaComponent(buttonColour, Math.round(Color.alpha(buttonColour) * 0.12f));
-                    iconColour = buttonColour;
-                } else { // Not selected
-                    backgroundColour = Color.TRANSPARENT;
-                    iconColour = ColorUtils.setAlphaComponent(Color.BLACK, Math.round(0xFF * OPACITY_DARK_ICON_INACTIVE));
-                }
-            }
-        }
+        // TODO: Preserve notes about how to test each scenario on the official emulators
 
         content.setInt(containerId, "setBackgroundColor", backgroundColour);
         content.setImageViewResource(buttonId, icon);
@@ -122,11 +93,63 @@ public class NotificationButtons {
         return this;
     }
 
+    @ColorInt
+    private int getIconColour(boolean isButtonSelected) {
+        if (isColour && isButtonSelected) {
+            return buttonColour;
+        } else {
+            float iconOpacity = isButtonSelected ? theme.iconOpacityActive : theme.iconOpacityInactive;
+            return ColorUtils.setAlphaComponent(theme.opaqueIconColour, Math.round(0xFF * iconOpacity));
+        }
+    }
+
+    @ColorInt
+    private int getButtonBackgroundColour(boolean isButtonSelected) {
+        if (!isButtonSelected)
+            return Color.TRANSPARENT;
+        else { // Selected
+            @ColorInt int backgroundColourOpaque = isColour ? buttonColour : theme.opaqueIconColour;
+
+            // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated
+            return ColorUtils.setAlphaComponent(backgroundColourOpaque, Math.round(Color.alpha(backgroundColourOpaque) * 0.12f));
+        }
+    }
+
     /**
      * Pass this into the notification builder.
      */
     public RemoteViews getContentView() {
         return content;
+    }
+
+    private enum Theme {
+        // Opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability
+        // For API 28 - 29, they were reverse-engineered from the emulator images
+
+        DARK(Color.WHITE, 1.00f, VERSION.SDK_INT >= 28 ? 0.70f : 0.50f),
+        LIGHT(Color.BLACK, 0.54f, VERSION.SDK_INT >= 28 ? 0.54f : 0.38f);
+
+        /**
+         * Icon colour for this theme before applying opacity
+         */
+        @ColorInt
+        public final int opaqueIconColour;
+
+        @FloatRange(from = 0, to = 1)
+        public final float iconOpacityActive;
+
+        @FloatRange(from = 0, to = 1)
+        public final float iconOpacityInactive;
+
+        Theme(
+                @ColorInt int opaqueIconColour,
+                @FloatRange(from = 0, to = 1) float iconOpacityActive,
+                @FloatRange(from = 0, to = 1) float iconOpacityInactive
+        ) {
+            this.opaqueIconColour = opaqueIconColour;
+            this.iconOpacityActive = iconOpacityActive;
+            this.iconOpacityInactive = iconOpacityInactive;
+        }
     }
 
 }
