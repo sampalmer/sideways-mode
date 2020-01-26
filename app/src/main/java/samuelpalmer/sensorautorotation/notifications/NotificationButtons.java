@@ -74,8 +74,6 @@ public class NotificationButtons {
         @ColorInt int backgroundColour = getButtonBackgroundColour(selected);
         @ColorInt int iconColour = getIconColour(selected);
 
-        // TODO: Preserve notes about how to test each scenario on the official emulators
-
         content.setInt(containerId, "setBackgroundColor", backgroundColour);
         content.setImageViewResource(buttonId, icon);
 
