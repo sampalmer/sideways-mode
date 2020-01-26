@@ -3,6 +3,8 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import samuelpalmer.sensorautorotation.R;
@@ -38,7 +40,7 @@ public class PermissionTipViewPreference extends Preference {
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         
-        holder.itemView.setBackgroundColor(0xffe5e5e5);
+        holder.itemView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.tip_view_background));
         
         TextView title = (TextView) holder.findViewById(android.R.id.title);
         if (title != null) {

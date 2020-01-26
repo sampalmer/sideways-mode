@@ -7,4 +7,5 @@
     <color name="not_active">#757575</color>
     <color name="primary_700">#5D4037</color>
     <color name="accent_700">#0091EA</color>
+    <color name="tip_view_background">#e5e5e5</color>
 </resources>
