@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class WhenLockedPreference extends BooleanDropDownPreference {
+public class WhenLockedPreference extends BooleanListPreference {
 
     public WhenLockedPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

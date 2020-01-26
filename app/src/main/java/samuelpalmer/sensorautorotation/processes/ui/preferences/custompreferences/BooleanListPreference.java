@@ -2,29 +2,33 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.custompreferenc
 
 import android.content.Context;
 import android.util.AttributeSet;
-import androidx.preference.DropDownPreference;
+import androidx.preference.ListPreference;
 
 /**
- * Like {@link DropDownPreference} but uses boolean values for the entry values.
+ * Like {@link ListPreference} but uses boolean values for the entry values.
  * When getting or setting entry values, use {@link #stringToBoolean(String)} and {@link #booleanToString(boolean)}
  * to convert them to and from boolean values, respectively.
+ *
+ * Not using {@link androidx.preference.DropDownPreference} because it uses a legacy spinner that
+ * doesn't get themed properly in dark mode, plus it looks like it's not used anymore in the OS
+ * settings app, and it's not even mentioned in https://developer.android.com/guide/topics/ui/settings/components-and-attributes.
  */
 @SuppressWarnings("WeakerAccess")
-public class BooleanDropDownPreference extends DropDownPreference {
+public class BooleanListPreference extends ListPreference {
 
-    public BooleanDropDownPreference(Context context) {
+    public BooleanListPreference(Context context) {
         super(context);
     }
 
-    public BooleanDropDownPreference(Context context, AttributeSet attrs) {
+    public BooleanListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public BooleanDropDownPreference(Context context, AttributeSet attrs, int defStyle) {
+    public BooleanListPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public BooleanDropDownPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public BooleanListPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

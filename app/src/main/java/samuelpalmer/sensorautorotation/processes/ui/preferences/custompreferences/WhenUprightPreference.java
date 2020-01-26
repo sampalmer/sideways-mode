@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class WhenUprightPreference extends BooleanDropDownPreference {
+public class WhenUprightPreference extends BooleanListPreference {
 
     public WhenUprightPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
