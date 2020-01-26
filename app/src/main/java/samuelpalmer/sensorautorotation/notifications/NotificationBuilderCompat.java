@@ -89,6 +89,13 @@ public class NotificationBuilderCompat {
     }
 
     /**
+     * See {@link NotificationCompat.Builder#setSubText(CharSequence)}
+     */
+    public NotificationBuilderCompat setSubText(CharSequence text) {
+        return this;
+    }
+
+    /**
      * See {@link NotificationCompat.Builder#setCategory(String)}
      */
     public NotificationBuilderCompat setCategory(String category) {
@@ -268,6 +275,12 @@ public class NotificationBuilderCompat {
         public RemoteViews createBigContentView() {
             //noinspection deprecation
             return build().bigContentView;
+        }
+
+        @Override
+        public NotificationBuilderCompat setSubText(CharSequence text) {
+            builder.setSubText(text);
+            return this;
         }
     }
 

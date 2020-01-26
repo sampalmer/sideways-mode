@@ -16,7 +16,7 @@
         tools:ignore="MergeRootFrame"/>
 
     <LinearLayout
-        style="@style/notification_buttons"
+        style="@style/AppTheme.NotificationButtonsBase"
         android:layoutDirection="ltr"
         tools:ignore="UnusedAttribute"
         android:baselineAligned="false">
@@ -28,6 +28,7 @@
             android:layout_weight="1"
             >
             <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_left_side_progress" />
         </FrameLayout>
 
         <FrameLayout
@@ -37,6 +38,7 @@
             android:layout_weight="1"
             >
             <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_turn_off_progress" />
         </FrameLayout>
 
         <FrameLayout
@@ -46,6 +48,7 @@
             android:layout_weight="1"
             >
             <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_right_side_progress" />
         </FrameLayout>
 
     </LinearLayout>

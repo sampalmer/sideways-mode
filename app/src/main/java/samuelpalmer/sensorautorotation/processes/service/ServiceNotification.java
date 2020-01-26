@@ -79,9 +79,7 @@ public class ServiceNotification {
      * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
      */
     public Notification build(@Nullable ApplicationStatus.RunningState runningState) {
-        builder
-            .setSmallIcon(runningState == null ? R.drawable.app_upright_filled : runningState.userSide.notificationIconId)
-            .setProgress(0, 0, runningState != null && runningState.waitingForSensor);
+        builder.setSmallIcon(runningState == null ? R.drawable.app_upright_filled : runningState.userSide.notificationIconId);
 
         int statusTextResource;
 
@@ -96,14 +94,15 @@ public class ServiceNotification {
 
         if (VERSION.SDK_INT >= 24) {
             // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
-            builder.setContentTitle(statusText);
+            // Plus, we can now make the notification thin, so we'll put the status to the right of the app name to save vertical space
+            builder.setSubText(statusText);
         }
         else {
             builder.setContentTitle(context.getText(R.string.app_name_full));
             builder.setContentText(statusText);
         }
         
-        applyButtons(runningState == null ? null : runningState.userSide);
+        applyButtons(runningState);
 
         Notification notification = builder.build();
 
@@ -118,9 +117,11 @@ public class ServiceNotification {
     }
 
     /**
-     * @param userSide set to {@code null} if the app isn't running (and the user is hence upright)
+     * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
      */
-    private void applyButtons(@Nullable UserSide userSide) {
+    private void applyButtons(@Nullable ApplicationStatus.RunningState runningState) {
+        @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
+
         builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
         NotificationButtons notificationButtons = new NotificationButtons(
@@ -130,34 +131,42 @@ public class ServiceNotification {
             titleColour,
             actionButtonColour
         );
-        
+
+        boolean isLoading = runningState != null && runningState.waitingForSensor;
+
         notificationButtons
             .configureButton(
                 R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
+                R.id.notification_left_side_progress,
                 R.drawable.app_left_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_left_side),
-                UserSide.LEFT.equals(userSide))
+                UserSide.LEFT.equals(userSide),
+                isLoading && runningState.userSide.equals(UserSide.LEFT))
             .configureButton(
                 R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_button,
+                R.id.notification_turn_off_progress,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
                 context.getText(R.string.action_turn_off),
-                userSide == null)
+                userSide == null,
+                false)
             .configureButton(
                 R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
+                R.id.notification_right_side_progress,
                 R.drawable.app_right_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_right_side),
-                UserSide.RIGHT.equals(userSide))
+                UserSide.RIGHT.equals(userSide),
+                isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
         builder.setCustomContentView(notificationButtons.getContentView());

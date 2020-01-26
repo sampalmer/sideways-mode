@@ -63,11 +63,18 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="notification_buttons">
+    <style name="AppTheme.NotificationButtonsBase">
+        <!-- Only using the minimum horizontal space to leave room for the main notification content -->
         <item name="android:layout_width">wrap_content</item>
+
+        <!-- Matching parent height since this makes it the same height as normal notifications -->
         <item name="android:layout_height">match_parent</item>
+
         <item name="android:layout_weight">0</item>
         <item name="android:baselineAligned">false</item>
+    </style>
+
+    <style name="AppTheme.NotificationButtons" parent="AppTheme.NotificationButtonsBase">
     </style>
 
 </resources>

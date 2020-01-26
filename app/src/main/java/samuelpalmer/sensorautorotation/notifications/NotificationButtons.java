@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build.VERSION;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.FloatRange;
+import androidx.annotation.IdRes;
 import androidx.core.graphics.ColorUtils;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -70,12 +73,24 @@ public class NotificationButtons {
     /**
      * @param icon 32 dip x 32 dip (including padding), white
      */
-    public NotificationButtons configureButton(int containerId, int buttonId, int icon, int pendingIntentCode, Intent onClickIntent, CharSequence contentDescription, boolean selected) {
+    public NotificationButtons configureButton(
+            @IdRes int containerId,
+            @IdRes int buttonId,
+            @IdRes int progressId,
+            @DrawableRes int icon,
+            int pendingIntentCode,
+            Intent onClickIntent,
+            CharSequence contentDescription,
+            boolean selected,
+            boolean isLoading
+    ) {
         @ColorInt int backgroundColour = getButtonBackgroundColour(selected);
         @ColorInt int iconColour = getIconColour(selected);
 
         content.setInt(containerId, "setBackgroundColor", backgroundColour);
-        content.setImageViewResource(buttonId, icon);
+
+        // Not hiding the button altogether when loading since then the user can click the notification body behind it
+        content.setImageViewResource(buttonId, isLoading ? 0 : icon);
 
         // The colour filter currently ignores alpha, but we're resetting the alpha to 1.0 anyway just in case this behaviour changes a future version of the OS
         content.setInt(buttonId, "setColorFilter", ColorUtils.setAlphaComponent(iconColour, 0xFF));
@@ -87,7 +102,10 @@ public class NotificationButtons {
 
         if (VERSION.SDK_INT >= 15)
             content.setContentDescription(buttonId, contentDescription);
-        
+
+        // Unfortunately, the progress bar colour cannot be changed, so leaving it at its default
+        content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.INVISIBLE);
+
         return this;
     }
 

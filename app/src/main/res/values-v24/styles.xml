@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.NotificationButtons" parent="AppTheme.NotificationButtonsBase">
+        <!--
+        In Android N, notification height is variable, and setting the height to match_parent
+        makes it use the standard height. However, we can shrink the notification to take up the
+        minimum possible space by using wrap_content. This frees space in the OS notification shade
+        and also allows the user to hide the notification from the status bar without the OS
+        collapsing the notification.
+         -->
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>
