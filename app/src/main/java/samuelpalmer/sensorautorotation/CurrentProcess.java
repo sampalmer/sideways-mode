@@ -20,8 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.service.PersistentNotification;
-import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationUpdater;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
@@ -36,7 +35,11 @@ public class CurrentProcess extends Application {
     
     @Nullable
     private static Boolean isServiceProcess;
-    
+
+    // Holding a reference to this just to make sure nothing gets garbage-collected
+    @SuppressWarnings("FieldCanBeLocal")
+    private PersistentNotificationUpdater persistentNotificationUpdater;
+
     public static boolean isServiceProcess(Context context) {
         if (isServiceProcess == null) {
             String processName = CurrentProcessNameDetector.getName();
@@ -147,8 +150,8 @@ public class CurrentProcess extends Application {
             
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         } else {
-            SharedPreferences serviceSettings = ServiceSettings.getSharedPreferences(this);
-            serviceSettings.registerOnSharedPreferenceChangeListener(serviceSettingsChanged);
+            persistentNotificationUpdater = new PersistentNotificationUpdater(this);
+            persistentNotificationUpdater.ensureStarted();
         }
     }
     
@@ -201,12 +204,5 @@ public class CurrentProcess extends Application {
             applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
         }
     }
-
-    private final SharedPreferences.OnSharedPreferenceChangeListener serviceSettingsChanged = (sharedPreferences, key) -> {
-        if (ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT.equals(key)) {
-            // The persistent notification setting changed, so we might need to update the service notification
-            PersistentNotification.sync(this);
-        }
-    };
 
 }

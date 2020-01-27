@@ -17,7 +17,7 @@ public class OsBootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             // The user has just turned on their device, so the notification won't be present.
             // So we'll re-create it if appropriate.
-            PersistentNotification.sync(context);
+            PersistentNotificationUpdater.sync(context);
         }
         else
             Log.w(OsBootReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());

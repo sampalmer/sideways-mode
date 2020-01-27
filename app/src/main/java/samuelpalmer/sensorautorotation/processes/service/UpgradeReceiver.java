@@ -33,7 +33,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
             }
 
             // Each time an app is upgraded, the OS removes all its notifications, so we need to re-create them if necessary
-            PersistentNotification.sync(context);
+            PersistentNotificationUpdater.sync(context);
         }
         else
             Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
