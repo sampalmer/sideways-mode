@@ -2,27 +2,23 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.widget.ImageViewCompat;
 
 import samuelpalmer.sensorautorotation.R;
+import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 public class DashboardButtonView extends FrameLayout {
 
@@ -82,29 +78,15 @@ public class DashboardButtonView extends FrameLayout {
 
     private void syncState() {
         // Get colours
-        @ColorRes int colorControlNormal = getThemeColour(R.attr.colorControlNormal);
-        @ColorRes int colorPrimary = getThemeColour(R.attr.colorPrimary);
+        @ColorInt int colorControlNormal = ThemeUtilities.getThemeColour(getContext(), R.attr.colorControlNormal);
+        @ColorInt int colorPrimary = ThemeUtilities.getThemeColour(getContext(), R.attr.colorPrimary);
 
-        @ColorInt int backgroundColour = isSelected() ? ColorUtils.setAlphaComponent(ContextCompat.getColor(getContext(), colorPrimary), Math.round(0xFF * 0.12f)) : Color.TRANSPARENT;
+        // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated
+        @ColorInt int backgroundColour = isSelected() ? ColorUtils.setAlphaComponent(colorPrimary, Math.round(0xFF * 0.12f)) : Color.TRANSPARENT;
         setBackgroundColor(backgroundColour);
 
-        @ColorInt int iconColour = ContextCompat.getColor(getContext(), isSelected() ? colorPrimary : colorControlNormal);
+        @ColorInt int iconColour = isSelected() ? colorPrimary : colorControlNormal;
         ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(iconColour));
-    }
-
-    @ColorRes
-    private int getThemeColour(@AttrRes int attribute) {
-        Resources.Theme theme = getContext().getTheme();
-
-        TypedValue outValue = new TypedValue();
-        if (!theme.resolveAttribute(attribute, outValue, true))
-            throw new RuntimeException("Can't find theme color for " + attribute);
-
-        @ColorRes int colorControlNormal = outValue.resourceId;
-        if (colorControlNormal == 0)
-            throw new RuntimeException("Theme color " + attribute + " is not a resource");
-
-        return colorControlNormal;
     }
 
     @Override

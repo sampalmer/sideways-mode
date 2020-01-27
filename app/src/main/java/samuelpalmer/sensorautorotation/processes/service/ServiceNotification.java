@@ -67,7 +67,7 @@ public class ServiceNotification {
 
         hideTimestamp();
         
-        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
+        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
         titleColour = styles.getTitleColour();
         actionButtonColour = styles.getActionButtonColour();
 

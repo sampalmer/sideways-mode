@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     app:srcCompat="@drawable/image_broken_phone"
-                    android:tint="@color/primary_500"
+                    android:tint="?colorPrimary"
                     android:scaleType="fitCenter"
                     android:alpha=".8"
                     android:contentDescription="@string/device_problem"/>

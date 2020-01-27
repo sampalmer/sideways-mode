@@ -27,15 +27,13 @@ public final class NotificationStyles {
     private final StyleType actionButton = new StyleType("ACTION");
     private final Context context;
     private final int exampleIconResource;
-    private final int colourArgb;
 
     /**
      * You might want to cache the result for performance & memory.
      */
-    public NotificationStyles(Context context, int exampleActionIconResource, int colourArgb) {
+    public NotificationStyles(Context context, int exampleActionIconResource) {
         this.context = context;
         this.exampleIconResource = exampleActionIconResource;
-        this.colourArgb = colourArgb;
         extractColors();
     }
 
@@ -66,10 +64,10 @@ public final class NotificationStyles {
     }
     
     private void extractColors() {
-        NotificationBuilderCompat builder = NotificationBuilderCompat.create(context)
+        // Using the factory so we get the right colour. Android N+ use the colour on the action buttons.
+        NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
             .setContentTitle(title.searchTip)
-            .setContentText(text.searchTip)
-            .setColor(colourArgb); // Android N seems to use the colour on the action buttons
+            .setContentText(text.searchTip);
 
         // Add action button
         String actionTitle = actionButton.searchTip;
