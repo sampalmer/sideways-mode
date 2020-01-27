@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -21,6 +20,7 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.ConfigurationUtilities;
 import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 class FirstStartTipsWizard {
@@ -233,8 +233,7 @@ class FirstStartTipsWizard {
 
             tapTarget.drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
 
-            int uiMode = dialog.getContext().getResources().getConfiguration().uiMode;
-            boolean isDark = (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+            boolean isDark = ConfigurationUtilities.isDarkTheme(dialog.getContext());
 
             if (isDark) {
                 // The library doesn't work well with dark mode out-of-the-box
