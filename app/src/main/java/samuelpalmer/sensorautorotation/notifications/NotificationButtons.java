@@ -99,9 +99,7 @@ public class NotificationButtons {
         content.setInt(buttonId, VERSION.SDK_INT >= 16 ? "setImageAlpha" : "setAlpha", Color.alpha(iconColour));
 
         content.setOnClickPendingIntent(buttonId, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
-
-        if (VERSION.SDK_INT >= 15)
-            content.setContentDescription(buttonId, contentDescription);
+        content.setContentDescription(buttonId, contentDescription);
 
         // Unfortunately, the progress bar colour cannot be changed, so leaving it at its default
         content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.INVISIBLE);
