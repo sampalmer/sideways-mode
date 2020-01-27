@@ -3,16 +3,25 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.view.*;
-import android.widget.ImageView;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+
+import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
+
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 class FirstStartTipsWizard {
 
@@ -223,6 +232,26 @@ class FirstStartTipsWizard {
             this.shownPreferenceKey = shownPreferenceKey;
 
             tapTarget.drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+
+            int uiMode = dialog.getContext().getResources().getConfiguration().uiMode;
+            boolean isDark = (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+            if (isDark) {
+                // The library doesn't work well with dark mode out-of-the-box
+
+                @ColorInt int primaryColour = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimary);
+
+                // Using 24% primary as suggested at https://material.io/design/color/dark-theme.html#states
+                @ColorInt int outerCircleColour = ColorUtils.blendARGB(Color.BLACK, primaryColour, 0.24f);
+
+                tapTarget
+                        .outerCircleColorInt(outerCircleColour) // Defaults to primary colour, which is too bright and glary for dark mode
+                        .textColorInt(Color.WHITE) // Defaults to black, which is way too dark for dark mode
+                        .targetCircleColorInt(primaryColour) // Defaults to black, which doesn't draw the user's attention to the target
+                ;
+            } else {
+                tapTarget.tintTarget(false); // The default tinted grey icon has poor contrast, so disabling tinting
+            }
         }
 
         private boolean isShown() {
