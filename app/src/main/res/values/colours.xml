@@ -3,8 +3,6 @@
     <color name="primary_500_light">#795548</color>
 
     <color name="primary_500">@color/primary_500_light</color>
-    <color name="primary_500_background_active">#1F795548</color>
-    <color name="not_active">#757575</color>
     <color name="primary_700">#5D4037</color>
     <color name="accent_700">#0091EA</color>
     <color name="tip_view_background">#e5e5e5</color>
