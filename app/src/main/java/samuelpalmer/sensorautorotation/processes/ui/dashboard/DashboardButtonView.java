@@ -80,12 +80,13 @@ public class DashboardButtonView extends FrameLayout {
         // Get colours
         @ColorInt int colorControlNormal = ThemeUtilities.getThemeColour(getContext(), R.attr.colorControlNormal);
         @ColorInt int colorPrimary = ThemeUtilities.getThemeColour(getContext(), R.attr.colorPrimary);
+        @ColorInt int colorOnPrimary = ThemeUtilities.getThemeColour(getContext(), R.attr.colorOnPrimary);
 
-        // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated
-        @ColorInt int backgroundColour = isSelected() ? ColorUtils.setAlphaComponent(colorPrimary, Math.round(0xFF * 0.12f)) : Color.TRANSPARENT;
+        // Using the primary colour to make the selection stand out
+        @ColorInt int backgroundColour = isSelected() ? colorPrimary : Color.TRANSPARENT;
         setBackgroundColor(backgroundColour);
 
-        @ColorInt int iconColour = isSelected() ? colorPrimary : colorControlNormal;
+        @ColorInt int iconColour = isSelected() ? colorOnPrimary : colorControlNormal;
         ImageViewCompat.setImageTintList(icon, ColorStateList.valueOf(iconColour));
     }
 

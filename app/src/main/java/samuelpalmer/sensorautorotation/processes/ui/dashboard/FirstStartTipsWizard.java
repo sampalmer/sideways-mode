@@ -239,15 +239,17 @@ class FirstStartTipsWizard {
             if (isDark) {
                 // The library doesn't work well with dark mode out-of-the-box
 
-                @ColorInt int primaryColour = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimary);
+                @ColorInt int colorPrimary = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimary);
+                @ColorInt int colorPrimaryDark = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimaryDark);
 
                 // Using 24% primary as suggested at https://material.io/design/color/dark-theme.html#states
-                @ColorInt int outerCircleColour = ColorUtils.blendARGB(Color.BLACK, primaryColour, 0.24f);
+                @ColorInt int outerCircleColour = ColorUtils.blendARGB(Color.BLACK, colorPrimary, 0.24f);
 
                 tapTarget
                         .outerCircleColorInt(outerCircleColour) // Defaults to primary colour, which is too bright and glary for dark mode
                         .textColorInt(Color.WHITE) // Defaults to black, which is way too dark for dark mode
-                        .targetCircleColorInt(primaryColour) // Defaults to black, which doesn't draw the user's attention to the target
+                        .targetCircleColorInt(colorPrimaryDark) // Defaults to black, which doesn't draw the user's attention to the target
+                        .tintTarget(false) // The default tinting also affects the background colour on the selected item, making the icon impossible to see
                 ;
             } else {
                 tapTarget.tintTarget(false); // The default tinted grey icon has poor contrast, so disabling tinting

@@ -110,7 +110,8 @@ public class NotificationButtons {
     @ColorInt
     private int getIconColour(boolean isButtonSelected) {
         if (isColour && isButtonSelected) {
-            return buttonColour;
+            // Using either white or black so the icon has plenty of contrast over the primary-coloured background
+            return theme.colourOnButtonColour;
         } else {
             float iconOpacity = isButtonSelected ? theme.iconOpacityActive : theme.iconOpacityInactive;
             return ColorUtils.setAlphaComponent(theme.opaqueIconColour, Math.round(0xFF * iconOpacity));
@@ -121,8 +122,11 @@ public class NotificationButtons {
     private int getButtonBackgroundColour(boolean isButtonSelected) {
         if (!isButtonSelected)
             return Color.TRANSPARENT;
-        else { // Selected
-            @ColorInt int backgroundColourOpaque = isColour ? buttonColour : theme.opaqueIconColour;
+        else if (isColour) {
+            // Using primary colour as the background to make the selection stand out
+            return buttonColour;
+        } else { // Selected
+            @ColorInt int backgroundColourOpaque = theme.opaqueIconColour;
 
             // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated
             return ColorUtils.setAlphaComponent(backgroundColourOpaque, Math.round(Color.alpha(backgroundColourOpaque) * 0.12f));
@@ -140,8 +144,8 @@ public class NotificationButtons {
         // Opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability
         // For API 28 - 29, they were reverse-engineered from the emulator images
 
-        DARK(Color.WHITE, 1.00f, VERSION.SDK_INT >= 28 ? 0.70f : 0.50f),
-        LIGHT(Color.BLACK, 0.54f, VERSION.SDK_INT >= 28 ? 0.54f : 0.38f);
+        DARK(Color.WHITE, 1.00f, VERSION.SDK_INT >= 28 ? 0.70f : 0.50f, Color.BLACK),
+        LIGHT(Color.BLACK, 0.54f, VERSION.SDK_INT >= 28 ? 0.54f : 0.38f, Color.WHITE);
 
         /**
          * Icon colour for this theme before applying opacity
@@ -155,14 +159,19 @@ public class NotificationButtons {
         @FloatRange(from = 0, to = 1)
         public final float iconOpacityInactive;
 
+        @ColorInt
+        public final int colourOnButtonColour;
+
         Theme(
                 @ColorInt int opaqueIconColour,
                 @FloatRange(from = 0, to = 1) float iconOpacityActive,
-                @FloatRange(from = 0, to = 1) float iconOpacityInactive
+                @FloatRange(from = 0, to = 1) float iconOpacityInactive,
+                @ColorInt int colourOnButtonColour
         ) {
             this.opaqueIconColour = opaqueIconColour;
             this.iconOpacityActive = iconOpacityActive;
             this.iconOpacityInactive = iconOpacityInactive;
+            this.colourOnButtonColour = colourOnButtonColour;
         }
     }
 
