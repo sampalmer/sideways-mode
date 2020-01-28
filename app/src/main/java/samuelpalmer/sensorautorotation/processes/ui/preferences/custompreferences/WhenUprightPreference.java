@@ -31,6 +31,7 @@ public class WhenUprightPreference extends BooleanListPreference {
     private void initialise(Context context) {
         setKey(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT);
         setTitle(R.string.preference_when_upright);
+        setDialogTitle(R.string.preference_when_upright);
         setIcon(R.drawable.preference_upright);
 
         setDefaultValue(booleanToString(true));
