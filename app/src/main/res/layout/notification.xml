@@ -3,7 +3,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false">
@@ -15,8 +14,12 @@
         android:layout_weight="1"
         tools:ignore="MergeRootFrame"/>
 
+    <!-- Only using the minimum horizontal space to leave room for the main notification content -->
+    <!-- Matching parent height since this makes it the same height as normal notifications -->
     <LinearLayout
-        style="@style/AppTheme.NotificationButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
         android:layoutDirection="ltr"
         android:layout_gravity="center_vertical"
         tools:ignore="UnusedAttribute"

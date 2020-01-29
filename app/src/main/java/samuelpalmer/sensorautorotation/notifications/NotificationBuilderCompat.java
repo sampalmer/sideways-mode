@@ -13,6 +13,7 @@ import android.os.Build.VERSION_CODES;
 import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 /**
@@ -246,6 +247,12 @@ public class NotificationBuilderCompat {
      */
     public NotificationBuilderCompat setSound(Uri sound) {
         builder.setSound(sound);
+        return this;
+    }
+
+    @RequiresApi(api = VERSION_CODES.JELLY_BEAN)
+    public NotificationBuilderCompat setStyle(Notification.Style style) {
+        builder.setStyle(style);
         return this;
     }
 
