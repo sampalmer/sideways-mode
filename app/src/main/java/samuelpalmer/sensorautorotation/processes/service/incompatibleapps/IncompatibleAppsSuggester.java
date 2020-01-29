@@ -135,7 +135,7 @@ public class IncompatibleAppsSuggester extends State {
 //                    .setDeleteIntent() // TODO: Don't ask again if user dismisses it?
                     .setTicker(summary) //Helps ensure the user actually notices notification. Only works on Android 4.
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                    .addAction() // TODO: Provide button to not ask again? Not sure if this works on API 14
+//                    .addAction() // TODO: Provide button to not ask again?
                     ;
                 
                 // TODO: Add a sound and maybe a vibration since the user might be in the middle of a full screen video or something
