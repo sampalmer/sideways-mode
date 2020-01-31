@@ -76,7 +76,7 @@ public abstract class NotificationChannels {
         );
         permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-        List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
+        List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission, incompatibleApp);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         assert notificationManager != null;
         notificationManager.createNotificationChannels(channels);
