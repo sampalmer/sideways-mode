@@ -1,10 +1,10 @@
-package samuelpalmer.sensorautorotation.processes.service.incompatibleapps;
+package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import samuelpalmer.sensorautorotation.processes.ui.RemovingIncompatibleAppsTipActivity;
+
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 import java.util.Collections;
