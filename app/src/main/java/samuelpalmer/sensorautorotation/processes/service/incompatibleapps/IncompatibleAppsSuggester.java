@@ -108,8 +108,6 @@ public class IncompatibleAppsSuggester extends State {
             overriddenOrientationDetector.overridesOrientation()
             &&
             supportedOrientationsDetector.supportsLandscape() && supportedOrientationsDetector.supportsPortrait() // Apps that are locked in the one orientation aren't a problem
-            &&
-            !currentActivity.getPackageName().equals(context.getPackageName()) // Sideways Mode might looks like it's incompatible if it's open over the top of an incompatible app
             // TODO: Don't prompt if a notification already exists for this app
             // TODO: Don't prompt if the user has asked not to be prompted again for this app
             // TODO: Don't prompt if the user has already been asked and dismissed the notification
