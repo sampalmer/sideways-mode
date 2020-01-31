@@ -11,13 +11,19 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         
         <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
     </style>
     
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <!-- For some reason, the toolbar text defaults to black on brown, which doesn't have enough contrast -->
         <item name="titleTextColor">@android:color/white</item>
     </style>
-    
+
+    <style name="AppTheme.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <!-- For some reason, the toolbar arrow defaults to black on brown, which doesn't have enough contrast -->
+        <item name="color">@android:color/white</item>
+    </style>
+
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/primary_500</item>
         <item name="colorPrimaryDark">@color/primary_700</item>
