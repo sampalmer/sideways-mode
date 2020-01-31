@@ -32,8 +32,17 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Tries to detect when an app is open that supports screen rotation but doesn't obey the
+ * orientations set by our app. Suggests to the user to mark the app as incompatible to work
+ * around this.
+ *
+ * To debug, use the following logcat regex: {@code OverriddenOrientationDetector|SupportedOrientationsDetector|ActivityMonitor|IncompatibleAppsSuggester}
+ */
 public class IncompatibleAppsSuggester extends State {
-    
+
+    private static final String TAG = IncompatibleAppsSuggester.class.getSimpleName();
+
     private final Context context;
     private final ActivityMonitor activityMonitor;
     private final SharedPreferences preferences;
@@ -117,6 +126,8 @@ public class IncompatibleAppsSuggester extends State {
             try {
                 ActivityInfo activityInfo = packageManager.getActivityInfo(currentActivity, 0);
                 if (!isFloating(activityInfo)) {
+                    Log.i(TAG, "Suggesting incompatible app");
+
                     // TODO: We might have lost track of what the real current activity is. For example, the user might have opened the recents screen and returned to an app, but we might have only been notified about the recents screen.
                     ApplicationInfo applicationInfo = packageManager.getApplicationInfo(currentActivity.getPackageName(), 0);
                     Intent intent = MarkAppAsIncompatibleReceiver.makeIntent(context, currentActivity.getPackageName());
@@ -147,7 +158,7 @@ public class IncompatibleAppsSuggester extends State {
                     notificationManager.notify(currentActivity.getPackageName(), NotificationIds.INCOMPATIBLE_APP, builder.build());
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                Log.w(getClass().getSimpleName(), e); // Don't really need to worry about this; maybe the app got uninstalled or something
+                Log.w(TAG, e); // Don't really need to worry about this; maybe the app got uninstalled or something
             }
         }
     }
