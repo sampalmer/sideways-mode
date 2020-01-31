@@ -137,7 +137,7 @@ public class IncompatibleAppsSuggester extends State {
                     // TODO: Stack/group multiple of these notifications so you get one for each incompatible app?
                     NotificationBuilderCompat builder = NotificationBuilderFactory
                             .create(context)
-                            .setSmallIcon(R.drawable.notification_rotation)
+                            .setSmallIcon(R.drawable.notification_rotation) // TODO: Change icon to something less detailed
                             .setContentTitle(summary)
                             .setContentText("Tap to fix")
                             .setContentIntent(pendingIntent)
