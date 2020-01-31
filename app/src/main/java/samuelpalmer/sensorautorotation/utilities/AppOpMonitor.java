@@ -45,25 +45,41 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
 
     @Override
     protected void subscribeToAdaptee() {
-        appOps.startWatchingMode(op, packageName, usageOpListener);
+        appOps.startWatchingMode(op, packageName, opListener);
     }
 
     @Override
     protected void unsubscribeFromAdaptee() {
-        appOps.stopWatchingMode(usageOpListener);
-        handler.removeCallbacks(checkUsagePermission);
+        appOps.stopWatchingMode(opListener);
+        handler.removeCallbacks(checkPermission);
         isUpToDate = false;
     }
 
-    private final AppOpsManager.OnOpChangedListener usageOpListener = new AppOpsManager.OnOpChangedListener() {
+    private final AppOpsManager.OnOpChangedListener opListener = new AppOpsManager.OnOpChangedListener() {
         @Override
         public void onOpChanged(String op, String packageName) {
-            // Not in main thread, so post to main thread queue
-            handler.post(checkUsagePermission);
+            /*
+             * We op change notifications for *all* apps, not just this app.
+             * Normally we would ignore ones that aren't for this ap.
+             * But there's a weird bug in the Android 8.0 emulator when granting the
+             * "display over other apps" permission that causes the OS to incorrectly
+             * report the op as _not_ granted when it in fact is. The OS then
+             * sends out a notification with a null packageName after the permission
+             * activity is closed, and the OS reports the correct op status at this point.
+             * So we need to check the op even if the notification isn't for this app.
+             */
+
+            if (packageName == null || AppOpMonitor.this.packageName.equals(packageName)) {
+                // Android actually notifies us of changes to ops other than the one we registered for, so filtering them out
+                if (AppOpMonitor.this.op.equals(op)) {
+                    // We're not in main thread, so post to main thread queue
+                    handler.post(checkPermission);
+                }
+            }
         }
     };
 
-    private final Runnable checkUsagePermission = new Runnable() {
+    private final Runnable checkPermission = new Runnable() {
         @Override
         public void run() {
             if (hasSubscriptions()) {
@@ -78,7 +94,15 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
     };
 
     private boolean poll() {
-        int mode = appOps.checkOpNoThrow(op, uid, packageName);
+        int mode;
+
+        if (Build.VERSION.SDK_INT >= 29)
+            mode = appOps.unsafeCheckOpNoThrow(op, uid, packageName);
+        else {
+            //noinspection deprecation
+            mode = appOps.checkOpNoThrow(op, uid, packageName);
+        }
+
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 

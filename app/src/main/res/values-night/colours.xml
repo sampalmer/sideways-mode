@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_500">#be9c91</color>
+    <color name="primary_700">#8d6e63</color>
+    <color name="tip_view_background">#0EFFFFFF</color>
+</resources>

@@ -8,11 +8,17 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import androidx.annotation.RequiresApi;
-import samuelpalmer.sensorautorotation.R;
 
 import java.lang.ref.WeakReference;
+
+import samuelpalmer.sensorautorotation.R;
 
 
 public class CheckedInstalledApp extends LinearLayout {
@@ -70,7 +76,7 @@ public class CheckedInstalledApp extends LinearLayout {
             if (currentLoader != null)
                 currentLoader.cancel(true);
             
-            //Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
+            // Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
             currentLoader = new ImageLoader(item, new WeakReference<>(this));
             currentLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             

@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions{
         disable 'MissingTranslation'
     }
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 64
-        versionName "2.4.0"
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 67
+        versionName "2.5.0"
 
         /*
          * Strips out languages added through the support library so that:
@@ -43,8 +43,17 @@ android {
 
 dependencies {
     compileOnly project(':com.sony.smallapp')
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.0'
+
+    def nav_version = "2.2.0"
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    implementation 'com.google.android.material:material:1.1.0-rc02'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
 }

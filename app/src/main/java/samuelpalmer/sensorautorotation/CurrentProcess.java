@@ -1,23 +1,30 @@
 package samuelpalmer.sensorautorotation;
 
 import android.app.Application;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ContentProvider;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
-import samuelpalmer.sensorautorotation.upgrade.Upgrader;
-import samuelpalmer.sensorautorotation.utilities.CurrentProcessNameDetector;
-import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationUpdater;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
+import samuelpalmer.sensorautorotation.upgrade.Upgrader;
+import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
  * Performs process startup logic, tracks the application context, and identifies which process the calling code is running in.
@@ -28,10 +35,23 @@ public class CurrentProcess extends Application {
     
     @Nullable
     private static Boolean isServiceProcess;
-    
+
+    // Holding a reference to this just to make sure nothing gets garbage-collected
+    @SuppressWarnings("FieldCanBeLocal")
+    private PersistentNotificationUpdater persistentNotificationUpdater;
+
     public static boolean isServiceProcess(Context context) {
-        if (isServiceProcess == null)
-            isServiceProcess = CurrentProcessNameDetector.isServiceProcess(context);
+        if (isServiceProcess == null) {
+            String processName = CurrentProcessNameDetector.getName();
+
+            String packageName = context.getPackageName();
+            if (processName.equals(packageName + context.getText(R.string.process_service)))
+                isServiceProcess = true;
+            else if (processName.equals(packageName + context.getText(R.string.process_ui)))
+                isServiceProcess = false;
+            else
+                throw new RuntimeException("Unrecognised process name: " + processName);
+        }
 
         return isServiceProcess;
     }
@@ -39,7 +59,7 @@ public class CurrentProcess extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        
+
         // Application.onCreate() is called *after* ContentProvider.onCreate().
         // However, attachBaseContext() is called before it, which is why this method is used here.
         Log.i(TAG, "Process created");
@@ -83,7 +103,7 @@ public class CurrentProcess extends Application {
 
         super.onCreate();
 
-        //Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
+        // Note that crashes that occur here don't appear to prevent the rest of the application from running, at least on Android 7.1 (not sure about other OS versions)
         
         /*
          * Must setup notification channels before doing anything else so channels will exist when notifications are posted.
@@ -129,6 +149,9 @@ public class CurrentProcess extends Application {
             removeUninstalledIncompatibleApps(applicationSettings);
             
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        } else {
+            persistentNotificationUpdater = new PersistentNotificationUpdater(this);
+            persistentNotificationUpdater.ensureStarted();
         }
     }
     
@@ -168,7 +191,6 @@ public class CurrentProcess extends Application {
     private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
         Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(getPackageManager(), null);
         Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
-        assert incompatibleAppPackages != null;
 
         Set<String> toRemove = new HashSet<>();
         for (String incompatibleAppPackage : incompatibleAppPackages)
@@ -182,5 +204,5 @@ public class CurrentProcess extends Application {
             applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
         }
     }
-    
+
 }

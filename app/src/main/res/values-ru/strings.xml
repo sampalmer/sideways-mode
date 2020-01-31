@@ -3,11 +3,11 @@
 <!-- Translation by Евгений Черник -->
 <!-- Can contact translator for minor fixes -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Menu -->
-    <string name="action_help">Справка</string>
-    <string name="action_report">Отчет о проблемах</string>
+    <string name="action_help" tools:keep="@string/action_help">Справка</string>
+    <string name="action_settings">Настройки</string>
 
     <!-- Upgrade -->
     <string name="upgrade_summary">%1$s обновлен</string>
@@ -16,6 +16,7 @@
     <!-- Dashboard -->
     <string name="user_rotation_left_side">Левая сторона</string>
     <string name="user_rotation_right_side">Правая сторона</string>
+    <string name="user_rotation_upright">Портретный</string>
     <string name="app_disabled_view_error">Ошибка</string>
 
     <!-- Errors -->
@@ -36,9 +37,6 @@
     <string name="permission_needed_overlays_summary">Панель поверх других приложений?</string>
 
     <string name="permission_needed_system_settings">Для того чтобы управлять вращением экрана, %1$s требует доступ на изменение системных настроек</string>
-
-    <!-- Report problem -->
-    <string name="report_problem_no_email_app">Не удалось найти приложение с аккаунтом электронной почты для использования</string>
 
     <!-- Device problem -->
     <string name="device_problem">Проблемы устройства</string>

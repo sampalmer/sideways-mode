@@ -19,6 +19,9 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
 
+    <!-- To show the controls notification on start-up if the "keep notification" setting is on -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-permission android:name="com.sony.smallapp.permission.SMALLAPP" />
 
     <uses-feature
@@ -73,22 +76,19 @@
             android:theme="@style/AppTheme.Dialog"/>
 
         <activity
-            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-            tools:ignore="UnusedAttribute" />
+            android:name=".processes.ui.preferences.SettingsActivity"
+            >
 
-        <activity
-            android:name=".processes.ui.preferences.incompatibleapps.IncompatibleAppsChooserActivity"
-            android:parentActivityName=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
-            tools:ignore="UnusedAttribute">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+            </intent-filter>
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
 
         </activity>
-
-        <activity android:name=".processes.ui.feedback.ReportProblemActivity" />
 
         <!--suppress AndroidDomInspection -->
         <service
@@ -110,7 +110,7 @@
         <service
             android:name=".processes.ui.QuickSettingService"
             android:label="@string/quick_setting_mode_name"
-            android:icon="@drawable/app_right_side"
+            android:icon="@drawable/app_right_side_outline"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             >
             <intent-filter>
@@ -165,6 +165,13 @@
             android:exported="false"
             android:process="@string/process_service" />
 
+        <receiver android:name=".processes.service.OsBootReceiver"
+                  android:process="@string/process_service">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".processes.service.UpgradeReceiver"
                   android:process="@string/process_service">
             <intent-filter>
@@ -182,7 +189,9 @@
             android:name=".processes.service.RotationService"
             android:enabled="true"
             android:exported="false"
-            android:process="@string/process_service" />
+            android:process="@string/process_service"
+            android:foregroundServiceType=""
+            tools:ignore="UnusedAttribute" />
 
         <activity
             android:name=".processes.service.DummyActivity"

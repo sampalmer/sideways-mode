@@ -7,26 +7,49 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
+
+import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.*;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
+import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
+import samuelpalmer.sensorautorotation.utilities.NotificationUtilities;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
-class ServiceNotification {
+public class ServiceNotification {
     
     private final Context context;
     private final NotificationBuilderCompat builder;
     
-    //Cached for RAM & CPU efficiency
+    // Cached for RAM & CPU efficiency
+    @ColorInt
+    private final int titleColour;
+
+    // Cached for RAM & CPU efficiency
+    @ColorInt
     private final int actionButtonColour;
-    private final int unselectedButtonBackground;
-    
+
+    // Cached for RAM & CPU efficiency
+    @IdRes
+    private final int mainContentId;
+
     public ServiceNotification(Context context) {
+        if (!CurrentProcess.isServiceProcess(context))
+            throw new RuntimeException("Cannot use service notification from outside of service process");
+
         this.context = context;
         
         PendingIntent dashboardIntent = PendingIntent.getActivity(
@@ -35,89 +58,135 @@ class ServiceNotification {
             new Intent(this.context, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntentIds.PENDING_INTENT_FLAGS);
         
-        //Caching and re-using the builder prevents the notification from disappearing and
+        // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
         builder = NotificationBuilderFactory.create(this.context)
             .setContentIntent(dashboardIntent)
-             .setCategory(NotificationCompat.CATEGORY_STATUS)
-            .setVisibility(NotificationCompat.VISIBILITY_SECRET) //To decrease likelihood of showing on lock screen
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
             .setChannelId(NotificationChannels.ID_CONTROLS)
             .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
+            .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+            .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
-        
+
         hideTimestamp();
         
-        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off, ContextCompat.getColor(this.context, R.color.primary_500));
+        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
+        titleColour = styles.getTitleColour();
         actionButtonColour = styles.getActionButtonColour();
-        unselectedButtonBackground = styles.getUnselectedButtonBackground();
-        
+        mainContentId = NotificationUtilities.getMainContentId(this.context);
+
+        Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
     }
 
-    public Notification build(ApplicationStatus.RunningState runningState) {
-        builder
-            .setSmallIcon(runningState.userSide.iconId)
-            .setProgress(0, 0, runningState.waitingForSensor);
+    /**
+     * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
+     */
+    public Notification build(@Nullable ApplicationStatus.RunningState runningState) {
+        builder.setSmallIcon(runningState == null ? R.drawable.app_upright_filled : runningState.userSide.notificationIconId);
 
-        int statusTextResource =
-            runningState.waitingForSensor
-            ?
-            R.string.status_waiting_sensor
-            :
-            runningState.userSide.descriptionId;
+        int statusTextResource;
+
+        if (runningState == null)
+            statusTextResource = R.string.user_rotation_upright;
+        else if (runningState.waitingForSensor)
+            statusTextResource = R.string.status_waiting_sensor;
+        else
+            statusTextResource = runningState.userSide.descriptionId;
         
         CharSequence statusText = context.getText(statusTextResource);
 
         if (VERSION.SDK_INT >= 24) {
-            //In Android N, the app name is already shown in the notification's header section, so we can skip it here.
-            builder.setContentTitle(statusText);
+            // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
+            // Plus, we can now make the notification thin, so we'll put the status to the right of the app name to save vertical space
+            builder.setSubText(statusText);
         }
         else {
             builder.setContentTitle(context.getText(R.string.app_name_full));
             builder.setContentText(statusText);
         }
         
-        applyButtons(runningState.userSide);
+        modifyContentView(runningState);
 
-        return builder.build();
+        Notification notification = builder.build();
+
+        // The OS sets these flags when the notification is attached to a foreground service,
+        // so we're also adding them here to ensure we get the same behaviour when the service isn't running.
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+
+        // Not adding FLAG_FOREGROUND_SERVICE since that makes it impossible to remove the
+        // notification with .cancel() when the user turns off the "keep notification" option
+
+        return notification;
     }
-    
-    private void applyButtons(UserSide userSide) {
-        builder.setCustomContentView(null); //So the pre-buttons notifification doesn't contain the buttons from last time around.
+
+    /**
+     * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
+     */
+    private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState) {
+        @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
+
+        builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
+
+        RemoteViews originalNotification = builder.createContentView();
+
+        /*
+         * In Android N, notification height is variable, and we we can shrink the notification to
+         * take up the minimum possible space by hiding the main content container, since it is
+         * taller than the minimum height. This frees space in the OS notification shade and also
+         * allows the user to hide the notification from the status bar without the OS collapsing
+         * the notification.
+         */
+        if (mainContentId != View.NO_ID)
+            originalNotification.setViewVisibility(mainContentId, View.GONE);
 
         NotificationButtons notificationButtons = new NotificationButtons(
-        context,
+            context,
             R.layout.notification,
-            builder.createContentView(),
-            actionButtonColour,
-            unselectedButtonBackground
+            originalNotification,
+            titleColour,
+            actionButtonColour
         );
-        
+
+        boolean isLoading = runningState != null && runningState.waitingForSensor;
+
         notificationButtons
             .configureButton(
+                R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
-                R.drawable.app_left_side,
+                R.id.notification_left_side_progress,
+                R.drawable.app_left_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-                userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
+                userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_left_side),
-                userSide.equals(UserSide.LEFT))
+                UserSide.LEFT.equals(userSide),
+                isLoading && runningState.userSide.equals(UserSide.LEFT))
             .configureButton(
+                R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_button,
+                R.id.notification_turn_off_progress,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
                 context.getText(R.string.action_turn_off),
+                userSide == null,
                 false)
             .configureButton(
+                R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
-                R.drawable.app_right_side,
+                R.id.notification_right_side_progress,
+                R.drawable.app_right_side_outline,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
-                userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
+                userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
                 context.getText(R.string.user_rotation_right_side),
-                userSide.equals(UserSide.RIGHT))
+                UserSide.RIGHT.equals(userSide),
+                isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
         builder.setCustomContentView(notificationButtons.getContentView());

@@ -133,7 +133,7 @@ public class IncompatibleAppsSuggester extends State {
                             .setContentIntent(pendingIntent)
                             .setChannelId(NotificationChannels.ID_INCOMPATIBLE)
 //                            .setDeleteIntent() // TODO: Don't ask again if user dismisses it?
-                            .setTicker(summary) //Helps ensure the user actually notices notification. Only works on Android 4.
+                            .setTicker(summary) // Helps ensure the user actually notices notification. Only works on Android 4.
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
 //                            .addAction() // TODO: Provide button to not ask again
                             ;

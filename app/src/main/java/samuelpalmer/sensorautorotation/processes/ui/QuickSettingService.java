@@ -8,6 +8,7 @@ import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusClient;
@@ -161,10 +162,21 @@ public class QuickSettingService extends TileService {
             tile.setState(Tile.STATE_INACTIVE);
         
         tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.iconId : R.drawable.quick_setting_off));
-        
-        int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.quick_setting_mode_name;
-        tile.setLabel(getText(labelId));
-        tile.updateTile(); //Seems to subsequently cause loss of listening state.
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            // Android Q lets you specify the subtitle, so we'll use that to show the status
+            tile.setLabel(getText(R.string.quick_setting_mode_name));
+
+            int subtitleId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.user_rotation_off;
+            tile.setSubtitle(getText(subtitleId));
+        }
+        else {
+            // Older versions of Android only let you specify the label, so we'll have to make do with that
+            int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.quick_setting_mode_name;
+            tile.setLabel(getText(labelId));
+        }
+
+        tile.updateTile(); // Seems to subsequently cause loss of listening state.
     }
 
 }

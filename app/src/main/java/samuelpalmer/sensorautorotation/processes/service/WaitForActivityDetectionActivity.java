@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
+
 import androidx.annotation.Nullable;
+
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
@@ -79,7 +81,7 @@ public class WaitForActivityDetectionActivity extends Activity {
     protected void onStart() {
         super.onStart();
         
-        //Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity} did not call finish() prior to onResume() completing"
+        // Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity} did not call finish() prior to onResume() completing"
         if (Build.VERSION.SDK_INT >= 23)
             setVisible(true);
     }

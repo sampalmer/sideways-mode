@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.PowerManager;
+
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
@@ -41,7 +42,8 @@ public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
     
     private boolean poll() {
         PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        
+        assert powerManager != null;
+
         if (Build.VERSION.SDK_INT >= 20)
             return powerManager.isInteractive();
         else

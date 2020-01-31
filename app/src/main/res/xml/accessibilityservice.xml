@@ -6,5 +6,5 @@
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagIncludeNotImportantViews"
     android:description="@string/accessibility_service_description"
-    android:settingsActivity=".processes.ui.preferences.incompatibleapps.IncompatibleAppsActivity"
+    android:settingsActivity=".processes.ui.preferences.SettingsActivity"
     xmlns:android="http://schemas.android.com/apk/res/android" />

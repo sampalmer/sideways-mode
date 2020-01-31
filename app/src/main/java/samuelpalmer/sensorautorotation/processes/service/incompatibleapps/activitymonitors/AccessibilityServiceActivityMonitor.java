@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.WindowChangeDetectingService;
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
@@ -57,7 +59,7 @@ public final class AccessibilityServiceActivityMonitor extends ActivityMonitor {
 
     @Override
     public Intent makeAcquirePermissionIntent() {
-        //TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist. Decide what to do here.
+        // TODO: Apparently the accessibility service management activity isn't guaranteed to actually exist. Decide what to do here.
         return new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
     }
 

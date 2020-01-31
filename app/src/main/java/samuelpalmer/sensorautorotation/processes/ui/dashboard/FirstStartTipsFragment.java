@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -63,9 +66,16 @@ public class FirstStartTipsFragment extends Fragment {
     }
 
     public void setTargets(Dialog dialog, View sideButton, View menuButton, View offButton) {
+        if (targetsSet()) {
+            // We cannot allow the targets to be set multiple times because then we will lose track of the current wizard and end up making a new one on top of it.
+            throw new IllegalStateException("Targets already set");
+        }
+
         this.dialog = dialog;
 
-        dialog.getWindow().setCallback(new WindowCallbackWrapper(dialog) {
+        Window window = dialog.getWindow();
+        assert window != null;
+        window.setCallback(new WindowCallbackWrapper(dialog) {
             @Override
             public boolean dispatchTouchEvent(MotionEvent event) {
                 if (status != null && normalSectionVisible)
@@ -100,6 +110,10 @@ public class FirstStartTipsFragment extends Fragment {
         );
 
         somethingChanged();
+    }
+
+    public boolean targetsSet() {
+        return this.tips != null;
     }
 
     public void setStatus(ApplicationStatus status) {

@@ -64,7 +64,7 @@ public class RemovingIncompatibleAppsTipActivity extends DialogActivity {
         public void onDismiss(DialogInterface dialog) {
             Activity activity = getActivity();
 
-            //For some reason the activity is null when the screen orientation changes
+            // For some reason the activity is null when the screen orientation changes
             if (activity != null)
                 activity.finish();
         }

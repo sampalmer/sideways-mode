@@ -6,6 +6,9 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import java.util.ArrayList;
+
 import samuelpalmer.sensorautorotation.errors.SensorError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.OrientationCalculator;
@@ -14,8 +17,6 @@ import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
-
-import java.util.ArrayList;
 
 
 public class OrientationSensorHandler extends State {
@@ -92,8 +93,8 @@ public class OrientationSensorHandler extends State {
         @Override
         public void onProposedRotationChanged(int rotation) {
             if (!isStarted()) {
-                //This happens if you quickly repeatedly enable and disable the service on an emulator.
-                //It might only affect older versions of Android (API 14-16)
+                // This happens if you quickly repeatedly enable and disable the service on an emulator.
+                // It might only affect older versions of Android (API 14-16)
                 Log.w(TAG, "Got callback while stopped");
                 return;
             }

@@ -54,58 +54,27 @@
                 android:layoutDirection="ltr"
                 tools:ignore="UnusedAttribute">
 
-                <LinearLayout
+                <samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardButtonView
                     android:id="@+id/dashboard_button_left_side"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/user_rotation_left_side"
-                    android:focusable="true"
-                    android:gravity="center_horizontal"
-                    >
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="6dp"
-                        app:srcCompat="@drawable/dashboard_left_side"
-                        android:scaleType="center"
-                        android:duplicateParentState="true"
-                        android:background="@drawable/button_selectable"
-                        tools:ignore="ContentDescription"/>
-                </LinearLayout>
+                    app:src="@drawable/dashboard_left_side"
+                    />
+
                 <!-- Spacer -->
                 <View android:layout_width="0dp"
                       android:layout_height="match_parent"
                       android:layout_weight="1"
                       android:visibility="invisible"/>
 
-                <LinearLayout
+                <samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardButtonView
                     android:id="@+id/dashboard_button_turn_off"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/action_turn_off"
-                    android:focusable="true"
-                    android:gravity="center_horizontal"
-                    >
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="6dp"
-                        app:srcCompat="@drawable/dashboard_turn_off"
-                        android:scaleType="center"
-                        android:duplicateParentState="true"
-                        android:background="@drawable/button_selectable"
-                        tools:ignore="ContentDescription"/>
-                </LinearLayout>
+                    app:src="@drawable/dashboard_turn_off"
+                    />
 
                 <!-- Spacer -->
                 <View android:layout_width="0dp"
@@ -113,29 +82,14 @@
                       android:layout_weight="1"
                       android:visibility="invisible"/>
 
-                <LinearLayout
+                <samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardButtonView
                     android:id="@+id/dashboard_button_right_side"
-                    android:layout_width="64dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/user_rotation_right_side"
-                    android:focusable="true"
-                    android:gravity="center_horizontal"
-                    >
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="6dp"
-                        app:srcCompat="@drawable/dashboard_right_side"
-                        android:scaleType="center"
-                        android:duplicateParentState="true"
-                        android:background="@drawable/button_selectable"
-                        tools:ignore="ContentDescription"/>
-                </LinearLayout>
+                    app:src="@drawable/dashboard_right_side"
+                    />
+
             </LinearLayout>
 
         </LinearLayout>

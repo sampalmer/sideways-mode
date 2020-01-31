@@ -2,16 +2,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary_500</item>
         <item name="colorPrimaryDark">@color/primary_700</item>
         <item name="colorAccent">@color/accent_700</item>
 
         <!-- Needed for the preference support library -->
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
     </style>
-
-    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
+    
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <!-- For some reason, the toolbar text defaults to black on brown, which doesn't have enough contrast -->
+        <item name="titleTextColor">@android:color/white</item>
+    </style>
+    
+    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/primary_500</item>
         <item name="colorPrimaryDark">@color/primary_700</item>
         <item name="colorAccent">@color/accent_700</item>
@@ -48,17 +55,6 @@
 
         <!-- This prevents the navigation bar from flickering -->
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
-    </style>
-
-    <style name="notification">
-        <item name="android:baselineAligned">false</item>
-    </style>
-
-    <style name="notification_buttons">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">0</item>
-        <item name="android:baselineAligned">false</item>
     </style>
 
 </resources>

@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/notification"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:baselineAligned="false">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
 
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/notification_content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         tools:ignore="MergeRootFrame"/>
 
+    <!-- Only using the minimum horizontal space to leave room for the main notification content -->
+    <!-- Matching parent height since this makes it the same height as normal notifications -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        style="@style/notification_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
         android:layoutDirection="ltr"
+        android:layout_gravity="center_vertical"
         tools:ignore="UnusedAttribute"
-        >
+        android:baselineAligned="false">
 
-        <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
-        <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
-        <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+        <FrameLayout
+            android:id="@+id/notification_left_side_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+            <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_left_side_progress" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/notification_turn_off_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+            <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_turn_off_progress" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/notification_right_side_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+            <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+            <include layout="@layout/notification_progress" android:id="@+id/notification_right_side_progress" />
+        </FrameLayout>
 
     </LinearLayout>
 

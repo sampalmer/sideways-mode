@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -64,24 +65,24 @@ public class ScreenOrientationEnforcer extends State {
         if (Build.VERSION.SDK_INT >= 26)
             layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
         else
-            //This seems like the most relevant window type for what we're doing.
-            //Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
+            // This seems like the most relevant window type for what we're doing.
+            // Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
             //noinspection deprecation
             layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
 
-        //Just in case the window type somehow doesn't enforce this
+        // Just in case the window type somehow doesn't enforce this
         layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
 
-        //Prevents breaking apps that detect overlying windows
-        //(eg UBank app, or enabling an accessibility service)
+        // Prevents breaking apps that detect overlying windows
+        // (eg UBank app, or enabling an accessibility service)
         layoutParams.width = 0;
         layoutParams.height = 0;
 
-        //Try to make it completely invisible
+        // Try to make it completely invisible
         layoutParams.format = PixelFormat.TRANSPARENT;
         layoutParams.alpha = 0f;
 
-        //Match the system's "user orientation" (which this app uses to specify screen orientation)
+        // Match the system's "user orientation" (which this app uses to specify screen orientation)
         layoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_USER;
 
         return layoutParams;

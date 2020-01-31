@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name_full">Sideways Mode</string>
     <string name="app_name_short">Sideways</string>
@@ -21,9 +21,9 @@
 
     <!-- Menu -->
     <string name="action_menu">Menu</string>
-    <string name="action_help">Help</string>
+    <string name="action_help" tools:keep="@string/action_help">Help</string>
     <string name="action_tips">Tips</string>
-    <string name="action_report">Report problem</string>
+    <string name="action_settings">Settings</string>
 
     <!-- Upgrade -->
     <string name="upgrade_summary">%1$s upgraded</string>
@@ -33,6 +33,8 @@
     <!-- Dashboard -->
     <string name="user_rotation_left_side">Left side</string>
     <string name="user_rotation_right_side">Right side</string>
+    <string name="user_rotation_upright">Upright</string>
+    <string name="user_rotation_off">Off</string>
     <string name="app_disabled_view_error">View error</string>
     <string name="status_waiting_sensor">Waiting for sensor</string>
     <string name="action_turn_off">Turn off</string>
@@ -47,12 +49,24 @@
     <string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
     <string name="preference_choose_apps">Choose incompatible apps</string>
 
+    <string name="preference_when_screen_locked">When screen locked</string>
+    <string name="preference_when_screen_locked_do_nothing">Do nothing</string>
+    <string name="preference_when_screen_locked_turn_off">Turn off %1$s</string>
+
+    <string name="preference_when_upright">"When I'm upright"</string>
+    <string name="preference_when_upright_close_notification">Remove notification</string>
+    <string name="preference_when_upright_keep_notification">Keep notification</string>
+
+
     <!-- Errors -->
     <string name="environment_error_message">%1$s %2$s has been turned off.</string>
     <string name="environment_error_more">More</string>
 
     <string name="environment_error_system_rotation_enabled_summary">System rotation turned on</string>
     <string name="environment_error_system_rotation_enabled_message">The device\'s built-in screen auto-rotation was turned on.</string>
+
+    <string name="environment_error_screen_orientation_changed_summary">Screen orientation changed</string>
+    <string name="environment_error_screen_orientation_changed_message">Another app is controlling the screen orientation.</string>
 
     <string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
     <string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
@@ -71,20 +85,6 @@
     <string name="permission_needed_system_settings">To control the screen rotation, %1$s needs permission to change system settings</string>
     <string name="permission_touch_to_fix">Touch to fix</string>
     <string name="permissions_needed_tip">To use this feature, some permissions are needed</string>
-
-    <!-- Report problem -->
-    <string name="report_problem_reproduce">What did you do?</string>
-    <string name="report_problem_problem">What happened?</string>
-    <string name="report_problem_expected">What did you expect to happen?</string>
-    <string name="report_problem_field_missing">This is required</string>
-    <string name="report_problem_field_wrong">Wrong answer</string>
-    <string name="report_problem_field_too_short">Please provide more information</string>
-    <string name="report_problem_send">Send by email</string>
-    <string name="report_problem_disclosure">"This will send logs, information about the app, and general information about your device to the developer to help fix the problem"</string>
-    <string name="report_problem_no_email_app">Couldn\'t find an email app with an email account to use</string>
-    <string name="report_problem_send_with">Send report with</string>
-    <string name="report_problem_confirmation">Discard problem report?</string>
-    <string name="report_problem_discard">Discard</string>
 
     <!-- Device problem -->
     <string name="device_problem">Device problem</string>

@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.util.Log;
+
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsSuggester;
@@ -14,9 +15,9 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
 public class ServiceRunningState extends State {
-
+    
     private static final String TAG = ServiceRunningState.class.getSimpleName();
-
+    
     private final RotationService service;
     private final OrientationCalculator calculator;
     final RunningStateUpdater runningStateUpdater;
@@ -32,7 +33,7 @@ public class ServiceRunningState extends State {
 
     public ServiceRunningState(RotationService service) {
         this.service = service;
-
+        
         ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
         LockScreenMonitor lockScreenMonitor = new LockScreenMonitor(service);
 
@@ -49,14 +50,14 @@ public class ServiceRunningState extends State {
 
         deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
     }
-
+    
     @Override
     protected void start() {
         Log.i(TAG, "App is turning on");
-
-        //This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
+        
+        // This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
         EnvironmentErrorManager.clear(service);
-
+        
         systemAutoRotationMonitor.ensureStarted();
         runningStateUpdater.ensureStarted();
         screenUpdater.ensureStarted();
@@ -67,16 +68,16 @@ public class ServiceRunningState extends State {
         incompatibleAppsSuggester.ensureStarted();
         deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
         deviceInteractivityListener.update();
-
+        
         ServiceRunningStateHolder.serviceStarted(this);
     }
-
+    
     @Override
     protected void stop() {
         Log.i(TAG, "App is turning off");
-
+        
         ServiceRunningStateHolder.serviceStopped();
-
+        
         deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
 
         incompatibleAppsSuggester.ensureStopped();
@@ -87,14 +88,14 @@ public class ServiceRunningState extends State {
         screenUpdater.ensureStopped();
         runningStateUpdater.ensureStopped();
         lowMemoryDetector.ensureStopped();
-
+        
         ServiceSettings
             .getSharedPreferences(service)
             .edit()
             .remove(ServiceSettings.KEY_PERSISTENT_STATE)
             .apply();
     }
-
+    
     private final EventHandler deviceInteractivityListener = new EventHandler() {
         @Override
         public void update() {
@@ -114,9 +115,9 @@ public class ServiceRunningState extends State {
             }
         }
     };
-
+    
     public void setSide(UserSide side) {
         calculator.setSide(side);
     }
-
+    
 }

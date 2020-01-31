@@ -7,6 +7,9 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
+
+import java.util.Set;
+
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
@@ -14,8 +17,6 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.SendConfigReceiv
 import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
-
-import java.util.Set;
 
 class Migrations {
     static SparseArray<Migration> buildMap() {
@@ -48,7 +49,7 @@ class Migrations {
                 editor.remove("userOrientation");
                 
                 if (prefs.contains("autoRotate") && prefs.contains("userOrientation") && prefs.getBoolean("autoRotate", true))
-                    //Not migrating this value when in locked orientation mode since it depends on the device orientation,
+                    // Not migrating this value when in locked orientation mode since it depends on the device orientation,
                     // which we don't have, and the startup logic should be able to correctly calculate the new value anyway.
                     editor.putInt("screenOrientationOffset", Orientation.NATURAL.minus(Orientation.fromOffset(prefs.getInt("userOrientation", 0))).offset);
             }
@@ -68,7 +69,7 @@ class Migrations {
             public void upgradeUiProcessData(Context context, SharedPreferences prefs, SharedPreferences.Editor editor) {
                 super.upgradeUiProcessData(context, prefs, editor);
                 
-                //The format of this setting has changed.
+                // The format of this setting has changed.
                 editor.remove("lastError");
             }
         });
@@ -180,6 +181,19 @@ class Migrations {
                             .putBoolean(ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN, true)
                             .putBoolean(ApplicationSettings.KEY_INCOMPATIBLE_APPS_TIP_SHOWN, true)
                             .putBoolean(ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN, true);
+            }
+        });
+
+        migrations.put(68, new Migration() {
+            @Override
+            public void upgradeServiceProcessData(Context context, SharedPreferences serviceSettings, SharedPreferences.Editor editor) {
+                super.upgradeServiceProcessData(context, serviceSettings, editor);
+
+                if (serviceSettings.contains(ServiceSettings.KEY_PERSISTENT_STATE)) {
+                    // This version of the app restores the original system auto-rotation value when the app is stopped.
+                    // Since we don't know the original value, we'll assume it was on since that was the behaviour in previous versions.
+                    editor.putBoolean(ServiceSettings.KEY_SYSTEM_ROTATION, true);
+                }
             }
         });
 

@@ -14,8 +14,9 @@
         android:gravity="center_horizontal"
         />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dashboard_permission_fix"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/permission_needed_allow"

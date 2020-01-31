@@ -3,15 +3,26 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
-import android.view.*;
-import android.widget.ImageView;
+import android.os.Build;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+
+import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
+
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
+import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 class FirstStartTipsWizard {
 
@@ -88,8 +99,7 @@ class FirstStartTipsWizard {
                                 sideButton,
                                 context.getString(R.string.intro_tip_side_button_title),
                                 context.getString(R.string.intro_tip_side_button_description, context.getText(R.string.app_name_full))
-                        )
-                        .icon(getDrawable(sideButton)),
+                        ),
                         ApplicationSettings.KEY_TURNING_ON_TIP_SHOWN
                 ),
 
@@ -107,8 +117,7 @@ class FirstStartTipsWizard {
                                 offButton,
                                 context.getString(R.string.intro_tip_uninstall_title),
                                 context.getString(R.string.intro_tip_uninstall_description, context.getText(R.string.app_name_full))
-                        )
-                        .icon(getDrawable(offButton)),
+                        ),
                         ApplicationSettings.KEY_UNINSTALLING_TIP_SHOWN
                 ),
         };
@@ -130,8 +139,11 @@ class FirstStartTipsWizard {
 
         windowManager.addView(disableActivityView, disableActivityViewParams);
 
-        //noinspection ConstantConditions
-        dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
+        // Unfortunately, changing the dim doesn't work prior to Android 4.3 since the OS doesn't support changing it after it's already been initialised
+        if (Build.VERSION.SDK_INT >= 18) {
+            //noinspection ConstantConditions
+            dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
+        }
 
         showCurrentTip();
     }
@@ -140,8 +152,10 @@ class FirstStartTipsWizard {
         if (!tipsRunning)
             throw new RuntimeException("Already stopped");
 
-        //noinspection ConstantConditions
-        dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
+        if (Build.VERSION.SDK_INT >= 18) {
+            //noinspection ConstantConditions
+            dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
+        }
 
         windowManager.removeView(disableActivityView);
 
@@ -163,30 +177,6 @@ class FirstStartTipsWizard {
 
     public boolean isRunning() {
         return tipsRunning;
-    }
-
-    /**
-     * Gets the first drawable that can be found in the given view hierarchy.
-     * This is needed because a selected dashboard button has an underline,
-     * which I don't want to include in the popup since it looks weird.
-     */
-    private Drawable getDrawable(View button) {
-        if (button instanceof ImageView) {
-            ImageView imageView = (ImageView) button;
-            return imageView.getDrawable();
-        }
-        else if (button instanceof ViewGroup) {
-            ViewGroup container = (ViewGroup) button;
-
-            for (int i = 0; i < container.getChildCount(); ++i) {
-                View child = container.getChildAt(i);
-                Drawable childDrawable = getDrawable(child);
-                if (childDrawable != null)
-                    return childDrawable;
-            }
-        }
-
-        return null;
     }
 
     private void showCurrentTip() {
@@ -243,6 +233,27 @@ class FirstStartTipsWizard {
             this.shownPreferenceKey = shownPreferenceKey;
 
             tapTarget.drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
+
+            boolean isDark = DarkThemeMonitor.poll(dialog.getContext());
+
+            if (isDark) {
+                // The library doesn't work well with dark mode out-of-the-box
+
+                @ColorInt int colorPrimary = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimary);
+                @ColorInt int colorPrimaryDark = ThemeUtilities.getThemeColour(dialog.getContext(), R.attr.colorPrimaryDark);
+
+                // Using 24% primary as suggested at https://material.io/design/color/dark-theme.html#states
+                @ColorInt int outerCircleColour = ColorUtils.blendARGB(Color.BLACK, colorPrimary, 0.24f);
+
+                tapTarget
+                        .outerCircleColorInt(outerCircleColour) // Defaults to primary colour, which is too bright and glary for dark mode
+                        .textColorInt(Color.WHITE) // Defaults to black, which is way too dark for dark mode
+                        .targetCircleColorInt(colorPrimaryDark) // Defaults to black, which doesn't draw the user's attention to the target
+                        .tintTarget(false) // The default tinting also affects the background colour on the selected item, making the icon impossible to see
+                ;
+            } else {
+                tapTarget.tintTarget(false); // The default tinted grey icon has poor contrast, so disabling tinting
+            }
         }
 
         private boolean isShown() {

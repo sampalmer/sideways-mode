@@ -6,7 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
@@ -19,7 +21,7 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 public abstract class EnvironmentErrorManager {
     
     public static void report(Context context, EnvironmentError error) {
-        //This is useful when checking log output from Cloud Test Lab on Google Play Store.
+        // This is useful when checking log output from Pre-launch report on Google Play Store.
         Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
         
         postNotification(context, error);
@@ -34,7 +36,9 @@ public abstract class EnvironmentErrorManager {
     }
     
     public static void clear(Context context) {
-        ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationIds.ERROR);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        notificationManager.cancel(NotificationIds.ERROR);
         
         ServiceSettings
             .getSharedPreferences(context)
@@ -52,12 +56,12 @@ public abstract class EnvironmentErrorManager {
         );
         
         NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
-            .setSmallIcon(R.drawable.notification_error) //TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
+            .setSmallIcon(R.drawable.notification_error) // TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
             .setContentIntent(error.showError(context))
             .setContentTitle(error.getSummary())
             .setContentText(context.getText(R.string.app_disabled_view_error))
             .setDeleteIntent(clearIntentIntent)
-            .setTicker(error.getSummary()) //Helps ensure the user actually notices that the error occurred. Only works on Android 4.
+            .setTicker(error.getSummary()) // Helps ensure the user actually notices that the error occurred. Only works on Android 4.
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ERROR)
             .setChannelId(NotificationChannels.ID_ERRORS);
@@ -68,8 +72,10 @@ public abstract class EnvironmentErrorManager {
             builder.setVibrate(new long[]{});
         
         Notification notification = builder.build();
-        
-        ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NotificationIds.ERROR, notification);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        notificationManager.notify(NotificationIds.ERROR, notification);
     }
     
 }

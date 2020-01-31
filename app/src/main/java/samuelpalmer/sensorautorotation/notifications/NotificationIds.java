@@ -5,5 +5,6 @@ public class NotificationIds {
     public static final int UPGRADE = 2;
     public static final int ERROR = 3;
     public static final int PERMISSION = 4;
-    public static final int INCOMPATIBLE_APP = 5;
+    public static final int DUMMY = 5;
+    public static final int INCOMPATIBLE_APP = 6;
 }

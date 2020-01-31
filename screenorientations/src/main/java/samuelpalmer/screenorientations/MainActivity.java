@@ -42,7 +42,6 @@ public class MainActivity extends Activity {
             if (field.getName().startsWith("SCREEN_ORIENTATION_") && Modifier.isStatic(field.getModifiers())) {
                 int value;
                 try {
-                    //noinspection unchecked
                     value = (int) field.get(null);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);

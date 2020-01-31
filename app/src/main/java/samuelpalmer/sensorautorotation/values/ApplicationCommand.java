@@ -84,30 +84,45 @@ public class ApplicationCommand {
 
     public static final class Config {
         public final Set<String> incompatibleAppPackages;
+        public final boolean turnOffWhenLocked;
+        public final boolean closeNotificationWhenUpright;
 
         public static boolean isSyncableAppSetting(String appSettingKey) {
-            return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+            return appSettingKey.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES)
+                    || appSettingKey.equals(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED)
+                    || appSettingKey.equals(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT);
         }
 
         private Config(SharedPreferences applicationSettings) {
             this(
-                applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet())
+                applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()),
+                applicationSettings.getBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, true),
+                applicationSettings.getBoolean(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, true)
             );
         }
 
-        private Config(Set<String> incompatibleAppPackages) {
+        private Config(Set<String> incompatibleAppPackages, boolean turnOffWhenLocked, boolean closeNotificationWhenUpright) {
             this.incompatibleAppPackages = incompatibleAppPackages;
             if (incompatibleAppPackages == null)
                 throw new IllegalArgumentException("incompatibleAppPackages is null");
+
+            this.turnOffWhenLocked = turnOffWhenLocked;
+            this.closeNotificationWhenUpright = closeNotificationWhenUpright;
         }
 
         private static @Nullable Config fromBundle(@Nullable Bundle bundle) {
             if (bundle == null)
                 return null;
 
-            return new Config(
-                getIncompatibleAppPackages(bundle)
-            );
+            Set<String> incompatibleAppPackages = getIncompatibleAppPackages(bundle);
+
+            if (!bundle.containsKey(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED))
+                throw new IllegalArgumentException("Bundle is missing value for " + ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
+
+            boolean turnOffWhenLocked = bundle.getBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED);
+            boolean closeNotificationWhenUpright = bundle.getBoolean(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT);
+
+            return new Config(incompatibleAppPackages, turnOffWhenLocked, closeNotificationWhenUpright);
         }
 
         private static Set<String> getIncompatibleAppPackages(Bundle bundle) {
@@ -123,6 +138,8 @@ public class ApplicationCommand {
         private Bundle asBundle() {
             Bundle result = new Bundle();
             result.putStringArray(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages.toArray(new String[0]));
+            result.putBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, turnOffWhenLocked);
+            result.putBoolean(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, closeNotificationWhenUpright);
             return result;
         }
     }
