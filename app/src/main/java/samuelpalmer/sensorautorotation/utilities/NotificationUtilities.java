@@ -31,7 +31,7 @@ public class NotificationUtilities {
             return View.NO_ID;
 
         RemoteViews notificationContent = NotificationBuilderFactory.create(context)
-                .setSmallIcon(R.drawable.app_right_side_filled)
+                .setSmallIcon(R.drawable.app_right_side)
                 .setCustomContentView(new RemoteViews(context.getPackageName(), R.layout.notification_marker))
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .createContentView();
