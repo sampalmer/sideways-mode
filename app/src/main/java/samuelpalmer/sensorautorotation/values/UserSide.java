@@ -15,15 +15,15 @@ public enum UserSide {
     public final Orientation orientation;
     
     @DrawableRes
-    public final int iconId;
+    public final int quickSettingIconId;
     
     @DrawableRes
     public final int notificationIconId;
 
-    UserSide(@StringRes int descriptionId, Orientation orientation, @DrawableRes int iconId, @DrawableRes int notificationIconId) {
+    UserSide(@StringRes int descriptionId, Orientation orientation, @DrawableRes int quickSettingIconId, @DrawableRes int notificationIconId) {
         this.descriptionId = descriptionId;
         this.orientation = orientation;
-        this.iconId = iconId;
+        this.quickSettingIconId = quickSettingIconId;
         this.notificationIconId = notificationIconId;
     }
     
