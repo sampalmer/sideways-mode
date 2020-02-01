@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class ViewLayoutDumper {
 
+    public static final String ANDROID_XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
     private static String TAG = ViewLayoutDumper.class.getSimpleName();
 
     private ViewLayoutDumper() {}
@@ -32,7 +33,7 @@ public class ViewLayoutDumper {
         try {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
-            viewToXml(context, view, serializer);
+            viewToXml(context, view, serializer, true);
             serializer.endDocument();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -45,8 +46,9 @@ public class ViewLayoutDumper {
         return writer.toString();
     }
 
-    private static void viewToXml(Context context, View view, XmlSerializer serializer) throws IOException, InvocationTargetException, IllegalAccessException {
+    private static void viewToXml(Context context, View view, XmlSerializer serializer, boolean isFirstElement) throws IOException, InvocationTargetException, IllegalAccessException {
         String className = view.getClass().getName();
+        serializer.setPrefix("android", ANDROID_XML_NAMESPACE);
         serializer.startTag(null, className);
 
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -60,7 +62,7 @@ public class ViewLayoutDumper {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); ++i) {
                 View child = viewGroup.getChildAt(i);
-                viewToXml(context, child, serializer);
+                viewToXml(context, child, serializer, false);
             }
         }
 
@@ -106,7 +108,7 @@ public class ViewLayoutDumper {
 
                     if (defaultObject != null && !areEqual(fieldValue, field.get(defaultObject))) {
                         String stringFieldValue = valueToXmlValue(fieldValue);
-                        serializer.attribute(null, prefix + field.getName(), stringFieldValue);
+                        serializer.attribute(ANDROID_XML_NAMESPACE, prefix + field.getName(), stringFieldValue);
                     }
                 }
             }
@@ -127,7 +129,7 @@ public class ViewLayoutDumper {
 
                         if (defaultObject != null && !areEqual(result, method.invoke(defaultObject))) {
                             String stringResult = valueToXmlValue(result);
-                            serializer.attribute(null, prefix + fieldNameCamelCase, stringResult);
+                            serializer.attribute(ANDROID_XML_NAMESPACE, prefix + fieldNameCamelCase, stringResult);
                         }
                     }
                 }
