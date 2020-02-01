@@ -105,7 +105,7 @@
         <service
             android:name=".processes.ui.QuickSettingService"
             android:label="@string/quick_setting_mode_name"
-            android:icon="@drawable/app_right_side_outline"
+            android:icon="@drawable/app_right_side"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             >
             <intent-filter>

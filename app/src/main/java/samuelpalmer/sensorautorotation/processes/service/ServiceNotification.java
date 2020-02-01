@@ -159,7 +159,7 @@ public class ServiceNotification {
                 R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
                 R.id.notification_left_side_progress,
-                R.drawable.app_left_side_outline,
+                R.drawable.app_left_side,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
@@ -180,7 +180,7 @@ public class ServiceNotification {
                 R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
                 R.id.notification_right_side_progress,
-                R.drawable.app_right_side_outline,
+                R.drawable.app_right_side,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
