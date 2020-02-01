@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout host = new FrameLayout(context);
         View inflated = notificationContent.apply(context, host);
 
-        String stringifiedNotification = ViewLayoutDumper.viewToXml(inflated);
+        String stringifiedNotification = ViewLayoutDumper.viewToXml(context, inflated);
         ClipboardManager clipboardManager = ContextCompat.getSystemService(context, ClipboardManager.class);
         assert clipboardManager != null;
         clipboardManager.setPrimaryClip(ClipData.newPlainText("Notification layout", stringifiedNotification));
