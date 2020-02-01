@@ -9,8 +9,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
+    android:minHeight="0dp"
     tools:ignore="ContentDescription"
     />
 
 <!-- The style is needed to make the buttons animate when pressed on Samsung Galaxy S5 -->
 <!-- The theme is needed to make the buttons animate when pressed on CyanogenMod -->
+<!-- Min-height is zeroed to override style that sets it to 48dp, which is taller than Samsung Galaxy S10 Android 10 min notification height -->
