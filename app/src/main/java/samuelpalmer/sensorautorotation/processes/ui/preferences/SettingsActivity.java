@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import androidx.transition.TransitionManager;
 
@@ -26,7 +26,11 @@ public class SettingsActivity extends UiActivity {
         setSupportActionBar(appBar);
 
         // Hook up the app bar with the navigation
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        // Not using Navigation.findNavController() due to https://issuetracker.google.com/issues/142847973
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        assert navHostFragment != null;
+        navController = navHostFragment.getNavController();
+
         NavigationUI.setupActionBarWithNavController(this, navController);
 
         // This animates changes to the toolbar.
