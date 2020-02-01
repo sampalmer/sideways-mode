@@ -1,0 +1,88 @@
+<android.widget.FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="8px"
+    android:paddingBottom="34px">
+
+    <android.view.NotificationHeaderView
+        android:layout_width="wrap_content"
+        android:layout_height="116px"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingStart="63px"
+        android:paddingLeft="63px"
+        android:paddingTop="26px"
+        android:paddingEnd="63px"
+        android:paddingRight="63px"
+        android:paddingBottom="26px">
+
+        <com.android.internal.widget.CachingIconView
+            android:id="@+id/notification_internal_icon"
+            android:layout_height="37px"
+            android:layout_marginEnd="8px"
+            android:layout_width="37px"
+            android:layout_marginRight="8px" />
+
+        <TextView
+            android:firstBaselineToTopHeight="37px"
+            android:id="@+id/notification_internal_app_name"
+            android:lastBaselineToBottomHeight="10px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8px"
+            android:layout_marginEnd="5px"
+            android:layout_marginStart="8px"
+            android:layout_marginRight="5px"
+            android:layout_width="wrap_content"
+            android:lineHeight="41px"
+            android:maxLines="1"
+            android:minLines="1"
+            android:text="Notification Layout Dump"
+            android:textSize="35.0px" />
+
+        <android.view.ViewStub
+            android:id="@+id/notification_internal_spacer"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5px"
+            android:layout_marginEnd="5px"
+            android:layout_marginStart="5px"
+            android:layout_marginRight="5px"
+            android:layout_width="wrap_content" />
+
+        <com.android.internal.widget.NotificationExpandButton
+            android:layout_height="63px"
+            android:layout_width="63px" />
+
+        <android.widget.LinearLayout
+            android:id="@+id/notification_internal_unknown"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16px"
+            android:layout_marginStart="16px"
+            android:layout_width="wrap_content">
+
+        </android.widget.LinearLayout>
+    </android.view.NotificationHeaderView>
+
+    <android.widget.LinearLayout
+        android:id="@+id/notification_internal_main_content"
+        android:layout_gravity="top"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="63px"
+        android:layout_marginEnd="63px"
+        android:layout_marginStart="63px"
+        android:layout_marginRight="63px"
+        android:layout_marginTop="97px"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+        
+        <!-- This FrameLayout is our own custom notification body supplied to the DecoratedCustomViewStyle -->
+        <android.widget.FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+        <android.view.ViewStub
+            android:id="@+id/notification_internal_spacer_2"
+            android:layout_height="39px"
+            android:layout_marginTop="21px"
+            android:layout_width="match_parent" />
+    </android.widget.LinearLayout>
+</android.widget.FrameLayout>

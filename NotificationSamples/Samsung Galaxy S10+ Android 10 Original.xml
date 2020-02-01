@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<android.widget.FrameLayout layout_height="-2" layout_width="-1" accessibilityViewId="14" childCount="3" id="16909594" paddingBottom="34" paddingTop="8" sourceLayoutResId="17367208" uniqueDrawingId="24">
+  <android.view.NotificationHeaderView layout_height="116" layout_width="-2" accessibilityViewId="16" childCount="12" clipChildren="false" clipToPadding="false" descendantFocusability="393216" id="16909235" paddingBottom="26" paddingEnd="63" paddingLeft="63" paddingRight="63" paddingStart="63" paddingTop="26" sourceLayoutResId="17367207" uniqueDrawingId="25">
+    <com.android.internal.widget.CachingIconView layout_rightMargin="8" layout_height="37" layout_width="37" layout_marginEnd="8" accessibilityViewId="18" id="16908294" sourceLayoutResId="17367207" uniqueDrawingId="26" />
+    <androidx.appcompat.widget.AppCompatTextView layout_leftMargin="8" layout_rightMargin="5" layout_height="-2" layout_width="-2" layout_marginEnd="5" layout_marginStart="8" accessibilityViewId="20" currentTextColor="-2614432" firstBaselineToTopHeight="37" id="16908735" iterableTextForAccessibility="Notification Layout Dump" lastBaselineToBottomHeight="10" lineHeight="41" maxLines="1" minLines="1" sourceLayoutResId="17367207" text="Notification Layout Dump" textSize="35.0" uniqueDrawingId="27" />
+    <android.view.ViewStub layout_leftMargin="5" layout_rightMargin="5" layout_height="-2" layout_width="-2" layout_marginEnd="5" layout_marginStart="5" accessibilityViewId="34" id="16908825" layoutResource="17367219" uniqueDrawingId="34" />
+    <com.android.internal.widget.NotificationExpandButton layout_height="63" layout_width="63" />
+    <android.widget.LinearLayout layout_leftMargin="16" layout_height="-2" layout_width="-2" layout_marginStart="16" accessibilityViewId="39" childCount="3" id="16908736" sourceLayoutResId="17367207" uniqueDrawingId="37">
+    </android.widget.LinearLayout>
+  </android.view.NotificationHeaderView>
+  <android.widget.LinearLayout layout_gravity="48" layout_leftMargin="63" layout_rightMargin="63" layout_topMargin="97" layout_height="-2" layout_width="-1" layout_marginEnd="63" layout_marginStart="63" accessibilityViewId="47" childCount="2" id="16909236" orientation="1" sourceLayoutResId="17367208" uniqueDrawingId="41">
+    <android.widget.FrameLayout layout_height="-1" layout_width="-1" accessibilityViewId="49" sourceLayoutResId="2131361824" uniqueDrawingId="52" />
+    <android.view.ViewStub layout_topMargin="21" layout_height="39" layout_width="-1" accessibilityViewId="51" id="16908301" layoutResource="17367222" uniqueDrawingId="46" />
+  </android.widget.LinearLayout>
+</android.widget.FrameLayout>
