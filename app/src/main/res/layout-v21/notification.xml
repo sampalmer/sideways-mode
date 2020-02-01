@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Using GridLayout to make the notification as vertically small as possible. This has two
+    benefits:
+    1. Takes up less space in the notification shade
+    2. Prevents the OS from "minimising" the notification
+
+    This relies on weights in both axes, which isn't possible prior to API 21.
+
+    The user might set the notification importance to IMPORTANCE_MIN so that its icon doesn't appear
+    in the status bar. But at this importance, the OS "minimises" the notification, so the user has
+    to manually expand it each time they want to use it. By shrinking the notification height as
+    much as possible, the OS no longer "minimises" it.
+-->
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="2">
+
+    <!--
+        Minimum notification height varies by device, so we aren't hard-coding any heights here
+        Example minimum heights:
+            AOSP Android 10: 50dp
+            Google Pixel 3 XL Android 10: 52dp
+            Samsung Galaxy S10 Android 10: 44dp
+
+        The OS hard-codes the notification height to a fixed amount that is greater than the
+        minimum, so we're using a combination of layout settings that manipulate it to match the
+        container minimum height.
+     -->
+    <include
+        layout="@layout/notification_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="0"
+        android:layout_gravity="fill_vertical|fill_horizontal"
+        />
+
+    <!-- Only using the minimum horizontal space to leave room for the main notification content -->
+    <!-- Matching parent height so buttons stretch vertically to fill the notification height -->
+    <include
+        layout="@layout/notification_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_columnWeight="0"
+        android:layout_rowWeight="1"
+        android:layout_gravity="fill_vertical|clip_horizontal"
+        />
+
+</GridLayout>

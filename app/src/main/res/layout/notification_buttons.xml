@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    tools:ignore="UnusedAttribute"
+    android:baselineAligned="false">
+
+    <FrameLayout
+        android:id="@+id/notification_left_side_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+        <include layout="@layout/notification_progress" android:id="@+id/notification_left_side_progress" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/notification_turn_off_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+        <include layout="@layout/notification_progress" android:id="@+id/notification_turn_off_progress" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/notification_right_side_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+        <include layout="@layout/notification_progress" android:id="@+id/notification_right_side_progress" />
+    </FrameLayout>
+
+</LinearLayout>

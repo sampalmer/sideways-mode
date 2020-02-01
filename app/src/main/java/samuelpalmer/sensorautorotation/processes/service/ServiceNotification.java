@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
-import android.view.View;
-import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -24,7 +21,6 @@ import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
-import samuelpalmer.sensorautorotation.utilities.NotificationUtilities;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
@@ -41,10 +37,6 @@ public class ServiceNotification {
     // Cached for RAM & CPU efficiency
     @ColorInt
     private final int actionButtonColour;
-
-    // Cached for RAM & CPU efficiency
-    @IdRes
-    private final int mainContentId;
 
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
@@ -77,7 +69,6 @@ public class ServiceNotification {
         NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
         titleColour = styles.getTitleColour();
         actionButtonColour = styles.getActionButtonColour();
-        mainContentId = NotificationUtilities.getMainContentId(this.context);
 
         Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
@@ -132,22 +123,10 @@ public class ServiceNotification {
 
         builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
-        RemoteViews originalNotification = builder.createContentView();
-
-        /*
-         * In Android N, notification height is variable, and we we can shrink the notification to
-         * take up the minimum possible space by hiding the main content container, since it is
-         * taller than the minimum height. This frees space in the OS notification shade and also
-         * allows the user to hide the notification from the status bar without the OS collapsing
-         * the notification.
-         */
-        if (mainContentId != View.NO_ID)
-            originalNotification.setViewVisibility(mainContentId, View.GONE);
-
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
-            originalNotification,
+            builder.createContentView(),
             titleColour,
             actionButtonColour
         );
