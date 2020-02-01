@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.app.KeyguardManager;
 import android.content.*;
 import android.os.Build;
+
+import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -19,7 +22,7 @@ public class AppDisabler extends State {
 
     public AppDisabler(Context context) {
         this.context = context;
-        keyguardManager = (KeyguardManager)context.getSystemService(Context.KEYGUARD_SERVICE);
+        keyguardManager = ContextCompat.getSystemService(context, KeyguardManager.class);
         prefs = ServiceSettings.getSharedPreferences(context);
     }
     

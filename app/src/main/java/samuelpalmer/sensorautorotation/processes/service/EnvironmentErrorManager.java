@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -36,7 +37,7 @@ public abstract class EnvironmentErrorManager {
     }
     
     public static void clear(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
         assert notificationManager != null;
         notificationManager.cancel(NotificationIds.ERROR);
         

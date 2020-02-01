@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +69,7 @@ public abstract class NotificationChannels {
         permission.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
         List<NotificationChannel> channels = Arrays.asList(controls, upgrades, errors, permission);
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
         assert notificationManager != null;
         notificationManager.createNotificationChannels(channels);
     }

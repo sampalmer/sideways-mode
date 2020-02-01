@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 
 import samuelpalmer.sensorautorotation.errors.SensorError;
@@ -31,7 +33,7 @@ public class OrientationSensorHandler extends State {
     private Integer oldBias;
 
     public static boolean canDetectOrientation(Context context) {
-        SensorManager sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+        SensorManager sensorManager = ContextCompat.getSystemService(context, SensorManager.class);
         ArrayList<Sensor> supportedSensors = WindowOrientationListener.getSupportedSensors(sensorManager);
         return !supportedSensors.isEmpty();
     }

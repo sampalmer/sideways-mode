@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavDeepLinkBuilder;
 
 import java.util.Collections;
@@ -47,7 +48,7 @@ public class PermissionNotificationManager extends State {
         this.activityMonitor = activityMonitor;
         enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
 
-        notificationManager = (NotificationManager)this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = ContextCompat.getSystemService(this.context, NotificationManager.class);
         prefs = ServiceSettings.getSharedPreferences(this.context);
     }
 

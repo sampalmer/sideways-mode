@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
@@ -28,8 +30,7 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
      * @param op The <code>OPSTR_</code> constant from {@link AppOpsManager} for the op you want to monitor
      */
     public AppOpMonitor(Context context, String op) {
-        // Not using ContextCompat.getSystemService() because it doesn't work on older versions of Android (as far as I recall)
-        appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        appOps = ContextCompat.getSystemService(context, AppOpsManager.class);
         uid = Process.myUid();
         packageName = context.getPackageName();
         handler = new Handler();

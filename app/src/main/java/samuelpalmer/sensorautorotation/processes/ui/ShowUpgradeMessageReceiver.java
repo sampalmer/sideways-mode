@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -81,7 +82,7 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
             .setChannelId(NotificationChannels.ID_UPGRADES)
             .build();
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
         assert notificationManager != null;
         notificationManager.notify(NotificationIds.UPGRADE, notification);
     }

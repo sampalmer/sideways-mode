@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
+import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
@@ -30,7 +32,7 @@ public class ScreenOrientationEnforcer extends State {
     private boolean isEnforced;
 
     public ScreenOrientationEnforcer(Context context) {
-        windows = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        windows = ContextCompat.getSystemService(context, WindowManager.class);
         view = new View(context);
         layout = generateLayout();
     }
