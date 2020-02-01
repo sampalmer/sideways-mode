@@ -1,11 +1,13 @@
 package com.example.notificationlayoutdump;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,12 +15,15 @@ import android.widget.FrameLayout;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String NOTIFICATION_CHANNEL_ID = "notifications";
+    private static final String PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        dumpNotificationLayout(this);
+
+        if (ContextCompat.checkSelfPermission(this, PERMISSION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{PERMISSION}, 0);
+        else
+            dumpNotificationLayout(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions.length == 1 && permissions[0].equals(PERMISSION))
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                dumpNotificationLayout(this);
+            else
+                finish();
     }
 
     private static void dumpNotificationLayout(Context context) {
@@ -46,11 +66,12 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout host = new FrameLayout(context);
         View inflated = notificationContent.apply(context, host);
 
-        String stringifiedNotification = ViewLayoutDumper.viewToXml(context, inflated);
+        String notificationXml = ViewLayoutDumper.viewToXml(context, inflated);
         ClipboardManager clipboardManager = ContextCompat.getSystemService(context, ClipboardManager.class);
         assert clipboardManager != null;
-        clipboardManager.setPrimaryClip(ClipData.newPlainText("Notification layout", stringifiedNotification));
-        Toast.makeText(context, "Notification copied to clipboard", Toast.LENGTH_LONG).show();
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("Notification layout", notificationXml));
+        String outFilePath = FileUtils.writeToDownloads(context, notificationXml, "notification_layout.xml", "text/xml");
+        Toast.makeText(context, "Notification dumped to clipboard and " + outFilePath, Toast.LENGTH_LONG).show();
     }
 
     private static RemoteViews makeNotificationRemoteViews(Context context) {
