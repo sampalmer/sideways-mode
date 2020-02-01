@@ -122,6 +122,8 @@ public class IncompatibleAppsSuggester extends State {
             // TODO: Don't prompt if the user has already been asked and dismissed the notification
             // TODO: Don't prompt if the current activity orientation is controlled by the activity behind it (eg a dialog)
             // TODO: For some reason a suggestion was made to mark the launcher as incompatible when I opened YouTube. This might be a timing-related issue caused by the accessibility service. If that's the case, then the issue no longer applies since the accessibility service has been replaced with polling.
+            // TODO: Don't alert when user is watching a YouTube video (which rotates correctly these days) and taps the full-screen button to manually control screen orientation (which overrides system orientation preferences)
+            // TODO: Don't alert in Android 9+ Pixel Launcher when switching between recents screen (which supports rotation) and home screen (which doesn't support rotation but is same activity as recents)
         ) {
             try {
                 ActivityInfo activityInfo = packageManager.getActivityInfo(currentActivity, 0);
