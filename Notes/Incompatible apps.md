@@ -6,8 +6,6 @@ Sideways Mode controls the screen orientation by turning off auto-rotate and cha
 
 App | Rotation control
 --- | ----------------
-YouTube | Programmatically sets activity orientation to portrait while system auto-rotation is disabled
-Apps that use YouTube APIs | Programmatically sets activity orientation to portrait while system auto-rotation is disabled
 VLC | Programmatically sets activity orientation to sensor rotation
 SBS On Demand | Programmatically sets activity orientation to sensor rotation
 7plus | Programmatically sets activity orientation to portrait while system auto-rotation is disabled

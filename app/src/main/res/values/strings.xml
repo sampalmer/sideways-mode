@@ -46,7 +46,7 @@
         <item quantity="other">%d incompatible apps</item>
     </plurals>
 
-    <string name="preference_incompatible_apps_details">"Some apps, such as YouTube, don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
+    <string name="preference_incompatible_apps_details">"Some apps don't rotate the screen correctly while %1$s is running. To fix this, choose any incompatible apps here."</string>
     <string name="preference_choose_apps">Choose incompatible apps</string>
 
     <string name="preference_when_screen_locked">When screen locked</string>
