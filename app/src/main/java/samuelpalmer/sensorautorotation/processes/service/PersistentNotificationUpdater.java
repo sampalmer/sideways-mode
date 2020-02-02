@@ -14,7 +14,9 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
- * Implementation of {@link ApplicationSettings#KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT}
+ * Implementation of {@link ApplicationSettings#KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT}. Updates
+ * the persistent notification when something changes that cannot be detected by an implicit
+ * broadcast. For implicit broadcast updates, see {@link PersistentNotificationSyncReceiver}.
  */
 public final class PersistentNotificationUpdater extends State {
 
