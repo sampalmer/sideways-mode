@@ -29,7 +29,10 @@ public class ServiceRunningState extends State {
 
     public ServiceRunningState(RotationService service) {
         this.service = service;
-        
+
+        // This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
+        EnvironmentErrorManager.clear(service);
+
         ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
         calculator = new OrientationCalculator(service, screenRotationMonitor);
         screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
@@ -46,10 +49,7 @@ public class ServiceRunningState extends State {
     @Override
     protected void start() {
         Log.i(TAG, "App is turning on");
-        
-        // This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-        EnvironmentErrorManager.clear(service);
-        
+
         systemAutoRotationMonitor.ensureStarted();
         runningStateUpdater.ensureStarted();
         screenUpdater.ensureStarted();
