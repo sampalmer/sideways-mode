@@ -50,5 +50,10 @@ public class GenericError extends EnvironmentError {
     public PendingIntent showError(Context context) {
         return MessageDialogActivity.makePendingIntent(context, summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, true);
     }
-    
+
+    @Override
+    public CharSequence getMessage(Context context) {
+        return message;
+    }
+
 }

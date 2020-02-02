@@ -56,7 +56,9 @@ public abstract class EnvironmentError {
     public CharSequence getSummary() {
         return summary;
     }
-    
+
+    public abstract CharSequence getMessage(Context context);
+
     @Override
     public boolean equals(Object obj) {
         return

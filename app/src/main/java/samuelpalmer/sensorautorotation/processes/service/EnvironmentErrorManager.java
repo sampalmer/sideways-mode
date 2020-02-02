@@ -60,7 +60,7 @@ public abstract class EnvironmentErrorManager {
             .setSmallIcon(R.drawable.notification_error) // TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
             .setContentIntent(error.showError(context))
             .setContentTitle(error.getSummary())
-            .setContentText(context.getText(R.string.app_disabled_view_error))
+            .setContentText(error.getMessage(context))
             .setDeleteIntent(clearIntentIntent)
             .setTicker(error.getSummary()) // Helps ensure the user actually notices that the error occurred. Only works on Android 4.
             .setPriority(NotificationCompat.PRIORITY_HIGH)

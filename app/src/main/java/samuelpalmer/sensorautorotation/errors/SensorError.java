@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.errors;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.StringRes;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -12,6 +15,9 @@ import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
 public class SensorError extends EnvironmentError {
     
     private static final String JSON_KEY_TYPE = "type";
+
+    @StringRes
+    private static int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
     
     SensorError() {}
     
@@ -57,11 +63,16 @@ public class SensorError extends EnvironmentError {
     public PendingIntent showError(Context context) {
         Intent intent = new Intent(context, DeviceUnsupportedActivity.class)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            .putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, R.string.device_problem_explanation_sensor)
+            .putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, MESSAGE_RESOURCE)
             .putExtra(DeviceUnsupportedActivity.EXTRA_IS_ERROR, true)
         ;
         
         return PendingIntent.getActivity(context, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
     }
-    
+
+    @Override
+    public CharSequence getMessage(Context context) {
+        return context.getText(MESSAGE_RESOURCE);
+    }
+
 }
