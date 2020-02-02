@@ -1,10 +1,13 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationSyncReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -45,6 +48,10 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
 
         if (dashboardDialog != null)
             dashboardDialog.setCommandSentListener(this::onCommandSent);
+
+        // The persistent notification could have been removed, for example by blocking the
+        // app's notifications or force-stopping the app. So we'll re-post it here just in-case.
+        sendBroadcast(new Intent(this, PersistentNotificationSyncReceiver.class));
     }
 
     @Override
