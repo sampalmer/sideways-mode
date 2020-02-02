@@ -16,14 +16,11 @@ public abstract class UiActivity extends AppCompatActivity {
         if (startupErrorString != 0) {
             // Not letting the user go any further since they shouldn't have installed the app
             Log.w(getClass().getSimpleName(), getText(startupErrorString).toString());
-            Intent intent = new Intent(this, DeviceUnsupportedActivity.class)
-                .putExtra(DeviceUnsupportedActivity.EXTRA_EXPLANATION, startupErrorString)
-                .putExtra(DeviceUnsupportedActivity.EXTRA_IS_ERROR, false)
-            ;
+            Intent intent = DeviceUnsupportedActivity.makeIntent(this, startupErrorString, false);
             startActivity(intent);
             
             finish();
         }
     }
-    
+
 }
