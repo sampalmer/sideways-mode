@@ -70,7 +70,7 @@
 
     <string name="environment_error_system_setting_write_failure_summary">Couldn\'t write setting</string>
     <string name="environment_error_system_setting_write_failure_message">Couldn\'t set system setting \'%1$s\' to \'%2$s\'.</string>
-    <string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings. To fix this, open %1$s.</string>
+    <string name="environment_error_system_setting_write_denied_message">%1$s doesn\'t have permission to change system settings.</string>
 
     <!-- Permissions -->
     <string name="permission_needed_summary">Permission needed</string>
