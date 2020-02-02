@@ -194,6 +194,9 @@ class Migrations {
                     // Since we don't know the original value, we'll assume it was on since that was the behaviour in previous versions.
                     editor.putBoolean(ServiceSettings.KEY_SYSTEM_ROTATION, true);
                 }
+
+                // The JSON structure changed, so we'll just throw away the last stored error
+                editor.remove(ServiceSettings.KEY_LAST_ERROR_JSON);
             }
         });
 

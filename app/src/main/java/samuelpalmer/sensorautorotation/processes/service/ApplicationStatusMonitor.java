@@ -9,12 +9,14 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 class ApplicationStatusMonitor extends EventRegistrarAdaptor {
-    
+
+    private final Context context;
     private final SharedPreferences prefs;
-    
+
     private boolean subscribedToRunningStateUpdates = false;
     
     public ApplicationStatusMonitor(Context context) {
+        this.context = context;
         prefs = ServiceSettings.getSharedPreferences(context);
     }
     
@@ -32,7 +34,7 @@ class ApplicationStatusMonitor extends EventRegistrarAdaptor {
             
             return new ApplicationStatus(
                 null,
-                errorJson == null ? null : EnvironmentError.fromJson(errorJson)
+                errorJson == null ? null : EnvironmentError.fromJson(context, errorJson)
             );
         }
     }

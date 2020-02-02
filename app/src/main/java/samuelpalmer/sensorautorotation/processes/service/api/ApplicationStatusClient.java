@@ -112,11 +112,12 @@ public class ApplicationStatusClient {
         
         @Override
         public void handleMessage(Message msg) {
-            ApplicationStatus status = new ApplicationStatus(msg);
             ApplicationStatusClient client = clientReference.get();
             if (client != null) {
-                if (client.bound) // Just in case they have already unsubscribed
+                if (client.bound) { // Just in case they have already unsubscribed
+                    ApplicationStatus status = new ApplicationStatus(client.context, msg);
                     client.listener.onChange(status);
+                }
             }
             else {
                 // Can't do much here

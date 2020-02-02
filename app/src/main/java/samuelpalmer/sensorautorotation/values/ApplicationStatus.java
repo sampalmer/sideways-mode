@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.values;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import androidx.annotation.Nullable;
@@ -41,7 +42,7 @@ public class ApplicationStatus {
     
     private static final int MSG_WHAT = 1;
     
-    public ApplicationStatus(Message message) {
+    public ApplicationStatus(Context context, Message message) {
         if (message.arg1 == 0)
             this.runningState = null;
         else if (message.arg1 == 1)
@@ -51,7 +52,7 @@ public class ApplicationStatus {
         
         String errorJson = message.getData().getString(null);
         if (errorJson != null)
-            error = EnvironmentError.fromJson(errorJson);
+            error = EnvironmentError.fromJson(context, errorJson);
         else
             error = null;
     }

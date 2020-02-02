@@ -8,6 +8,7 @@ import androidx.annotation.StringRes;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
@@ -17,63 +18,72 @@ import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
  */
 public class SensorError extends EnvironmentError {
     
-    private static final String JSON_KEY_TYPE = "type";
-
     @StringRes
     private static int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
-    
-    SensorError() {}
     
     public enum Type {
         NOT_FOUND,
         NO_DATA
     }
-    
+
+    private final Context context;
+
+    /**
+     * The type of sensor error.
+     */
+    private final Type type;
+
     public SensorError(Context context, Type type) {
-        summary = context.getText(R.string.device_problem);
+        this.context = context;
         this.type = type;
-    }
-    
-    private Type type;
-    
-    @Override
-    JSONObject serialiseDetails() throws JSONException {
-        return new JSONObject().put(JSON_KEY_TYPE, type.name());
-    }
-    
-    @Override
-    void deserialiseDetails(JSONObject details) throws JSONException {
-        String typeName = details.getString(JSON_KEY_TYPE);
-        type = Type.valueOf(typeName);
-    }
-    
-    @Override
-    public String logMessage() {
-        return type.name();
-    }
-    
-    @Override
-    String code() {
-        return "sensor";
-    }
-    
-    @Override
-    EnvironmentError newInstance() {
-        return new SensorError();
-    }
-    
-    @Override
-    public PendingIntent showError(Context context) {
-        Intent intent = DeviceUnsupportedActivity.makeIntent(context, MESSAGE_RESOURCE, true)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ;
-        
-        return PendingIntent.getActivity(context, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
     }
 
     @Override
-    public CharSequence getMessage(Context context) {
+    public CharSequence getSummary() {
+        return context.getText(R.string.device_problem);
+    }
+
+    @Override
+    public CharSequence getMessage() {
         return context.getText(MESSAGE_RESOURCE);
+    }
+
+    @Override
+    public String getLogMessage() {
+        return type.name();
+    }
+
+    @Override
+    public PendingIntent showError(Context context) {
+        Intent intent = DeviceUnsupportedActivity.makeIntent(context, MESSAGE_RESOURCE, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                ;
+
+        return PendingIntent.getActivity(context, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+    }
+
+    static class Serialiser extends EnvironmentError.Serialiser<SensorError> {
+
+        private static final String JSON_KEY_TYPE = "type";
+
+        @Override
+        public Class<SensorError> getTypeClass() {
+            return SensorError.class;
+        }
+
+        @Override
+        public JSONObject serialiseDetails(SensorError environmentError) throws JSONException {
+            return new JSONObject()
+                    .put(JSON_KEY_TYPE, environmentError.type.name());
+        }
+
+        @Override
+        public SensorError deserialiseDetails(Context context, JSONObject serialised) throws JSONException {
+            String typeName = serialised.getString(JSON_KEY_TYPE);
+            Type type = Type.valueOf(typeName);
+            return new SensorError(context, type);
+        }
+
     }
 
 }

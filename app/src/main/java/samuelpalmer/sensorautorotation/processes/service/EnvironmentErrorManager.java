@@ -23,7 +23,7 @@ public abstract class EnvironmentErrorManager {
     
     public static void report(Context context, EnvironmentError error) {
         // This is useful when checking log output from Pre-launch report on Google Play Store.
-        Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.logMessage());
+        Log.w(EnvironmentError.class.getSimpleName(), error.getSummary() + ". " + error.getClass().getSimpleName() + ": " + error.getLogMessage());
         
         postNotification(context, error);
         
@@ -60,7 +60,7 @@ public abstract class EnvironmentErrorManager {
             .setSmallIcon(R.drawable.notification_error) // TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
             .setContentIntent(error.showError(context))
             .setContentTitle(error.getSummary())
-            .setContentText(error.getMessage(context))
+            .setContentText(error.getMessage())
             .setDeleteIntent(clearIntentIntent)
             .setTicker(error.getSummary()) // Helps ensure the user actually notices that the error occurred. Only works on Android 4.
             .setPriority(NotificationCompat.PRIORITY_HIGH)
