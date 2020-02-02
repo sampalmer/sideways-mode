@@ -8,6 +8,9 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
 
+/**
+ * An error that is shown in a {@link MessageDialogActivity}.
+ */
 public class GenericError extends EnvironmentError {
     
     private static final String JSON_KEY_MESSAGE = "message";

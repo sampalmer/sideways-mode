@@ -12,6 +12,9 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
 
+/**
+ * An error with the device's rotation-related sensors.
+ */
 public class SensorError extends EnvironmentError {
     
     private static final String JSON_KEY_TYPE = "type";

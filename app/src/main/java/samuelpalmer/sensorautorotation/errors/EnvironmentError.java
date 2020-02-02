@@ -5,6 +5,10 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * An error that is outside of the control of the app. This is typically a problem caused by the
+ * user, device, operating system, or other app.
+ */
 @SuppressWarnings("WeakerAccess")
 public abstract class EnvironmentError {
     
