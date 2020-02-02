@@ -157,10 +157,12 @@
             android:exported="false"
             android:process="@string/process_service" />
 
-        <receiver android:name=".processes.service.OsBootReceiver"
+        <receiver android:name=".processes.service.PersistentNotificationSyncReceiver"
                   android:process="@string/process_service">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.app.action.APP_BLOCK_STATE_CHANGED" />
+                <action android:name="android.app.action.NOTIFICATION_CHANNEL_BLOCK_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
