@@ -27,6 +27,7 @@ public class RunningStateUpdater extends State {
     private final Context context;
     private final OrientationCalculator calculator;
     private final RotationService service;
+    private final ServiceNotificationUnblockedMonitor notificationUnblockedMonitor;
     private ServiceNotification notificationBuilder;
     private final SharedPreferences prefs;
     private final NotificationManager notificationManager;
@@ -40,6 +41,7 @@ public class RunningStateUpdater extends State {
         prefs = ServiceSettings.getSharedPreferences(context);
         notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
         darkThemeMonitor = new DarkThemeMonitor(context);
+        notificationUnblockedMonitor = new ServiceNotificationUnblockedMonitor(context);
     }
 
     @Override
@@ -47,10 +49,12 @@ public class RunningStateUpdater extends State {
         anythingChanged.update();
         calculator.onAnythingChanged.subscribe(anythingChanged);
         darkThemeMonitor.subscribe(darkThemeChanged);
+        notificationUnblockedMonitor.subscribe(notificationUnblocked);
     }
 
     @Override
     protected void stop() {
+        notificationUnblockedMonitor.unsubscribe(notificationUnblocked);
         darkThemeMonitor.unsubscribe(darkThemeChanged);
         calculator.onAnythingChanged.unsubscribe(anythingChanged);
 
@@ -105,6 +109,14 @@ public class RunningStateUpdater extends State {
             notificationBuilder = new ServiceNotification(context);
 
             // Since the notification uses a custom layout
+            updateDisplays(lastRunningState);
+        }
+    };
+
+    private final EventHandler notificationUnblocked = new EventHandler() {
+        @Override
+        public void update() {
+            // The notification was just unblocked, so we'll re-post it
             updateDisplays(lastRunningState);
         }
     };

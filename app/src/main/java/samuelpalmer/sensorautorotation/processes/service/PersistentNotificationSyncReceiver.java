@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 
 /**
- * This receiver creates the persistent notification when the operating system boots.
+ * This receiver updates the persistent notification in response to implicit broadcasts. For
+ * updates triggered by things other than implicit broadcasts, see
+ * {@link PersistentNotificationUpdater}.
  */
 public class PersistentNotificationSyncReceiver extends BroadcastReceiver {
 
@@ -32,21 +34,10 @@ public class PersistentNotificationSyncReceiver extends BroadcastReceiver {
                 // The user has just turned on their device, so the notification won't be present.
                 // So we'll re-create it if appropriate.
                 return true;
-            } else if (Build.VERSION.SDK_INT >= 28) {
-                // Android 9+ broadcasts changes to notification blocking
-
-                if (NotificationManager.ACTION_APP_BLOCK_STATE_CHANGED.equals(action)) {
-                    boolean isBlocked = intent.getBooleanExtra(NotificationManager.EXTRA_BLOCKED_STATE, false);
-
-                    // If the app's notifications have just been unblocked, then we'll need to re-post the persistent notification.
-                    return !isBlocked;
-                } else if (NotificationManager.ACTION_NOTIFICATION_CHANNEL_BLOCK_STATE_CHANGED.equals(action)) {
-                    boolean isBlocked = intent.getBooleanExtra(NotificationManager.EXTRA_BLOCKED_STATE, false);
-                    String channelId = intent.getStringExtra(NotificationManager.EXTRA_NOTIFICATION_CHANNEL_ID);
-
-                    // If the notification channel has just been unblocked, then we'll need to re-post the persistent notification
-                    return NotificationChannels.ID_CONTROLS.equals(channelId) && !isBlocked;
-                }
+            } else if (ServiceNotificationUnblockedMonitor.wasUnblocked(intent)) {
+                // The notification has been unblocked, so we'll need to re-create it in order for
+                // it to re-appear.
+                return true;
             }
 
         Log.w(PersistentNotificationSyncReceiver.class.getSimpleName(), "Unknown action: " + action);
