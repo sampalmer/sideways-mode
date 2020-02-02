@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
+import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 public class MessageDialogActivity extends DialogActivity {
@@ -22,13 +23,20 @@ public class MessageDialogActivity extends DialogActivity {
     private static final String TAG = "dialog";
 
     public static PendingIntent makePendingIntent(Context context, CharSequence title, CharSequence message, int requestCode, boolean isError) {
-        Intent intent = new Intent(context, MessageDialogActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        // Opening the message over the top of the dashboard to give the user context that it's
+        // about this app, and since it makes more sense to send the user here than to the settings
+        // screen.
+        Intent dashboardIntent = new Intent(context, DashboardActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Not passing Intent.FLAG_ACTIVITY_NEW_TASK since the documentation for PendingIntent.getActivities() says to only supply that flag to the first activity in the array.
+        Intent messageIntent = new Intent(context, MessageDialogActivity.class)
                 .putExtra(INTENT_EXTRA_MESSAGE, message)
                 .putExtra(INTENT_EXTRA_TITLE, title)
                 .putExtra(INTENT_EXTRA_IS_ERROR, isError);
-        
-        return PendingIntent.getActivity(context, requestCode, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+
+        Intent[] intents = {dashboardIntent, messageIntent};
+        return PendingIntent.getActivities(context, requestCode, intents, PendingIntentIds.PENDING_INTENT_FLAGS);
     }
 
     @Override

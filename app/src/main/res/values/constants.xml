@@ -3,4 +3,6 @@
     <!-- The processes have simple, easy-to-read names since the user can see them in the Android memory usage screen. -->
     <string name="process_ui" translatable="false">:UI</string>
     <string name="process_service" translatable="false">:Service</string>
+
+    <string name="task_dashboard" translatable="false">:dashboard</string>
 </resources>
