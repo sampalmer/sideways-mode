@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Opacity values reverse-engineered from the emulator images -->
+
+    <!-- 70% white -->
+    <color name="notification_button_icon_unselected_dark_theme">#B3FFFFFF</color>
+
+    <!-- 54% black -->
+    <color name="notification_button_icon_unselected_light_theme">#8A000000</color>
+
+</resources>

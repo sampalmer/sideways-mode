@@ -9,9 +9,10 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.FloatRange;
 import androidx.annotation.IdRes;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -109,13 +110,10 @@ public class NotificationButtons {
 
     @ColorInt
     private int getIconColour(boolean isButtonSelected) {
-        if (isColour && isButtonSelected) {
-            // Using either white or black so the icon has plenty of contrast over the primary-coloured background
-            return theme.colourOnButtonColour;
-        } else {
-            float iconOpacity = isButtonSelected ? theme.iconOpacityActive : theme.iconOpacityInactive;
-            return ColorUtils.setAlphaComponent(theme.opaqueIconColour, Math.round(0xFF * iconOpacity));
-        }
+        if (isColour && isButtonSelected)
+            return ContextCompat.getColor(context, theme.colourOnButtonColour);
+        else
+            return ContextCompat.getColor(context, isButtonSelected ? theme.selectedIconColour : theme.unselectedIconColour);
     }
 
     @ColorInt
@@ -125,12 +123,8 @@ public class NotificationButtons {
         else if (isColour) {
             // Using primary colour as the background to make the selection stand out
             return buttonColour;
-        } else { // Selected
-            @ColorInt int backgroundColourOpaque = theme.opaqueIconColour;
-
-            // Using 12% of the primary colour as suggested by https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated
-            return ColorUtils.setAlphaComponent(backgroundColourOpaque, Math.round(Color.alpha(backgroundColourOpaque) * 0.12f));
-        }
+        } else // Selected
+            return ContextCompat.getColor(context, theme.selectedBackgroundColour);
     }
 
     /**
@@ -141,36 +135,43 @@ public class NotificationButtons {
     }
 
     private enum Theme {
-        // Opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability
-        // For API 28 - 29, they were reverse-engineered from the emulator images
 
-        DARK(Color.WHITE, 1.00f, VERSION.SDK_INT >= 28 ? 0.70f : 0.50f, Color.BLACK),
-        LIGHT(Color.BLACK, 0.54f, VERSION.SDK_INT >= 28 ? 0.54f : 0.38f, Color.WHITE);
+        DARK(R.color.notification_button_background_selected_dark_theme, R.color.notification_button_icon_selected_dark_theme, R.color.notification_button_icon_unselected_dark_theme, R.color.notification_button_icon_on_colour_dark_theme),
+        LIGHT(R.color.notification_button_background_selected_light_theme, R.color.notification_button_icon_selected_light_theme, R.color.notification_button_icon_unselected_light_theme, R.color.notification_button_icon_on_colour_light_theme);
 
         /**
-         * Icon colour for this theme before applying opacity
+         * Background colour for selected button when not using coloured background
          */
-        @ColorInt
-        public final int opaqueIconColour;
+        @ColorRes
+        public final int selectedBackgroundColour;
 
-        @FloatRange(from = 0, to = 1)
-        public final float iconOpacityActive;
+        /**
+         * Icon colour for selected button when not using coloured background
+         */
+        @ColorRes
+        public final int selectedIconColour;
 
-        @FloatRange(from = 0, to = 1)
-        public final float iconOpacityInactive;
+        /**
+         * Icon colour for unselected button
+         */
+        @ColorRes
+        public final int unselectedIconColour;
 
-        @ColorInt
+        /**
+         * Icon colour for button with coloured background
+         */
+        @ColorRes
         public final int colourOnButtonColour;
 
         Theme(
-                @ColorInt int opaqueIconColour,
-                @FloatRange(from = 0, to = 1) float iconOpacityActive,
-                @FloatRange(from = 0, to = 1) float iconOpacityInactive,
-                @ColorInt int colourOnButtonColour
+                @ColorRes int selectedBackgroundColour,
+                @ColorRes int selectedIconColour,
+                @ColorRes int unselectedIconColour,
+                @ColorRes int colourOnButtonColour
         ) {
-            this.opaqueIconColour = opaqueIconColour;
-            this.iconOpacityActive = iconOpacityActive;
-            this.iconOpacityInactive = iconOpacityInactive;
+            this.selectedBackgroundColour = selectedBackgroundColour;
+            this.selectedIconColour = selectedIconColour;
+            this.unselectedIconColour = unselectedIconColour;
             this.colourOnButtonColour = colourOnButtonColour;
         }
     }
