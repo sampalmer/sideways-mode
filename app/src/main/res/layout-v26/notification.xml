@@ -6,7 +6,9 @@
     1. Takes up less space in the notification shade
     2. Prevents the OS from "minimising" the notification
 
-    This relies on weights in both axes, which isn't possible prior to API 21.
+    This relies on weights in both axes, which isn't possible prior to API 21. Plus, GridLayout
+    prevents the user from clicking on the bottom half of buttons within the notification in API
+    24 - 25. So only using this in 26+.
 
     The user might set the notification importance to IMPORTANCE_MIN so that its icon doesn't appear
     in the status bar. But at this importance, the OS "minimises" the notification, so the user has
