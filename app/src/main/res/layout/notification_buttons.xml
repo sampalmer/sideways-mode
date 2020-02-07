@@ -17,7 +17,10 @@
         android:layout_weight="1"
         >
         <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
-        <include layout="@layout/notification_progress" android:id="@+id/notification_left_side_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_left_side_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_left_side_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_left_side_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_left_side_progress_selected_light_theme" />
     </FrameLayout>
 
     <FrameLayout
@@ -27,7 +30,10 @@
         android:layout_weight="1"
         >
         <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
-        <include layout="@layout/notification_progress" android:id="@+id/notification_turn_off_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_turn_off_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_turn_off_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_turn_off_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_turn_off_progress_selected_light_theme" />
     </FrameLayout>
 
     <FrameLayout
@@ -37,7 +43,10 @@
         android:layout_weight="1"
         >
         <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
-        <include layout="@layout/notification_progress" android:id="@+id/notification_right_side_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_right_side_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_right_side_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_right_side_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_right_side_progress_selected_light_theme" />
     </FrameLayout>
 
 </LinearLayout>

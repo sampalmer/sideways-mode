@@ -137,7 +137,10 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
-                R.id.notification_left_side_progress,
+                R.id.notification_left_side_progress_on_colour_dark_theme,
+                R.id.notification_left_side_progress_on_colour_light_theme,
+                R.id.notification_left_side_progress_selected_dark_theme,
+                R.id.notification_left_side_progress_selected_light_theme,
                 R.drawable.app_left_side,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
@@ -148,7 +151,10 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_button,
-                R.id.notification_turn_off_progress,
+                R.id.notification_turn_off_progress_on_colour_dark_theme,
+                R.id.notification_turn_off_progress_on_colour_light_theme,
+                R.id.notification_turn_off_progress_selected_dark_theme,
+                R.id.notification_turn_off_progress_selected_light_theme,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
@@ -158,7 +164,10 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
-                R.id.notification_right_side_progress,
+                R.id.notification_right_side_progress_on_colour_dark_theme,
+                R.id.notification_right_side_progress_on_colour_light_theme,
+                R.id.notification_right_side_progress_selected_dark_theme,
+                R.id.notification_right_side_progress_selected_light_theme,
                 R.drawable.app_right_side,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.

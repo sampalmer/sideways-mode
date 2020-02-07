@@ -4,7 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build.VERSION;
+import android.os.Build;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -77,7 +77,10 @@ public class NotificationButtons {
     public NotificationButtons configureButton(
             @IdRes int containerId,
             @IdRes int buttonId,
-            @IdRes int progressId,
+            @IdRes int progressOnColourDarkThemeId,
+            @IdRes int progressOnColourLightThemeId,
+            @IdRes int progressSelectedDarkThemeId,
+            @IdRes int progressSelectedLightThemeId,
             @DrawableRes int icon,
             int pendingIntentCode,
             Intent onClickIntent,
@@ -86,34 +89,39 @@ public class NotificationButtons {
             boolean isLoading
     ) {
         @ColorInt int backgroundColour = getButtonBackgroundColour(selected);
-        @ColorInt int iconColour = getIconColour(selected);
 
         content.setInt(containerId, "setBackgroundColor", backgroundColour);
 
         // Not hiding the button altogether when loading since then the user can click the notification body behind it
         content.setImageViewResource(buttonId, isLoading ? 0 : icon);
 
+        // Unfortunately, the progress bar colour cannot be changed directly, so we'll switch between pre-defined progress bars to achieve the same effect
+        content.setViewVisibility(progressOnColourDarkThemeId, View.GONE);
+        content.setViewVisibility(progressOnColourLightThemeId, View.GONE);
+        content.setViewVisibility(progressSelectedDarkThemeId, View.GONE);
+        content.setViewVisibility(progressSelectedLightThemeId, View.GONE);
+
+        @ColorInt int iconColour;
+        if (isColour && selected) {
+            iconColour = ContextCompat.getColor(context, theme.colourOnButtonColour);
+            if (isLoading)
+                content.setViewVisibility(theme == Theme.DARK ? progressOnColourDarkThemeId : progressOnColourLightThemeId, View.VISIBLE);
+        } else {
+            iconColour = ContextCompat.getColor(context, selected ? theme.selectedIconColour : theme.unselectedIconColour);
+            if (selected && isLoading)
+                content.setViewVisibility(theme == Theme.DARK ? progressSelectedDarkThemeId : progressSelectedLightThemeId, View.VISIBLE);
+        }
+
         // The colour filter currently ignores alpha, but we're resetting the alpha to 1.0 anyway just in case this behaviour changes a future version of the OS
         content.setInt(buttonId, "setColorFilter", ColorUtils.setAlphaComponent(iconColour, 0xFF));
 
         // In API 15, the method is called "setAlpha", but it was deprecated in API 16
-        content.setInt(buttonId, VERSION.SDK_INT >= 16 ? "setImageAlpha" : "setAlpha", Color.alpha(iconColour));
+        content.setInt(buttonId, Build.VERSION.SDK_INT >= 16 ? "setImageAlpha" : "setAlpha", Color.alpha(iconColour));
 
         content.setOnClickPendingIntent(buttonId, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
         content.setContentDescription(buttonId, contentDescription);
 
-        // Unfortunately, the progress bar colour cannot be changed, so leaving it at its default
-        content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.INVISIBLE);
-
         return this;
-    }
-
-    @ColorInt
-    private int getIconColour(boolean isButtonSelected) {
-        if (isColour && isButtonSelected)
-            return ContextCompat.getColor(context, theme.colourOnButtonColour);
-        else
-            return ContextCompat.getColor(context, isButtonSelected ? theme.selectedIconColour : theme.unselectedIconColour);
     }
 
     @ColorInt
@@ -136,8 +144,18 @@ public class NotificationButtons {
 
     private enum Theme {
 
-        DARK(R.color.notification_button_background_selected_dark_theme, R.color.notification_button_icon_selected_dark_theme, R.color.notification_button_icon_unselected_dark_theme, R.color.notification_button_icon_on_colour_dark_theme),
-        LIGHT(R.color.notification_button_background_selected_light_theme, R.color.notification_button_icon_selected_light_theme, R.color.notification_button_icon_unselected_light_theme, R.color.notification_button_icon_on_colour_light_theme);
+        DARK(
+                R.color.notification_button_background_selected_dark_theme,
+                R.color.notification_button_icon_selected_dark_theme,
+                R.color.notification_button_icon_unselected_dark_theme,
+                R.color.notification_button_icon_on_colour_dark_theme
+        ),
+        LIGHT(
+                R.color.notification_button_background_selected_light_theme,
+                R.color.notification_button_icon_selected_light_theme,
+                R.color.notification_button_icon_unselected_light_theme,
+                R.color.notification_button_icon_on_colour_light_theme
+        );
 
         /**
          * Background colour for selected button when not using coloured background

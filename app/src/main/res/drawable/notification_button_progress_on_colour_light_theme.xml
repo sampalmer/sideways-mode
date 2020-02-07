@@ -1,0 +1,33 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <rotate
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:fromDegrees="0"
+            android:toDegrees="1080">
+
+            <rotate android:fromDegrees="-90" android:toDegrees="-90">
+
+                <shape
+                    android:shape="ring"
+                    android:innerRadius="8dp"
+                    android:thickness="2dp"
+                    android:useLevel="false"
+                    >
+
+                    <gradient
+                        android:startColor="@android:color/transparent"
+                        android:endColor="@color/notification_button_icon_on_colour_light_theme"
+                        android:type="sweep"
+                        android:useLevel="false"
+                        />
+
+                </shape>
+
+            </rotate>
+
+        </rotate>
+    </item>
+
+</layer-list>
