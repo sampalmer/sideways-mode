@@ -1,1 +1,1 @@
-include ':app', ':com.sony.smallapp', ':loremipsum', ':memoryhog', ':screenorientations', ':thirdpartyuninstaller', ':notificationactions', ':notificationlayoutdump'
+include ':app', ':com.sony.smallapp', ':loremipsum', ':memoryhog', ':screenorientations', ':thirdpartyuninstaller', ':notificationactions', ':notificationlayoutdump', ':deviceinfodump'
