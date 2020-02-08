@@ -1,4 +1,4 @@
-com.android.settingspackage com.example.deviceinfodump;
+package com.example.deviceinfodump;
 
 import android.Manifest;
 import android.app.Notification;
