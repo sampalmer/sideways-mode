@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -38,18 +39,21 @@ public class ServiceNotification {
     @ColorInt
     private final int actionButtonColour;
 
+    @Nullable
+    private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
+
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Cannot use service notification from outside of service process");
 
         this.context = context;
-        
+
         PendingIntent dashboardIntent = PendingIntent.getActivity(
         this.context,
             PendingIntentIds.MAIN_NOTIFICATION_CLICK,
             new Intent(this.context, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntentIds.PENDING_INTENT_FLAGS);
-        
+
         // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
         builder = NotificationBuilderFactory.create(this.context)
@@ -65,10 +69,17 @@ public class ServiceNotification {
         ;
 
         hideTimestamp();
-        
-        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
-        titleColour = styles.getTitleColour();
-        actionButtonColour = styles.getActionButtonColour();
+
+        if (SamsungDarkNotificationFixer.isNeeded(context)) {
+            samsungDarkNotificationFixer = new SamsungDarkNotificationFixer(context);
+            titleColour = samsungDarkNotificationFixer.getTitleColour();
+            actionButtonColour = samsungDarkNotificationFixer.getActionButtonColour();
+        } else {
+            samsungDarkNotificationFixer = null;
+            NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
+            titleColour = styles.getTitleColour();
+            actionButtonColour = styles.getActionButtonColour();
+        }
 
         Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
@@ -177,7 +188,20 @@ public class ServiceNotification {
                 isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
-        builder.setCustomContentView(notificationButtons.getContentView());
+        RemoteViews customNotification = notificationButtons.getContentView();
+        if (samsungDarkNotificationFixer != null)
+            samsungDarkNotificationFixer.applyTo(customNotification);
+
+        // The OS sometimes reapplies the new notification contents onto the contents from last time.
+        // This causes issues in night mode on Samsung Android 9 devices, such as:
+        // - Being dimmed after the first update
+        // - Staying dark after turning off night mode
+        // So we're explicitly wiping and re-inserting the notification contents each time to ensure we get a consistent result each time.
+        RemoteViews wrapper = new RemoteViews(context.getPackageName(), R.layout.notification_wrapper);
+        wrapper.removeAllViews(R.id.notification_wrapper);
+        wrapper.addView(R.id.notification_wrapper, customNotification);
+
+        builder.setCustomContentView(wrapper);
     }
 
     private void hideTimestamp() {
