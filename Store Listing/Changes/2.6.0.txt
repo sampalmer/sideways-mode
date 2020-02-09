@@ -1,0 +1,6 @@
+• Added support for dark theme
+• Fixed white notification background on Samsung devices
+• Added option to always show notification
+• Shrunk notification to free up space and prevent minimisation by the OS
+• Updated icon style
+• Other minor improvements and bug fixes
