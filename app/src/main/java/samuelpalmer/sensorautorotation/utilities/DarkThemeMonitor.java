@@ -59,7 +59,8 @@ public final class DarkThemeMonitor extends EventRegistrarAdaptor {
 
     public static boolean poll(Context context) {
         int uiMode = context.getResources().getConfiguration().uiMode;
-        return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        int nightMode = uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
 }
