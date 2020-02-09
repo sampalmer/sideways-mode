@@ -39,6 +39,8 @@ public class ServiceNotification {
     @ColorInt
     private final int actionButtonColour;
 
+    private final NotificationStyles styles;
+
     @Nullable
     private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
 
@@ -70,13 +72,13 @@ public class ServiceNotification {
 
         hideTimestamp();
 
+        styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
         if (SamsungDarkNotificationFixer.isNeeded(context)) {
             samsungDarkNotificationFixer = new SamsungDarkNotificationFixer(context);
             titleColour = samsungDarkNotificationFixer.getTitleColour();
             actionButtonColour = samsungDarkNotificationFixer.getActionButtonColour();
         } else {
             samsungDarkNotificationFixer = null;
-            NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
             titleColour = styles.getTitleColour();
             actionButtonColour = styles.getActionButtonColour();
         }
@@ -134,10 +136,16 @@ public class ServiceNotification {
 
         builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
 
+        RemoteViews originalNotification = builder.createContentView();
+
+        // The app name and status get truncated on smaller screens or when the UI is enlargened,
+        // so removing padding between the buttons and original notification to make more room.
+        styles.removeRightPadding(originalNotification);
+
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
-            builder.createContentView(),
+            originalNotification,
             titleColour,
             actionButtonColour
         );
