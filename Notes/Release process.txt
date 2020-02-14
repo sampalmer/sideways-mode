@@ -1,6 +1,5 @@
 Increment version numbers
 Ensure migration code is complete and working
-Update screenshots
 Promote from Beta to Production
 Update store listing description and screenshots
 Update release date in GitHub
