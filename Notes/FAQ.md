@@ -22,3 +22,7 @@ For a few reasons:
 * To focus the app on its core purpose. A lot of people were using the app for other reasons and asking me for support with them.
 * Sideways Mode used to run 24/7, but Android 8 made it impossible to do this without showing a notification. Having a 24/7 notification is a bad experience, so Sideways Mode needed to be reworked.
 * The code and user interface were getting complicated, so I removed unimportant features to simplify things.
+
+### Why won't "incompatible apps" work when there is a dialog over the app?
+
+This is a limitation of Android. See https://github.com/sampalmer/sideways-mode/issues/473 for more details.
