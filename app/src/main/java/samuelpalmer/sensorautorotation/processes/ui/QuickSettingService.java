@@ -68,7 +68,7 @@ public class QuickSettingService extends TileService {
          * Not using the quick setting dialog because:
          *  1. It is affected by an OS layout bug (https://issuetracker.google.com/issues/38188882)
          *  2. It appears over system activities such as "recents"
-         *  3. It's simpler to just use the one activity for all possible ways of accessing the dashboard
+         *  3. Keeping a separate dashboard dialog and dashboard activity in sync is messy
          *  4. It occasionally crashes
          */
         
