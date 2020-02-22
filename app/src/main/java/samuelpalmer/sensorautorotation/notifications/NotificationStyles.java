@@ -186,7 +186,7 @@ public final class NotificationStyles {
     }
 
     public void removeRightPadding(RemoteViews originalNotification) {
-        if (notificationHeaderId != 0 && VERSION.SDK_INT > 15)
+        if (notificationHeaderId != 0)
             originalNotification.setViewPadding(notificationHeaderId, isHeaderLtr ? headerPadding.left : 0, headerPadding.top, isHeaderLtr ? 0 : headerPadding.right, headerPadding.bottom);
     }
 

@@ -10,6 +10,7 @@ import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.Fragment;
 
 import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
@@ -40,7 +41,7 @@ public class FirstStartTipsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new Handler(Looper.getMainLooper());
+        handler = HandlerCompat.createAsync(Looper.getMainLooper());
 
         if (savedInstanceState != null) {
             dialogTouched = savedInstanceState.getBoolean(STATE_DIALOG_TOUCHED);

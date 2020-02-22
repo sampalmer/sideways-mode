@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.core.os.HandlerCompat;
+
 abstract class PollingActivityMonitor extends ActivityMonitor {
 
     private static final int POLL_INTERVAL_MILLIS = 500;
@@ -13,8 +15,7 @@ abstract class PollingActivityMonitor extends ActivityMonitor {
 
     PollingActivityMonitor(Context context) {
         super(context);
-        //noinspection ConstantConditions
-        this.handler = new Handler(Looper.myLooper());
+        this.handler = HandlerCompat.createAsync(Looper.getMainLooper());
     }
 
     @Override

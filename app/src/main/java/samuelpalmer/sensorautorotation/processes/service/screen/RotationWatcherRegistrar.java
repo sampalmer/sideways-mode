@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.IRotationWatcher;
 
+import androidx.core.os.HandlerCompat;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -32,7 +34,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
     }
 
     private final Object[] typedWatchRotationArguments;
-    private final Handler callerHandler = new Handler(Looper.getMainLooper());
+    private final Handler callerHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private final Object windowManagerService;
     private final Method watchRotation;
     private final Method removeRotationWatcher;

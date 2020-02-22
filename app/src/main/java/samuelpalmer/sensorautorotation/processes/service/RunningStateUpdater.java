@@ -78,12 +78,14 @@ public class RunningStateUpdater extends State {
 
         ServiceCompat.stopForeground(service, removeNotification ? ServiceCompat.STOP_FOREGROUND_REMOVE : ServiceCompat.STOP_FOREGROUND_DETACH);
 
-        if (!closeNotificationWhenUpright){
-            // Update notification to "upright" / "off" state
-            // This also re-posts the notification if we needed to remove it above
-            Notification notification = notificationBuilder.build(null);
-            notificationManager.notify(NotificationIds.SERVICE, notification);
-        }
+        // Update notification to "upright" / "off" state
+        // This also restores the notification if we had to remove it in stopForeground()
+        // This is also needed to prevent Android from delaying 5 seconds from when the notification was last posted/updated before dismissing it on Google Pixel 3 XL Android 10 Build QQ1A.200205.002 and Android 11 Preview 1 emulator
+        Notification notification = notificationBuilder.build(null);
+        notificationManager.notify(NotificationIds.SERVICE, notification);
+
+        if (closeNotificationWhenUpright)
+            notificationManager.cancel(NotificationIds.SERVICE);
 
         if (postDummyNotification)
             notificationManager.cancel(NotificationIds.DUMMY);

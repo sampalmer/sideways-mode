@@ -91,7 +91,7 @@ public class CurrentProcess extends Application {
                 .permitDiskReads() // So we can read SharedPreferences and the current process name
                 .permitDiskWrites() // So SharedPreferences can initialise itself on first-run
                 .penaltyLog()
-                .penaltyDialog()
+                // Not using penaltyDialog since it's too annoying
                 .build()
             );
 

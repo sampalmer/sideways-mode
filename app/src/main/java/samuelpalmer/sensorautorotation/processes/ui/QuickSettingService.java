@@ -79,6 +79,7 @@ public class QuickSettingService extends TileService {
         startActivityAndCollapse(intent);
         
         // Using a PendingIntent works around the issue where pressing the home button causes a delay in activity starts (https://issuetracker.google.com/issues/36910222)
+        // Note that this no longer works in Android 10
         try {
             pendingIntent.send();
         } catch (PendingIntent.CanceledException e) {

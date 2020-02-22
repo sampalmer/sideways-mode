@@ -6,8 +6,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.HandlerCompat;
 
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
@@ -34,8 +36,7 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
         appOps = ContextCompat.getSystemService(context, AppOpsManager.class);
         uid = Process.myUid();
         packageName = context.getPackageName();
-        //noinspection ConstantConditions
-        handler = new Handler(Looper.myLooper());
+        handler = HandlerCompat.createAsync(Looper.getMainLooper());
         this.op = op;
     }
 
