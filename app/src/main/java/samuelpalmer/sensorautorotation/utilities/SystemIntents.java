@@ -19,6 +19,8 @@ public abstract class SystemIntents {
     
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static Intent drawOnTopOfApps(Context context) {
+        // Sending the user straight to the permissions screen for our app.
+        // Starting from Android 11, the package is ignored and the user will still have to select the app.
         return new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri(context));
     }
 
