@@ -100,7 +100,7 @@ public class AppDisabler extends State {
     private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Not that we don't get here on API 15 when the screen lock is set to "None". Not much we can do about that.
+            // Note that we don't get here on API 15 when the screen lock is set to "None". Not much we can do about that.
 
             /*
              Only proceeding if the user wasn't on the lock screen, because if they were, then:
