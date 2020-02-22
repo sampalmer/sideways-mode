@@ -17,12 +17,14 @@ public class LoggingAppOpsCollector extends AppOpsManager.AppOpsCollector {
 
     @Override
     public void onNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
-        Log.w(TAG, String.format("App op %s noted for this package inside of a two-way binder call", syncNotedAppOp.getOp()));
+        // Logging an exception so that the call stack is output to help narrow down the problematic code
+        Log.w(TAG, new Exception(String.format("App op %s noted for this package inside of a two-way binder call", syncNotedAppOp.getOp())));
     }
 
     @Override
     public void onSelfNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
-        Log.w(TAG, String.format("This app noted app op %s for its own package", syncNotedAppOp.getOp()));
+        // Logging an exception so that the call stack is output to help narrow down the problematic code
+        Log.w(TAG, new Exception(String.format("This app noted app op %s for its own package", syncNotedAppOp.getOp())));
     }
 
     @Override
