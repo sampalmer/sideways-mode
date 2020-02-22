@@ -3,11 +3,11 @@ package samuelpalmer.sensorautorotation.processes.service.deviceorientation;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.os.HandlerCompat;
 
 import java.util.ArrayList;
 
@@ -89,7 +89,7 @@ public class OrientationSensorHandler extends State {
     
     private class MyWindowOrientationListener extends WindowOrientationListener {
         private MyWindowOrientationListener(Context context) {
-            super(context, new Handler(Looper.getMainLooper()));
+            super(context, HandlerCompat.createAsync(Looper.getMainLooper()));
         }
         
         @Override
