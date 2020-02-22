@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activ
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 abstract class PollingActivityMonitor extends ActivityMonitor {
 
@@ -12,7 +13,8 @@ abstract class PollingActivityMonitor extends ActivityMonitor {
 
     PollingActivityMonitor(Context context) {
         super(context);
-        this.handler = new Handler();
+        //noinspection ConstantConditions
+        this.handler = new Handler(Looper.myLooper());
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Surface;
@@ -143,7 +144,7 @@ public class ScreenOrientationController extends State {
         return true;
     }
 
-    private final ContentObserver onUserRotationChanged = new ContentObserver(new Handler()) {
+    private final ContentObserver onUserRotationChanged = new ContentObserver(new Handler(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -39,7 +40,7 @@ public class WaitForActivityDetectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         isSubscribed = false;
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper());
         
         ServiceRunningStateHolder.onStartedOrStopped.subscribe(serviceStartedOrStopped);
         

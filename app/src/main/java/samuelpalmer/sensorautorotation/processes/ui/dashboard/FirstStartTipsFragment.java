@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -39,7 +40,7 @@ public class FirstStartTipsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper());
 
         if (savedInstanceState != null) {
             dialogTouched = savedInstanceState.getBoolean(STATE_DIALOG_TOUCHED);

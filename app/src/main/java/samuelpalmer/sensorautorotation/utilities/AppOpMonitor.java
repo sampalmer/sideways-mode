@@ -4,6 +4,7 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Process;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -33,7 +34,8 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
         appOps = ContextCompat.getSystemService(context, AppOpsManager.class);
         uid = Process.myUid();
         packageName = context.getPackageName();
-        handler = new Handler();
+        //noinspection ConstantConditions
+        handler = new Handler(Looper.myLooper());
         this.op = op;
     }
 
