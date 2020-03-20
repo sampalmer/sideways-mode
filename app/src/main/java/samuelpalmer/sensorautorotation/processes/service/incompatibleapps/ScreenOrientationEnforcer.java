@@ -50,15 +50,13 @@ public class ScreenOrientationEnforcer extends State {
 
     @Override
     protected void start() {
-        setEnforcedUnconditionally(false);
-        windows.addView(view, layout);
-        Log.i(TAG, "Added screen orientation enforcement overlay");
+        isEnforced = false;
     }
 
     @Override
     protected void stop() {
-        windows.removeView(view);
-        Log.i(TAG, "Removed screen orientation enforcement overlay");
+        if (isEnforced)
+            windows.removeView(view);
     }
 
     private static LayoutParams generateLayout() {
@@ -94,26 +92,25 @@ public class ScreenOrientationEnforcer extends State {
         verifyStarted();
 
         if (newEnforced != isEnforced) {
-            setEnforcedUnconditionally(newEnforced);
-            Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
+            isEnforced = newEnforced;
+
+            /*
+             * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
+             * slower, and removing and adding the view is even slower again.
+             *
+             * There are a few ways of toggling screen orientation enforcement:
+             * 1. Fastest: Toggle its {@link LayoutParams#screenOrientation} value. This causes the Android 6 "Screen Overlay Detected" problem even when enforcement is disabled.
+             * 2. Medium: Toggle the view's visibility. This doesn't work in Android R, since even "INVISIBLE" or "GONE" windows control orientation.
+             * 3. Slowest: Add/remove the view from the window manager.
+             *
+             * Picking the last option since it's the fastest one that doesn't have undesired side effects.
+             */
+            if (isEnforced)
+                windows.addView(view, layout);
+            else
+                windows.removeView(view);
+
+            Log.i(TAG, "Set screen orientation enforcement: " + isEnforced);
         }
     }
-    
-    /**
-     * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
-     * slower, and removing and adding the view is even slower again.
-     *
-     * There are a few ways of toggling screen orientation enforcement:
-     * 1. Fastest: Toggle its {@link LayoutParams#screenOrientation} value. This causes the Android 6 "Screen Overlay Detected" problem even when enforcement is disabled.
-     * 2. Medium: Toggle the view's visibility.
-     * 3. Slowest: Add/remove the view from the window manager.
-     *
-     * Picking the middle option since it's the fastest one that doesn't have undesired side effects.
-     */
-    private void setEnforcedUnconditionally(boolean newEnforced) {
-        isEnforced = newEnforced;
-        int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
-        view.setVisibility(visibility);
-    }
-
 }
