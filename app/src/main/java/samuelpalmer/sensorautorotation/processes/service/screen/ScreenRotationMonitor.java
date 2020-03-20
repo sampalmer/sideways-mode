@@ -6,6 +6,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.hardware.display.DisplayManagerCompat;
 
 import samuelpalmer.sensorautorotation.processes.service.screen.RotationWatcherRegistrar.RotationWatcherNotSupportedException;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
@@ -25,7 +26,7 @@ public class ScreenRotationMonitor extends EventRegistrarAdaptor {
     public ScreenRotationMonitor(Context context) {
         WindowManager windowManager = ContextCompat.getSystemService(context, WindowManager.class);
         assert windowManager != null;
-        this.screen = windowManager.getDefaultDisplay();
+        this.screen = DisplayManagerCompat.getInstance(context).getDisplay(Display.DEFAULT_DISPLAY);
         this.context = context;
         
         try {
