@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 /**
- * Writes warnings to the system log for each noted app op
+ * Writes warnings to the system log for each noted app op. This is useful to audit usage of
+ * potentially-dangerous permissions by third-party code.
+ *
+ * As this writes a lot of log noise, make sure to only turn it on when needed.
  */
 @RequiresApi(29)
 public class LoggingAppOpsCollector extends AppOpsManager.AppOpsCollector {
