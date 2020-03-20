@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
@@ -25,7 +24,6 @@ import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationU
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
-import samuelpalmer.sensorautorotation.utilities.LoggingAppOpsCollector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
@@ -102,12 +100,13 @@ public class CurrentProcess extends Application {
                 .build()
             );
 
-            if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
-                // Logging all uses of dangerous app ops to make sure no privacy-breaching code makes it to production
-                AppOpsManager appOpsManager = getSystemService(AppOpsManager.class);
-                assert appOpsManager != null;
-                appOpsManager.setNotedAppOpsCollector(new LoggingAppOpsCollector());
-            }
+            // Uncomment the below to audit usage of dangerous permissions
+//            if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+//                // Logging all uses of dangerous app ops to make sure no privacy-breaching code makes it to production
+//                AppOpsManager appOpsManager = getSystemService(AppOpsManager.class);
+//                assert appOpsManager != null;
+//                appOpsManager.setNotedAppOpsCollector(new LoggingAppOpsCollector());
+//            }
         }
 
         super.onCreate();
