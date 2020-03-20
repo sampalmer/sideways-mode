@@ -48,6 +48,16 @@ public class ScreenOrientationEnforcer extends State {
             return new NullEventRegistrarAdaptor();
     }
 
+    public static int getWindowType() {
+        if (Build.VERSION.SDK_INT >= 26)
+            return LayoutParams.TYPE_APPLICATION_OVERLAY;
+        else
+            // This seems like the most relevant window type for what we're doing.
+            // Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
+            //noinspection deprecation
+            return LayoutParams.TYPE_SYSTEM_OVERLAY;
+    }
+
     @Override
     protected void start() {
         isEnforced = false;
@@ -61,14 +71,8 @@ public class ScreenOrientationEnforcer extends State {
 
     private static LayoutParams generateLayout() {
         LayoutParams layoutParams = new LayoutParams();
-        
-        if (Build.VERSION.SDK_INT >= 26)
-            layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
-        else
-            // This seems like the most relevant window type for what we're doing.
-            // Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
-            //noinspection deprecation
-            layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
+
+        layoutParams.type = getWindowType();
 
         // Just in case the window type somehow doesn't enforce this
         layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
