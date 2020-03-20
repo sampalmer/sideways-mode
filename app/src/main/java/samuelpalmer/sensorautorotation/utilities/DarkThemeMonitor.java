@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.utilities;
 import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -58,9 +59,13 @@ public final class DarkThemeMonitor extends EventRegistrarAdaptor {
     }
 
     public static boolean poll(Context context) {
-        int uiMode = context.getResources().getConfiguration().uiMode;
-        int nightMode = uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        return nightMode == Configuration.UI_MODE_NIGHT_YES;
+        if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+            return context.getResources().getConfiguration().isNightModeActive();
+        else {
+            int uiMode = context.getResources().getConfiguration().uiMode;
+            int nightMode = uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            return nightMode == Configuration.UI_MODE_NIGHT_YES;
+        }
     }
 
 }
