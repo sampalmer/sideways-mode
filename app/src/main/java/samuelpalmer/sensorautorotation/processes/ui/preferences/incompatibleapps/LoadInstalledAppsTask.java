@@ -36,6 +36,8 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
         // Not getting *all* installed packages since it turns out that this can cause a TransactionTooLargeException
         // http://stackoverflow.com/questions/21656440/android-os-transactiontoolargeexception-retrieving-installed-applications
         Set<String> installedPackageNames = new HashSet<>();
+
+        // NOTE: If you change the criteria here, make sure to also update the <queries> element in the manifest
         for (String category : new String[] { Intent.CATEGORY_LAUNCHER, Intent.CATEGORY_HOME }) {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null).setPackage(packageName);
             mainIntent.addCategory(category);

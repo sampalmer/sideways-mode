@@ -4,6 +4,18 @@
           package="samuelpalmer.sensorautorotation"
         android:installLocation="internalOnly">
 
+    <!-- NOTE: If you change the queries here, make sure to also update the code in LoadInstalledAppsTask -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
+    </queries>
+
     <!-- To disable system rotation, set user rotation -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
