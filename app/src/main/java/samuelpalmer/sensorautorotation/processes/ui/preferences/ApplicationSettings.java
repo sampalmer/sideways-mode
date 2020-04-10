@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
 /**
@@ -12,14 +13,14 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 public abstract class ApplicationSettings {
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        if (CurrentProcess.isServiceProcess(context))
+        if (CurrentProcess.isServiceProcess())
             throw new RuntimeException("Application settings accessed outside of the UI process");
         
         return context.getSharedPreferences(getSharedPreferencesName(context), Context.MODE_PRIVATE);
     }
 
     public static String getSharedPreferencesName(Context context) {
-        if (CurrentProcess.isServiceProcess(context))
+        if (CurrentProcess.isServiceProcess())
             throw new RuntimeException("Application settings accessed outside of the UI process");
 
         return context.getPackageName() + "_preferences";

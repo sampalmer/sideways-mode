@@ -45,7 +45,7 @@ public class ServiceNotification {
     private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
 
     public ServiceNotification(Context context) {
-        if (!CurrentProcess.isServiceProcess(context))
+        if (!CurrentProcess.isServiceProcess())
             throw new RuntimeException("Cannot use service notification from outside of service process");
 
         this.context = context;
