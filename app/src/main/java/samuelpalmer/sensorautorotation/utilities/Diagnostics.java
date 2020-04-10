@@ -26,7 +26,10 @@ public final class Diagnostics {
         this.context = context;
     }
 
-    public void logLastExitReason() {
+    /**
+     * Writes a message to the log explaining the reason the process last exited, if this information is available
+     */
+    public void logLastProcessExitReason() {
         if (!(Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1))
             return;
 
@@ -50,7 +53,7 @@ public final class Diagnostics {
         return null;
     }
 
-    private String formatExitReason(ApplicationExitInfo exitReason) {
+    private static String formatExitReason(ApplicationExitInfo exitReason) {
         long timeDifferenceMillis = System.currentTimeMillis() - exitReason.getTimestamp();
         String importanceName = new FieldConstants<>(ActivityManager.RunningAppProcessInfo.class, "IMPORTANCE").getName(exitReason.getImportance());
 

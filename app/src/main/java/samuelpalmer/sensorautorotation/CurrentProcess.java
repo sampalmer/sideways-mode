@@ -80,7 +80,7 @@ public class CurrentProcess extends Application {
         serviceProcessName = packageName + this.getText(R.string.process_service);
         uiProcessName = packageName + this.getText(R.string.process_ui);
 
-        new Diagnostics(this).logLastExitReason();
+        new Diagnostics(this).logLastProcessExitReason();
 
         /*
          * Sometimes Android makes two instances of Application and its components within the one process.
