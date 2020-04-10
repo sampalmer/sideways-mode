@@ -1,9 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.Application;
-import android.app.ApplicationExitInfo;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.Context;
@@ -13,16 +11,12 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.os.StrictMode;
-import android.system.OsConstants;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
@@ -30,8 +24,8 @@ import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationU
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
+import samuelpalmer.sensorautorotation.utilities.Diagnostics;
 import samuelpalmer.sensorautorotation.utilities.LoggingAppOpsCollector;
-import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
@@ -44,14 +38,32 @@ public class CurrentProcess extends Application {
     // Whether to audit usage of dangerous permissions. This generates a lot of log noise, so it's off by default.
     private static final boolean AUDIT_PERMISSIONS = false;
 
-    private static CurrentProcessNameDetector currentProcessNameDetector;
+    // These values are all cached to reduce lag, although this mightn't make any discernible difference
+    private static String processName;
+    private static String serviceProcessName;
+    private static String uiProcessName;
 
     // Holding a reference to this just to make sure nothing gets garbage-collected
     @SuppressWarnings("FieldCanBeLocal")
     private PersistentNotificationUpdater persistentNotificationUpdater;
 
+    /**
+     * Returns the name of the process that the calling code is running in
+     */
+    public static String getProcessName() {
+        return processName;
+    }
+
+    /**
+     * Returns whether the calling code is running in the service process
+     */
     public static boolean isServiceProcess() {
-        return currentProcessNameDetector.isServiceProcess();
+        if (processName.equals(serviceProcessName))
+            return true;
+        else if (processName.equals(uiProcessName))
+            return false;
+        else
+            throw new RuntimeException("Unrecognised process name: " + processName);
     }
 
     @Override
@@ -62,9 +74,13 @@ public class CurrentProcess extends Application {
         // However, attachBaseContext() is called before it, which is why this method is used here.
         Log.i(TAG, "Process created");
 
-        currentProcessNameDetector = new CurrentProcessNameDetector(this);
+        processName = CurrentProcessNameDetector.getName();
 
-        logLastExitReason();
+        String packageName = this.getPackageName();
+        serviceProcessName = packageName + this.getText(R.string.process_service);
+        uiProcessName = packageName + this.getText(R.string.process_ui);
+
+        new Diagnostics(this).logLastExitReason();
 
         /*
          * Sometimes Android makes two instances of Application and its components within the one process.
@@ -76,38 +92,6 @@ public class CurrentProcess extends Application {
         if (getResources() == null) {
             Log.w(TAG, "Process is in a bad state. Killing process.");
             Process.killProcess(Process.myPid());
-        }
-    }
-
-    private void logLastExitReason() {
-        if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
-            ActivityManager activityManager = ContextCompat.getSystemService(this, ActivityManager.class);
-            List<ApplicationExitInfo> exitReasons = activityManager.getHistoricalProcessExitReasons(this.getPackageName(), 0, 0);
-            for (ApplicationExitInfo exitReason : exitReasons) {
-                if (currentProcessNameDetector.getProcessName().equals(exitReason.getProcessName())) {
-                    long timeDifferenceMillis = System.currentTimeMillis() - exitReason.getTimestamp();
-                    String importanceName = new FieldConstants<>(ActivityManager.RunningAppProcessInfo.class, "IMPORTANCE").getName(exitReason.getImportance());
-
-                    String reasonName = new FieldConstants<>(ApplicationExitInfo.class, "REASON").getName(exitReason.getReason());
-                    long rss = exitReason.getRss();
-                    String logMessage = String.format(
-                            Locale.US,
-                            "Process %s last exited %dms ago with importance %s and resident set size %s due to %s (%s)",
-                            exitReason.getProcessName(),
-                            timeDifferenceMillis,
-                            importanceName,
-                            rss == 0 ? "N/A" : rss + "kB",
-                            reasonName,
-                            exitReason.getDescription()
-                    );
-
-                    if (!ActivityManager.isLowMemoryKillReportSupported() && exitReason.getReason() == ApplicationExitInfo.REASON_SIGNALED && exitReason.getStatus() == OsConstants.SIGKILL)
-                        logMessage += ". This may be due to low memory.";
-
-                    Log.i(TAG, logMessage);
-                    break;
-                }
-            }
         }
     }
 
