@@ -62,13 +62,14 @@ public final class Diagnostics {
 
         String logMessage = String.format(
                 Locale.US,
-                "Process %s last exited %dms ago with importance %s and resident set size %s due to %s (%s)",
+                "Process %s last exited %dms ago with importance %s and resident set size %s due to %s (%s) and status %d",
                 exitReason.getProcessName(),
                 timeDifferenceMillis,
                 importanceName,
                 rss == 0 ? "N/A" : rss + "kB",
                 reasonName,
-                exitReason.getDescription()
+                exitReason.getDescription(),
+                exitReason.getStatus()
         );
 
         // Apparently some OS versions cannot report REASON_LOW_MEMORY, so we're left guessing in those cases
