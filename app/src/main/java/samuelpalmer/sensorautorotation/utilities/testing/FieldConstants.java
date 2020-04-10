@@ -32,7 +32,7 @@ public class FieldConstants<TClass> {
                     return field.getName();
             }
 
-        throw new RuntimeException("Couldn't find value");
+        throw new RuntimeException(String.format("Couldn't find constant in class %s with value %s", containingClass.getName(), value));
     }
 
 }
