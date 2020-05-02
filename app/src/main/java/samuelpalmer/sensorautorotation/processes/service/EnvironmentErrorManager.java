@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
@@ -56,7 +55,7 @@ public abstract class EnvironmentErrorManager {
             PendingIntentIds.PENDING_INTENT_FLAGS
         );
         
-        NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
+        NotificationCompat.Builder builder = NotificationBuilderFactory.create(context, NotificationChannels.ID_ERRORS)
             .setSmallIcon(R.drawable.notification_error) // TODO: Maybe just use the app's normal icon so it's clear which app posted this notification
             .setContentIntent(error.showError(context))
             .setContentTitle(error.getSummary())
@@ -64,8 +63,7 @@ public abstract class EnvironmentErrorManager {
             .setDeleteIntent(clearIntentIntent)
             .setTicker(error.getSummary()) // Helps ensure the user actually notices that the error occurred. Only works on Android 4.
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_ERROR)
-            .setChannelId(NotificationChannels.ID_ERRORS);
+            .setCategory(NotificationCompat.CATEGORY_ERROR);
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < 26)
             // Android 5 doesn't seem to use tickers by default. Heads-up notifications seem to be

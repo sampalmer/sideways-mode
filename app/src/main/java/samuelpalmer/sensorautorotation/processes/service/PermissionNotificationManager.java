@@ -88,13 +88,12 @@ public class PermissionNotificationManager extends State {
                     .createPendingIntent();
 
             Notification notification = NotificationBuilderFactory
-                    .create(context)
+                    .create(context, NotificationChannels.ID_PERMISSIONS)
                     .setCategory(NotificationCompat.CATEGORY_ERROR)
                     .setContentIntent(incompatibleAppsIntent)
                     .setContentTitle(context.getText(R.string.permission_needed_summary))
                     .setContentText(context.getText(R.string.permission_touch_to_fix))
                     .setSmallIcon(R.drawable.notification_error)
-                    .setChannelId(NotificationChannels.ID_PERMISSIONS)
                     .build();
 
             notificationManager.notify(NotificationIds.PERMISSION, notification);

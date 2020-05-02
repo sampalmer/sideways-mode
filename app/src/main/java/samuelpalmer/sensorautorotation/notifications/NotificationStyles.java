@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.notifications;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.core.app.NotificationCompat;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,7 +40,7 @@ public final class NotificationStyles {
     }
 
     /**
-     * Gets the colour of the title from {@link NotificationBuilderCompat#setContentTitle(CharSequence)}
+     * Gets the colour of the title from {@link NotificationCompat.Builder#setContentTitle(CharSequence)}
      */
     @ColorInt
     public int getTitleColour() {
@@ -64,10 +66,16 @@ public final class NotificationStyles {
     }
 
     private void extractColors() {
-        // Using the factory so we get the right colour. Android N+ use the colour on the action buttons.
-        NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
+        // Not using NotificationCompat here because it doesn't give us access to the notification RemoteView
+        Notification.Builder builder = new Notification.Builder(context)
             .setContentTitle(title.searchTip)
             .setContentText(text.searchTip);
+
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            // Setting our usual colour because Android N+ use the colour on the action buttons.
+            builder
+                    .setColor(NotificationBuilderFactory.getNotificationColour(context))
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
 
         // Add action button
         String actionTitle = actionButton.searchTip;
@@ -90,9 +98,17 @@ public final class NotificationStyles {
             Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification action colour");
     }
 
-    private RemoteViews getContentView(NotificationBuilderCompat builder) {
-        RemoteViews result = builder.createBigContentView();
-        return result == null ? builder.createContentView() : result;
+    private RemoteViews getContentView(Notification.Builder builder) {
+        RemoteViews result = createBigContentView(builder);
+        return result == null ? createContentView(builder) : result;
+    }
+
+    private RemoteViews createBigContentView(Notification.Builder builder) {
+        return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createBigContentView() : builder.build().bigContentView;
+    }
+
+    private RemoteViews createContentView(Notification.Builder builder) {
+        return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createContentView() : builder.build().contentView;
     }
 
     private void extractColours(ViewGroup viewGroup)
