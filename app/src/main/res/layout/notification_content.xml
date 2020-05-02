@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- This holds the OS's stock notification contents -->
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/notification_content"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    />
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/notification_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        />
+
+    <TextView
+        android:id="@+id/notification_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Compat.Notification"
+        />
+
+</LinearLayout>

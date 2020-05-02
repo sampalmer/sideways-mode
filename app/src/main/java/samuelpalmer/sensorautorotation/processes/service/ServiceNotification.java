@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
@@ -16,8 +15,6 @@ import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
@@ -26,10 +23,12 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+import static samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory.getNotificationColour;
+
 public class ServiceNotification {
     
     private final Context context;
-    private final NotificationBuilderCompat builder;
+    private final NotificationCompat.Builder builder;
     
     // Cached for RAM & CPU efficiency
     @ColorInt
@@ -58,16 +57,17 @@ public class ServiceNotification {
 
         // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
-        builder = NotificationBuilderFactory.create(this.context)
-            .setContentIntent(dashboardIntent)
-            .setCategory(NotificationCompat.CATEGORY_STATUS)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
-            .setChannelId(NotificationChannels.ID_CONTROLS)
-            .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
-            .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
-            .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
+        builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
+                .setColor(getNotificationColour(context))
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(dashboardIntent)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
+                .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
+                .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+                .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
 
         hideTimestamp();
@@ -114,7 +114,9 @@ public class ServiceNotification {
             builder.setContentText(statusText);
         }
         
-        modifyContentView(runningState);
+        modifyContentView(runningState, context.getText(R.string.app_name_full), statusText);
+
+        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
 
         Notification notification = builder.build();
 
@@ -131,23 +133,18 @@ public class ServiceNotification {
     /**
      * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
      */
-    private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState) {
+    private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState, CharSequence titleText, CharSequence bodyText) {
         @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
 
-        builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
-
-        RemoteViews originalNotification = builder.createContentView();
-
-        // The app name and status get truncated on smaller screens or when the UI is enlargened,
-        // so removing padding between the buttons and original notification to make more room.
-        styles.removeRightPadding(originalNotification);
+        // TODO: The app name and status get truncated on smaller screens or when the UI is enlargened, so remove padding between the buttons and original notification to make more room.
 
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
-            originalNotification,
             titleColour,
-            actionButtonColour
+            actionButtonColour,
+            titleText,
+            bodyText
         );
 
         boolean isLoading = runningState != null && runningState.waitingForSensor;
@@ -196,20 +193,13 @@ public class ServiceNotification {
                 isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
-        RemoteViews customNotification = notificationButtons.getContentView();
-        if (samsungDarkNotificationFixer != null)
-            samsungDarkNotificationFixer.applyTo(customNotification);
-
-        // The OS sometimes reapplies the new notification contents onto the contents from last time.
+        // TODO: The OS sometimes reapplies the new notification contents onto the contents from last time.
         // This causes issues in night mode on Samsung Android 9 devices, such as:
         // - Being dimmed after the first update
         // - Staying dark after turning off night mode
         // So we're explicitly wiping and re-inserting the notification contents each time to ensure we get a consistent result each time.
-        RemoteViews wrapper = new RemoteViews(context.getPackageName(), R.layout.notification_wrapper);
-        wrapper.removeAllViews(R.id.notification_wrapper);
-        wrapper.addView(R.id.notification_wrapper, customNotification);
 
-        builder.setCustomContentView(wrapper);
+        builder.setCustomContentView(notificationButtons.getContentView());
     }
 
     private void hideTimestamp() {
