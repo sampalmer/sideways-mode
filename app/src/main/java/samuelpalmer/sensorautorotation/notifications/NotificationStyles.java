@@ -1,12 +1,12 @@
 package samuelpalmer.sensorautorotation.notifications;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -18,13 +18,9 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.IdRes;
-import androidx.core.os.LocaleListCompat;
-import androidx.core.text.TextUtilsCompat;
-import androidx.core.view.ViewCompat;
+import androidx.core.app.NotificationCompat;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Locale;
 
 public final class NotificationStyles {
 
@@ -33,15 +29,6 @@ public final class NotificationStyles {
     private final StyleType actionButton = new StyleType("ACTION");
     private final Context context;
     private final int exampleIconResource;
-    private Rect headerPadding;
-    private boolean isHeaderLtr;
-
-    /**
-     * The header line for the stock notification on Android 7+. Corresponds to
-     * {@code android.R.id.notification_header}. Will be {@code 0} if not available.
-     */
-    @IdRes
-    private int notificationHeaderId;
 
     /**
      * You might want to cache the result for performance & memory.
@@ -53,7 +40,7 @@ public final class NotificationStyles {
     }
 
     /**
-     * Gets the colour of the title from {@link NotificationBuilderCompat#setContentTitle(CharSequence)}
+     * Gets the colour of the title from {@link NotificationCompat.Builder#setContentTitle(CharSequence)}
      */
     @ColorInt
     public int getTitleColour() {
@@ -79,10 +66,16 @@ public final class NotificationStyles {
     }
 
     private void extractColors() {
-        // Using the factory so we get the right colour. Android N+ use the colour on the action buttons.
-        NotificationBuilderCompat builder = NotificationBuilderFactory.create(context)
+        // Not using NotificationCompat here because it doesn't give us access to the notification RemoteView
+        Notification.Builder builder = new Notification.Builder(context)
             .setContentTitle(title.searchTip)
             .setContentText(text.searchTip);
+
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            // Setting our usual colour because Android N+ use the colour on the action buttons.
+            builder
+                    .setColor(NotificationBuilderFactory.getNotificationColour(context))
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
 
         // Add action button
         String actionTitle = actionButton.searchTip;
@@ -95,7 +88,6 @@ public final class NotificationStyles {
         LinearLayout group = new LinearLayout(context);
         ViewGroup event = (ViewGroup) contentView.apply(context, group);
         extractColours(event);
-        extractPadding(event);
         group.removeAllViews();
 
         if (title.colour == null)
@@ -106,30 +98,17 @@ public final class NotificationStyles {
             Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification action colour");
     }
 
-    private void extractPadding(ViewGroup event) {
-        if (VERSION.SDK_INT >= 24) {
-            notificationHeaderId = context.getResources().getIdentifier("android:id/notification_header", null, null);
-            if (notificationHeaderId != 0) {
-                View notificationHeader = event.findViewById(notificationHeaderId);
-                if (notificationHeader != null) {
-                    headerPadding = new Rect(
-                            notificationHeader.getPaddingLeft(),
-                            notificationHeader.getPaddingTop(),
-                            notificationHeader.getPaddingRight(),
-                            notificationHeader.getPaddingBottom()
-                    );
-
-                    Locale primaryLocale = LocaleListCompat.getDefault().get(0);
-                    int layoutDirection = TextUtilsCompat.getLayoutDirectionFromLocale(primaryLocale);
-                    isHeaderLtr = layoutDirection == ViewCompat.LAYOUT_DIRECTION_LTR;
-                }
-            }
-        }
+    private RemoteViews getContentView(Notification.Builder builder) {
+        RemoteViews result = createBigContentView(builder);
+        return result == null ? createContentView(builder) : result;
     }
 
-    private RemoteViews getContentView(NotificationBuilderCompat builder) {
-        RemoteViews result = builder.createBigContentView();
-        return result == null ? builder.createContentView() : result;
+    private RemoteViews createBigContentView(Notification.Builder builder) {
+        return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createBigContentView() : builder.build().bigContentView;
+    }
+
+    private RemoteViews createContentView(Notification.Builder builder) {
+        return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createContentView() : builder.build().contentView;
     }
 
     private void extractColours(ViewGroup viewGroup)
@@ -183,11 +162,6 @@ public final class NotificationStyles {
     @ColorInt
     private int extractTextColour(TextView textView) {
         return textView.getTextColors().getDefaultColor();
-    }
-
-    public void removeRightPadding(RemoteViews originalNotification) {
-        if (notificationHeaderId != 0)
-            originalNotification.setViewPadding(notificationHeaderId, isHeaderLtr ? headerPadding.left : 0, headerPadding.top, isHeaderLtr ? 0 : headerPadding.right, headerPadding.bottom);
     }
 
     private static class StyleType {

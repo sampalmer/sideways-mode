@@ -52,16 +52,13 @@ public class NotificationButtons {
     private final boolean isColour;
 
     /**
-     * @param originalNotification Get this from the notification builder.
      * @param titleColour Get this from {@link NotificationStyles#getTitleColour()}
      * @param buttonColour Get this from {@link NotificationStyles#getActionButtonColour()}
      */
-    public NotificationButtons(Context context, int layoutResource, RemoteViews originalNotification, @ColorInt int titleColour, @ColorInt int buttonColour) {
+    public NotificationButtons(Context context, int layoutResource, @ColorInt int titleColour, @ColorInt int buttonColour) {
         this.context = context;
 
         content = new RemoteViews(context.getPackageName(), layoutResource);
-        content.removeAllViews(R.id.notification_content);
-        content.addView(R.id.notification_content, originalNotification);
 
         this.buttonColour = buttonColour;
 

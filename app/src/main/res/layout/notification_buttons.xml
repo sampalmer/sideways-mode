@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layoutDirection="ltr"
-    tools:ignore="UnusedAttribute"
-    android:baselineAligned="false">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:id="@+id/notification_left_side_button_container"
@@ -49,4 +40,4 @@
         <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_right_side_progress_selected_light_theme" />
     </FrameLayout>
 
-</LinearLayout>
+</merge>

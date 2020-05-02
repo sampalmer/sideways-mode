@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
+import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -135,7 +136,7 @@ public class RunningStateUpdater extends State {
     }
 
     private Notification buildDummyNotification() {
-        return NotificationBuilderFactory.create(context)
+        return NotificationBuilderFactory.create(context, NotificationChannels.ID_CONTROLS)
                 .setSmallIcon(R.drawable.app_empty) // So the user doesn't see the icon in the status bar
                 .setCustomContentView(new RemoteViews(context.getPackageName(), R.layout.notification_dummy))
                 .setPriority(NotificationCompat.PRIORITY_MIN) // To move the notification near the bottom of the list

@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -16,8 +15,6 @@ import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderCompat;
-import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
@@ -26,10 +23,12 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+import static samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory.getNotificationColour;
+
 public class ServiceNotification {
     
     private final Context context;
-    private final NotificationBuilderCompat builder;
+    private final NotificationCompat.Builder builder;
     
     // Cached for RAM & CPU efficiency
     @ColorInt
@@ -38,8 +37,6 @@ public class ServiceNotification {
     // Cached for RAM & CPU efficiency
     @ColorInt
     private final int actionButtonColour;
-
-    private final NotificationStyles styles;
 
     @Nullable
     private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
@@ -58,21 +55,19 @@ public class ServiceNotification {
 
         // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
-        builder = NotificationBuilderFactory.create(this.context)
-            .setContentIntent(dashboardIntent)
-            .setCategory(NotificationCompat.CATEGORY_STATUS)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
-            .setChannelId(NotificationChannels.ID_CONTROLS)
-            .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
-            .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
-            .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
+        builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
+                .setColor(getNotificationColour(context))
+                .setContentIntent(dashboardIntent)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
+                .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
+                .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
+                .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
 
-        hideTimestamp();
-
-        styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
+        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
         if (SamsungDarkNotificationFixer.isNeeded(context)) {
             samsungDarkNotificationFixer = new SamsungDarkNotificationFixer(context);
             titleColour = samsungDarkNotificationFixer.getTitleColour();
@@ -101,19 +96,25 @@ public class ServiceNotification {
             statusTextResource = R.string.status_waiting_sensor;
         else
             statusTextResource = runningState.userSide.descriptionId;
-        
+
         CharSequence statusText = context.getText(statusTextResource);
+        CharSequence title;
+        CharSequence bodyText;
 
         if (VERSION.SDK_INT >= 24) {
             // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
             // Plus, we can now make the notification thin, so we'll put the status to the right of the app name to save vertical space
-            builder.setSubText(statusText);
+            title = statusText;
+            bodyText = null;
         }
         else {
-            builder.setContentTitle(context.getText(R.string.app_name_full));
-            builder.setContentText(statusText);
+            title = context.getText(R.string.app_name_full);
+            bodyText = statusText;
         }
-        
+
+        builder.setContentTitle(title);
+        builder.setContentText(bodyText);
+
         modifyContentView(runningState);
 
         Notification notification = builder.build();
@@ -134,18 +135,9 @@ public class ServiceNotification {
     private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState) {
         @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
 
-        builder.setCustomContentView(null); // So the pre-buttons notifification doesn't contain the buttons from last time around.
-
-        RemoteViews originalNotification = builder.createContentView();
-
-        // The app name and status get truncated on smaller screens or when the UI is enlargened,
-        // so removing padding between the buttons and original notification to make more room.
-        styles.removeRightPadding(originalNotification);
-
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
-            originalNotification,
             titleColour,
             actionButtonColour
         );
@@ -210,13 +202,6 @@ public class ServiceNotification {
         wrapper.addView(R.id.notification_wrapper, customNotification);
 
         builder.setCustomContentView(wrapper);
-    }
-
-    private void hideTimestamp() {
-        if (Build.VERSION.SDK_INT >= 17)
-            builder.setShowWhen(false);
-        else
-            builder.setWhen(0);
     }
 
 }

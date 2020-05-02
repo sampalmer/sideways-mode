@@ -1,14 +1,16 @@
 package samuelpalmer.sensorautorotation.notifications;
 
 import android.content.Context;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
 import samuelpalmer.sensorautorotation.R;
 
 public class NotificationBuilderFactory {
 
-    public static NotificationBuilderCompat create(Context context) {
-        return NotificationBuilderCompat.create(context)
+    public static NotificationCompat.Builder create(Context context, String channelId) {
+        return new NotificationCompat.Builder(context, channelId)
             .setColor(getNotificationColour(context))
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         ;

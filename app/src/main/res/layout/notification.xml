@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    Using this layout on older OS versions since GridLayout weights aren't available on them, and
-    we can't use AndroidX GridLayout since it's not available to the OS code.
- -->
+<!-- The notification container layout height on Android 4 doesn't work with "match_parent", so we have to set the height explicitly -->
+<!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@id/notification_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@android:dimen/notification_large_icon_height"
+    android:layoutDirection="ltr"
+    tools:ignore="UnusedAttribute"
     android:baselineAligned="false">
 
-    <!-- Horizontally stretching or shrinking main notification contents to fill remaining space -->
-    <include
-        layout="@layout/notification_content"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
-
-    <!-- Only using the minimum horizontal space to leave room for the main notification content -->
-    <!-- Matching parent height since this makes it the same height as normal notifications -->
-    <include
-        layout="@layout/notification_buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:layout_gravity="center_vertical"
-        />
+    <include layout="@layout/notification_buttons" />
 
 </LinearLayout>
