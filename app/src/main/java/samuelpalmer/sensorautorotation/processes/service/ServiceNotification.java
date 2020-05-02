@@ -38,11 +38,6 @@ public class ServiceNotification {
     @ColorInt
     private final int actionButtonColour;
 
-    private final NotificationStyles styles;
-
-    @Nullable
-    private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
-
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Cannot use service notification from outside of service process");
@@ -72,16 +67,9 @@ public class ServiceNotification {
 
         hideTimestamp();
 
-        styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
-        if (SamsungDarkNotificationFixer.isNeeded(context)) {
-            samsungDarkNotificationFixer = new SamsungDarkNotificationFixer(context);
-            titleColour = samsungDarkNotificationFixer.getTitleColour();
-            actionButtonColour = samsungDarkNotificationFixer.getActionButtonColour();
-        } else {
-            samsungDarkNotificationFixer = null;
-            titleColour = styles.getTitleColour();
-            actionButtonColour = styles.getActionButtonColour();
-        }
+        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
+        titleColour = styles.getTitleColour();
+        actionButtonColour = styles.getActionButtonColour();
 
         Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
         Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
