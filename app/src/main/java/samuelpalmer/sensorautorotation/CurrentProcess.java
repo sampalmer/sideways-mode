@@ -123,7 +123,7 @@ public class CurrentProcess extends Application {
                     // Logging all uses of dangerous app ops to make sure no privacy-breaching code makes it to production
                     AppOpsManager appOpsManager = getSystemService(AppOpsManager.class);
                     assert appOpsManager != null;
-                    appOpsManager.setNotedAppOpsCollector(new LoggingAppOpsCollector());
+                    appOpsManager.setOnOpNotedCallback(getMainExecutor(), new LoggingAppOpsCollector());
                 }
             }
         }
