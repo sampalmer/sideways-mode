@@ -110,8 +110,6 @@ public class ServiceNotification {
 
         modifyContentView(runningState, title, bodyText);
 
-        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
-
         Notification notification = builder.build();
 
         // The OS sets these flags when the notification is attached to a foreground service,
