@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -58,7 +57,6 @@ public class ServiceNotification {
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
         builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
                 .setColor(getNotificationColour(context))
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(dashboardIntent)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
@@ -68,8 +66,6 @@ public class ServiceNotification {
                 .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
                 .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
-
-        hideTimestamp();
 
         NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
         if (SamsungDarkNotificationFixer.isNeeded(context)) {
@@ -206,13 +202,6 @@ public class ServiceNotification {
         wrapper.addView(R.id.notification_wrapper, customNotification);
 
         builder.setCustomContentView(wrapper);
-    }
-
-    private void hideTimestamp() {
-        if (Build.VERSION.SDK_INT >= 17)
-            builder.setShowWhen(false);
-        else
-            builder.setWhen(0);
     }
 
 }
