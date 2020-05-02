@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    Using this layout on older OS versions since GridLayout weights aren't available on them, and
-    we can't use AndroidX GridLayout since it's not available to the OS code.
- -->
+<!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/notification_root"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    tools:ignore="UnusedAttribute"
     android:baselineAligned="false">
 
-    <!-- Horizontally stretching or shrinking main notification contents to fill remaining space -->
-    <include
-        layout="@layout/notification_content"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/notification_left_side_button_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_left_side_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_left_side_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_left_side_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_left_side_progress_selected_light_theme" />
+    </FrameLayout>
 
-    <!-- Only using the minimum horizontal space to leave room for the main notification content -->
-    <!-- Matching parent height since this makes it the same height as normal notifications -->
-    <include
-        layout="@layout/notification_buttons"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/notification_turn_off_button_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:layout_gravity="center_vertical"
-        />
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_turn_off_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_turn_off_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_turn_off_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_turn_off_progress_selected_light_theme" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/notification_right_side_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_right_side_progress_on_colour_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_right_side_progress_on_colour_light_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_right_side_progress_selected_dark_theme" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_right_side_progress_selected_light_theme" />
+    </FrameLayout>
 
 </LinearLayout>

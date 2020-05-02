@@ -55,16 +55,10 @@ public class NotificationButtons {
      * @param titleColour Get this from {@link NotificationStyles#getTitleColour()}
      * @param buttonColour Get this from {@link NotificationStyles#getActionButtonColour()}
      */
-    public NotificationButtons(Context context, int layoutResource, @ColorInt int titleColour, @ColorInt int buttonColour, CharSequence titleText, CharSequence bodyText) {
+    public NotificationButtons(Context context, int layoutResource, @ColorInt int titleColour, @ColorInt int buttonColour) {
         this.context = context;
 
         content = new RemoteViews(context.getPackageName(), layoutResource);
-
-        if (titleText != null)
-            content.setTextViewText(R.id.notification_title, titleText);
-
-        if (bodyText != null)
-            content.setTextViewText(R.id.notification_text, bodyText);
 
         this.buttonColour = buttonColour;
 

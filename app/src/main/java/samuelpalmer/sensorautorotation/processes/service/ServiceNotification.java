@@ -89,7 +89,7 @@ public class ServiceNotification {
             statusTextResource = R.string.status_waiting_sensor;
         else
             statusTextResource = runningState.userSide.descriptionId;
-        
+
         CharSequence statusText = context.getText(statusTextResource);
         CharSequence title;
         CharSequence bodyText;
@@ -108,7 +108,7 @@ public class ServiceNotification {
         builder.setContentTitle(title);
         builder.setContentText(bodyText);
 
-        modifyContentView(runningState, title, bodyText);
+        modifyContentView(runningState);
 
         Notification notification = builder.build();
 
@@ -125,16 +125,14 @@ public class ServiceNotification {
     /**
      * @param runningState set to {@code null} if the app isn't running (and the user is hence upright)
      */
-    private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState, CharSequence titleText, CharSequence bodyText) {
+    private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState) {
         @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
 
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
             titleColour,
-            actionButtonColour,
-            titleText,
-            bodyText
+            actionButtonColour
         );
 
         boolean isLoading = runningState != null && runningState.waitingForSensor;
