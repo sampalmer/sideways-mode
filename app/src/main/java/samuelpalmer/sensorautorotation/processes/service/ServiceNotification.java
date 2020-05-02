@@ -130,8 +130,6 @@ public class ServiceNotification {
     private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState, CharSequence titleText, CharSequence bodyText) {
         @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
 
-        // TODO: The app name and status get truncated on smaller screens or when the UI is enlargened, so remove padding between the buttons and original notification to make more room.
-
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
             R.layout.notification,
