@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Starting from Android 5, we no longer need to explicitly set the notification height, so setting it to match_parent -->
+<!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    tools:ignore="UnusedAttribute"
+    android:baselineAligned="false">
+
+    <include layout="@layout/notification_buttons" />
+
+</LinearLayout>
