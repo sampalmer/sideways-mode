@@ -103,18 +103,24 @@ public class ServiceNotification {
             statusTextResource = runningState.userSide.descriptionId;
         
         CharSequence statusText = context.getText(statusTextResource);
+        CharSequence title;
+        CharSequence bodyText;
 
         if (VERSION.SDK_INT >= 24) {
             // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
             // Plus, we can now make the notification thin, so we'll put the status to the right of the app name to save vertical space
-            builder.setSubText(statusText);
+            title = statusText;
+            bodyText = null;
         }
         else {
-            builder.setContentTitle(context.getText(R.string.app_name_full));
-            builder.setContentText(statusText);
+            title = context.getText(R.string.app_name_full);
+            bodyText = statusText;
         }
-        
-        modifyContentView(runningState, context.getText(R.string.app_name_full), statusText);
+
+        builder.setContentTitle(title);
+        builder.setContentText(bodyText);
+
+        modifyContentView(runningState, title, bodyText);
 
         builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
 
