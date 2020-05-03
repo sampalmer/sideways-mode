@@ -118,9 +118,7 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_left_side_button_container,
                 R.id.notification_left_side_button,
-                R.id.notification_left_side_progress_on_colour_dark_theme,
-                R.id.notification_left_side_progress_on_colour_light_theme,
-                R.drawable.app_left_side,
+                R.id.notification_left_side_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
@@ -129,9 +127,7 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_button,
-                R.id.notification_turn_off_progress_on_colour_dark_theme,
-                R.id.notification_turn_off_progress_on_colour_light_theme,
-                R.drawable.action_turn_off,
+                R.id.notification_turn_off_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
                 userSide == null,
@@ -139,9 +135,7 @@ public class ServiceNotification {
             .configureButton(
                 R.id.notification_right_side_button_container,
                 R.id.notification_right_side_button,
-                R.id.notification_right_side_progress_on_colour_dark_theme,
-                R.id.notification_right_side_progress_on_colour_light_theme,
-                R.drawable.app_right_side,
+                R.id.notification_right_side_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),

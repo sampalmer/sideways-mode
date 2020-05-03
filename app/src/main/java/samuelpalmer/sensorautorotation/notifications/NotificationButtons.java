@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
@@ -28,15 +27,10 @@ public class NotificationButtons {
         content = new RemoteViews(context.getPackageName(), layoutResource);
     }
 
-    /**
-     * @param icon 32 dip x 32 dip (including padding), white
-     */
     public NotificationButtons configureButton(
             @IdRes int containerId,
             @IdRes int buttonId,
-            @IdRes int progressOnColourDarkThemeId,
-            @IdRes int progressOnColourLightThemeId,
-            @DrawableRes int icon,
+            @IdRes int progressId,
             int pendingIntentCode,
             Intent onClickIntent,
             boolean selected,
@@ -45,13 +39,8 @@ public class NotificationButtons {
         content.setBoolean(containerId, "setEnabled", selected);
 
         // Not hiding the button altogether when loading since then the user can click the notification body behind it
-        content.setImageViewResource(buttonId, isLoading ? 0 : icon);
-
-        // Unfortunately, the progress bar colour cannot be changed directly, so we'll switch between pre-defined progress bars to achieve the same effect
-        content.setViewVisibility(progressOnColourDarkThemeId, View.GONE);
-        content.setViewVisibility(progressOnColourLightThemeId, View.GONE);
-
-        // TODO: Show the appropriate progress bar. For this, either usage setImageLevel() or
+        content.setInt(buttonId, "setImageAlpha", isLoading ? 0 : 255);
+        content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.GONE);
 
         content.setOnClickPendingIntent(buttonId, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
 
