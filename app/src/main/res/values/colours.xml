@@ -8,9 +8,8 @@
     <color name="accent_700">#0091EA</color>
     <color name="tip_view_background">#e5e5e5</color>
 
-    <color name="notification_background_dark_theme">@android:color/black</color>
-    <color name="notification_background_light_theme">@android:color/white</color>
-    <color name="notification_background">@color/notification_background_dark_theme</color>
+    <!-- Unfortunately, different devices use different background colours. So we'll just match the stock Android background colour for a basic level of consistency. -->
+    <color name="notification_background">#181818</color>
 
     <color name="notification_button_container_selected">@color/primary_500_dark</color>
 
