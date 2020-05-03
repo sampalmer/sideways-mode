@@ -63,13 +63,6 @@
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
     </style>
 
-    <style name="Base.AppTheme.Notification.ProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:indeterminate">true</item>
-    </style>
-
     <style name="AppTheme.NotificationButtonContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -110,15 +103,15 @@
         <item name="android:alpha">1.00</item>
     </style>
 
-    <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar" />
-
-    <!-- Using specific drawables since this is the only way to do it prior to API 21 -->
-    <style name="AppTheme.Notification.ProgressBar.OnColour.DarkTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/notification_button_progress_on_colour_dark_theme</item>
+    <style name="Base.AppTheme.Notification.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminate">true</item>
     </style>
 
-    <style name="AppTheme.Notification.ProgressBar.OnColour.LightTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/notification_button_progress_on_colour_light_theme</item>
+    <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/notification_button_progress_on_colour</item>
     </style>
 
 </resources>

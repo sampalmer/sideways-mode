@@ -18,7 +18,7 @@
             android:src="@drawable/app_left_side"
             />
 
-        <include layout="@layout/notification_button_progress" android:id="@+id/notification_left_side_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_left_side_progress" />
     </FrameLayout>
 
     <FrameLayout style="@style/AppTheme.NotificationButtonContainer" android:id="@+id/notification_turn_off_button_container">
@@ -38,7 +38,7 @@
             android:src="@drawable/action_turn_off"
             />
 
-        <include layout="@layout/notification_button_progress" android:id="@+id/notification_turn_off_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_turn_off_progress" />
     </FrameLayout>
 
     <FrameLayout style="@style/AppTheme.NotificationButtonContainer" android:id="@+id/notification_right_side_button_container">
@@ -58,7 +58,7 @@
             android:src="@drawable/app_right_side"
             />
 
-        <include layout="@layout/notification_button_progress" android:id="@+id/notification_right_side_progress" />
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_right_side_progress" />
     </FrameLayout>
 
 </merge>
