@@ -78,20 +78,36 @@
     </style>
 
     <style name="AppTheme.NotificationButton">
-        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
-        <item name="android:theme">@style/AppTheme</item>
-        <item name="android:scaleType">center</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
 
+        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
+        <item name="android:theme">@style/AppTheme</item>
+
         <!-- Using Android selectableItemBackground since our own one crashes prior to Android 5 -->
         <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme.NotificationButtonIcon">
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
 
         <item name="android:padding">0dp</item>
         <item name="android:minWidth">48dp</item>
 
         <!-- Min-height is zeroed to override style that sets it to 48dp, which is taller than Samsung Galaxy S10 Android 10 min notification height -->
         <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="AppTheme.NotificationButtonIcon.Unselected">
+        <item name="android:tint">@color/notification_button_icon_unselected</item>
+        <item name="android:alpha">@integer/notification_button_icon_unselected_alpha</item>
+    </style>
+
+    <style name="AppTheme.NotificationButtonIcon.Selected">
+        <item name="android:tint">@color/notification_button_icon_on_colour</item>
+        <item name="android:alpha">1.00</item>
     </style>
 
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar" />

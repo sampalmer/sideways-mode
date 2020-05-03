@@ -117,6 +117,8 @@ public class ServiceNotification {
         notificationButtons
             .configureButton(
                 R.id.notification_left_side_button_container,
+                R.id.notification_left_side_icon_unselected,
+                R.id.notification_left_side_icon_selected,
                 R.id.notification_left_side_button,
                 R.id.notification_left_side_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
@@ -126,6 +128,8 @@ public class ServiceNotification {
                 isLoading && runningState.userSide.equals(UserSide.LEFT))
             .configureButton(
                 R.id.notification_turn_off_button_container,
+                R.id.notification_turn_off_icon_unselected,
+                R.id.notification_turn_off_icon_selected,
                 R.id.notification_turn_off_button,
                 R.id.notification_turn_off_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
@@ -134,6 +138,8 @@ public class ServiceNotification {
                 false)
             .configureButton(
                 R.id.notification_right_side_button_container,
+                R.id.notification_right_side_icon_unselected,
+                R.id.notification_right_side_icon_selected,
                 R.id.notification_right_side_button,
                 R.id.notification_right_side_progress,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
@@ -144,7 +150,18 @@ public class ServiceNotification {
         ;
 
         RemoteViews customNotification = notificationButtons.getContentView();
-        builder.setCustomContentView(customNotification);
+
+        // The OS sometimes reapplies the new notification contents onto the contents from last time.
+        // This causes issues in night mode on Samsung Android 9 devices, such as:
+        // - Being dimmed after the first update
+        // - Staying dark after turning off night mode
+        // This bug also causes the unselected notification buttons to be hidden on API 16 when the persistent notification is first displayed.
+        // So we're explicitly wiping and re-inserting the notification contents each time to ensure we get a consistent result each time.
+        RemoteViews wrapper = new RemoteViews(context.getPackageName(), R.layout.notification_wrapper);
+        wrapper.removeAllViews(R.id.notification_wrapper);
+        wrapper.addView(R.id.notification_wrapper, customNotification);
+
+        builder.setCustomContentView(wrapper);
     }
 
 }

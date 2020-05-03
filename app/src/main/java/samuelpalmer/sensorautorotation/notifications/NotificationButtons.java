@@ -29,6 +29,8 @@ public class NotificationButtons {
 
     public NotificationButtons configureButton(
             @IdRes int containerId,
+            @IdRes int iconUnselectedId,
+            @IdRes int iconSelectedId,
             @IdRes int buttonId,
             @IdRes int progressId,
             int pendingIntentCode,
@@ -38,8 +40,8 @@ public class NotificationButtons {
     ) {
         content.setBoolean(containerId, "setEnabled", selected);
 
-        // Not hiding the button altogether when loading since then the user can click the notification body behind it
-        content.setInt(buttonId, "setImageAlpha", isLoading ? 0 : 255);
+        content.setViewVisibility(iconUnselectedId, !isLoading && !selected ? View.VISIBLE : View.GONE);
+        content.setViewVisibility(iconSelectedId, !isLoading && selected ? View.VISIBLE : View.GONE);
         content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.GONE);
 
         content.setOnClickPendingIntent(buttonId, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
