@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Icon opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability -->
-    <item name="notification_button_icon_unselected_alpha" type="integer" format="float">0.54</item>
+    <item name="notification_button_icon_unselected_alpha_light_theme" type="integer" format="float">0.54</item>
+    <item name="notification_button_icon_unselected_alpha_dark_theme" type="integer" format="float">0.70</item>
+
+    <item name="notification_button_icon_unselected_alpha" type="integer" format="float">@integer/notification_button_icon_unselected_alpha_dark_theme</item>
 </resources>

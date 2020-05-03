@@ -16,8 +16,9 @@
                     android:useLevel="false"
                     >
 
+                    <!-- Using the actual background colour as the start colour since transparent gradients seem to act on a black background -->
                     <gradient
-                        android:startColor="@color/primary_500"
+                        android:startColor="@color/notification_button_container_selected"
                         android:endColor="@color/notification_button_icon_on_colour"
                         android:type="sweep"
                         android:useLevel="false"

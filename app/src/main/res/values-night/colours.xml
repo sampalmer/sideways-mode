@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_500">#be9c91</color>
+    <color name="primary_500">@color/primary_500_dark</color>
     <color name="primary_700">#8d6e63</color>
     <color name="tip_view_background">#0EFFFFFF</color>
 
     <color name="notification_background">@color/notification_background_dark_theme</color>
+    <color name="notification_button_container_selected">@color/primary_500_dark</color>
     <color name="notification_button_icon_unselected">@color/notification_button_icon_unselected_dark_theme</color>
     <color name="notification_button_icon_on_colour">@color/notification_button_icon_on_colour_dark_theme</color>
 </resources>
