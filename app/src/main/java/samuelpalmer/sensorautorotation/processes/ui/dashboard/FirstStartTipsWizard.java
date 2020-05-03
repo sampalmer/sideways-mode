@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
