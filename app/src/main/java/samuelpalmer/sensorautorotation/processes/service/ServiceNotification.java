@@ -150,18 +150,7 @@ public class ServiceNotification {
         ;
 
         RemoteViews customNotification = notificationButtons.getContentView();
-
-        // The OS sometimes reapplies the new notification contents onto the contents from last time.
-        // This causes issues in night mode on Samsung Android 9 devices, such as:
-        // - Being dimmed after the first update
-        // - Staying dark after turning off night mode
-        // This bug also causes the unselected notification buttons to be hidden on API 16 when the persistent notification is first displayed.
-        // So we're explicitly wiping and re-inserting the notification contents each time to ensure we get a consistent result each time.
-        RemoteViews wrapper = new RemoteViews(context.getPackageName(), R.layout.notification_wrapper);
-        wrapper.removeAllViews(R.id.notification_wrapper);
-        wrapper.addView(R.id.notification_wrapper, customNotification);
-
-        builder.setCustomContentView(wrapper);
+        builder.setCustomContentView(customNotification);
     }
 
 }
