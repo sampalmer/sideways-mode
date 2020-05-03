@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme.NotificationButton" parent="AppTheme.NotificationButtonBase">
+        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
+        <item name="android:theme">@style/AppTheme</item>
+
+        <!-- Using Android selectableItemBackground since it seems pretty platform-neutral -->
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar">
         <!-- Using tints so we can stick with the OS default progress bar while retaining our own colours -->
         <item name="android:indeterminateTintMode">src_in</item>
