@@ -41,9 +41,9 @@ public class NotificationButtons {
         content.setBoolean(containerId, "setEnabled", selected);
 
         // TODO: Having two separate views for the different icons causes them to randomly disappear on API 16
-        content.setViewVisibility(iconUnselectedId, !isLoading && !selected ? View.VISIBLE : View.GONE);
-        content.setViewVisibility(iconSelectedId, !isLoading && selected ? View.VISIBLE : View.GONE);
-        content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.GONE);
+        content.setViewVisibility(iconUnselectedId, !isLoading && !selected ? View.VISIBLE : View.INVISIBLE);
+        content.setViewVisibility(iconSelectedId, !isLoading && selected ? View.VISIBLE : View.INVISIBLE);
+        content.setViewVisibility(progressId, isLoading ? View.VISIBLE : View.INVISIBLE);
 
         content.setOnClickPendingIntent(buttonId, PendingIntent.getBroadcast(context, pendingIntentCode, onClickIntent, PendingIntentIds.PENDING_INTENT_FLAGS));
 
