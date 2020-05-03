@@ -22,6 +22,8 @@ import androidx.core.app.NotificationCompat;
 
 import java.lang.reflect.InvocationTargetException;
 
+import samuelpalmer.sensorautorotation.R;
+
 public final class NotificationStyles {
 
     private final StyleType title = new StyleType("TITLE");
@@ -66,24 +68,8 @@ public final class NotificationStyles {
     }
 
     private void extractColors() {
-        // Not using NotificationCompat here because it doesn't give us access to the notification RemoteView
-        Notification.Builder builder = new Notification.Builder(context)
-            .setContentTitle(title.searchTip)
-            .setContentText(text.searchTip);
-
-        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            // Setting our usual colour because Android N+ use the colour on the action buttons.
-            builder
-                    .setColor(NotificationBuilderFactory.getNotificationColour(context))
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-
-        // Add action button
-        String actionTitle = actionButton.searchTip;
-        PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
-        builder.addAction(exampleIconResource, actionTitle, intent);
-
         // Build
-        RemoteViews contentView = getContentView(builder);
+        RemoteViews contentView = getContentView();
 
         LinearLayout group = new LinearLayout(context);
         ViewGroup event = (ViewGroup) contentView.apply(context, group);
@@ -98,17 +84,60 @@ public final class NotificationStyles {
             Log.w(NotificationStyles.class.getSimpleName(), "Couldn't find notification action colour");
     }
 
-    private RemoteViews getContentView(Notification.Builder builder) {
-        RemoteViews result = createBigContentView(builder);
-        return result == null ? createContentView(builder) : result;
+    private RemoteViews getContentView() {
+        // Using a separate builder to determine whether a big content view is available
+        // Not using the actual builder in case we accidentally influence its output
+        Notification.Builder dummyBuilder = createBuilder();
+        boolean hasBigContentView = createBigContentView(dummyBuilder) != null;
+
+        // Putting a custom layout into whichever view is *not* being used to coerce Samsung devices
+        // running Android 10 into thinking it's a custom notification. This is needed to prevent
+        // us from getting stock colours and then using them in a custom notification, which will
+        // get different treatment by the OS.
+        RemoteViews dummyLayout = new RemoteViews(context.getPackageName(), R.layout.notification_dummy);
+        Notification.Builder builder = createBuilder();
+
+        if (hasBigContentView) {
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                builder.setCustomContentView(dummyLayout);
+            else
+                builder.setContent(dummyLayout);
+
+            return createBigContentView(builder);
+        } else {
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                builder.setCustomBigContentView(dummyLayout);
+
+            return createContentView(builder);
+        }
     }
 
-    private RemoteViews createBigContentView(Notification.Builder builder) {
+    private static RemoteViews createBigContentView(Notification.Builder builder) {
         return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createBigContentView() : builder.build().bigContentView;
     }
 
-    private RemoteViews createContentView(Notification.Builder builder) {
+    private static RemoteViews createContentView(Notification.Builder builder) {
         return VERSION.SDK_INT >= Build.VERSION_CODES.N ? builder.createContentView() : builder.build().contentView;
+    }
+
+    private Notification.Builder createBuilder() {
+        // Not using NotificationCompat here because it doesn't give us access to the notification RemoteView
+        Notification.Builder builder = new Notification.Builder(context)
+                .setContentTitle(title.searchTip)
+                .setContentText(text.searchTip);
+
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            // Setting our usual colour because Android N+ use the colour on the action buttons.
+            builder
+                    .setColor(NotificationBuilderFactory.getNotificationColour(context))
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+
+        // Add action button
+        String actionTitle = actionButton.searchTip;
+        PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent("").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+        builder.addAction(exampleIconResource, actionTitle, intent);
+
+        return builder;
     }
 
     private void extractColours(ViewGroup viewGroup)
