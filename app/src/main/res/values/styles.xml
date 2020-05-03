@@ -70,6 +70,30 @@
         <item name="android:indeterminate">true</item>
     </style>
 
+    <style name="AppTheme.NotificationButtonContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/notification_button_container_background</item>
+    </style>
+
+    <style name="AppTheme.NotificationButton">
+        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <!-- Using Android selectableItemBackground since our own one crashes prior to Android 5 -->
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+
+        <item name="android:padding">0dp</item>
+        <item name="android:minWidth">48dp</item>
+
+        <!-- Min-height is zeroed to override style that sets it to 48dp, which is taller than Samsung Galaxy S10 Android 10 min notification height -->
+        <item name="android:minHeight">0dp</item>
+    </style>
+
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar" />
 
     <!-- Using specific drawables since this is the only way to do it prior to API 21 -->
@@ -79,14 +103,6 @@
 
     <style name="AppTheme.Notification.ProgressBar.OnColour.LightTheme" parent="AppTheme.Notification.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/notification_button_progress_on_colour_light_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.Selected.DarkTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/notification_button_progress_selected_dark_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.Selected.LightTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/notification_button_progress_selected_light_theme</item>
     </style>
 
 </resources>

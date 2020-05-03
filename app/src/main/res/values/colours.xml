@@ -7,10 +7,13 @@
     <color name="accent_700">#0091EA</color>
     <color name="tip_view_background">#e5e5e5</color>
 
+    <color name="notification_background_dark_theme">@android:color/black</color>
+    <color name="notification_background_light_theme">@android:color/white</color>
+    <color name="notification_background">@color/notification_background_light_theme</color>
+
     <!-- Using either white or black so the icon has plenty of contrast over the primary-coloured background -->
     <color name="notification_button_icon_on_colour_dark_theme">@android:color/black</color>
     <color name="notification_button_icon_on_colour_light_theme">@android:color/white</color>
-
 
     <!-- Icon opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability -->
 

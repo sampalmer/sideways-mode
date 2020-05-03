@@ -14,12 +14,4 @@
         <item name="android:indeterminateTint">@color/notification_button_icon_on_colour_light_theme</item>
     </style>
 
-    <style name="AppTheme.Notification.ProgressBar.Selected.DarkTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_selected_dark_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.Selected.LightTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_selected_light_theme</item>
-    </style>
-
 </resources>

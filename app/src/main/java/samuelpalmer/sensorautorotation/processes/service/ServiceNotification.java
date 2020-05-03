@@ -5,10 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build.VERSION;
-import android.util.Log;
 import android.widget.RemoteViews;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -17,7 +15,6 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
-import samuelpalmer.sensorautorotation.notifications.NotificationStyles;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -30,17 +27,6 @@ public class ServiceNotification {
     private final Context context;
     private final NotificationCompat.Builder builder;
     
-    // Cached for RAM & CPU efficiency
-    @ColorInt
-    private final int titleColour;
-
-    // Cached for RAM & CPU efficiency
-    @ColorInt
-    private final int actionButtonColour;
-
-    @Nullable
-    private final SamsungDarkNotificationFixer samsungDarkNotificationFixer;
-
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess(context))
             throw new RuntimeException("Cannot use service notification from outside of service process");
@@ -66,20 +52,6 @@ public class ServiceNotification {
                 .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
                 .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
         ;
-
-        NotificationStyles styles = new NotificationStyles(this.context, R.drawable.action_turn_off);
-        if (SamsungDarkNotificationFixer.isNeeded(context)) {
-            samsungDarkNotificationFixer = new SamsungDarkNotificationFixer(context);
-            titleColour = samsungDarkNotificationFixer.getTitleColour();
-            actionButtonColour = samsungDarkNotificationFixer.getActionButtonColour();
-        } else {
-            samsungDarkNotificationFixer = null;
-            titleColour = styles.getTitleColour();
-            actionButtonColour = styles.getActionButtonColour();
-        }
-
-        Log.i(ServiceNotification.class.getSimpleName(), "Text colour: " + Integer.toHexString(titleColour));
-        Log.i(ServiceNotification.class.getSimpleName(), "Action button colour: " + Integer.toHexString(actionButtonColour));
     }
 
     /**
@@ -137,9 +109,7 @@ public class ServiceNotification {
 
         NotificationButtons notificationButtons = new NotificationButtons(
             context,
-            R.layout.notification,
-            titleColour,
-            actionButtonColour
+            R.layout.notification
         );
 
         boolean isLoading = runningState != null && runningState.waitingForSensor;
@@ -150,13 +120,10 @@ public class ServiceNotification {
                 R.id.notification_left_side_button,
                 R.id.notification_left_side_progress_on_colour_dark_theme,
                 R.id.notification_left_side_progress_on_colour_light_theme,
-                R.id.notification_left_side_progress_selected_dark_theme,
-                R.id.notification_left_side_progress_selected_light_theme,
                 R.drawable.app_left_side,
                 PendingIntentIds.MAIN_NOTIFICATION_LEFT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
-                context.getText(R.string.user_rotation_left_side),
                 UserSide.LEFT.equals(userSide),
                 isLoading && runningState.userSide.equals(UserSide.LEFT))
             .configureButton(
@@ -164,12 +131,9 @@ public class ServiceNotification {
                 R.id.notification_turn_off_button,
                 R.id.notification_turn_off_progress_on_colour_dark_theme,
                 R.id.notification_turn_off_progress_on_colour_light_theme,
-                R.id.notification_turn_off_progress_selected_dark_theme,
-                R.id.notification_turn_off_progress_selected_light_theme,
                 R.drawable.action_turn_off,
                 PendingIntentIds.MAIN_NOTIFICATION_TURN_OFF,
                 new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).asIntent(context),
-                context.getText(R.string.action_turn_off),
                 userSide == null,
                 false)
             .configureButton(
@@ -177,31 +141,16 @@ public class ServiceNotification {
                 R.id.notification_right_side_button,
                 R.id.notification_right_side_progress_on_colour_dark_theme,
                 R.id.notification_right_side_progress_on_colour_light_theme,
-                R.id.notification_right_side_progress_selected_dark_theme,
-                R.id.notification_right_side_progress_selected_light_theme,
                 R.drawable.app_right_side,
                 PendingIntentIds.MAIN_NOTIFICATION_RIGHT_SIDE,
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
-                context.getText(R.string.user_rotation_right_side),
                 UserSide.RIGHT.equals(userSide),
                 isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
         RemoteViews customNotification = notificationButtons.getContentView();
-        if (samsungDarkNotificationFixer != null)
-            samsungDarkNotificationFixer.applyTo(customNotification);
-
-        // The OS sometimes reapplies the new notification contents onto the contents from last time.
-        // This causes issues in night mode on Samsung Android 9 devices, such as:
-        // - Being dimmed after the first update
-        // - Staying dark after turning off night mode
-        // So we're explicitly wiping and re-inserting the notification contents each time to ensure we get a consistent result each time.
-        RemoteViews wrapper = new RemoteViews(context.getPackageName(), R.layout.notification_wrapper);
-        wrapper.removeAllViews(R.id.notification_wrapper);
-        wrapper.addView(R.id.notification_wrapper, customNotification);
-
-        builder.setCustomContentView(wrapper);
+        builder.setCustomContentView(customNotification);
     }
 
 }
