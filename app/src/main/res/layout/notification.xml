@@ -10,7 +10,9 @@
     android:layout_height="@android:dimen/notification_large_icon_height"
     android:layoutDirection="ltr"
     tools:ignore="UnusedAttribute"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:background="@color/notification_background"
+    >
 
     <include layout="@layout/notification_buttons" />
 
