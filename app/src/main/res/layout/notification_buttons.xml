@@ -1,43 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <FrameLayout
-        android:id="@+id/notification_left_side_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
-        <include layout="@layout/notification_button" android:id="@+id/notification_left_side_button" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_left_side_progress_on_colour_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_left_side_progress_on_colour_light_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_left_side_progress_selected_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_left_side_progress_selected_light_theme" />
+    <FrameLayout style="@style/AppTheme.NotificationButtonContainer" android:id="@+id/notification_left_side_button_container">
+        <FrameLayout style="@style/AppTheme.NotificationButton" android:id="@+id/notification_left_side_button" />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Unselected"
+            android:id="@+id/notification_left_side_icon_unselected"
+            android:contentDescription="@string/user_rotation_left_side"
+            android:src="@drawable/app_left_side"
+            />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Selected"
+            android:id="@+id/notification_left_side_icon_selected"
+            android:contentDescription="@string/user_rotation_left_side"
+            android:src="@drawable/app_left_side"
+            />
+
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_left_side_progress" />
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/notification_turn_off_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
-        <include layout="@layout/notification_button" android:id="@+id/notification_turn_off_button" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_turn_off_progress_on_colour_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_turn_off_progress_on_colour_light_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_turn_off_progress_selected_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_turn_off_progress_selected_light_theme" />
+    <FrameLayout style="@style/AppTheme.NotificationButtonContainer" android:id="@+id/notification_turn_off_button_container">
+        <FrameLayout style="@style/AppTheme.NotificationButton" android:id="@+id/notification_turn_off_button" />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Unselected"
+            android:id="@+id/notification_turn_off_icon_unselected"
+            android:contentDescription="@string/action_turn_off"
+            android:src="@drawable/action_turn_off"
+            />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Selected"
+            android:id="@+id/notification_turn_off_icon_selected"
+            android:contentDescription="@string/action_turn_off"
+            android:src="@drawable/action_turn_off"
+            />
+
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_turn_off_progress" />
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/notification_right_side_button_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
-        <include layout="@layout/notification_button" android:id="@+id/notification_right_side_button" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.DarkTheme" android:id="@+id/notification_right_side_progress_on_colour_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.OnColour.LightTheme" android:id="@+id/notification_right_side_progress_on_colour_light_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.DarkTheme" android:id="@+id/notification_right_side_progress_selected_dark_theme" />
-        <ProgressBar style="@style/AppTheme.Notification.ProgressBar.Selected.LightTheme" android:id="@+id/notification_right_side_progress_selected_light_theme" />
+    <FrameLayout style="@style/AppTheme.NotificationButtonContainer" android:id="@+id/notification_right_side_button_container">
+        <FrameLayout style="@style/AppTheme.NotificationButton" android:id="@+id/notification_right_side_button" />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Unselected"
+            android:id="@+id/notification_right_side_icon_unselected"
+            android:contentDescription="@string/user_rotation_right_side"
+            android:src="@drawable/app_right_side"
+            />
+
+        <ImageView
+            style="@style/AppTheme.NotificationButtonIcon.Selected"
+            android:id="@+id/notification_right_side_icon_selected"
+            android:contentDescription="@string/user_rotation_right_side"
+            android:src="@drawable/app_right_side"
+            />
+
+        <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_right_side_progress" />
     </FrameLayout>
 
 </merge>

@@ -17,7 +17,6 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
@@ -29,10 +28,9 @@ public class RunningStateUpdater extends State {
     private final OrientationCalculator calculator;
     private final RotationService service;
     private final ServiceNotificationUnblockedMonitor notificationUnblockedMonitor;
-    private ServiceNotification notificationBuilder;
+    private final ServiceNotification notificationBuilder;
     private final SharedPreferences prefs;
     private final NotificationManager notificationManager;
-    private final DarkThemeMonitor darkThemeMonitor;
 
     public RunningStateUpdater(Context context, OrientationCalculator calculator, RotationService service) {
         this.context = context;
@@ -41,7 +39,6 @@ public class RunningStateUpdater extends State {
         notificationBuilder = new ServiceNotification(context);
         prefs = ServiceSettings.getSharedPreferences(context);
         notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
-        darkThemeMonitor = new DarkThemeMonitor(context);
         notificationUnblockedMonitor = new ServiceNotificationUnblockedMonitor(context);
     }
 
@@ -49,14 +46,12 @@ public class RunningStateUpdater extends State {
     protected void start() {
         anythingChanged.update();
         calculator.onAnythingChanged.subscribe(anythingChanged);
-        darkThemeMonitor.subscribe(darkThemeChanged);
         notificationUnblockedMonitor.subscribe(notificationUnblocked);
     }
 
     @Override
     protected void stop() {
         notificationUnblockedMonitor.unsubscribe(notificationUnblocked);
-        darkThemeMonitor.unsubscribe(darkThemeChanged);
         calculator.onAnythingChanged.unsubscribe(anythingChanged);
 
         // Detach notification from service
@@ -102,17 +97,6 @@ public class RunningStateUpdater extends State {
                 lastRunningState = runningState;
                 onStateChanged.report();
             }
-        }
-    };
-
-    private final EventHandler darkThemeChanged = new EventHandler() {
-        @Override
-        public void update() {
-            // The notification builder caches the colour scheme, so we need to recreate it
-            notificationBuilder = new ServiceNotification(context);
-
-            // Since the notification uses a custom layout
-            updateDisplays(lastRunningState);
         }
     };
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary_500_dark">#be9c91</color>
     <color name="primary_500_light">#795548</color>
 
     <color name="primary_500">@color/primary_500_light</color>
@@ -7,32 +8,18 @@
     <color name="accent_700">#0091EA</color>
     <color name="tip_view_background">#e5e5e5</color>
 
+    <!-- Unfortunately, different devices use different background colours. So we'll just match the stock Android background colour for a basic level of consistency. -->
+    <color name="notification_background">#181818</color>
+
+    <color name="notification_button_container_selected">@color/primary_500_dark</color>
+
+    <color name="notification_button_icon_unselected_dark_theme">@android:color/white</color>
+    <color name="notification_button_icon_unselected_light_theme">@android:color/black</color>
+    <color name="notification_button_icon_unselected">@color/notification_button_icon_unselected_dark_theme</color>
+
     <!-- Using either white or black so the icon has plenty of contrast over the primary-coloured background -->
     <color name="notification_button_icon_on_colour_dark_theme">@android:color/black</color>
     <color name="notification_button_icon_on_colour_light_theme">@android:color/white</color>
-
-
-    <!-- Icon opacity values taken from https://material.io/archive/guidelines/style/color.html#color-usability -->
-
-    <!-- 100% white -->
-    <color name="notification_button_icon_selected_dark_theme">@android:color/white</color>
-
-    <!-- 54% black -->
-    <color name="notification_button_icon_selected_light_theme">#8A000000</color>
-
-    <!-- 50% white -->
-    <color name="notification_button_icon_unselected_dark_theme">#80FFFFFF</color>
-
-    <!-- 38% black -->
-    <color name="notification_button_icon_unselected_light_theme">#61000000</color>
-
-
-    <!-- Background colour opacity values taken from https://material.io/design/color/dark-theme.html#states and https://material.io/design/interaction/states.html#activated -->
-
-    <!-- 12% white -->
-    <color name="notification_button_background_selected_dark_theme">#1FFFFFFF</color>
-
-    <!-- 12% black -->
-    <color name="notification_button_background_selected_light_theme">#1F000000</color>
+    <color name="notification_button_icon_on_colour">@color/notification_button_icon_on_colour_dark_theme</color>
 
 </resources>
