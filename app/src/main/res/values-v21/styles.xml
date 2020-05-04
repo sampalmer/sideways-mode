@@ -5,8 +5,8 @@
         <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
         <item name="android:theme">@style/AppTheme</item>
 
-        <!-- Using Android selectableItemBackground since it seems pretty platform-neutral -->
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <!-- Using AndroidX selectableItemBackground since it seems pretty platform-neutral -->
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar">
