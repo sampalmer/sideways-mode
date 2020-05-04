@@ -38,6 +38,8 @@ public class CustomNotificationTemplate {
             boolean selected,
             boolean isLoading
     ) {
+        // Allowing the resources to change the button background depending on the selected state.
+        // Storing the "selected" state in the "enabled" state since that's the only state we can set in a RemoteViews.
         content.setBoolean(containerId, "setEnabled", selected);
 
         content.setViewVisibility(iconUnselectedId, !isLoading && !selected ? View.VISIBLE : View.INVISIBLE);
