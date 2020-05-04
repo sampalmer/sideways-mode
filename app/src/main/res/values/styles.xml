@@ -98,6 +98,12 @@
         <item name="android:minHeight">0dp</item>
     </style>
 
+    <!--
+        Using two separate styles for unselected VS selected buttons because older Android versions
+        have no way to change the icon colour properly using only resources. We also have to
+        separate tint from alpha since tint doesn't use the source colour's alpha value when used
+        in a RemoteViews.
+     -->
     <style name="AppTheme.NotificationButtonIcon.Unselected">
         <item name="android:tint">@color/notification_button_icon_unselected</item>
         <item name="android:alpha">@integer/notification_button_icon_unselected_alpha</item>
@@ -116,6 +122,10 @@
     </style>
 
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar">
+        <!--
+            Using a custom progress bar instead of the OS one since the OS colours may not match
+            this app's theme
+         -->
         <item name="android:indeterminateDrawable">@drawable/notification_button_progress_on_colour</item>
     </style>
 
