@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build.VERSION;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
@@ -59,33 +58,7 @@ public class ServiceNotification {
      */
     public Notification build(@Nullable ApplicationStatus.RunningState runningState) {
         builder.setSmallIcon(runningState == null ? R.drawable.app_upright_filled : runningState.userSide.notificationIconId);
-
-        int statusTextResource;
-
-        if (runningState == null)
-            statusTextResource = R.string.user_rotation_upright;
-        else if (runningState.waitingForSensor)
-            statusTextResource = R.string.status_waiting_sensor;
-        else
-            statusTextResource = runningState.userSide.descriptionId;
-
-        CharSequence statusText = context.getText(statusTextResource);
-        CharSequence title;
-        CharSequence bodyText;
-
-        if (VERSION.SDK_INT >= 24) {
-            // In Android N, the app name is already shown in the notification's header section, so we can skip it here.
-            // Plus, we can now make the notification thin, so we'll put the status to the right of the app name to save vertical space
-            title = statusText;
-            bodyText = null;
-        }
-        else {
-            title = context.getText(R.string.app_name_full);
-            bodyText = statusText;
-        }
-
-        builder.setContentTitle(title);
-        builder.setContentText(bodyText);
+        builder.setContentTitle(makeStatusText(runningState));
 
         modifyContentView(runningState);
 
@@ -99,6 +72,19 @@ public class ServiceNotification {
         // notification with .cancel() when the user turns off the "keep notification" option
 
         return notification;
+    }
+
+    private CharSequence makeStatusText(@Nullable ApplicationStatus.RunningState runningState) {
+        int statusTextResource;
+
+        if (runningState == null)
+            statusTextResource = R.string.user_rotation_upright;
+        else if (runningState.waitingForSensor)
+            statusTextResource = R.string.status_waiting_sensor;
+        else
+            statusTextResource = runningState.userSide.descriptionId;
+
+        return context.getText(statusTextResource);
     }
 
     /**
