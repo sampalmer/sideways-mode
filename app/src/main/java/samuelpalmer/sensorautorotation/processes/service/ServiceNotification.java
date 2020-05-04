@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.notifications.NotificationButtons;
+import samuelpalmer.sensorautorotation.notifications.CustomNotificationTemplate;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
@@ -93,14 +93,14 @@ public class ServiceNotification {
     private void modifyContentView(@Nullable ApplicationStatus.RunningState runningState) {
         @Nullable UserSide userSide = runningState == null ? null : runningState.userSide;
 
-        NotificationButtons notificationButtons = new NotificationButtons(
+        CustomNotificationTemplate template = new CustomNotificationTemplate(
             context,
             R.layout.notification
         );
 
         boolean isLoading = runningState != null && runningState.waitingForSensor;
 
-        notificationButtons
+        template
             .configureButton(
                 R.id.notification_left_side_button_container,
                 R.id.notification_left_side_icon_unselected,
@@ -135,7 +135,7 @@ public class ServiceNotification {
                 isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
-        RemoteViews customNotification = notificationButtons.getContentView();
+        RemoteViews customNotification = template.getContentView();
         builder.setCustomContentView(customNotification);
     }
 

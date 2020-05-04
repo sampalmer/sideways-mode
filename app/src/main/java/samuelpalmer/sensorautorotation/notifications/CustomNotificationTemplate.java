@@ -15,19 +15,19 @@ import samuelpalmer.sensorautorotation.PendingIntentIds;
  * content. This is more convenient for the user than stock notification actions because the
  * buttons are always visible and don't increase the height of the notification.
  */
-public class NotificationButtons {
+public class CustomNotificationTemplate {
 
     private final RemoteViews content;
 
     private final Context context;
 
-    public NotificationButtons(Context context, int layoutResource) {
+    public CustomNotificationTemplate(Context context, int layoutResource) {
         this.context = context;
 
         content = new RemoteViews(context.getPackageName(), layoutResource);
     }
 
-    public NotificationButtons configureButton(
+    public CustomNotificationTemplate configureButton(
             @IdRes int containerId,
             @IdRes int iconUnselectedId,
             @IdRes int iconSelectedId,
