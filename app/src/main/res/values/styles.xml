@@ -73,18 +73,9 @@
     <style name="AppTheme.NotificationButtonBase">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-
-        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
-        <item name="android:theme">@style/AppTheme</item>
-
-        <!-- Using Android selectableItemBackground since our own one crashes prior to Android 5 -->
-        <item name="android:background">@drawable/notification_button_background_holo</item>
     </style>
 
     <style name="AppTheme.NotificationButton" parent="AppTheme.NotificationButtonBase">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-
         <!-- Using a custom background since the OS one uses colours that don't fit in with our theme -->
         <item name="android:background">@drawable/notification_button_background_holo</item>
     </style>
