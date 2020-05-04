@@ -34,7 +34,7 @@ public class ServiceNotification {
         this.context = context;
 
         PendingIntent dashboardIntent = PendingIntent.getActivity(
-        this.context,
+            this.context,
             PendingIntentIds.MAIN_NOTIFICATION_CLICK,
             new Intent(this.context, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             PendingIntentIds.PENDING_INTENT_FLAGS);
