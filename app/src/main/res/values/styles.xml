@@ -64,8 +64,6 @@
     </style>
 
     <style name="AppTheme.NotificationContainer">
-        <item name="android:id">@id/notification_root</item>
-
         <!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
         <item name="android:layoutDirection" tools:targetApi="jelly_bean_mr1">ltr</item>
 
