@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- The notification container layout height on Android 4 doesn't work with "match_parent", so we have to set the height explicitly -->
-<!--
-    To make matters worse, older Android versions crash if the layout height is set by a style or points to a resource that has different qualifiers,
-    so we have to use separate layouts for each OS version.
--->
-<!-- Always laying out buttons from left-to-right regardless of locale to ensure that the "Rotate Left" button is on the left -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@id/notification_root"
+    style="@style/AppTheme.NotificationContainer"
     android:layout_width="match_parent"
     android:layout_height="@android:dimen/notification_large_icon_height"
-    android:layoutDirection="ltr"
-    tools:ignore="UnusedAttribute"
-    android:baselineAligned="false"
-    android:background="@color/notification_background"
     >
 
     <include layout="@layout/notification_buttons" />
