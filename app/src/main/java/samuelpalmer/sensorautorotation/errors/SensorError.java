@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
 public class SensorError extends EnvironmentError {
     
     @StringRes
-    private static int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
+    private static final int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
     
     public enum Type {
         NOT_FOUND,

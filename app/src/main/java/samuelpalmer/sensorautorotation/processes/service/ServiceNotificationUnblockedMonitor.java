@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
  */
 public class ServiceNotificationUnblockedMonitor extends EventRegistrarAdaptor {
 
-    private static String TAG = ServiceNotificationUnblockedMonitor.class.getSimpleName();
+    private static final String TAG = ServiceNotificationUnblockedMonitor.class.getSimpleName();
 
     private final Context context;
     private final IntentFilter filter;
