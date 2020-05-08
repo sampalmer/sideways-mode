@@ -14,7 +14,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.graphics.ColorUtils;
 import androidx.core.widget.ImageViewCompat;
 
 import samuelpalmer.sensorautorotation.R;
@@ -22,7 +21,6 @@ import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 public class DashboardButtonView extends FrameLayout {
 
-    private View container;
     private AppCompatImageView icon;
 
     public DashboardButtonView(Context context) {
@@ -49,7 +47,7 @@ public class DashboardButtonView extends FrameLayout {
     private void init(@Nullable AttributeSet attrs) {
         int src = getSource(attrs);
 
-        container = inflate(getContext(), R.layout.dashboard_button, this);
+        View container = inflate(getContext(), R.layout.dashboard_button, this);
         icon = container.findViewById(R.id.dashboard_button_icon);
         icon.setImageResource(src);
 

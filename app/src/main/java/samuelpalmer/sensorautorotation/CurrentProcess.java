@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
@@ -10,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
-import android.os.StrictMode;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -25,7 +23,6 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.Diagnostics;
-import samuelpalmer.sensorautorotation.utilities.LoggingAppOpsCollector;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
@@ -34,9 +31,6 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 public class CurrentProcess extends Application {
 
     private static final String TAG = CurrentProcess.class.getSimpleName();
-
-    // Whether to audit usage of dangerous permissions. This generates a lot of log noise, so it's off by default.
-    private static final boolean AUDIT_PERMISSIONS = false;
 
     // These values are all cached to reduce lag, although this mightn't make any discernible difference
     private static String processName;
@@ -101,32 +95,8 @@ public class CurrentProcess extends Application {
      */
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .permitDiskReads() // So we can read SharedPreferences and the current process name
-                .permitDiskWrites() // So SharedPreferences can initialise itself on first-run
-                .penaltyLog()
-                // Not using penaltyDialog since it's too annoying
-                .build()
-            );
-
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                // Not using penaltyDeath since it makes it look like the app is malfunctioning
-                .build()
-            );
-
-            if (AUDIT_PERMISSIONS) {
-                if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
-                    // Logging all uses of dangerous app ops to make sure no privacy-breaching code makes it to production
-                    AppOpsManager appOpsManager = getSystemService(AppOpsManager.class);
-                    assert appOpsManager != null;
-                    appOpsManager.setOnOpNotedCallback(getMainExecutor(), new LoggingAppOpsCollector());
-                }
-            }
-        }
+        if (BuildConfig.DEBUG)
+            DebugConfig.configureDebug(this);
 
         super.onCreate();
 
@@ -181,7 +151,7 @@ public class CurrentProcess extends Application {
             persistentNotificationUpdater.ensureStarted();
         }
     }
-    
+
     @Override
     public void onTerminate() {
         super.onTerminate();

@@ -2,12 +2,14 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.lifecycle.ViewModelProviders;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
@@ -29,7 +31,7 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
         super.onAttach(context);
 
         // Preparing the view-model before onCreate() so that it's ready for use as soon as the preferences are created.
-        viewModel = ViewModelProviders.of(this).get(IncompatibleAppsPermissionViewModel.class);
+        viewModel = new ViewModelProvider(this).get(IncompatibleAppsPermissionViewModel.class);
         viewModel.getShouldShowTip().observe(this, shouldShowTip -> updateTipVisibility());
         updateTipVisibility();
     }
@@ -38,7 +40,7 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_incompatible_apps);
 
-        tipView = (PermissionTipViewPreference) findPreference("incompatibleAppsPermission");
+        tipView = findPreference("incompatibleAppsPermission");
         tipView.setOnPreferenceClickListener(preference -> {
             permissionFragment.grantPermissions();
             return true;
@@ -66,18 +68,17 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //noinspection ConstantConditions
-        permissionFragment = (IncompatibleAppsPermissionFragment) getFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
+        permissionFragment = (IncompatibleAppsPermissionFragment) getParentFragmentManager().findFragmentByTag(TAG_PERMISSIONS_FRAGMENT);
         if (permissionFragment == null) {
             permissionFragment = new IncompatibleAppsPermissionFragment();
 
-            getFragmentManager()
+            getParentFragmentManager()
                     .beginTransaction()
                     .add(permissionFragment, TAG_PERMISSIONS_FRAGMENT)
                     .commit();
         }
 
-        IncompatibleAppsViewModel viewModel = ViewModelProviders.of(this).get(IncompatibleAppsViewModel.class);
+        IncompatibleAppsViewModel viewModel = new ViewModelProvider(this).get(IncompatibleAppsViewModel.class);
 
         viewModel.getIncompatibleAppCount().observe(this, quantity -> {
             final String quantityString = getResources().getQuantityString(R.plurals.preference_incompatible_apps_summary_enabled, quantity, quantity);
