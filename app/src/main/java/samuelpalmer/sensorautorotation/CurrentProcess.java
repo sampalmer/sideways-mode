@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
-import android.os.StrictMode;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -83,23 +82,8 @@ public class CurrentProcess extends Application {
      */
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .permitDiskReads() // So we can read SharedPreferences and the current process name
-                .permitDiskWrites() // So SharedPreferences can initialise itself on first-run
-                .penaltyLog()
-                // Not using penaltyDialog since it's too annoying
-                .build()
-            );
-
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                // Not using penaltyDeath since it makes it look like the app is malfunctioning
-                .build()
-            );
-        }
+        if (BuildConfig.DEBUG)
+            DebugConfig.configureDebug();
 
         super.onCreate();
 
@@ -154,7 +138,7 @@ public class CurrentProcess extends Application {
             persistentNotificationUpdater.ensureStarted();
         }
     }
-    
+
     @Override
     public void onTerminate() {
         super.onTerminate();
