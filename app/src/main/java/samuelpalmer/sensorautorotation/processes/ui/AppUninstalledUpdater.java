@@ -6,13 +6,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.core.os.HandlerCompat;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps.LoadInstalledAppsTask;
@@ -35,10 +42,14 @@ public class AppUninstalledUpdater extends State {
 
     private final Context context;
     private final SharedPreferences applicationSettings;
+    private final ExecutorService executor;
+    private final Handler handler;
 
     public AppUninstalledUpdater(Context context) {
         this.context = context;
         applicationSettings = ApplicationSettings.getSharedPreferences(context);
+        executor = Executors.newSingleThreadExecutor();
+        handler = HandlerCompat.createAsync(Looper.getMainLooper());
     }
 
     @Override
@@ -65,17 +76,21 @@ public class AppUninstalledUpdater extends State {
             * The user has done a config restore onto a different device, so a different set of apps is installed
             * This app has just been re-installed and is using a backed-up config from the last time it was installed
          */
-        removeUninstalledIncompatibleApps(applicationSettings, null);
+        executor.execute(new RemoveUninstalledIncompatibleAppsTask(null));
     }
 
     @Override
     protected void stop() {
+        executor.shutdown();
         context.unregisterReceiver(appMaybeUninstalledReceiver);
     }
 
     private final BroadcastReceiver appMaybeUninstalledReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!isStarted())
+                return;
+
             // Don't want to lose config if the app is just being upgraded
             boolean isReplacement = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
             if (isReplacement)
@@ -89,27 +104,54 @@ public class AppUninstalledUpdater extends State {
             if (packageName == null)
                 Log.w(TAG, "Couldn't determine package for intent: " + intent);
 
-            removeUninstalledIncompatibleApps(applicationSettings, packageName);
+            executor.execute(new RemoveUninstalledIncompatibleAppsTask(packageName));
         }
     };
 
-    private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings, @Nullable String packageToCheck) {
-        Set<String> installedPackagesToCheck = LoadInstalledAppsTask.getInstalledPackages(context.getPackageManager(), packageToCheck);
-        Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+    /**
+     * Doing the bulk of the work in a worker thread so we don't slow down the app's initial
+     * start-up or make the UI jitter
+     */
+    class RemoveUninstalledIncompatibleAppsTask implements Runnable {
 
-        Set<String> toRemove = new HashSet<>();
-        for (String incompatibleAppPackage : incompatibleAppPackages)
-            // Only considering removal of packageToCheck
-            if (packageToCheck == null || incompatibleAppPackage.equals(packageToCheck))
-                if (!installedPackagesToCheck.contains(incompatibleAppPackage))
-                    toRemove.add(incompatibleAppPackage);
+        @Nullable
+        private final String packageToCheck;
 
-        if (!toRemove.isEmpty()) {
-            Log.i(TAG, "Some incompatible apps have been uninstalled or disabled. Removing from the list.");
-            Set<String> newIncompatibleAppPackages = new HashSet<>(incompatibleAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
-            newIncompatibleAppPackages.removeAll(toRemove);
-            applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, newIncompatibleAppPackages).apply();
+        public RemoveUninstalledIncompatibleAppsTask(@Nullable String packageToCheck) {
+            this.packageToCheck = packageToCheck;
         }
+
+        @Override
+        @WorkerThread
+        public void run() {
+            Set<String> installedPackagesToCheck = LoadInstalledAppsTask.getInstalledPackages(context.getPackageManager(), packageToCheck);
+            handler.post(() -> removeUninstalledIncompatibleApps(installedPackagesToCheck));
+        }
+
+        /**
+         * Updates the app setting in the main thread. This cannot be done in the worker thread
+         * because the app setting could be updated by a different thread in between when we read
+         * it and when we update it.
+         */
+        @MainThread
+        private void removeUninstalledIncompatibleApps(Set<String> installedPackagesToCheck) {
+            Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
+
+            Set<String> toRemove = new HashSet<>();
+            for (String incompatibleAppPackage : incompatibleAppPackages)
+                // Only considering removal of packageToCheck
+                if (packageToCheck == null || incompatibleAppPackage.equals(packageToCheck))
+                    if (!installedPackagesToCheck.contains(incompatibleAppPackage))
+                        toRemove.add(incompatibleAppPackage);
+
+            if (!toRemove.isEmpty()) {
+                Log.i(TAG, "Some incompatible apps have been uninstalled or disabled. Removing from the list.");
+                Set<String> newIncompatibleAppPackages = new HashSet<>(incompatibleAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+                newIncompatibleAppPackages.removeAll(toRemove);
+                applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, newIncompatibleAppPackages).apply();
+            }
+        }
+
     }
 
 }
