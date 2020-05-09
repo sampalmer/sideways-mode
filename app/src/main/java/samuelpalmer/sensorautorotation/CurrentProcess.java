@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Process;
 import android.util.Log;
@@ -12,11 +11,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationUpdater;
+import samuelpalmer.sensorautorotation.processes.ui.AppSettingsSynchroniser;
 import samuelpalmer.sensorautorotation.processes.ui.AppUninstalledUpdater;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
 import samuelpalmer.sensorautorotation.utilities.Diagnostics;
-import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
  * Performs process startup logic, tracks the application context, and identifies which process the calling code is running in.
@@ -37,6 +35,10 @@ public class CurrentProcess extends Application {
     // Holding a reference to this just to make sure nothing gets garbage-collected
     @SuppressWarnings("FieldCanBeLocal")
     private AppUninstalledUpdater appUninstalledUpdater;
+
+    // Holding a reference to this just to make sure nothing gets garbage-collected
+    @SuppressWarnings("FieldCanBeLocal")
+    private AppSettingsSynchroniser appSettingsSynchroniser;
 
     /**
      * Returns the name of the process that the calling code is running in
@@ -110,13 +112,8 @@ public class CurrentProcess extends Application {
         Upgrader.upgradeIfNecessary(this);
         
         if (!isServiceProcess()) {
-            SharedPreferences applicationSettings = ApplicationSettings.getSharedPreferences(this);
-            
-            /*
-              Automatically pushes changes to user preferences from the UI process to the service process.
-              This ensures preference changes made by the user appear to instantly take effect.
-             */
-            applicationSettings.registerOnSharedPreferenceChangeListener(applicationSettingsChanged);
+            appSettingsSynchroniser = new AppSettingsSynchroniser(this);
+            appSettingsSynchroniser.ensureStarted();
 
             appUninstalledUpdater = new AppUninstalledUpdater(this);
             appUninstalledUpdater.ensureStarted();
@@ -136,17 +133,5 @@ public class CurrentProcess extends Application {
         
         Log.i(TAG, "Process terminated");
     }
-    
-    // Do not re-use. This is just stored in a field to prevent garbage collection of the listener.
-    private final SharedPreferences.OnSharedPreferenceChangeListener applicationSettingsChanged = (sharedPreferences, s) -> {
-        if (ApplicationCommand.Config.isSyncableAppSetting(s)) {
-            Log.i(TAG, "User preferences changed. Sending to service process.");
-
-            new ApplicationCommand(
-                ApplicationCommand.ACTION_SYNC_CONFIG,
-                ApplicationSettings.getSharedPreferences(CurrentProcess.this)
-            ).send(CurrentProcess.this);
-        }
-    };
 
 }
