@@ -71,6 +71,7 @@ public class AppUninstalledUpdater extends State {
     private final BroadcastReceiver appMaybeUninstalledReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // Don't want to lose config if the app is just being upgraded
             boolean isReplacement = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
             if (isReplacement)
                 return;
