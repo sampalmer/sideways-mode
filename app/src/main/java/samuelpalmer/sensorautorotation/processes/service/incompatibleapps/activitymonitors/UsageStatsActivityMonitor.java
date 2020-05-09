@@ -11,8 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
@@ -111,7 +113,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
                     Log.w(getClass().getSimpleName(), "Didn't get any usage events. Usage permission is probably missing.");
                 }
 
-                return null; // We're in the dark about which app is on top since polling isn't working at te moment
+                return null; // We're in the dark about which app is on top since polling isn't working at the moment
             }
             else {
                 // We got some data but couldn't find the last-opened activity. This shouldn't happen.
