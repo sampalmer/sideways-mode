@@ -66,9 +66,8 @@
         <!-- Main Process -->
 
         <activity
-            android:name=".processes.ui.MessageDialogActivity"
+            android:name=".processes.ui.MessageActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Dialog"
             android:taskAffinity="@string/task_dashboard" />
 
         <activity
@@ -140,8 +139,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity android:name=".processes.ui.DeviceUnsupportedActivity" />
 
         <receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 

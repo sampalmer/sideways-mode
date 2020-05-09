@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".processes.ui.DeviceUnsupportedActivity"
+    tools:context=".processes.ui.MessageActivity"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             tools:ignore="UselessParent"
-            tools:context="samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity"
+            tools:context="samuelpalmer.sensorautorotation.processes.ui.MessageActivity"
             >
 
             <LinearLayout
@@ -45,7 +45,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/device_unsupported_explanation"
+                    android:id="@+id/message_explanation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

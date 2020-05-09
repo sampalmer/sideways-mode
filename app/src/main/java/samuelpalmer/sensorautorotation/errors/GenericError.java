@@ -8,10 +8,10 @@ import org.json.JSONObject;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.MessageDialogActivity;
+import samuelpalmer.sensorautorotation.processes.ui.MessageActivity;
 
 /**
- * An error that is shown in a {@link MessageDialogActivity}.
+ * An error that is shown in a {@link MessageActivity}.
  */
 public class GenericError extends EnvironmentError {
     
@@ -47,7 +47,7 @@ public class GenericError extends EnvironmentError {
 
     @Override
     public PendingIntent showError(Context context) {
-        return MessageDialogActivity.makePendingIntent(context, summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, true);
+        return MessageActivity.makePendingIntent(context, summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, true);
     }
 
     static class Serialiser extends EnvironmentError.Serialiser<GenericError> {
