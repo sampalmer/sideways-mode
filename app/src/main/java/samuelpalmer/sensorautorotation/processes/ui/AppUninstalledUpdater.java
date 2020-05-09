@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,6 +30,8 @@ import samuelpalmer.sensorautorotation.utilities.State;
  * apps when absolutely necessary.
  */
 public class AppUninstalledUpdater extends State {
+
+    private static final String TAG = AppUninstalledUpdater.class.getSimpleName();
 
     private final Context context;
     private final SharedPreferences applicationSettings;
@@ -60,7 +65,7 @@ public class AppUninstalledUpdater extends State {
             * The user has done a config restore onto a different device, so a different set of apps is installed
             * This app has just been re-installed and is using a backed-up config from the last time it was installed
          */
-        removeUninstalledIncompatibleApps(applicationSettings);
+        removeUninstalledIncompatibleApps(applicationSettings, null);
     }
 
     @Override
@@ -76,24 +81,34 @@ public class AppUninstalledUpdater extends State {
             if (isReplacement)
                 return;
 
-            removeUninstalledIncompatibleApps(applicationSettings);
+            String packageName = null;
+            Uri data = intent.getData();
+            if (data != null && "package".equals(data.getScheme()))
+                packageName = data.getSchemeSpecificPart();
+
+            if (packageName == null)
+                Log.w(TAG, "Couldn't determine package for intent: " + intent);
+
+            removeUninstalledIncompatibleApps(applicationSettings, packageName);
         }
     };
 
-    private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings) {
-        Set<String> installedPackageNames = LoadInstalledAppsTask.getInstalledPackages(context.getPackageManager(), null);
+    private void removeUninstalledIncompatibleApps(SharedPreferences applicationSettings, @Nullable String packageToCheck) {
+        Set<String> installedPackagesToCheck = LoadInstalledAppsTask.getInstalledPackages(context.getPackageManager(), packageToCheck);
         Set<String> incompatibleAppPackages = applicationSettings.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 
         Set<String> toRemove = new HashSet<>();
         for (String incompatibleAppPackage : incompatibleAppPackages)
-            if (!installedPackageNames.contains(incompatibleAppPackage))
-                toRemove.add(incompatibleAppPackage);
+            // Only considering removal of packageToCheck
+            if (packageToCheck == null || incompatibleAppPackage.equals(packageToCheck))
+                if (!installedPackagesToCheck.contains(incompatibleAppPackage))
+                    toRemove.add(incompatibleAppPackage);
 
         if (!toRemove.isEmpty()) {
-            Log.i(getClass().getSimpleName(), "Some incompatible apps are no longer installed. Removing from the list.");
-            incompatibleAppPackages = new HashSet<>(incompatibleAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
-            incompatibleAppPackages.removeAll(toRemove);
-            applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, incompatibleAppPackages).apply();
+            Log.i(TAG, "Some incompatible apps have been uninstalled or disabled. Removing from the list.");
+            Set<String> newIncompatibleAppPackages = new HashSet<>(incompatibleAppPackages); // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
+            newIncompatibleAppPackages.removeAll(toRemove);
+            applicationSettings.edit().putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, newIncompatibleAppPackages).apply();
         }
     }
 
