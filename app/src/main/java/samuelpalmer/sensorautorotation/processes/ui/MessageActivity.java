@@ -4,9 +4,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -101,6 +104,26 @@ public class MessageActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_CLEARED_ERROR, clearedError);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        ActionBar supportActionBar = getSupportActionBar();
+        assert supportActionBar != null;
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setHomeAsUpIndicator(R.drawable.close);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
