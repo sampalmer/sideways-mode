@@ -110,8 +110,11 @@ public class CurrentProcess extends Application {
 
         // Must upgrade settings before any settings-related code runs.
         Upgrader.upgradeIfNecessary(this);
-        
-        if (!isServiceProcess()) {
+
+        if (isServiceProcess()) {
+            persistentNotificationUpdater = new PersistentNotificationUpdater(this);
+            persistentNotificationUpdater.ensureStarted();
+        } else {
             appSettingsSynchroniser = new AppSettingsSynchroniser(this);
             appSettingsSynchroniser.ensureStarted();
 
@@ -119,9 +122,6 @@ public class CurrentProcess extends Application {
             appUninstalledUpdater.ensureStarted();
 
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        } else {
-            persistentNotificationUpdater = new PersistentNotificationUpdater(this);
-            persistentNotificationUpdater.ensureStarted();
         }
     }
 
