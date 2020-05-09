@@ -91,6 +91,8 @@ public class CurrentProcess extends Application {
         /*
          * Must setup notification channels before doing anything else so channels will exist when notifications are posted.
          * Doing this regardless of which process we're in since notifications can (technically) be posted from either process.
+         * We cannot rely on the app settings to determine whether this is needed since the app settings could have been
+         * migrated from a different device.
          */
         if (Build.VERSION.SDK_INT >= 26)
             NotificationChannels.setup(this);
