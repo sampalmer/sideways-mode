@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,17 +14,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
-public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<InstalledApp>> {
-    
+import samuelpalmer.sensorautorotation.utilities.TaskRunner;
+
+public class LoadInstalledAppsTask implements Callable<ArrayList<InstalledApp>> {
+
+    public static final TaskRunner taskRunner = new TaskRunner(Executors.newSingleThreadExecutor());
+
     // Only for use in the background thread
     private final PackageManager packageManager;
     
-    private final OnLoadedListener loadedListener;
-    
-    public LoadInstalledAppsTask(Context context, OnLoadedListener loadedListener) {
+    public LoadInstalledAppsTask(Context context) {
         packageManager = context.getPackageManager();
-        this.loadedListener = loadedListener;
     }
     
     /**
@@ -63,17 +65,17 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
         
         return  new InstalledApp(applicationInfo, packageManager, false);
     }
-    
+
     @Override
-    protected ArrayList<InstalledApp> doInBackground(Void... params) {
-        if (isCancelled())
+    public ArrayList<InstalledApp> call() {
+        if (Thread.currentThread().isInterrupted())
             return null;
 
         Set<String> installedPackageNames = getInstalledPackages(packageManager, null);
 
         ArrayList<InstalledApp> options = new ArrayList<>();
         for (String installedPackage : installedPackageNames) {
-            if (isCancelled())
+            if (Thread.currentThread().isInterrupted())
                 return null;
             
             InstalledApp installedApp = getInstalledApp(packageManager, installedPackage);
@@ -84,14 +86,4 @@ public class LoadInstalledAppsTask extends AsyncTask<Void, Integer, ArrayList<In
         return options;
     }
 
-    @Override
-    protected void onPostExecute(final ArrayList<InstalledApp> result) {
-        super.onPostExecute(null);
-        loadedListener.loaded(result);
-    }
-    
-    public interface OnLoadedListener {
-        void loaded(ArrayList<InstalledApp> result);
-    }
-    
 }

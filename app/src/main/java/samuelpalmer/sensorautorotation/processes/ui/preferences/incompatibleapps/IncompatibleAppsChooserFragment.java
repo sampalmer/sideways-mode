@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +16,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.TaskRunner;
 
 public class IncompatibleAppsChooserFragment extends Fragment {
     
     private SharedPreferences prefs;
     private InstalledAppComparator installedAppComparator;
     private ProgressListView list;
-    private LoadInstalledAppsTask loader;
+    private Future<?> loader;
     
     private boolean needsReload = false;
     private boolean started = false;
@@ -80,10 +82,11 @@ public class IncompatibleAppsChooserFragment extends Fragment {
     }
     
     private void beginLoadInstalledApps() {
-        loader = new LoadInstalledAppsTask(requireContext(), onLoadedListener);
         list.list.setVisibility(View.GONE);
         list.progressBar.setVisibility(View.VISIBLE);
-        loader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        LoadInstalledAppsTask task = new LoadInstalledAppsTask(requireContext());
+        loader = LoadInstalledAppsTask.taskRunner.executeAsync(task, onLoadedListener);
     }
     
     private final BroadcastReceiver installedAppsChanged = new BroadcastReceiver() {
@@ -159,15 +162,15 @@ public class IncompatibleAppsChooserFragment extends Fragment {
         started = false;
     }
     
-    private final LoadInstalledAppsTask.OnLoadedListener onLoadedListener = result -> {
+    private final TaskRunner.Callback<ArrayList<InstalledApp>> onLoadedListener = result -> {
         if (!list.adapter.isEmpty())
             list.adapter.clear();
-        
+
         list.adapter.addAll(result);
         list.adapter.sort(installedAppComparator);
-        
+
         markIncompatibleAppPackages();
-        
+
         list.progressBar.setVisibility(View.GONE);
         list.list.setVisibility(View.VISIBLE);
     };
