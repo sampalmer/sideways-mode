@@ -21,15 +21,15 @@ public class TaskRunner {
         handler = new Handler(Looper.getMainLooper());
     }
 
-    public interface Callback<R> {
-        void onComplete(R result);
+    public interface Callback<T extends Callable<R>, R> {
+        void onComplete(T task, R result);
     }
 
-    public <R> Future<?> executeAsync(Callable<R> callable, Callback<R> callback) {
+    public <T extends Callable<R>, R> Future<?> executeAsync(T callable, Callback<T, R> callback) {
         return executor.submit(() -> {
             try {
                 R result = callable.call();
-                handler.post(() -> callback.onComplete(result));
+                handler.post(() -> callback.onComplete(callable, result));
             } catch (Exception e) {
                 handler.post(() -> {
                     throw new RuntimeException(e);
