@@ -67,7 +67,6 @@
 
         <activity
             android:name=".processes.ui.MessageActivity"
-            android:excludeFromRecents="true"
             android:taskAffinity="@string/task_dashboard" />
 
         <activity
