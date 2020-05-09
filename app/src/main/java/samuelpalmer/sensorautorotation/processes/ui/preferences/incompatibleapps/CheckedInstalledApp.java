@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,9 +16,12 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import samuelpalmer.sensorautorotation.R;
-
+import samuelpalmer.sensorautorotation.utilities.TaskRunner;
 
 public class CheckedInstalledApp extends LinearLayout {
     
@@ -32,7 +34,7 @@ public class CheckedInstalledApp extends LinearLayout {
     private CheckBox checkbox;
 
     private InstalledApp currentItem;
-    private ImageLoader currentLoader;
+    private Future<?> currentLoader;
     
     public CheckedInstalledApp(Context context) {
         super(context);
@@ -75,10 +77,12 @@ public class CheckedInstalledApp extends LinearLayout {
         if (item != currentItem) {
             if (currentLoader != null)
                 currentLoader.cancel(true);
-            
-            // Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
-            currentLoader = new ImageLoader(item, new WeakReference<>(this));
-            currentLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+
+            iconProgress.setVisibility(View.VISIBLE);
+            icon.setVisibility(View.GONE);
+
+            ImageLoader task = new ImageLoader(item, new WeakReference<>(this));
+            currentLoader = ImageLoader.taskRunner.executeAsync(task, imageLoaded);
             
             label.setText(item.label);
             packageName.setText(item.packageName);
@@ -89,12 +93,30 @@ public class CheckedInstalledApp extends LinearLayout {
         checkbox.setChecked(item.isIncompatible);
         currentItem = item;
     }
-    
+
+    private final TaskRunner.Callback<ImageLoader, Drawable> imageLoaded = (task, image) -> {
+        if (image == null)
+            return; // Task was cancelled
+
+        CheckedInstalledApp listItem = task.listItemReference.get();
+        if (listItem != null) {
+            // It's possible that this item has since been repurposed, which would make the loaded icon irrelevant
+            if (task.installedApp == listItem.currentItem) {
+                listItem.iconProgress.setVisibility(View.GONE);
+                listItem.icon.setImageDrawable(image);
+                listItem.icon.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
     /**
      * Loads icons in the background to avoid lag when scrolling through the list
      */
-    private static class ImageLoader extends AsyncTask<Void, Void, Drawable> {
-        
+    private static class ImageLoader implements Callable<Drawable> {
+
+        // Not using THREAD_POOL_EXECUTOR since it crashes if we load a lot of tasks in parallel
+        private static final TaskRunner taskRunner = new TaskRunner(Executors.newSingleThreadExecutor());
+
         private final InstalledApp installedApp;
         
         // Android Studio says this class could cause a memory leak by indirectly holding onto the context in a background thread.
@@ -107,45 +129,15 @@ public class CheckedInstalledApp extends LinearLayout {
         }
         
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            
-            CheckedInstalledApp listItem = listItemReference.get();
-            if (listItem != null) {
-                listItem.iconProgress.setVisibility(View.VISIBLE);
-                listItem.icon.setVisibility(View.GONE);
-            }
-            else
-                cancel(true);
-        }
-        
-        @Override
-        protected Drawable doInBackground(Void... params) {
-            if (isCancelled())
+        public Drawable call() {
+            if (Thread.currentThread().isInterrupted())
                 return null;
             
             CheckedInstalledApp listItem = listItemReference.get();
             if (listItem != null)
                 return installedApp.loadIcon(listItem.packageManager);
-            else {
-                cancel(true);
+            else
                 return null;
-            }
-        }
-        
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            super.onPostExecute(drawable);
-            
-            CheckedInstalledApp listItem = listItemReference.get();
-            if (listItem != null) {
-                // It's possible that this item has since been repurposed, which would make the loaded icon irrelevant
-                if (installedApp == listItem.currentItem) {
-                    listItem.iconProgress.setVisibility(View.GONE);
-                    listItem.icon.setImageDrawable(drawable);
-                    listItem.icon.setVisibility(View.VISIBLE);
-                }
-            }
         }
         
     }
