@@ -163,6 +163,10 @@ public class IncompatibleAppsChooserFragment extends Fragment {
     }
     
     private final TaskRunner.Callback<ArrayList<InstalledApp>> onLoadedListener = result -> {
+        if (result == null)
+            // The task must have been cancelled, so nothing to do here
+            return;
+
         if (!list.adapter.isEmpty())
             list.adapter.clear();
 
