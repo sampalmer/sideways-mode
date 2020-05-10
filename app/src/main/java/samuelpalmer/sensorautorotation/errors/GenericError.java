@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.errors;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,8 @@ public class GenericError extends EnvironmentError {
 
     @Override
     public PendingIntent showError(Context context) {
-        return MessageActivity.makePendingIntent(context, summary, message, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE, true);
+        Intent intent = MessageActivity.makeIntent(context, R.drawable.image_error, summary, message, true);
+        return MessageActivity.makePendingIntent(context, intent, PendingIntentIds.ENVIRONMENT_ERROR_MESSAGE);
     }
 
     static class Serialiser extends EnvironmentError.Serialiser<GenericError> {

@@ -18,7 +18,14 @@ public abstract class UiActivity extends AppCompatActivity {
         if (startupErrorString != 0) {
             // Not letting the user go any further since they shouldn't have installed the app
             Log.w(getClass().getSimpleName(), getText(startupErrorString).toString());
-            Intent intent = MessageActivity.makeIntent(this, this.getText(R.string.device_problem), this.getText(startupErrorString), false);
+            Intent intent = MessageActivity.makeIntent(
+                    this,
+                    R.drawable.image_error,
+                    this.getText(R.string.device_problem),
+                    this.getText(startupErrorString),
+                    false
+            );
+
             startActivity(intent);
             
             finish();

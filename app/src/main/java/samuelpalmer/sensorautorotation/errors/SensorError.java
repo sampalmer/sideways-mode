@@ -55,7 +55,13 @@ public class SensorError extends EnvironmentError {
 
     @Override
     public PendingIntent showError(Context context) {
-        Intent intent = MessageActivity.makeIntent(context, context.getText(R.string.device_problem), context.getText(MESSAGE_RESOURCE), true)
+        Intent intent = MessageActivity.makeIntent(
+                context,
+                R.drawable.image_error,
+                context.getText(R.string.device_problem),
+                context.getText(MESSAGE_RESOURCE),
+                true
+        )
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 ;
 
