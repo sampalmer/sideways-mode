@@ -166,7 +166,7 @@ public class QuickSettingService extends TileService {
 
         if (Build.VERSION.SDK_INT >= 29) {
             // Android Q lets you specify the subtitle, so we'll use that to show the status
-            tile.setLabel(getText(R.string.quick_setting_mode_name));
+            tile.setLabel(getText(R.string.app_name_full));
 
             if (status.runningState == null) {
                 // Not showing the state if the app is turned off. This is consistent with the other OS quick setting tiles.
@@ -178,7 +178,7 @@ public class QuickSettingService extends TileService {
         }
         else {
             // Older versions of Android only let you specify the label, so we'll have to make do with that
-            int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.quick_setting_mode_name;
+            int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.app_name_full;
             tile.setLabel(getText(labelId));
         }
 

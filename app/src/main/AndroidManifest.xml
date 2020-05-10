@@ -103,7 +103,7 @@
          -->
         <service
             android:name=".processes.ui.QuickSettingService"
-            android:label="@string/quick_setting_mode_name"
+            android:label="@string/app_name_full"
             android:icon="@drawable/app_right_side"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             >
