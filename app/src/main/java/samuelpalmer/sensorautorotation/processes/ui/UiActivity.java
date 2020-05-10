@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import samuelpalmer.sensorautorotation.R;
+
 public abstract class UiActivity extends AppCompatActivity {
     
     @Override
@@ -16,7 +18,14 @@ public abstract class UiActivity extends AppCompatActivity {
         if (startupErrorString != 0) {
             // Not letting the user go any further since they shouldn't have installed the app
             Log.w(getClass().getSimpleName(), getText(startupErrorString).toString());
-            Intent intent = DeviceUnsupportedActivity.makeIntent(this, startupErrorString, false);
+            Intent intent = MessageActivity.makeIntent(
+                    this,
+                    R.drawable.image_error,
+                    this.getText(R.string.device_problem),
+                    this.getText(startupErrorString),
+                    false
+            );
+
             startActivity(intent);
             
             finish();
