@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationUpdater;
+import samuelpalmer.sensorautorotation.processes.ui.AppCompatibilityChecker;
 import samuelpalmer.sensorautorotation.processes.ui.AppSettingsSynchroniser;
 import samuelpalmer.sensorautorotation.processes.ui.AppUninstalledUpdater;
 import samuelpalmer.sensorautorotation.upgrade.Upgrader;
@@ -109,6 +110,8 @@ public class CurrentProcess extends Application {
 
             appUninstalledUpdater = new AppUninstalledUpdater(this);
             appUninstalledUpdater.ensureStarted();
+
+            registerActivityLifecycleCallbacks(new AppCompatibilityChecker());
 
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         }
