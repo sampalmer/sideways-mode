@@ -11,24 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.utilities.ActivityUtils;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
 
     private static final int REQUEST_CODE_GRANT_PERMISSION = 1;
 
-    private EventRegistrar permissionMonitor;
+    private Observer<Boolean> permissionObserver;
+    private DashboardDialogViewModel model;
 
     @Nullable
     @Override
@@ -44,6 +46,12 @@ public class DashboardPermissionFragment extends Fragment {
         return layout;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        model = new ViewModelProvider(getActivity()).get(DashboardDialogViewModel.class);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void grantPermission(@SuppressWarnings("unused") View view) {
         Context context = getContext();
@@ -54,9 +62,12 @@ public class DashboardPermissionFragment extends Fragment {
         try {
             startActivityForResult(intent, REQUEST_CODE_GRANT_PERMISSION);
 
-            if (permissionMonitor == null) {
-                permissionMonitor = ScreenOrientationController.makePermissionMonitor(context);
-                permissionMonitor.subscribe(permissionChanged);
+            if (permissionObserver == null) {
+                permissionObserver = this::checkPermissionGranted;
+
+                // Not tying the observer to our lifecycle since we need to continue observing
+                // while we're behind the system permission activity
+                model.getPermissionToStart().observeForever(permissionObserver);
             }
         }
         catch (ActivityNotFoundException e) {
@@ -72,8 +83,8 @@ public class DashboardPermissionFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private final EventHandler permissionChanged = () -> {
-        if (ScreenOrientationController.hasPermissionToStart(getContext())) {
+    private void checkPermissionGranted(boolean hasPermission) {
+        if (hasPermission) {
             FragmentActivity activity = getActivity();
             if (activity != null)
                 ActivityUtils.finishActivitiesOnTopOf(activity);
@@ -84,9 +95,9 @@ public class DashboardPermissionFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void unsubscribePermissionMonitor() {
-        if (permissionMonitor != null) {
-            permissionMonitor.unsubscribe(permissionChanged);
-            permissionMonitor = null;
+        if (permissionObserver != null) {
+            model.getPermissionToStart().removeObserver(permissionObserver);
+            permissionObserver = null;
         }
     }
 
