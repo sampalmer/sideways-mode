@@ -1,0 +1,11 @@
+• Redesigned notification to be simpler and consistent across all devices
+• Fixed crash on Xiaomi Redmi 5 Plus
+• Fixed notification colour when toggling dark theme
+• Fixed broken notification layout on some Xiaomi devices
+• Fixed bad notification colours on some Samsung custom themes
+• Fixed notification button highlight colour on Android 4
+• Reduced start-up lag
+• Fixed delay removing notification after stopping app on some recent phones
+• Changed message dialog to an activity
+• Removed support for Android 4.0.3 - 4.0.4
+• Other minor fixes and improvements
