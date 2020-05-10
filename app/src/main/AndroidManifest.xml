@@ -97,9 +97,8 @@
         </service>
 
         <!--
-            This is in the UI process since its popup dialog uses a fair bit of RAM, and we can't use
-            the activity as an alternative since Android blocks activity launches for 5 seconds after
-            the last home button press.
+            This is in the UI process since it doesn't strictly need to be in the service process
+            and we don't want to waste resources in the service process
          -->
         <service
             android:name=".processes.ui.QuickSettingService"
