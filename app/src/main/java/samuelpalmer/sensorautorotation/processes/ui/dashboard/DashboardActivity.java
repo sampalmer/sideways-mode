@@ -2,16 +2,18 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationSyncReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class DashboardActivity extends DialogActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
+public class DashboardActivity extends AppCompatActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
@@ -45,6 +47,11 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity} did not call finish() prior to onResume() completing"
+        // Ideally we would be using a dialog-themed activity instead of an empty activity with nested dialog, but that doesn't work with TapTargetView
+        if (Build.VERSION.SDK_INT >= 23)
+            setVisible(true);
 
         if (dashboardDialog != null)
             dashboardDialog.setCommandSentListener(this::onCommandSent);
