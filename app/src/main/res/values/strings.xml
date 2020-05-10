@@ -38,7 +38,6 @@
     <string name="app_disabled_view_error">View error</string>
     <string name="status_waiting_sensor">Waiting for sensor</string>
     <string name="action_turn_off">Turn off</string>
-    <string name="quick_setting_mode_name">Sideways mode</string> <!-- Note the different case to the app's name. This is for consistency with other quick setting tiles. -->
 
     <string name="preference_incompatible_apps_title">Incompatible apps</string>
     <plurals name="preference_incompatible_apps_summary_enabled">
