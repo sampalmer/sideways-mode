@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'android-R'
+    compileSdkVersion 30
 
     lintOptions{
         disable 'MissingTranslation'
@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
         minSdkVersion 16
-        targetSdkVersion 'R'
+        targetSdkVersion 30
         versionCode 69
         versionName "2.7.0"
 

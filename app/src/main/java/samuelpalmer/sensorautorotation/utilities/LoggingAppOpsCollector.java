@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi;
  *
  * As this writes a lot of log noise, make sure to only turn it on when needed.
  */
-@RequiresApi(29)
+@RequiresApi(30)
 public class LoggingAppOpsCollector extends AppOpsManager.OnOpNotedCallback {
     private static final String TAG = LoggingAppOpsCollector.class.getSimpleName();
 

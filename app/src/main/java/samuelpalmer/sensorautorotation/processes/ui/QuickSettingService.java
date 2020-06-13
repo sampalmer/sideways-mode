@@ -182,7 +182,7 @@ public class QuickSettingService extends TileService {
             tile.setLabel(getText(labelId));
         }
 
-        if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+        if (Build.VERSION.SDK_INT >= 30) {
             int stateDescriptionId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.user_rotation_off;
             tile.setStateDescription(getText(stateDescriptionId));
         }

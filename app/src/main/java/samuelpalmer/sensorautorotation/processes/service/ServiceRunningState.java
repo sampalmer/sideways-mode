@@ -71,7 +71,7 @@ public class ServiceRunningState extends State {
         Display primaryDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
         Context displayContext = service.createDisplayContext(primaryDisplay);
 
-        if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+        if (Build.VERSION.SDK_INT >= 30)
             return displayContext.createWindowContext(ScreenOrientationEnforcer.getWindowType(), null);
         else
             return displayContext;

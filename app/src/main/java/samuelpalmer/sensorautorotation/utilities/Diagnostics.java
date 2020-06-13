@@ -8,6 +8,7 @@ import android.system.OsConstants;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public final class Diagnostics {
      * Writes a message to the log explaining the reason the process last exited, if this information is available
      */
     public void logLastProcessExitReason() {
-        if (!(Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1))
+        if (Build.VERSION.SDK_INT < 30)
             return;
 
         ApplicationExitInfo exitReason = getLastExitReason();
@@ -41,9 +42,11 @@ public final class Diagnostics {
         Log.i(TAG, logMessage);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Nullable
     private ApplicationExitInfo getLastExitReason() {
         ActivityManager activityManager = ContextCompat.getSystemService(context, ActivityManager.class);
+        assert activityManager != null;
         List<ApplicationExitInfo> exitReasons = activityManager.getHistoricalProcessExitReasons(context.getPackageName(),0,0);
 
         for (ApplicationExitInfo exitReason : exitReasons)
@@ -53,6 +56,7 @@ public final class Diagnostics {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private static String formatExitReason(ApplicationExitInfo exitReason) {
         long timeDifferenceMillis = System.currentTimeMillis() - exitReason.getTimestamp();
         String importanceName = new FieldConstants<>(ActivityManager.RunningAppProcessInfo.class, "IMPORTANCE").getName(exitReason.getImportance());

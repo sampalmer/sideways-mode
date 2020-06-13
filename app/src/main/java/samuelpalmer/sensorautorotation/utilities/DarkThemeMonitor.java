@@ -59,7 +59,7 @@ public final class DarkThemeMonitor extends EventRegistrarAdaptor {
     }
 
     public static boolean poll(Context context) {
-        if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1)
+        if (Build.VERSION.SDK_INT >= 30)
             return context.getResources().getConfiguration().isNightModeActive();
         else {
             int uiMode = context.getResources().getConfiguration().uiMode;

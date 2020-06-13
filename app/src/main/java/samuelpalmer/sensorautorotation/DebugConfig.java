@@ -34,7 +34,7 @@ public final class DebugConfig {
         );
 
         if (AUDIT_PERMISSIONS) {
-            if (Build.VERSION.SDK_INT == 29 && Build.VERSION.PREVIEW_SDK_INT >= 1) {
+            if (Build.VERSION.SDK_INT >= 30) {
                 // Logging all uses of dangerous app ops to make sure no privacy-breaching code makes it to production
                 AppOpsManager appOpsManager = context.getSystemService(AppOpsManager.class);
                 assert appOpsManager != null;
