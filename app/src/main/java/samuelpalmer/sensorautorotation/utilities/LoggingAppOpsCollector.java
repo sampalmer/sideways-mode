@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 /**
- * Writes warnings to the system log for each noted app op. This is useful to audit usage of
+ * Writes to the system log for each noted app op. This is useful to audit usage of
  * potentially-dangerous permissions by third-party code.
  *
  * As this writes a lot of log noise, make sure to only turn it on when needed.
@@ -21,17 +21,17 @@ public class LoggingAppOpsCollector extends AppOpsManager.OnOpNotedCallback {
     @Override
     public void onNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
         // Logging an exception so that the call stack is output to help narrow down the problematic code
-        Log.w(TAG, new Exception(String.format("App op %s noted for this package inside of a two-way binder call", syncNotedAppOp.getOp())));
+        Log.i(TAG, String.format("App op %s noted for this package inside of a two-way binder call", syncNotedAppOp.getOp()), new Exception());
     }
 
     @Override
     public void onSelfNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
         // Logging an exception so that the call stack is output to help narrow down the problematic code
-        Log.w(TAG, new Exception(String.format("This app noted app op %s for its own package", syncNotedAppOp.getOp())));
+        Log.i(TAG, String.format("This app noted app op %s for its own package", syncNotedAppOp.getOp()), new Exception());
     }
 
     @Override
     public void onAsyncNoted(@NonNull AsyncNotedAppOp asyncNotedAppOp) {
-        Log.w(TAG, String.format("Async app op %s noted for this package by uid %d with message %s", asyncNotedAppOp.getOp(), asyncNotedAppOp.getNotingUid(), asyncNotedAppOp.getMessage()));
+        Log.i(TAG, String.format("Async app op %s noted for this package by uid %d with message %s", asyncNotedAppOp.getOp(), asyncNotedAppOp.getNotingUid(), asyncNotedAppOp.getMessage()));
     }
 }
