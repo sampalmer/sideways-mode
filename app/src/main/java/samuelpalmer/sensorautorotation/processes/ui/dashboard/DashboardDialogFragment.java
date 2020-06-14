@@ -162,13 +162,16 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
                 break;
             }
             case R.id.action_settings: {
-                startActivity(new Intent(requireContext(), SettingsActivity.class).addFlags(flags));
+                Intent settingsIntent = new Intent(requireContext(), SettingsActivity.class).addFlags(flags);
+
+                DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
+                dashboardActivity.unlockAndRun(() -> startActivity(settingsIntent));
                 break;
             }
             default:
                 throw new RuntimeException("Unknown navigation menu item: " + menuItem.getItemId());
         }
-        
+
         return true;
     }
 
