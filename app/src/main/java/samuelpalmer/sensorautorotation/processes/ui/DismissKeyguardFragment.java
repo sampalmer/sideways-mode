@@ -84,6 +84,8 @@ public class DismissKeyguardFragment extends Fragment {
                 return;
             }
 
+            isUnlocking = true;
+
             // We cannot show the dialog when locked or the OS won't prompt the user to unlock
             requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
@@ -94,8 +96,6 @@ public class DismissKeyguardFragment extends Fragment {
             lockScreenMonitor = new LockScreenMonitor(requireContext());
             lockScreenMonitor.subscribe(lockScreenStatusChanged);
             lockScreenStatusChanged.update();
-
-            isUnlocking = true;
         }
 
         private final EventHandler lockScreenStatusChanged = new EventHandler() {
