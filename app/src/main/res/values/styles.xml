@@ -36,7 +36,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Invisible; activity appears to not exist -->
+    <!-- Invisible; activity appears to not exist but is still detectable by the accessibility service -->
     <style name="AppTheme.Translucent">
         <!-- This must be "false" to ensure the accessibility service picks up the the next activity once this one closes on API 27. -->
         <item name="android:windowIsTranslucent">false</item>

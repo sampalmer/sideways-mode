@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationSyncReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.DismissKeyguardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
 public class DashboardActivity extends AppCompatActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
@@ -103,4 +104,19 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
         } else
             finish();
     }
+
+    /**
+     * Starts the given activity from the dashboard. All activity starts triggered from the
+     * dashboard must go through here.
+     */
+    public void unlockAndStartActivity(Intent targetIntent) {
+        // We might be on the lock screen if the user launched the dashboard from the quick setting tile,
+        // so we'll make sure the device is unlocked before proceeding.
+        boolean willUnlock = DismissKeyguardActivity.dismissAndLaunch(this, targetIntent);
+
+        // Finishing this activity so it doesn't get in the way while unlocking the device on API 29
+        if (willUnlock)
+            finish();
+    }
+
 }
