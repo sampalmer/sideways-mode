@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -29,6 +30,9 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // This fixes the issue where the lock screen orientation changes when you start Sideways Mode for the first time and the tip dialog shows
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         applicationSettings = ApplicationSettings.getSharedPreferences(this);
