@@ -138,13 +138,6 @@
 
         </activity>
 
-        <activity
-            android:name=".processes.ui.DismissKeyguardActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            android:autoRemoveFromRecents="true"
-            android:excludeFromRecents="true"
-            />
-
         <receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
         <receiver android:name=".processes.ui.ShowUpgradeMessageReceiver">

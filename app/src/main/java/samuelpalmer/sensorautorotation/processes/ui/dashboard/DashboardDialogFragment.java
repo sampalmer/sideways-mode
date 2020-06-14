@@ -162,9 +162,10 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
                 break;
             }
             case R.id.action_settings: {
-                DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
                 Intent settingsIntent = new Intent(requireContext(), SettingsActivity.class).addFlags(flags);
-                dashboardActivity.unlockAndStartActivity(settingsIntent);
+
+                DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
+                dashboardActivity.unlockAndRun(() -> startActivity(settingsIntent));
                 break;
             }
             default:

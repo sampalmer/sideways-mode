@@ -58,21 +58,24 @@ public class DashboardPermissionFragment extends Fragment {
         assert context != null; // Because the user has just clicked a button, so the activity must be running
 
         Intent intent = SystemIntents.modifySystemSettings(context);
-        
-        try {
-            startActivityForResult(intent, REQUEST_CODE_GRANT_PERMISSION);
 
-            if (permissionObserver == null) {
-                permissionObserver = this::checkPermissionGranted;
+        DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
+        dashboardActivity.unlockAndRun(() -> {
+            try {
+                startActivityForResult(intent, REQUEST_CODE_GRANT_PERMISSION);
 
-                // Not tying the observer to our lifecycle since we need to continue observing
-                // while we're behind the system permission activity
-                model.getPermissionToStart().observeForever(permissionObserver);
+                if (permissionObserver == null) {
+                    permissionObserver = DashboardPermissionFragment.this::checkPermissionGranted;
+
+                    // Not tying the observer to our lifecycle since we need to continue observing
+                    // while we're behind the system permission activity
+                    model.getPermissionToStart().observeForever(permissionObserver);
+                }
             }
-        }
-        catch (ActivityNotFoundException e) {
-            throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
-        }
+            catch (ActivityNotFoundException e) {
+                throw new RuntimeException("Couldn't find 'modify system settings' activity. This should have been caught by the startup check.", e);
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
