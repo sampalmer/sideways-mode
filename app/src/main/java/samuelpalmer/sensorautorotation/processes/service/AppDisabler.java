@@ -49,6 +49,10 @@ public class AppDisabler extends State {
         }
         
         context.registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+
+        // We might be starting the app from the lock screen, so better keep track of that
+        if (turnOffWhenLocked)
+            isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
     }
     
     @Override
