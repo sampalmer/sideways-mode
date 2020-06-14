@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.app.KeyguardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -8,34 +9,28 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationSyncReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 public class DashboardActivity extends AppCompatActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
-    private DashboardDialogFragment dashboardDialog;
+    private KeyguardManager keyguardManager;
     private SharedPreferences applicationSettings;
-    private LockScreenMonitor lockScreenMonitor;
-    private boolean isOnLockScreen;
+    private DashboardDialogFragment dashboardDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Allowing use on lock screen in case the user started the dashboard from the quick setting while locked
-        if (Build.VERSION.SDK_INT >= 27)
-            setShowWhenLocked(true);
-        else
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-
+        keyguardManager = ContextCompat.getSystemService(this, KeyguardManager.class);
         FragmentManager fragmentManager = getSupportFragmentManager();
         applicationSettings = ApplicationSettings.getSharedPreferences(this);
 
@@ -45,38 +40,31 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
         }
         else
             dashboardDialog = (DashboardDialogFragment) fragmentManager.findFragmentByTag(TAG_DASHBOARD_DIALOG);
-
-        lockScreenMonitor = new LockScreenMonitor(this);
-        lockScreenMonitor.subscribe(lockScreenStatusChanged);
-        isOnLockScreen = lockScreenMonitor.isOnLockScreen();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        lockScreenMonitor.unsubscribe(lockScreenStatusChanged);
-        lockScreenMonitor = null;
-
         dashboardDialog = null;
         applicationSettings = null;
+        keyguardManager = null;
     }
-
-    private final EventHandler lockScreenStatusChanged = new EventHandler() {
-        @Override
-        public void update() {
-            boolean wasOnLockScreen = isOnLockScreen;
-            isOnLockScreen = lockScreenMonitor.isOnLockScreen();
-
-            // Closing the activity if the user locks their device so it won't display over the lock screen when they next turn the screen on
-            if (!wasOnLockScreen && isOnLockScreen)
-                finish();
-        }
-    };
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Allowing use on lock screen in case the user started the dashboard from the quick setting while locked
+        // Not allowing on lock screen if the user isn't on the lock screen so that if the user locks the device while the dashboard is open then the dashboard won't sit on top of the lock screen when the screen is next turned on
+        boolean isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+        if (Build.VERSION.SDK_INT >= 27)
+            setShowWhenLocked(isOnLockScreen);
+        else
+            if (isOnLockScreen)
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            else
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
         // Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity} did not call finish() prior to onResume() completing"
         // Ideally we would be using a dialog-themed activity instead of an empty activity with nested dialog, but that doesn't work with TapTargetView
