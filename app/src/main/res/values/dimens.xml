@@ -7,4 +7,14 @@
     <dimen name="dialog_content_margin">24dp</dimen>
     <dimen name="list_item_min_height">72dp</dimen>
 
+    <!--
+        This is the smallest functional size of a notification as of Android 7.
+        Any smaller, and the notification will visibly fill up the available space, but its buttons
+        will no longer be clickable between the end of the content and the end of the area allocated
+        by the OS.
+
+        This isn't needed in Android 8.0+
+    -->
+    <dimen name="min_notification_layout_height">48dp</dimen>
+
 </resources>
