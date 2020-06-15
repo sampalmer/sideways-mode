@@ -103,7 +103,7 @@
         <service
             android:name=".processes.ui.QuickSettingService"
             android:label="@string/app_name_full"
-            android:icon="@drawable/app_right_side_outline"
+            android:icon="@drawable/app_right_side_filled"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             >
             <intent-filter>
