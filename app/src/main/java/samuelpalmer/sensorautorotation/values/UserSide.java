@@ -2,12 +2,13 @@ package samuelpalmer.sensorautorotation.values;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
+
 import samuelpalmer.sensorautorotation.R;
 
 public enum UserSide {
     
-    LEFT(R.string.user_rotation_left_side, Orientation.LEFT_SIDE, R.drawable.app_left_side, R.drawable.app_left_side_filled),
-    RIGHT(R.string.user_rotation_right_side, Orientation.RIGHT_SIDE, R.drawable.app_right_side, R.drawable.app_right_side_filled);
+    LEFT(R.string.user_rotation_left_side, Orientation.LEFT_SIDE, R.drawable.app_left_side_outline, R.drawable.app_left_side_filled),
+    RIGHT(R.string.user_rotation_right_side, Orientation.RIGHT_SIDE, R.drawable.app_right_side_outline, R.drawable.app_right_side_filled);
     
     @StringRes
     public final int descriptionId;
