@@ -135,6 +135,10 @@ public class ServiceNotification {
                 isLoading && runningState.userSide.equals(UserSide.RIGHT))
         ;
 
+        // Using a fully-custom view because:
+        // * Generating and then tweaking an OS notification doesn't work on MIUI
+        // * The built-in MediaStyle template is expandable, has a large icon, and sometimes has a coloured background
+        // * The built-in DecoratedCustomViewStyle templates doesn't leave enough vertical space for our buttons
         RemoteViews customNotification = template.getContentView();
         builder.setCustomContentView(customNotification);
     }
