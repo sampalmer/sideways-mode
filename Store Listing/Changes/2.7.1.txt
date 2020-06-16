@@ -1,0 +1,6 @@
+• Fixed issue where notification buttons didn't work in Android 7
+• Added Android 11 compatibility
+• Updated quick setting tile to work on the lock screen
+• Fixed issue where app turned itself off after being started from lock screen
+• Fixed issue where notification importance changed when the app was started
+• Changed quick setting icon to filled style for better consistency

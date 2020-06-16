@@ -8,14 +8,14 @@
             style="@style/AppTheme.NotificationButtonIcon.Unselected"
             android:id="@+id/notification_left_side_icon_unselected"
             android:contentDescription="@string/user_rotation_left_side"
-            android:src="@drawable/app_left_side"
+            android:src="@drawable/app_left_side_outline"
             />
 
         <ImageView
             style="@style/AppTheme.NotificationButtonIcon.Selected"
             android:id="@+id/notification_left_side_icon_selected"
             android:contentDescription="@string/user_rotation_left_side"
-            android:src="@drawable/app_left_side"
+            android:src="@drawable/app_left_side_outline"
             />
 
         <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_left_side_progress" />
@@ -48,14 +48,14 @@
             style="@style/AppTheme.NotificationButtonIcon.Unselected"
             android:id="@+id/notification_right_side_icon_unselected"
             android:contentDescription="@string/user_rotation_right_side"
-            android:src="@drawable/app_right_side"
+            android:src="@drawable/app_right_side_outline"
             />
 
         <ImageView
             style="@style/AppTheme.NotificationButtonIcon.Selected"
             android:id="@+id/notification_right_side_icon_selected"
             android:contentDescription="@string/user_rotation_right_side"
-            android:src="@drawable/app_right_side"
+            android:src="@drawable/app_right_side_outline"
             />
 
         <ProgressBar style="@style/AppTheme.Notification.ProgressBar" android:id="@+id/notification_right_side_progress" />

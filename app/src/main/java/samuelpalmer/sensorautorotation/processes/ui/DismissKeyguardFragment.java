@@ -58,11 +58,30 @@ public class DismissKeyguardFragment extends Fragment {
             KeyguardManager keyguardManager = ContextCompat.getSystemService(requireContext(), KeyguardManager.class);
             assert keyguardManager != null;
             keyguardManager.requestDismissKeyguard(requireActivity(), new KeyguardManager.KeyguardDismissCallback() {
+
+                @Override
+                public void onDismissCancelled() {
+                    super.onDismissCancelled();
+
+                    // The unlock isn't complete, but we'll proceed anyway just in case.
+                    // It's better to err on the side of starting the activity then not doing anything.
+                    onUnlockComplete();
+                }
+
+                @Override
+                public void onDismissError() {
+                    super.onDismissError();
+
+                    // We get here if the device is already unlocked, so we're good to proceed immediately
+                    onUnlockComplete();
+                }
+
                 @Override
                 public void onDismissSucceeded() {
                     super.onDismissSucceeded();
                     onUnlockComplete();
                 }
+
             });
             // We've prompted the user to unlock the device, so no further work is needed
         }

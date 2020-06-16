@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusCl
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -164,7 +165,7 @@ public class QuickSettingService extends TileService {
         else
             tile.setState(Tile.STATE_INACTIVE);
         
-        tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.quickSettingIconId : R.drawable.quick_setting_off));
+        tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.quickSettingIconId : UserSide.RIGHT.quickSettingIconId));
 
         if (Build.VERSION.SDK_INT >= 29) {
             // Android Q lets you specify the subtitle, so we'll use that to show the status
