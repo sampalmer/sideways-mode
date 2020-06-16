@@ -2,7 +2,6 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -20,19 +19,18 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
     private static final String TAG_ALLOW_ON_LOCK_SCREEN = "allowOnLockScreen";
     private static final String TAG_DISMISS_KEYGUARD = "dismissKeyguard";
+    private static final String TAG_ORIENTATION_CHANGE = "orientationChange";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
     private SharedPreferences applicationSettings;
     private DashboardDialogFragment dashboardDialog;
     private AllowLaunchOnLockScreenFragment allowOnLockScreen;
     private DismissKeyguardFragment dismissKeyguardFragment;
+    private PreventOrientationChangeWhenLockedFragment preventOrientationChangeFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // This fixes the issue where the lock screen orientation changes when you start Sideways Mode for the first time and the tip dialog shows
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         applicationSettings = ApplicationSettings.getSharedPreferences(this);
@@ -41,19 +39,33 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
             dashboardDialog = new DashboardDialogFragment();
             dashboardDialog.show(fragmentManager, TAG_DASHBOARD_DIALOG);
 
+            // Allowing the user to launch the dashboard from the lock screen so they can start the
+            // app while on their side before unlocking the phone. This is useful because after the
+            // phone is unlocked, the screen would switch to landscape mode, making it a pain to
+            // start the app.
             allowOnLockScreen = new AllowLaunchOnLockScreenFragment();
             dismissKeyguardFragment = new DismissKeyguardFragment();
+
+            // Preventing the orientation from changing when the dashboard is open over the lock
+            // screen since lock screens typically don't allow screen rotation, and the user might
+            // be starting the app from the lock screen while on their.
+            //
+            // This also fixes the issue where the lock screen orientation changes when you start
+            // Sideways Mode for the first time and the tip dialog shows.
+            preventOrientationChangeFragment = new PreventOrientationChangeWhenLockedFragment();
 
             fragmentManager
                     .beginTransaction()
                     .add(allowOnLockScreen, TAG_ALLOW_ON_LOCK_SCREEN)
                     .add(dismissKeyguardFragment, TAG_DISMISS_KEYGUARD)
+                    .add(preventOrientationChangeFragment, TAG_ORIENTATION_CHANGE)
                     .commitNow();
         }
         else {
             dashboardDialog = (DashboardDialogFragment) fragmentManager.findFragmentByTag(TAG_DASHBOARD_DIALOG);
             allowOnLockScreen = (AllowLaunchOnLockScreenFragment) fragmentManager.findFragmentByTag(TAG_ALLOW_ON_LOCK_SCREEN);
             dismissKeyguardFragment = (DismissKeyguardFragment) fragmentManager.findFragmentByTag(TAG_DISMISS_KEYGUARD);
+            preventOrientationChangeFragment = (PreventOrientationChangeWhenLockedFragment) fragmentManager.findFragmentByTag(TAG_ORIENTATION_CHANGE);
         }
     }
 
@@ -67,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity implements RunningInBac
     protected void onDestroy() {
         super.onDestroy();
 
+        preventOrientationChangeFragment = null;
         dismissKeyguardFragment = null;
         allowOnLockScreen = null;
         dashboardDialog = null;
