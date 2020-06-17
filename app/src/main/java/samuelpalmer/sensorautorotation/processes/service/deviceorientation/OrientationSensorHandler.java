@@ -28,7 +28,7 @@ public class OrientationSensorHandler extends State {
     private final OrientationCalculator calculator;
     private final ScreenRotationMonitor screen;
     private final WindowOrientationListener windowOrientationListener;
-    
+
     private Integer lastRotation;
     private Integer oldBias;
 
@@ -55,10 +55,16 @@ public class OrientationSensorHandler extends State {
 
         calculator.onAnythingChanged.subscribe(screenUserOrAutoRotateChanged);
         screen.subscribe(screenOrientationChanged);
+
+        SensorOverrider.onOverrideChanged().subscribe(overrideChanged);
+        if (SensorOverrider.getOverride() != SensorOverride.OFF)
+            HandlerCompat.createAsync(Looper.getMainLooper()).post(overrideChanged::update);
     }
 
     @Override
     protected void stop() {
+        SensorOverrider.onOverrideChanged().unsubscribe(overrideChanged);
+
         screen.unsubscribe(screenOrientationChanged);
         calculator.onAnythingChanged.unsubscribe(screenUserOrAutoRotateChanged);
 
@@ -74,7 +80,41 @@ public class OrientationSensorHandler extends State {
     };
     
     private final EventHandler screenUserOrAutoRotateChanged = this::updateRotationBias;
-    
+
+    private final EventHandler overrideChanged = new EventHandler() {
+        @Override
+        public void update() {
+            if (!isStarted())
+                return;
+
+            SensorOverride override = SensorOverrider.getOverride();
+
+            switch (override) {
+                case UNKNOWN:
+                    deviceRotationChanged(-1);
+                    break;
+                case UPRIGHT:
+                    deviceRotationChanged(0);
+                    break;
+                case LEFT_SIDE:
+                    deviceRotationChanged(1);
+                    break;
+                case UPSIDE_DOWN:
+                    deviceRotationChanged(2);
+                    break;
+                case RIGHT_SIDE:
+                    deviceRotationChanged(3);
+                    break;
+                case OFF:
+                    if (lastRotation != null)
+                        deviceRotationChanged(lastRotation);
+                    break;
+                default:
+                    throw new RuntimeException("Got unknown sensor override: " + override.name());
+            }
+        }
+    };
+
     private void updateRotationBias() {
         int newBias = deviceRotationBias();
         if (oldBias == null || newBias != oldBias) {
@@ -103,17 +143,24 @@ public class OrientationSensorHandler extends State {
             
             if (lastRotation == null || lastRotation != rotation) {
                 lastRotation = rotation;
-                
-                Orientation orientation =
-                    rotation == -1
-                    ?
-                    null
-                    :
-                    AndroidSurfaceRotation.toOrientationAnticlockwise(rotation);
-                
-                Log.i(TAG, "Device orientation changed: " + orientation);
-                calculator.setDevice(orientation);
+
+                // We'll only apply the device orientation if it's not being overridden
+                if (SensorOverrider.getOverride() == SensorOverride.OFF)
+                    deviceRotationChanged(rotation);
             }
         }
+    }
+
+    private void deviceRotationChanged(int rotation) {
+        Orientation orientation =
+            rotation == -1
+            ?
+            null
+            :
+            AndroidSurfaceRotation.toOrientationAnticlockwise(rotation);
+
+        Log.i(TAG, "Device orientation changed: " + orientation);
+
+        calculator.setDevice(orientation);
     }
 }

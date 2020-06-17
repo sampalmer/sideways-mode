@@ -8,7 +8,14 @@ android {
     }
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
-        minSdkVersion 16
+
+        if (gradle.startParameter.taskNames.contains(":app:assembleDebugAndroidTest")) {
+            // The automated tests cannot run below API 18 because UI Automator isn't available on older versions
+            minSdkVersion 18
+        } else {
+            minSdkVersion 16
+        }
+
         targetSdkVersion 29
         versionCode 71
         versionName "2.7.1"
@@ -21,6 +28,8 @@ android {
          */
         resConfigs "en", "ru"
         vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -56,4 +65,9 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
