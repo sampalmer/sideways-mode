@@ -10,6 +10,9 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+/**
+ * Grants the target app permission to write system settings
+ */
 public class GrantSystemSettingPermissionRule implements TestRule {
 
     @Override
