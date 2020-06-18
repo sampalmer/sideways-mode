@@ -146,6 +146,12 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:theme="@android:style/Theme.DeviceDefault"
+            android:taskAffinity=""
+            android:name=".processes.ui.testing.TestActivity"
+            />
+
         <!-- Service Process -->
 
         <service
