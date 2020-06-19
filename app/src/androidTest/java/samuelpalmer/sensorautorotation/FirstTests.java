@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -38,6 +37,9 @@ public class FirstTests {
     @Rule
     public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
 
+    @Rule
+    public DeviceOrientationRule deviceOrientation = new DeviceOrientationRule();
+
     private static final String BASIC_SAMPLE_PACKAGE = "samuelpalmer.sensorautorotation.dev";
 
     private static final int LAUNCH_TIMEOUT = 5000;
@@ -54,8 +56,8 @@ public class FirstTests {
         assertThat(device, notNullValue());
         assertThat(context, notNullValue());
 
-        // Start test activity
-        testActivity.getScenario().onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
+        // Change activity orientation if needed
+//        testActivity.getScenario().onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
 
         // Start dashboard
         Intent intent = context.getPackageManager()
@@ -73,7 +75,8 @@ public class FirstTests {
         SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
 
         // Type text and then press the button.
-        device.findObject(By.res(BASIC_SAMPLE_PACKAGE, "dashboard_button_left_side")).click();
+        UiObject2 leftSideButton = device.findObject(By.res(BASIC_SAMPLE_PACKAGE, "dashboard_button_left_side"));
+//        leftSideButton.click();
 
         // Wasting time so we can visually check the result
         UiObject2 changedText = device
