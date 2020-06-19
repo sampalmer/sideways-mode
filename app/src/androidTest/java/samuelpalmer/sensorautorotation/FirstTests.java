@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import samuelpalmer.sensorautorotation.deviceorientation.DeviceOrientationRule;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverride;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverrideReceiver;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
