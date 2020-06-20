@@ -37,7 +37,7 @@ class EmulatorConnection implements AutoCloseable {
     public EmulatorConnection(String host, int port) throws IOException {
         Log.v(TAG, "Setting connection timeouts");
         telnetClient = new TelnetClient();
-        telnetClient.setReaderThread(false); // This prevents the socket timeout from counting from when the connection was established instead of when the last read commenced
+        telnetClient.setReaderThread(false); // This prevents the socket timeout from counting from when the connection was established instead of when the last read commenced: https://stackoverflow.com/a/62483348/238753
         telnetClient.setConnectTimeout(10); // The connection should be practically instant since it's just from VM to Host
         telnetClient.setDefaultTimeout(2500);
 
