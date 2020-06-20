@@ -32,6 +32,7 @@ class CurrentEmulatorFinder {
     private static final int MAX_DEVICES = 10;
 
     public static EmulatorConsole getCurrentEmulator() {
+        // The only way to figure out which emulator is current is trial-and-error
         for (int i = 0; i < MAX_DEVICES; ++i) {
             // For some reason, the port number is incremented by 2 for each new emulator instance
             int port = HOST_FIRST_EMULATOR_CONSOLE_PORT + i * 2;
@@ -55,6 +56,9 @@ class CurrentEmulatorFinder {
         throw new RuntimeException("Couldn't find current emulator");
     }
 
+    /**
+     * Checks if the given emulator is the one that we are currently running in
+     */
     private static boolean isThisEmulator(EmulatorConsole emulator) {
         // Setting the proximity sensor through the emulator console to see if it changes the current device
 
