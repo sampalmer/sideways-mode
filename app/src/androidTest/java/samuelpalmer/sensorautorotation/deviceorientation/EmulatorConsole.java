@@ -67,18 +67,18 @@ public class EmulatorConsole implements AutoCloseable {
     }
 
     private static String getAuthTokenPath(String[] preamble) {
-        if (preamble.length >= 2) {
-            String authTokenLocationLine = preamble[preamble.length - 2];
-            Matcher authTokenLocationMatcher = authTokenLocationPattern.matcher(authTokenLocationLine);
+        if (preamble.length >= 1) {
+            String authTokenPathLine = preamble[preamble.length - 1];
+            Matcher authTokenPathMatcher = authTokenPathPattern.matcher(authTokenPathLine);
 
-            if (authTokenLocationMatcher.matches())
-                return authTokenLocationMatcher.group(1);
+            if (authTokenPathMatcher.matches())
+                return authTokenPathMatcher.group(1);
         }
 
         return null;
     }
 
-    private static final Pattern authTokenLocationPattern = Pattern.compile("^'(.+)'$");
+    private static final Pattern authTokenPathPattern = Pattern.compile("^'(.+)'$");
 
     /**
      * Rotate the device clockwise by 90 degrees
