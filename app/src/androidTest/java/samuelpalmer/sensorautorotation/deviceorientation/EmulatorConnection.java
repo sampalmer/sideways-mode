@@ -36,7 +36,9 @@ class EmulatorConnection implements AutoCloseable {
     public EmulatorConnection(String host, int port) throws IOException {
         Log.v(TAG, "Setting connection timeouts");
         telnetClient = new TelnetClient();
+        telnetClient.setReaderThread(false); // This prevents the socket timeout from counting from when the connection was established instead of when the last read commenced
         telnetClient.setConnectTimeout(2500);
+        telnetClient.setDefaultTimeout(2500);
 
         Log.v(TAG, "Connecting to emulator");
         try {
@@ -87,7 +89,7 @@ class EmulatorConnection implements AutoCloseable {
                 sendCommand(command);
 
             String[] response = readResponse();
-            checkResponseStatus(response);
+            checkResponseStatus(command, response);
             return getResponseContent(response);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -122,18 +124,15 @@ class EmulatorConnection implements AutoCloseable {
             String line;
 
             try {
-                // Only setting the timeout while waiting because if the timeout is always set,
-                // then it will be triggered while stopped at a breakpoint during debugging.
-                telnetClient.setSoTimeout(2500);
                 line = inputStream.readLine();
             } catch (SocketTimeoutException timeout) {
                 throw new RuntimeException("Timed out waiting for response text. Text received so far: " + String.join("\n", lines), timeout);
-            } finally {
-                telnetClient.setSoTimeout(0);
             }
 
             if (line == null)
                 break;
+
+            Log.d(TAG, "Got emulator response: " + line);
 
             // We need to check for the status line so we know when we've finished reading.
             // Otherwise, we could finish too early if the response text doesn't show up quickly enough.
@@ -153,7 +152,7 @@ class EmulatorConnection implements AutoCloseable {
     /**
      * Validates that the given response status line is in the expected format and is an "OK" response
      */
-    private static void checkResponseStatus(String[] response) {
+    private static void checkResponseStatus(@Nullable String command, String[] response) {
         String statusLine = response[response.length - 1];
 
         Matcher statusMatcher = responseStatusPattern.matcher(statusLine);
@@ -163,8 +162,10 @@ class EmulatorConnection implements AutoCloseable {
         }
 
         String commandError = statusMatcher.group(1);
-        if (commandError != null)
-            throw new RuntimeException("Command rejected by emulator: " + commandError);
+        if (commandError != null) {
+            String message = String.format("Command %s rejected by emulator: %s", command, commandError);
+            throw new RuntimeException(message);
+        }
     }
 
     private static String[] getResponseContent(String[] response) {
