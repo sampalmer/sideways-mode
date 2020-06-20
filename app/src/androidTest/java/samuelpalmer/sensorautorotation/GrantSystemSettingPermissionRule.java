@@ -18,9 +18,8 @@ public class GrantSystemSettingPermissionRule extends ExternalResource {
         super.before();
 
         // The permission is automatically granted on earlier Android versions
-        if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < 23)
             return;
-        }
 
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         UiDevice device = UiDevice.getInstance(instrumentation);
