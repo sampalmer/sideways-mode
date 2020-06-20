@@ -7,8 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import samuelpalmer.sensorautorotation.deviceorientation.DeviceOrientationRule;
 import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
+import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
+import samuelpalmer.sensorautorotation.rules.deviceorientation.DeviceOrientationRule;
 
 @RunWith(AndroidJUnit4.class)
 public class FirstTests {

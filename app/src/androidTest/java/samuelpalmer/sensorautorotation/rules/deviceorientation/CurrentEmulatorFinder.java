@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.deviceorientation;
+package samuelpalmer.sensorautorotation.rules.deviceorientation;
 
 import android.hardware.Sensor;
 import android.util.Log;

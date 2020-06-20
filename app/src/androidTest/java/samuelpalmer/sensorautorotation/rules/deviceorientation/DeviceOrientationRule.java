@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.deviceorientation;
+package samuelpalmer.sensorautorotation.rules.deviceorientation;
 
 import org.junit.rules.ExternalResource;
 

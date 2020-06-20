@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation;
+package samuelpalmer.sensorautorotation.rules;
 
 import android.app.Instrumentation;
 import android.os.Build;

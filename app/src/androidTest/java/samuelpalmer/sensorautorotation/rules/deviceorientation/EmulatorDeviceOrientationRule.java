@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.deviceorientation;
+package samuelpalmer.sensorautorotation.rules.deviceorientation;
 
 /**
  * Controls device orientation by rotating the emulated device itself. This makes it easy to
