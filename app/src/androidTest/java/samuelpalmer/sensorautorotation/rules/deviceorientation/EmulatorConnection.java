@@ -42,7 +42,7 @@ class EmulatorConnection implements AutoCloseable {
         telnetClient.setDefaultTimeout(2500);
 
         Log.v(TAG, "Connecting to emulator");
-        TrafficStats.setThreadStatsTag((int) Thread.currentThread().getId()); // Prevents StrictMode from logging an UntaggedSocketViolation: https://stackoverflow.com/a/57963770/238753
+        TrafficStats.setThreadStatsTag((int) Thread.currentThread().getId()); // Prevents StrictMode from logging an UntaggedSocketViolation on recent Android versions: https://stackoverflow.com/a/57963770/238753
         try {
             telnetClient.connect(host, port);
         } catch (SocketException e) {
