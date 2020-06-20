@@ -39,4 +39,6 @@ public abstract class DeviceOrientationRule extends ExternalResource {
     public abstract void setLeftSide();
     public abstract void setUnknown();
 
+    DeviceOrientationRule() {}
+
 }
