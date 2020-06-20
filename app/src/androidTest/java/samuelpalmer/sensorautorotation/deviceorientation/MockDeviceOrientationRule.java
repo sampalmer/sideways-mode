@@ -18,14 +18,14 @@ class MockDeviceOrientationRule extends DeviceOrientationRule {
     @Override
     protected void before() throws Throwable {
         super.before();
-        context = InstrumentationRegistry.getInstrumentation().getContext();
+        // Must use target context to send the broadcasts. Otherwise they won't make it to the receiver.
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         setUpright();
     }
 
     @Override
     protected void after() {
         super.after();
-        // TODO: Make this block until the command has been processed by the target app. Otherwise our test gets terminated before the broadcast is properly sent, resulting in this not taking effect
         SensorOverrideReceiver.sendOverride(context, SensorOverride.OFF);
         context = null;
     }
