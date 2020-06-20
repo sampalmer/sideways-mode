@@ -34,10 +34,12 @@ class SensorPoller {
         if (sensor == null)
             throw new RuntimeException("Sensor not found");
 
+        Log.v(TAG, "Starting sensor listener thread");
         SensorListenerThread sensorThread = new SensorListenerThread();
         sensorThread.start();
         Handler sensorHandler = HandlerCompat.createAsync(sensorThread.getLooper());
 
+        Log.v(TAG, "Registering sensor listener");
         boolean registered = sensorManager.registerListener(sensorThread.listener, sensor, SensorManager.SENSOR_DELAY_FASTEST, sensorHandler);
         if (!registered)
             throw new RuntimeException("Failed to register for sensor");
@@ -85,7 +87,9 @@ class SensorPoller {
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                Log.v(TAG, "Accuracy changed for sensor " + sensor + " to " + accuracy);
+            }
 
         };
 
