@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- We need network permission in order for the tests to communicate with the emulator over Telnet -->
+    <!--
+        Unfortunately, adding the permission to the target app's debug build type is the only way
+        to grant Internet permission to the testing code, which needs it to communicate with the
+        emulator over Telnet
+    -->
+    <!-- See https://stackoverflow.com/a/43346852/238753 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
