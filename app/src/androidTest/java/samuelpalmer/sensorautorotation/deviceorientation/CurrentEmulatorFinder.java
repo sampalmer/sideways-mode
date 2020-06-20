@@ -35,7 +35,7 @@ class CurrentEmulatorFinder {
         for (int i = 0; i < MAX_DEVICES; ++i) {
             // For some reason, the port number is incremented by 2 for each new emulator instance
             int port = HOST_FIRST_EMULATOR_CONSOLE_PORT + i * 2;
-            Log.v(TAG, "Looking for emulator at " + HOST_LOOPBACK + ":" + port);
+            Log.i(TAG, "Looking for emulator at " + HOST_LOOPBACK + ":" + port);
 
             EmulatorConsole emulator;
             try {
@@ -48,6 +48,7 @@ class CurrentEmulatorFinder {
             if (isThisEmulator(emulator))
                 return emulator;
 
+            Log.i(TAG, "Emulator at " + HOST_LOOPBACK + ":" + port + " is not this emulator. Ignoring.");
             emulator.close();
         }
 
