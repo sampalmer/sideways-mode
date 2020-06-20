@@ -17,16 +17,18 @@ public class GrantSystemSettingPermissionRule extends ExternalResource {
     protected void before() throws Throwable {
         super.before();
 
+        // The permission is automatically granted on earlier Android versions
+        if (Build.VERSION.SDK_INT < 23) {
+            return;
+        }
+
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         UiDevice device = UiDevice.getInstance(instrumentation);
 
         String targetPackageName = instrumentation.getTargetContext().getPackageName();
 
-        // The permission is automatically granted on earlier Android versions
-        if (Build.VERSION.SDK_INT >= 23) {
-            String shellCommand = String.format("appops set %s WRITE_SETTINGS allow", targetPackageName);
-            device.executeShellCommand(shellCommand);
-        }
+        String shellCommand = String.format("appops set %s WRITE_SETTINGS allow", targetPackageName);
+        device.executeShellCommand(shellCommand);
     }
 
 }
