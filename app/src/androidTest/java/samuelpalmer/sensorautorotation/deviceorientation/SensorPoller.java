@@ -3,7 +3,7 @@ package samuelpalmer.sensorautorotation.deviceorientation;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventCallback;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -72,19 +72,20 @@ class SensorPoller {
             return values;
         }
 
-        private final SensorEventCallback listener = new SensorEventCallback() {
+        private final SensorEventListener listener = new SensorEventListener() {
 
             @Override
             @WorkerThread
             public void onSensorChanged(SensorEvent event) {
-                super.onSensorChanged(event);
-
                 if (values == null) {
                     values = event.values.clone();
                     Log.d(TAG, "Got sensor values: " + Arrays.toString(values));
                     quitSafely();
                 }
             }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
         };
 
