@@ -2,14 +2,10 @@ package samuelpalmer.sensorautorotation;
 
 import android.app.Instrumentation;
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
-import androidx.test.uiautomator.Until;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,16 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import samuelpalmer.sensorautorotation.deviceorientation.DeviceOrientationRule;
-import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverride;
-import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverrideReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FirstTests {
@@ -50,6 +42,8 @@ public class FirstTests {
 
     @Before
     public void startMainActivityFromHomeScreen() {
+        deviceOrientation.setRightSide();
+
         // Initialize UiDevice instance
         Instrumentation instrumentation = getInstrumentation();
         device = UiDevice.getInstance(instrumentation);
@@ -61,30 +55,36 @@ public class FirstTests {
 //        testActivity.getScenario().onActivity(activity -> activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
 
         // Start dashboard
-        Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);    // Clear out any previous instances
-        context.startActivity(intent);
+//        Intent intent = context.getPackageManager()
+//                .getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);    // Clear out any previous instances
+//        context.startActivity(intent);
 
         // Wait for the app to appear
-        boolean launched = device.wait(Until.hasObject(By.clazz(DashboardActivity.class).depth(0)), LAUNCH_TIMEOUT);
-        assertTrue("Failed to launch dashboard", launched);
+//        boolean launched = device.wait(Until.hasObject(By.clazz(DashboardActivity.class).depth(0)), LAUNCH_TIMEOUT);
+//        assertTrue("Failed to launch dashboard", launched);
     }
 
     @Test
     public void checkPreconditions() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+//        SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
 
         // Type text and then press the button.
-        UiObject2 leftSideButton = device.findObject(By.res(BASIC_SAMPLE_PACKAGE, "dashboard_button_left_side"));
+//        UiObject2 leftSideButton = device.findObject(By.res(BASIC_SAMPLE_PACKAGE, "dashboard_button_left_side"));
 //        leftSideButton.click();
 
         // Wasting time so we can visually check the result
-        UiObject2 changedText = device
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
-                        5000 /* wait 5000ms */);
+//        UiObject2 changedText = device
+//                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
+//                        5000 /* wait 5000ms */);
 
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.OFF);
+//        SensorOverrideReceiver.sendOverride(context, SensorOverride.OFF);
     }
 
 }

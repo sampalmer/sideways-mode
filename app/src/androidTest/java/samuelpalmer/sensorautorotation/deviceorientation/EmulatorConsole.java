@@ -2,6 +2,8 @@ package samuelpalmer.sensorautorotation.deviceorientation;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,33 +11,17 @@ import java.util.regex.Pattern;
 /**
  * High-level interface to Android emulator Telnet console
  */
-public class EmulatorConsole implements AutoCloseable {
+@SuppressWarnings({"SameParameterValue", "unused", "WeakerAccess"})
+class EmulatorConsole implements AutoCloseable {
 
     private static String TAG = EmulatorConsole.class.getSimpleName();
-
-    /**
-     * IP address of your development machine that is running the emulator.
-     * See <a href="https://developer.android.com/studio/run/emulator-networking.html">Set up Android Emulator networking</a> for more info.
-     */
-    private static final String HOST_LOOPBACK = "10.0.2.2";
-
-    /**
-     * TCP port that emulator is listening on within your development machine.
-     * See <a href="https://developer.android.com/studio/run/emulator-networking.html">Set up Android Emulator networking</a> for more info.
-     */
-    private static final int HOST_FIRST_EMULATOR_CONSOLE_PORT = 5554;
+    private static final Pattern authTokenPathPattern = Pattern.compile("^'(.+)'$");
+    private static final Pattern sensorValueLine = Pattern.compile("^(.+) = (.+):(.+):(.+)$");
 
     private EmulatorConnection connection;
 
-    /*
-     * TODO: Ensure the port being used matches the emulator we're running on. There might be multiple emulators running, each with different ports. Or maybe this emulator was launched after another one, and then the other was closed, leaving this emulator as the only one, but still using a non-standard port.
-     *  One way to do this is to use the "redir" command to redirect a port from the host to the device, then listen to that port, then send data to it at the host, and confirm it's received in the emulator
-     *  Or maybe somehow make use of the "avd name" and "avd id" commands?
-     *  Or maybe change one of the sensor values through the emulator, and read the value within the app code
-     */
-
-    public EmulatorConsole() throws IOException {
-        connection = new EmulatorConnection(HOST_LOOPBACK, HOST_FIRST_EMULATOR_CONSOLE_PORT);
+    public EmulatorConsole(String host, int port) throws IOException {
+        connection = new EmulatorConnection(host, port);
 
         String[] preamble = connection.runCommand(null);
         checkPreamble(preamble);
@@ -78,8 +64,6 @@ public class EmulatorConsole implements AutoCloseable {
         return null;
     }
 
-    private static final Pattern authTokenPathPattern = Pattern.compile("^'(.+)'$");
-
     /**
      * Rotate the device clockwise by 90 degrees
      */
@@ -89,10 +73,94 @@ public class EmulatorConsole implements AutoCloseable {
     }
 
     /**
+     * Gets current acceleration sensor values (in m/s/s)
+     * @return [x, y, z]
+     */
+    public float[] getAcceleration() {
+        return getSensor("acceleration");
+    }
+
+    /**
      * Set acceleration sensor to the given values (in m/s/s)
      */
     public void setAcceleration(float x, float y, float z) {
-        String command = String.format("sensor set acceleration %f:%f:%f", x, y, z);
+        setSensor("acceleration", x, y, z);
+    }
+
+    /**
+     * Gets proximity sensor value in centimetres
+     */
+    public float getProximity() {
+        float[] values = getSensor("proximity");
+        return values[0];
+    }
+
+    /**
+     * Sets proximity sensor value in centimetres
+     */
+    public void setProximity(float distanceCentimetres) {
+        setSensor("proximity", distanceCentimetres, null, null);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private float[] getSensor(String sensor) {
+        // Run command
+        String command = "sensor get " + sensor;
+        String[] response = connection.runCommand(command);
+        String responseLine = validateSingleLineResponse(response);
+
+        // Parse result
+        Matcher matcher = sensorValueLine.matcher(responseLine);
+        if (!matcher.matches())
+            throw new RuntimeException("Sensor response in unexpected format: " + responseLine);
+
+        // Validate sensor name
+        String responseSensor = matcher.group(1);
+        if (!sensor.equals(responseSensor)) {
+            String message = String.format("Response sensor %s is different to requested sensor %s: %s", responseSensor, sensor, responseLine);
+            throw new RuntimeException(message);
+        }
+
+        // Get sensor values
+        float a = Float.parseFloat(matcher.group(2));
+        float b = Float.parseFloat(matcher.group(3));
+        float c = Float.parseFloat(matcher.group(4));
+
+        return new float[]{a, b, c};
+    }
+
+    private void setSensor(String sensor, float a, @Nullable Float b, @Nullable Float c) {
+        String command = String.format("sensor set %s %g", sensor, a);
+        if (b != null) {
+            command += String.format(":%g", b);
+
+            if (c != null)
+                command += String.format(":%g", c);
+        }
+
+        String[] response = connection.runCommand(command);
+        validateEmptyResponse(response);
+    }
+
+    /**
+     * Add a new port redirection. As an example, <c>redir tcp:5000:6000</c> will allow any packets
+     * sent to the host's TCP port 5000 to be routed to TCP port 6000 of the emulated device.
+     *
+     * @param protocol either 'tcp' or 'udp'
+     * @param hostPort a number indicating which port on the host to open
+     * @param guestPort a number indicating which port to route to on the device
+     */
+    public void addPortRedirection(String protocol, int hostPort, int guestPort) {
+        String command = String.format("redir add %s:%d:%d", protocol, hostPort, guestPort);
+        String[] response = connection.runCommand(command);
+        validateEmptyResponse(response);
+    }
+
+    /**
+     * Remove a port redirecion that was created with {@link #addPortRedirection(String, int, int)}
+     */
+    public void deletePortRedirection(String protocol, int hostPort) {
+        String command = String.format("redir del %s:%d", protocol, hostPort);
         String[] response = connection.runCommand(command);
         validateEmptyResponse(response);
     }
@@ -100,6 +168,15 @@ public class EmulatorConsole implements AutoCloseable {
     private static void validateEmptyResponse(String[] response) {
         if (response.length != 0)
             throw new RuntimeException("Received unexpected response: " + String.join("\n", response));
+    }
+
+    private String validateSingleLineResponse(String[] response) {
+        if (response.length != 1) {
+            String message = String.format("Expected single line response but got %d lines: %s", response.length, String.join("\n", response));
+            throw new RuntimeException(message);
+        }
+
+        return response[0];
     }
 
 }
