@@ -17,6 +17,8 @@ public abstract class DeviceOrientationRule extends ExternalResource {
     }
 
     private static boolean isEmulator() {
+        // We only want to detect the official Android emulator since that's the one with
+        // the special device orientation controls that we can use
         String qemuValue = getSystemProperty("ro.kernel.qemu");
         return qemuValue != null && qemuValue.equals("1");
     }
