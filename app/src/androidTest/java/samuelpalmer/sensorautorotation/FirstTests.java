@@ -28,18 +28,18 @@ public class FirstTests {
     public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
 
     @Rule
-    public DeviceOrientationRule deviceOrientation = DeviceOrientationRule.create();
+    public DeviceOrientationRule device = DeviceOrientationRule.create();
 
     @Rule
-    public ApplicationCommandRule command = new ApplicationCommandRule();
+    public ApplicationCommandRule app = new ApplicationCommandRule();
 
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();
 
     @Test
     public void invertsScreenWhenDeviceUpsideDown() {
-        deviceOrientation.setRightSide();
-        command.run(ApplicationCommand.ACTION_LEFT_SIDE);
+        device.setRightSide();
+        app.run(ApplicationCommand.ACTION_LEFT_SIDE);
         Orientation screenRotation = screen.waitForRotationChange();
 
         Assert.assertThat(screenRotation, CoreMatchers.is(Orientation.UPSIDE_DOWN));
