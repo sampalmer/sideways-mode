@@ -31,7 +31,7 @@ public class FirstTests {
     public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
 
     @Rule
-    public DeviceOrientationRule deviceOrientation = new DeviceOrientationRule();
+    public DeviceOrientationRule deviceOrientation = DeviceOrientationRule.create();
 
     private static final String BASIC_SAMPLE_PACKAGE = "samuelpalmer.sensorautorotation.dev";
 
@@ -73,7 +73,6 @@ public class FirstTests {
             throw new RuntimeException(e);
         }
 
-//        SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
 
         // Type text and then press the button.
 //        UiObject2 leftSideButton = device.findObject(By.res(BASIC_SAMPLE_PACKAGE, "dashboard_button_left_side"));
@@ -84,7 +83,6 @@ public class FirstTests {
 //                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
 //                        5000 /* wait 5000ms */);
 
-//        SensorOverrideReceiver.sendOverride(context, SensorOverride.OFF);
     }
 
 }

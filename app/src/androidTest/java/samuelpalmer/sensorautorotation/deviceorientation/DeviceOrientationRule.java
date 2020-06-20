@@ -2,54 +2,39 @@ package samuelpalmer.sensorautorotation.deviceorientation;
 
 import org.junit.rules.ExternalResource;
 
-public class DeviceOrientationRule extends ExternalResource {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-    private EmulatorConsole console;
-    private float[] originalAcceleration;
+public abstract class DeviceOrientationRule extends ExternalResource {
 
-    @Override
-    protected void before() throws Throwable {
-        super.before();
-
-        // TODO: Detect if the device is an emulator before proceeding with Telnet commands
-        console = CurrentEmulatorFinder.getCurrentEmulator();
-        originalAcceleration = console.getAcceleration();
-
-        // Older emulators don't rotate the device window on the host in response to acceleration changes, unless you first use the "rotate" command
-        // So we'll do this up-front to make sure everything works after we've initialised
-        console.rotateClockwise();
-        setUpright();
+    public static DeviceOrientationRule create() {
+        // The first preference is emulator-based device orientation since we can watch the device
+        // rotate, which makes it easy to develop and maintain tests.
+        if (isEmulator())
+            return new EmulatorDeviceOrientationRule();
+        else
+            return new MockDeviceOrientationRule();
     }
 
-    @Override
-    protected void after() {
-        super.after();
-
-        console.setAcceleration(originalAcceleration[0], originalAcceleration[1], originalAcceleration[2]);
-        originalAcceleration = null;
-
-        console.close();
-        console = null;
+    private static boolean isEmulator() {
+        String qemuValue = getSystemProperty("ro.kernel.qemu");
+        return qemuValue != null && qemuValue.equals("1");
     }
 
-    public void setUpright() {
-        console.setAcceleration(0, 9.81f, 0);
+    private static String getSystemProperty(String name) {
+        try {
+            Class<?> systemPropertyClazz = Class.forName("android.os.SystemProperties");
+            Method getSystemProperty = systemPropertyClazz.getMethod("get", String.class);
+            return (String) getSystemProperty.invoke(systemPropertyClazz, name);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void setRightSide() {
-        console.setAcceleration(-9.81f, 0, 0);
-    }
-
-    public void setUpsideDown() {
-        console.setAcceleration(0, -9.81f, 0);
-    }
-
-    public void setLeftSide() {
-        console.setAcceleration(9.81f, 0, 0);
-    }
-
-    public void setUnknown() {
-        console.setAcceleration(0, 0, 9.81f);
-    }
+    public abstract void setUpright();
+    public abstract void setRightSide();
+    public abstract void setUpsideDown();
+    public abstract void setLeftSide();
+    public abstract void setUnknown();
 
 }
