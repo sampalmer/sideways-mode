@@ -6,44 +6,27 @@ import android.os.Build;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import org.junit.rules.ExternalResource;
 
 /**
  * Grants the target app permission to write system settings
  */
-public class GrantSystemSettingPermissionRule implements TestRule {
+public class GrantSystemSettingPermissionRule extends ExternalResource {
 
     @Override
-    public Statement apply(Statement base, Description description) {
-        return new GrantSystemSettingPermissionStatement(base);
-    }
+    protected void before() throws Throwable {
+        super.before();
 
-    private static class GrantSystemSettingPermissionStatement extends Statement {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
 
-        private final Statement base;
+        String targetPackageName = instrumentation.getTargetContext().getPackageName();
 
-        private GrantSystemSettingPermissionStatement(Statement base) {
-            this.base = base;
+        // The permission is automatically granted on earlier Android versions
+        if (Build.VERSION.SDK_INT >= 23) {
+            String shellCommand = String.format("appops set %s WRITE_SETTINGS allow", targetPackageName);
+            device.executeShellCommand(shellCommand);
         }
-
-        @Override
-        public void evaluate() throws Throwable {
-            Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-            UiDevice device = UiDevice.getInstance(instrumentation);
-
-            String targetPackageName = instrumentation.getTargetContext().getPackageName();
-
-            // The permission is automatically granted on earlier Android versions
-            if (Build.VERSION.SDK_INT >= 23) {
-                String shellCommand = String.format("appops set %s WRITE_SETTINGS allow", targetPackageName);
-                device.executeShellCommand(shellCommand);
-            }
-
-            base.evaluate();
-        }
-
     }
 
 }
