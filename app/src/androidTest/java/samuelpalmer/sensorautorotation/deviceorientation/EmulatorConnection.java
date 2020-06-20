@@ -37,7 +37,6 @@ class EmulatorConnection implements AutoCloseable {
         Log.v(TAG, "Setting connection timeouts");
         telnetClient = new TelnetClient();
         telnetClient.setConnectTimeout(2500);
-        telnetClient.setDefaultTimeout(2500);
 
         Log.v(TAG, "Connecting to emulator");
         try {
@@ -105,6 +104,9 @@ class EmulatorConnection implements AutoCloseable {
         Log.d(TAG, "Running emulator command: " + command);
 
         outputStream.write(command + "\n");
+
+        // Must flush what we send to ensure it isn't just waiting in the buffer
+        outputStream.flush();
     }
 
     /**
@@ -120,9 +122,14 @@ class EmulatorConnection implements AutoCloseable {
             String line;
 
             try {
+                // Only setting the timeout while waiting because if the timeout is always set,
+                // then it will be triggered while stopped at a breakpoint during debugging.
+                telnetClient.setSoTimeout(2500);
                 line = inputStream.readLine();
             } catch (SocketTimeoutException timeout) {
-                throw new RuntimeException("Timed out waiting for response text. Text received so far: " + String.join("\n", lines));
+                throw new RuntimeException("Timed out waiting for response text. Text received so far: " + String.join("\n", lines), timeout);
+            } finally {
+                telnetClient.setSoTimeout(0);
             }
 
             if (line == null)
