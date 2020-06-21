@@ -1,10 +1,12 @@
 package samuelpalmer.sensorautorotation.values;
 
 import androidx.annotation.NonNull;
+
 import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 
 public enum Orientation { // Using an enum to reduce heap allocation and garbage collection
-    
+
+    /** Upright */
     NATURAL(0, "Natural"),
     RIGHT_SIDE(1, "Right Side"),
     UPSIDE_DOWN(2, "Upside-Down"),
