@@ -42,9 +42,16 @@ public class ScreenRotationRule extends ExternalResource {
     };
 
     /**
-     * Waits for the screen orientation to change and then returns the resulting screen orientation
+     * Waits for the screen orientation to change and then returns the resulting screen orientation.
+     * If the screen is already in the expected rotation, then returns immediately.
      */
-    public Orientation waitForRotationChange() {
+    public Orientation waitForRotation(Orientation expectedRotation) {
+        // If the screen is already in the expected rotation then we'd better stop since the OS
+        // won't notify us of a rotation change since there is none!
+        Orientation currentRotation = watcher.lastRotationOrNull();
+        if (currentRotation == expectedRotation)
+            return currentRotation;
+
         waitForChangeLatch = new CountDownLatch(1);
 
         boolean waitResult;

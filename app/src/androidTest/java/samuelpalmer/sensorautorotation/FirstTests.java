@@ -37,12 +37,31 @@ public class FirstTests {
     public ScreenRotationRule screen = new ScreenRotationRule();
 
     @Test
-    public void invertsScreenWhenDeviceUpsideDown() {
-        device.setRotation(Orientation.RIGHT_SIDE);
-        app.run(ApplicationCommand.ACTION_LEFT_SIDE);
-        Orientation screenRotation = screen.waitForRotationChange();
+    public void userRightDeviceRight() {
+        check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.RIGHT_SIDE, Orientation.NATURAL);
+    }
 
-        Assert.assertThat(screenRotation, CoreMatchers.is(Orientation.UPSIDE_DOWN));
+    @Test
+    public void userRightDeviceUpright() {
+        check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.NATURAL, Orientation.RIGHT_SIDE);
+    }
+
+    @Test
+    public void userRightDeviceLeft() {
+        check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.LEFT_SIDE, Orientation.UPSIDE_DOWN);
+    }
+
+    @Test
+    public void userRightDeviceUpsideDown() {
+        check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.UPSIDE_DOWN, Orientation.LEFT_SIDE);
+    }
+
+    private void check(@ApplicationCommand.ACTION String userSide, Orientation deviceOrientation, Orientation expectedScreenRotation) {
+        device.setRotation(deviceOrientation);
+        app.run(userSide);
+        Orientation screenRotation = screen.waitForRotation(expectedScreenRotation);
+
+        Assert.assertThat(screenRotation, CoreMatchers.is(expectedScreenRotation));
     }
 
 }
