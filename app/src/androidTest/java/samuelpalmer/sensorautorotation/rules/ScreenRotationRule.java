@@ -15,7 +15,7 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 public class ScreenRotationRule extends ExternalResource {
 
     private RotationWatcherRegistrar watcher;
-    private CountDownLatch waitForChangeLatch;
+    private volatile CountDownLatch waitForChangeLatch;
 
     @Override
     protected void before() throws Throwable {
@@ -36,6 +36,9 @@ public class ScreenRotationRule extends ExternalResource {
     private final EventHandler rotationChanged = new EventHandler() {
         @Override
         public void update() {
+            if (waitForChangeLatch == null)
+                return; // We're not currently waiting for a change, so nothing to do
+
             // WARNING: We are not in the same thread as the test here
             waitForChangeLatch.countDown();
         }
