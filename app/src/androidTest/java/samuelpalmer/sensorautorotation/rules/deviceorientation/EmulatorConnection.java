@@ -6,13 +6,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import org.apache.commons.net.telnet.TelnetClient;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -30,21 +30,24 @@ class EmulatorConnection implements AutoCloseable {
     private static String TAG = EmulatorConnection.class.getSimpleName();
     private static final Pattern responseStatusPattern = Pattern.compile("^(?:OK|KO: (.+))$");
 
-    private TelnetClient telnetClient;
+    private Socket telnetClient;
     private BufferedReader inputStream;
     private BufferedWriter outputStream;
 
     public EmulatorConnection(String host, int port) throws IOException {
         Log.v(TAG, "Setting connection timeouts");
-        telnetClient = new TelnetClient();
-        telnetClient.setReaderThread(false); // This prevents the socket timeout from counting from when the connection was established instead of when the last read commenced: https://stackoverflow.com/a/62483348/238753
-        telnetClient.setConnectTimeout(25); // The connection should be practically instant since it's just from VM to Host. Note that if the emulator is being turned on then it takes an extra 10-15ms.
-        telnetClient.setDefaultTimeout(2500);
+        telnetClient = new Socket();
+        telnetClient.setSoTimeout(2500);
 
         Log.v(TAG, "Connecting to emulator");
         TrafficStats.setThreadStatsTag((int) Thread.currentThread().getId()); // Prevents StrictMode from logging an UntaggedSocketViolation on recent Android versions: https://stackoverflow.com/a/57963770/238753
+
+        InetSocketAddress address = new InetSocketAddress(host, port);
+        if (address.isUnresolved())
+            throw new RuntimeException("Couldn't resolve address: " + address);
+
         try {
-            telnetClient.connect(host, port);
+            telnetClient.connect(address, 25); // The connection should be practically instant since it's just from VM to Host. Note that if the emulator is being turned on then it takes an extra 10-15ms.
         } catch (SocketException e) {
             if ("Permission denied".equals(e.getMessage()))
                 throw new RuntimeException("Don't have permission to Telnet to emulator. You're probably missing the " + Manifest.permission.INTERNET + " permission.", e);
@@ -67,7 +70,7 @@ class EmulatorConnection implements AutoCloseable {
             inputStream = null;
             outputStream = null;
 
-            telnetClient.disconnect();
+            telnetClient.close();;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
