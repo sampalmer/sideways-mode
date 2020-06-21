@@ -1,5 +1,9 @@
 package samuelpalmer.sensorautorotation.rules.deviceorientation;
 
+import androidx.annotation.Nullable;
+
+import samuelpalmer.sensorautorotation.values.Orientation;
+
 /**
  * Controls device orientation by rotating the emulated device itself. This makes it easy to
  * develop and maintain tests since we can actually watch the device rotate as the tests run.
@@ -19,7 +23,7 @@ class EmulatorDeviceOrientationRule extends DeviceOrientationRule {
         // Older emulators don't rotate the device window on the host in response to acceleration changes, unless you first use the "rotate" command
         // So we'll do this up-front to make sure everything works after we've initialised
         console.rotateClockwise();
-        setUpright();
+        setRotation(Orientation.NATURAL);
     }
 
     @Override
@@ -34,28 +38,28 @@ class EmulatorDeviceOrientationRule extends DeviceOrientationRule {
     }
 
     @Override
-    public void setUpright() {
-        console.setAcceleration(0, 9.81f, 0);
-    }
+    public void setRotation(@Nullable Orientation deviceOrientation) {
+        if (deviceOrientation == null) {
+            console.setAcceleration(0, 0, 9.81f);
+            return;
+        }
 
-    @Override
-    public void setRightSide() {
-        console.setAcceleration(-9.81f, 0, 0);
-    }
-
-    @Override
-    public void setUpsideDown() {
-        console.setAcceleration(0, -9.81f, 0);
-    }
-
-    @Override
-    public void setLeftSide() {
-        console.setAcceleration(9.81f, 0, 0);
-    }
-
-    @Override
-    public void setUnknown() {
-        console.setAcceleration(0, 0, 9.81f);
+        switch (deviceOrientation) {
+            case NATURAL:
+                console.setAcceleration(0, 9.81f, 0);
+                return;
+            case RIGHT_SIDE:
+                console.setAcceleration(-9.81f, 0, 0);
+                return;
+            case UPSIDE_DOWN:
+                console.setAcceleration(0, -9.81f, 0);
+                return;
+            case LEFT_SIDE:
+                console.setAcceleration(9.81f, 0, 0);
+                return;
+            default:
+                throw new IllegalArgumentException("Unknown orientation: " + deviceOrientation);
+        }
     }
 
 }

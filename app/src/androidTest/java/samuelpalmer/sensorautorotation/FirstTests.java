@@ -38,7 +38,7 @@ public class FirstTests {
 
     @Test
     public void invertsScreenWhenDeviceUpsideDown() {
-        device.setRightSide();
+        device.setRotation(Orientation.RIGHT_SIDE);
         app.run(ApplicationCommand.ACTION_LEFT_SIDE);
         Orientation screenRotation = screen.waitForRotationChange();
 

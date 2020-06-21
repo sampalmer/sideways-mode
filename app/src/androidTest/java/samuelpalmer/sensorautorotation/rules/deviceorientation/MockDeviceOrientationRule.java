@@ -2,10 +2,12 @@ package samuelpalmer.sensorautorotation.rules.deviceorientation;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverride;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverrideReceiver;
+import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
  * Simulates device orientation by directing the target app to ignore the real sensors and instead
@@ -20,7 +22,7 @@ class MockDeviceOrientationRule extends DeviceOrientationRule {
         super.before();
         // Must use target context to send the broadcasts. Otherwise they won't make it to the receiver.
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        setUpright();
+        setRotation(Orientation.NATURAL);
     }
 
     @Override
@@ -31,28 +33,28 @@ class MockDeviceOrientationRule extends DeviceOrientationRule {
     }
 
     @Override
-    public void setUpright() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.UPRIGHT);
-    }
+    public void setRotation(@Nullable Orientation deviceOrientation) {
+        if (deviceOrientation == null) {
+            SensorOverrideReceiver.sendOverride(context, SensorOverride.UNKNOWN);
+            return;
+        }
 
-    @Override
-    public void setRightSide() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.RIGHT_SIDE);
-    }
-
-    @Override
-    public void setUpsideDown() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.UPSIDE_DOWN);
-    }
-
-    @Override
-    public void setLeftSide() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
-    }
-
-    @Override
-    public void setUnknown() {
-        SensorOverrideReceiver.sendOverride(context, SensorOverride.UNKNOWN);
+        switch (deviceOrientation) {
+            case NATURAL:
+                SensorOverrideReceiver.sendOverride(context, SensorOverride.UPRIGHT);
+                return;
+            case RIGHT_SIDE:
+                SensorOverrideReceiver.sendOverride(context, SensorOverride.RIGHT_SIDE);
+                return;
+            case UPSIDE_DOWN:
+                SensorOverrideReceiver.sendOverride(context, SensorOverride.UPSIDE_DOWN);
+                return;
+            case LEFT_SIDE:
+                SensorOverrideReceiver.sendOverride(context, SensorOverride.LEFT_SIDE);
+                return;
+            default:
+                throw new IllegalArgumentException("Unknown orientation: " + deviceOrientation);
+        }
     }
 
 }
