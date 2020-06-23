@@ -81,7 +81,8 @@ public class ScreenRotation {
         app.run(userSide);
         Orientation screenRotation = screen.waitForRotation(expectedScreenRotation);
 
-        Assert.assertThat(screenRotation, CoreMatchers.is(expectedScreenRotation));
+        String message = "Wrong screen orientation when user " + userSide + " and device " + deviceOrientation;
+        Assert.assertThat(message, screenRotation, CoreMatchers.is(expectedScreenRotation));
     }
 
 }
