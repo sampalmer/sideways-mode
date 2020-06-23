@@ -18,7 +18,7 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 @RunWith(AndroidJUnit4.class)
-public class FirstTests {
+public class ScreenRotation {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
     @Rule
@@ -37,42 +37,42 @@ public class FirstTests {
     public ScreenRotationRule screen = new ScreenRotationRule();
 
     @Test
-    public void userRightDeviceRight() {
+    public void isNaturalWhenUserRightDeviceRight() {
         check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.RIGHT_SIDE, Orientation.NATURAL);
     }
 
     @Test
-    public void userRightDeviceUpright() {
+    public void isRightWhenUserRightDeviceUpright() {
         check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.NATURAL, Orientation.RIGHT_SIDE);
     }
 
     @Test
-    public void userRightDeviceLeft() {
+    public void isUpsideDownWhenUserRightDeviceLeft() {
         check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.LEFT_SIDE, Orientation.UPSIDE_DOWN);
     }
 
     @Test
-    public void userRightDeviceUpsideDown() {
+    public void isLeftWhenUserRightDeviceUpsideDown() {
         check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.UPSIDE_DOWN, Orientation.LEFT_SIDE);
     }
 
     @Test
-    public void userLeftDeviceRight() {
+    public void isUpsideDownWhenUserLeftDeviceRight() {
         check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.RIGHT_SIDE, Orientation.UPSIDE_DOWN);
     }
 
     @Test
-    public void userLeftDeviceUpright() {
+    public void isLeftWhenUserLeftDeviceUpright() {
         check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.NATURAL, Orientation.LEFT_SIDE);
     }
 
     @Test
-    public void userLeftDeviceLeft() {
+    public void isNaturalWhenUserLeftDeviceLeft() {
         check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.LEFT_SIDE, Orientation.NATURAL);
     }
 
     @Test
-    public void userLeftDeviceUpsideDown() {
+    public void isRightWhenUserLeftDeviceUpsideDown() {
         check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.UPSIDE_DOWN, Orientation.RIGHT_SIDE);
     }
 
