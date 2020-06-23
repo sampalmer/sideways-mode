@@ -110,7 +110,8 @@ class EmulatorConnection implements AutoCloseable {
 
         Log.d(TAG, "Running emulator command: " + command);
 
-        outputStream.write(command + "\n");
+        // Using CRLF since the emulator uses this in text it sends to us
+        outputStream.write(command + "\r\n");
 
         // Must flush what we send to ensure it isn't just waiting in the buffer
         outputStream.flush();
