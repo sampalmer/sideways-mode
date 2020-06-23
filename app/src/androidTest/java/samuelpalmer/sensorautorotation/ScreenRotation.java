@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-
 import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
@@ -43,8 +41,8 @@ public class ScreenRotation {
     public ScreenRotationRule screen = new ScreenRotationRule();
 
     @Parameterized.Parameters(name = "When user {0} device {1} then screen {2}")
-    public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    public static Object[][] data() {
+        return new Object[][] {
                 { ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.RIGHT_SIDE, Orientation.NATURAL },
                 { ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.NATURAL, Orientation.RIGHT_SIDE },
                 { ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.LEFT_SIDE, Orientation.UPSIDE_DOWN },
@@ -53,7 +51,7 @@ public class ScreenRotation {
                 { ApplicationCommand.ACTION_LEFT_SIDE, Orientation.NATURAL, Orientation.LEFT_SIDE },
                 { ApplicationCommand.ACTION_LEFT_SIDE, Orientation.LEFT_SIDE, Orientation.NATURAL },
                 { ApplicationCommand.ACTION_LEFT_SIDE, Orientation.UPSIDE_DOWN, Orientation.RIGHT_SIDE },
-        });
+        };
     }
 
     public ScreenRotation(@ApplicationCommand.ACTION String user, Orientation device, Orientation expectedScreen) {
