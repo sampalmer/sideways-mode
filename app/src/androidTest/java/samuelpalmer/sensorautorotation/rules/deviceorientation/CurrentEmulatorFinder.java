@@ -73,7 +73,7 @@ class CurrentEmulatorFinder {
             // Using integers to ensure we can do an exact match
             // Limiting to 6 digits since the emulator console truncates values with more than 6 significant digits
             emulatorNewProximity = (float) Math.floor(Math.random() * 999999);
-        } while (emulatorNewProximity != thisDeviceOriginalProximity);
+        } while (emulatorNewProximity == thisDeviceOriginalProximity);
 
         // Sending the new proximity value to the emulator to see if the change comes through to this device
         emulator.setProximity(emulatorNewProximity);
