@@ -1,9 +1,11 @@
-package samuelpalmer.sensorautorotation.rules.deviceorientation;
+package samuelpalmer.sensorautorotation.rules;
 
 import android.content.Context;
 
 import androidx.annotation.Nullable;
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.rules.ExternalResource;
 
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverride;
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.SensorOverrideReceiver;
@@ -13,7 +15,7 @@ import samuelpalmer.sensorautorotation.values.Orientation;
  * Simulates device orientation by directing the target app to ignore the real sensors and instead
  * look at the override values supplied here.
  */
-class MockDeviceOrientationRule extends DeviceOrientationRule {
+public class MockDeviceOrientationRule extends ExternalResource {
 
     private Context context;
 
@@ -32,7 +34,6 @@ class MockDeviceOrientationRule extends DeviceOrientationRule {
         context = null;
     }
 
-    @Override
     public void setRotation(@Nullable Orientation deviceOrientation) {
         if (deviceOrientation == null) {
             SensorOverrideReceiver.sendOverride(context, SensorOverride.UNKNOWN);

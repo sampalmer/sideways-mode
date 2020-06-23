@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
+import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
-import samuelpalmer.sensorautorotation.rules.deviceorientation.DeviceOrientationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
@@ -28,7 +28,7 @@ public class FirstTests {
     public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
 
     @Rule
-    public DeviceOrientationRule device = DeviceOrientationRule.create();
+    public MockDeviceOrientationRule device = new MockDeviceOrientationRule();
 
     @Rule
     public ApplicationCommandRule app = new ApplicationCommandRule();
