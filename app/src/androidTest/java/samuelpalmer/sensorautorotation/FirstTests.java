@@ -56,6 +56,26 @@ public class FirstTests {
         check(ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.UPSIDE_DOWN, Orientation.LEFT_SIDE);
     }
 
+    @Test
+    public void userLeftDeviceRight() {
+        check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.RIGHT_SIDE, Orientation.UPSIDE_DOWN);
+    }
+
+    @Test
+    public void userLeftDeviceUpright() {
+        check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.NATURAL, Orientation.LEFT_SIDE);
+    }
+
+    @Test
+    public void userLeftDeviceLeft() {
+        check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.LEFT_SIDE, Orientation.NATURAL);
+    }
+
+    @Test
+    public void userLeftDeviceUpsideDown() {
+        check(ApplicationCommand.ACTION_LEFT_SIDE, Orientation.UPSIDE_DOWN, Orientation.RIGHT_SIDE);
+    }
+
     private void check(@ApplicationCommand.ACTION String userSide, Orientation deviceOrientation, Orientation expectedScreenRotation) {
         device.setRotation(deviceOrientation);
         app.run(userSide);
