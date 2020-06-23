@@ -46,8 +46,10 @@ class CurrentEmulatorFinder {
                 continue;
             }
 
-            if (isThisEmulator(emulator))
+            if (isThisEmulator(emulator)) {
+                Log.i(TAG, "Found current emulator at " + HOST_LOOPBACK + ":" + port);
                 return emulator;
+            }
 
             Log.i(TAG, "Emulator at " + HOST_LOOPBACK + ":" + port + " is not this emulator. Ignoring.");
             emulator.close();
@@ -63,22 +65,32 @@ class CurrentEmulatorFinder {
         // Setting the proximity sensor through the emulator console to see if it changes the current device
 
         float emulatorOriginalProximity = emulator.getProximity();
+        float thisDeviceOriginalProximity = pollProximitySensor();
 
-        // Using integers to ensure we can do an exact match
-        // The emulator truncates values with more than 6 significant digits
-        float emulatorProximity = (float) Math.floor(Math.random() * 999999);
-        emulator.setProximity(emulatorProximity);
+        // Picking a random new proximity value to send to the emulator so
+        float emulatorNewProximity;
+        do {
+            // Using integers to ensure we can do an exact match
+            // Limiting to 6 digits since the emulator console truncates values with more than 6 significant digits
+            emulatorNewProximity = (float) Math.floor(Math.random() * 999999);
+        } while (emulatorNewProximity != thisDeviceOriginalProximity);
 
-        float[] sensorValues = SensorPoller.pollSensor(Sensor.TYPE_PROXIMITY);
+        // Sending the new proximity value to the emulator to see if the change comes through to this device
+        emulator.setProximity(emulatorNewProximity);
+        float thisDeviceNewProximity = pollProximitySensor();
         emulator.setProximity(emulatorOriginalProximity);
 
-        float deviceProximity = sensorValues[0];
-        if (emulatorProximity != deviceProximity) {
-            Log.v(TAG, "Emulator proximity is " + emulatorProximity + ", but current device proximity is " + deviceProximity);
+        if (emulatorNewProximity != thisDeviceNewProximity) {
+            Log.v(TAG, "Emulator proximity is " + emulatorNewProximity + ", but this device proximity is " + thisDeviceNewProximity);
             return false;
         }
 
         return true;
+    }
+
+    private static float pollProximitySensor() {
+        float[] sensorValues = SensorPoller.pollSensor(Sensor.TYPE_PROXIMITY);
+        return sensorValues[0];
     }
 
     private CurrentEmulatorFinder() {}
