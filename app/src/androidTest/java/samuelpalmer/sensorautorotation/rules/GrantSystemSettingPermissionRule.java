@@ -1,10 +1,7 @@
 package samuelpalmer.sensorautorotation.rules;
 
-import android.app.Instrumentation;
+import android.app.AppOpsManager;
 import android.os.Build;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.rules.ExternalResource;
 
@@ -21,13 +18,7 @@ public class GrantSystemSettingPermissionRule extends ExternalResource {
         if (Build.VERSION.SDK_INT < 23)
             return;
 
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        UiDevice device = UiDevice.getInstance(instrumentation);
-
-        String targetPackageName = instrumentation.getTargetContext().getPackageName();
-
-        String shellCommand = String.format("appops set %s WRITE_SETTINGS allow", targetPackageName);
-        device.executeShellCommand(shellCommand);
+        AppOpsHelper.grantAppOp(AppOpsManager.OPSTR_WRITE_SETTINGS);
     }
 
 }

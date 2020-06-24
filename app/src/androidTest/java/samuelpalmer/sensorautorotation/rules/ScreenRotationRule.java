@@ -1,5 +1,7 @@
 package samuelpalmer.sensorautorotation.rules;
 
+import androidx.annotation.Nullable;
+
 import org.junit.rules.ExternalResource;
 
 import java.util.concurrent.CountDownLatch;
@@ -48,7 +50,7 @@ public class ScreenRotationRule extends ExternalResource {
      * Waits for the screen orientation to change and then returns the resulting screen orientation.
      * If the screen is already in the expected rotation, then returns immediately.
      */
-    public Orientation waitForRotation(Orientation expectedRotation) {
+    public Orientation waitForRotation(@Nullable Orientation expectedRotation) {
         // If the screen is already in the expected rotation then we'd better stop since the OS
         // won't notify us of a rotation change since there is none!
         Orientation currentRotation = watcher.lastRotationOrNull();
