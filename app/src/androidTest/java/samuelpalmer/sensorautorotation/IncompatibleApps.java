@@ -16,6 +16,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,8 +37,11 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 public class IncompatibleApps {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
+    private ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
+    private LockScreenRule lockScreen = LockScreenRule.create(testActivity);
+
     @Rule
-    public ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
+    public RuleChain activityAndLockScreen = RuleChain.outerRule(testActivity).around(lockScreen);
 
     @Rule
     public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
@@ -59,9 +63,6 @@ public class IncompatibleApps {
 
     @Rule
     public GrantOverlayPermissionRule drawOverAppsPermission = new GrantOverlayPermissionRule();
-
-    @Rule
-    public LockScreenRule lockScreen = new LockScreenRule();
 
     @Before
     public void makeAppIncompatible() {
@@ -89,8 +90,7 @@ public class IncompatibleApps {
 
     @Test
     public void doesntOverrideLockScreen() {
-        // We can't run the test if the device is secured because we won't be able to disable or reconfigure the lock screen
-        Assume.assumeFalse(lockScreen.wasDeviceOriginallySecure());
+        Assume.assumeFalse("Cannot test lock screen because device has secure screen lock", lockScreen.wasDeviceOriginallySecure());
 
         // The lock screen isn't an activity, so when the device is locked, our app will still see the current activity as being whatever is behind the lock screen
         String testActivityPackage = getTestActivityPackage();

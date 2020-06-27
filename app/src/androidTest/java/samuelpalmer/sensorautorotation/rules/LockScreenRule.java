@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.rules;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.app.KeyguardManager;
 import android.content.Context;
@@ -15,17 +16,27 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.junit.rules.ExternalResource;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import samuelpalmer.sensorautorotation.processes.ui.DismissKeyguardFragment;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 
-public class LockScreenRule extends ExternalResource {
+/**
+ * Provides the abilities to toggle whether the device has a secure lock screen and also lock and unlock the device.
+ */
+public abstract class LockScreenRule extends ExternalResource {
 
-    private static final String PIN = "1234";
+    static final String PIN = "1234";
 
-    private UiDevice device;
+    public static LockScreenRule create(ActivityScenarioRule<? extends Activity> activity) {
+        if (Build.VERSION.SDK_INT < 26)
+            return new DeviceAdminLockScreenRule(activity);
+        else
+            return new ShellLockScreenRule();
+    }
+
+    UiDevice device;
+    Instrumentation instrumentation;
     private KeyguardManager keyguardManager;
     private boolean deviceWasOriginallySecure;
 
@@ -33,11 +44,7 @@ public class LockScreenRule extends ExternalResource {
     protected void before() throws Throwable {
         super.before();
 
-        if (Build.VERSION.SDK_INT < 26)
-            // TODO: Add support for older device versions using Device Admin or similar
-            throw new UnsupportedOperationException("Lock screen can only be changed on Android 8+");
-
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation = InstrumentationRegistry.getInstrumentation();
         device = UiDevice.getInstance(instrumentation);
 
         Context targetContext = instrumentation.getTargetContext();
@@ -65,11 +72,14 @@ public class LockScreenRule extends ExternalResource {
         return deviceWasOriginallySecure;
     }
 
+    /**
+     * Configures the device to use a secure lock screen
+     */
     public void enableLockScreen() {
         if (deviceWasOriginallySecure)
             throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
 
-        runCommand("set-pin %s", PIN);
+        enableLockScreenUnchecked();
     }
 
     /**
@@ -80,7 +90,7 @@ public class LockScreenRule extends ExternalResource {
         if (deviceWasOriginallySecure)
             throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
 
-        runCommand("clear --old %s", PIN);
+        disableLockScreenUnchecked();
 
         boolean isLocked = LockScreenMonitor.poll(keyguardManager);
         if (!isLocked)
@@ -96,9 +106,14 @@ public class LockScreenRule extends ExternalResource {
         }
     }
 
-    public void lockDevice() {
-        // TODO: Use device admin to lock the device since that should be faster and more reliable
+    abstract void enableLockScreenUnchecked();
+    abstract void disableLockScreenUnchecked();
 
+    /**
+     * Brings the device to the lock screen with the keyguard displayed
+     */
+    public void lockDevice() {
+        // Using the power button to lock the device since this simulates what the user would do
         try {
             device.sleep(); // Pressing power button to turn off screen like a user would
             Thread.sleep(500); // We need to wait between presses so the device doesn't think this is the power button double-tap shortcut to open the camera
@@ -114,6 +129,8 @@ public class LockScreenRule extends ExternalResource {
     }
 
     /**
+     * Dismisses the keyguard
+     *
      * @param activityScenarioRule An activity that is currently open. This will be used to dismiss the keyguard.
      * @throws IllegalStateException If the keyguard is secure
      */
@@ -151,21 +168,6 @@ public class LockScreenRule extends ExternalResource {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void runCommand(String format, Object... args) {
-        String command = "locksettings " + String.format(format, args);
-
-        String response;
-        try {
-            response = device.executeShellCommand(command);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (response == null || response.equals(""))
-            // Unfortunately, we don't get the exit code or error output, so the only way to detect an error is by checking standard output
-            throw new RuntimeException("Unknown error when running shell command " + command);
     }
 
 }
