@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.testing;
+package samuelpalmer.sensorautorotation.components;
 
 import androidx.appcompat.app.AppCompatActivity;
 

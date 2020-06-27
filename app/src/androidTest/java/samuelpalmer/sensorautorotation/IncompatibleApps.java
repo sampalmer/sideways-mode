@@ -20,8 +20,8 @@ import org.junit.Test;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
 import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;

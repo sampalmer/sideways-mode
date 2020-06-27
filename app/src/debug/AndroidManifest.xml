@@ -8,4 +8,12 @@
     -->
     <!-- See https://stackoverflow.com/a/43346852/238753 -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:theme="@style/Theme.AppCompat"
+            android:taskAffinity=""
+            android:name="samuelpalmer.sensorautorotation.components.TestActivity"
+            />
+    </application>
 </manifest>

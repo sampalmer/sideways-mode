@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import samuelpalmer.sensorautorotation.processes.ui.testing.TestActivity;
+import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
