@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.rules;
+package samuelpalmer.sensorautorotation.rules.lockscreen;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;

@@ -28,9 +28,9 @@ import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantUsageStatsPermissionRule;
 import samuelpalmer.sensorautorotation.rules.IncompatibleAppsRule;
-import samuelpalmer.sensorautorotation.rules.LockScreenRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
+import samuelpalmer.sensorautorotation.rules.lockscreen.LockScreenRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.Orientation;
 

@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.rules;
+package samuelpalmer.sensorautorotation.rules.lockscreen;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
