@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import samuelpalmer.sensorautorotation.processes.ui.testing.TestingDeviceAdmin;
+import samuelpalmer.sensorautorotation.components.TestingDeviceAdmin;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**

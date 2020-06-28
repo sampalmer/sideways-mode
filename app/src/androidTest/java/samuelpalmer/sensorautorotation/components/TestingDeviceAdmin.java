@@ -1,4 +1,4 @@
-package samuelpalmer.sensorautorotation.processes.ui.testing;
+package samuelpalmer.sensorautorotation.components;
 
 import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
