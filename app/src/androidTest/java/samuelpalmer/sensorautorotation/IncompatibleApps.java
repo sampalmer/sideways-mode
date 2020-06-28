@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -22,12 +21,11 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
+import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
 import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantUsageStatsPermissionRule;
-import samuelpalmer.sensorautorotation.rules.IncompatibleAppsRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
 import samuelpalmer.sensorautorotation.rules.lockscreen.LockScreenRule;
@@ -56,7 +54,7 @@ public class IncompatibleApps {
     public ScreenRotationRule screen = new ScreenRotationRule();
 
     @Rule
-    public IncompatibleAppsRule incompatibleApps = new IncompatibleAppsRule();
+    public ApplicationSettingsRule appSettings = new ApplicationSettingsRule();
 
     @Rule
     public GrantUsageStatsPermissionRule usagePermission = new GrantUsageStatsPermissionRule();
@@ -77,14 +75,14 @@ public class IncompatibleApps {
     @Test
     public void doesntOverrideWhenOtherAppInList() {
         String launcherPackage = getLauncherPackage();
-        incompatibleApps.markAsIncompatible(launcherPackage);
+        appSettings.markAsIncompatible(launcherPackage);
         check(false);
     }
 
     @Test
     public void overridesAppInList() {
         String testActivityPackage = getTestActivityPackage();
-        incompatibleApps.markAsIncompatible(testActivityPackage);
+        appSettings.markAsIncompatible(testActivityPackage);
         check(true);
     }
 
@@ -94,15 +92,10 @@ public class IncompatibleApps {
 
         // The lock screen isn't an activity, so when the device is locked, our app will still see the current activity as being whatever is behind the lock screen
         String testActivityPackage = getTestActivityPackage();
-        incompatibleApps.markAsIncompatible(testActivityPackage);
+        appSettings.markAsIncompatible(testActivityPackage);
 
         // We need the app to stay running when the device is locked in order to test this
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        Context targetContext = instrumentation.getTargetContext();
-        ApplicationSettings.getSharedPreferences(targetContext)
-                .edit()
-                .putBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, false)
-                .commit();
+        appSettings.setTurnOffWhenLocked(false);
 
         lockScreen.enableLockScreen();
         lockScreen.lockDevice();

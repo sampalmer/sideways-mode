@@ -13,7 +13,10 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class IncompatibleAppsRule extends ExternalResource {
+/**
+ * Provides convenient access to change {@link ApplicationSettings}, and resets them after each test.
+ */
+public class ApplicationSettingsRule extends ExternalResource {
 
     private SharedPreferences prefs;
 
@@ -29,10 +32,12 @@ public class IncompatibleAppsRule extends ExternalResource {
     protected void after() {
         super.after();
 
+        // Resetting to default preference values
         prefs
                 .edit()
-                .putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, null)
+                .clear()
                 .commit();
+
         prefs = null;
     }
 
@@ -44,6 +49,13 @@ public class IncompatibleAppsRule extends ExternalResource {
         prefs
                 .edit()
                 .putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, newIncompatibleAppPackages)
+                .commit();
+    }
+
+    public void setTurnOffWhenLocked(boolean turnOffWhenLocked) {
+        prefs
+                .edit()
+                .putBoolean(ApplicationSettings.KEY_TURN_OFF_WHEN_LOCKED, turnOffWhenLocked)
                 .commit();
     }
 
