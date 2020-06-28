@@ -6,15 +6,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.os.HandlerCompat;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiObject2;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import samuelpalmer.sensorautorotation.processes.ui.testing.TestingDeviceAdmin;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
  * Uses Android's Device Administration API to control the secure screen lock
@@ -58,11 +64,15 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
                 // The OS prevents us from showing the device admin activity unless we get there from another activity
                 activity.getScenario().onActivity(a -> a.startActivity(addAdminIntent));
 
+                // Get activate button
                 UiObject2 activateButton = device.findObject(By.res("com.android.settings", "action_button"));
                 if (activateButton == null)
                     throw new RuntimeException("Couldn't find activate button");
 
                 activateButton.click();
+
+                // We don't know how long it will take for the activation to occur, so we'll wait
+                waitForAdminActivation();
             }
         }
 
@@ -108,6 +118,39 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
 
         if (result == null || result.equals(""))
             throw new RuntimeException("Failed to run command " + command);
+    }
+
+    private static void waitForAdminActivation() {
+        try {
+            // Broadcasts and events occur in the main thread, so we'll have to listen over there
+            Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+
+            CountDownLatch activated = new CountDownLatch(1);
+            EventHandler adminActivated = activated::countDown;
+
+            // Subscribe to activation event
+            CountDownLatch subscribed = new CountDownLatch(1);
+            mainHandler.post(() -> {
+                TestingDeviceAdmin.onEnabled.subscribe(adminActivated);
+                subscribed.countDown();
+            });
+            subscribed.await();
+
+            // Wait for activation
+            try {
+                activated.await(1, TimeUnit.SECONDS);
+            } finally {
+                // Unsubscribe from activation event
+                CountDownLatch unsubscribed = new CountDownLatch(1);
+                mainHandler.post(() -> {
+                    TestingDeviceAdmin.onEnabled.unsubscribe(adminActivated);
+                    unsubscribed.countDown();
+                });
+                unsubscribed.await();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
