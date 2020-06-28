@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.rules;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import java.io.IOException;
 
@@ -9,6 +11,10 @@ import java.io.IOException;
  */
 @RequiresApi(26)
 class ShellLockScreenRule extends LockScreenRule {
+
+    public ShellLockScreenRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
+        super(activity);
+    }
 
     @Override
     void enableLockScreenUnchecked() {

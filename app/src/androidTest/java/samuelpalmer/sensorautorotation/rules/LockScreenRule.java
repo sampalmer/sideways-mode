@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.rules;
 
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.app.KeyguardManager;
 import android.content.Context;
@@ -16,7 +15,9 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.junit.rules.ExternalResource;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import samuelpalmer.sensorautorotation.processes.ui.DismissKeyguardFragment;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -28,13 +29,18 @@ public abstract class LockScreenRule extends ExternalResource {
 
     static final String PIN = "1234";
 
-    public static LockScreenRule create(ActivityScenarioRule<? extends Activity> activity) {
+    public LockScreenRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
+        this.activity = activity;
+    }
+
+    public static LockScreenRule create(ActivityScenarioRule<? extends AppCompatActivity> activity) {
         if (Build.VERSION.SDK_INT < 26)
             return new DeviceAdminLockScreenRule(activity);
         else
-            return new ShellLockScreenRule();
+            return new ShellLockScreenRule(activity);
     }
 
+    final ActivityScenarioRule<? extends AppCompatActivity> activity;
     UiDevice device;
     Instrumentation instrumentation;
     private KeyguardManager keyguardManager;
@@ -60,6 +66,7 @@ public abstract class LockScreenRule extends ExternalResource {
 
         if (!deviceWasOriginallySecure) {
             // We must remove the lock screen after each test, even on test failure, so we don't break a subsequent test and lock the user out of the device
+            unlockDevice(activity);
             disableLockScreen();
         }
     }
@@ -80,30 +87,35 @@ public abstract class LockScreenRule extends ExternalResource {
             throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
 
         enableLockScreenUnchecked();
+
+        if (!keyguardManager.isKeyguardSecure())
+            throw new RuntimeException("Failed to enable lock screen");
     }
 
     /**
      * Removes any secure lock settings from the device. If the device is currently locked, then
      * the keyguard will <b>not</b> be dismissed.
+     *
+     * @throws IllegalStateException if device is currently locked
      */
     public void disableLockScreen() {
         if (deviceWasOriginallySecure)
             throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
 
-        disableLockScreenUnchecked();
-
-        boolean isLocked = LockScreenMonitor.poll(keyguardManager);
-        if (!isLocked)
+        // Check if it's already disabled
+        boolean isSecure = keyguardManager.isKeyguardSecure();
+        if (!isSecure)
             return;
 
-        // Turning the screen off and on so the secure keyguard converts into a swipe keyguard
-        try {
-            device.sleep();
-            Thread.sleep(500); // We need to wait between presses so the device doesn't think this is the power button double-tap shortcut to open the camera
-            device.wakeUp();
-        } catch (RemoteException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        // Make sure it's unlocked since we cannot disable the lock screen while locked on Android 5.0
+        boolean isLocked = LockScreenMonitor.poll(keyguardManager);
+        if (isLocked)
+            throw new IllegalStateException("Cannot disable lock screen while device is locked");
+
+        disableLockScreenUnchecked();
+
+        if (keyguardManager.isKeyguardSecure())
+            throw new RuntimeException("Failed to disable lock screen");
     }
 
     abstract void enableLockScreenUnchecked();
@@ -129,21 +141,21 @@ public abstract class LockScreenRule extends ExternalResource {
     }
 
     /**
-     * Dismisses the keyguard
+     * Dismisses the keyguard. If a lock is currently set-up, then it will be unlocked.
      *
      * @param activityScenarioRule An activity that is currently open. This will be used to dismiss the keyguard.
-     * @throws IllegalStateException If the keyguard is secure
      */
     public void unlockDevice(ActivityScenarioRule<? extends AppCompatActivity> activityScenarioRule) {
         boolean isLocked = LockScreenMonitor.poll(keyguardManager);
         if (!isLocked)
             return;
 
-        if (keyguardManager.isKeyguardSecure())
-            throw new IllegalStateException("Cannot unlock device because the keyguard is secure");
+        boolean isSecure = keyguardManager.isKeyguardSecure();
 
         // Dismissing the keyguard, which unfortunately needs to be done using an activity and fragment
+        CountDownLatch showingUnlockScreen = new CountDownLatch(1);
         CountDownLatch unlocked = new CountDownLatch(1);
+
         activityScenarioRule.getScenario().onActivity(a -> {
             FragmentManager fragmentManager = a.getSupportFragmentManager();
             DismissKeyguardFragment dismissKeyguardFragment = new DismissKeyguardFragment();
@@ -161,11 +173,24 @@ public abstract class LockScreenRule extends ExternalResource {
 
                 unlocked.countDown();
             });
+
+            showingUnlockScreen.countDown();
         });
 
+        String typePassword = String.format("input text %s", PIN);
+        String pressEnter = "input keyevent 66";
+
         try {
-            unlocked.await();
-        } catch (InterruptedException e) {
+            showingUnlockScreen.await(1, TimeUnit.SECONDS);
+            Thread.sleep(500); // Waiting for the keyguard to animate in so it can accept input
+
+            if (isSecure) {
+                device.executeShellCommand(typePassword);
+                device.executeShellCommand(pressEnter);
+            }
+
+            unlocked.await(1, TimeUnit.SECONDS);
+        } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
     }

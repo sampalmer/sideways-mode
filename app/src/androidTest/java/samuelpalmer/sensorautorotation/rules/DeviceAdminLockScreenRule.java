@@ -1,6 +1,5 @@
 package samuelpalmer.sensorautorotation.rules;
 
-import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.HandlerCompat;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -27,13 +27,12 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
  */
 class DeviceAdminLockScreenRule extends LockScreenRule {
 
-    private final ActivityScenarioRule<? extends Activity> activity;
     private DevicePolicyManager devicePolicyManager;
     private ComponentName adminComponent;
     private String adminComponentString;
 
-    public DeviceAdminLockScreenRule(ActivityScenarioRule<? extends Activity> activity) {
-        this.activity = activity;
+    public DeviceAdminLockScreenRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
+        super(activity);
     }
 
     @Override
@@ -104,6 +103,23 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
         boolean success = devicePolicyManager.resetPassword("", 0);
         if (!success)
             throw new RuntimeException("Failed to clear device password");
+
+        if (Build.VERSION.SDK_INT < 22) {
+            // Older OS versions don't disable the lock screen after you clear the password, so we need to use UI Automation to do this
+            activity.getScenario().onActivity(a -> a.startActivity(new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD)));
+
+            UiObject2 screenLockTypes = device.findObject(By.res("android", "list"));
+            UiObject2 noneButton = screenLockTypes.getChildren().get(0);
+
+            noneButton.click();
+
+            // Waiting for the change to take effect after clicking the button
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void runCommand(String format, Object... args) {
