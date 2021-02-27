@@ -35,8 +35,8 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 public class IncompatibleApps {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
-    private ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
-    private LockScreenRule lockScreen = LockScreenRule.create(testActivity);
+    private final ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
+    private final LockScreenRule lockScreen = LockScreenRule.create(testActivity);
 
     @Rule
     public RuleChain activityAndLockScreen = RuleChain.outerRule(testActivity).around(lockScreen);

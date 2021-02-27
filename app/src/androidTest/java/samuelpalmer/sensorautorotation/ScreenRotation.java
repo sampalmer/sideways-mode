@@ -20,9 +20,9 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 @RunWith(Parameterized.class)
 public class ScreenRotation {
 
-    private Orientation expectedScreen;
-    private String user;
-    private Orientation deviceRotation;
+    private final Orientation expectedScreen;
+    private final String user;
+    private final Orientation deviceRotation;
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
     @Rule
