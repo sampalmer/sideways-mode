@@ -40,7 +40,7 @@ public class ScreenRotation {
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();
 
-    @Parameterized.Parameters(name = "When user {0} device {1} then screen {2}")
+    @Parameterized.Parameters(name = "When user {0} and device {1} then screen {2}")
     public static Object[][] data() {
         return new Object[][] {
                 { ApplicationCommand.ACTION_RIGHT_SIDE, Orientation.RIGHT_SIDE, Orientation.NATURAL },
