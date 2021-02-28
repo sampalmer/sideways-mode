@@ -36,6 +36,8 @@ public class ApplicationSettingsRule extends ExternalResource {
         prefs
                 .edit()
                 .clear()
+                // We need to also edit a syncable app setting for the sync job to notice the change: https://stackoverflow.com/q/24262595/238753
+                .putStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, new HashSet<>())
                 .commit();
 
         prefs = null;

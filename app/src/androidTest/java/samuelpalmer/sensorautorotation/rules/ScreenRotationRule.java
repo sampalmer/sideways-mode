@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.rules;
 
-import androidx.annotation.Nullable;
-
 import org.junit.rules.ExternalResource;
 
 import java.util.concurrent.CountDownLatch;
@@ -17,7 +15,9 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 public class ScreenRotationRule extends ExternalResource {
 
     private RotationWatcherRegistrar watcher;
+
     private volatile CountDownLatch waitForChangeLatch;
+    private final Object latchLock = new Object();
 
     @Override
     protected void before() throws Throwable {
@@ -38,36 +38,39 @@ public class ScreenRotationRule extends ExternalResource {
     private final EventHandler rotationChanged = new EventHandler() {
         @Override
         public void update() {
-            if (waitForChangeLatch == null)
-                return; // We're not currently waiting for a change, so nothing to do
+            synchronized (latchLock) {
+                if (waitForChangeLatch == null)
+                    return; // We're not currently waiting for a change, so nothing to do
 
-            // WARNING: We are not in the same thread as the test here
-            waitForChangeLatch.countDown();
+                // WARNING: We are not in the same thread as the test here
+                waitForChangeLatch.countDown();
+            }
         }
     };
 
     /**
-     * Waits for the screen orientation to change and then returns the resulting screen orientation.
-     * If the screen is already in the expected rotation, then returns immediately.
+     * Waits for the screen orientation to stop changing, and then returns the resulting orientation
      */
-    public Orientation waitForRotation(@Nullable Orientation expectedRotation) {
-        // If the screen is already in the expected rotation then we'd better stop since the OS
-        // won't notify us of a rotation change since there is none!
-        Orientation currentRotation = watcher.lastRotationOrNull();
-        if (currentRotation == expectedRotation)
-            return currentRotation;
-
-        waitForChangeLatch = new CountDownLatch(1);
-
+    public Orientation waitForScreenToSettle() {
         try {
-            waitForChangeLatch.await(3500, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            waitForChangeLatch = null;
-        }
+            while (true) {
+                synchronized (latchLock) {
+                    waitForChangeLatch = new CountDownLatch(1);
+                }
 
-        // Even if we timed out, then we'll still proceed since the OS's screen rotation must be settled by now
+                try {
+                    boolean rotationChanged = waitForChangeLatch.await(4000, TimeUnit.MILLISECONDS);
+                    if (!rotationChanged)
+                        break;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } finally {
+            synchronized (latchLock) {
+                waitForChangeLatch = null;
+            }
+        }
 
         return watcher.lastRotationOrNull();
     }

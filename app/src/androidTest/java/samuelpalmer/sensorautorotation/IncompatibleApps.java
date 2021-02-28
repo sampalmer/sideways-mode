@@ -113,7 +113,7 @@ public class IncompatibleApps {
         // we're overriding the screen orientation.
         device.setRotation(Orientation.LEFT_SIDE);
         app.run(ApplicationCommand.ACTION_RIGHT_SIDE);
-        Orientation screenRotation = screen.waitForRotation(shouldOverride ? Orientation.UPSIDE_DOWN : null);
+        Orientation screenRotation = screen.waitForScreenToSettle();
 
         Assert.assertThat(screenRotation, shouldOverride ? CoreMatchers.is(Orientation.UPSIDE_DOWN) : CoreMatchers.not(Orientation.UPSIDE_DOWN));
     }
