@@ -38,8 +38,6 @@ public class ApplicationCommandRule extends ExternalResource {
     public void run(@ApplicationCommand.ACTION String action) {
         ApplicationCommand command = new ApplicationCommand(action);
         command.send(context);
-
-        // TODO: Wait for command to take effect (using ApplicationStatusService)
     }
 
 }
