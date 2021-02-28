@@ -16,7 +16,6 @@ import androidx.test.uiautomator.UiDevice;
 import org.junit.AssumptionViolatedException;
 import org.junit.rules.ExternalResource;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -176,9 +175,6 @@ public abstract class LockScreenRule extends ExternalResource {
             showingUnlockScreen.countDown();
         });
 
-        String typePassword = String.format("input text %s", PIN);
-        String pressEnter = "input keyevent 66";
-
         try {
             showingUnlockScreen.await(1, TimeUnit.SECONDS);
             Thread.sleep(500); // Waiting for the keyguard to animate in so it can accept input
@@ -187,12 +183,11 @@ public abstract class LockScreenRule extends ExternalResource {
                 // Bailing out if we know we won't be able to unlock the device, since we don't want to waste time or lock the user out
                 checkAccess();
 
-                device.executeShellCommand(typePassword);
-                device.executeShellCommand(pressEnter);
+                LockScreenPinEnterer.enterPin(device, PIN);
             }
 
             unlocked.await(1, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
