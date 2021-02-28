@@ -11,7 +11,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -88,9 +87,6 @@ public class IncompatibleApps {
 
     @Test
     public void doesntOverrideLockScreen() {
-        // TODO: Move this into LockScreenRule since other tests that depend on it will have the same behaviour
-        Assume.assumeFalse("Cannot test lock screen because device has secure screen lock", lockScreen.wasDeviceOriginallySecure());
-
         // The lock screen isn't an activity, so when the device is locked, our app will still see the current activity as being whatever is behind the lock screen
         String testActivityPackage = getTestActivityPackage();
         appSettings.markAsIncompatible(testActivityPackage);

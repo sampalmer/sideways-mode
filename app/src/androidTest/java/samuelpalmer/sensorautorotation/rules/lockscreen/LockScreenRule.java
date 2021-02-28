@@ -13,6 +13,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.rules.ExternalResource;
 
 import java.io.IOException;
@@ -44,6 +45,11 @@ public abstract class LockScreenRule extends ExternalResource {
     UiDevice device;
     Instrumentation instrumentation;
     private KeyguardManager keyguardManager;
+
+    /**
+     * Determines whether the device was configured with a secure lock screen before tests were run.
+     * If this is <c>true</c>, then the we cannot make changes to the lock screen.
+     */
     private boolean deviceWasOriginallySecure;
 
     @Override
@@ -72,19 +78,10 @@ public abstract class LockScreenRule extends ExternalResource {
     }
 
     /**
-     * Determines whether the device was configured with a secure lock screen before tests were run.
-     * If this is <c>true</c>, then the we cannot make changes to the lock screen.
-     */
-    public boolean wasDeviceOriginallySecure() {
-        return deviceWasOriginallySecure;
-    }
-
-    /**
      * Configures the device to use a secure lock screen
      */
     public void enableLockScreen() {
-        if (deviceWasOriginallySecure)
-            throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
+        checkAccess();
 
         enableLockScreenUnchecked();
 
@@ -99,13 +96,12 @@ public abstract class LockScreenRule extends ExternalResource {
      * @throws IllegalStateException if device is currently locked
      */
     public void disableLockScreen() {
-        if (deviceWasOriginallySecure)
-            throw new IllegalStateException("Device is protected by a secure lock. Cannot make changes to lock screen.");
-
         // Check if it's already disabled
         boolean isSecure = keyguardManager.isKeyguardSecure();
         if (!isSecure)
             return;
+
+        checkAccess();
 
         // Make sure it's unlocked since we cannot disable the lock screen while locked on Android 5.0
         boolean isLocked = LockScreenMonitor.poll(keyguardManager);
@@ -125,6 +121,9 @@ public abstract class LockScreenRule extends ExternalResource {
      * Brings the device to the lock screen with the keyguard displayed
      */
     public void lockDevice() {
+        // Don't want to lock the device if we won't be able to unlock it again
+        checkAccess();
+
         // Using the power button to lock the device since this simulates what the user would do
         try {
             device.sleep(); // Pressing power button to turn off screen like a user would
@@ -185,6 +184,9 @@ public abstract class LockScreenRule extends ExternalResource {
             Thread.sleep(500); // Waiting for the keyguard to animate in so it can accept input
 
             if (isSecure) {
+                // Bailing out if we know we won't be able to unlock the device, since we don't want to waste time or lock the user out
+                checkAccess();
+
                 device.executeShellCommand(typePassword);
                 device.executeShellCommand(pressEnter);
             }
@@ -193,6 +195,11 @@ public abstract class LockScreenRule extends ExternalResource {
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void checkAccess() {
+        if (deviceWasOriginallySecure)
+            throw new AssumptionViolatedException("Device is protected by a secure lock. Cannot use or change the lock screen.");
     }
 
 }
