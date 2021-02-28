@@ -2,8 +2,10 @@ package samuelpalmer.sensorautorotation.rules;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.os.Looper;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -33,7 +35,7 @@ public class ApplicationStatusRule extends ExternalResource {
         // Using target context to increase chances of successfully binding to the service
         Context targetContext = instrumentation.getTargetContext();
 
-        client = new ApplicationStatusClient(targetContext, listener);
+        client = new ApplicationStatusClient(targetContext, listener, Looper.getMainLooper());
         client.subscribe();
     }
 
@@ -45,33 +47,29 @@ public class ApplicationStatusRule extends ExternalResource {
         client = null;
     }
 
-    /**
-     * Gets the current status of the application. Will be <c>null</c> if the status is unavailable.
-     */
-    @Nullable
-    public ApplicationStatus getStatus() {
-        return status;
-    }
-
-    public void waitForStatusChange() {
-        synchronized (receivedStatusChangeLock) {
-            receivedStatusChange = new CountDownLatch(1);
-        }
-
-        boolean received;
+    @NonNull
+    public ApplicationStatus waitForStatusChange() {
         try {
-            //noinspection ConstantConditions
-            received = receivedStatusChange.await(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            while (true) {
+                synchronized (receivedStatusChangeLock) {
+                    receivedStatusChange = new CountDownLatch(1);
+                }
+
+                try {
+                    boolean statusChanged = receivedStatusChange.await(1000, TimeUnit.MILLISECONDS);
+                    if (status != null && !statusChanged)
+                        break;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } finally {
+            synchronized (receivedStatusChangeLock) {
+                receivedStatusChange = null;
+            }
         }
 
-        synchronized (receivedStatusChangeLock) {
-            receivedStatusChange = null;
-        }
-
-        if (!received)
-            throw new RuntimeException("Didn't receive status change");
+        return status;
     }
 
     private final ApplicationStatusClient.Listener listener = new ApplicationStatusClient.Listener() {
@@ -79,9 +77,13 @@ public class ApplicationStatusRule extends ExternalResource {
         @Override
         @MainThread
         public void onChange(@Nullable ApplicationStatus status) {
-            ApplicationStatusRule.this.status = status;
+            if (status == null)
+                // We got disconnected, so we'll just ignore until we're reconnected
+                return;
 
             synchronized (receivedStatusChangeLock) {
+                ApplicationStatusRule.this.status = status;
+
                 if (receivedStatusChange != null) {
                     //noinspection ConstantConditions
                     receivedStatusChange.countDown();

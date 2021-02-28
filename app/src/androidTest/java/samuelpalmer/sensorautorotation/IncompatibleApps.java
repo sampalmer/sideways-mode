@@ -98,9 +98,6 @@ public class IncompatibleApps {
         lockScreen.lockDevice();
 
         check(false);
-
-        lockScreen.unlockDevice(testActivity);
-        lockScreen.disableLockScreen();
     }
 
     private void check(boolean shouldOverride) {
