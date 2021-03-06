@@ -38,18 +38,18 @@ class LockScreenPinEnterer {
         try {
             for (char numberCharacter : pin.toCharArray()) {
                 UiObject numberButton = device.findObject(new UiSelector()
-                        .packageName("android")
+                        // API 18 uses package "android", whereas API 19 uses package "com.android.keyguard"
+                        .packageNameMatches("android|com.android.keyguard")
                         .clickable(true)
-                        .resourceId("android:id/key" + numberCharacter)
+                        .resourceIdMatches("(android|com.android.keyguard):id/key" + numberCharacter)
                 );
 
                 numberButton.click();
             }
-
             UiObject enterButton = device.findObject(new UiSelector()
-                    .packageName("android")
+                    .packageNameMatches("android|com.android.keyguard")
                     .clickable(true)
-                    .resourceId("android:id/key_enter")
+                    .resourceIdMatches("(android|com.android.keyguard):id/key_enter")
             );
 
             enterButton.click();
