@@ -1,17 +1,25 @@
 package samuelpalmer.sensorautorotation;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import android.service.notification.StatusBarNotification;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import samuelpalmer.sensorautorotation.components.TestActivity;
+import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationStatusRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
-import samuelpalmer.sensorautorotation.rules.NotificationRule;
+import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
 
 public class WhenImUpright {
 
@@ -33,9 +41,22 @@ public class WhenImUpright {
     @Rule
     public NotificationRule notifications = new NotificationRule(testActivity);
 
+    private String targetPackage;
+
+    @Before
+    public void setTargetPackage() {
+        targetPackage = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
+    }
+
     @Test
     public void hasNoNotificationBeforeAppStarted() {
-        Assert.fail();
+        StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
+        boolean hasServiceNotification = Arrays.stream(notifications).anyMatch(this::isServiceNotification);
+        Assert.assertThat(hasServiceNotification, CoreMatchers.is(false));
+    }
+
+    private boolean isServiceNotification(StatusBarNotification notification) {
+        return notification.getPackageName().equals(targetPackage) && notification.getId() == NotificationIds.SERVICE;
     }
 
 }
