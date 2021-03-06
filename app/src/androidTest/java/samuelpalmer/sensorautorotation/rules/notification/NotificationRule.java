@@ -56,7 +56,6 @@ public class NotificationRule extends ExternalResource {
         final StatusBarNotification[][] notificationsHolder = new StatusBarNotification[1][1];
         CountDownLatch gotNotifications = new CountDownLatch(1);
         mainHandler.post(() -> {
-            TestingNotificationListener.onNotificationsChanged.unsubscribe(notificationsChangeHandler);
             notificationsHolder[0] = TestingNotificationListener.getNotifications();
             gotNotifications.countDown();
         });
