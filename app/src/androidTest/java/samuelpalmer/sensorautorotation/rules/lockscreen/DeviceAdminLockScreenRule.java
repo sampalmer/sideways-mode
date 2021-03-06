@@ -14,6 +14,7 @@ import androidx.core.os.HandlerCompat;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.Until;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -62,9 +63,11 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
 
                 // The OS prevents us from showing the device admin activity unless we get there from another activity
                 activity.getScenario().onActivity(a -> a.startActivity(addAdminIntent));
+                if (!device.wait(Until.hasObject(By.pkg("com.android.settings").depth(0)), 5000))
+                    throw new RuntimeException("Took too long for add device admin activity to start");
 
                 // Get activate button
-                UiObject2 activateButton = device.findObject(By.res("com.android.settings", "action_button"));
+                UiObject2 activateButton = device.wait(Until.findObject(By.res("com.android.settings", "action_button")), 2000);
                 if (activateButton == null)
                     throw new RuntimeException("Couldn't find activate button");
 
@@ -107,6 +110,8 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
         if (Build.VERSION.SDK_INT < 22) {
             // Older OS versions don't disable the lock screen after you clear the password, so we need to use UI Automation to do this
             activity.getScenario().onActivity(a -> a.startActivity(new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD)));
+            if (!device.wait(Until.hasObject(By.pkg("com.android.settings").depth(0)), 5000))
+                throw new RuntimeException("Took too long for set PIN activity to start");
 
             UiObject2 screenLockTypes = device.findObject(By.res("android", "list"));
             UiObject2 noneButton = screenLockTypes.getChildren().get(0);
@@ -159,7 +164,7 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
 
             // Wait for activation
             try {
-                if (!activated.await(1, TimeUnit.SECONDS))
+                if (!activated.await(2, TimeUnit.SECONDS))
                     throw new RuntimeException("Took too long for device admin to activate");
             } finally {
                 // Unsubscribe from activation event

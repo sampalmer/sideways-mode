@@ -28,6 +28,8 @@ class ShellCommandNotificationListenerPermissionManager extends NotificationList
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        waitForListenerPermission(true);
     }
 
     @Override
@@ -39,6 +41,8 @@ class ShellCommandNotificationListenerPermissionManager extends NotificationList
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        waitForListenerPermission(false);
     }
 
 }

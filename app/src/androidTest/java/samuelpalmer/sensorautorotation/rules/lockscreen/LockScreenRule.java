@@ -189,7 +189,7 @@ public abstract class LockScreenRule extends ExternalResource {
                 LockScreenPinEnterer.enterPin(device, PIN);
             }
 
-            if (!unlocked.await(1, TimeUnit.SECONDS))
+            if (!unlocked.await(2, TimeUnit.SECONDS))
                 throw new RuntimeException("Took too long to unlock device");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

@@ -25,6 +25,7 @@ class ShellSettingsNotificationListenerPermissionManager extends NotificationLis
         HashSet<ComponentName> newListeners = new HashSet<>(originalListeners);
         newListeners.add(listenerComponent);
         setEnabledListeners(newListeners);
+        waitForListenerPermission(true);
     }
 
     @Override
@@ -33,6 +34,7 @@ class ShellSettingsNotificationListenerPermissionManager extends NotificationLis
         HashSet<ComponentName> newListeners = new HashSet<>(originalListeners);
         newListeners.remove(listenerComponent);
         setEnabledListeners(newListeners);
+        waitForListenerPermission(false);
     }
 
     private void setEnabledListeners(Set<ComponentName> newListeners) {

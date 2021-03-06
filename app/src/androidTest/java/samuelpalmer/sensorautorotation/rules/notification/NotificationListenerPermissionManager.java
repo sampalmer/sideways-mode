@@ -66,4 +66,19 @@ abstract class NotificationListenerPermissionManager {
         return results;
     }
 
+    void waitForListenerPermission(boolean targetState) {
+        long timeout = System.currentTimeMillis() + 10000;
+        while (isEnabled() != targetState) {
+            if (System.currentTimeMillis() >= timeout)
+                throw new RuntimeException("Took too long for permission state to reach " + targetState);
+
+            try {
+                //noinspection BusyWait
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }

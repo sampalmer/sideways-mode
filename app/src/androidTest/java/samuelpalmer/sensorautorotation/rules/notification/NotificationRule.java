@@ -154,8 +154,8 @@ public class NotificationRule extends ExternalResource {
 
             // Wait for target state
             try {
-                if (!targetStateReached.await(10, TimeUnit.SECONDS))
-                    throw new RuntimeException("Took too long to reach notification listener connection state " + targetState);
+                if (!targetStateReached.await(5, TimeUnit.SECONDS))
+                    throw new RuntimeException("Took too long to reach notification listener connection state " + targetState + ". Has the listener crashed previously? Try wiping the test device in case the OS has given up on the service.");
             } finally {
                 // Unsubscribe from event
                 CountDownLatch unsubscribed = new CountDownLatch(1);
