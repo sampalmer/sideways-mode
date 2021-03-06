@@ -1,6 +1,9 @@
 package samuelpalmer.sensorautorotation.components;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -26,17 +29,45 @@ public class TestingNotificationListener extends NotificationListenerService {
     private static volatile TestingNotificationListener instance = null;
 
     @Override
+    public IBinder onBind(Intent intent) {
+        IBinder result = super.onBind(intent);
+
+        // Old versions of Android didn't have onListenerConnected(), so this will have to do instead
+        if (Build.VERSION.SDK_INT < 21)
+            connected();
+
+        return result;
+    }
+
+    @Override
     public void onListenerConnected() {
         super.onListenerConnected();
         // WARNING: Not guaranteed to be called from main thread: https://developer.android.com/reference/android/service/notification/NotificationListenerService
+        connected();
+    }
+
+    private void connected() {
         instance = this;
         mainHandler.post(onConnected::report);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // Old versions of Android didn't have onListenerDisconnected(), so this will have to do instead
+        if (Build.VERSION.SDK_INT < 24)
+            disconnected();
     }
 
     @Override
     public void onListenerDisconnected() {
         super.onListenerDisconnected();
         // WARNING: Not guaranteed to be called from main thread: https://developer.android.com/reference/android/service/notification/NotificationListenerService
+        disconnected();
+    }
+
+    private void disconnected() {
         instance = null;
         mainHandler.post(onDisconnected::report);
     }
