@@ -29,7 +29,7 @@ public abstract class LockScreenRule extends ExternalResource {
 
     static final String PIN = "1234";
 
-    public LockScreenRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
+    LockScreenRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
         this.activity = activity;
     }
 
@@ -94,6 +94,7 @@ public abstract class LockScreenRule extends ExternalResource {
      *
      * @throws IllegalStateException if device is currently locked
      */
+    @SuppressWarnings("WeakerAccess")
     public void disableLockScreen() {
         // Check if it's already disabled
         boolean isSecure = keyguardManager.isKeyguardSecure();
@@ -143,6 +144,7 @@ public abstract class LockScreenRule extends ExternalResource {
      *
      * @param activityScenarioRule An activity that is currently open. This will be used to dismiss the keyguard.
      */
+    @SuppressWarnings("WeakerAccess")
     public void unlockDevice(ActivityScenarioRule<? extends AppCompatActivity> activityScenarioRule) {
         boolean isLocked = LockScreenMonitor.poll(keyguardManager);
         if (!isLocked)
@@ -176,7 +178,8 @@ public abstract class LockScreenRule extends ExternalResource {
         });
 
         try {
-            showingUnlockScreen.await(1, TimeUnit.SECONDS);
+            if (!showingUnlockScreen.await(1, TimeUnit.SECONDS))
+                throw new RuntimeException("Took too long to show unlock screen");
             Thread.sleep(500); // Waiting for the keyguard to animate in so it can accept input
 
             if (isSecure) {
@@ -186,7 +189,8 @@ public abstract class LockScreenRule extends ExternalResource {
                 LockScreenPinEnterer.enterPin(device, PIN);
             }
 
-            unlocked.await(1, TimeUnit.SECONDS);
+            if (!unlocked.await(1, TimeUnit.SECONDS))
+                throw new RuntimeException("Took too long to unlock device");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

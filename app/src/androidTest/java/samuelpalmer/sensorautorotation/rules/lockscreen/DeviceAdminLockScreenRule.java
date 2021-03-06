@@ -149,12 +149,18 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
             mainHandler.post(() -> {
                 TestingDeviceAdmin.onEnabled.subscribe(adminActivated);
                 subscribed.countDown();
+
+                // The connection might have occurred before we got here
+                if (TestingDeviceAdmin.isEnabled())
+                    activated.countDown();
             });
-            subscribed.await();
+            if (!subscribed.await(5000, TimeUnit.MILLISECONDS))
+                throw new RuntimeException("Took too long for subscribe to device admin activation event");
 
             // Wait for activation
             try {
-                activated.await(1, TimeUnit.SECONDS);
+                if (!activated.await(1, TimeUnit.SECONDS))
+                    throw new RuntimeException("Took too long for device admin to activate");
             } finally {
                 // Unsubscribe from activation event
                 CountDownLatch unsubscribed = new CountDownLatch(1);
@@ -162,7 +168,9 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
                     TestingDeviceAdmin.onEnabled.unsubscribe(adminActivated);
                     unsubscribed.countDown();
                 });
-                unsubscribed.await();
+                if (!unsubscribed.await(5000, TimeUnit.MILLISECONDS))
+                    //noinspection ThrowFromFinallyBlock
+                    throw new RuntimeException("Took too long to unsubscribe from activation event");
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
