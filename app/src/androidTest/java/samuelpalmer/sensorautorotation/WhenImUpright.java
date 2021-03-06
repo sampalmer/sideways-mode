@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
@@ -51,7 +49,14 @@ public class WhenImUpright {
     @Test
     public void hasNoNotificationBeforeAppStarted() {
         StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
-        boolean hasServiceNotification = Arrays.stream(notifications).anyMatch(this::isServiceNotification);
+
+        boolean hasServiceNotification = false;
+        for (StatusBarNotification notification : notifications)
+            if (isServiceNotification(notification)) {
+                hasServiceNotification = true;
+                break;
+            }
+
         Assert.assertThat(hasServiceNotification, CoreMatchers.is(false));
     }
 
