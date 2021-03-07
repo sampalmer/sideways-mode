@@ -79,14 +79,14 @@ public class TestingNotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        super.onNotificationPosted(sbn);
+        // Not calling super since that causes an AbstractMethodError on API 18-19
         // WARNING: Not guaranteed to be called from main thread: https://developer.android.com/reference/android/service/notification/NotificationListenerService
         mainHandler.post(onNotificationsChanged::report);
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        super.onNotificationRemoved(sbn);
+        // Not calling super since that causes an AbstractMethodError on API 18-19
         // WARNING: Not guaranteed to be called from main thread: https://developer.android.com/reference/android/service/notification/NotificationListenerService
         mainHandler.post(onNotificationsChanged::report);
     }
