@@ -37,8 +37,8 @@ public class AppSettingsSynchroniser extends State {
     private final SharedPreferences.OnSharedPreferenceChangeListener applicationSettingsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
 
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (ApplicationCommand.Config.isSyncableAppSetting(s)) {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key == null || ApplicationCommand.Config.isSyncableAppSetting(key)) {
                 Log.i(TAG, "User preferences changed. Sending to service process.");
 
                 new ApplicationCommand(

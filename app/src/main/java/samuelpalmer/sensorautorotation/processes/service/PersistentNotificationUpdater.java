@@ -39,7 +39,7 @@ public final class PersistentNotificationUpdater extends State {
     private final SharedPreferences.OnSharedPreferenceChangeListener serviceSettingsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT.equals(key)) {
+            if (key == null || key.equals(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT)) {
                 // The persistent notification setting changed, so we might need to update the service notification
                 sync(context);
             }
