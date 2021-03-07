@@ -61,4 +61,11 @@ public class ApplicationSettingsRule extends ExternalResource {
                 .commit();
     }
 
+    public void setCloseNotificationWhenUpright(boolean closeNotificationWhenUpright) {
+        prefs
+                .edit()
+                .putBoolean(ApplicationSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT, closeNotificationWhenUpright)
+                .commit();
+    }
+
 }
