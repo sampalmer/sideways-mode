@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegi
 public class TestingDeviceAdmin extends DeviceAdminReceiver {
 
     public static final UpdatingEventRegistrar onEnabled = new UpdatingEventRegistrar();
+    public static final UpdatingEventRegistrar onDisabled = new UpdatingEventRegistrar();
 
     private static boolean isEnabled = false;
 
@@ -29,6 +30,7 @@ public class TestingDeviceAdmin extends DeviceAdminReceiver {
     public void onDisabled(@NonNull Context context, @NonNull Intent intent) {
         super.onDisabled(context, intent);
         isEnabled = false;
+        onDisabled.report();
     }
 
     @MainThread

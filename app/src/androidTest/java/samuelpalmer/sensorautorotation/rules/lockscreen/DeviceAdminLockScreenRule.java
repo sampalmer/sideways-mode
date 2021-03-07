@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import samuelpalmer.sensorautorotation.components.TestingDeviceAdmin;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 /**
  * Uses Android's Device Administration API to control the secure screen lock
@@ -72,25 +73,42 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
                     throw new RuntimeException("Couldn't find activate button");
 
                 activateButton.click();
-
-                // We don't know how long it will take for the activation to occur, so we'll wait
-                waitForAdminActivation();
             }
         }
 
-        if (!devicePolicyManager.isAdminActive(adminComponent))
-            throw new RuntimeException("Admin is not active");
+        // We don't know how long it will take for the activation to occur, so we'll wait
+        waitForAdminActivation(TestingDeviceAdmin.onEnabled, true);
     }
 
     @Override
     protected void after() {
         super.after();
 
-        if (Build.VERSION.SDK_INT >= 24)
+        if (Build.VERSION.SDK_INT >= 24) {
             // We need to use the shell to remove *profile* admin since the API only removes regular admins
             runCommand("dpm remove-active-admin %s", adminComponentString);
-        else
+
+            // Removing the profile owner doesn't trigger DeviceAdminReceiver#onDisabled(), so we need to busy-wait instead
+            busyWaitForProfileOwnerDeactivation();
+        } else {
             devicePolicyManager.removeActiveAdmin(adminComponent);
+            waitForAdminActivation(TestingDeviceAdmin.onDisabled, false);
+        }
+    }
+
+    private void busyWaitForProfileOwnerDeactivation() {
+        long timeout = System.currentTimeMillis() + 10000;
+        while (devicePolicyManager.isProfileOwnerApp(adminComponent.getPackageName())) {
+            if (System.currentTimeMillis() >= timeout)
+                throw new RuntimeException("Took too long for profile owner to be removed");
+
+            try {
+                //noinspection BusyWait
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -141,36 +159,36 @@ class DeviceAdminLockScreenRule extends LockScreenRule {
             throw new RuntimeException("Failed to run command " + command);
     }
 
-    private static void waitForAdminActivation() {
+    private static void waitForAdminActivation(EventRegistrar event, boolean targetState) {
         try {
             // Broadcasts and events occur in the main thread, so we'll have to listen over there
             Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
 
-            CountDownLatch activated = new CountDownLatch(1);
-            EventHandler adminActivated = activated::countDown;
+            CountDownLatch targetStateReached = new CountDownLatch(1);
+            EventHandler notifyTargetStateReached = targetStateReached::countDown;
 
             // Subscribe to activation event
             CountDownLatch subscribed = new CountDownLatch(1);
             mainHandler.post(() -> {
-                TestingDeviceAdmin.onEnabled.subscribe(adminActivated);
+                event.subscribe(notifyTargetStateReached);
                 subscribed.countDown();
 
-                // The connection might have occurred before we got here
-                if (TestingDeviceAdmin.isEnabled())
-                    activated.countDown();
+                // The activation might have occurred before we got here
+                if (TestingDeviceAdmin.isEnabled() == targetState)
+                    targetStateReached.countDown();
             });
             if (!subscribed.await(5000, TimeUnit.MILLISECONDS))
                 throw new RuntimeException("Took too long for subscribe to device admin activation event");
 
             // Wait for activation
             try {
-                if (!activated.await(2, TimeUnit.SECONDS))
-                    throw new RuntimeException("Took too long for device admin to activate");
+                if (!targetStateReached.await(5, TimeUnit.SECONDS))
+                    throw new RuntimeException("Took too long to reach device admin activation state " + targetState);
             } finally {
                 // Unsubscribe from activation event
                 CountDownLatch unsubscribed = new CountDownLatch(1);
                 mainHandler.post(() -> {
-                    TestingDeviceAdmin.onEnabled.unsubscribe(adminActivated);
+                    event.unsubscribe(notifyTargetStateReached);
                     unsubscribed.countDown();
                 });
                 if (!unsubscribed.await(5000, TimeUnit.MILLISECONDS))
