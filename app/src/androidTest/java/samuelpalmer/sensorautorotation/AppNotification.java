@@ -45,26 +45,26 @@ public class AppNotification {
 
     @Test
     public void doesntShowBeforeAppStarted() {
-        assetHasNotification(false);
+        assertHasNotification(false);
     }
 
     @Test
     public void showsAfterAppStarted() {
         app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
-        assetHasNotification(true);
+        assertHasNotification(true);
     }
 
     @Test
     public void doesntShowAfterAppStopped() {
         app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
         app.stopApp();
-        assetHasNotification(false);
+        assertHasNotification(false);
     }
 
     @Test
     public void showsBeforeAppStartedIfUserPrefers() {
         appSettings.setCloseNotificationWhenUpright(false);
-        assetHasNotification(true);
+        assertHasNotification(true);
     }
 
     @Test
@@ -72,10 +72,10 @@ public class AppNotification {
         app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
         appSettings.setCloseNotificationWhenUpright(false);
         app.stopApp();
-        assetHasNotification(true);
+        assertHasNotification(true);
     }
 
-    private void assetHasNotification(boolean shouldHaveNotification) {
+    private void assertHasNotification(boolean shouldHaveNotification) {
         StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
         boolean hasServiceNotification = hasServiceNotification(notifications);
         Assert.assertThat(hasServiceNotification, CoreMatchers.is(shouldHaveNotification));
