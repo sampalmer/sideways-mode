@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
@@ -9,10 +10,16 @@
             Adding them to the test manifest causes the OS to get confused and ignore them.
         -->
 
+        <!--
+            Note that we're configuring the test activity to handle its own config changes to it
+            doesn't get destroyed when the device is unlocked in a new orientation while waiting
+            for
+        -->
         <activity
             android:theme="@style/Theme.AppCompat"
             android:taskAffinity=""
             android:name="samuelpalmer.sensorautorotation.components.TestActivity"
+            android:configChanges="uiMode|orientation|screenLayout|screenSize"
             />
 
         <!-- Device admin is used to control the lock screen during automated tests -->
