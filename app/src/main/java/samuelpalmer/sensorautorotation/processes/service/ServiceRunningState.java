@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+
+import java.lang.ref.WeakReference;
 
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
@@ -23,7 +26,8 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 public class ServiceRunningState extends State {
     
     private static final String TAG = ServiceRunningState.class.getSimpleName();
-    
+    private static WeakReference<Context> cachedWindowContextReference;
+
     private final Context context;
     private final OrientationCalculator calculator;
     final RunningStateUpdater runningStateUpdater;
@@ -63,18 +67,37 @@ public class ServiceRunningState extends State {
      * As of Android R, this is required when accessing {@link WindowManager} etc.
      */
     private static Context makeContext(RotationService service) {
-        if (Build.VERSION.SDK_INT < 17)
-            return service;
+        if (Build.VERSION.SDK_INT >= 30) {
+            // The OS restricts the rate at which window contexts may be created, which can lead to
+            // the following exception when the user or an automated test repeatedly starts and
+            // stops the app:
+            // java.lang.UnsupportedOperationException: createWindowContext failed! Too many unused window contexts. Please see Context#createWindowContext documentation for detail.
+            //
+            // So, unfortunately, we need to cache the window context and re-use it
 
+            Context cachedContext = cachedWindowContextReference == null ? null : cachedWindowContextReference.get();
+            if (cachedContext == null) {
+                // Using the app context since we will cache the result beyond the lifetime of the
+                // service
+                Context appContext = service.getApplicationContext();
+                Context displayContext = makeDisplayContext(appContext);
+                cachedContext = displayContext.createWindowContext(ScreenOrientationEnforcer.getWindowType(), null);
+                cachedWindowContextReference = new WeakReference<>(cachedContext);
+            }
+
+            return cachedContext;
+        } else if (Build.VERSION.SDK_INT >= 17) {
+            return makeDisplayContext(service);
+        } else
+            return service;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private static Context makeDisplayContext(Context service) {
         DisplayManager displayManager = ContextCompat.getSystemService(service, DisplayManager.class);
         assert displayManager != null;
         Display primaryDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
-        Context displayContext = service.createDisplayContext(primaryDisplay);
-
-        if (Build.VERSION.SDK_INT >= 30)
-            return displayContext.createWindowContext(ScreenOrientationEnforcer.getWindowType(), null);
-        else
-            return displayContext;
+        return service.createDisplayContext(primaryDisplay);
     }
 
     @Override
