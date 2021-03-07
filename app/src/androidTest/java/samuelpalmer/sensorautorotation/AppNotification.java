@@ -78,7 +78,7 @@ public class AppNotification {
     private void assertHasNotification(boolean shouldHaveNotification) {
         StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
         boolean hasServiceNotification = hasServiceNotification(notifications);
-        Assert.assertThat(hasServiceNotification, CoreMatchers.is(shouldHaveNotification));
+        Assert.assertThat(shouldHaveNotification ? "Service notification is missing" : "Service notification is present", hasServiceNotification, CoreMatchers.is(shouldHaveNotification));
     }
 
     private boolean hasServiceNotification(StatusBarNotification[] notifications) {
