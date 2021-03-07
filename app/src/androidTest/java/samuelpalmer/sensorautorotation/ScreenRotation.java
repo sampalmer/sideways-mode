@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
+import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
@@ -35,7 +35,7 @@ public class ScreenRotation {
     public MockDeviceOrientationRule device = new MockDeviceOrientationRule();
 
     @Rule
-    public ApplicationCommandRule app = new ApplicationCommandRule();
+    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();
@@ -63,7 +63,7 @@ public class ScreenRotation {
     @Test
     public void test() {
         device.setRotation(deviceRotation);
-        app.run(user);
+        app.startApp(user);
         Orientation screenRotation = screen.waitForScreenToSettle();
 
         String message = "Wrong screen orientation when user " + user + " and device " + deviceRotation;

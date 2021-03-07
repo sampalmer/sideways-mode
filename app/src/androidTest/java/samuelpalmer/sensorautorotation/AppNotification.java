@@ -13,13 +13,11 @@ import org.junit.Test;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
+import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
-import samuelpalmer.sensorautorotation.rules.ApplicationStatusRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
-import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class AppNotification {
 
@@ -30,13 +28,10 @@ public class AppNotification {
     public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
 
     @Rule
-    public ApplicationCommandRule app = new ApplicationCommandRule();
+    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ApplicationSettingsRule appSettings = new ApplicationSettingsRule();
-
-    @Rule
-    public ApplicationStatusRule appStatus = new ApplicationStatusRule();
 
     @Rule
     public NotificationRule notifications = new NotificationRule(testActivity);
@@ -55,14 +50,14 @@ public class AppNotification {
 
     @Test
     public void showsAfterAppStarted() {
-        startApp();
+        app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
         assetHasNotification(true);
     }
 
     @Test
     public void doesntShowAfterAppStopped() {
-        startApp();
-        stopApp();
+        app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
+        app.stopApp();
         assetHasNotification(false);
     }
 
@@ -74,9 +69,9 @@ public class AppNotification {
 
     @Test
     public void showsAfterAppStoppedIfUserPrefers() {
-        startApp();
+        app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
         appSettings.setCloseNotificationWhenUpright(false);
-        stopApp();
+        app.stopApp();
         assetHasNotification(true);
     }
 
@@ -84,20 +79,6 @@ public class AppNotification {
         StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
         boolean hasServiceNotification = hasServiceNotification(notifications);
         Assert.assertThat(hasServiceNotification, CoreMatchers.is(shouldHaveNotification));
-    }
-
-    private void startApp() {
-        app.run(ApplicationCommand.ACTION_RIGHT_SIDE);
-        ApplicationStatus applicationStatus = appStatus.waitForStatusChange();
-        if (applicationStatus.runningState == null)
-            throw new RuntimeException("App failed to start");
-    }
-
-    private void stopApp() {
-        app.run(ApplicationCommand.ACTION_TURN_OFF);
-        ApplicationStatus applicationStatus = appStatus.waitForStatusChange();
-        if (applicationStatus.runningState != null)
-            throw new RuntimeException("App failed to stop");
     }
 
     private boolean hasServiceNotification(StatusBarNotification[] notifications) {

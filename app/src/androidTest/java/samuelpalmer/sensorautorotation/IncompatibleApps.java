@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
+import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
 import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
@@ -47,7 +47,7 @@ public class IncompatibleApps {
     public MockDeviceOrientationRule device = new MockDeviceOrientationRule();
 
     @Rule
-    public ApplicationCommandRule app = new ApplicationCommandRule();
+    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();
@@ -105,7 +105,7 @@ public class IncompatibleApps {
         // prevents apps from turning the screen upside-down, so this is a good test to see whether
         // we're overriding the screen orientation.
         device.setRotation(Orientation.LEFT_SIDE);
-        app.run(ApplicationCommand.ACTION_RIGHT_SIDE);
+        app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
         Orientation screenRotation = screen.waitForScreenToSettle();
 
         Assert.assertThat(screenRotation, shouldOverride ? CoreMatchers.is(Orientation.UPSIDE_DOWN) : CoreMatchers.not(Orientation.UPSIDE_DOWN));

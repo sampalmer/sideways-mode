@@ -8,10 +8,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 
+import java.util.concurrent.TimeoutException;
+
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationCommandRule;
+import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
-import samuelpalmer.sensorautorotation.rules.ApplicationStatusRule;
 import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.lockscreen.LockScreenRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
@@ -31,45 +32,52 @@ public class WhenScreenLocked {
     public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
 
     @Rule
-    public ApplicationCommandRule app = new ApplicationCommandRule();
+    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ApplicationSettingsRule appSettings = new ApplicationSettingsRule();
 
-    @Rule
-    public ApplicationStatusRule appStatus = new ApplicationStatusRule();
-
     @Test
     public void turnsOffIfSettingOn() {
         appSettings.setTurnOffWhenLocked(true);
-        app.run(ApplicationCommand.ACTION_RIGHT_SIDE);
-
-        ApplicationStatus status = appStatus.waitForStatusChange();
-        Assert.assertThat("App did not start", status.runningState, CoreMatchers.notNullValue());
+        app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
 
         lockScreen.enableLockScreen();
         lockScreen.lockDevice();
 
-        status = appStatus.waitForStatusChange();
-        Assert.assertThat("App did not turn off", status.runningState, CoreMatchers.nullValue());
+        try {
+            app.waitForAppState(false);
+        } catch (TimeoutException e) {
+            Assert.fail("App did not turn off");
+        }
     }
 
     @Test
     public void staysOnIfSettingOff() {
         appSettings.setTurnOffWhenLocked(false);
-        app.run(ApplicationCommand.ACTION_RIGHT_SIDE);
+        ApplicationStatus startedStatus = app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
 
-        ApplicationStatus status = appStatus.waitForStatusChange();
-        Assert.assertThat("App did not start", status.runningState, CoreMatchers.notNullValue());
-        UserSide originalSide = status.runningState.userSide;
+        assert startedStatus.runningState != null;
+        UserSide originalSide = startedStatus.runningState.userSide;
 
         lockScreen.enableLockScreen();
         lockScreen.lockDevice();
 
-        status = appStatus.waitForStatusChange();
-        Assert.assertThat("App turned off", status.runningState, CoreMatchers.notNullValue());
+        // Also unlocking the device since sometimes the app doesn't detect the lock until the
+        // subsequent unlock occurs
+        lockScreen.unlockDevice(testActivity);
 
-        UserSide newSide = status.runningState.userSide;
+        // Allowing time for the app to notice that the device was locked and react to it
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        ApplicationStatus newStatus = app.getCurrentStatus();
+        Assert.assertThat("App turned off", newStatus.runningState, CoreMatchers.notNullValue());
+
+        UserSide newSide = newStatus.runningState.userSide;
         Assert.assertThat("App side changed", newSide, CoreMatchers.equalTo(originalSide));
     }
 
