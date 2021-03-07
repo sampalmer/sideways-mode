@@ -26,6 +26,7 @@ class ShellLockScreenRule extends LockScreenRule {
         runCommand("locksettings clear --old %s", PIN);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void runCommand(String format, Object... args) {
         String command = String.format(format, args);
 

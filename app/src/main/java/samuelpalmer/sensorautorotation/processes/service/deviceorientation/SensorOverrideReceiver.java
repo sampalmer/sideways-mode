@@ -10,7 +10,7 @@ import android.content.Intent;
  */
 public class SensorOverrideReceiver extends BroadcastReceiver {
 
-    private static String EXTRA_OVERRIDE = "override";
+    private static final String EXTRA_OVERRIDE = "override";
 
     /**
      * Sends a broadcast to use the given override.

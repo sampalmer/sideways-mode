@@ -22,7 +22,7 @@ public class TestingNotificationListener extends NotificationListenerService {
     public static final UpdatingEventRegistrar onDisconnected = new UpdatingEventRegistrar();
 
     /** Called on main thread */
-    public static UpdatingEventRegistrar onNotificationsChanged = new UpdatingEventRegistrar();
+    public static final UpdatingEventRegistrar onNotificationsChanged = new UpdatingEventRegistrar();
 
     private static final Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
 

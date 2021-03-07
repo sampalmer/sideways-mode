@@ -10,10 +10,10 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegi
  */
 final class SensorOverrider {
 
-    private static String TAG = SensorOverrider.class.getSimpleName();
+    private static final String TAG = SensorOverrider.class.getSimpleName();
 
     private static SensorOverride currentOverride = SensorOverride.OFF;
-    private static UpdatingEventRegistrar overrideChanged = new UpdatingEventRegistrar();
+    private static final UpdatingEventRegistrar overrideChanged = new UpdatingEventRegistrar();
 
     public static void setOverride(SensorOverride override) {
         Log.i(TAG, "Setting sensor override to " + override.name());

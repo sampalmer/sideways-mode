@@ -94,7 +94,7 @@ public class DashboardPermissionFragment extends Fragment {
 
             unsubscribePermissionMonitor();
         }
-    };
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void unsubscribePermissionMonitor() {
