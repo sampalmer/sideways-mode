@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Looper;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
@@ -29,7 +30,7 @@ public class QuickSettingService extends TileService {
     
     @Override
     public void onCreate() {
-        statusClient = new ApplicationStatusClient(this, statusListener);
+        statusClient = new ApplicationStatusClient(this, statusListener, Looper.myLooper());
     }
     
     /**

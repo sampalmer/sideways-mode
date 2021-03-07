@@ -131,12 +131,12 @@ public class WaitForActivityDetectionActivity extends Activity {
             if (currentActivity != null) {
                 // Doesn't matter which activity was detected; main thing is that *some* change was detected, so now our job is done.
                 Log.i(TAG, "Detected activity change. Finishing activity.");
-                finish();
             } else {
                 // The accessibility service is needed to detect activity changes, so without it, this activity isn't relevant.
                 Log.w(TAG, "Accessibility service disconnected. Finishing activity.");
-                finish();
             }
+
+            finish();
         }
     };
     

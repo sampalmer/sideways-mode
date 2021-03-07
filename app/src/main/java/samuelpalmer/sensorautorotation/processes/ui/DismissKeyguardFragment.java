@@ -38,8 +38,14 @@ public class DismissKeyguardFragment extends Fragment {
         impl = null;
     }
 
-    public void unlockAndRun(Runnable runnable) {
-        pendingRunnable = runnable;
+    /**
+     * Dismisses the keyguard, prompting the user to unlock the device if needed.
+     *
+     * @param runAfterUnlock Run after the keyguard has been dismissed. <b>Note that this will not be
+     *                       called if the activity is destroyed.</b>
+     */
+    public void unlockAndRun(Runnable runAfterUnlock) {
+        pendingRunnable = runAfterUnlock;
         impl.startUnlock();
     }
 

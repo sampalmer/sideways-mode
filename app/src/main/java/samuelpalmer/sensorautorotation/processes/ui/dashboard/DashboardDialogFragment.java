@@ -155,22 +155,17 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
             However, the activities we launch from the dashboard should have normal activity behaviour, so we launch them into a separate task.
          */
         int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK;
-        
-        switch (menuItem.getItemId()) {
-            case R.id.action_tips: {
-                tipsFragment.showAllTips();
-                break;
-            }
-            case R.id.action_settings: {
-                Intent settingsIntent = new Intent(requireContext(), SettingsActivity.class).addFlags(flags);
 
-                DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
-                dashboardActivity.unlockAndRun(() -> startActivity(settingsIntent));
-                break;
-            }
-            default:
-                throw new RuntimeException("Unknown navigation menu item: " + menuItem.getItemId());
-        }
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.action_tips)
+            tipsFragment.showAllTips();
+        else if (itemId == R.id.action_settings) {
+            Intent settingsIntent = new Intent(requireContext(), SettingsActivity.class).addFlags(flags);
+
+            DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
+            dashboardActivity.unlockAndRun(() -> startActivity(settingsIntent));
+        } else
+            throw new RuntimeException("Unknown navigation menu item: " + itemId);
 
         return true;
     }

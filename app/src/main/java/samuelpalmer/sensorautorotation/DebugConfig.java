@@ -19,7 +19,7 @@ public final class DebugConfig {
     static void configureDebug(Context context) {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
             .detectAll()
-            .permitDiskReads() // So we can read SharedPreferences and the current process name
+            .permitDiskReads() // So we can read SharedPreferences
             .permitDiskWrites() // So SharedPreferences can initialise itself on first-run
             .penaltyLog()
             // Not using penaltyDialog since it's too annoying

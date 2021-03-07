@@ -1,46 +1,53 @@
 package samuelpalmer.sensorautorotation.utilities.testing;
 
-@SuppressWarnings("unused")
-public class Stopwatch {
+import android.util.Log;
 
-    private long startNanos;
-    private boolean hasStartNanos;
+import androidx.annotation.Nullable;
 
+import java.io.Closeable;
+
+/**
+ * Use this to quickly measure how long a block of code takes to run and log the result
+ * Use like this:
+ *
+ * <pre>
+ * try (Stopwatch ignored = new Stopwatch("Doing something")) {
+ *     yourCode();
+ * }
+ * </pre>
+ */
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class Stopwatch implements Closeable {
+
+    private final long startNanos;
+    private final String operation;
     private long stopNanos;
     private boolean hasStopNanos;
 
-    public static Stopwatch startNew() {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.start();
-        return stopwatch;
+    /** Creates a new stopwatch and starts counting */
+    public Stopwatch() {
+        this(null);
     }
 
-    public void start() {
-        if (hasStartNanos)
-            throw new IllegalStateException("Already started");
-
-        if (hasStopNanos)
-            throw new IllegalStateException("This stopwatch has already been used");
-
+    /** Creates a new stopwatch with the given description and starts counting */
+    public Stopwatch(@Nullable String operation) {
         startNanos = System.nanoTime();
-        hasStartNanos = true;
+        this.operation = operation == null ? "Operation" : operation;
     }
 
-    public void stop() {
-        if (!hasStartNanos)
-            throw new IllegalStateException("Not started");
-
+    @Override
+    public void close() {
         if (hasStopNanos)
             throw new IllegalStateException("This stopwatch has already been used");
 
         stopNanos = System.nanoTime();
         hasStopNanos = true;
+
+        String logMessage = operation + " took " + getElapsedMillis() + "ms";
+        Log.i(getClass().getSimpleName(), logMessage);
     }
 
     public int getElapsedMillis() {
-        if (!hasStartNanos)
-            throw new IllegalStateException("Not started");
-
         long endNanos = hasStopNanos ? stopNanos : System.nanoTime();
         long elapsedNanos = endNanos - startNanos;
         double elapsedMicros = elapsedNanos / 1000d;
