@@ -11,7 +11,9 @@
         android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="samuelpalmer.screenorientations.MainActivity">
+        <activity
+            android:name="samuelpalmer.screenorientations.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

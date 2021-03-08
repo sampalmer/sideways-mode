@@ -10,7 +10,9 @@
         android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="samuelpalmer.thirdpartyuninstaller.MainActivity">
+        <activity
+            android:name="samuelpalmer.thirdpartyuninstaller.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="samuelpalmer.thirdpartyuninstaller.UninstallerActivity">
+        <activity android:name="samuelpalmer.thirdpartyuninstaller.UninstallerActivity"
+            android:exported="false">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.DELETE" />
                 <action android:name="android.intent.action.UNINSTALL_PACKAGE" />

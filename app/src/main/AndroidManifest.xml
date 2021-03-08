@@ -83,6 +83,7 @@
 
         <activity
             android:name=".processes.ui.preferences.SettingsActivity"
+            android:exported="false"
             >
 
             <intent-filter>
@@ -117,6 +118,7 @@
             android:label="@string/app_name_full"
             android:icon="@drawable/app_right_side_filled"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -130,6 +132,7 @@
                   android:excludeFromRecents="true"
                   android:taskAffinity="@string/task_dashboard"
                   android:theme="@style/AppTheme.Dialog"
+                  android:exported="true"
                   tools:ignore="UnusedAttribute">
 
             <intent-filter>
@@ -152,7 +155,10 @@
 
         <receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
-        <receiver android:name=".processes.ui.ShowUpgradeMessageReceiver">
+        <receiver
+            android:name=".processes.ui.ShowUpgradeMessageReceiver"
+            android:exported="false"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -166,7 +172,8 @@
             android:process="@string/process_service" />
 
         <receiver android:name=".processes.service.PersistentNotificationSyncReceiver"
-                  android:process="@string/process_service">
+                  android:process="@string/process_service"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.app.action.APP_BLOCK_STATE_CHANGED" />
@@ -175,7 +182,8 @@
         </receiver>
 
         <receiver android:name=".processes.service.UpgradeReceiver"
-                  android:process="@string/process_service">
+                  android:process="@string/process_service"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -235,7 +243,8 @@
             android:name=".processes.service.WindowChangeDetectingService"
             android:description="@string/accessibility_service_description"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:process="@string/process_service">
+            android:process="@string/process_service"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
