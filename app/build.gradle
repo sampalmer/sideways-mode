@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion "android-S"
 
     lintOptions{
         disable 'MissingTranslation'
@@ -16,7 +16,7 @@ android {
             minSdkVersion 16
         }
 
-        targetSdkVersion 30
+        targetSdkVersion "S"
         versionCode 71
         versionName "2.7.1"
 
