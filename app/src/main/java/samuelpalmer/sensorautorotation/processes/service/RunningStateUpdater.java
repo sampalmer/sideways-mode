@@ -59,7 +59,11 @@ public class RunningStateUpdater extends State {
 
         // Prior to Android N, the OS will *always* remove the notification when the service is stopped, even if we tried to detach it from the service.
         // So in those OS versions, our best option is to completely remove the notification and re-post it straight away.
-        boolean removeNotification = closeNotificationWhenUpright || Build.VERSION.SDK_INT <= 23;
+        //
+        // Also, starting from Android 11, if we start the service and then immediately stop it, removing the service notification in the process,
+        // and then post and cancel the workaround notification to bypass the 5 second delay, then
+        // the service notification never goes away. It turns out that this can be worked around by
+        boolean removeNotification = closeNotificationWhenUpright && Build.VERSION.SDK_INT < 30 || Build.VERSION.SDK_INT <= 23;
 
         // If all notifications in the OS notification shade are removed, then the OS closes the notification shade.
         // The problem with this is we are only *temporarily* removing the notification, so from the user's perspective, it's not really being removed.
@@ -77,7 +81,7 @@ public class RunningStateUpdater extends State {
         // Update notification to "upright" / "off" state
         // This also restores the notification if we had to remove it in stopForeground()
         // This is also needed to prevent Android from delaying 5 seconds from when the notification was last posted/updated before dismissing it on Google Pixel 3 XL Android 10 Build QQ1A.200205.002 and Android 11 Preview 1 emulator
-        Notification notification = notificationBuilder.build(null);
+        Notification notification = notificationBuilder.build(closeNotificationWhenUpright ? lastRunningState : null);
         notificationManager.notify(NotificationIds.SERVICE, notification);
 
         if (closeNotificationWhenUpright)
