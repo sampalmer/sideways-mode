@@ -7,6 +7,7 @@ import android.service.notification.StatusBarNotification;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.HandlerCompat;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.rules.ExternalResource;
 
@@ -25,12 +26,18 @@ public class NotificationRule extends ExternalResource {
     private final Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
 
     private NotificationListenerPermissionManager permissionManager;
+    private String targetPackage;
 
     public NotificationRule(ActivityScenarioRule<? extends AppCompatActivity> activity) {
         this.activity = activity;
     }
 
-    public StatusBarNotification[] waitForNotificationsToSettle() {
+    public boolean hasNotification(int notificationId) {
+        StatusBarNotification[] notifications = waitForNotificationsToSettle();
+        return hasNotification(notifications, notificationId);
+    }
+
+    private StatusBarNotification[] waitForNotificationsToSettle() {
         // Wait for notifications to settle
         try {
             while (true) {
@@ -70,6 +77,16 @@ public class NotificationRule extends ExternalResource {
         return notificationsHolder[0];
     }
 
+    private boolean hasNotification(StatusBarNotification[] notifications, int notificationId) {
+        for (StatusBarNotification notification : notifications) {
+            boolean isServiceNotification = notification.getPackageName().equals(targetPackage) && notification.getId() == notificationId;
+            if (isServiceNotification)
+                return true;
+        }
+
+        return false;
+    }
+
     @Override
     protected void before() throws Throwable {
         super.before();
@@ -91,6 +108,8 @@ public class NotificationRule extends ExternalResource {
         boolean success = subscribed.await(5000, TimeUnit.MILLISECONDS);
         if (!success)
             throw new RuntimeException("Took too long to subscribe to notifications");
+
+        targetPackage = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
     }
 
     @Override
