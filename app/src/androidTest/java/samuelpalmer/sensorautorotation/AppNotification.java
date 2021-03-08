@@ -1,13 +1,9 @@
 package samuelpalmer.sensorautorotation;
 
-import android.service.notification.StatusBarNotification;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,13 +31,6 @@ public class AppNotification {
 
     @Rule
     public NotificationRule notifications = new NotificationRule(testActivity);
-
-    private String targetPackage;
-
-    @Before
-    public void setTargetPackage() {
-        targetPackage = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
-    }
 
     @Test
     public void doesntShowBeforeAppStarted() {
@@ -76,19 +65,8 @@ public class AppNotification {
     }
 
     private void assertHasNotification(boolean shouldHaveNotification) {
-        StatusBarNotification[] notifications = this.notifications.waitForNotificationsToSettle();
-        boolean hasServiceNotification = hasServiceNotification(notifications);
+        boolean hasServiceNotification = notifications.hasNotification(NotificationIds.SERVICE);
         Assert.assertThat(shouldHaveNotification ? "Service notification is missing" : "Service notification is present", hasServiceNotification, CoreMatchers.is(shouldHaveNotification));
-    }
-
-    private boolean hasServiceNotification(StatusBarNotification[] notifications) {
-        for (StatusBarNotification notification : notifications) {
-            boolean isServiceNotification = notification.getPackageName().equals(targetPackage) && notification.getId() == NotificationIds.SERVICE;
-            if (isServiceNotification)
-                return true;
-        }
-
-        return false;
     }
 
 }
