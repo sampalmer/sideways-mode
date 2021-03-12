@@ -4,6 +4,13 @@
           package="samuelpalmer.sensorautorotation"
         android:installLocation="internalOnly">
 
+    <!-- NOTE: If you change the queries here, make sure to also update the code in LoadInstalledAppsTask -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
+
     <!-- To disable system rotation, set user rotation -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -66,9 +73,7 @@
         <!-- Main Process -->
 
         <activity
-            android:name=".processes.ui.MessageDialogActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Dialog"
+            android:name=".processes.ui.MessageActivity"
             android:taskAffinity="@string/task_dashboard" />
 
         <activity
@@ -91,7 +96,7 @@
             android:name=".processes.ui.DashboardSmallApp"
             android:label="@string/app_name_short"
             android:exported="true"
-            tools:ignore="ExportedService">
+            tools:ignore="ExportedService,Instantiatable">
             <intent-filter>
                 <action android:name="com.sony.smallapp.intent.action.MAIN" />
                 <category android:name="com.sony.smallapp.intent.category.LAUNCHER" />
@@ -99,14 +104,13 @@
         </service>
 
         <!--
-            This is in the UI process since its popup dialog uses a fair bit of RAM, and we can't use
-            the activity as an alternative since Android blocks activity launches for 5 seconds after
-            the last home button press.
+            This is in the UI process since it doesn't strictly need to be in the service process
+            and we don't want to waste resources in the service process
          -->
         <service
             android:name=".processes.ui.QuickSettingService"
-            android:label="@string/quick_setting_mode_name"
-            android:icon="@drawable/app_right_side"
+            android:label="@string/app_name_full"
+            android:icon="@drawable/app_right_side_filled"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             >
             <intent-filter>
@@ -140,8 +144,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity android:name=".processes.ui.DeviceUnsupportedActivity" />
 
         <receiver android:name=".processes.ui.preferences.SendConfigReceiver" />
 
@@ -178,6 +180,9 @@
                   android:process="@string/process_service" />
 
         <receiver android:name=".processes.service.api.ApplicationCommandReceiver"
+                  android:process="@string/process_service" />
+
+        <receiver android:name=".processes.service.deviceorientation.SensorOverrideReceiver"
                   android:process="@string/process_service" />
 
         <service

@@ -48,29 +48,31 @@ public class ScreenOrientationEnforcer extends State {
             return new NullEventRegistrarAdaptor();
     }
 
-    @Override
-    protected void start() {
-        setEnforcedUnconditionally(false);
-        windows.addView(view, layout);
-        Log.i(TAG, "Added screen orientation enforcement overlay");
-    }
-
-    @Override
-    protected void stop() {
-        windows.removeView(view);
-        Log.i(TAG, "Removed screen orientation enforcement overlay");
-    }
-
-    private static LayoutParams generateLayout() {
-        LayoutParams layoutParams = new LayoutParams();
-        
+    public static int getWindowType() {
         if (Build.VERSION.SDK_INT >= 26)
-            layoutParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
+            return LayoutParams.TYPE_APPLICATION_OVERLAY;
         else
             // This seems like the most relevant window type for what we're doing.
             // Note that TYPE_TOAST can't be used to bypass the permission requirement since it still needs the permission in MIUI V8
             //noinspection deprecation
-            layoutParams.type = LayoutParams.TYPE_SYSTEM_OVERLAY;
+            return LayoutParams.TYPE_SYSTEM_OVERLAY;
+    }
+
+    @Override
+    protected void start() {
+        isEnforced = false;
+    }
+
+    @Override
+    protected void stop() {
+        if (isEnforced)
+            windows.removeView(view);
+    }
+
+    private static LayoutParams generateLayout() {
+        LayoutParams layoutParams = new LayoutParams();
+
+        layoutParams.type = getWindowType();
 
         // Just in case the window type somehow doesn't enforce this
         layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
@@ -94,26 +96,25 @@ public class ScreenOrientationEnforcer extends State {
         verifyStarted();
 
         if (newEnforced != isEnforced) {
-            setEnforcedUnconditionally(newEnforced);
-            Log.i(TAG, "Set screen orientation enforcement: " + newEnforced);
+            isEnforced = newEnforced;
+
+            /*
+             * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
+             * slower, and removing and adding the view is even slower again.
+             *
+             * There are a few ways of toggling screen orientation enforcement:
+             * 1. Fastest: Toggle its {@link LayoutParams#screenOrientation} value. This causes the Android 6 "Screen Overlay Detected" problem even when enforcement is disabled.
+             * 2. Medium: Toggle the view's visibility. This doesn't work in Android R, since even "INVISIBLE" or "GONE" windows control orientation.
+             * 3. Slowest: Add/remove the view from the window manager.
+             *
+             * Picking the last option since it's the fastest one that doesn't have undesired side effects.
+             */
+            if (isEnforced)
+                windows.addView(view, layout);
+            else
+                windows.removeView(view);
+
+            Log.i(TAG, "Set screen orientation enforcement: " + isEnforced);
         }
     }
-    
-    /**
-     * This seems to be the quickest way of toggling enforcement. Changing the view visibility is
-     * slower, and removing and adding the view is even slower again.
-     *
-     * There are a few ways of toggling screen orientation enforcement:
-     * 1. Fastest: Toggle its {@link LayoutParams#screenOrientation} value. This causes the Android 6 "Screen Overlay Detected" problem even when enforcement is disabled.
-     * 2. Medium: Toggle the view's visibility.
-     * 3. Slowest: Add/remove the view from the window manager.
-     *
-     * Picking the middle option since it's the fastest one that doesn't have undesired side effects.
-     */
-    private void setEnforcedUnconditionally(boolean newEnforced) {
-        isEnforced = newEnforced;
-        int visibility = newEnforced ? View.VISIBLE : View.INVISIBLE;
-        view.setVisibility(visibility);
-    }
-
 }

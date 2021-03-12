@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
@@ -13,14 +13,17 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/com.sony.smallapp" />
-            <option value="$PROJECT_DIR$/facedetectiontester" />
+            <option value="$PROJECT_DIR$/deviceinfodump" />
             <option value="$PROJECT_DIR$/loremipsum" />
             <option value="$PROJECT_DIR$/memoryhog" />
+            <option value="$PROJECT_DIR$/notificationactions" />
+            <option value="$PROJECT_DIR$/notificationlayoutdump" />
             <option value="$PROJECT_DIR$/screenorientations" />
             <option value="$PROJECT_DIR$/thirdpartyuninstaller" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

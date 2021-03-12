@@ -1,7 +1,11 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
 import android.app.KeyguardManager;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.core.content.ContextCompat;
@@ -10,7 +14,9 @@ import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandR
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 
-
+/**
+ * Turns off the app when certain events occur, such as when the device is shutdown.
+ */
 public class AppDisabler extends State {
     
     private final KeyguardManager keyguardManager;
@@ -43,6 +49,10 @@ public class AppDisabler extends State {
         }
         
         context.registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+
+        // We might be starting the app from the lock screen, so better keep track of that
+        if (turnOffWhenLocked)
+            isOnLockScreen = LockScreenMonitor.poll(keyguardManager);
     }
     
     @Override
@@ -72,6 +82,9 @@ public class AppDisabler extends State {
         
         @Override
         public void onReceive(Context context, Intent intent) {
+            // We need to turn off the app when the device shuts down so that:
+            // 1. The original value of the system "auto rotate" toggle isn't lost
+            // 2. The device's USER_ROTATION value is back to normal when the device next starts up
             if (isStarted())
                 ApplicationCommandReceiver.turnOffApp(context, "Device is shutting down");
         }
@@ -100,7 +113,7 @@ public class AppDisabler extends State {
     private final BroadcastReceiver unlockReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Not that we don't get here on API 15 when the screen lock is set to "None". Not much we can do about that.
+            // Note that we don't get here on API 15 when the screen lock is set to "None". Not much we can do about that.
 
             /*
              Only proceeding if the user wasn't on the lock screen, because if they were, then:

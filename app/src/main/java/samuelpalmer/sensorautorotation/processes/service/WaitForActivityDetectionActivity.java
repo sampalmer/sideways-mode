@@ -5,10 +5,12 @@ import android.content.ComponentName;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.Nullable;
+import androidx.core.os.HandlerCompat;
 
 import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStateMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -39,8 +41,8 @@ public class WaitForActivityDetectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         isSubscribed = false;
-        handler = new Handler();
-        
+        handler = HandlerCompat.createAsync(Looper.getMainLooper());
+
         ServiceRunningStateHolder.onStartedOrStopped.subscribe(serviceStartedOrStopped);
         
         if (!new AccessibilityServiceEnabledStateMonitor(this, WindowChangeDetectingService.class).isEnabled()) {
@@ -129,12 +131,12 @@ public class WaitForActivityDetectionActivity extends Activity {
             if (currentActivity != null) {
                 // Doesn't matter which activity was detected; main thing is that *some* change was detected, so now our job is done.
                 Log.i(TAG, "Detected activity change. Finishing activity.");
-                finish();
             } else {
                 // The accessibility service is needed to detect activity changes, so without it, this activity isn't relevant.
                 Log.w(TAG, "Accessibility service disconnected. Finishing activity.");
-                finish();
             }
+
+            finish();
         }
     };
     

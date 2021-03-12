@@ -4,21 +4,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
+import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
+import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
 /**
  * Provides a way to remotely communicate with the back-end.
  */
 public class ApplicationCommand {
 
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({ ACTION_LEFT_SIDE, ACTION_RIGHT_SIDE, ACTION_TURN_OFF, ACTION_CLEAR_ERROR, ACTION_SYNC_CONFIG })
+    public @interface ACTION {}
     public static final String ACTION_LEFT_SIDE = "left_side";
     public static final String ACTION_RIGHT_SIDE = "right_side";
     public static final String ACTION_TURN_OFF = "turn_off";
@@ -38,21 +46,21 @@ public class ApplicationCommand {
     public final String action;
     @Nullable public final Config config;
 
-    public ApplicationCommand(String action) {
+    public ApplicationCommand(@ACTION String action) {
         this(action, (Config)null);
     }
 
     /**
      * @param applicationSettings If specified, the app setting values will be included in the command for synchronisation with the service settings.
      */
-    public ApplicationCommand(String action, SharedPreferences applicationSettings) {
+    public ApplicationCommand(@ACTION String action, SharedPreferences applicationSettings) {
         this(
             action,
             new Config(applicationSettings)
         );
     }
 
-    private ApplicationCommand(String action, @Nullable Config config) {
+    private ApplicationCommand(@ACTION String action, @Nullable Config config) {
         if (action == null || !knownActions.contains(action))
             throw new IllegalArgumentException("Unknown action: " + action);
 

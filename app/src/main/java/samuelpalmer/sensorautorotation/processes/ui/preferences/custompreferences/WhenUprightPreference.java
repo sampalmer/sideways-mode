@@ -43,7 +43,7 @@ public class WhenUprightPreference extends BooleanListPreference {
         setEntryValues(new CharSequence[]{ booleanToString(false), booleanToString(true) });
 
         // Show the current selection in the summary
-        setSummary("%s");
+        setSummaryProvider(SimpleSummaryProvider.getInstance());
     }
 
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+            Unfortunately, adding components to the debug manifest is the only way to make them
+            available to tests.
+
+            Adding them to the test manifest causes the OS to get confused and ignore them.
+        -->
+
+        <!--
+            Note that we're configuring the test activity to handle its own config changes to it
+            doesn't get destroyed when the device is unlocked in a new orientation while waiting
+            for
+        -->
+        <activity
+            android:theme="@style/Theme.AppCompat"
+            android:taskAffinity=""
+            android:name="samuelpalmer.sensorautorotation.components.TestActivity"
+            android:configChanges="uiMode|orientation|screenLayout|screenSize"
+            />
+
+        <!-- Device admin is used to control the lock screen during automated tests -->
+        <receiver android:name="samuelpalmer.sensorautorotation.components.TestingDeviceAdmin"
+            android:label="Sideways Mode Testing Device Admin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin_policies" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Notification listener is used to check the app's notifications during automated tests -->
+        <service android:name="samuelpalmer.sensorautorotation.components.TestingNotificationListener"
+            android:label="Sideways Mode Testing Notification Listener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

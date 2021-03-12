@@ -69,9 +69,10 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
     
     private static void postUpgradeNotification(Context context, String upgradeMessage) {
         String messageTitle = context.getString(R.string.upgrade_summary, context.getText(R.string.app_name_full));
-        PendingIntent viewMessageIntent = MessageDialogActivity.makePendingIntent(context, messageTitle, upgradeMessage, PendingIntentIds.UPGRADE_MESSAGE, false);
+        Intent intent = MessageActivity.makeIntent(context, R.drawable.image_upgrade, messageTitle, upgradeMessage, false);
+        PendingIntent viewMessageIntent = MessageActivity.makePendingIntent(context, intent, PendingIntentIds.UPGRADE_MESSAGE);
         
-        Notification notification = NotificationBuilderFactory.create(context)
+        Notification notification = NotificationBuilderFactory.create(context, NotificationChannels.ID_UPGRADES)
             .setSmallIcon(R.drawable.notification_update)
             .setContentIntent(viewMessageIntent)
             .setContentTitle(messageTitle)
@@ -79,7 +80,6 @@ public class ShowUpgradeMessageReceiver extends BroadcastReceiver {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
-            .setChannelId(NotificationChannels.ID_UPGRADES)
             .build();
 
         NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);

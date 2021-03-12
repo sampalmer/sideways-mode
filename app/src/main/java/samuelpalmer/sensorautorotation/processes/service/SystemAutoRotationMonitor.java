@@ -3,9 +3,11 @@ package samuelpalmer.sensorautorotation.processes.service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+
+import androidx.core.os.HandlerCompat;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -30,7 +32,7 @@ public class SystemAutoRotationMonitor extends State {
         contentResolver.unregisterContentObserver(systemAutoRotationChanged);
     }
 
-    private final ContentObserver systemAutoRotationChanged = new ContentObserver(new Handler(Looper.getMainLooper()) /* Otherwise the callback is called in a different thread */ ) {
+    private final ContentObserver systemAutoRotationChanged = new ContentObserver(HandlerCompat.createAsync(Looper.getMainLooper()) /* Otherwise the callback is called in a different thread */ ) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);

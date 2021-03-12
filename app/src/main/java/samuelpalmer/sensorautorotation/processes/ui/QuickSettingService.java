@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Looper;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
@@ -15,6 +16,7 @@ import samuelpalmer.sensorautorotation.processes.service.api.ApplicationStatusCl
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
+import samuelpalmer.sensorautorotation.values.UserSide;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
@@ -28,7 +30,7 @@ public class QuickSettingService extends TileService {
     
     @Override
     public void onCreate() {
-        statusClient = new ApplicationStatusClient(this, statusListener);
+        statusClient = new ApplicationStatusClient(this, statusListener, Looper.myLooper());
     }
     
     /**
@@ -56,10 +58,8 @@ public class QuickSettingService extends TileService {
     private void handleClick() {
         if (status.runningState != null)
             new ApplicationCommand(ApplicationCommand.ACTION_TURN_OFF).send(this);
-        else if (isLocked())
-            // On a non-secure lock screen, we can smoothly unlock the device and open the dashboard.
-            unlockAndRun(this::launchDashboard);
         else
+            // Launching the dashboard regardless of whether we are on the lock screen since the user might want to start the app before unlocking their device
             launchDashboard();
     }
     
@@ -68,17 +68,22 @@ public class QuickSettingService extends TileService {
          * Not using the quick setting dialog because:
          *  1. It is affected by an OS layout bug (https://issuetracker.google.com/issues/38188882)
          *  2. It appears over system activities such as "recents"
-         *  3. It's simpler to just use the one activity for all possible ways of accessing the dashboard
+         *  3. Keeping a separate dashboard dialog and dashboard activity in sync is messy
          *  4. It occasionally crashes
          */
         
         Intent intent = new Intent(this, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
         
-        // This is needed to collapse the status bar.
-        startActivityAndCollapse(intent);
+        if (isLocked())
+            // Not collapsing the status bar if the device is locked because then the keyguard pops up if it's the first time the user has opened the app
+            startActivity(intent);
+        else
+            // This is needed to collapse the status bar if the device is unlocked
+            startActivityAndCollapse(intent);
         
         // Using a PendingIntent works around the issue where pressing the home button causes a delay in activity starts (https://issuetracker.google.com/issues/36910222)
+        // Note that this no longer works in Android 10
         try {
             pendingIntent.send();
         } catch (PendingIntent.CanceledException e) {
@@ -161,11 +166,11 @@ public class QuickSettingService extends TileService {
         else
             tile.setState(Tile.STATE_INACTIVE);
         
-        tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.quickSettingIconId : R.drawable.quick_setting_off));
+        tile.setIcon(Icon.createWithResource(this, status.runningState != null ? status.runningState.userSide.quickSettingIconId : UserSide.RIGHT.quickSettingIconId));
 
         if (Build.VERSION.SDK_INT >= 29) {
             // Android Q lets you specify the subtitle, so we'll use that to show the status
-            tile.setLabel(getText(R.string.quick_setting_mode_name));
+            tile.setLabel(getText(R.string.app_name_full));
 
             if (status.runningState == null) {
                 // Not showing the state if the app is turned off. This is consistent with the other OS quick setting tiles.
@@ -177,8 +182,13 @@ public class QuickSettingService extends TileService {
         }
         else {
             // Older versions of Android only let you specify the label, so we'll have to make do with that
-            int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.quick_setting_mode_name;
+            int labelId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.app_name_full;
             tile.setLabel(getText(labelId));
+        }
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            int stateDescriptionId = status.runningState != null ? status.runningState.userSide.descriptionId : R.string.user_rotation_off;
+            tile.setStateDescription(getText(stateDescriptionId));
         }
 
         tile.updateTile(); // Seems to subsequently cause loss of listening state.

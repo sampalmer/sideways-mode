@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
+import samuelpalmer.sensorautorotation.processes.ui.MessageActivity;
 
 /**
  * An error with the device's rotation-related sensors.
@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.processes.ui.DeviceUnsupportedActivity;
 public class SensorError extends EnvironmentError {
     
     @StringRes
-    private static int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
+    private static final int MESSAGE_RESOURCE = R.string.device_problem_explanation_sensor;
     
     public enum Type {
         NOT_FOUND,
@@ -55,7 +55,13 @@ public class SensorError extends EnvironmentError {
 
     @Override
     public PendingIntent showError(Context context) {
-        Intent intent = DeviceUnsupportedActivity.makeIntent(context, MESSAGE_RESOURCE, true)
+        Intent intent = MessageActivity.makeIntent(
+                context,
+                R.drawable.image_error,
+                context.getText(R.string.device_problem),
+                context.getText(MESSAGE_RESOURCE),
+                true
+        )
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 ;
 

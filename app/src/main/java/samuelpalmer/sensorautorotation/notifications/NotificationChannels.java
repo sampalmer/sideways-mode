@@ -34,9 +34,13 @@ public abstract class NotificationChannels {
              * The notification helps keep the user aware that the display contents are sideways
              * while also allowing them to easily control the app. However, using an importance of
              * "default" or higher causes a sound to be played, which isn't appropriate for this
-             * notification, so I've chosen the next best option, "low".
+             * notification, so I prefer the next best option, "low". Unfortunately, Android 10
+             * automatically promotes the notification to "default" importance when the foreground
+             * service is running, which means the notification will move around when the service
+             * is started from the persistent notification. So we'll go with "default" for
+             * consistency with Android 10.
              */
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT
         );
         controls.setShowBadge(false); // This isn't needed, but it makes it clearer to the user that the service notification won't show as a badge.
         controls.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); // So when the user unlocks the phone, they can see if they've left the app on

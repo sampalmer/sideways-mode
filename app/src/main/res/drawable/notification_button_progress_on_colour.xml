@@ -1,0 +1,34 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <rotate
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:fromDegrees="0"
+            android:toDegrees="1080">
+
+            <rotate android:fromDegrees="-90" android:toDegrees="-90">
+
+                <shape
+                    android:shape="ring"
+                    android:innerRadius="8dp"
+                    android:thickness="2dp"
+                    android:useLevel="false"
+                    >
+
+                    <!-- Using the actual background colour as the start colour since transparent gradients seem to act on a black background -->
+                    <gradient
+                        android:startColor="@color/notification_button_container_selected"
+                        android:endColor="@color/notification_button_icon_on_colour"
+                        android:type="sweep"
+                        android:useLevel="false"
+                        />
+
+                </shape>
+
+            </rotate>
+
+        </rotate>
+    </item>
+
+</layer-list>

@@ -6,20 +6,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class DashboardDialogFragment extends AppCompatDialogFragment {
 
@@ -32,7 +37,6 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     private FirstStartTipsFragment tipsFragment;
     private ImageButton menuButton;
     private PopupMenu popup;
-    private EventRegistrar permissionMonitor;
 
     public DashboardDialogFragment() {
         setStyle(STYLE_NO_TITLE, 0);
@@ -106,15 +110,14 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        permissionMonitor = ScreenOrientationController.makePermissionMonitor(getContext());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        permissionMonitor = null;
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        DashboardDialogViewModel model = new ViewModelProvider(getActivity()).get(DashboardDialogViewModel.class);
+        model.getPermissionToStart().observe(this, hasPermission -> {
+            ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
+            ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
+            tipsFragment.setNormalSectionVisibility(hasPermission);
+        });
     }
 
     @Override
@@ -123,9 +126,6 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 
         if (!tipsFragment.targetsSet())
             tipsFragment.setTargets(getDialog(), normalSection.getRightSideButton(), menuButton, normalSection.getOffButton());
-
-        permissionMonitor.subscribe(permissionChanged);
-        checkPermission();
 
         tipsFragment.onCanShowTipsChanged.subscribe(updateShowTipsState);
         updateShowTipsState.update();
@@ -136,7 +136,6 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         super.onStop();
 
         tipsFragment.onCanShowTipsChanged.unsubscribe(updateShowTipsState);
-        permissionMonitor.unsubscribe(permissionChanged);
     }
 
     private final EventHandler updateShowTipsState = new EventHandler() {
@@ -149,15 +148,6 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         }
     };
 
-    private final EventHandler permissionChanged = this::checkPermission;
-
-    private void checkPermission() {
-        boolean hasPermission = ScreenOrientationController.hasPermissionToStart(getContext());
-        ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
-        ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
-        tipsFragment.setNormalSectionVisibility(hasPermission);
-    }
-
     @SuppressWarnings("SameReturnValue")
     private boolean handleMenuItemClick(MenuItem menuItem) {
         /*
@@ -165,20 +155,18 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
             However, the activities we launch from the dashboard should have normal activity behaviour, so we launch them into a separate task.
          */
         int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK;
-        
-        switch (menuItem.getItemId()) {
-            case R.id.action_tips: {
-                tipsFragment.showAllTips();
-                break;
-            }
-            case R.id.action_settings: {
-                startActivity(new Intent(requireContext(), SettingsActivity.class).addFlags(flags));
-                break;
-            }
-            default:
-                throw new RuntimeException("Unknown navigation menu item: " + menuItem.getItemId());
-        }
-        
+
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.action_tips)
+            tipsFragment.showAllTips();
+        else if (itemId == R.id.action_settings) {
+            Intent settingsIntent = new Intent(requireContext(), SettingsActivity.class).addFlags(flags);
+
+            DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
+            dashboardActivity.unlockAndRun(() -> startActivity(settingsIntent));
+        } else
+            throw new RuntimeException("Unknown navigation menu item: " + itemId);
+
         return true;
     }
 

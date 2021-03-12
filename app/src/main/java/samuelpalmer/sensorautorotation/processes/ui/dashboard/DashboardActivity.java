@@ -2,22 +2,31 @@ package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationSyncReceiver;
-import samuelpalmer.sensorautorotation.processes.ui.DialogActivity;
+import samuelpalmer.sensorautorotation.processes.ui.DismissKeyguardFragment;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
-public class DashboardActivity extends DialogActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
+public class DashboardActivity extends AppCompatActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";
+    private static final String TAG_ALLOW_ON_LOCK_SCREEN = "allowOnLockScreen";
+    private static final String TAG_DISMISS_KEYGUARD = "dismissKeyguard";
+    private static final String TAG_ORIENTATION_CHANGE = "orientationChange";
     private static final String TAG_RUNNING_IN_BACKGROUND_DIALOG = "runningInBackground";
 
-    private DashboardDialogFragment dashboardDialog;
     private SharedPreferences applicationSettings;
+    private DashboardDialogFragment dashboardDialog;
+    private AllowLaunchOnLockScreenFragment allowOnLockScreen;
+    private DismissKeyguardFragment dismissKeyguardFragment;
+    private PreventOrientationChangeWhenLockedFragment preventOrientationChangeFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,15 +38,50 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
         if (savedInstanceState == null) {
             dashboardDialog = new DashboardDialogFragment();
             dashboardDialog.show(fragmentManager, TAG_DASHBOARD_DIALOG);
+
+            // Allowing the user to launch the dashboard from the lock screen so they can start the
+            // app while on their side before unlocking the phone. This is useful because after the
+            // phone is unlocked, the screen would switch to landscape mode, making it a pain to
+            // start the app.
+            allowOnLockScreen = new AllowLaunchOnLockScreenFragment();
+            dismissKeyguardFragment = new DismissKeyguardFragment();
+
+            // Preventing the orientation from changing when the dashboard is open over the lock
+            // screen since lock screens typically don't allow screen rotation, and the user might
+            // be starting the app from the lock screen while on their.
+            //
+            // This also fixes the issue where the lock screen orientation changes when you start
+            // Sideways Mode for the first time and the tip dialog shows.
+            preventOrientationChangeFragment = new PreventOrientationChangeWhenLockedFragment();
+
+            fragmentManager
+                    .beginTransaction()
+                    .add(allowOnLockScreen, TAG_ALLOW_ON_LOCK_SCREEN)
+                    .add(dismissKeyguardFragment, TAG_DISMISS_KEYGUARD)
+                    .add(preventOrientationChangeFragment, TAG_ORIENTATION_CHANGE)
+                    .commitNow();
         }
-        else
+        else {
             dashboardDialog = (DashboardDialogFragment) fragmentManager.findFragmentByTag(TAG_DASHBOARD_DIALOG);
+            allowOnLockScreen = (AllowLaunchOnLockScreenFragment) fragmentManager.findFragmentByTag(TAG_ALLOW_ON_LOCK_SCREEN);
+            dismissKeyguardFragment = (DismissKeyguardFragment) fragmentManager.findFragmentByTag(TAG_DISMISS_KEYGUARD);
+            preventOrientationChangeFragment = (PreventOrientationChangeWhenLockedFragment) fragmentManager.findFragmentByTag(TAG_ORIENTATION_CHANGE);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        allowOnLockScreen.onNewIntent();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
+        preventOrientationChangeFragment = null;
+        dismissKeyguardFragment = null;
+        allowOnLockScreen = null;
         dashboardDialog = null;
         applicationSettings = null;
     }
@@ -45,6 +89,11 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Prevents the error: "Activity {samuelpalmer.sensorautorotation/samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity} did not call finish() prior to onResume() completing"
+        // Ideally we would be using a dialog-themed activity instead of an empty activity with nested dialog, but that doesn't work with TapTargetView
+        if (Build.VERSION.SDK_INT >= 23)
+            setVisible(true);
 
         if (dashboardDialog != null)
             dashboardDialog.setCommandSentListener(this::onCommandSent);
@@ -83,4 +132,14 @@ public class DashboardActivity extends DialogActivity implements RunningInBackgr
         } else
             finish();
     }
+
+    /**
+     * Runs the given runnable, prompting the user to unlock the device if needed
+     */
+    public void unlockAndRun(Runnable runnable) {
+        // We might be on the lock screen if the user launched the dashboard from the quick setting tile,
+        // so we'll make sure the device is unlocked
+        dismissKeyguardFragment.unlockAndRun(runnable);
+    }
+
 }

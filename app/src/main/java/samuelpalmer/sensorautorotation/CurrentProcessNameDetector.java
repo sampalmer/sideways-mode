@@ -7,7 +7,10 @@ import android.os.Build;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-abstract class CurrentProcessNameDetector {
+/**
+ * Identifies which process the calling code is running in
+ */
+final class CurrentProcessNameDetector {
 
     public static String getName() {
         if (Build.VERSION.SDK_INT >= 28)

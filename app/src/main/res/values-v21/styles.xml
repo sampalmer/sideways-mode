@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme.NotificationButton" parent="AppTheme.NotificationButtonBase">
+        <!-- The theme is needed to make selectableItemBackground work in Android 5+ -->
+        <item name="android:theme">@style/AppTheme</item>
+
+        <!-- Using AndroidX selectableItemBackground since it seems pretty platform-neutral -->
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="AppTheme.Notification.ProgressBar" parent="Base.AppTheme.Notification.ProgressBar">
+        <!-- Using tints so we can stick with the OS default progress bar while retaining our own colours -->
         <item name="android:indeterminateTintMode">src_in</item>
-    </style>
-
-    <!-- Using tints so we can stick with the OS default progress bar while retaining our own colours -->
-    <style name="AppTheme.Notification.ProgressBar.OnColour.DarkTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_on_colour_dark_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.OnColour.LightTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_on_colour_light_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.Selected.DarkTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_selected_dark_theme</item>
-    </style>
-
-    <style name="AppTheme.Notification.ProgressBar.Selected.LightTheme" parent="AppTheme.Notification.ProgressBar">
-        <item name="android:indeterminateTint">@color/notification_button_icon_selected_light_theme</item>
+        <item name="android:indeterminateTint">@color/notification_button_icon_on_colour</item>
     </style>
 
 </resources>

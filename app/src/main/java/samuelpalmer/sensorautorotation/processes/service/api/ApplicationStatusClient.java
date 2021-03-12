@@ -4,13 +4,20 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.*;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
-import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
-import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 import java.lang.ref.WeakReference;
+
+import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
+import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 public class ApplicationStatusClient {
     
@@ -21,10 +28,12 @@ public class ApplicationStatusClient {
     private boolean bound;
     private @Nullable Messenger serviceMessenger; // Only available when the service is both bound and connected.
 
-    public ApplicationStatusClient(Context context, Listener listener) {
+    public ApplicationStatusClient(Context context, Listener listener, Looper looper) {
         this.context = context;
         this.listener = listener;
-        this.clientMessenger = new Messenger(new ClientHandler(this));
+
+        // TODO: Change this to an async handler to improve responsiveness
+        this.clientMessenger = new Messenger(new ClientHandler(looper, this));
     }
     
     public void subscribe() {
@@ -105,7 +114,9 @@ public class ApplicationStatusClient {
         
         private final WeakReference<ApplicationStatusClient> clientReference;
 
-        private ClientHandler(ApplicationStatusClient client) {
+        private ClientHandler(Looper looper, ApplicationStatusClient client) {
+            super(looper);
+
             // Android Studio issued a warning saying that I must use weak references to outside of the handler, hence the use of weak references here
             this.clientReference = new WeakReference<>(client);
         }

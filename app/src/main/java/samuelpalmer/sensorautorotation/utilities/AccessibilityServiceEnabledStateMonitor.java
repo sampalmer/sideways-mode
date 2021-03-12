@@ -5,10 +5,12 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
+
+import androidx.core.os.HandlerCompat;
+
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
@@ -46,7 +48,7 @@ public class AccessibilityServiceEnabledStateMonitor extends EventRegistrarAdapt
         isUpToDate = false;
     }
 
-    private final ContentObserver observer = new ContentObserver(new Handler(Looper.getMainLooper())) {
+    private final ContentObserver observer = new ContentObserver(HandlerCompat.createAsync(Looper.getMainLooper())) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);

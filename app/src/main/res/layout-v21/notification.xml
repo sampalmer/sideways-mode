@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Unfortunately, older Android versions crash if the layout height is set by a style or points
+    to a resource that has different qualifiers, so we have to use separate layouts for each OS version.
+-->
+<!-- Starting from Android 5, we no longer need to explicitly set the notification height, so setting it to match_parent -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.NotificationContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include layout="@layout/notification_buttons" />
+
+</LinearLayout>

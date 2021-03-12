@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -11,9 +12,8 @@ import androidx.transition.TransitionManager;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import samuelpalmer.sensorautorotation.R;
-import samuelpalmer.sensorautorotation.processes.ui.UiActivity;
 
-public class SettingsActivity extends UiActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private NavController navController;
 

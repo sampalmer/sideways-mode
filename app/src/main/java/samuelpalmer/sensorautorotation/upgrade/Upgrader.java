@@ -6,13 +6,14 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
+
+import java.util.Map;
+
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-
-import java.util.Map;
 
 public class Upgrader {
     
@@ -40,7 +41,7 @@ public class Upgrader {
         SharedPreferences prefs;
         String settingsAppVersionKey;
         
-        if (CurrentProcess.isServiceProcess(context)) {
+        if (CurrentProcess.isServiceProcess()) {
             prefs = ServiceSettings.getSharedPreferences(context);
             settingsAppVersionKey = ServiceSettings.KEY_APP_VERSION;
             lastAppVersion = prefs.contains(settingsAppVersionKey) ? prefs.getInt(settingsAppVersionKey, -1) : null;
@@ -68,7 +69,7 @@ public class Upgrader {
             &&
             lastAppVersion != newAppVersion
         ) {
-            Log.i(Upgrader.class.getSimpleName(), "Upgrading " + (CurrentProcess.isServiceProcess(context) ? "service" : "application") + " settings from " + lastAppVersion + " to " + newAppVersion);
+            Log.i(Upgrader.class.getSimpleName(), "Upgrading " + (CurrentProcess.isServiceProcess() ? "service" : "application") + " settings from " + lastAppVersion + " to " + newAppVersion);
             
             if (lastAppVersion > newAppVersion) {
                 // On my Sony Xperia M running Android 4.1.2, the OS lets me downgrade the app, so we need to guard against this.
@@ -77,7 +78,7 @@ public class Upgrader {
                 
                 prefs.edit().clear().apply();
                 
-                if (CurrentProcess.isServiceProcess(context)) {
+                if (CurrentProcess.isServiceProcess()) {
                     if (!ScreenOrientationController.hasPermissionToStart(context))
                         Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
                     else {
@@ -95,7 +96,7 @@ public class Upgrader {
                         
                         SharedPreferences.Editor editor = prefs.edit();
                         
-                        if (CurrentProcess.isServiceProcess(context))
+                        if (CurrentProcess.isServiceProcess())
                             migration.upgradeServiceProcessData(context, prefs, editor);
                         else
                             migration.upgradeUiProcessData(context, prefs, editor);

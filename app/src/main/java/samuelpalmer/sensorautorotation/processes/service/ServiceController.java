@@ -37,7 +37,7 @@ public abstract class ServiceController {
     }
     
     public static void ensureStopped(Context context) {
-        if (!CurrentProcess.isServiceProcess(context))
+        if (!CurrentProcess.isServiceProcess())
             throw new RuntimeException("Cannot control the service from outside the service process");
 
         if (ServiceRunningStateHolder.isServiceRunning()) {

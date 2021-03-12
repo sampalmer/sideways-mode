@@ -40,8 +40,9 @@ public class IncompatibleAppsViewModel extends AndroidViewModel {
     private final SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (prefs != null && ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES.equals(key))
-                updateCount();
+            if (prefs != null)
+                if (key == null || key.equals(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES))
+                    updateCount();
         }
     };
 

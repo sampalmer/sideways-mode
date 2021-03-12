@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="samuelpalmer.sensorautorotation"
+    >
+
+    <!-- Must have "testOnly" set in order to deactivate the device admin app -->
+    <application
+        tools:replace="label" android:label="Sideways Mode Tests"
+        android:testOnly="true"
+        >
+    </application>
+</manifest>

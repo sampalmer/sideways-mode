@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
 /**
  * Implementation of {@link ApplicationSettings#KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT}. Updates
@@ -22,43 +20,29 @@ public final class PersistentNotificationUpdater extends State {
 
     private final Context context;
     private final SharedPreferences serviceSettings;
-    private final DarkThemeMonitor darkThemeMonitor;
 
     public PersistentNotificationUpdater(Context context) {
         this.context = context;
         serviceSettings = ServiceSettings.getSharedPreferences(context);
-        darkThemeMonitor = new DarkThemeMonitor(context);
     }
 
     @Override
     protected void start() {
         serviceSettings.registerOnSharedPreferenceChangeListener(serviceSettingsChanged);
-        darkThemeMonitor.subscribe(darkThemeChanged);
     }
 
     @Override
     protected void stop() {
-        darkThemeMonitor.unsubscribe(darkThemeChanged);
         serviceSettings.unregisterOnSharedPreferenceChangeListener(serviceSettingsChanged);
     }
 
     private final SharedPreferences.OnSharedPreferenceChangeListener serviceSettingsChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT.equals(key)) {
+            if (key == null || key.equals(ServiceSettings.KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT)) {
                 // The persistent notification setting changed, so we might need to update the service notification
                 sync(context);
             }
-        }
-    };
-
-    private final EventHandler darkThemeChanged = new EventHandler() {
-        @Override
-        public void update() {
-            // The notification needs an update since the theme changed.
-            // There's no guarantee we'll actually get here since this process might not be running
-            // at the time of the theme changed, but there's not much more we can do.
-            sync(context);
         }
     };
 

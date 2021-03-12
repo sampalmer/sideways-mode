@@ -1,9 +1,20 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
+import android.content.Context;
+import android.hardware.display.DisplayManager;
+import android.os.Build;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+
+import java.lang.ref.WeakReference;
 
 import samuelpalmer.sensorautorotation.processes.service.deviceorientation.OrientationSensorHandler;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.IncompatibleAppsManager;
+import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationUpdater;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenRotationMonitor;
@@ -15,8 +26,9 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 public class ServiceRunningState extends State {
     
     private static final String TAG = ServiceRunningState.class.getSimpleName();
-    
-    private final RotationService service;
+    private static WeakReference<Context> cachedWindowContextReference;
+
+    private final Context context;
     private final OrientationCalculator calculator;
     final RunningStateUpdater runningStateUpdater;
     private final LowMemoryDetector lowMemoryDetector;
@@ -28,24 +40,66 @@ public class ServiceRunningState extends State {
     private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 
     public ServiceRunningState(RotationService service) {
-        this.service = service;
+        this.context = makeContext(service);
 
         // This should happen before other work is done so it doesn't clear any errors that occur during initialisation.
-        EnvironmentErrorManager.clear(service);
+        EnvironmentErrorManager.clear(context);
 
-        ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(service);
-        calculator = new OrientationCalculator(service, screenRotationMonitor);
-        screenUpdater = new ScreenOrientationUpdater(service, calculator, screenRotationMonitor);
-        runningStateUpdater = new RunningStateUpdater(service, calculator, service);
-        lowMemoryDetector = new LowMemoryDetector(service);
-        orientationSensorHandler = new OrientationSensorHandler(service, calculator, screenRotationMonitor);
-        systemAutoRotationMonitor = new SystemAutoRotationMonitor(service);
-        ActivityMonitor activityMonitor = ActivityMonitor.create(service);
-        incompatibleAppsManager = new IncompatibleAppsManager(service, activityMonitor);
-        appDisabler = new AppDisabler(service);
-        deviceInteractivityMonitor = new DeviceInteractivityMonitor(service);
+        ScreenRotationMonitor screenRotationMonitor = new ScreenRotationMonitor(context);
+        calculator = new OrientationCalculator(context, screenRotationMonitor);
+        screenUpdater = new ScreenOrientationUpdater(context, calculator, screenRotationMonitor);
+        runningStateUpdater = new RunningStateUpdater(context, calculator, service);
+        lowMemoryDetector = new LowMemoryDetector(context);
+        orientationSensorHandler = new OrientationSensorHandler(context, calculator, screenRotationMonitor);
+        systemAutoRotationMonitor = new SystemAutoRotationMonitor(context);
+        ActivityMonitor activityMonitor = ActivityMonitor.create(context);
+        incompatibleAppsManager = new IncompatibleAppsManager(context, activityMonitor);
+        appDisabler = new AppDisabler(context);
+        deviceInteractivityMonitor = new DeviceInteractivityMonitor(context);
     }
-    
+
+    /**
+     * Creates a context that is also suitable for UI-related work on the default display.
+     *
+     * Since we're in a service, then our context doesn't have UI-related information, such as
+     * {@link android.content.res.Configuration}, which is needed for correct resource resolution.
+     *
+     * As of Android R, this is required when accessing {@link WindowManager} etc.
+     */
+    private static Context makeContext(RotationService service) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            // The OS restricts the rate at which window contexts may be created, which can lead to
+            // the following exception when the user or an automated test repeatedly starts and
+            // stops the app:
+            // java.lang.UnsupportedOperationException: createWindowContext failed! Too many unused window contexts. Please see Context#createWindowContext documentation for detail.
+            //
+            // So, unfortunately, we need to cache the window context and re-use it
+
+            Context cachedContext = cachedWindowContextReference == null ? null : cachedWindowContextReference.get();
+            if (cachedContext == null) {
+                // Using the app context since we will cache the result beyond the lifetime of the
+                // service
+                Context appContext = service.getApplicationContext();
+                Context displayContext = makeDisplayContext(appContext);
+                cachedContext = displayContext.createWindowContext(ScreenOrientationEnforcer.getWindowType(), null);
+                cachedWindowContextReference = new WeakReference<>(cachedContext);
+            }
+
+            return cachedContext;
+        } else if (Build.VERSION.SDK_INT >= 17) {
+            return makeDisplayContext(service);
+        } else
+            return service;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private static Context makeDisplayContext(Context service) {
+        DisplayManager displayManager = ContextCompat.getSystemService(service, DisplayManager.class);
+        assert displayManager != null;
+        Display primaryDisplay = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
+        return service.createDisplayContext(primaryDisplay);
+    }
+
     @Override
     protected void start() {
         Log.i(TAG, "App is turning on");
@@ -79,7 +133,7 @@ public class ServiceRunningState extends State {
         lowMemoryDetector.ensureStopped();
         
         ServiceSettings
-            .getSharedPreferences(service)
+            .getSharedPreferences(context)
             .edit()
             .remove(ServiceSettings.KEY_PERSISTENT_STATE)
             .apply();
