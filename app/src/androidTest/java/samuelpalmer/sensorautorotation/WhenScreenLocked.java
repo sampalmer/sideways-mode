@@ -46,7 +46,7 @@ public class WhenScreenLocked {
         lockScreen.lockDevice();
 
         try {
-            app.waitForAppState(false);
+            app.waitForAppToStop();
         } catch (TimeoutException e) {
             Assert.fail("App did not turn off");
         }
