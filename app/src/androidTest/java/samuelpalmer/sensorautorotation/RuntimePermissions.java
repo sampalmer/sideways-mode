@@ -55,7 +55,7 @@ public class RuntimePermissions {
 
         ApplicationStatus newStatus;
         try {
-            newStatus = app.waitForAppState(false);
+            newStatus = app.waitForAppToStop();
         } catch (TimeoutException e) {
             Assert.fail("App did not stop after revoking system settings permission");
             return;

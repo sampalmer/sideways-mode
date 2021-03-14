@@ -50,6 +50,8 @@ public class ApplicationRule extends ExternalResource {
         if (lastStatus == null || lastStatus.runningState != null)
             stopApp();
 
+        clearEnvironmentErrors();
+
         targetContext = null;
 
         client.unsubscribe();
@@ -76,7 +78,7 @@ public class ApplicationRule extends ExternalResource {
 
         // Waiting for startup to complete
         try {
-            return waitForAppState(true);
+            return waitForAppToStart();
         } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
@@ -96,7 +98,7 @@ public class ApplicationRule extends ExternalResource {
         command.send(targetContext);
 
         try {
-            waitForAppState(false);
+            waitForAppToStop();
         } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
@@ -123,6 +125,21 @@ public class ApplicationRule extends ExternalResource {
         return lastStatus;
     }
 
+    private void clearEnvironmentErrors() {
+        ApplicationStatus originalStatus = getCurrentStatus();
+        if (originalStatus.error == null)
+            return;
+
+        ApplicationCommand clearErrorCommand = new ApplicationCommand(ApplicationCommand.ACTION_CLEAR_ERROR);
+        clearErrorCommand.send(targetContext);
+
+        try {
+            waitForAppState(status -> status.error == null, "error cleared");
+        } catch (TimeoutException e) {
+            throw new RuntimeException("Took too long to clear environment error", e);
+        }
+    }
+
     /** Sets {@link #lastStatus} to the most recent status received by the listener */
     private void refreshLastStatus() {
         while (true) {
@@ -134,6 +151,14 @@ public class ApplicationRule extends ExternalResource {
         }
     }
 
+    public ApplicationStatus waitForAppToStart() throws TimeoutException {
+        return waitForAppState(status -> status.runningState != null && !status.runningState.waitingForSensor, "started");
+    }
+
+    public ApplicationStatus waitForAppToStop() throws TimeoutException {
+        return waitForAppState(status -> status.runningState == null, "stopped");
+    }
+
     /**
      * Waits for the app to reach the given running state. Note that if the status has already
      * changed since the last call to any method on this rule, then that previous status change will
@@ -142,7 +167,7 @@ public class ApplicationRule extends ExternalResource {
      * @return The target running state
      * @throws TimeoutException if the target running state is not reached
      */
-    public ApplicationStatus waitForAppState(boolean targetRunningState) throws TimeoutException {
+    private ApplicationStatus waitForAppState(TargetAppState targetState, String targetStateName) throws TimeoutException {
         long timeout = System.currentTimeMillis() + 5000;
         while (true) {
             ApplicationStatus newStatus;
@@ -153,11 +178,10 @@ public class ApplicationRule extends ExternalResource {
             }
 
             if (newStatus == null)
-                throw new TimeoutException("Took too long for app to reach started state " + targetRunningState);
+                throw new TimeoutException("Took too long for app to reach state " + targetStateName);
 
             lastStatus = newStatus;
-            boolean isRunning = newStatus.runningState != null;
-            if (isRunning == targetRunningState && (!targetRunningState || !newStatus.runningState.waitingForSensor))
+            if (targetState.hasReachedTargetState(newStatus))
                 break;
         }
 
@@ -181,5 +205,9 @@ public class ApplicationRule extends ExternalResource {
         }
 
     };
+
+    private interface TargetAppState {
+        boolean hasReachedTargetState(ApplicationStatus status);
+    }
 
 }
