@@ -14,9 +14,13 @@ public class UpgradeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + intent.getAction());
-        
-        if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
+        String action = intent.getAction();
+
+        Log.i(UpgradeReceiver.class.getSimpleName(), "Received intent: " + action);
+
+        // Allowing a null action so we can trigger the receiver from automated tests since the OS
+        // doesn't allow ACTION_MY_PACKAGE_REPLACED to be sent by an app or through adb
+        if (action == null || action.equals(Intent.ACTION_MY_PACKAGE_REPLACED)) {
             SharedPreferences prefs = ServiceSettings.getSharedPreferences(context);
             boolean wasRunning = prefs.contains(ServiceSettings.KEY_PERSISTENT_STATE);
             
@@ -36,7 +40,7 @@ public class UpgradeReceiver extends BroadcastReceiver {
             PersistentNotificationUpdater.sync(context);
         }
         else
-            Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + intent.getAction());
+            Log.w(UpgradeReceiver.class.getSimpleName(), "Unknown action: " + action);
     }
 
 }

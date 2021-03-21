@@ -6,7 +6,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
-    
+
+    /**
+     * Boolean extra supplied to intent passed to {@link #onStartCommand(Intent, int, int)} to
+     * indicate that the service should use started state {@link #START_NOT_STICKY}. If not
+     * specified, started state {@link #START_STICKY} will be used.
+     */
+    public static final String EXTRA_NOT_STICKY = "notsticky";
+
     private static final String TAG = RotationService.class.getSimpleName();
     
     // Used to ensure the OS doesn't create multiple simultaneous instances of the service.
@@ -33,8 +40,9 @@ public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
             runningState = new ServiceRunningState(this);
             runningState.ensureStarted();
         }
-        
-        return Service.START_STICKY;
+
+        boolean notSticky = intent != null && intent.getExtras() != null && intent.getExtras().getBoolean(EXTRA_NOT_STICKY, false);
+        return notSticky ? Service.START_NOT_STICKY : Service.START_STICKY;
     }
     
     @Override
