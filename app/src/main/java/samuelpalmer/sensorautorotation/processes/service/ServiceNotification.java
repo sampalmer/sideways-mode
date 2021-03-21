@@ -43,7 +43,7 @@ public class ServiceNotification {
         builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
                 .setColor(getNotificationColour(context))
                 .setContentIntent(dashboardIntent)
-                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setCategory(NotificationCompat.CATEGORY_NAVIGATION) // TODO: Temporary fix to prevent Android 11 notification delay: https://issuetracker.google.com/issues/182635568
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
                 .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
