@@ -8,6 +8,8 @@
 /.idea/assetWizardSettings.xml
 /*/build
 /build
+/*/lint
+/lint
 /.gradle
 Thumbs.db
 *.alloc
@@ -20,3 +22,5 @@ Thumbs.db
 output.json
 google-services.json
 *.jks
+/fastlane/README.md
+/fastlane/report.xml
