@@ -46,11 +46,6 @@ ensureContainer:
   stage: build
   before_script:
     - chmod +x gradlew
-    # We store this binary file in a variable as hex with this command, `xxd -p android-signing-keystore.jks`
-    # Then we convert the hex back to a binary file
-    - cat "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.jks
-  after_script:
-    - rm android-signing-keystore.jks || true
   artifacts:
     paths:
       - app/build/outputs
@@ -62,8 +57,14 @@ buildDebug:
 
 buildRelease:
   extends: .build_job
+  before_script:
+    # We store this binary file in a variable as hex with this command, `xxd -p android-signing-keystore.jks`
+    # Then we convert the hex back to a binary file
+    - cat "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.jks
   script:
     - bundle exec fastlane buildRelease
+  after_script:
+    - rm android-signing-keystore.jks || true
   environment:
     name: production
 
