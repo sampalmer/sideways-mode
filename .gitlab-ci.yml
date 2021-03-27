@@ -26,6 +26,8 @@ updateContainer:
     changes:
       - Dockerfile
       - gradle.properties
+      - Gemfile
+      - Gemfile.lock
 
 ensureContainer:
   extends: .updateContainerJob
@@ -40,6 +42,8 @@ ensureContainer:
     changes:
       - Dockerfile
       - gradle.properties
+      - Gemfile
+      - Gemfile.lock
 
 .build_job:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
