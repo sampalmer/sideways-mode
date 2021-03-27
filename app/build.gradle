@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    // Compile SDK version moved into gradle.properties so CI pipeline can read it
+    def compileSdkVersionString = project.'app.compileSdkVersion'
+    compileSdkVersion compileSdkVersionString.isInteger() ? compileSdkVersionString as Integer : compileSdkVersionString
 
     lintOptions{
         disable 'MissingTranslation'

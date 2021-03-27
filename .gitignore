@@ -19,3 +19,4 @@ Thumbs.db
 *.apks
 output.json
 google-services.json
+*.jks
