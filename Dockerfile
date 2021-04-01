@@ -3,6 +3,7 @@
 FROM openjdk:8-jdk
 
 ARG ANDROID_COMPILE_SDK
+RUN test -n "$ANDROID_COMPILE_SDK"
 
 ENV ANDROID_SDK_ROOT /android-sdk-linux
 ENV PATH="${PATH}:/android-sdk-linux/platform-tools/:/android-sdk-linux/cmdline-tools/latest/bin/"
