@@ -30,5 +30,6 @@ RUN bundle install
 COPY build.gradle gradle.properties gradlew settings.gradle app/
 COPY gradle app/gradle
 COPY app/build.gradle app/app/
+RUN chmod +x app/gradlew
 RUN cd app && ./gradlew app:assembleDebug || true
 RUN rm -r app
