@@ -26,3 +26,9 @@ COPY Gemfile.lock .
 COPY Gemfile .
 RUN gem install bundler
 RUN bundle install
+# install build-time Android dependencies
+COPY build.gradle gradle.properties gradlew settings.gradle app/
+COPY gradle app/gradle
+COPY app/build.gradle app/app/
+RUN cd app && ./gradlew app:assembleDebug || true
+RUN rm -r app

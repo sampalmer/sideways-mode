@@ -24,10 +24,15 @@ updateContainer:
   extends: .updateContainerJob
   only:
     changes:
+      - app/build.gradle
+      - gradle/**/*
+      - build.gradle
       - Dockerfile
-      - gradle.properties
       - Gemfile
       - Gemfile.lock
+      - gradle.properties
+      - gradlew
+      - settings.gradle
 
 ensureContainer:
   extends: .updateContainerJob
@@ -40,10 +45,15 @@ ensureContainer:
     - docker manifest inspect $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
   except:
     changes:
+      - app/build.gradle
+      - gradle/**/*
+      - build.gradle
       - Dockerfile
-      - gradle.properties
       - Gemfile
       - Gemfile.lock
+      - gradle.properties
+      - gradlew
+      - settings.gradle
 
 .build_job:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
