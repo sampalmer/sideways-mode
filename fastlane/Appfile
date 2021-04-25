@@ -1,0 +1,2 @@
+json_key_file("~/google_play_api_key.json")
+package_name("samuelpalmer.sensorautorotation")

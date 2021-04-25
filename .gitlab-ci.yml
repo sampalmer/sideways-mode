@@ -1,0 +1,144 @@
+stages:
+  - environment
+  - build
+  - test
+  - internal
+  - alpha
+  - beta
+  - production
+
+
+.updateContainerJob:
+  image: docker:stable
+  stage: environment
+  services:
+    - docker:dind
+  script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || true
+    - export ANDROID_COMPILE_SDK=$(grep '^app.compileSdkVersion=' gradle.properties | cut -d'=' -f2)
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG --build-arg ANDROID_COMPILE_SDK -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+updateContainer:
+  extends: .updateContainerJob
+  only:
+    changes:
+      - app/build.gradle
+      - gradle/**/*
+      - build.gradle
+      - Dockerfile
+      - Gemfile
+      - Gemfile.lock
+      - gradle.properties
+      - gradlew
+      - settings.gradle
+
+ensureContainer:
+  extends: .updateContainerJob
+  allow_failure: true
+  before_script:
+    - "mkdir -p ~/.docker && echo '{\"experimental\": \"enabled\"}' > ~/.docker/config.json"
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    # Skip update container `script` if the container already exists
+    # via https://gitlab.com/gitlab-org/gitlab-ce/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
+    - docker manifest inspect $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
+  except:
+    changes:
+      - app/build.gradle
+      - gradle/**/*
+      - build.gradle
+      - Dockerfile
+      - Gemfile
+      - Gemfile.lock
+      - gradle.properties
+      - gradlew
+      - settings.gradle
+
+.build_job:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build
+  before_script:
+    - chmod +x gradlew
+  artifacts:
+    paths:
+      - app/build/outputs
+
+buildDebug:
+  extends: .build_job
+  script:
+    - bundle exec fastlane buildDebug
+
+buildRelease:
+  extends: .build_job
+  before_script:
+    # We store this binary file in a variable as hex with this command, `xxd -p android-signing-keystore.jks`
+    # Then we convert the hex back to a binary file
+    - cat "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.jks
+  script:
+    - bundle exec fastlane buildRelease
+  after_script:
+    - rm android-signing-keystore.jks || true
+  environment:
+    name: production
+  # We only allow release builds on tags to protect production-scoped secret variables
+  rules:
+    - if: $CI_COMMIT_TAG
+
+lint:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: test
+  dependencies:
+    - buildDebug
+  script:
+    - chmod +x gradlew
+    - bundle exec fastlane lint
+
+test:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: test
+  dependencies:
+    - buildDebug
+  script:
+    - chmod +x gradlew
+    - bundle exec fastlane test
+
+.promote_job:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  dependencies: []
+  before_script:
+    - chmod +x gradlew
+    - cp "$google_play_service_account_api_key_json" ~/google_play_api_key.json
+  after_script:
+    - rm -f ~/google_play_api_key.json
+  # We only allow publishing on tags to protect production-scoped secret variables
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+
+publishInternal:
+  extends: .promote_job
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: internal
+  dependencies:
+    - buildRelease
+  script:
+    - bundle exec fastlane internal
+
+promoteAlpha:
+  extends: .promote_job
+  stage: alpha
+  script:
+    - bundle exec fastlane promote_internal_to_alpha
+
+promoteBeta:
+  extends: .promote_job
+  stage: beta
+  script:
+    - bundle exec fastlane promote_alpha_to_beta
+
+promoteProduction:
+  extends: .promote_job
+  stage: production
+  script:
+    - bundle exec fastlane promote_beta_to_production
