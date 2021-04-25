@@ -1,0 +1,9 @@
+*
+!/app/build.gradle
+!/gradle
+!/build.gradle
+!/Gemfile
+!/Gemfile.lock
+!/gradle.properties
+!/gradlew
+!/settings.gradle

@@ -14,12 +14,12 @@ public class FieldConstants<TClass> {
         this.prefix = prefix;
     }
 
+    @SuppressWarnings("unchecked")
     public <TConstant> String getName(TConstant value) {
         for (Field field : containingClass.getDeclaredFields())
             if (field.getName().startsWith(prefix) && Modifier.isStatic(field.getModifiers())) {
                 TConstant currentFieldValue;
                 try {
-                    //noinspection unchecked
                     currentFieldValue = (TConstant) field.get(null);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
