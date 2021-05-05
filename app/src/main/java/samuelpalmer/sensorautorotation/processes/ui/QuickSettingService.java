@@ -73,21 +73,22 @@ public class QuickSettingService extends TileService {
          */
         
         Intent intent = new Intent(this, DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
-        
         if (isLocked())
             // Not collapsing the status bar if the device is locked because then the keyguard pops up if it's the first time the user has opened the app
             startActivity(intent);
         else
             // This is needed to collapse the status bar if the device is unlocked
             startActivityAndCollapse(intent);
-        
-        // Using a PendingIntent works around the issue where pressing the home button causes a delay in activity starts (https://issuetracker.google.com/issues/36910222)
-        // Note that this no longer works in Android 10
-        try {
-            pendingIntent.send();
-        } catch (PendingIntent.CanceledException e) {
-            throw new RuntimeException(e);
+
+        if (Build.VERSION.SDK_INT < 29) {
+            // Using a PendingIntent works around the issue where pressing the home button causes a delay in activity starts (https://issuetracker.google.com/issues/36910222)
+            // Note that this no longer works in Android 10 but was fixed in the OS starting from Android 12
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, PendingIntentIds.QUICK_SETTING_CLICK, intent, PendingIntentIds.PENDING_INTENT_FLAGS);
+            try {
+                pendingIntent.send();
+            } catch (PendingIntent.CanceledException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     
