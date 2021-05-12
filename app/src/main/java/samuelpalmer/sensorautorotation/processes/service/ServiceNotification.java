@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
@@ -141,6 +142,12 @@ public class ServiceNotification {
         // * The built-in DecoratedCustomViewStyle templates doesn't leave enough vertical space for our buttons
         RemoteViews customNotification = template.getContentView();
         builder.setCustomContentView(customNotification);
+
+        if (Build.VERSION.SDK_INT >= 30 && Build.VERSION.PREVIEW_SDK_INT > 0) {
+            // Android 12 requires custom notifications to also have custom layouts for expanded view
+            // https://developer.android.com/about/versions/12/behavior-changes-12#custom-notifications
+            builder.setCustomBigContentView(customNotification);
+        }
     }
 
 }
