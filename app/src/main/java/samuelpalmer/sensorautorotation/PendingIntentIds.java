@@ -23,10 +23,10 @@ public abstract class PendingIntentIds {
     public static final int MAIN_NOTIFICATION_RIGHT_SIDE = 15;
     public static final int TASK_REMOVAL_FIX = 16;
 
-    // Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
     public static final int PENDING_INTENT_FLAGS;
 
     static {
+        // Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
         int flags = PendingIntent.FLAG_CANCEL_CURRENT;
         if (Build.VERSION.SDK_INT >= 23)
             flags |= PendingIntent.FLAG_IMMUTABLE;
