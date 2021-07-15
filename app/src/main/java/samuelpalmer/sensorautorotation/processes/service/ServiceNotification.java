@@ -143,7 +143,7 @@ public class ServiceNotification {
         RemoteViews customNotification = template.getContentView();
         builder.setCustomContentView(customNotification);
 
-        if (Build.VERSION.SDK_INT >= 30 && Build.VERSION.PREVIEW_SDK_INT > 0) {
+        if (Build.VERSION.SDK_INT >= 31) {
             // Android 12 requires custom notifications to also have custom layouts for expanded view
             // https://developer.android.com/about/versions/12/behavior-changes-12#custom-notifications
             builder.setCustomBigContentView(customNotification);
