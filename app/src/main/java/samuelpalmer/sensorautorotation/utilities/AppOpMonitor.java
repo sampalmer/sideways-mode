@@ -11,14 +11,12 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.HandlerCompat;
 
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
-
 /**
  * Monitors changes to a particular app op.
  * @see AppOpsManager
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class AppOpMonitor extends EventRegistrarAdaptor {
+public class AppOpMonitor extends PermissionMonitor {
 
     private final AppOpsManager appOps;
     private final int uid;
@@ -40,6 +38,7 @@ public class AppOpMonitor extends EventRegistrarAdaptor {
         this.op = op;
     }
 
+    @Override
     public boolean hasPermission() {
         if (isUpToDate)
             return hadPermission;

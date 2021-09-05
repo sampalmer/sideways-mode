@@ -79,7 +79,7 @@ public class Upgrader {
                 prefs.edit().clear().apply();
                 
                 if (CurrentProcess.isServiceProcess()) {
-                    if (!ScreenOrientationController.hasPermissionToStart(context))
+                    if (!ScreenOrientationController.makePermissionMonitor(context).hasPermission())
                         Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore screen orientation while downgrading.");
                     else {
                         Settings.System.putInt(context.getContentResolver(), Settings.System.USER_ROTATION, Surface.ROTATION_0);

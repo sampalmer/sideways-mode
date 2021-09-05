@@ -204,7 +204,7 @@ class Migrations {
     }
 
     private static void restoreSystemSettings(Context context, Boolean autoRotate) {
-        if (!ScreenOrientationController.hasPermissionToStart(context))
+        if (!ScreenOrientationController.makePermissionMonitor(context).hasPermission())
             Log.w(Migrations.class.getSimpleName(), "Didn't have permission to restore the system settings while upgrading.");
         else {
             if (autoRotate != null)

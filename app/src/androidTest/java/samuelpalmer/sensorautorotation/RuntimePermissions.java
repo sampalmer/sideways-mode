@@ -80,8 +80,10 @@ public class RuntimePermissions {
     private void testOptionalPermissionRevocation(RuntimePermissionRule permission, String permissionName) {
         Assume.assumeTrue(String.format("%s permission cannot be revoked on this device", permissionName), permission.isRuntimePermission());
 
+        // Marking an app as incompatible so the permissions will be monitored. Doesn't matter which app we mark.
         String testPackageName = InstrumentationRegistry.getInstrumentation().getContext().getPackageName();
         appSettings.markAsIncompatible(testPackageName);
+
         app.startApp(ApplicationCommand.ACTION_RIGHT_SIDE);
 
         permission.revoke();
