@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapps;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -83,6 +84,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NewApi") // Because we're only sending the user to the permission screen on supported devices
     private void grantOverlayPermission() {
         if (!enforcementPermissionMonitor.hasPermission()) {
             new AlertDialog.Builder(requireActivity())

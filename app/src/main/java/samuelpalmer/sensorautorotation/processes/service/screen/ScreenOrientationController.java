@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.processes.service.screen;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -128,10 +129,20 @@ public class ScreenOrientationController extends State {
     }
 
     private boolean setAndHandleErrors(String name, int newValue) {
-        if (!validateSystemSettingsPermission())
-            return false;
+        boolean worked;
+        try {
+            worked = Settings.System.putInt(contentResolver, name, newValue);
+        } catch (SecurityException ex) {
+            boolean isSystemSettingsPermissionError = ex.getMessage() != null && ex.getMessage().contains(Manifest.permission.WRITE_SETTINGS);
 
-        boolean worked = Settings.System.putInt(contentResolver, name, newValue);
+            if (isSystemSettingsPermissionError) {
+                reportPermissionError();
+                return false;
+            } else {
+                throw ex;
+            }
+        }
+
         if (!worked) {
             // Because the developer can't do anything about this; it seems to be a problem on the device.
             GenericError error = new GenericError(context, R.string.environment_error_system_setting_write_failure_summary, context.getString(R.string.environment_error_system_setting_write_failure_message, name, Integer.toString(newValue)));
@@ -174,19 +185,19 @@ public class ScreenOrientationController extends State {
         }
     };
 
-    private final EventHandler systemSettingPermissionChanged = this::validateSystemSettingsPermission;
+    private final EventHandler systemSettingPermissionChanged = new EventHandler() {
+        @Override
+        public void update() {
+            if (!systemSettingPermissionMonitor.hasPermission())
+                reportPermissionError();
+        }
+    };
 
     /**
-     * Raises an {@link samuelpalmer.sensorautorotation.errors.EnvironmentError} if system settings permission is missing.
-     * @return Whether the permission is granted
+     * Raises an {@link samuelpalmer.sensorautorotation.errors.EnvironmentError} to report that system settings write permission is missing
      */
-    private boolean validateSystemSettingsPermission() {
-        if (!systemSettingPermissionMonitor.hasPermission()) {
-            GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
-            EnvironmentErrorManager.report(context, error);
-            return false;
-        }
-        else
-            return true;
+    private void reportPermissionError() {
+        GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
+        EnvironmentErrorManager.report(context, error);
     }
 }
