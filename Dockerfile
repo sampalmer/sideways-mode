@@ -1,6 +1,6 @@
 # This Dockerfile creates a static build image for CI
 
-FROM openjdk:8-jdk
+FROM openjdk:11-jdk
 
 ARG ANDROID_COMPILE_SDK
 RUN test -n "$ANDROID_COMPILE_SDK"
