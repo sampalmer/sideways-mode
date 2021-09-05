@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,10 +12,10 @@ import android.view.WindowManager.LayoutParams;
 
 import androidx.core.content.ContextCompat;
 
+import samuelpalmer.sensorautorotation.utilities.AlwaysGrantedPermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 
 /**
  * Forces the OS to use the {@link ActivityInfo#SCREEN_ORIENTATION_USER} screen orientation.
@@ -37,15 +36,13 @@ public class ScreenOrientationEnforcer extends State {
         layout = generateLayout();
     }
 
-    public static boolean hasPermissionToStart(Context context) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context);
-    }
-
-    public static EventRegistrar makePermissionMonitor(Context context) {
+    public static PermissionMonitor makePermissionMonitor(Context context) {
+        // Using App Ops instead of Settings.canDrawOverlays() to ensure permission polling is consistent with notifications from the OS.
+        // This also makes automated tests of these features more reliable.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             return new AppOpMonitor(context, AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW);
         else
-            return new NullEventRegistrarAdaptor();
+            return new AlwaysGrantedPermissionMonitor();
     }
 
     public static int getWindowType() {

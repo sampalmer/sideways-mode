@@ -9,15 +9,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class IncompatibleAppsPermissionViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> shouldShowTip = new MutableLiveData<>();
 
     private final ActivityMonitor activityMonitor;
-    private final EventRegistrar enforcementPermissionMonitor;
+    private final PermissionMonitor enforcementPermissionMonitor;
 
     public LiveData<Boolean > getShouldShowTip() {
         return shouldShowTip;
@@ -46,7 +46,7 @@ public class IncompatibleAppsPermissionViewModel extends AndroidViewModel {
     private final EventHandler onPermissionsChanged = this::updateShouldShowTip;
 
     private void updateShouldShowTip() {
-        boolean result = !activityMonitor.hasPermission() || !ScreenOrientationEnforcer.hasPermissionToStart(getApplication());
+        boolean result = !activityMonitor.hasPermission() || !enforcementPermissionMonitor.hasPermission();
         shouldShowTip.setValue(result);
     }
 

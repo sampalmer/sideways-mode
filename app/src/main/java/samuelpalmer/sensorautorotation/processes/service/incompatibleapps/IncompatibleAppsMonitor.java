@@ -11,6 +11,7 @@ import samuelpalmer.sensorautorotation.processes.service.PermissionNotificationM
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
@@ -25,16 +26,16 @@ public class IncompatibleAppsMonitor extends State {
     private final ScreenOrientationEnforcer orientationEnforcer;
     private final LockScreenMonitor lockScreenDetector;
     private final SharedPreferences prefs;
-    private final Context context;
+    private final PermissionMonitor enforcementPermissionMonitor;
     private Set<String> incompatibleAppPackages;
-    
+
     public IncompatibleAppsMonitor(Context context, ActivityMonitor activityMonitor, PermissionNotificationManager permissionNotificationManager) {
-        this.context = context;
         this.activityMonitor = activityMonitor;
         this.permissionNotificationManager = permissionNotificationManager;
-        orientationEnforcer = new ScreenOrientationEnforcer(this.context);
-        this.lockScreenDetector = new LockScreenMonitor(this.context);
-        prefs = ServiceSettings.getSharedPreferences(this.context);
+        orientationEnforcer = new ScreenOrientationEnforcer(context);
+        enforcementPermissionMonitor = ScreenOrientationEnforcer.makePermissionMonitor(context);
+        this.lockScreenDetector = new LockScreenMonitor(context);
+        prefs = ServiceSettings.getSharedPreferences(context);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class IncompatibleAppsMonitor extends State {
     }
 
     private void tryToStartEnforcer() {
-        if (ScreenOrientationEnforcer.hasPermissionToStart(context)) {
+        if (enforcementPermissionMonitor.hasPermission()) {
             orientationEnforcer.ensureStarted();
             updateEnforcement();
         }

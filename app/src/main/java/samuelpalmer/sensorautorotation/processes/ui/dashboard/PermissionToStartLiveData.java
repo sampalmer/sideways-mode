@@ -5,17 +5,15 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 public class PermissionToStartLiveData extends LiveData<Boolean> {
 
-    private final Context context;
-    private final EventRegistrar permissionMonitor;
+    private final PermissionMonitor permissionMonitor;
 
     public PermissionToStartLiveData(Context context) {
-        this.context = context;
-        permissionMonitor = ScreenOrientationController.makePermissionMonitor(this.context);
+        permissionMonitor = ScreenOrientationController.makePermissionMonitor(context);
     }
 
     @Override
@@ -34,7 +32,7 @@ public class PermissionToStartLiveData extends LiveData<Boolean> {
     private final EventHandler permissionChanged = this::checkPermission;
 
     private void checkPermission() {
-        boolean hasPermission = ScreenOrientationController.hasPermissionToStart(context);
+        boolean hasPermission = permissionMonitor.hasPermission();
         setValue(hasPermission);
     }
 
