@@ -18,12 +18,12 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.processes.service.EnvironmentErrorManager;
 import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
+import samuelpalmer.sensorautorotation.utilities.AlwaysGrantedPermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.AndroidSurfaceRotation;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 public class ScreenOrientationController extends State {
@@ -34,21 +34,19 @@ public class ScreenOrientationController extends State {
     // user mashes the Recents button to rapidly switch between a landscape app and a portrait app
     private static final float MAX_EXTERNAL_ROTATIONS_PER_SECOND = .5f;
 
-    public static boolean hasPermissionToStart(Context context) {
-        return Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(context);
-    }
-
-    public static EventRegistrar makePermissionMonitor(Context context) {
+    public static PermissionMonitor makePermissionMonitor(Context context) {
+        // Using App Ops instead of Settings.System.canWrite() to ensure permission polling is consistent with notifications from the OS.
+        // This also makes automated tests of these features more reliable.
         if (Build.VERSION.SDK_INT >= 23)
             return new AppOpMonitor(context, AppOpsManager.OPSTR_WRITE_SETTINGS);
         else
-            return new NullEventRegistrarAdaptor();
+            return new AlwaysGrantedPermissionMonitor();
     }
 
     private final Context context;
     private final ScreenRotationMonitor screen;
     private final ContentResolver contentResolver;
-    private final EventRegistrar systemSettingPermissionMonitor;
+    private final PermissionMonitor systemSettingPermissionMonitor;
     private final SharedPreferences prefs;
 
     @Nullable
@@ -183,7 +181,7 @@ public class ScreenOrientationController extends State {
      * @return Whether the permission is granted
      */
     private boolean validateSystemSettingsPermission() {
-        if (!hasPermissionToStart(context)) {
+        if (!systemSettingPermissionMonitor.hasPermission()) {
             GenericError error = new GenericError(context, R.string.permission_needed_summary, context.getString(R.string.environment_error_system_setting_write_denied_message, context.getText(R.string.app_name_full)));
             EnvironmentErrorManager.report(context, error);
             return false;

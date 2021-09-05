@@ -20,9 +20,9 @@ import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 /**
  * Issues a notification if the permissions needed for the "Incompatible apps" feature are
@@ -37,7 +37,7 @@ public class PermissionNotificationManager extends State {
 
     private final Context context;
     private final ActivityMonitor activityMonitor;
-    private final EventRegistrar enforcementPermissionMonitor;
+    private final PermissionMonitor enforcementPermissionMonitor;
     private final NotificationManager notificationManager;
     private final SharedPreferences prefs;
 
@@ -107,7 +107,7 @@ public class PermissionNotificationManager extends State {
             Set<String> incompatibleAppPackages = prefs.getStringSet(ServiceSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet());
 
             //noinspection RedundantIfStatement
-            if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && ScreenOrientationEnforcer.hasPermissionToStart(context)))
+            if (!incompatibleAppPackages.isEmpty() && !(activityMonitor.hasPermission() && enforcementPermissionMonitor.hasPermission()))
                 return true;
         }
         

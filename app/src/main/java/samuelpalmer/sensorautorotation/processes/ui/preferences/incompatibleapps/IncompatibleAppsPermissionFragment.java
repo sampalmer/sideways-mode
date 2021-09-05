@@ -3,17 +3,19 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.ScreenOrientationEnforcer;
 import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activitymonitors.ActivityMonitor;
 import samuelpalmer.sensorautorotation.utilities.ActivityUtils;
+import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
 /**
  * Provides UI and logic to help user grant permissions for the incompatible apps feature.
@@ -24,7 +26,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     private static final int REQUEST_CODE_ACTIVITY_MONITOR = 1;
 
     private ActivityMonitor activityMonitor;
-    private EventRegistrar enforcementPermissionMonitor;
+    private PermissionMonitor enforcementPermissionMonitor;
 
     private boolean isGrantingPermission;
 
@@ -82,7 +84,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     }
 
     private void grantOverlayPermission() {
-        if (!ScreenOrientationEnforcer.hasPermissionToStart(requireContext())) {
+        if (!enforcementPermissionMonitor.hasPermission()) {
             new AlertDialog.Builder(requireActivity())
                     .setTitle(R.string.permission_needed_overlays_summary)
                     .setMessage(getString(R.string.permission_needed_overlays_description, getText(R.string.app_name_full)))
@@ -102,7 +104,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     };
 
     private final EventHandler enforcementPermissionChanged = () -> {
-        if (ScreenOrientationEnforcer.hasPermissionToStart(requireContext()))
+        if (enforcementPermissionMonitor.hasPermission())
             onPermissionGranted();
     };
 
