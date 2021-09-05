@@ -9,11 +9,11 @@ import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 
-import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
 /**
  * Detects when the device is locked.
@@ -42,11 +42,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
     }
 
     public static boolean poll(KeyguardManager keyguardManager) {
-        if (Build.VERSION.SDK_INT >= 16)
-            return keyguardManager.isKeyguardLocked();
-        else
-            //noinspection deprecation
-            return keyguardManager.inKeyguardRestrictedInputMode();
+        return keyguardManager.isKeyguardLocked();
     }
 
     @Override
