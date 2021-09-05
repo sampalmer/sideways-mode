@@ -1,0 +1,4 @@
+• Added compatibility support for Android 12
+• Upgraded to latest AndroidX and Material Design libraries
+• Added full support for Android 11
+• Other minor fixes and improvements
