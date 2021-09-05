@@ -103,9 +103,8 @@ public class WindowChangeDetectingService extends AccessibilityService {
             config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
             config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
 
-            if (Build.VERSION.SDK_INT >= 16)
-                // Just in case this helps
-                config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
+            // Just in case this helps
+            config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
         }
         
         setServiceInfo(config);

@@ -19,7 +19,7 @@ import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 
 public final class Diagnostics {
 
-    private static String TAG = Diagnostics.class.getSimpleName();
+    private static final String TAG = Diagnostics.class.getSimpleName();
 
     private final Context context;
 
