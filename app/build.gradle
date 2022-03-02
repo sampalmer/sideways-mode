@@ -25,13 +25,7 @@ android {
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
 
-        if (gradle.startParameter.taskNames.contains(":app:assembleDebugAndroidTest")) {
-            // The automated tests cannot run below API 18 because UI Automator isn't available on older versions
-            minSdkVersion 18
-        } else {
-            minSdkVersion 16
-        }
-
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 72
         versionName "2.8.0"
