@@ -73,19 +73,20 @@ android {
 
 dependencies {
     compileOnly project(':com.sony.smallapp')
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.preference:preference:1.2.0'
 
-    def nav_version = "2.3.5"
+    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-    def lifecycle_version = "2.3.1"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version" // https://stackoverflow.com/a/69832319/238753
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common:$lifecycle_version"
 
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.2'
 
     androidTestImplementation 'androidx.test:core:1.4.0'
