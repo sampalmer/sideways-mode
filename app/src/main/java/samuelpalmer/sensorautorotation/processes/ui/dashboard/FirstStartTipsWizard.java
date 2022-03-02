@@ -49,8 +49,6 @@ class FirstStartTipsWizard {
     public FirstStartTipsWizard(Dialog dialog, View sideButton, View menuButton, View offButton, Listener listener) {
         this.dialog = dialog;
         this.listener = listener;
-
-        //noinspection ConstantConditions
         this.dialogOriginalDimAmount = dialog.getWindow().getAttributes().dimAmount;
 
         Context context = dialog.getContext();
@@ -140,7 +138,6 @@ class FirstStartTipsWizard {
 
         // Unfortunately, changing the dim doesn't work prior to Android 4.3 since the OS doesn't support changing it after it's already been initialised
         if (Build.VERSION.SDK_INT >= 18) {
-            //noinspection ConstantConditions
             dialog.getWindow().setDimAmount(1f); // Making the background behind the dialog completely black to create a cinematic effect so the user knows they are watching rather than interacting with the app.
         }
 
@@ -152,7 +149,6 @@ class FirstStartTipsWizard {
             throw new RuntimeException("Already stopped");
 
         if (Build.VERSION.SDK_INT >= 18) {
-            //noinspection ConstantConditions
             dialog.getWindow().setDimAmount(dialogOriginalDimAmount);
         }
 

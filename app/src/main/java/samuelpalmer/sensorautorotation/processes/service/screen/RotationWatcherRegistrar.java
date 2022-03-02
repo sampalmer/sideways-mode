@@ -104,6 +104,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
             try {
                 int currentRotationOffset;
                 try {
+                    //noinspection ConstantConditions
                     currentRotationOffset = (int) watchResult;
                 } catch (ClassCastException e) {
                     throw new RotationWatcherNotSupportedException(e);

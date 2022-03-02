@@ -21,7 +21,7 @@ public class RunningInBackgroundTipDialogFragment extends AppCompatDialogFragmen
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         Fragment parentFragment = getParentFragment();
@@ -42,7 +42,7 @@ public class RunningInBackgroundTipDialogFragment extends AppCompatDialogFragmen
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
         complete();
     }

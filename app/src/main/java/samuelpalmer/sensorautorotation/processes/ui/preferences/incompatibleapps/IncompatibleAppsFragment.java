@@ -3,6 +3,7 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,7 +28,7 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
     private boolean preferencesCreated;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         // Preparing the view-model before onCreate() so that it's ready for use as soon as the preferences are created.
@@ -41,12 +42,14 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences_incompatible_apps);
 
         tipView = findPreference("incompatibleAppsPermission");
+        assert tipView != null;
         tipView.setOnPreferenceClickListener(preference -> {
             permissionFragment.grantPermissions();
             return true;
         });
 
         appsPreference = findPreference(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES);
+        assert appsPreference != null;
         appsPreference.setOnPreferenceClickListener(preference -> {
             RecyclerView prefsList = IncompatibleAppsFragment.super.getListView();
             NavController navController = Navigation.findNavController(prefsList);
@@ -56,6 +59,7 @@ public class IncompatibleAppsFragment extends PreferenceFragmentCompat {
 
         Preference description = findPreference("incompatibleAppsDetails");
         String newSummary = getString(R.string.preference_incompatible_apps_details, getText(R.string.app_name_full));
+        assert description != null;
         description.setSummary(newSummary);
 
         preferencesCreated = true;

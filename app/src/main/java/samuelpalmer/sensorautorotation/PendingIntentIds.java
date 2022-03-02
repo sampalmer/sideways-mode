@@ -1,7 +1,7 @@
 package samuelpalmer.sensorautorotation;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.os.Build;
 
 @SuppressWarnings("unused") // Need to keep old pending intent ids around since they might persist across app upgrades.
 public abstract class PendingIntentIds {
@@ -23,15 +23,9 @@ public abstract class PendingIntentIds {
     public static final int MAIN_NOTIFICATION_RIGHT_SIDE = 15;
     public static final int TASK_REMOVAL_FIX = 16;
 
-    public static final int PENDING_INTENT_FLAGS;
-
-    static {
-        // Always cancelling the existing pending intent since it's possible for the existing one to die and become permanently useless.
-        int flags = PendingIntent.FLAG_CANCEL_CURRENT;
-        if (Build.VERSION.SDK_INT >= 23)
-            flags |= PendingIntent.FLAG_IMMUTABLE;
-
-        PENDING_INTENT_FLAGS = flags;
-    }
+    // FLAG_IMMUTABLE is only available on API 23, but if we add conditional logic then a warning is
+    // produced for every use of this field
+    @SuppressLint("InlinedApi")
+    public static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE;
 
 }

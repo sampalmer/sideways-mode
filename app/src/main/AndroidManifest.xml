@@ -64,11 +64,12 @@
         android:label="@string/app_name_full"
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backupscheme"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:supportsRtl="true"
         android:appCategory="productivity"
         android:process="@string/process_ui"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="o">
+        tools:targetApi="s">
 
         <!-- Main Process -->
 

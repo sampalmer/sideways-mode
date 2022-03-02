@@ -98,8 +98,6 @@ public class IncompatibleAppsChooserFragment extends Fragment {
             
             if (started) {
                 PackageManager packageManager = requireContext().getPackageManager();
-                
-                //noinspection ConstantConditions
                 String packageName = intent.getData().getSchemeSpecificPart();
                 Set<String> installedPackages = LoadInstalledAppsTask.getInstalledPackages(packageManager, packageName);
                 
@@ -187,7 +185,6 @@ public class IncompatibleAppsChooserFragment extends Fragment {
         // Need to clone the set to prevent bug https://stackoverflow.com/q/9803838/238753.
         Set<String> incompatibleAppPackages = new HashSet<>(prefs.getStringSet(ApplicationSettings.KEY_INCOMPATIBLE_APP_PACKAGES, Collections.emptySet()));
         
-        //noinspection ConstantConditions
         if (item.isIncompatible)
             incompatibleAppPackages.remove(item.packageName);
         else {

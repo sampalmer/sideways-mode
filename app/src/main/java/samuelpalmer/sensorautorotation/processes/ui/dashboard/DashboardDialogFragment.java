@@ -100,7 +100,7 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
 
         // It's important that we finish the activity when the dialog is *cancelled*, not dismissed.

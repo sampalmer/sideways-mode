@@ -102,7 +102,6 @@ public class AppOpMonitor extends PermissionMonitor {
         if (Build.VERSION.SDK_INT >= 29)
             mode = appOps.unsafeCheckOpNoThrow(op, uid, packageName);
         else {
-            //noinspection deprecation
             mode = appOps.checkOpNoThrow(op, uid, packageName);
         }
 

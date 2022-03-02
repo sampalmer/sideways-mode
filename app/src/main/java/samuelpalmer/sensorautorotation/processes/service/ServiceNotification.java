@@ -2,6 +2,7 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import static samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory.getNotificationColour;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -27,6 +28,7 @@ public class ServiceNotification {
     private final Context context;
     private final NotificationCompat.Builder builder;
     
+    @SuppressLint("WrongConstant") // For false positive warning for use of NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
     public ServiceNotification(Context context) {
         if (!CurrentProcess.isServiceProcess())
             throw new RuntimeException("Cannot use service notification from outside of service process");

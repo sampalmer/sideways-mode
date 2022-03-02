@@ -30,7 +30,6 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
         if (Build.VERSION.SDK_INT >= 29)
             ACTIVITY_IN_FOREGROUND = UsageEvents.Event.ACTIVITY_RESUMED;
         else {
-            //noinspection deprecation
             ACTIVITY_IN_FOREGROUND = UsageEvents.Event.MOVE_TO_FOREGROUND;
         }
     }

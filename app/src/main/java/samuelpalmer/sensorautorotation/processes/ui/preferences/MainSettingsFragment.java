@@ -23,6 +23,7 @@ public class MainSettingsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences_main);
 
         Preference incompatibleAppsPreference = findPreference("incompatibleApps");
+        assert incompatibleAppsPreference != null;
         incompatibleAppsPreference.setOnPreferenceClickListener(preference -> {
             RecyclerView prefsList = MainSettingsFragment.super.getListView();
             NavController navController = Navigation.findNavController(prefsList);
