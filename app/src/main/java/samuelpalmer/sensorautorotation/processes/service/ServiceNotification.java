@@ -43,13 +43,14 @@ public class ServiceNotification {
         builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
                 .setColor(getNotificationColour(context))
                 .setContentIntent(dashboardIntent)
-                .setCategory(NotificationCompat.CATEGORY_NAVIGATION) // TODO: Temporary fix to prevent Android 12 notification delay: https://issuetracker.google.com/issues/182635568
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
                 .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped
                 .setVibrate(null) // Just to make sure this never triggers a vibration, even if the user configures it to do so, since the notification is a response to user interaction
                 .setSound(null) // Just to make sure this never triggers a sound, even if the user configures it to do so, since the notification is a response to user interaction
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE) // Prevents Android 12 and above from delaying display of the service notification
         ;
     }
 
