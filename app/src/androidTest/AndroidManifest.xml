@@ -4,6 +4,9 @@
     package="samuelpalmer.sensorautorotation"
     >
 
+    <!-- The app supports OS versions prior to when UI Automator was available -->
+    <uses-sdk tools:overrideLibrary="android_libs.ub_uiautomator" />
+
     <!-- Must have "testOnly" set in order to deactivate the device admin app -->
     <application
         tools:replace="label" android:label="Sideways Mode Tests"
