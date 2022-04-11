@@ -1,7 +1,7 @@
 Sideways Mode accesses the following information from the device it is installed on in order to provide its core functionality:
 * Device orientation
 
-Sideways Mode may also access the following information from the device it is installed in order to provide its optional "Incompatible apps" feature:
+Sideways Mode may also access the following information from the device it is installed on in order to provide its optional "Incompatible apps" feature:
 * Installed apps
 * Running apps
 * App usage statistics
