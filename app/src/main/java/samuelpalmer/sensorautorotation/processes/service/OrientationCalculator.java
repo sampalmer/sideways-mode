@@ -69,7 +69,7 @@ public class OrientationCalculator {
         return new ApplicationStatus.RunningState(side(), waitingForSensor);
     }
     
-    private UserSide side() {
+    public UserSide side() {
         String name = prefs.getString(ServiceSettings.KEY_PERSISTENT_STATE, null);
         if (name == null)
             throw new RuntimeException("Service has no state; don't know user side.");

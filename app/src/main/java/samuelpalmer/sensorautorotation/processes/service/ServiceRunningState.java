@@ -37,6 +37,7 @@ public class ServiceRunningState extends State {
     private final IncompatibleAppsManager incompatibleAppsManager;
     private final ScreenOrientationUpdater screenUpdater;
     private final AppDisabler appDisabler;
+    private final SideSwapHandler sideSwapHandler;
     private final DeviceInteractivityMonitor deviceInteractivityMonitor;
 
     public ServiceRunningState(RotationService service) {
@@ -55,6 +56,7 @@ public class ServiceRunningState extends State {
         ActivityMonitor activityMonitor = ActivityMonitor.create(context);
         incompatibleAppsManager = new IncompatibleAppsManager(context, activityMonitor);
         appDisabler = new AppDisabler(context);
+        sideSwapHandler = new SideSwapHandler(context, calculator);
         deviceInteractivityMonitor = new DeviceInteractivityMonitor(context);
     }
 
@@ -110,6 +112,7 @@ public class ServiceRunningState extends State {
         lowMemoryDetector.ensureStarted();
         incompatibleAppsManager.ensureStarted();
         appDisabler.ensureStarted();
+        sideSwapHandler.ensureStarted();
 
         deviceInteractivityMonitor.subscribe(deviceInteractivityListener);
         deviceInteractivityListener.update();
@@ -124,6 +127,7 @@ public class ServiceRunningState extends State {
         ServiceRunningStateHolder.serviceStopped();
         
         deviceInteractivityMonitor.unsubscribe(deviceInteractivityListener);
+        sideSwapHandler.ensureStopped();
         appDisabler.ensureStopped();
         orientationSensorHandler.ensureStopped();
         incompatibleAppsManager.ensureStopped();
