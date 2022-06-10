@@ -19,7 +19,7 @@ android {
     def compileSdkVersionString = project.'app.compileSdkVersion'
     compileSdkVersion compileSdkVersionString.isInteger() ? compileSdkVersionString as Integer : compileSdkVersionString
 
-    lintOptions{
+    lint {
         disable 'MissingTranslation'
     }
     defaultConfig {
