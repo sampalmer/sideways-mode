@@ -113,9 +113,9 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        DashboardDialogViewModel model = new ViewModelProvider(getActivity()).get(DashboardDialogViewModel.class);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        DashboardDialogViewModel model = new ViewModelProvider(requireActivity()).get(DashboardDialogViewModel.class);
         model.getPermissionToStart().observe(this, hasPermission -> {
             ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
             ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);

@@ -6,13 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -30,8 +31,6 @@ import samuelpalmer.sensorautorotation.utilities.SystemIntents;
  */
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
-
-    private static final int REQUEST_CODE_GRANT_PERMISSION = 1;
 
     private Observer<Boolean> permissionObserver;
     private DashboardDialogViewModel model;
@@ -52,8 +51,8 @@ public class DashboardPermissionFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         model = new ViewModelProvider(getActivity()).get(DashboardDialogViewModel.class);
     }
 
@@ -67,7 +66,7 @@ public class DashboardPermissionFragment extends Fragment {
         DashboardActivity dashboardActivity = (DashboardActivity) requireActivity();
         dashboardActivity.unlockAndRun(() -> {
             try {
-                startActivityForResult(intent, REQUEST_CODE_GRANT_PERMISSION);
+                grantPermissionLauncher.launch(intent);
 
                 if (permissionObserver == null) {
                     permissionObserver = DashboardPermissionFragment.this::checkPermissionGranted;
@@ -110,13 +109,6 @@ public class DashboardPermissionFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private final ActivityResultLauncher<Intent> grantPermissionLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> unsubscribePermissionMonitor());
 
-        if (requestCode == REQUEST_CODE_GRANT_PERMISSION)
-            unsubscribePermissionMonitor();
-        else
-            Log.w(DashboardPermissionFragment.class.getSimpleName(), "Got back unknown request code: " + requestCode);
-    }
 }

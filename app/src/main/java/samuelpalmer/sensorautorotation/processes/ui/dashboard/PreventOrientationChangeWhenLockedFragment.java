@@ -1,10 +1,10 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
-import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
@@ -18,8 +18,8 @@ public class PreventOrientationChangeWhenLockedFragment extends Fragment {
     private LockScreenMonitor lockScreenMonitor;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
         lockScreenMonitor = new LockScreenMonitor(requireActivity());
         lockScreenMonitor.subscribe(lockScreenStatusChanged);
@@ -27,8 +27,8 @@ public class PreventOrientationChangeWhenLockedFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
 
         lockScreenMonitor.unsubscribe(lockScreenStatusChanged);
         lockScreenMonitor = null;

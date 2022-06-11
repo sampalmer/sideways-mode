@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -23,8 +27,6 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
  */
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class IncompatibleAppsPermissionFragment extends Fragment {
-
-    private static final int REQUEST_CODE_ACTIVITY_MONITOR = 1;
 
     private ActivityMonitor activityMonitor;
     private PermissionMonitor enforcementPermissionMonitor;
@@ -58,7 +60,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
                     .setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
                         Intent intent = activityMonitor.makeAcquirePermissionIntent();
-                        startActivityForResult(intent, REQUEST_CODE_ACTIVITY_MONITOR);
+                        activityPermissionLauncher.launch(intent);
                         isGrantingPermission = true;
                     })
                     .show();
@@ -66,11 +68,9 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
             grantOverlayPermission();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_ACTIVITY_MONITOR) {
+    private final ActivityResultLauncher<Intent> activityPermissionLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
             if (activityMonitor.hasPermission())
                 grantOverlayPermission();
             else {
@@ -82,7 +82,7 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
                         .show();
             }
         }
-    }
+    });
 
     @SuppressLint("NewApi") // Because we're only sending the user to the permission screen on supported devices
     private void grantOverlayPermission() {

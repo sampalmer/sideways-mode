@@ -1,6 +1,7 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -100,10 +101,10 @@ public class DashboardNormalFragment extends Fragment {
         
         return layout;
     }
-    
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         statusClient = new ApplicationStatusClient(getContext(), statusChanged, Looper.myLooper());
     }
 

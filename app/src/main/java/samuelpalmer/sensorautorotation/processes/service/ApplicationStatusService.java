@@ -32,6 +32,7 @@ public class ApplicationStatusService extends Service {
         private final WeakReference<ApplicationStatusService> serviceReference;
         
         private ServerHandler(WeakReference<ApplicationStatusService> serviceReference) {
+            super(Looper.getMainLooper());
             this.serviceReference = serviceReference;
         }
         
