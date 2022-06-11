@@ -1,14 +1,16 @@
 package samuelpalmer.sensorautorotation.processes.ui.dashboard;
 
 import android.app.KeyguardManager;
+import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
@@ -24,16 +26,27 @@ public class AllowLaunchOnLockScreenFragment extends Fragment {
     private LockScreenMonitor lockScreenMonitor;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        keyguardManager = ContextCompat.getSystemService(requireContext(), KeyguardManager.class);
-        lockScreenMonitor = new LockScreenMonitor(requireContext());
-        lockScreenMonitor.subscribe(lockScreenStatusChanged);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
-        // The activity has just been created, so we'll only allow it on the lock screen if it was launched from the lock screen
-        shouldShowOnLockScreen = LockScreenMonitor.poll(keyguardManager);
-        updateCanShowOnLockScreen();
+        // We need to wait for the activity to be created in order for this to work
+        requireActivity().getLifecycle().addObserver(activityObserver);
     }
+
+    private final DefaultLifecycleObserver activityObserver = new DefaultLifecycleObserver() {
+        @Override
+        public void onCreate(@NonNull LifecycleOwner owner) {
+            requireActivity().getLifecycle().removeObserver(activityObserver);
+
+            keyguardManager = ContextCompat.getSystemService(requireContext(), KeyguardManager.class);
+            lockScreenMonitor = new LockScreenMonitor(requireContext());
+            lockScreenMonitor.subscribe(lockScreenStatusChanged);
+
+            // The activity has just been created, so we'll only allow it on the lock screen if it was launched from the lock screen
+            shouldShowOnLockScreen = LockScreenMonitor.poll(keyguardManager);
+            updateCanShowOnLockScreen();
+        }
+    };
 
     @Override
     public void onDestroy() {
