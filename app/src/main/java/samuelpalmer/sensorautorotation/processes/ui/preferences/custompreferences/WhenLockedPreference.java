@@ -5,6 +5,9 @@ import android.util.AttributeSet;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
+/**
+ * Preference for the {@link ApplicationSettings#KEY_TURN_OFF_WHEN_LOCKED} setting
+ */
 public class WhenLockedPreference extends BooleanListPreference {
 
     public WhenLockedPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

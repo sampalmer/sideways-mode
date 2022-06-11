@@ -18,6 +18,9 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarComponent;
 
+/**
+ * {@link AccessibilityService} used to implement {@link AccessibilityServiceActivityMonitor}
+ */
 // Keep in mind that renaming (or moving?) this class will result in users having to re-enable the accessibility service.
 public class WindowChangeDetectingService extends AccessibilityService {
 

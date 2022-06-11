@@ -2,6 +2,9 @@ package samuelpalmer.sensorautorotation.processes.service;
 
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 
+/**
+ * Keeps track of the {@link ServiceRunningState}
+ */
 public abstract class ServiceRunningStateHolder {
     
     public static final UpdatingEventRegistrar onStartedOrStopped = new UpdatingEventRegistrar();

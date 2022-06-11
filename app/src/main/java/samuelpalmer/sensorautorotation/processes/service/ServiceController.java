@@ -8,6 +8,9 @@ import android.util.Log;
 
 import samuelpalmer.sensorautorotation.CurrentProcess;
 
+/**
+ * Interface to control the lifecycle of {@link RotationService}
+ */
 public abstract class ServiceController {
     
     public static void ensureStarted(Context context) {

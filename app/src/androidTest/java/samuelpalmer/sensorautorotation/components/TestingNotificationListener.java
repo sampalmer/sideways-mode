@@ -13,6 +13,9 @@ import androidx.core.os.HandlerCompat;
 
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 
+/**
+ * Listens to Android notifications and provides real-time updates about them
+ */
 public class TestingNotificationListener extends NotificationListenerService {
 
     /** Called on main thread */

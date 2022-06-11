@@ -19,6 +19,9 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * Tests for what to do when the device screen gets locked while the app is on
+ */
 public class WhenScreenLocked {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */

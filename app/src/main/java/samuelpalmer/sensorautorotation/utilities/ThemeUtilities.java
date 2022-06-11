@@ -13,6 +13,9 @@ public class ThemeUtilities {
 
     private ThemeUtilities(){}
 
+    /**
+     * Gets the colour for the given attribute from the current theme
+     */
     @ColorInt
     public static int getThemeColour(Context context, @AttrRes int attribute) {
         Resources.Theme theme = context.getTheme();

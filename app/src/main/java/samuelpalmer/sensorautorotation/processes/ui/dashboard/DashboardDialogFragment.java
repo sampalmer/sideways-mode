@@ -26,6 +26,9 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.SettingsActivity
 import samuelpalmer.sensorautorotation.utilities.ViewUtilities;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
+/**
+ * The dialog for the app's main dashboard
+ */
 public class DashboardDialogFragment extends AppCompatDialogFragment {
 
     private static final String TAG_NORMAL_CONTENTS_FRAGMENT = "normalContents";

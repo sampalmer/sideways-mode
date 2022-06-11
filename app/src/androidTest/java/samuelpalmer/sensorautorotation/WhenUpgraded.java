@@ -24,6 +24,9 @@ import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Tests for what to do when the app is upgraded
+ */
 public class WhenUpgraded {
 
     @Rule

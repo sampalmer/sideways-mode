@@ -18,6 +18,9 @@ import samuelpalmer.sensorautorotation.components.TestingNotificationListener;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrar;
 
+/**
+ * {@link org.junit.rules.TestRule} for accessing Android notifications
+ */
 public class NotificationRule extends ExternalResource {
 
     private final ActivityScenarioRule<? extends AppCompatActivity> activity;

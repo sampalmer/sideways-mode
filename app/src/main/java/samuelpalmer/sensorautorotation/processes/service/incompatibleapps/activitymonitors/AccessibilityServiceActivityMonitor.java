@@ -15,6 +15,10 @@ import samuelpalmer.sensorautorotation.utilities.AccessibilityServiceEnabledStat
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
+/**
+ * {@link ActivityMonitor} that uses an Android accessibility service to detect which activity
+ * is open
+ */
 public final class AccessibilityServiceActivityMonitor extends ActivityMonitor {
 
     private final AccessibilityServiceEnabledStateMonitor enabledStateMonitor;

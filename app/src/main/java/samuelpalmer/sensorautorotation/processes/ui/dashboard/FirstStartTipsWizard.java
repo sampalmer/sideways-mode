@@ -23,6 +23,9 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
 import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
+/**
+ * Pop-up tips that show the user how to use the app
+ */
 class FirstStartTipsWizard {
 
     private final Dialog dialog;

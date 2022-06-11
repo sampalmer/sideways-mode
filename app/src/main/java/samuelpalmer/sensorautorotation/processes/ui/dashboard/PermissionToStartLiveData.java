@@ -8,6 +8,9 @@ import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientatio
 import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
+/**
+ * Adapts {@link PermissionMonitor} to {@link LiveData}
+ */
 public class PermissionToStartLiveData extends LiveData<Boolean> {
 
     private final PermissionMonitor permissionMonitor;

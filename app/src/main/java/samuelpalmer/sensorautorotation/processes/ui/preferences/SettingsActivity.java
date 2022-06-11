@@ -13,6 +13,9 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import samuelpalmer.sensorautorotation.R;
 
+/**
+ * The main settings activity
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private NavController navController;

@@ -12,6 +12,9 @@ import samuelpalmer.sensorautorotation.processes.service.incompatibleapps.activi
 import samuelpalmer.sensorautorotation.utilities.PermissionMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 
+/**
+ * View-model for {@link IncompatibleAppsPermissionFragment}
+ */
 public class IncompatibleAppsPermissionViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> shouldShowTip = new MutableLiveData<>();

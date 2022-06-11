@@ -20,7 +20,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAda
 import samuelpalmer.sensorautorotation.values.Orientation;
 
 /**
- * Single point of entry to RotationWatcher. Protects against duplicate subscriptions and handles
+ * Single point of entry to RotationWatcher. Protects against duplicate subscriptions, and handles
  * inability to unsubscribe on older versions of Android.
  */
 public class RotationWatcherRegistrar extends EventRegistrarAdaptor {

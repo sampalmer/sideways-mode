@@ -3,17 +3,27 @@ package samuelpalmer.sensorautorotation.utilities.testing;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+/**
+ * Utilities for working with constant fields
+ */
 @SuppressWarnings("unused")
 public class FieldConstants<TClass> {
 
     private final Class<TClass> containingClass;
     private final String prefix;
 
+    /**
+     * @param containingClass The class containing the constant fields to inspect
+     * @param prefix Filters out all constant fields whose names don't begin with this
+     */
     public FieldConstants(Class<TClass> containingClass, String prefix) {
         this.containingClass = containingClass;
         this.prefix = prefix;
     }
 
+    /**
+     * Gets the fields name of the given constant value
+     */
     @SuppressWarnings("unchecked")
     public <TConstant> String getName(TConstant value) {
         for (Field field : containingClass.getDeclaredFields())

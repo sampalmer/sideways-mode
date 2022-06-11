@@ -7,21 +7,24 @@ import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.R;
 
+/**
+ * Contains static helper methods for building notifications
+ */
 public class NotificationBuilderFactory {
 
-    public static NotificationCompat.Builder create(Context context, String channelId) {
-        return new NotificationCompat.Builder(context, channelId)
-            .setColor(getNotificationColour(context))
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-        ;
-    }
+    private NotificationBuilderFactory() {}
 
     /**
-     * Gets the colour to pass into {@link NotificationCompat.Builder#setColor(int)}.
-     * This colour is automatically applied if you construct the notification through this class.
+     * Initialises a {@link NotificationCompat.Builder} with the the app's notification colour
+     * and {@link NotificationCompat#VISIBILITY_PUBLIC}.
      */
-    public static int getNotificationColour(Context context) {
-        return ContextCompat.getColor(context, R.color.primary_500);
+    public static NotificationCompat.Builder create(Context context, String channelId) {
+        int color = ContextCompat.getColor(context, R.color.primary_500);
+
+        return new NotificationCompat.Builder(context, channelId)
+            .setColor(color)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        ;
     }
 
 }

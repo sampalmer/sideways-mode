@@ -10,6 +10,9 @@ import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
+/**
+ * Keeps track of which activity the user currently has open
+ */
 public abstract class ActivityMonitor extends EventRegistrarAdaptor {
     
     private static final String TAG = ActivityMonitor.class.getSimpleName();

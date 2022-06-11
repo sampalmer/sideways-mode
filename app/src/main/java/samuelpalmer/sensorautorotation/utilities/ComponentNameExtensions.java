@@ -4,6 +4,9 @@ import android.content.ComponentName;
 import android.content.pm.PackageItemInfo;
 import android.view.accessibility.AccessibilityEvent;
 
+/**
+ * Utilities for working with {@link ComponentName}s
+ */
 @SuppressWarnings("WeakerAccess")
 public final class ComponentNameExtensions {
     // Intents may resolve to this when run on the official Android emulators if they doesn't match anything.

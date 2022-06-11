@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * The main foreground service responsible for this app's functionality
+ */
 public class RotationService extends ServiceThatWorksAroundTaskRemovalBug {
 
     /**

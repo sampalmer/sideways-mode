@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import java.text.Collator;
 import java.util.Comparator;
 
+/**
+ * Sorts {@link InstalledApp} by app name
+ */
 class InstalledAppComparator implements Comparator<InstalledApp> {
     
     private final Collator collator;

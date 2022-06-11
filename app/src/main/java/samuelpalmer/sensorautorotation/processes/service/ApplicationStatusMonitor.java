@@ -8,6 +8,9 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Provides real-time {@link ApplicationStatus} updates, for use within the service process
+ */
 class ApplicationStatusMonitor extends EventRegistrarAdaptor {
 
     private final Context context;

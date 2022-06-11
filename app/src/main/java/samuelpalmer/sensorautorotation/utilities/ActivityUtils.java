@@ -5,6 +5,8 @@ import android.content.Intent;
 
 public class ActivityUtils {
 
+    private ActivityUtils() {}
+
     public static void finishActivitiesOnTopOf(Activity currentActivity) {
         Intent finishPermissionActivityIntent = new Intent(currentActivity, currentActivity.getClass())
             // This flag finishes all activities that are on top of this activity

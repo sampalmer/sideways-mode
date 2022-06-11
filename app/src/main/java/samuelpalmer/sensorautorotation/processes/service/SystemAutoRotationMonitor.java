@@ -12,6 +12,10 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.errors.GenericError;
 import samuelpalmer.sensorautorotation.utilities.State;
 
+/**
+ * Keeps track of the operating system's "auto-rotate" feature, and stops this app if the user
+ * turns the operating system "auto-rotate" feature on
+ */
 public class SystemAutoRotationMonitor extends State {
     
     private final Context context;

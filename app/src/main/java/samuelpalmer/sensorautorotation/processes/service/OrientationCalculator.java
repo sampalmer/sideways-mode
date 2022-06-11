@@ -10,6 +10,9 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * Keeps track of the device and user orientations, and reports the target screen orientation
+ */
 public class OrientationCalculator {
     
     private final SharedPreferences prefs;

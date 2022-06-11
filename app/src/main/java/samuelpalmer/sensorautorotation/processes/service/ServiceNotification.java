@@ -1,7 +1,5 @@
 package samuelpalmer.sensorautorotation.processes.service;
 
-import static samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory.getNotificationColour;
-
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -17,12 +15,16 @@ import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.notifications.CustomNotificationTemplate;
+import samuelpalmer.sensorautorotation.notifications.NotificationBuilderFactory;
 import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.processes.ui.dashboard.DashboardActivity;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * Assembles the service notification
+ */
 public class ServiceNotification {
     
     private final Context context;
@@ -43,11 +45,10 @@ public class ServiceNotification {
 
         // Caching and re-using the builder prevents the notification from disappearing and
         // reappearing each time it is updated on my Sony Xperia M (Android 4.3).
-        builder = new NotificationCompat.Builder(context, NotificationChannels.ID_CONTROLS)
-                .setColor(getNotificationColour(context))
+        // Making the notification public so that when the user unlocks the phone, they can see if they've left the app on
+        builder = NotificationBuilderFactory.create(context, NotificationChannels.ID_CONTROLS)
                 .setContentIntent(dashboardIntent)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // So when the user unlocks the phone, they can see if they've left the app on
                 .setOnlyAlertOnce(true) // Don't want to alert the user each time we update the state of the service notification
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setOngoing(true) // Prevents the user from dismissing the notification when the service is stopped

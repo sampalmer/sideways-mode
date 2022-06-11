@@ -15,6 +15,9 @@ import samuelpalmer.sensorautorotation.processes.service.ServiceSettings;
 import samuelpalmer.sensorautorotation.processes.service.screen.ScreenOrientationController;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
+/**
+ * Upgrades the app's {@link SharedPreferences} where appropriate
+ */
 public class Upgrader {
     
     /**

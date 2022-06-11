@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
 import samuelpalmer.sensorautorotation.R;
 
+/**
+ * Dialog that tells the user that the app is running in the background
+ */
 @SuppressWarnings("WeakerAccess")
 public class RunningInBackgroundTipDialogFragment extends AppCompatDialogFragment {
 

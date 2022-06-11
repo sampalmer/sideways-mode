@@ -4,6 +4,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
+/**
+ * Data about an app that is installed on the device
+ */
 class InstalledApp {
 
     public final String packageName;

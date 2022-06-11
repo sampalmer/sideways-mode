@@ -18,7 +18,14 @@ import samuelpalmer.sensorautorotation.utilities.NumberUtilities;
 import samuelpalmer.sensorautorotation.values.Orientation;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * Holds {@link Migration}s for all versions of the app
+ */
 class Migrations {
+
+    /**
+     * Assembles the migrations keyed by app version
+     */
     static SparseArray<Migration> buildMap() {
         SparseArray<Migration> migrations = new SparseArray<>();
 

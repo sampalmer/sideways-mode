@@ -16,6 +16,9 @@ import java.util.List;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.NullEventRegistrarAdaptor;
 
+/**
+ * {@link ActivityMonitor} that detects the current activity using {@link ActivityManager#getRunningTasks(int)}
+ */
 class RunningTasksActivityMonitor extends PollingActivityMonitor {
 
     static boolean isSupported() {

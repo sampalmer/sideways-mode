@@ -14,6 +14,10 @@ import samuelpalmer.sensorautorotation.processes.service.PersistentNotificationS
 import samuelpalmer.sensorautorotation.processes.ui.DismissKeyguardFragment;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
+/**
+ * Activity for the app's main dashboard. This is the activity that the user typically sees when
+ * they open the app.
+ */
 public class DashboardActivity extends AppCompatActivity implements RunningInBackgroundTipDialogFragment.OnCompletionListener {
 
     private static final String TAG_DASHBOARD_DIALOG = "dashboard";

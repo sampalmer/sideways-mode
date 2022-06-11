@@ -1,5 +1,8 @@
 package samuelpalmer.sensorautorotation.notifications;
 
+/**
+ * Contains the each notification's unique identifier to be used when posting the notification to the OS
+ */
 public class NotificationIds {
     public static final int SERVICE = 1;
     public static final int UPGRADE = 2;

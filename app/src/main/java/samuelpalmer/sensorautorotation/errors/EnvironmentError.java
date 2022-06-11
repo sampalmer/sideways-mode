@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 /**
  * An error that is outside of the control of the app. This is typically a problem caused by the
- * user, device, operating system, or other app.
+ * user, device, operating system, or other app. The error is suitable to be shown to the user.
  */
 @SuppressWarnings({"WeakerAccess", "rawtypes", "unchecked"})
 public abstract class EnvironmentError {
@@ -25,6 +25,9 @@ public abstract class EnvironmentError {
             new SensorError.Serialiser()
     };
 
+    /**
+     * Serialises the error into JSON. Can be deserialised using {@link #fromJson(Context, String)}.
+     */
     public String toJson() {
         String className = getClass().getSimpleName();
         Serialiser serialiser = getSerialiser(className);
@@ -39,6 +42,9 @@ public abstract class EnvironmentError {
         }
     }
 
+    /**
+     * Deserialises from the given JSON an error that was previously serialised using {@link #toJson()}.
+     */
     public static EnvironmentError fromJson(Context context, String json) {
         try {
             JSONObject parsed = new JSONObject(json);
@@ -60,7 +66,14 @@ public abstract class EnvironmentError {
         throw new RuntimeException("Didn't find a serialiser for class name " + className);
     }
 
+    /**
+     * Gets a brief high-level description of the error suitable to display to the user.
+     */
     public abstract CharSequence getSummary();
+
+    /**
+     * Gets a detailed explanation of the error suitable to display to the user.
+     */
     public abstract CharSequence getMessage();
 
     /**
@@ -69,6 +82,9 @@ public abstract class EnvironmentError {
      */
     public abstract String getLogMessage();
 
+    /**
+     * Makes a {@link PendingIntent} that presents the error to the user.
+     */
     public abstract PendingIntent showError(Context context);
 
     @Override
@@ -84,7 +100,8 @@ public abstract class EnvironmentError {
     }
 
     /**
-     * Every subclass of {@link EnvironmentError} must implement this.
+     * Every subclass of {@link EnvironmentError} must implement this so that the error can be
+     * persisted for later retrieval.
      */
     static abstract class Serialiser<T extends EnvironmentError> {
 
@@ -93,7 +110,14 @@ public abstract class EnvironmentError {
          */
         public abstract Class<T> getTypeClass();
 
+        /**
+         * Serialises the error data specific to the error subclass {@link T}.
+         */
         public abstract JSONObject serialiseDetails(T environmentError) throws JSONException;
+
+        /**
+         * Derialises the error data specific to the error subclass {@link T}.
+         */
         public abstract T deserialiseDetails(Context context, JSONObject serialised) throws JSONException;
 
     }

@@ -17,6 +17,9 @@ import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
+/**
+ * Tests for the app's core screen rotation business logic
+ */
 @RunWith(Parameterized.class)
 public class ScreenRotation {
 

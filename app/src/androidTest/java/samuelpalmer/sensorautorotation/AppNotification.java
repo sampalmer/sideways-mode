@@ -15,6 +15,9 @@ import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
+/**
+ * Tests related to the main service notification
+ */
 public class AppNotification {
 
     @Rule

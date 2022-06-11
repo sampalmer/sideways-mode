@@ -16,13 +16,21 @@ import java.util.List;
 
 import samuelpalmer.sensorautorotation.R;
 
-public abstract class NotificationChannels {
+/**
+ * Container for static helpers related to Android {@link NotificationChannel}s
+ */
+public class NotificationChannels {
+
+    private NotificationChannels() {}
 
     public static final String ID_CONTROLS = "controls";
     public static final String ID_UPGRADES = "upgrades";
     public static final String ID_ERRORS = "errors";
     public static final String ID_PERMISSIONS = "permissions";
 
+    /**
+     * Creates or updates this app's notification channels in the operating system.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void setup(Context context) {
         Log.i(NotificationChannels.class.getSimpleName(), "Configuring notification channels");

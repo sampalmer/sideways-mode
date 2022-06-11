@@ -19,6 +19,9 @@ import java.lang.ref.WeakReference;
 import samuelpalmer.sensorautorotation.processes.service.ApplicationStatusService;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Listens to the current {@link ApplicationStatus} for use outside of the service process
+ */
 public class ApplicationStatusClient {
     
     private final Context context;

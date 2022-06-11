@@ -11,6 +11,9 @@ import androidx.core.content.ContextCompat;
 
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
+/**
+ * Keeps track of changes to the device's "interactive" state, effectively {@link PowerManager#isInteractive()}.
+ */
 public class DeviceInteractivityMonitor extends EventRegistrarAdaptor {
     
     private final Context context;

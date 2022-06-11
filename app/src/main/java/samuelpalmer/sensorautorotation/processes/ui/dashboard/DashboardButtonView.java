@@ -19,6 +19,9 @@ import androidx.core.widget.ImageViewCompat;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
+/**
+ * {@link View} for each state icon button on the main dashboard
+ */
 public class DashboardButtonView extends FrameLayout {
 
     private AppCompatImageView icon;

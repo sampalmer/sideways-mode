@@ -23,6 +23,9 @@ import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Tests for when the user or operating system changes the app's permissions at runtime
+ */
 public class RuntimePermissions {
 
     @Rule

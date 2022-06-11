@@ -27,6 +27,9 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
+/**
+ * Interface to control the device's screen orientation
+ */
 public class ScreenOrientationController extends State {
 
     private static final String TAG = ScreenOrientationController.class.getSimpleName();
@@ -53,7 +56,7 @@ public class ScreenOrientationController extends State {
     @Nullable
     private Orientation lastProposed;
 
-    private ExternalRotationChangeRateLimiter rateLimiter;
+    private ExternalRotationChangeRateDetector rateLimiter;
 
     public ScreenOrientationController(Context context, ScreenRotationMonitor screen) {
         this.context = context;
@@ -66,7 +69,7 @@ public class ScreenOrientationController extends State {
     @Override
     protected void start() {
         lastProposed = null;
-        rateLimiter = new ExternalRotationChangeRateLimiter();
+        rateLimiter = new ExternalRotationChangeRateDetector();
 
         boolean wasAutoRotationOn = Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1) == 1;
 

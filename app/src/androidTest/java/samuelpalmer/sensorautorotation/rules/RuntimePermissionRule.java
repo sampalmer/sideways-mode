@@ -11,6 +11,9 @@ import org.junit.rules.ExternalResource;
 
 import java.io.IOException;
 
+/**
+ * {@link org.junit.rules.TestRule} that grants runtime permissions to the app
+ */
 public abstract class RuntimePermissionRule extends ExternalResource {
 
     private final String op;

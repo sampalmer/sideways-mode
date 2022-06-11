@@ -9,6 +9,9 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
+/**
+ * Synchronises {@link OrientationCalculator} to the screen orientation
+ */
 public class ScreenOrientationUpdater extends State {
 
     private final OrientationCalculator calculator;

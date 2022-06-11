@@ -2,13 +2,17 @@ package samuelpalmer.sensorautorotation.processes.service.screen;
 
 import java.util.ArrayList;
 
-class ExternalRotationChangeRateLimiter {
+/**
+ * Keeps track of the rate at which the screen orientation is changed by something external to
+ * this app
+ */
+class ExternalRotationChangeRateDetector {
 
     private static final int EXTERNAL_ROTATION_CHANGE_HISTORY_SIZE = 3;
 
     private final ArrayList<Long> externalRotationChangeTimestamps;
 
-    public ExternalRotationChangeRateLimiter() {
+    public ExternalRotationChangeRateDetector() {
         if (EXTERNAL_ROTATION_CHANGE_HISTORY_SIZE < 2)
             throw new RuntimeException("Need at least two data points to calculate rate of change");
 

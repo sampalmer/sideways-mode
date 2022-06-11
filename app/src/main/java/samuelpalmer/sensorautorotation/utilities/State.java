@@ -1,6 +1,8 @@
 package samuelpalmer.sensorautorotation.utilities;
 
-
+/**
+ * An application logic component that has a simple lifecycle consisting of starting and stopping
+ */
 public abstract class State {
     private boolean started;
 

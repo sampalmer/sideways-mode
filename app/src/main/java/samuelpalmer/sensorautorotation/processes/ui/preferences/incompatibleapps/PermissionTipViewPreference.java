@@ -10,7 +10,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 import samuelpalmer.sensorautorotation.R;
 
-
+/**
+ * {@link Preference} that prompts the user to grant a missing permission
+ */
 public class PermissionTipViewPreference extends Preference {
     
     public PermissionTipViewPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

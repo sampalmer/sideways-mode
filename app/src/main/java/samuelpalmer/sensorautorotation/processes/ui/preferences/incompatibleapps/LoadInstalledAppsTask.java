@@ -19,6 +19,9 @@ import java.util.concurrent.Executors;
 
 import samuelpalmer.sensorautorotation.utilities.TaskRunner;
 
+/**
+ * Loads the apps that are installed on the device
+ */
 public class LoadInstalledAppsTask implements Callable<ArrayList<InstalledApp>> {
 
     public static final TaskRunner taskRunner = new TaskRunner(Executors.newSingleThreadExecutor());

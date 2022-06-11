@@ -14,6 +14,9 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 
 import java.util.Collections;
 
+/**
+ * Receives and runs {@link ApplicationCommand}s
+ */
 public class ApplicationCommandReceiver extends BroadcastReceiver {
     
     private static final String TAG = ApplicationCommandReceiver.class.getSimpleName();

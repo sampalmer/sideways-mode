@@ -26,6 +26,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 import samuelpalmer.sensorautorotation.utilities.TaskRunner;
 
+/**
+ * List of incompatible apps
+ */
 public class IncompatibleAppsChooserFragment extends Fragment {
     
     private SharedPreferences prefs;

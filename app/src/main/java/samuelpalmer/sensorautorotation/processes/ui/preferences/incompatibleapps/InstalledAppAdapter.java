@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 
+/**
+ * Adapts {@link InstalledApp} to a {@link View}
+ */
 class InstalledAppAdapter extends ArrayAdapter<InstalledApp> {
 
     public InstalledAppAdapter(Context context) {

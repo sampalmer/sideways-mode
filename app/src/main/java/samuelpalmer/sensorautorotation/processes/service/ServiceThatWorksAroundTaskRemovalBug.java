@@ -8,6 +8,9 @@ import android.os.Build;
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.utilities.BroadcastKillFix;
 
+/**
+ * Works around a couple of operating system bugs that inappropriately kill the service process
+ */
 abstract class ServiceThatWorksAroundTaskRemovalBug extends Service {
 
     @Override

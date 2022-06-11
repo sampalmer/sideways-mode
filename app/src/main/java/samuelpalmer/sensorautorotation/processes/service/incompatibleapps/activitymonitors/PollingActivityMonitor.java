@@ -7,6 +7,10 @@ import android.os.Looper;
 
 import androidx.core.os.HandlerCompat;
 
+/**
+ * An {@link ActivityMonitor} that tracks the current activity by repeatedly polling instead of
+ * listening for notifications from the operating system.
+ */
 abstract class PollingActivityMonitor extends ActivityMonitor {
 
     private static final int POLL_INTERVAL_MILLIS = 500;

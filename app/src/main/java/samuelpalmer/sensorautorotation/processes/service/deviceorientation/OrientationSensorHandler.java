@@ -20,7 +20,9 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
-
+/**
+ * Synchronises the device orientation and user orientation with the screen orientation
+ */
 public class OrientationSensorHandler extends State {
     
     private static final String TAG = OrientationSensorHandler.class.getSimpleName();
@@ -32,6 +34,9 @@ public class OrientationSensorHandler extends State {
     private Integer lastRotation;
     private Integer oldBias;
 
+    /**
+     * Checks whether this device is able to detect its physical orientation
+     */
     public static boolean canDetectOrientation(Context context) {
         SensorManager sensorManager = ContextCompat.getSystemService(context, SensorManager.class);
         ArrayList<Sensor> supportedSensors = WindowOrientationListener.getSupportedSensors(sensorManager);

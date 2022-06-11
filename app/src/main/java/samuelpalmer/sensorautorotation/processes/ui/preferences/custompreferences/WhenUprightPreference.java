@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
+/**
+ * Preference for the {@link ApplicationSettings#KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT} setting
+ */
 public class WhenUprightPreference extends BooleanListPreference {
 
     public WhenUprightPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

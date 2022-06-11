@@ -18,6 +18,9 @@ import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * This app's main quick settings tile
+ */
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
     

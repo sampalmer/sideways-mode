@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.StringRes;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,14 +14,14 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.MessageActivity;
 
 /**
- * An error that is shown in a {@link MessageActivity}.
+ * An {@link EnvironmentError} that is shown to the user in a {@link MessageActivity}.
  */
 public class GenericError extends EnvironmentError {
     
     private final CharSequence summary;
     private final CharSequence message;
 
-    public GenericError(Context context, int summaryResourceId, CharSequence messageEndingWithFullStop) {
+    public GenericError(Context context, @StringRes int summaryResourceId, CharSequence messageEndingWithFullStop) {
         this(
                 context.getText(summaryResourceId),
                 context.getString(R.string.environment_error_message, messageEndingWithFullStop, context.getText(R.string.app_name_full))

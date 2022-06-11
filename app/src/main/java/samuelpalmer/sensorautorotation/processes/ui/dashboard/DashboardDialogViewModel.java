@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+/**
+ * View-model for {@link DashboardDialogFragment}
+ */
 public class DashboardDialogViewModel extends AndroidViewModel {
 
     private final PermissionToStartLiveData permissionToStartLiveData;

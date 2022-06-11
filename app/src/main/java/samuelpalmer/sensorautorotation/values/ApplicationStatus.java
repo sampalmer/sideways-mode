@@ -7,6 +7,9 @@ import androidx.annotation.Nullable;
 import samuelpalmer.sensorautorotation.errors.EnvironmentError;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 
+/**
+ * The current high-level state of the application
+ */
 public class ApplicationStatus {
     
     /**

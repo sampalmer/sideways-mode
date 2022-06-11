@@ -8,6 +8,9 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import samuelpalmer.sensorautorotation.R;
 
+/**
+ * The main settings screen contents
+ */
 public class MainSettingsFragment extends PreferenceFragmentCompat {
 
     @Override

@@ -17,6 +17,9 @@ import samuelpalmer.sensorautorotation.utilities.WindowCallbackWrapper;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Manages the visibility of {@link FirstStartTipsWizard}
+ */
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class FirstStartTipsFragment extends Fragment {
 

@@ -20,6 +20,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.AppOpMonitor;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
+/**
+ * {@link ActivityMonitor} that detects the current activity using {@link UsageStatsManager}
+ */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class UsageStatsActivityMonitor extends PollingActivityMonitor {
 

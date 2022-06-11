@@ -18,7 +18,7 @@ import java.util.Set;
 import samuelpalmer.sensorautorotation.components.TestingNotificationListener;
 
 /**
- * Enabled, disables, and checks state of {@link samuelpalmer.sensorautorotation.components.TestingNotificationListener}
+ * Enables, disables, and checks state of {@link samuelpalmer.sensorautorotation.components.TestingNotificationListener}
  */
 abstract class NotificationListenerPermissionManager {
 

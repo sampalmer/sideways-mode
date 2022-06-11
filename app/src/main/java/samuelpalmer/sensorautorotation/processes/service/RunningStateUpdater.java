@@ -22,6 +22,10 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.UpdatingEventRegistrar;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
+/**
+ * Keeps track of the {@link ApplicationStatus.RunningState}, and also responsible for the service
+ * notification
+ */
 public class RunningStateUpdater extends State {
 
     private final Context context;

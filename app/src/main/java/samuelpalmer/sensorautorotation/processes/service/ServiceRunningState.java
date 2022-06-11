@@ -23,6 +23,9 @@ import samuelpalmer.sensorautorotation.utilities.State;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 import samuelpalmer.sensorautorotation.values.UserSide;
 
+/**
+ * The core lifecycle and logic of the app when it is running
+ */
 public class ServiceRunningState extends State {
     
     private static final String TAG = ServiceRunningState.class.getSimpleName();

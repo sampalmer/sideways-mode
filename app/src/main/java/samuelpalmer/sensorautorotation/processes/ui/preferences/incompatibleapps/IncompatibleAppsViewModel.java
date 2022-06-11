@@ -13,6 +13,9 @@ import java.util.Set;
 
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
 
+/**
+ * View-model for {@link IncompatibleAppsFragment}
+ */
 public class IncompatibleAppsViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Integer> incompatibleAppCount = new MutableLiveData<>();

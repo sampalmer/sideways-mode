@@ -3,6 +3,9 @@ package samuelpalmer.sensorautorotation.upgrade;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * Upgrade's the app's {@link SharedPreferences} from one version of the app to another
+ */
 class Migration {
     
     /**

@@ -18,6 +18,9 @@ import samuelpalmer.sensorautorotation.notifications.NotificationChannels;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
+/**
+ * Reports and keeps track of {@link EnvironmentError}s
+ */
 public abstract class EnvironmentErrorManager {
     
     public static void report(Context context, EnvironmentError error) {

@@ -25,6 +25,9 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.ActivityUtils;
 import samuelpalmer.sensorautorotation.utilities.SystemIntents;
 
+/**
+ * The contents of the main dashboard when a key permission is missing
+ */
 @SuppressWarnings("WeakerAccess") // Because fragments must be public
 public class DashboardPermissionFragment extends Fragment {
 

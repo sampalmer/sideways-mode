@@ -14,7 +14,7 @@ import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.MessageActivity;
 
 /**
- * An error with the device's rotation-related sensors.
+ * An {@link EnvironmentError} related to the device's rotation-related sensors.
  */
 public class SensorError extends EnvironmentError {
     

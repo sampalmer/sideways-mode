@@ -17,6 +17,9 @@ import java.util.Locale;
 import samuelpalmer.sensorautorotation.CurrentProcess;
 import samuelpalmer.sensorautorotation.utilities.testing.FieldConstants;
 
+/**
+ * Utilities for troubleshooting runtime issues
+ */
 public final class Diagnostics {
 
     private static final String TAG = Diagnostics.class.getSimpleName();

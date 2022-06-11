@@ -6,6 +6,9 @@ import android.content.res.Configuration;
 import android.util.Log;
 import samuelpalmer.sensorautorotation.utilities.State;
 
+/**
+ * Handles rare situations in which the OS is running out of memory
+ */
 public class LowMemoryDetector extends State {
     
     private final Context context;

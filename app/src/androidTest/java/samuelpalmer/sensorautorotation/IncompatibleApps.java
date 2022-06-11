@@ -31,6 +31,9 @@ import samuelpalmer.sensorautorotation.rules.lockscreen.LockScreenRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.Orientation;
 
+/**
+ * Tests related to the incompatible apps feature
+ */
 public class IncompatibleApps {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */

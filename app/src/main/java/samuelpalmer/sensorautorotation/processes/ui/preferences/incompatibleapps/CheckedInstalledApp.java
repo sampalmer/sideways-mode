@@ -23,6 +23,9 @@ import java.util.concurrent.Future;
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.utilities.TaskRunner;
 
+/**
+ * An item in the incompatible apps list
+ */
 public class CheckedInstalledApp extends LinearLayout {
     
     private PackageManager packageManager;
