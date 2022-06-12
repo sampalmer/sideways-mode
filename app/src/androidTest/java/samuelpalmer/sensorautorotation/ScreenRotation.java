@@ -10,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
@@ -21,7 +19,7 @@ import samuelpalmer.sensorautorotation.values.Orientation;
  * Tests for the app's core screen rotation business logic
  */
 @RunWith(Parameterized.class)
-public class ScreenRotation {
+public class ScreenRotation extends TestBase {
 
     private final Orientation expectedScreen;
     private final String user;
@@ -32,13 +30,7 @@ public class ScreenRotation {
     public ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
 
     @Rule
-    public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
-
-    @Rule
     public MockDeviceOrientationRule device = new MockDeviceOrientationRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();

@@ -11,9 +11,7 @@ import org.junit.rules.RuleChain;
 import java.util.concurrent.TimeoutException;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.lockscreen.LockScreenRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
@@ -22,7 +20,7 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 /**
  * Tests for what to do when the device screen gets locked while the app is on
  */
-public class WhenScreenLocked {
+public class WhenScreenLocked extends TestBase {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
     private final ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
@@ -30,12 +28,6 @@ public class WhenScreenLocked {
 
     @Rule
     public RuleChain activityAndLockScreen = RuleChain.outerRule(testActivity).around(lockScreen);
-
-    @Rule
-    public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ApplicationSettingsRule appSettings = new ApplicationSettingsRule();

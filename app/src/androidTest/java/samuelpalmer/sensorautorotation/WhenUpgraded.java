@@ -11,7 +11,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,21 +18,13 @@ import java.util.concurrent.TimeoutException;
 
 import samuelpalmer.sensorautorotation.processes.service.RotationService;
 import samuelpalmer.sensorautorotation.processes.service.UpgradeReceiver;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 
 /**
  * Tests for what to do when the app is upgraded
  */
-public class WhenUpgraded {
-
-    @Rule
-    public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
+public class WhenUpgraded extends TestBase {
 
     @Test
     public void serviceIsRestartedInSameState() {

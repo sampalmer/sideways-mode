@@ -9,25 +9,17 @@ import org.junit.Test;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
 import samuelpalmer.sensorautorotation.values.ApplicationCommand;
 
 /**
  * Tests related to the main service notification
  */
-public class AppNotification {
+public class AppNotification extends TestBase {
 
     @Rule
     public ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
-
-    @Rule
-    public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ApplicationSettingsRule appSettings = new ApplicationSettingsRule();

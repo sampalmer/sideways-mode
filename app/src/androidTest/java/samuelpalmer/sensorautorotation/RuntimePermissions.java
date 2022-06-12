@@ -13,10 +13,8 @@ import java.util.concurrent.TimeoutException;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
 import samuelpalmer.sensorautorotation.notifications.NotificationIds;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
 import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantUsageStatsPermissionRule;
 import samuelpalmer.sensorautorotation.rules.RuntimePermissionRule;
 import samuelpalmer.sensorautorotation.rules.notification.NotificationRule;
@@ -26,16 +24,10 @@ import samuelpalmer.sensorautorotation.values.ApplicationStatus;
 /**
  * Tests for when the user or operating system changes the app's permissions at runtime
  */
-public class RuntimePermissions {
+public class RuntimePermissions extends TestBase {
 
     @Rule
     public ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
-
-    @Rule
-    public GrantSystemSettingPermissionRule grantPermissionRule = new GrantSystemSettingPermissionRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public NotificationRule notifications = new NotificationRule(testActivity);

@@ -20,10 +20,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import samuelpalmer.sensorautorotation.components.TestActivity;
-import samuelpalmer.sensorautorotation.rules.ApplicationRule;
 import samuelpalmer.sensorautorotation.rules.ApplicationSettingsRule;
 import samuelpalmer.sensorautorotation.rules.GrantOverlayPermissionRule;
-import samuelpalmer.sensorautorotation.rules.GrantSystemSettingPermissionRule;
 import samuelpalmer.sensorautorotation.rules.GrantUsageStatsPermissionRule;
 import samuelpalmer.sensorautorotation.rules.MockDeviceOrientationRule;
 import samuelpalmer.sensorautorotation.rules.ScreenRotationRule;
@@ -34,7 +32,7 @@ import samuelpalmer.sensorautorotation.values.Orientation;
 /**
  * Tests related to the incompatible apps feature
  */
-public class IncompatibleApps {
+public class IncompatibleApps extends TestBase {
 
     /** We need this activity open under the dashboard to ensure all screen orientations are allowed */
     private final ActivityScenarioRule<TestActivity> testActivity = new ActivityScenarioRule<>(TestActivity.class);
@@ -44,13 +42,7 @@ public class IncompatibleApps {
     public RuleChain activityAndLockScreen = RuleChain.outerRule(testActivity).around(lockScreen);
 
     @Rule
-    public GrantSystemSettingPermissionRule systemSettingPermission = new GrantSystemSettingPermissionRule();
-
-    @Rule
     public MockDeviceOrientationRule device = new MockDeviceOrientationRule();
-
-    @Rule
-    public ApplicationRule app = new ApplicationRule();
 
     @Rule
     public ScreenRotationRule screen = new ScreenRotationRule();
