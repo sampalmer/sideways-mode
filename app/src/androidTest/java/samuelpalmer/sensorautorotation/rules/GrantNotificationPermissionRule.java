@@ -1,5 +1,6 @@
 package samuelpalmer.sensorautorotation.rules;
 
+import android.Manifest;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -17,11 +18,10 @@ public class GrantNotificationPermissionRule implements TestRule {
     private final TestRule permissionRule;
 
     public GrantNotificationPermissionRule() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            permissionRule = GrantPermissionRule.grant("android.permission.POST_NOTIFICATIONS");
-        } else {
+        if (Build.VERSION.SDK_INT >= 33)
+            permissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS);
+        else
             permissionRule = (base, description) -> base;
-        }
     }
 
     @NonNull
