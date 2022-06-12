@@ -68,7 +68,6 @@ public class DashboardButtonView extends FrameLayout {
             src = a.getResourceId(R.styleable.DashboardButtonView_src, -1);
         } finally {
             a.recycle();
-            a = null;
         }
 
         if (src == -1)

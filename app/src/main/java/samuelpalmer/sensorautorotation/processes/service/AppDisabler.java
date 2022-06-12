@@ -10,6 +10,8 @@ import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.Objects;
+
 import samuelpalmer.sensorautorotation.processes.service.api.ApplicationCommandReceiver;
 import samuelpalmer.sensorautorotation.utilities.LockScreenMonitor;
 import samuelpalmer.sensorautorotation.utilities.State;
@@ -18,7 +20,7 @@ import samuelpalmer.sensorautorotation.utilities.State;
  * Turns off the app when certain events occur, such as when the device is shutdown.
  */
 public class AppDisabler extends State {
-    
+
     private final KeyguardManager keyguardManager;
     private final Context context;
     private final SharedPreferences prefs;
@@ -28,7 +30,7 @@ public class AppDisabler extends State {
 
     public AppDisabler(Context context) {
         this.context = context;
-        keyguardManager = ContextCompat.getSystemService(context, KeyguardManager.class);
+        keyguardManager = Objects.requireNonNull(ContextCompat.getSystemService(context, KeyguardManager.class));
         prefs = ServiceSettings.getSharedPreferences(context);
     }
     

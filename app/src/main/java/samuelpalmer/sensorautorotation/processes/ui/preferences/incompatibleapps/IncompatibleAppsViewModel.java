@@ -16,6 +16,7 @@ import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSetti
 /**
  * View-model for {@link IncompatibleAppsFragment}
  */
+@SuppressWarnings("WeakerAccess")
 public class IncompatibleAppsViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Integer> incompatibleAppCount = new MutableLiveData<>();

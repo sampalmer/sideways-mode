@@ -117,8 +117,8 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         DashboardDialogViewModel model = new ViewModelProvider(requireActivity()).get(DashboardDialogViewModel.class);
         model.getPermissionToStart().observe(this, hasPermission -> {
-            ViewUtilities.ensureVisibility(normalSection.getView(), hasPermission ? View.VISIBLE : View.GONE);
-            ViewUtilities.ensureVisibility(permissionSection.getView(), hasPermission ? View.GONE : View.VISIBLE);
+            ViewUtilities.ensureVisibility(normalSection.requireView(), hasPermission ? View.VISIBLE : View.GONE);
+            ViewUtilities.ensureVisibility(permissionSection.requireView(), hasPermission ? View.GONE : View.VISIBLE);
             tipsFragment.setNormalSectionVisibility(hasPermission);
         });
     }

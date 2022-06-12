@@ -1,7 +1,9 @@
 package samuelpalmer.sensorautorotation.utilities;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.TypedValue;
 
 import androidx.annotation.AttrRes;
@@ -30,6 +32,19 @@ public class ThemeUtilities {
 
         @ColorInt int color = ContextCompat.getColor(context, colorRes);
         return color;
+    }
+
+    /**
+     * Returns whether the device is in dark mode (also known as night mode)
+     */
+    public static boolean isDarkMode(Context context) {
+        if (Build.VERSION.SDK_INT >= 30)
+            return context.getResources().getConfiguration().isNightModeActive();
+        else {
+            int uiMode = context.getResources().getConfiguration().uiMode;
+            int nightMode = uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            return nightMode == Configuration.UI_MODE_NIGHT_YES;
+        }
     }
 
 }

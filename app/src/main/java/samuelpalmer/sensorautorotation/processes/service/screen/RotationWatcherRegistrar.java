@@ -146,6 +146,7 @@ public class RotationWatcherRegistrar extends EventRegistrarAdaptor {
     }
 
     private final IRotationWatcher screenRotationChanged = new IRotationWatcher.Stub() {
+        @SuppressWarnings("unused")
         @Override
         public void onRotationChanged(final int rotation) {
             if (BuildConfig.DEBUG)

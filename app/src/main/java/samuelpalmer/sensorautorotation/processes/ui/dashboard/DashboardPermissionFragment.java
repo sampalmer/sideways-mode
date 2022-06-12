@@ -53,7 +53,7 @@ public class DashboardPermissionFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        model = new ViewModelProvider(getActivity()).get(DashboardDialogViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(DashboardDialogViewModel.class);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

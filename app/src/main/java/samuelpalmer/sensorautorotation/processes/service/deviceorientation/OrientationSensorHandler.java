@@ -137,6 +137,7 @@ public class OrientationSensorHandler extends State {
             super(context, HandlerCompat.createAsync(Looper.getMainLooper()));
         }
         
+        @SuppressWarnings("unused")
         @Override
         public void onProposedRotationChanged(int rotation) {
             if (!isStarted()) {

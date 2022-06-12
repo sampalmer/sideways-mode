@@ -100,7 +100,7 @@ public class DismissKeyguardFragment extends Fragment {
         private boolean isUnlocking = false;
 
         @Override
-        public void startUnlock() {
+        protected void startUnlock() {
             if (isUnlocking) {
                 // The user probably cancelled the last unlock attempt, so we're still waiting for it to finish.
                 // In order to make the keyguard appear again, we need to remove FLAG_DISMISS_KEYGUARD, wait a bit, then re-add it
@@ -151,7 +151,7 @@ public class DismissKeyguardFragment extends Fragment {
     }
 
     private abstract static class BaseDismissKeyguardImpl {
-        public abstract void startUnlock();
+        protected abstract void startUnlock();
     }
 
 }

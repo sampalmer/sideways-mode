@@ -7,7 +7,7 @@ import android.os.StrictMode;
 
 import samuelpalmer.sensorautorotation.utilities.LoggingAppOpsCollector;
 
-public final class DebugConfig {
+final class DebugConfig {
 
     // Whether to audit usage of dangerous permissions. This generates a lot of log noise, so it's off by default.
     private static final boolean AUDIT_PERMISSIONS = false;

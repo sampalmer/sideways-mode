@@ -117,7 +117,7 @@ public class AppUninstalledUpdater extends State {
         @Nullable
         private final String packageToCheck;
 
-        public RemoveUninstalledIncompatibleAppsTask(@Nullable String packageToCheck) {
+        protected RemoveUninstalledIncompatibleAppsTask(@Nullable String packageToCheck) {
             this.packageToCheck = packageToCheck;
         }
 

@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
 
@@ -25,7 +26,7 @@ public class LockScreenMonitor extends EventRegistrarAdaptor {
 
     public LockScreenMonitor(Context context) {
         this.context = context;
-        keyguardManager = ContextCompat.getSystemService(this.context, KeyguardManager.class);
+        keyguardManager = Objects.requireNonNull(ContextCompat.getSystemService(this.context, KeyguardManager.class));
     }
 
     private Boolean isOnLockScreen;

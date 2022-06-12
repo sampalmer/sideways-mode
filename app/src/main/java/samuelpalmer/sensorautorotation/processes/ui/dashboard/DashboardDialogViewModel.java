@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 /**
  * View-model for {@link DashboardDialogFragment}
  */
+@SuppressWarnings("WeakerAccess")
 public class DashboardDialogViewModel extends AndroidViewModel {
 
     private final PermissionToStartLiveData permissionToStartLiveData;

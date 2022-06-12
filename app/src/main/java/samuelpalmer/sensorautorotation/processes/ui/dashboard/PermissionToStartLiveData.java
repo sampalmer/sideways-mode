@@ -11,7 +11,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 /**
  * Adapts {@link PermissionMonitor} to {@link LiveData}
  */
-public class PermissionToStartLiveData extends LiveData<Boolean> {
+class PermissionToStartLiveData extends LiveData<Boolean> {
 
     private final PermissionMonitor permissionMonitor;
 

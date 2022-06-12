@@ -20,7 +20,6 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 
 import samuelpalmer.sensorautorotation.R;
 import samuelpalmer.sensorautorotation.processes.ui.preferences.ApplicationSettings;
-import samuelpalmer.sensorautorotation.utilities.DarkThemeMonitor;
 import samuelpalmer.sensorautorotation.utilities.ThemeUtilities;
 
 /**
@@ -232,7 +231,7 @@ class FirstStartTipsWizard {
 
             tapTarget.drawShadow(true); // The shadow looks nice and helps distinguish the circle from whatever is behind the dialog.
 
-            boolean isDark = DarkThemeMonitor.poll(dialog.getContext());
+            boolean isDark = ThemeUtilities.isDarkMode(dialog.getContext());
 
             if (isDark) {
                 // The library doesn't work well with dark mode out-of-the-box

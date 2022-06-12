@@ -15,6 +15,7 @@ import samuelpalmer.sensorautorotation.utilities.eventhandling.EventHandler;
 /**
  * View-model for {@link IncompatibleAppsPermissionFragment}
  */
+@SuppressWarnings("WeakerAccess")
 public class IncompatibleAppsPermissionViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> shouldShowTip = new MutableLiveData<>();

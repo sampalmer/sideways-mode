@@ -25,7 +25,7 @@ import samuelpalmer.sensorautorotation.values.UserSide;
 /**
  * Assembles the service notification
  */
-public class ServiceNotification {
+class ServiceNotification {
     
     private final Context context;
     private final NotificationCompat.Builder builder;
@@ -116,7 +116,7 @@ public class ServiceNotification {
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.LEFT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_LEFT_SIDE).asIntent(context),
                 UserSide.LEFT.equals(userSide),
-                isLoading && runningState.userSide.equals(UserSide.LEFT))
+                isLoading && UserSide.LEFT.equals(runningState.userSide))
             .configureButton(
                 R.id.notification_turn_off_button_container,
                 R.id.notification_turn_off_icon_unselected,
@@ -137,7 +137,7 @@ public class ServiceNotification {
                 // Android 4.0 doesn't support using a "null" pending intent, so we need to use a no-op one instead.
                 userSide != null && userSide.equals(UserSide.RIGHT) ? new Intent(context, DummyReceiver.class) : new ApplicationCommand(ApplicationCommand.ACTION_RIGHT_SIDE).asIntent(context),
                 UserSide.RIGHT.equals(userSide),
-                isLoading && runningState.userSide.equals(UserSide.RIGHT))
+                isLoading && UserSide.RIGHT.equals(runningState.userSide))
         ;
 
         // Using a fully-custom view because:
