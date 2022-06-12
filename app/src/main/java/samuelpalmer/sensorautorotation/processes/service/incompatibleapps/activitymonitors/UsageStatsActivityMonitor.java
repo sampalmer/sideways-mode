@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -46,7 +47,16 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
         // Some devices don't have the usage access settings screen or don't have an intent to go there.
         // For example, Samsung Galaxy S5 SM-G900I running G900IZTU1BOA1 firmware has the screen but the intent doesn't work.
         // So these users won't have any easy way to grant the permission and hence can't use this feature.
-        return packageManager.resolveActivity(acquirePermissionIntent, 0) != null;
+        ResolveInfo resolveInfo;
+        int resolveFlags = 0;
+        if (Build.VERSION.SDK_INT >= 33) {
+            resolveInfo = packageManager.resolveActivity(acquirePermissionIntent, PackageManager.ResolveInfoFlags.of(resolveFlags));
+        } else {
+            //noinspection deprecation
+            resolveInfo = packageManager.resolveActivity(acquirePermissionIntent, resolveFlags);
+        }
+
+        return resolveInfo != null;
     }
 
     private final UsageStatsManager usageStatsManager;
