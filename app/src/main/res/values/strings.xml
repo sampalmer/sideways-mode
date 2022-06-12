@@ -28,7 +28,7 @@
     <!-- Upgrade -->
     <string name="upgrade_summary">%1$s upgraded</string>
     <string name="upgrade_notification_content">Touch for details</string>
-    <string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s. Also, blocking this app's notifications isn't supported anymore. If you have them blocked, please unblock them."</string>
+    <string name="upgrade_v57">"Auto Rotation for Lying Down has been renamed to %1$s"</string>
 
     <!-- Dashboard -->
     <string name="user_rotation_left_side">Left side</string>
