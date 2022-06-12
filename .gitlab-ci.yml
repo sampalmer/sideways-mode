@@ -93,6 +93,9 @@ lint:
   script:
     - chmod +x gradlew
     - bundle exec fastlane lint
+  artifacts:
+    paths:
+      - app/build/reports/lint-results-debug.html
 
 test:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
