@@ -31,7 +31,7 @@ android {
         applicationId "samuelpalmer.sensorautorotation"
 
         minSdkVersion 16
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 72
         versionName "2.8.0"
 
