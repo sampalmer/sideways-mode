@@ -12,11 +12,17 @@ import androidx.lifecycle.LiveData;
 @SuppressWarnings("WeakerAccess")
 public class DashboardDialogViewModel extends AndroidViewModel {
 
+    private final DashboardSectionLiveData dashboardSection;
     private final PermissionToStartLiveData permissionToStartLiveData;
 
     public DashboardDialogViewModel(@NonNull Application application) {
         super(application);
+        dashboardSection = new DashboardSectionLiveData(application);
         permissionToStartLiveData = new PermissionToStartLiveData(application);
+    }
+
+    public LiveData<DashboardSection> getDashboardSection() {
+        return dashboardSection;
     }
 
     public LiveData<Boolean> getPermissionToStart() {

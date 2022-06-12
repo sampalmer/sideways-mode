@@ -2,6 +2,9 @@ package samuelpalmer.sensorautorotation.processes.ui;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.app.StatusBarManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
@@ -9,6 +12,14 @@ import android.os.Looper;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.os.ExecutorCompat;
+import androidx.core.os.HandlerCompat;
+
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 import samuelpalmer.sensorautorotation.PendingIntentIds;
 import samuelpalmer.sensorautorotation.R;
@@ -30,7 +41,20 @@ public class QuickSettingService extends TileService {
     private ApplicationStatus status;
     private boolean pendingClick;
     private boolean isListening;
-    
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static void promptUserToAddTile(Context context, Consumer<Integer> callback) {
+        StatusBarManager statusBarManager = ContextCompat.getSystemService(context, StatusBarManager.class);
+        assert statusBarManager != null;
+
+        ComponentName componentName = new ComponentName(context, QuickSettingService.class);
+        String label = context.getString(R.string.app_name_full);
+        Icon icon = Icon.createWithResource(context, R.drawable.app_right_side_filled);
+        Executor executor = ExecutorCompat.create(HandlerCompat.createAsync(Looper.getMainLooper()));
+
+        statusBarManager.requestAddTileService(componentName, label, icon, executor, callback);
+    }
+
     @Override
     public void onCreate() {
         statusClient = new ApplicationStatusClient(this, statusListener, Looper.myLooper());

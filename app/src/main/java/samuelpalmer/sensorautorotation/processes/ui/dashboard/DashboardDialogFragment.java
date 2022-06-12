@@ -33,10 +33,12 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
 
     private static final String TAG_NORMAL_CONTENTS_FRAGMENT = "normalContents";
     private static final String TAG_PERMISSION_CONTENTS_FRAGMENT = "permissionContents";
+    private static final String TAG_QUICK_SETTING_CONTENTS_FRAGMENT = "quickSettingContents";
     private static final String TAG_TIPS_FRAGMENT = "tips";
 
-    private DashboardNormalFragment normalSection;
     private DashboardPermissionFragment permissionSection;
+    private DashboardQuickSettingFragment quickSettingSection;
+    private DashboardNormalFragment normalSection;
     private FirstStartTipsFragment tipsFragment;
     private ImageButton menuButton;
     private PopupMenu popup;
@@ -72,16 +74,22 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        normalSection = (DashboardNormalFragment) fragmentManager.findFragmentByTag(TAG_NORMAL_CONTENTS_FRAGMENT);
-        if (normalSection == null) {
-            normalSection = new DashboardNormalFragment();
-            fragmentTransaction.add(R.id.dashboard_normal_contents, normalSection, TAG_NORMAL_CONTENTS_FRAGMENT);
-        }
-
         permissionSection = (DashboardPermissionFragment) fragmentManager.findFragmentByTag(TAG_PERMISSION_CONTENTS_FRAGMENT);
         if (permissionSection == null) {
             permissionSection = new DashboardPermissionFragment();
             fragmentTransaction.add(R.id.dashboard_permission_contents, permissionSection, TAG_PERMISSION_CONTENTS_FRAGMENT);
+        }
+
+        quickSettingSection = (DashboardQuickSettingFragment) fragmentManager.findFragmentByTag(TAG_QUICK_SETTING_CONTENTS_FRAGMENT);
+        if (quickSettingSection == null) {
+            quickSettingSection = new DashboardQuickSettingFragment();
+            fragmentTransaction.add(R.id.dashboard_quick_setting_contents, quickSettingSection, TAG_QUICK_SETTING_CONTENTS_FRAGMENT);
+        }
+
+        normalSection = (DashboardNormalFragment) fragmentManager.findFragmentByTag(TAG_NORMAL_CONTENTS_FRAGMENT);
+        if (normalSection == null) {
+            normalSection = new DashboardNormalFragment();
+            fragmentTransaction.add(R.id.dashboard_normal_contents, normalSection, TAG_NORMAL_CONTENTS_FRAGMENT);
         }
 
         tipsFragment = (FirstStartTipsFragment) fragmentManager.findFragmentByTag(TAG_TIPS_FRAGMENT);
@@ -116,10 +124,11 @@ public class DashboardDialogFragment extends AppCompatDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DashboardDialogViewModel model = new ViewModelProvider(requireActivity()).get(DashboardDialogViewModel.class);
-        model.getPermissionToStart().observe(this, hasPermission -> {
-            ViewUtilities.ensureVisibility(normalSection.requireView(), hasPermission ? View.VISIBLE : View.GONE);
-            ViewUtilities.ensureVisibility(permissionSection.requireView(), hasPermission ? View.GONE : View.VISIBLE);
-            tipsFragment.setNormalSectionVisibility(hasPermission);
+        model.getDashboardSection().observe(this, section -> {
+            ViewUtilities.ensureVisibility(permissionSection.requireView(), section == DashboardSection.PERMISSION ? View.VISIBLE : View.GONE);
+            ViewUtilities.ensureVisibility(quickSettingSection.requireView(), section == DashboardSection.QUICK_SETTING ? View.VISIBLE : View.GONE);
+            ViewUtilities.ensureVisibility(normalSection.requireView(), section == DashboardSection.NORMAL ? View.VISIBLE : View.GONE);
+            tipsFragment.setNormalSectionVisibility(section == DashboardSection.NORMAL);
         });
     }
 

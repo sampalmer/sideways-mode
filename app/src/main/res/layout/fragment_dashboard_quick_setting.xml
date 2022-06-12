@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/dialog_content_margin"
+              android:gravity="center_horizontal"
+    >
+
+    <TextView
+        android:id="@+id/dashboard_quick_setting_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        />
+
+    <!--
+        Not explicitly asking the user to add the tile because they might have already done so,
+        and we don't have an easy way to check
+    -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dashboard_quick_setting_add"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_got_it"
+        />
+
+</LinearLayout>

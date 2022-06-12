@@ -52,7 +52,7 @@ public abstract class ApplicationSettings {
     public static final String KEY_CLOSE_NOTIFICATION_WHEN_UPRIGHT = "closeNotificationWhenUpright";
 
     /**
-     * Whether the user has been told that the app is running in the background.
+     * Whether the user has been told how to change this app while it's running in the background.
      */
     public static final String KEY_RUNNING_IN_BACKGROUND_TIP_SHOWN = "runningInBackgroundTipShown";
 

@@ -37,7 +37,9 @@
     <string name="user_rotation_off">Off</string>
     <string name="status_waiting_sensor">Waiting for sensor</string>
     <string name="action_turn_off">Turn off</string>
+    <string name="explanation_quick_setting">"To change %1$s while it's running, use the quick settings tile"</string>
 
+    <!-- Settings -->
     <string name="preference_incompatible_apps_title">Incompatible apps</string>
     <plurals name="preference_incompatible_apps_summary_enabled">
         <item quantity="one">%d incompatible app</item>

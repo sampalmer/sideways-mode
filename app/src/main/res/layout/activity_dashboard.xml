@@ -51,6 +51,12 @@
                 android:layout_height="wrap_content"
                 />
 
+            <FrameLayout
+                android:id="@+id/dashboard_quick_setting_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
         </RelativeLayout>
 
     </LinearLayout>
