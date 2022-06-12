@@ -23,14 +23,9 @@ android {
         disable 'MissingTranslation'
     }
     lintOptions {
-        // Including extra output for convenience when running from CI/CD pipeline
-        explainIssues true
-        showAll true
+        // Including summary output for convenience when running from CI/CD pipeline
+        explainIssues false
         textOutput 'stdout'
-
-        // Failing CI/CD pipeline on lint warnings to keep the codebase clean
-        if (System.env.CI === 'true')
-            warningsAsErrors true
     }
     defaultConfig {
         applicationId "samuelpalmer.sensorautorotation"
