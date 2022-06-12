@@ -54,9 +54,8 @@
     <string name="preference_when_screen_locked_turn_off">Turn off %1$s</string>
 
     <string name="preference_when_upright">"When I'm upright"</string>
-    <string name="preference_when_upright_close_notification">Remove notification</string>
-    <string name="preference_when_upright_keep_notification">Keep notification</string>
-
+    <string name="preference_when_upright_close_notification">Remove controls notification</string>
+    <string name="preference_when_upright_keep_notification">Show controls notification</string>
 
     <!-- Errors -->
     <string name="environment_error_message">%1$s %2$s has been turned off.</string>
