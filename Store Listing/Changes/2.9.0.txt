@@ -1,3 +1,5 @@
 • Added support for Android 13
 • Upgraded to latest AndroidX and Material Design libraries
 • Other minor fixes and improvements
+
+Are you a software engineer? This project is open-source and needs a new maintainer. Please reach out if you're interested.
