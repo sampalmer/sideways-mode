@@ -1,3 +1,0 @@
-Maybe have an option to assume the user's orientation is the phone's orientation when the screen is turned on
-    Doesn't work if the phone is started in landscape
-    Doesn't work if moving the phone while turning it on.
