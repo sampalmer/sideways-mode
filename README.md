@@ -6,3 +6,11 @@
 
 * Design & development: Sam Palmer
 * Russian translation: Евгений Черник
+
+# Status
+
+This project currently needs a new maintainer. Please reach out if you're interested.
+
+# Developer documentation
+
+See the documentation in the Notes folder at the root of the repo.
