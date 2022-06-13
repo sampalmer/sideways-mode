@@ -17,7 +17,7 @@
     <string name="accessibility_service_description">"Observes when an incompatible app is open while Sideways Mode is on.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an incompatible app is open"</string>
     <string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
     <string name="permission_needed_accessibility_service_description">"To see when an incompatible app is open, %1$s needs an accessibility service"</string>
-    <string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation."</string>
+    <string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation"</string>
 
     <!-- Menu -->
     <string name="action_menu">Menu</string>
@@ -98,13 +98,13 @@
 
     <!-- Introduction tips -->
     <string name="intro_tip_side_button_title">Lying down</string>
-    <string name="intro_tip_side_button_description">"When you lie down, tell %1$s which side you're on."</string>
+    <string name="intro_tip_side_button_description">"When you lie down, tell %1$s which side you're on"</string>
     <string name="intro_tip_incompatible_apps_title">Use your favourite apps</string>
-    <string name="intro_tip_incompatible_apps_description">"If an app doesn't rotate correctly, add it to %1$s to fix it."</string>
+    <string name="intro_tip_incompatible_apps_description">"If an app doesn't rotate correctly, add it to %1$s to fix it"</string>
     <string name="intro_tip_uninstall_title">Don\'t want it?</string>
     <string name="intro_tip_uninstall_description">"Turn off %1$s before you uninstall it. Otherwise the screen might get stuck."</string>
     <string name="tip_running_in_background_title">%1$s is running</string>
-    <string name="tip_running_in_background_description">To change it, use the notification in your notification drawer.</string>
+    <string name="tip_running_in_background_description">To change it, use the notification in your notification drawer</string>
     <string name="action_got_it">Got it</string>
 
 </resources>
