@@ -1,0 +1,3 @@
+• Added support for Android 13
+• Upgraded to latest AndroidX and Material Design libraries
+• Other minor fixes and improvements
