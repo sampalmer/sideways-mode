@@ -9,7 +9,7 @@
 
 # Status
 
-This project currently needs a new maintainer. Please reach out if you're interested.
+This project needs a new maintainer. Please reach out if you're interested.
 
 # Project structure
 
@@ -44,13 +44,14 @@ Sideways Mode stores persistent data in a few different places:
 |  Name  | Class | Location | Data | Reason |
 | ------ | ----- | -------- | ------- | ------ |
 | Application settings | `ApplicationSettings` | `samuelpalmer.sensorautorotation_preferences.xml` | User preferences | Standard practice |
-| Service settings | `ServiceSettings` | `service.xml` | Persistent service state and cached copies of user preferences | Service might need to save data across process or device restarts, and Android [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) is not safe to share between processes |
+| Service settings | `ServiceSettings` | `service.xml` | Persistent service state and cached copies of user preferences | Service might need to persist state across process or device restarts, and Android [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) is not safe to share between processes |
 
 # Release process
 
 To release a new version of Sideways Mode, follow these steps:
 1. Increment version numbers in `build.gradle`
 1. If any persistent data has changed (`ApplicationSettings` or `ServiceSettings`), then ensure data migrations have been added to `Migrations`
+1. Run automated instrumentation tests across all supported Android versions
 1. Update store listing description (`/Store Listing/Full Description.html`) and screenshots (`/Store Listing/Graphics`)
 1. Manually create release notes (`/Store Listing/Changes`)
 1. Update privacy policy (`/Store Listing/privacy-policy.txt`)
@@ -60,4 +61,4 @@ To release a new version of Sideways Mode, follow these steps:
 
 # Other documentation
 
-See the documentation in the Notes folder at the root of the repo.
+Other developer documentation and user documentation can be found in `/Notes`.
