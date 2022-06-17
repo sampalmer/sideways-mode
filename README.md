@@ -11,6 +11,10 @@
 
 This project currently needs a new maintainer. Please reach out if you're interested.
 
+# Project structure
+
+This is a standard Android Studio project. The project contains a number of modules. The `app` module is Sideways Mode itself. The other modules are separate testing apps for local use to assist development and troubleshooting for specific situations.  
+
 # Architecture
 
 Sideways Mode runs two separate processes:
@@ -32,6 +36,8 @@ Most multi-process complexity is already taken care of in the codebase. Main thi
 
 The reason the preferences are replicated across both processes is Android's [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) implementation doesn't support use across multiple processes, so each settings file is specific to a particular process.
 
+In general, code that runs in the UI process lives in the `samuelpalmer.sensorautorotation.processes.ui` package, and code that runs in the service process lives in the `samuelpalmer.sensorautorotation.processes.service` package.
+
 # Persistent data
 
 Sideways Mode stores persistent data in a few different places:
@@ -39,6 +45,18 @@ Sideways Mode stores persistent data in a few different places:
 | ------ | ----- | -------- | ------- | ------ |
 | Application settings | `ApplicationSettings` | `samuelpalmer.sensorautorotation_preferences.xml` | User preferences | Standard practice |
 | Service settings | `ServiceSettings` | `service.xml` | Persistent service state and cached copies of user preferences | Service might need to save data across process or device restarts, and Android [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) is not safe to share between processes |
+
+# Release process
+
+To release a new version of Sideways Mode, follow these steps:
+1. Increment version numbers in `build.gradle`
+1. If any persistent data has changed (`ApplicationSettings` or `ServiceSettings`), then ensure data migrations have been added to `Migrations`
+1. Update store listing description (`/Store Listing/Full Description.html`) and screenshots (`/Store Listing/Graphics`)
+1. Manually create release notes (`/Store Listing/Changes`)
+1. Update privacy policy (`/Store Listing/privacy-policy.txt`)
+1. Create a Git tag and set it to the `versionName` value
+1. Test and promote through all environments
+1. Manually copy store listing description, screenshots, and release notes into Google Play Console
 
 # Other documentation
 
