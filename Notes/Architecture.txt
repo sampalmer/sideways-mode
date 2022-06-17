@@ -1,7 +1,0 @@
-This app uses a two-process architecture to ensure the background service holds onto minimal RAM:
-1. Most UI stuff should go in one process
-2. The background service and its dependencies go in a different one
-
-Unfortunately, Android's SharedPreferences implementation doesn't support use across multiple
-processes, so each settings file is specific to either process. Preferences are synced across
-processes where necessary using IPC.

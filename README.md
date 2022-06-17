@@ -11,6 +11,28 @@
 
 This project currently needs a new maintainer. Please reach out if you're interested.
 
+# Architecture
+
+Sideways Mode runs two separate processes:
+| Process | Purpose | Usage |
+| ------- | ------- | ----- |
+| UI | UI code. Can be killed by OS when UI is not visible. | For all UI code. Allowed to use plenty of RAM for images and icons etc as needed. |
+| Service | Background code. Designed to minimise risk of being killed by OS. | Must use low amount of RAM so OS doesn't kill process. Must not run UI code since that uses a lot of RAM that can't all be freed. |
+
+Having two processes adds some complexity but provides the following benefits:
+* Background service won't die if UI crashes
+* Less chances of background service being killed by OS during memory pressure, since the OS kills memory hogs first
+* Leaves more RAM free for other apps since the OS can readily kill the UI process
+
+Most multi-process complexity is already taken care of in the codebase. Main things to keep in mind for this are:
+* The UI process communicates requests to the service process through `ApplicationCommand`, which are received by `ApplicationCommandReceiver`
+* The service process communicates requests to the UI process through `ApplicationStatusService`, which are received by `ApplicationStatusClient`
+* User preferences are persisted through `ApplicationSettings`, which is owned by the UI process
+* User preferences are replicated to the service process by `AppSettingsSynchroniser`
+* Overall application state and replicated user preferences are persisted through `ServiceSettings`, which is owned by the service process
+
+The reason the preferences are replicated across both processes is Android's `SharedPreferences` implementation doesn't support use across multiple processes, so each settings file is specific to either process.
+
 # Developer documentation
 
 See the documentation in the Notes folder at the root of the repo.
