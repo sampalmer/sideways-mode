@@ -27,12 +27,19 @@ Having two processes adds some complexity but provides the following benefits:
 Most multi-process complexity is already taken care of in the codebase. Main things to keep in mind for this are:
 * The UI process communicates requests to the service process through `ApplicationCommand`, which are received by `ApplicationCommandReceiver`
 * The service process communicates requests to the UI process through `ApplicationStatusService`, which are received by `ApplicationStatusClient`
-* User preferences are persisted through `ApplicationSettings`, which is owned by the UI process
-* User preferences are replicated to the service process by `AppSettingsSynchroniser`
-* Overall application state and replicated user preferences are persisted through `ServiceSettings`, which is owned by the service process
+* Application settings (`ApplicationSettings`) are owned by the UI process and replicated to the service process by `AppSettingsSynchroniser`
+* Service settings (`ServiceSettings`) are owned by the service process
 
-The reason the preferences are replicated across both processes is Android's `SharedPreferences` implementation doesn't support use across multiple processes, so each settings file is specific to either process.
+The reason the preferences are replicated across both processes is Android's [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) implementation doesn't support use across multiple processes, so each settings file is specific to a particular process.
 
-# Developer documentation
+# Persistent data
+
+Sideways Mode stores persistent data in a few different places:
+|  Name  | Class | Location | Data | Reason |
+| ------ | ----- | -------- | ------- | ------ |
+| Application settings | `ApplicationSettings` | `samuelpalmer.sensorautorotation_preferences.xml` | User preferences | Standard practice |
+| Service settings | `ServiceSettings` | `service.xml` | Persistent service state and cached copies of user preferences | Service might need to save data across process or device restarts, and Android [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) is not safe to share between processes |
+
+# Other documentation
 
 See the documentation in the Notes folder at the root of the repo.
