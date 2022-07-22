@@ -116,6 +116,9 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
         }
         else {
             if (!gotEvents) {
+                // Once this happened on an Android emulator. Usage permission was granted, but the
+                // OS didn't provide any usage events at all. Restarting the device fixed the issue.
+
                 if (lastActivity != null) {
                     // Only logging this if we previously knew the activity.
                     // This is to prevent the log message from repeating every time this is polled.
