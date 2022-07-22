@@ -81,11 +81,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.preference:preference:1.2.0'
 
-    def nav_version = "2.4.2"
+    def nav_version = "2.5.0"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-    def lifecycle_version = "2.4.1"
+    def lifecycle_version = "2.5.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version" // https://stackoverflow.com/a/69832319/238753
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
