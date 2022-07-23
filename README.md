@@ -49,6 +49,7 @@ Sideways Mode stores persistent data in a few different places:
 # Release process
 
 To release a new version of Sideways Mode, follow these steps:
+1. Remove support for any old unused version of Android
 1. Increment version numbers in `build.gradle`
 1. If any persistent data has changed (`ApplicationSettings` or `ServiceSettings`), then ensure data migrations have been added to `Migrations`
 1. Run automated instrumentation tests across all supported Android versions
