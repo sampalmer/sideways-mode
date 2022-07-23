@@ -155,7 +155,7 @@ class UsageStatsActivityMonitor extends PollingActivityMonitor {
     }
 
     @Override
-    public String makeAcquirePermissionQuestion() {
+    public String makeAcquirePermissionTitle() {
         return context.getString(R.string.permission_needed_usage_summary);
     }
 

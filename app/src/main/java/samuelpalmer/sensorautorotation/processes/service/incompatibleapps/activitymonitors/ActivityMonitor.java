@@ -4,8 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import samuelpalmer.sensorautorotation.BuildConfig;
 import samuelpalmer.sensorautorotation.utilities.ObjectExtensions;
 import samuelpalmer.sensorautorotation.utilities.eventhandling.EventRegistrarAdaptor;
@@ -47,8 +49,14 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
      */
     @NonNull
     public abstract EventRegistrarAdaptor onPermissionChange();
+
+    @Nullable
     public abstract Intent makeAcquirePermissionIntent();
-    public abstract String makeAcquirePermissionQuestion();
+
+    @Nullable
+    public abstract String makeAcquirePermissionTitle();
+
+    @Nullable
     public abstract String makeAcquirePermissionExplanation();
 
     void setTopActivity(@Nullable ComponentName activityOrNull, boolean sendUpdate) {
@@ -87,10 +95,7 @@ public abstract class ActivityMonitor extends EventRegistrarAdaptor {
             // This is out next-best bet since it uses polling, which is more reliable than callbacks
             return new UsageStatsActivityMonitor(context);
         else
-            // This is our last resort since it relies on callbacks which can sometimes not occur or occur out-of-order
-            return new AccessibilityServiceActivityMonitor(context);
+            // Activity monitoring is not supported on this device
+            return new NullActivityMonitor(context);
     }
-
-    @Nullable
-    public String makeAcquirePermissionCancelledMessage() { return null; }
 }

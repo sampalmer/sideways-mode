@@ -4,21 +4,6 @@
     <string name="app_name_full">Sideways Mode</string>
     <string name="app_name_short">Sideways</string>
 
-    <!-- Accessibility service -->
-    <!--
-        Requirements according to email from Google Play:
-
-        If your accessibility app uses accessibility privileges for both accessibility and non-accessibility purposes, you must instead fulfill the below criteria.
-
-        • If you use the BIND_ACCESSIBILITY_SERVICE permission in your app for any purpose not relating to, or in addition to, helping users with accessibility needs use Android devices and apps, you must update the android:description element in your accessibility service definition to provide user-facing disclosure of the Accessibility Service API: before asking the user to enable this permission within your app. Your disclosure must meet the following requirements:
-            • In all cases, you must have a disclosure to explain why you need to observe user actions in general using the Accessibility Service API.
-            • For each accessibility capability declared, you must have an accompanying disclosure to describe the app functionality that the Accessibility Service permission is enabling for your app. (The default disclosure tells us “what”, but you must disclose to the user “why”).
-    -->
-    <string name="accessibility_service_description">"Observes when an incompatible app is open while Sideways Mode is on.\n\nAccessibility capabilities used:\n• Observe your actions: To see when an incompatible app is open"</string>
-    <string name="permission_needed_accessibility_service_summary">Use accessibility service?</string>
-    <string name="permission_needed_accessibility_service_description">"To see when an incompatible app is open, %1$s needs an accessibility service"</string>
-    <string name="accessibility_service_cancelled">"If the switch didn't work, try turning off apps that control screen brightness and orientation"</string>
-
     <!-- Menu -->
     <string name="action_menu">Menu</string>
     <string name="action_help" tools:keep="@string/action_help">Help</string>
@@ -77,6 +62,8 @@
 
     <string name="permission_needed_usage_summary">Check app usage?</string>
     <string name="permission_needed_usage_description">"To see when an incompatible app is open, %1$s needs usage access"</string>
+
+    <string name="permission_needed_no_activity_monitor_description">"To see when an incompatible app is open, %1$s needs permission, but your device doesn't support this"</string>
 
     <string name="permission_needed_overlays_summary">Draw over other apps?</string>
     <string name="permission_needed_overlays_description">"To change other apps' screen orientations, %1$s needs permission to draw over other apps"</string>

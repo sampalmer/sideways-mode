@@ -75,7 +75,7 @@ public class ScreenOrientationEnforcer extends State {
         layoutParams.flags = LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
 
         // Prevents breaking apps that detect overlying windows
-        // (eg UBank app, or enabling an accessibility service)
+        // (eg UBank app)
         layoutParams.width = 0;
         layoutParams.height = 0;
 

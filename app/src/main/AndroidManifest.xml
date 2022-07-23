@@ -221,37 +221,6 @@
             android:process="@string/process_service"
             />
 
-        <activity android:name=".processes.service.WaitForActivityDetectionActivity"
-            android:theme="@style/AppTheme.Translucent"
-            android:enabled="true"
-            android:autoRemoveFromRecents="true"
-            android:allowTaskReparenting="true"
-            android:noHistory="true"
-            android:excludeFromRecents="true"
-            android:alwaysRetainTaskState="false"
-            android:stateNotNeeded="true"
-            android:clearTaskOnLaunch="true"
-            android:finishOnTaskLaunch="true"
-            android:taskAffinity=""
-            android:screenOrientation="behind"
-            android:process="@string/process_service"
-        />
-
-        <!-- The description element is specified here since Google Play seems to require it for the accessibility services disclosure. -->
-        <service
-            android:name=".processes.service.WindowChangeDetectingService"
-            android:description="@string/accessibility_service_description"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:process="@string/process_service"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibilityservice"/>
-        </service>
-
         <uses-library android:name="com.sony.smallapp.framework" android:required="false" />
     </application>
 

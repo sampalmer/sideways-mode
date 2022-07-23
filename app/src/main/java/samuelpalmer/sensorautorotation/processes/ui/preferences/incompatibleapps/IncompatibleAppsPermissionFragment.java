@@ -3,7 +3,6 @@ package samuelpalmer.sensorautorotation.processes.ui.preferences.incompatibleapp
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -52,19 +51,24 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
     }
 
     public void grantPermissions() {
-        if (!activityMonitor.hasPermission())
-            new AlertDialog.Builder(requireActivity())
-                    .setTitle(activityMonitor.makeAcquirePermissionQuestion())
+        if (!activityMonitor.hasPermission()) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity())
+                    .setTitle(activityMonitor.makeAcquirePermissionTitle())
                     .setMessage(activityMonitor.makeAcquirePermissionExplanation())
                     .setOnCancelListener(dialog -> {})
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {})
-                    .setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
-                        Intent intent = activityMonitor.makeAcquirePermissionIntent();
-                        activityPermissionLauncher.launch(intent);
-                        isGrantingPermission = true;
-                    })
-                    .show();
-        else
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {});
+
+            Intent acquirePermissionIntent = activityMonitor.makeAcquirePermissionIntent();
+            if (acquirePermissionIntent != null) {
+                dialogBuilder
+                        .setPositiveButton(R.string.permission_needed_allow, (dialog, which) -> {
+                            activityPermissionLauncher.launch(acquirePermissionIntent);
+                            isGrantingPermission = true;
+                        });
+            }
+
+            dialogBuilder.show();
+        } else
             grantOverlayPermission();
     }
 
@@ -73,14 +77,6 @@ public class IncompatibleAppsPermissionFragment extends Fragment {
         public void onActivityResult(ActivityResult result) {
             if (activityMonitor.hasPermission())
                 grantOverlayPermission();
-            else {
-                String cancelledMessage = activityMonitor.makeAcquirePermissionCancelledMessage();
-
-                if (cancelledMessage != null)
-                    Toast
-                        .makeText(requireActivity(), cancelledMessage, Toast.LENGTH_LONG)
-                        .show();
-            }
         }
     });
 

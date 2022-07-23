@@ -66,7 +66,7 @@ class RunningTasksActivityMonitor extends PollingActivityMonitor {
     }
 
     @Override
-    public String makeAcquirePermissionQuestion() {
+    public String makeAcquirePermissionTitle() {
         // We always have permission since it's declared in the manifest and runtime permissions don't exist in these versions of Android
         return null;
     }
