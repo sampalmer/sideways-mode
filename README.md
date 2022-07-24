@@ -58,15 +58,19 @@ docker run --rm -v C:\your\path\to\sideways-mode:/home/project ruby bash -c "cd 
 
 To release a new version of Sideways Mode, follow these steps:
 1. Remove support for any old unused version of Android
-1. Increment version numbers in `build.gradle`
-1. If any persistent data has changed (`ApplicationSettings` or `ServiceSettings`), then ensure data migrations have been added to `Migrations`
-1. Run automated instrumentation tests across all supported Android versions
-1. Update store listing description (`/Store Listing/Full Description.html`) and screenshots (`/Store Listing/Graphics`)
-1. Manually create release notes (`/Store Listing/Changes`)
-1. Update privacy policy (`/Store Listing/privacy-policy.txt`)
-1. Create a Git tag and set it to the `versionName` value
-1. Test and promote through all environments
-1. Manually copy store listing description, screenshots, and release notes into Google Play Console
+2. Increment version numbers in `build.gradle`
+3. If any persistent data has changed (`ApplicationSettings` or `ServiceSettings`), then ensure data migrations have been added to `Migrations`
+4. Run automated instrumentation tests across all supported Android versions
+5. Update store listing description (`/Store Listing/Full Description.html`) and screenshots (`/Store Listing/Graphics`)
+6. Manually create release notes (`/Store Listing/Changes`)
+7. Update privacy policy (`/Store Listing/privacy-policy.txt`)
+8. Create a Git tag and set it to the `versionName` value
+9. Wait for CI/CD pipeline to publish to Play Store internal track
+10. Manually install from Play Store as internal tester and perform manual smoke test
+11. Wait for Play Console pre-launch report to generate and ensure no issues are detected
+12. Manually copy store listing description, screenshots, and release notes into Google Play Console
+13. Promote to Production using CI/CD pipeline
+14. Monitor Production errors
 
 # Other documentation
 
