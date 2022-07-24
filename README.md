@@ -46,6 +46,14 @@ Sideways Mode stores persistent data in a few different places:
 | Application settings | `ApplicationSettings` | `samuelpalmer.sensorautorotation_preferences.xml` | User preferences | Standard practice |
 | Service settings | `ServiceSettings` | `service.xml` | Persistent service state and cached copies of user preferences | Service might need to persist state across process or device restarts, and Android [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) is not safe to share between processes |
 
+# Updating Fastlane
+
+Sideways Mode uses [Fastlane](https://fastlane.tools/) in its CI/CD pipeline. Fastlane occasionally needs to be updated for compatibility with changes to Google Play Console. To update Fastlane, you need a Ruby environment. One way to upgrade Fastlane is to open Docker Desktop and then run the upgrade from within a container:
+
+```shell
+docker run --rm -v C:\your\path\to\sideways-mode:/home/project ruby bash -c "cd /home/project && bundle update fastlane"
+```
+
 # Release process
 
 To release a new version of Sideways Mode, follow these steps:
