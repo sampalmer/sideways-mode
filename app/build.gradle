@@ -33,7 +33,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 33
         versionCode 74
-        versionName "2.9.1"
+        versionName "2.9.3"
 
         /*
          * Strips out languages added through the support library so that:
