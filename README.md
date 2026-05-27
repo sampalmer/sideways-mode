@@ -1,15 +1,14 @@
 # Sideways Mode
 
-<a href='https://play.google.com/store/apps/details?id=samuelpalmer.sensorautorotation&utm_campaign=github&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width='240'/></a>
+When you turn your device, the screen switches between portrait and landscape. But if you lie on your side, it's the wrong way around. Sideways Mode fixes this, so now you can turn your device to switch between portrait and landscape even while lying on your side. This is useful for reading, web browsing or watching videos in bed.
 
-# Credits
+Promo video:
 
-* Design & development: Sam Palmer
-* Russian translation: Евгений Черник
+[![Promotional video demonstrating the Sideways Mode app](http://img.youtube.com/vi/8Etkce1Dos4/0.jpg)](http://www.youtube.com/watch?v=8Etkce1Dos4 "Sideways Mode promo video")
 
 # Status
 
-This project needs a new maintainer. Please reach out if you're interested.
+**This app is discontinued and no longer available.**
 
 # Project structure
 
@@ -75,3 +74,8 @@ To release a new version of Sideways Mode, follow these steps:
 # Other documentation
 
 Other developer documentation and user documentation can be found in `/Notes`.
+
+# Credits
+
+* Design & development: Sam Palmer
+* Russian translation: Евгений Черник
